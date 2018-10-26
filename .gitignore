@@ -1,4 +1,7 @@
 .DS_Store
 .idea/
+build/
+dist/
 docs/
 *.autosave
+vorta/libs

@@ -1,4 +1,4 @@
-name: lucutus
+name: vorta
 
 channels:
 - conda-forge
@@ -6,9 +6,12 @@ channels:
 
 dependencies:
 - python=3.6.6
-- pyqt
-- peewee
 
 - pip:
   - appdirs
   - paramiko
+  - pyqt5
+  - peewee
+
+dev-dependencies:
+  - pyinstaller

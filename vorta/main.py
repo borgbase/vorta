@@ -2,7 +2,7 @@ import sys
 import os
 import platform
 from datetime import datetime as dt
-from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
 from PyQt5 import uic, QtCore
 
 from .repo_add import AddRepoWindow, ExistingRepoWindow
@@ -170,9 +170,3 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def menu_reset(self):
         reset_app()
         app.quit()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = MainWindow()
-    ex.show()
-    sys.exit(app.exec_())
