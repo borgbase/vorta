@@ -49,9 +49,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createStartBtn.setEnabled(False)
         self.createStartBtn.repaint()
 
-        repo_id = self.repoSelector.currentData()
-        repo = RepoModel.get(id=repo_id)
-        cmd = ['borg', 'create', '--log-json', '--json', '-C', self.profile.compression,
+        repo = self.profile.repo
+        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', self.profile.compression,
                f'{repo.url}::{platform.node()}-{dt.now().isoformat()}'
         ]
         for i in range(n_backup_folders):
@@ -69,12 +68,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createStartBtn.setEnabled(True)
         self.createStartBtn.repaint()
         if result['returncode'] == 0:
-            self.set_status('Finished backup.', 100)
+            self.set_status(progress_max=100)
             new_snapshot = SnapshotModel(
                 snapshot_id=result['data']['archive']['id'],
                 name=result['data']['archive']['name'],
                 time=parser.parse(result['data']['archive']['start']),
-                repo=self.repoSelector.currentData()
+                repo=self.profile.repo
             )
             new_snapshot.save()
             if 'cache' in result['data']:
