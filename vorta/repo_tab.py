@@ -2,7 +2,7 @@ import os
 from dateutil import parser
 from PyQt5 import uic, QtCore
 
-from .models import RepoModel, SourceDirModel, SnapshotModel, BackupProfileModel
+from .models import RepoModel, SnapshotModel
 from .repo_add import AddRepoWindow, ExistingRepoWindow
 from .borg_runner import BorgThread
 from .utils import prettyBytes, get_private_keys

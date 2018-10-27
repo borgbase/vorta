@@ -25,7 +25,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profile = BackupProfileModel.get(id=1)
 
         self.repoTab = RepoTab(self.repoTabSlot)
-        self.repoTab.repo_changed.connect(lambda: print('adf'))
+        self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
 
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
