@@ -12,6 +12,7 @@ class InitRepoWindow(InitRepoBase, InitRepoUI):
         self.setupUi(self)
         self.closeButton.clicked.connect(self.close)
 
+        self.logText.appendPlainText('Connecting to repo...')
         self._thread = BorgThread(self, cmd, env)
         self._thread.updated.connect(self.update_log)
         self._thread.result.connect(self.get_result)

@@ -39,7 +39,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
@@ -81,104 +81,82 @@
            <number>25</number>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_10">
             <property name="text">
-             <string>Repository ID:</string>
+             <string>Encryption:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="repoId">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Location:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="repoLocation">
+           <widget class="QLabel" name="repoEncryption">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Encrypted:</string>
+           <widget class="Line" name="line">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="repoEncryption_2">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
            <widget class="Line" name="line_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_11">
             <property name="text">
              <string>Original Size:</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_12">
+          <item row="3" column="1">
+           <widget class="QLabel" name="sizeOriginal">
             <property name="text">
-             <string>Compressed Size:</string>
+             <string/>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_13">
             <property name="text">
              <string>Deduplicated Size:</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
-           <widget class="QLabel" name="sizeDeduplicated">
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_12">
             <property name="text">
-             <string/>
+             <string>Compressed Size:</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="1">
+          <item row="5" column="1">
            <widget class="QLabel" name="sizeCompressed">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="sizeOriginal">
+          <item row="4" column="1">
+           <widget class="QLabel" name="sizeDeduplicated">
             <property name="text">
              <string/>
             </property>
@@ -385,7 +363,10 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="mountErrors">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount snapshots, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -394,7 +375,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="snapshotMountButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -407,7 +388,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="snapshotDeleteButton">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -423,7 +404,10 @@
              </widget>
             </item>
             <item alignment="Qt::AlignLeft">
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="snapshotRefreshButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -448,6 +432,43 @@
         <widget class="QProgressBar" name="createProgress">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="palette">
+          <palette>
+           <active>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>255</red>
+               <green>151</green>
+               <blue>41</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>255</red>
+               <green>151</green>
+               <blue>41</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>220</red>
+               <green>220</green>
+               <blue>220</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
+          </palette>
          </property>
          <property name="value">
           <number>0</number>
@@ -497,7 +518,7 @@
     </property>
     <widget class="QMenu" name="menuBackup_Configuration">
      <property name="title">
-      <string>Backup Configuration</string>
+      <string>Backup Profile</string>
      </property>
      <addaction name="actionLatest"/>
     </widget>

@@ -12,6 +12,7 @@ dependencies:
   - paramiko
   - pyqt5
   - peewee
+  - python-dateutil
 
 dev-dependencies:
   - pyinstaller

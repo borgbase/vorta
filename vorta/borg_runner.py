@@ -43,7 +43,9 @@ class BorgThread(QtCore.QThread):
                 'params': self.params,
                 'returncode': p.returncode,
             }
-            if stdout.strip():
+            try:
                 result['data'] = json.loads(stdout)
+            except:
+                result['data'] = {}
 
             self.result.emit(result)
