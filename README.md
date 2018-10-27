@@ -21,6 +21,9 @@ Missing features:
 - Check for duplicate source dirs
 - Exclude options/patterns.
 
+## Download
+The app package under [Releases](https://github.com/borgbase/vorta/releases) should include everything. Just download, unzip and run.
+
 ## Development
 Conda is used for dependency management. Create a new virtual env using:
 ```
