@@ -51,3 +51,4 @@ $ pyinstaller --clean --noconfirm vorta.spec
 - Licensed under GPLv3. See LICENSE.txt for details.
 - Uses the excellent [BorgBackup](https://www.borgbackup.org)
 - Based on PyQt and Qt.
+- Icons by [FontAwesome](https://fontawesome.com)
