@@ -1,6 +1,7 @@
 # Vorta - BorgBackup GUI
 
 ![Alt Text](https://files.qmax.us/vorta-screencast.gif)
+![test image size](https://files.qmax.us/vorta-screencast.gif){:width="100%"}
 
 [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) is a GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's in alpha status and currently has the following features:
 
