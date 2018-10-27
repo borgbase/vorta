@@ -1,8 +1,8 @@
 import os
 from PyQt5 import uic
-from .ssh_keys import get_private_keys
+from .utils import get_private_keys
 
-uifile = os.path.join(os.path.dirname(__file__), 'UI/addrepo.ui')
+uifile = os.path.join(os.path.dirname(__file__), 'UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
