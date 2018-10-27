@@ -33,9 +33,11 @@ class BorgThread(QtCore.QThread):
     def run(self):
         with Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env) as p:
             for line in p.stderr:
-                print(line)
                 parsed = json.loads(line)
-                self.updated.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                if parsed['type'] == 'log_message':
+                    self.updated.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                elif parsed['type'] == 'file_status':
+                    self.updated.emit(f'{parsed["path"]} ({parsed["status"]})')
 
             p.wait()
             stdout = p.stdout.read()
