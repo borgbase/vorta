@@ -29,7 +29,7 @@ $ conda env create environment.yml
 
 Qt Creator is used to edit views. Install using Homebrew and then open the .ui files in `vorta/UI`:
 ```
-$ brew cask install qt-creater
+$ brew cask install qt-creator
 $ brew install qt
 ```
 
