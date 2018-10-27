@@ -17,11 +17,12 @@ class RepoModel(peewee.Model):
         database = db
 
 
-class BackupConfigModel(peewee.Model):
+class BackupProfileModel(peewee.Model):
     """Allows the user to switch between different configurations."""
     name = peewee.CharField()
     added_at = peewee.DateTimeField(default=datetime.utcnow)
     repo = peewee.ForeignKeyField(RepoModel, default=None, null=True)
+    ssh_key = peewee.CharField(default=None, null=True)
 
     class Meta:
         database = db
@@ -30,7 +31,7 @@ class BackupConfigModel(peewee.Model):
 class SourceDirModel(peewee.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = peewee.CharField()
-    config = peewee.ForeignKeyField(BackupConfigModel, default=1)
+    config = peewee.ForeignKeyField(BackupProfileModel, default=1)
     added_at = peewee.DateTimeField(default=datetime.utcnow)
 
     class Meta:
@@ -49,6 +50,6 @@ class SnapshotModel(peewee.Model):
 
 
 db.connect()
-db.create_tables([RepoModel, BackupConfigModel, SourceDirModel, SnapshotModel])
+db.create_tables([RepoModel, BackupProfileModel, SourceDirModel, SnapshotModel])
 
-BackupConfigModel.get_or_create(id=1, name='Default')
+BackupProfileModel.get_or_create(id=1, name='Default')

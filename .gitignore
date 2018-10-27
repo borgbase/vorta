@@ -4,4 +4,5 @@ build/
 dist/
 docs/
 *.autosave
-vorta/libs
+bin/
+__pycache__

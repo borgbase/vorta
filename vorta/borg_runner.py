@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+import shutil
 from PyQt5 import QtCore
 import subprocess
 from subprocess import Popen, PIPE
@@ -11,6 +13,12 @@ class BorgThread(QtCore.QThread):
 
     def __init__(self, parent, cmd, params):
         super().__init__(parent)
+
+        # Find packaged borg binary. Prefer globally installed.
+        if not shutil.which('borg'):
+            meipass_borg = os.path.join(sys._MEIPASS, 'bin', 'borg')
+            if os.path.isfile(meipass_borg):
+                cmd[0] = meipass_borg
         self.cmd = cmd
 
         env = os.environ.copy()
@@ -23,7 +31,6 @@ class BorgThread(QtCore.QThread):
         self.params = params
 
     def run(self):
-        self.updated.emit('Adding Repo...')
         with Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env) as p:
             for line in p.stderr:
                 print(line)
