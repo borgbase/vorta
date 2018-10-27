@@ -11,7 +11,11 @@ class RepoModel(peewee.Model):
     url = peewee.CharField(unique=True)
     password = peewee.CharField()
     added_at = peewee.DateTimeField(default=datetime.utcnow)
-    encryption = peewee.CharField()
+    encryption = peewee.CharField(null=True)
+    unique_size = peewee.IntegerField(null=True)
+    unique_csize = peewee.IntegerField(null=True)
+    total_size = peewee.IntegerField(null=True)
+    total_unique_chunks = peewee.IntegerField(null=True)
 
     class Meta:
         database = db
@@ -23,7 +27,7 @@ class BackupProfileModel(peewee.Model):
     added_at = peewee.DateTimeField(default=datetime.utcnow)
     repo = peewee.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = peewee.CharField(default=None, null=True)
-
+    compression = peewee.CharField(default='lz4')
     class Meta:
         database = db
 
@@ -40,10 +44,13 @@ class SourceDirModel(peewee.Model):
 
 class SnapshotModel(peewee.Model):
     """A snapshot to a specific remote repository."""
-    id = peewee.CharField(primary_key=True)
+    snapshot_id = peewee.CharField(unique=True)
     name = peewee.CharField()
-    repo = peewee.ForeignKeyField(RepoModel)
+    repo = peewee.ForeignKeyField(RepoModel, backref='snapshots')
     time = peewee.DateTimeField()
+
+    def formatted_time(self):
+        return
 
     class Meta:
         database = db
