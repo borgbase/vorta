@@ -5,11 +5,13 @@ block_cipher = None
 
 a = Analysis(['vorta/__main__.py'],
              pathex=['/Users/manu/Workspace/vorta'],
-             binaries=[],
-             datas=[
-                ('vorta/UI/*.ui', 'vorta/UI')
+             binaries=[
+                ('bin/macosx64/borg', 'bin')
              ],
-             hiddenimports=['borg.archiver'],
+             datas=[
+                ('vorta/UI/*.ui', 'vorta/UI'),
+             ],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -40,3 +42,12 @@ app = BUNDLE(exe,
                      'NSHighResolutionCapable': 'True'
                      },
              )
+# Debug package. (inspired from borg)
+if False:
+    coll = COLLECT(exe,
+                   a.binaries,
+                   a.zipfiles,
+                   a.datas,
+                   strip=False,
+                   upx=True,
+                   name='vorta-dir')

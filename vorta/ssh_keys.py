@@ -8,7 +8,7 @@ from paramiko import SSHException
 def get_private_keys():
     key_formats = [RSAKey, ECDSAKey, Ed25519Key]
 
-    ssh_folder = os.path.join(os.path.expanduser('~'), '.ssh')
+    ssh_folder = os.path.expanduser('~/.ssh')
 
     available_private_keys = []
     for key in os.listdir(ssh_folder):
