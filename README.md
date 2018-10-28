@@ -1,4 +1,4 @@
-# Vorta - BorgBackup GUI
+# Vorta - A Boring GUI for BorgBackup
 
 ![](https://files.qmax.us/vorta-screencast-2.gif)
 
