@@ -7,7 +7,6 @@ import platform
 from datetime import datetime as dt
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-import subprocess
 from subprocess import Popen, PIPE
 
 from .models import SourceDirModel, BackupProfileModel
@@ -42,7 +41,6 @@ class BorgThread(QtCore.QThread):
     def run(self):
         with Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env) as p:
             for line in p.stderr:
-                print(line)
                 try:
                     parsed = json.loads(line)
                     if parsed['type'] == 'log_message':
@@ -70,12 +68,17 @@ class BorgThread(QtCore.QThread):
         """`borg create` is called from different places and need preparation.
         Centralize it here and return a thread to the caller.
         """
-        ret = {
-            'ok': False,
-        }
         profile = BackupProfileModel.get(id=1)
         app = QApplication.instance()
         n_backup_folders = SourceDirModel.select().count()
+
+        ret = {
+            'ok': False,
+        }
+
+        params = {'password': profile.repo.password}
+
+
 
         if app.thread and app.thread.isRunning():
             ret['message'] = 'Backup is already in progress.'
@@ -105,6 +108,7 @@ class BorgThread(QtCore.QThread):
                 pattern_file.write('\n'.join(exclude_dirs))
                 pattern_file.flush()
                 cmd.extend(['--exclude-from', pattern_file.name])
+                params['pattern_file'] = pattern_file
 
         if profile.exclude_if_present is not None:
             for f in profile.exclude_if_present.split('\n'):
@@ -116,9 +120,6 @@ class BorgThread(QtCore.QThread):
 
         for f in SourceDirModel.select():
             cmd.append(f.dir)
-
-        params = {'password': profile.repo.password,
-                  'pattern_file': pattern_file}
 
         app.thread = cls(app, cmd, params)
         ret['message'] = 'Starting Backup.'
