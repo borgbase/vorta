@@ -74,41 +74,26 @@ class RepoTab(RepoBase, RepoUI):
     def repo_select_action(self, index):
         if index <= 2:
             if index == 1:
-                repo_add_window = AddRepoWindow()
+                window = AddRepoWindow()
             else:
-                repo_add_window = ExistingRepoWindow()
+                window = ExistingRepoWindow()
 
-            repo_add_window.setParent(self, QtCore.Qt.Sheet)
-            repo_add_window.show()
-            if repo_add_window.exec_():
-                params = repo_add_window.get_values()
-
-                if index == 1:
-                    cmd = ["borg", "init", "--log-json", f"--encryption={params['encryption']}", params['repo_url']]
-                else:
-                    cmd = ["borg", "list", "--json", params['repo_url']]
-
-                self.set_status('Connecting to repo...', 0)
-                thread = BorgThread(self, cmd, params)
-                thread.updated.connect(self.repo_add_update_log)
-                thread.result.connect(self.repo_add_result)
-                thread.start()
+            window.setParent(self, QtCore.Qt.Sheet)
+            window.show()
+            if window.exec_():
+                self.process_new_repo(window.result)
         else:
             self.profile.repo = self.repoSelector.currentData()
             self.profile.save()
             self.init_repo_stats()
 
-    def repo_add_update_log(self, text):
-        self.set_status(text)
-
-    def repo_add_result(self, result):
+    def process_new_repo(self, result):
         if result['returncode'] == 0:
-            self.set_status('Successfully connected to repo.', 100)
             new_repo, _ = RepoModel.get_or_create(
                 url=result['params']['repo_url'],
                 defaults={
                     'password': result['params']['password'],
-                    # 'encryption': result['params'].get('encryption', '')
+                    'encryption': result['params'].get('encryption', 'none')
                 }
             )
             if 'cache' in result['data']:
@@ -117,7 +102,9 @@ class RepoTab(RepoBase, RepoUI):
                 new_repo.unique_csize = stats['unique_csize']
                 new_repo.unique_size = stats['unique_size']
                 new_repo.total_unique_chunks = stats['total_unique_chunks']
+            if 'encryption' in result['data']:
                 new_repo.encryption = result['data']['encryption']['mode']
+
             new_repo.save()
             self.profile.repo = new_repo.id
             self.profile.save()
@@ -135,4 +122,4 @@ class RepoTab(RepoBase, RepoUI):
                     new_snapshot.save()
             self.repoSelector.addItem(new_repo.url, new_repo.id)
             self.repoSelector.setCurrentIndex(self.repoSelector.count()-1)
-            self.init_snapshots()
+            self.repo_changed.emit(self.profile.repo.id)

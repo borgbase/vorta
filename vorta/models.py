@@ -28,6 +28,9 @@ class BackupProfileModel(peewee.Model):
     repo = peewee.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = peewee.CharField(default=None, null=True)
     compression = peewee.CharField(default='lz4')
+    exclude_patterns = peewee.TextField(null=True)
+    exclude_if_present = peewee.TextField(null=True)
+
     class Meta:
         database = db
 

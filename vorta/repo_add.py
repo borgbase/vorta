@@ -1,26 +1,60 @@
 import os
 from PyQt5 import uic
 from .utils import get_private_keys, get_relative_asset
+from .borg_runner import BorgThread
 
 uifile = get_relative_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
 class AddRepoWindow(AddRepoBase, AddRepoUI):
+    connection_message = 'Setting up new repo...'
+    cmd = ["borg", "init", "--log-json"]
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
         self.closeButton.clicked.connect(self.close)
-        self.saveButton.clicked.connect(self.validate)
+        self.saveButton.clicked.connect(self.run)
 
         self.init_encryption()
         self.init_ssh_key()
 
+    @property
+    def values(self):
+        out = dict(
+            ssh_key=self.sshComboBox.currentData(),
+            repo_url=self.repoURL.text(),
+            password=self.passwordLineEdit.text()
+        )
+        if self.__class__ == AddRepoWindow:
+            out['encryption'] = self.encryptionComboBox.currentData()
+        return out
+
+    def run(self):
+        if self.validate():
+            self.set_status(self.connection_message)
+            cmd = self.cmd + [self.values['repo_url']]
+            thread = BorgThread(self, cmd, self.values)
+            thread.updated.connect(self.set_status)
+            thread.result.connect(self.run_result)
+            thread.start()
+
+    def set_status(self, text):
+        self.errorText.setText(text)
+        self.errorText.repaint()
+
+    def run_result(self, result):
+        if result['returncode'] == 0:
+            self.result = result
+            self.accept()
+
     def init_encryption(self):
-        self.encryptionComboBox.model().item(0).setEnabled(False)
-        self.encryptionComboBox.addItem('Repokey-Blake2 (Recommended)', 'repokey-blake2')
+        self.encryptionComboBox.addItem('Repokey-Blake2 (Recommended, key stored remotely)', 'repokey-blake2')
         self.encryptionComboBox.addItem('Repokey', 'repokey')
+        self.encryptionComboBox.addItem('Keyfile-Blake2 (Key stored locally)', 'keyfile-blake2')
+        self.encryptionComboBox.addItem('Keyfile', 'keyfile')
         self.encryptionComboBox.addItem('None (not recommended', 'none')
 
     def init_ssh_key(self):
@@ -29,34 +63,27 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})', key['filename'])
 
     def validate(self):
-        if len(self.repoURL.text()) < 5:
-            self.errorText.setText('Please enter a repo URL.')
-            return
+        if len(self.values['repo_url']) < 5 or ':' not in self.values['repo_url']:
+            self.set_status('Please enter a valid repo URL including hostname and path.')
+            return False
 
-        if self.encryptionComboBox.isVisible() and self.encryptionComboBox.currentData() is None:
-            self.errorText.setText('Please choose an encryption mode.')
-            return
+        if self.__class__ == AddRepoWindow:
+            if self.values['encryption'] != 'none' and len(self.values['password']) < 8:
+                self.set_status('Please use a longer password.')
+                return False
 
-        self.cmd = ["borg", "init", "--log-json", f"--encryption={params['encryption']}", params['repo_url']]
+            self.cmd.append(f"--encryption={self.values['encryption']}")
 
-    def get_values(self):
-        return {
-            'ssh_key': self.sshComboBox.currentData(),
-            'encryption': self.encryptionComboBox.currentData(),
-            'repo_url': self.repoURL.text(),
-            'password': self.passwordLineEdit.text()
-        }
+        return True
 
 
 class ExistingRepoWindow(AddRepoWindow):
+    connection_message = 'Validating existing repo...'
+    cmd = ["borg", "list", "--json"]
+
     def __init__(self):
         super().__init__()
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
+        self.title.setText('Connect to existing Repository')
 
-    def get_values(self):
-        return {
-            'ssh_key': self.sshComboBox.currentData(),
-            'repo_url': self.repoURL.text(),
-            'password': self.passwordLineEdit.text()
-        }
