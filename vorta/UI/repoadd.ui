@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>287</height>
+    <width>555</width>
+    <height>257</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,16 +23,16 @@
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>
      <property name="leftMargin">
-      <number>20</number>
+      <number>5</number>
      </property>
      <property name="topMargin">
-      <number>20</number>
+      <number>5</number>
      </property>
      <property name="rightMargin">
-      <number>20</number>
+      <number>5</number>
      </property>
      <property name="bottomMargin">
-      <number>20</number>
+      <number>5</number>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
@@ -101,7 +101,7 @@
         <enum>Qt::PlainText</enum>
        </property>
        <property name="wordWrap">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>

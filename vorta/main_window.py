@@ -76,7 +76,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createStartBtn.repaint()
             self.set_status(progress_max=100)
         except:
-            print('no thread')
+            pass
 
     def create_get_result(self, result):
         self.createStartBtn.setEnabled(True)
@@ -86,9 +86,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
             new_snapshot, created = SnapshotModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
-                    'name':result['data']['archive']['name'],
-                    'time':parser.parse(result['data']['archive']['start']),
-                    'repo':self.profile.repo
+                    'name': result['data']['archive']['name'],
+                    'time': parser.parse(result['data']['archive']['start']),
+                    'repo': self.profile.repo
                 }
             )
             new_snapshot.save()
