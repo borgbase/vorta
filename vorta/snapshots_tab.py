@@ -29,6 +29,10 @@ class SnapshotTab(SnapshotBase, SnapshotUI):
 
         self.populate()
 
+    def set_status(self, text):
+        self.mountErrors.setText(text)
+        self.mountErrors.repaint()
+
     def populate(self):
         if self.profile.repo:
             snapshots = [s for s in self.profile.repo.snapshots.select()]
@@ -61,8 +65,9 @@ class SnapshotTab(SnapshotBase, SnapshotUI):
         if mountPoint:
             cmd.append(mountPoint)
 
-            self.set_status('Mounting snapshot into folder', 0)
-            thread = BorgThread(self, cmd, {})
+            self.set_status('Mounting snapshot into folder...')
+            params = {'password': self.profile.repo.password}
+            thread = BorgThread(self, cmd, params)
             thread.updated.connect(self.mount_update_log)
             thread.result.connect(self.mount_get_result)
             thread.start()
@@ -71,6 +76,5 @@ class SnapshotTab(SnapshotBase, SnapshotUI):
         self.mountErrors.setText(text)
 
     def mount_get_result(self, result):
-        self.set_status(progress_max=100)
         if result['returncode'] == 0:
             self.set_status('Mounted successfully.')

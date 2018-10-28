@@ -27,15 +27,14 @@ class BorgThread(QtCore.QThread):
                 cmd[0] = meipass_borg
         self.cmd = cmd
 
-        print(cmd)
-
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
         if params.get('password') and params['password']:
             env['BORG_PASSPHRASE'] = params['password']
 
+        env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
         if params.get('ssh_key') and params['ssh_key']:
-            env['BORG_RSH'] = f'ssh -i ~/.ssh/{params["ssh_key"]}'
+            env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
         self.env = env
         self.params = params
@@ -93,22 +92,24 @@ class BorgThread(QtCore.QThread):
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', profile.compression]
 
         # Add excludes
-        # Inspired by borgmatic/borgmatic/borg/create.py
-        exclude_dirs = []
-        for p in profile.exclude_patterns.split('\n'):
-            if p.strip():
-                expanded_directory = os.path.expanduser(p.strip())
-                exclude_dirs.append(expanded_directory)
+        # Partly inspired by borgmatic/borgmatic/borg/create.py
+        if profile.exclude_patterns is not None:
+            exclude_dirs = []
+            for p in profile.exclude_patterns.split('\n'):
+                if p.strip():
+                    expanded_directory = os.path.expanduser(p.strip())
+                    exclude_dirs.append(expanded_directory)
 
-        if exclude_dirs:
-            pattern_file = tempfile.NamedTemporaryFile('w')
-            pattern_file.write('\n'.join(exclude_dirs))
-            pattern_file.flush()
-            cmd.extend(['--exclude-from', pattern_file.name])
+            if exclude_dirs:
+                pattern_file = tempfile.NamedTemporaryFile('w')
+                pattern_file.write('\n'.join(exclude_dirs))
+                pattern_file.flush()
+                cmd.extend(['--exclude-from', pattern_file.name])
 
-        for f in profile.exclude_if_present.split('\n'):
-            if f.strip():
-                cmd.extend(['--exclude-if-present', f.strip()])
+        if profile.exclude_if_present is not None:
+            for f in profile.exclude_if_present.split('\n'):
+                if f.strip():
+                    cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
         cmd.append(f'{profile.repo.url}::{platform.node()}-{dt.now().isoformat()}')
