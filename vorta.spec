@@ -2,7 +2,6 @@
 
 block_cipher = None
 
-
 a = Analysis(['vorta/__main__.py'],
              pathex=['/Users/manu/Workspace/vorta'],
              binaries=[
@@ -35,15 +34,18 @@ exe = EXE(pyz,
           upx=True,
           runtime_tmpdir=None,
           console=False )
+
 app = BUNDLE(exe,
              name='Vorta.app',
-             icon=None,
-             bundle_identifier=None,
+             icon='vorta/UI/icons/app-icon.icns',
+             bundle_identifier='com.borgbase.client.macos',
              info_plist={
                      'NSHighResolutionCapable': 'True',
-                     'LSUIElement': '1'
+                     'LSUIElement': '1',
+                     'CFBundleShortVersionString': '0.0.3'
                      },
              )
+
 # Debug package. (inspired from borg)
 if False:
     coll = COLLECT(exe,

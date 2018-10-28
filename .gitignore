@@ -6,3 +6,4 @@ docs/
 *.autosave
 bin/
 __pycache__
+Makefile
