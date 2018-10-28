@@ -159,30 +159,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="fileMenu">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <widget class="QMenu" name="menuBackup_Configuration">
-     <property name="title">
-      <string>Backup Profile</string>
-     </property>
-     <addaction name="actionLatest"/>
-    </widget>
-    <addaction name="menuBackup_Configuration"/>
-    <addaction name="actionResetApp"/>
-   </widget>
-   <addaction name="fileMenu"/>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLatest">
    <property name="text">

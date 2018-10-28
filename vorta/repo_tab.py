@@ -5,10 +5,10 @@ from PyQt5 import uic, QtCore
 from .models import RepoModel, SnapshotModel
 from .repo_add import AddRepoWindow, ExistingRepoWindow
 from .borg_runner import BorgThread
-from .utils import prettyBytes, get_private_keys
+from .utils import prettyBytes, get_private_keys, get_relative_asset
 from .ssh_add import SSHAddWindow
 
-uifile = os.path.join(os.path.dirname(__file__), 'UI/repotab.ui')
+uifile = get_relative_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
@@ -37,7 +37,9 @@ class RepoTab(RepoBase, RepoUI):
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
-        self.init_repo_stats()
+
+        if self.profile.repo:
+            self.init_repo_stats()
 
     def init_repo_stats(self):
         self.sizeCompressed.setText(prettyBytes(self.profile.repo.unique_csize))

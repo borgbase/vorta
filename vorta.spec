@@ -9,7 +9,8 @@ a = Analysis(['vorta/__main__.py'],
                 ('bin/macosx64/borg', 'bin')
              ],
              datas=[
-                ('vorta/UI/*.ui', 'vorta/UI'),
+                ('vorta/UI/*.ui', 'UI'),
+                ('vorta/UI/icons/*', 'UI/icons'),
              ],
              hiddenimports=[],
              hookspath=[],
@@ -39,7 +40,8 @@ app = BUNDLE(exe,
              icon=None,
              bundle_identifier=None,
              info_plist={
-                     'NSHighResolutionCapable': 'True'
+                     'NSHighResolutionCapable': 'True',
+                     'LSUIElement': '1'
                      },
              )
 # Debug package. (inspired from borg)
