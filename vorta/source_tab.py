@@ -19,6 +19,12 @@ class SourceTab(SourceBase, SourceUI):
         for source in SourceDirModel.select():
             self.sourceDirectoriesWidget.addItem(source.dir)
 
+        self.excludePatternsField.appendPlainText(self.profile.exclude_patterns)
+        self.excludeIfPresentField.appendPlainText(self.profile.exclude_if_present)
+
+        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
+        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+
     def source_add(self):
         options = QFileDialog.Options()
         options |= QFileDialog.ShowDirsOnly
@@ -35,3 +41,11 @@ class SourceTab(SourceBase, SourceUI):
         db_item = SourceDirModel.get(dir=item.text())
         db_item.delete_instance()
         item = None
+
+    def save_exclude_patterns(self):
+        self.profile.exclude_patterns = self.excludePatternsField.toPlainText()
+        self.profile.save()
+
+    def save_exclude_if_present(self):
+        self.profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
+        self.profile.save()

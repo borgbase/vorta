@@ -1,11 +1,9 @@
-import os
-import platform
-from datetime import datetime as dt
+import sys
 from dateutil import parser
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import uic
-
-from .config import APP_NAME, remove_config
+from PyQt5.QtWidgets import QApplication, QShortcut
+from PyQt5 import uic, QtCore
+from PyQt5.QtGui import QKeySequence
+from .config import APP_NAME
 from .models import SnapshotModel, BackupProfileModel, SourceDirModel
 from .borg_runner import BorgThread
 from .repo_tab import RepoTab
@@ -24,6 +22,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setupUi(self)
         self.setWindowTitle(APP_NAME)
         self.profile = BackupProfileModel.get(id=1)
+        self.app = QApplication.instance()
 
         self.repoTab = RepoTab(self.repoTabSlot)
         self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
@@ -32,6 +31,21 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
 
         self.createStartBtn.clicked.connect(self.create_action)
+        self.cancelButton.clicked.connect(self.cancel_create_action)
+
+        QShortcut(QKeySequence("Ctrl+W"), self).activated.connect(self.on_close_window)
+        QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(self.on_close_window)
+
+        # Connect to existing thread.
+        if self.app.thread and self.app.thread.isRunning():
+            self.createStartBtn.setEnabled(False)
+            self.cancelButton.setEnabled(True)
+            self.set_status('Connected to existing backup process.', progress_max=0)
+            self.app.thread.updated.connect(self.create_update_log)
+            self.app.thread.result.connect(self.create_get_result)
+
+    def on_close_window(self):
+        self.close()
 
     def set_status(self, text=None, progress_max=None):
         if text:
@@ -41,22 +55,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createProgressText.repaint()
 
     def create_action(self):
-        n_backup_folders = SourceDirModel.select().count()
-        if n_backup_folders == 0:
-            self.set_status('Add some folders to back up first.')
-            return
-        self.set_status('Starting Backup.', progress_max=0)
-        self.createStartBtn.setEnabled(False)
-        self.createStartBtn.repaint()
-
-        repo = self.profile.repo
-        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', self.profile.compression,
-               f'{repo.url}::{platform.node()}-{dt.now().isoformat()}'
-        ]
-        for f in SourceDirModel.select():
-            cmd.append(f.dir)
-
-        thread = BorgThread(self, cmd, {})
+        thread_msg = BorgThread.create_thread_factory()
+        if thread_msg['ok']:
+            self.set_status(thread_msg['message'], progress_max=0)
+            self.createStartBtn.setEnabled(False)
+            self.createStartBtn.repaint()
+        thread = thread_msg['thread']
         thread.updated.connect(self.create_update_log)
         thread.result.connect(self.create_get_result)
         thread.start()
@@ -64,19 +68,31 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def create_update_log(self, text):
         self.set_status(text)
 
+    def cancel_create_action(self):
+        try:
+            self.app.thread.terminate()
+            self.app.thread.wait()
+            self.createStartBtn.setEnabled(True)
+            self.createStartBtn.repaint()
+            self.set_status(progress_max=100)
+        except:
+            print('no thread')
+
     def create_get_result(self, result):
         self.createStartBtn.setEnabled(True)
         self.createStartBtn.repaint()
+        self.set_status(progress_max=100)
         if result['returncode'] == 0:
-            self.set_status(progress_max=100)
-            new_snapshot = SnapshotModel(
+            new_snapshot, created = SnapshotModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
-                name=result['data']['archive']['name'],
-                time=parser.parse(result['data']['archive']['start']),
-                repo=self.profile.repo
+                defaults={
+                    'name':result['data']['archive']['name'],
+                    'time':parser.parse(result['data']['archive']['start']),
+                    'repo':self.profile.repo
+                }
             )
             new_snapshot.save()
-            if 'cache' in result['data']:
+            if 'cache' in result['data'] and created:
                 stats = result['data']['cache']['stats']
                 repo = self.profile.repo
                 repo.total_size = stats['total_size']
