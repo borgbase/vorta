@@ -8,7 +8,9 @@ from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 
-uifile = os.path.join(os.path.dirname(__file__), 'UI/sshadd.ui')
+from .utils import get_relative_asset
+
+uifile = get_relative_asset('UI/sshadd.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 FORMAT_MAPPING = {

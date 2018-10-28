@@ -11,9 +11,10 @@ from .borg_runner import BorgThread
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
+from .utils import get_relative_asset
 
 
-uifile = os.path.join(os.path.dirname(__file__), 'UI/mainwindow.ui')
+uifile = get_relative_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
@@ -31,7 +32,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
 
         self.createStartBtn.clicked.connect(self.create_action)
-        self.actionResetApp.triggered.connect(self.menu_reset)
 
     def set_status(self, text=None, progress_max=None):
         if text:
@@ -86,6 +86,3 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 repo.save()
             self.snapshotTab.populate()
 
-    def menu_reset(self):
-        remove_config()
-        QApplication.instance().quit()

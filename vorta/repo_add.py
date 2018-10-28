@@ -1,8 +1,8 @@
 import os
 from PyQt5 import uic
-from .utils import get_private_keys
+from .utils import get_private_keys, get_relative_asset
 
-uifile = os.path.join(os.path.dirname(__file__), 'UI/repoadd.ui')
+uifile = get_relative_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
@@ -37,7 +37,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.errorText.setText('Please choose an encryption mode.')
             return
 
-        self.accept()
+        self.cmd = ["borg", "init", "--log-json", f"--encryption={params['encryption']}", params['repo_url']]
 
     def get_values(self):
         return {

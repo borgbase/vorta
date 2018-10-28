@@ -1,4 +1,5 @@
 import os
+import sys
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
@@ -42,3 +43,12 @@ def prettyBytes(size):
         size /=  power
         n += 1
     return str(round(size))+Dic_powerN[n]+'B'
+
+def get_relative_asset(path):
+    if getattr(sys, 'frozen', False):
+        # we are running in a bundle
+        bundle_dir = sys._MEIPASS
+    else:
+        # we are running in a normal Python environment
+        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(bundle_dir, path)
