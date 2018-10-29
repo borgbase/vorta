@@ -4,7 +4,8 @@
 
 [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) is a GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's in alpha status and currently has the following features:
 
-- [x] Select and manage SSH keys
+- [x] Select and create SSH keys without using the Terminal
+- [x] Securely save repo password in Keychain instead of database.
 - [x] Initialize new remote Borg repositories
 - [x] Create new Borg snapshots (backups) from local folders
 - [x] Mount existing snapshots with FUSE
@@ -14,12 +15,10 @@
 Missing features:
 
 - [ ] Scheduling for background backups.
-- [ ] Rule-based scheduling by time, Wifi SSID, etc.
 - [ ] Repo pruning
 - [ ] Repo checking
-- [ ] Securely save repo password in Keychain instead of database.
-- [ ] Handle encrypted SSH keys
-- [ ] Check for duplicate source dirs
+- [ ] Save SSH keys with password. Store password in Keychain.
+- [ ] Rule-based scheduling by time, Wifi SSID, etc.
 
 ## Download
 The app package under [Releases](https://github.com/borgbase/vorta/releases) should include everything. Just download, unzip and run.

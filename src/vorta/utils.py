@@ -44,11 +44,12 @@ def prettyBytes(size):
         n += 1
     return str(round(size))+Dic_powerN[n]+'B'
 
-def get_relative_asset(path):
+
+def get_relative_asset(path, caller):
     if getattr(sys, 'frozen', False):
         # we are running in a bundle
         bundle_dir = sys._MEIPASS
     else:
         # we are running in a normal Python environment
-        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+        bundle_dir = os.path.dirname(os.path.abspath(caller))
     return os.path.join(bundle_dir, path)

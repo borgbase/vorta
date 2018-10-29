@@ -1,11 +1,10 @@
-import os
-from PyQt5 import uic, QtCore
+from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
-from .borg_runner import BorgThread
-from .utils import get_relative_asset
+from ..borg_runner import BorgThread
+from ..utils import get_relative_asset
 
-uifile = get_relative_asset('UI/snapshottab.ui')
+uifile = get_relative_asset('UI/snapshottab.ui', __file__)
 SnapshotUI, SnapshotBase = uic.loadUiType(uifile)
 
 

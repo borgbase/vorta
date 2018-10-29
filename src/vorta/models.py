@@ -1,15 +1,14 @@
 import peewee
 import os
 from datetime import datetime
-import vorta.config as config
+from .config import SETTINGS_DIR
 
-db = peewee.SqliteDatabase(os.path.join(config.SETTINGS_DIR, 'settings.db'))
+db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
 
 
 class RepoModel(peewee.Model):
     """A single remote repo with unique URL."""
     url = peewee.CharField(unique=True)
-    password = peewee.CharField()
     added_at = peewee.DateTimeField(default=datetime.utcnow)
     encryption = peewee.CharField(null=True)
     unique_size = peewee.IntegerField(null=True)

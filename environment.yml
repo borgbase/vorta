@@ -14,3 +14,4 @@ dependencies:
   - pyqt5
   - peewee
   - python-dateutil
+  - keyring

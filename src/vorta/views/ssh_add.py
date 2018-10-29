@@ -1,6 +1,5 @@
 import os
-import subprocess
-from PyQt5 import uic, QtCore
+from PyQt5 import uic
 from PyQt5.QtCore import QProcess
 from PyQt5.QtWidgets import QApplication
 
@@ -8,9 +7,9 @@ from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 
-from .utils import get_relative_asset
+from ..utils import get_relative_asset
 
-uifile = get_relative_asset('UI/sshadd.ui')
+uifile = get_relative_asset('UI/sshadd.ui', __file__)
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 FORMAT_MAPPING = {
