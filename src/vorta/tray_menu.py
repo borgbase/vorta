@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon
+from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon, QMessageBox, QDialog
 from .views.main_window import MainWindow
 from PyQt5.QtGui import QIcon
 
@@ -14,7 +14,7 @@ class TrayMenu(QSystemTrayIcon):
         self.app = parent
         menu = QMenu()
 
-        self.status = menu.addAction("Sleeping")
+        self.status = menu.addAction(self._get_scheduler_status())
         self.status.setEnabled(False)
 
         self.create_action = menu.addAction("Backup Now")
@@ -49,25 +49,30 @@ class TrayMenu(QSystemTrayIcon):
         QApplication.instance().quit()
 
     def on_create_backup(self):
-        thread_msg = BorgThread.create_thread_factory()
-        if thread_msg['ok']:
-            thread_msg['thread'].start()
-        else:
-            error_dialog = QtWidgets.QErrorMessage()
-            error_dialog.showMessage(thread_msg['message'])
-            error_dialog.show()
-
-    def on_cancel_backup(self):
         if self.app.thread and self.app.thread.isRunning():
             self.app.thread.process.kill()
             self.app.thread.terminate()
+        else:
+            msg = BorgThread.prepare_runner()
+            if msg['ok']:
+                self.app.thread = BorgThread(msg['cmd'], msg['params'])
+                self.app.thread.start()
+            else:
+                print(msg['message'])
+                # TODO: error dialog
 
     def on_user_click(self):
+        """Adjust labels to reflect current status."""
         if self.app.thread and self.app.thread.isRunning():
             self.status.setText('Backup in Progress')
             self.create_action.setText('Cancel Backup')
-            self.create_action.triggered.connect(self.on_cancel_backup)
         else:
-            self.status.setText('Sleeping')
+            self.status.setText(self._get_scheduler_status())
             self.create_action.setText('Backup Now')
-            self.create_action.triggered.connect(self.on_create_backup)
+
+    def _get_scheduler_status(self):
+        if self.app.scheduler is not None:
+            job = self.app.scheduler.get_job('create-backup')
+            return f"Next run: {job.next_run_time.strftime('%Y-%m-%d %H:%M')}"
+        else:
+            return 'No backups scheduled'

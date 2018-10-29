@@ -39,6 +39,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
             item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
             if wifi.allowed:
                 item.setCheckState(QtCore.Qt.Checked)
+            else:
+                item.setCheckState(QtCore.Qt.Unchecked)
             self.wifiListWidget.addItem(item)
 
     def init_logs(self):

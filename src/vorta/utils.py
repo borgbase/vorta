@@ -6,6 +6,7 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
 from PyQt5.QtWidgets import QApplication
+import subprocess
 
 from .models import WifiSettingModel
 
@@ -73,3 +74,20 @@ def get_sorted_wifis():
                                                     'allowed': True})
 
     return WifiSettingModel.select().order_by(-WifiSettingModel.last_connected)
+
+
+def get_current_wifi():
+    """
+    Get current SSID or None if Wifi is off.
+
+    From https://gist.github.com/keithweaver/00edf356e8194b89ed8d3b7bbead000c
+    """
+    cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport','-I']
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    out, err = process.communicate()
+    process.wait()
+    for line in out.decode("utf-8").split('\n'):
+        split_line = line.strip().split(':')
+        if split_line[0] == 'SSID':
+            return split_line[1]
+
