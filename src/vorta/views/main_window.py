@@ -8,6 +8,7 @@ from ..borg_runner import BorgThread
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
+from .schedule_tab import ScheduleTab
 from ..utils import get_asset
 
 
@@ -23,12 +24,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profile = BackupProfileModel.get(id=1)
         self.app = QApplication.instance()
 
+        # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
-        self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
-
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
+        self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
 
+        self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
         self.createStartBtn.clicked.connect(self.create_action)
         self.cancelButton.clicked.connect(self.cancel_create_action)
 

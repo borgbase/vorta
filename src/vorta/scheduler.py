@@ -1,12 +1,12 @@
 from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import interval
+from apscheduler.triggers import cron
 
 def tick():
     print('scheduler')
 
 def init_scheduler():
     s = QtScheduler()
-    trigger = interval.IntervalTrigger(seconds=3)
-    s.add_job(tick, trigger, seconds=3)
+    trigger = cron.CronTrigger(second='*/3')
+    s.add_job(tick, trigger, id='create-backup')
     s.start()
     return s
