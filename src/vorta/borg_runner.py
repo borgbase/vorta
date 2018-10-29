@@ -38,31 +38,32 @@ class BorgThread(QtCore.QThread):
 
         self.env = env
         self.params = params
+        self.process = None
 
     def run(self):
-        with Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env) as p:
-            for line in p.stderr:
-                try:
-                    parsed = json.loads(line)
-                    if parsed['type'] == 'log_message':
-                        self.updated.emit(f'{parsed["levelname"]}: {parsed["message"]}')
-                    elif parsed['type'] == 'file_status':
-                        self.updated.emit(f'{parsed["path"]} ({parsed["status"]})')
-                except json.decoder.JSONDecodeError:
-                    self.updated.emit(line.strip())
-
-            p.wait()
-            stdout = p.stdout.read()
-            result = {
-                'params': self.params,
-                'returncode': p.returncode,
-            }
+        self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env)
+        for line in iter(self.process.stderr.readline, b''):
             try:
-                result['data'] = json.loads(stdout)
-            except:
-                result['data'] = {}
+                parsed = json.loads(line)
+                if parsed['type'] == 'log_message':
+                    self.updated.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                elif parsed['type'] == 'file_status':
+                    self.updated.emit(f'{parsed["path"]} ({parsed["status"]})')
+            except json.decoder.JSONDecodeError:
+                self.updated.emit(line.strip())
 
-            self.result.emit(result)
+        self.process.wait()
+        stdout = self.process.stdout.read()
+        result = {
+            'params': self.params,
+            'returncode': self.process.returncode,
+        }
+        try:
+            result['data'] = json.loads(stdout)
+        except:
+            result['data'] = {}
+
+        self.result.emit(result)
 
     @classmethod
     def create_thread_factory(cls):

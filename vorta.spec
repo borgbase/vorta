@@ -2,14 +2,14 @@
 
 block_cipher = None
 
-a = Analysis(['vorta/__main__.py'],
-             pathex=['/Users/manu/Workspace/vorta'],
+a = Analysis(['src/vorta/__main__.py'],
+             pathex=['/Users/manu/Workspace/vorta/src'],
              binaries=[
                 ('bin/macosx64/borg', 'bin')
              ],
              datas=[
-                ('vorta/UI/*.ui', 'UI'),
-                ('vorta/UI/icons/*', 'UI/icons'),
+                ('src/vorta/assets/UI/*', 'assets/UI'),
+                ('src/vorta/assets/icons/*', 'assets/icons'),
              ],
              hiddenimports=[],
              hookspath=[],
@@ -37,7 +37,7 @@ exe = EXE(pyz,
 
 app = BUNDLE(exe,
              name='Vorta.app',
-             icon='vorta/UI/icons/app-icon.icns',
+             icon='src/vorta/assets/icons/app-icon.icns',
              bundle_identifier='com.borgbase.client.macos',
              info_plist={
                      'NSHighResolutionCapable': 'True',

@@ -4,10 +4,10 @@ import keyring
 
 from ..models import RepoModel, SnapshotModel
 from .repo_add import AddRepoWindow, ExistingRepoWindow
-from ..utils import prettyBytes, get_private_keys, get_relative_asset
+from ..utils import prettyBytes, get_private_keys, get_asset
 from .ssh_add import SSHAddWindow
 
-uifile = get_relative_asset('UI/repotab.ui', __file__)
+uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 

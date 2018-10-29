@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from .tray_menu import TrayMenu
-from .scheduler import init_scheduler
+from vorta.tray_menu import TrayMenu
+from vorta.scheduler import init_scheduler
 
 app = QApplication(sys.argv)
 app.thread = None

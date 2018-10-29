@@ -8,10 +8,10 @@ from ..borg_runner import BorgThread
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
-from ..utils import get_relative_asset
+from ..utils import get_asset
 
 
-uifile = get_relative_asset('UI/mainwindow.ui', __file__)
+uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
@@ -69,6 +69,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def cancel_create_action(self):
         try:
+            self.app.thread.process.kill()
             self.app.thread.terminate()
             self.app.thread.wait()
             self.createStartBtn.setEnabled(True)
