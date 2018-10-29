@@ -1,14 +1,13 @@
-import os
 from dateutil import parser
 from PyQt5 import uic, QtCore
+import keyring
 
-from .models import RepoModel, SnapshotModel
+from ..models import RepoModel, SnapshotModel
 from .repo_add import AddRepoWindow, ExistingRepoWindow
-from .borg_runner import BorgThread
-from .utils import prettyBytes, get_private_keys, get_relative_asset
+from ..utils import prettyBytes, get_private_keys, get_relative_asset
 from .ssh_add import SSHAddWindow
 
-uifile = get_relative_asset('UI/repotab.ui')
+uifile = get_relative_asset('UI/repotab.ui', __file__)
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
@@ -92,7 +91,6 @@ class RepoTab(RepoBase, RepoUI):
             new_repo, _ = RepoModel.get_or_create(
                 url=result['params']['repo_url'],
                 defaults={
-                    'password': result['params']['password'],
                     'encryption': result['params'].get('encryption', 'none')
                 }
             )
@@ -104,6 +102,9 @@ class RepoTab(RepoBase, RepoUI):
                 new_repo.total_unique_chunks = stats['total_unique_chunks']
             if 'encryption' in result['data']:
                 new_repo.encryption = result['data']['encryption']['mode']
+            if new_repo.encryption is not None and new_repo.encryption != 'none':
+                keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
+
 
             new_repo.save()
             self.profile.repo = new_repo.id

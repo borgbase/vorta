@@ -1,9 +1,8 @@
-import os
 from PyQt5 import uic
-from .utils import get_private_keys, get_relative_asset
-from .borg_runner import BorgThread
+from ..utils import get_private_keys, get_relative_asset
+from ..borg_runner import BorgThread
 
-uifile = get_relative_asset('UI/repoadd.ui')
+uifile = get_relative_asset('UI/repoadd.ui', __file__)
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 

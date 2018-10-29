@@ -1,18 +1,17 @@
-import sys
 from dateutil import parser
 from PyQt5.QtWidgets import QApplication, QShortcut
-from PyQt5 import uic, QtCore
+from PyQt5 import uic
 from PyQt5.QtGui import QKeySequence
-from .config import APP_NAME
-from .models import SnapshotModel, BackupProfileModel, SourceDirModel
-from .borg_runner import BorgThread
+from ..config import APP_NAME
+from ..models import SnapshotModel, BackupProfileModel
+from ..borg_runner import BorgThread
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
-from .utils import get_relative_asset
+from ..utils import get_relative_asset
 
 
-uifile = get_relative_asset('UI/mainwindow.ui')
+uifile = get_relative_asset('UI/mainwindow.ui', __file__)
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 

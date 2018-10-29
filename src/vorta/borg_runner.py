@@ -4,6 +4,7 @@ import sys
 import shutil
 import tempfile
 import platform
+import keyring
 from datetime import datetime as dt
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -76,8 +77,9 @@ class BorgThread(QtCore.QThread):
             'ok': False,
         }
 
-        params = {'password': profile.repo.password}
+        params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
 
+        print(params)
 
 
         if app.thread and app.thread.isRunning():

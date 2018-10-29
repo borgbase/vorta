@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMenu, QAction, QApplication, QSystemTrayIcon
-from vorta.main_window import MainWindow
+from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon
+from .views.main_window import MainWindow
 from PyQt5.QtGui import QIcon
 
 from .utils import get_relative_asset
@@ -9,7 +9,7 @@ from .borg_runner import BorgThread
 
 class TrayMenu(QSystemTrayIcon):
     def __init__(self, parent=None):
-        icon = QIcon(get_relative_asset('UI/icons/hdd-o.png'))
+        icon = QIcon(get_relative_asset('views/UI/icons/hdd-o.png', __file__))
         QSystemTrayIcon.__init__(self, icon, parent)
         self.app = parent
         menu = QMenu()

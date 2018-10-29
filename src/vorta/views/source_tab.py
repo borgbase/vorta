@@ -1,10 +1,9 @@
-import os
-from PyQt5 import uic, QtCore
+from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog
-from .models import SourceDirModel
-from .utils import get_relative_asset
+from ..models import SourceDirModel
+from ..utils import get_relative_asset
 
-uifile = get_relative_asset('UI/sourcetab.ui')
+uifile = get_relative_asset('UI/sourcetab.ui', __file__)
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
 
@@ -32,9 +31,10 @@ class SourceTab(SourceBase, SourceUI):
         fileName = QFileDialog.getExistingDirectory(
             self, "Choose Backup Directory", "", options=options)
         if fileName:
-            self.sourceDirectoriesWidget.addItem(fileName)
-            new_source = SourceDirModel(dir=fileName)
-            new_source.save()
+            new_source, created = SourceDirModel.get_or_create(dir=fileName)
+            if created:
+                self.sourceDirectoriesWidget.addItem(fileName)
+                new_source.save()
 
     def source_remove(self):
         item = self.sourceDirectoriesWidget.takeItem(self.sourceDirectoriesWidget.currentRow())
