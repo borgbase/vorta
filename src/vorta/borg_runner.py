@@ -10,7 +10,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from .models import SourceDirModel, BackupProfileModel
+from .models import SourceDirModel, BackupProfileModel, EventLogModel
 
 
 class BorgThread(QtCore.QThread):
@@ -31,18 +31,22 @@ class BorgThread(QtCore.QThread):
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
         if params.get('password') and params['password']:
             env['BORG_PASSPHRASE'] = params['password']
+            params['password'] = '***'
 
         env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
         if params.get('ssh_key') and params['ssh_key']:
             env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
         self.env = env
+        self.profile = BackupProfileModel.get(id=1)
         self.params = params
         self.process = None
 
     def run(self):
+        log_entry = EventLogModel(category='borg-run', subcommand=self.cmd[1], params=self.params)
+        log_entry.save()
         self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env)
-        for line in iter(self.process.stderr.readline, b''):
+        for line in iter(self.process.stderr.readline, ''):
             try:
                 parsed = json.loads(line)
                 if parsed['type'] == 'log_message':
@@ -57,12 +61,15 @@ class BorgThread(QtCore.QThread):
         result = {
             'params': self.params,
             'returncode': self.process.returncode,
+            'cmd': self.cmd
         }
         try:
             result['data'] = json.loads(stdout)
         except:
             result['data'] = {}
 
+        log_entry.returncode = self.process.returncode
+        log_entry.save()
         self.result.emit(result)
 
     @classmethod
@@ -79,9 +86,6 @@ class BorgThread(QtCore.QThread):
         }
 
         params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
-
-        print(params)
-
 
         if app.thread and app.thread.isRunning():
             ret['message'] = 'Backup is already in progress.'

@@ -63,7 +63,6 @@ class RepoTab(RepoBase, RepoUI):
         else:
             self.profile.ssh_key = self.sshComboBox.itemData(index)
             self.profile.save()
-            print('set ssh key to', self.profile.ssh_key)
 
 
     def compression_select_action(self, index):

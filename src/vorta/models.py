@@ -1,7 +1,22 @@
 import peewee
 import os
+import json
 from datetime import datetime
 from .config import SETTINGS_DIR
+
+class JSONField(peewee.TextField):
+    """
+    Class to "fake" a JSON field with a text field. Not efficient but works nicely
+
+    From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
+    """
+    def db_value(self, value):
+        """Convert the python value for storage in the database."""
+        return value if value is None else json.dumps(value)
+
+    def python_value(self, value):
+        """Convert the database value to a pythonic value."""
+        return value if value is None else json.loads(value)
 
 db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
 
@@ -29,6 +44,11 @@ class BackupProfileModel(peewee.Model):
     compression = peewee.CharField(default='lz4')
     exclude_patterns = peewee.TextField(null=True)
     exclude_if_present = peewee.TextField(null=True)
+    schedule_mode = peewee.CharField(default='off')
+    schedule_interval_hours = peewee.IntegerField(default=3)
+    schedule_interval_minutes = peewee.IntegerField(default=42)
+    schedule_fixed_hour = peewee.IntegerField(default=3)
+    schedule_fixed_minute = peewee.IntegerField(default=42)
 
     class Meta:
         database = db
@@ -58,7 +78,33 @@ class SnapshotModel(peewee.Model):
         database = db
 
 
+class WifiSettingModel(peewee.Model):
+    """Save Wifi Settings"""
+    ssid = peewee.CharField()
+    last_connected = peewee.DateTimeField()
+    allowed = peewee.BooleanField(default=True)
+    profile = peewee.ForeignKeyField(BackupProfileModel, default=1)
+
+    class Meta:
+        database = db
+
+
+class EventLogModel(peewee.Model):
+    """Keep a log of background jobs."""
+    start_time = peewee.DateTimeField(default=datetime.utcnow)
+    category = peewee.CharField()
+    subcommand = peewee.CharField(null=True)
+    message = peewee.CharField(null=True)
+    returncode = peewee.IntegerField(default=1)
+    params = JSONField(null=True)
+    profile = peewee.ForeignKeyField(BackupProfileModel, default=1)
+
+    class Meta:
+        database = db
+
+
 db.connect()
-db.create_tables([RepoModel, BackupProfileModel, SourceDirModel, SnapshotModel])
+db.create_tables([RepoModel, BackupProfileModel, SourceDirModel,
+                  SnapshotModel, WifiSettingModel, EventLogModel])
 
 BackupProfileModel.get_or_create(id=1, name='Default')

@@ -5,7 +5,9 @@ from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
+from PyQt5.QtWidgets import QApplication
 
+from .models import WifiSettingModel
 
 def get_private_keys():
     """Find SSH keys in standard folder."""
@@ -41,7 +43,7 @@ def prettyBytes(size):
     n = 0
     Dic_powerN = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
     while size > power:
-        size /=  power
+        size /= power
         n += 1
     return str(round(size))+Dic_powerN[n]+'B'
 
@@ -58,12 +60,16 @@ def get_asset(path):
 
 def get_sorted_wifis():
     """Get SSIDs from OS and merge with settings in DB."""
+    app = QApplication.instance()
 
-    wifis = plistlib.load(open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb'))['KnownNetworks']
-    out = []
+    plist_file = open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb')
+    wifis = plistlib.load(plist_file)['KnownNetworks']
     if wifis:
         for wifi in wifis.values():
             timestamp = wifi['LastConnected']
             ssid = wifi['SSIDString']
-            out.append({'ssid': ssid, 'last_connected': timestamp, 'allowed': True})
-    return out
+            WifiSettingModel.get_or_create(ssid=ssid, profile=app.profile,
+                                           defaults={'last_connected': timestamp,
+                                                    'allowed': True})
+
+    return WifiSettingModel.select().order_by(-WifiSettingModel.last_connected)

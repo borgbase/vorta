@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>wifi.svg</file>
+        <file>tasks.svg</file>
+        <file>clock-o.svg</file>
+        <file>server.svg</file>
+        <file>window-restore.svg</file>
+    </qresource>
+</RCC>
