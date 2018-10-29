@@ -38,7 +38,7 @@ class RepoModel(peewee.Model):
 class BackupProfileModel(peewee.Model):
     """Allows the user to switch between different configurations."""
     name = peewee.CharField()
-    added_at = peewee.DateTimeField(default=datetime.utcnow)
+    added_at = peewee.DateTimeField(default=datetime.now)
     repo = peewee.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = peewee.CharField(default=None, null=True)
     compression = peewee.CharField(default='lz4')
@@ -91,7 +91,7 @@ class WifiSettingModel(peewee.Model):
 
 class EventLogModel(peewee.Model):
     """Keep a log of background jobs."""
-    start_time = peewee.DateTimeField(default=datetime.utcnow)
+    start_time = peewee.DateTimeField(default=datetime.now)
     category = peewee.CharField()
     subcommand = peewee.CharField(null=True)
     message = peewee.CharField(null=True)

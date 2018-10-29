@@ -10,16 +10,16 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from .models import SourceDirModel, BackupProfileModel, EventLogModel
+from .models import SourceDirModel, BackupProfileModel, EventLogModel, WifiSettingModel
+from .utils import get_current_wifi
 
 
 class BorgThread(QtCore.QThread):
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(object)
 
-    def __init__(self, parent, cmd, params):
-        super().__init__(parent)
-
+    def __init__(self, cmd, params):
+        super().__init__()
         # Find packaged borg binary. Prefer globally installed.
         if not shutil.which('borg'):
             meipass_borg = os.path.join(sys._MEIPASS, 'bin', 'borg')
@@ -73,32 +73,43 @@ class BorgThread(QtCore.QThread):
         self.result.emit(result)
 
     @classmethod
-    def create_thread_factory(cls):
-        """`borg create` is called from different places and need preparation.
-        Centralize it here and return a thread to the caller.
+    def prepare_runner(cls):
+        """
+        `borg create` is called from different places and needs some preparation.
+        Centralize it here and return the required arguments to the caller.
         """
         profile = BackupProfileModel.get(id=1)
         app = QApplication.instance()
-        n_backup_folders = SourceDirModel.select().count()
 
         ret = {
             'ok': False,
         }
 
-        params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
-
         if app.thread and app.thread.isRunning():
             ret['message'] = 'Backup is already in progress.'
-            return ret
-
-        if n_backup_folders == 0:
-            ret['message'] = 'Add some folders to back up first.'
             return ret
 
         if profile.repo is None:
             ret['message'] = 'Add a remote backup repository first.'
             return ret
 
+        n_backup_folders = SourceDirModel.select().count()
+        if n_backup_folders == 0:
+            ret['message'] = 'Add some folders to back up first.'
+            return ret
+
+        current_wifi = get_current_wifi()
+        if current_wifi is not None:
+            wifi_is_disallowed = WifiSettingModel.select().where(
+                WifiSettingModel.ssid == current_wifi &
+                WifiSettingModel.allowed == False &
+                WifiSettingModel.profile == profile.id
+            )
+            if wifi_is_disallowed.count() > 0:
+                ret['message'] = 'Current Wifi is not allowed.'
+                return ret
+
+        params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', profile.compression]
 
         # Add excludes
@@ -128,10 +139,10 @@ class BorgThread(QtCore.QThread):
         for f in SourceDirModel.select():
             cmd.append(f.dir)
 
-        app.thread = cls(app, cmd, params)
-        ret['message'] = 'Starting Backup.'
+        ret['message'] = 'Ready to start backup..'
         ret['ok'] = True
-        ret['thread'] = app.thread
+        ret['cmd'] = cmd
+        ret['params'] = params
 
         return ret
 

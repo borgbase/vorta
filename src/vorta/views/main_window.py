@@ -56,15 +56,16 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createProgressText.repaint()
 
     def create_action(self):
-        thread_msg = BorgThread.create_thread_factory()
-        if thread_msg['ok']:
-            self.set_status(thread_msg['message'], progress_max=0)
+        msg = BorgThread.prepare_runner()
+        if msg['ok']:
+            self.set_status(msg['message'], progress_max=0)
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.repaint()
-        thread = thread_msg['thread']
+        thread = BorgThread(msg['cmd'], msg['params'])
         thread.updated.connect(self.create_update_log)
         thread.result.connect(self.create_get_result)
-        thread.start()
+        self.app.thread = thread
+        self.app.thread.start()
 
     def create_update_log(self, text):
         self.set_status(text)
