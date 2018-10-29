@@ -54,7 +54,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="repoTabSlot">
         <property name="sizePolicy">
@@ -70,6 +70,11 @@
        <widget class="QWidget" name="sourceTabSlot">
         <attribute name="title">
          <string>Sources</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="scheduleTabSlot">
+        <attribute name="title">
+         <string>Schedule</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="snapshotTabSlot">

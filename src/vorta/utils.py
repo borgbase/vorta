@@ -1,5 +1,6 @@
 import os
 import sys
+import plistlib
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
@@ -53,3 +54,16 @@ def get_asset(path):
         # we are running in a normal Python environment
         bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
     return os.path.join(bundle_dir, path)
+
+
+def get_sorted_wifis():
+    """Get SSIDs from OS and merge with settings in DB."""
+
+    wifis = plistlib.load(open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb'))['KnownNetworks']
+    out = []
+    if wifis:
+        for wifi in wifis.values():
+            timestamp = wifi['LastConnected']
+            ssid = wifi['SSIDString']
+            out.append({'ssid': ssid, 'last_connected': timestamp, 'allowed': True})
+    return out
