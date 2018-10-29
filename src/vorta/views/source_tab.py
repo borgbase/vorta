@@ -1,9 +1,9 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog
 from ..models import SourceDirModel
-from ..utils import get_relative_asset
+from ..utils import get_asset
 
-uifile = get_relative_asset('UI/sourcetab.ui', __file__)
+uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
 

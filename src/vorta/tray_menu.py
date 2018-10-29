@@ -3,13 +3,13 @@ from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon
 from .views.main_window import MainWindow
 from PyQt5.QtGui import QIcon
 
-from .utils import get_relative_asset
+from .utils import get_asset
 from .config import remove_config
 from .borg_runner import BorgThread
 
 class TrayMenu(QSystemTrayIcon):
     def __init__(self, parent=None):
-        icon = QIcon(get_relative_asset('views/UI/icons/hdd-o.png', __file__))
+        icon = QIcon(get_asset('icons/hdd-o.png'))
         QSystemTrayIcon.__init__(self, icon, parent)
         self.app = parent
         menu = QMenu()
@@ -59,6 +59,7 @@ class TrayMenu(QSystemTrayIcon):
 
     def on_cancel_backup(self):
         if self.app.thread and self.app.thread.isRunning():
+            self.app.thread.process.kill()
             self.app.thread.terminate()
 
     def on_user_click(self):
