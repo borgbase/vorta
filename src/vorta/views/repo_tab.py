@@ -75,7 +75,6 @@ class RepoTab(RepoBase, RepoUI):
                 window = AddRepoWindow()
             else:
                 window = ExistingRepoWindow()
-
             window.setParent(self, QtCore.Qt.Sheet)
             window.show()
             if window.exec_():
