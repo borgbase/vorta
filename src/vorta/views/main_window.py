@@ -17,12 +17,12 @@ MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle(APP_NAME)
         self.profile = BackupProfileModel.get(id=1)
-        self.app = QApplication.instance()
+        self.app = parent
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -61,11 +61,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.set_status(msg['message'], progress_max=0)
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.repaint()
-        thread = BorgThread(msg['cmd'], msg['params'])
-        thread.updated.connect(self.create_update_log)
-        thread.result.connect(self.create_get_result)
-        self.app.thread = thread
-        self.app.thread.start()
+            thread = BorgThread(msg['cmd'], msg['params'])
+            thread.updated.connect(self.create_update_log)
+            thread.result.connect(self.create_get_result)
+            self.app.thread = thread
+            self.app.thread.start()
+        else:
+            self.set_status(msg['message'])
 
     def create_update_log(self, text):
         self.set_status(text)

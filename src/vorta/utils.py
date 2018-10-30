@@ -89,5 +89,5 @@ def get_current_wifi():
     for line in out.decode("utf-8").split('\n'):
         split_line = line.strip().split(':')
         if split_line[0] == 'SSID':
-            return split_line[1]
+            return split_line[1].strip()
 

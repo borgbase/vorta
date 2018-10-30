@@ -19,7 +19,7 @@ class BorgThread(QtCore.QThread):
     result = QtCore.pyqtSignal(object)
 
     def __init__(self, cmd, params):
-        super().__init__()
+        super().__init__(QApplication.instance())
         # Find packaged borg binary. Prefer globally installed.
         if not shutil.which('borg'):
             meipass_borg = os.path.join(sys._MEIPASS, 'bin', 'borg')
@@ -101,9 +101,9 @@ class BorgThread(QtCore.QThread):
         current_wifi = get_current_wifi()
         if current_wifi is not None:
             wifi_is_disallowed = WifiSettingModel.select().where(
-                WifiSettingModel.ssid == current_wifi &
-                WifiSettingModel.allowed == False &
-                WifiSettingModel.profile == profile.id
+                WifiSettingModel.ssid == current_wifi
+                & WifiSettingModel.allowed == 0
+                # & WifiSettingModel.profile == profile
             )
             if wifi_is_disallowed.count() > 0:
                 ret['message'] = 'Current Wifi is not allowed.'

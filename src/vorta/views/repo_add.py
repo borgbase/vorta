@@ -1,4 +1,4 @@
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from ..utils import get_private_keys, get_asset
 from ..borg_runner import BorgThread
 
@@ -10,9 +10,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     connection_message = 'Setting up new repo...'
     cmd = ["borg", "init", "--log-json"]
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.setupUi(self)
+        self.result = None
 
         self.closeButton.clicked.connect(self.close)
         self.saveButton.clicked.connect(self.run)
@@ -35,10 +36,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.validate():
             self.set_status(self.connection_message)
             cmd = self.cmd + [self.values['repo_url']]
-            thread = BorgThread(self, cmd, self.values)
+            thread = BorgThread(cmd, self.values)
             thread.updated.connect(self.set_status)
             thread.result.connect(self.run_result)
-            thread.start()
+            self.thread = thread
+            self.thread.start()
 
     def set_status(self, text):
         self.errorText.setText(text)

@@ -13,12 +13,12 @@
 - [x] Exclude options/patterns.
 - [x] Rule-based scheduling by time, Wifi SSID, etc.
 - [x] Scheduling for background backups.
+- [x] Tests (partly)
 
 Missing features:
 
 - [ ] Repo pruning
 - [ ] Repo checking
-- [ ] Tests
 
 ## Download
 The app package under [Releases](https://github.com/borgbase/vorta/releases) should include everything. Just download, unzip and run.
@@ -39,6 +39,10 @@ To build a binary package:
 ```
 $ pyinstaller --clean --noconfirm vorta.spec 
 ```
+
+### Testing (work in progress)
+Tests are in the folder `/tests`. Run them with `PYTHONPATH=src pytest`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output.
+
 
 ## Why the Name?
 [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) are a race referenced in Star Trek. They serve the Dominion and are replaced by their clones if they die. Just like our backups.

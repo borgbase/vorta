@@ -1,8 +1,9 @@
 import peewee
-import os
 import json
 from datetime import datetime
-from .config import SETTINGS_DIR
+
+db = peewee.Proxy()
+
 
 class JSONField(peewee.TextField):
     """
@@ -18,7 +19,6 @@ class JSONField(peewee.TextField):
         """Convert the database value to a pythonic value."""
         return value if value is None else json.loads(value)
 
-db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
 
 
 class RepoModel(peewee.Model):
@@ -49,6 +49,8 @@ class BackupProfileModel(peewee.Model):
     schedule_interval_minutes = peewee.IntegerField(default=42)
     schedule_fixed_hour = peewee.IntegerField(default=3)
     schedule_fixed_minute = peewee.IntegerField(default=42)
+    validation_on = peewee.BooleanField(default=True)
+    validation_weeks = peewee.IntegerField(default=3)
 
     class Meta:
         database = db
@@ -103,8 +105,10 @@ class EventLogModel(peewee.Model):
         database = db
 
 
-db.connect()
-db.create_tables([RepoModel, BackupProfileModel, SourceDirModel,
-                  SnapshotModel, WifiSettingModel, EventLogModel])
+def init_db(con):
+    db.initialize(con)
+    db.connect()
+    db.create_tables([RepoModel, BackupProfileModel, SourceDirModel,
+                      SnapshotModel, WifiSettingModel, EventLogModel])
 
-BackupProfileModel.get_or_create(id=1, name='Default')
+    BackupProfileModel.get_or_create(id=1, name='Default')

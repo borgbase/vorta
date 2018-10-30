@@ -38,7 +38,7 @@ class TrayMenu(QSystemTrayIcon):
         self.show()
 
     def on_settings_action(self):
-        ex = MainWindow()
+        ex = MainWindow(self.app)
         ex.show()
 
     def on_exit_action(self):
@@ -57,9 +57,7 @@ class TrayMenu(QSystemTrayIcon):
             if msg['ok']:
                 self.app.thread = BorgThread(msg['cmd'], msg['params'])
                 self.app.thread.start()
-            else:
-                print(msg['message'])
-                # TODO: error dialog
+            # TODO: error dialog
 
     def on_user_click(self):
         """Adjust labels to reflect current status."""
