@@ -5,6 +5,7 @@ from PyQt5.QtGui import QIcon
 
 from .utils import get_asset
 from .config import remove_config
+from .borg_runner import BorgThread
 
 
 class TrayMenu(QSystemTrayIcon):
@@ -49,7 +50,7 @@ class TrayMenu(QSystemTrayIcon):
 
     def on_user_click(self):
         """Adjust labels to reflect current status."""
-        if self.app.thread and self.app.thread.isRunning():
+        if BorgThread.is_running():
             self.status.setText('Backup in Progress')
             self.create_action.setText('Cancel Backup')
         else:

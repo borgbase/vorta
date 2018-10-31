@@ -36,7 +36,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.validate():
             self.set_status(self.connection_message)
             cmd = self.cmd + [self.values['repo_url']]
-            thread = BorgThread(cmd, self.values)
+            thread = BorgThread(cmd, self.values, parent=self)
             thread.updated.connect(self.set_status)
             thread.result.connect(self.run_result)
             self.thread = thread

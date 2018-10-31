@@ -2,7 +2,7 @@ from dateutil import parser
 from PyQt5 import uic, QtCore
 import keyring
 
-from ..models import RepoModel, SnapshotModel
+from ..models import RepoModel, SnapshotModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
 from ..utils import prettyBytes, get_private_keys, get_asset
 from .ssh_add import SSHAddWindow
@@ -11,13 +11,12 @@ uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
-class RepoTab(RepoBase, RepoUI):
+class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     repo_changed = QtCore.pyqtSignal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.profile = self.window().profile
 
         self.repoSelector.model().item(0).setEnabled(False)
         self.repoSelector.addItem('Initialize New Repository', 'init')
@@ -41,11 +40,12 @@ class RepoTab(RepoBase, RepoUI):
             self.init_repo_stats()
 
     def init_repo_stats(self):
-        self.sizeCompressed.setText(prettyBytes(self.profile.repo.unique_csize))
-        self.sizeDeduplicated.setText(prettyBytes(self.profile.repo.unique_size))
-        self.sizeOriginal.setText(prettyBytes(self.profile.repo.total_size))
-        self.repoEncryption.setText(str(self.profile.repo.encryption))
-        self.repo_changed.emit(self.profile.repo.id)
+        repo = self.profile.repo
+        self.sizeCompressed.setText(prettyBytes(repo.unique_csize))
+        self.sizeDeduplicated.setText(prettyBytes(repo.unique_size))
+        self.sizeOriginal.setText(prettyBytes(repo.total_size))
+        self.repoEncryption.setText(str(repo.encryption))
+        self.repo_changed.emit(repo.id)
 
     def init_ssh(self):
         keys = get_private_keys()
@@ -61,13 +61,15 @@ class RepoTab(RepoBase, RepoUI):
             if ssh_add_window.exec_():
                 self.init_ssh()
         else:
-            self.profile.ssh_key = self.sshComboBox.itemData(index)
-            self.profile.save()
+            profile = self.profile
+            profile.ssh_key = self.sshComboBox.itemData(index)
+            profile.save()
 
 
     def compression_select_action(self, index):
-        self.profile.compression = self.repoCompression.currentData()
-        self.profile.save()
+        profile = self.profile
+        profile.compression = self.repoCompression.currentData()
+        profile.save()
 
     def repo_select_action(self, index):
         if index <= 2:
@@ -80,8 +82,9 @@ class RepoTab(RepoBase, RepoUI):
             if window.exec_():
                 self.process_new_repo(window.result)
         else:
-            self.profile.repo = self.repoSelector.currentData()
-            self.profile.save()
+            profile = self.profile
+            profile.repo = self.repoSelector.currentData()
+            profile.save()
             self.init_repo_stats()
 
     def process_new_repo(self, result):
@@ -105,8 +108,9 @@ class RepoTab(RepoBase, RepoUI):
 
 
             new_repo.save()
-            self.profile.repo = new_repo.id
-            self.profile.save()
+            profile = self.profile
+            profile.repo = new_repo.id
+            profile.save()
 
             if 'archives' in result['data'].keys():
                 for snapshot in result['data']['archives']:

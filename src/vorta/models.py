@@ -111,6 +111,14 @@ class EventLogModel(peewee.Model):
         database = db
 
 
+class BackupProfileMixin:
+    """Extend to support multiple profiles later."""
+
+    @property
+    def profile(self):
+        return BackupProfileModel.get(id=1)
+
+
 def init_db(con):
     db.initialize(con)
     db.connect()

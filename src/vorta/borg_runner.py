@@ -5,21 +5,31 @@ import shutil
 import tempfile
 import platform
 import keyring
+from dateutil import parser
 from datetime import datetime as dt
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from .models import SourceDirModel, BackupProfileModel, EventLogModel, WifiSettingModel
+from .models import SourceDirModel, BackupProfileModel, EventLogModel, WifiSettingModel, SnapshotModel, BackupProfileMixin
 from .utils import get_current_wifi
 
 
-class BorgThread(QtCore.QThread):
+
+class BorgThread(QtCore.QThread, BackupProfileMixin):
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(object)
+    mutex = QtCore.QMutex()
 
-    def __init__(self, cmd, params):
-        super().__init__(QApplication.instance())
+    def __init__(self, cmd, params, parent=None):
+        """
+        Thread to run Borg operations in.
+
+        :param cmd: Borg command line
+        :param params: To pass extra options that are later formatted centrally.
+        :param parent: Parent window. Needs `thread.wait()` if none.
+        """
+        super().__init__(parent)
 
         # Find packaged borg binary. Prefer globally installed.
         if not shutil.which('borg'):
@@ -38,11 +48,19 @@ class BorgThread(QtCore.QThread):
             env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
         self.env = env
-        self.profile = BackupProfileModel.get(id=1)
         self.params = params
         self.process = None
 
+    @classmethod
+    def is_running(cls):
+        if cls.mutex.tryLock():
+            cls.mutex.unlock()
+            return False
+        else:
+            return True
+
     def run(self):
+        self.mutex.lock()
         log_entry = EventLogModel(category='borg-run', subcommand=self.cmd[1])
         log_entry.save()
         self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True, env=self.env)
@@ -70,7 +88,35 @@ class BorgThread(QtCore.QThread):
 
         log_entry.returncode = self.process.returncode
         log_entry.save()
+
+        # If result function is available for subcommand, run it.
+        result_func = f'process_{self.cmd[1]}_result'
+        if hasattr(self, result_func):
+            getattr(self, result_func)(result)
+
         self.result.emit(result)
+        self.mutex.unlock()
+
+
+    def process_create_result(self, result):
+        if result['returncode'] == 0:
+            new_snapshot, created = SnapshotModel.get_or_create(
+                snapshot_id=result['data']['archive']['id'],
+                defaults={
+                    'name': result['data']['archive']['name'],
+                    'time': parser.parse(result['data']['archive']['start']),
+                    'repo': self.profile.repo
+                }
+            )
+            new_snapshot.save()
+            if 'cache' in result['data'] and created:
+                stats = result['data']['cache']['stats']
+                repo = self.profile.repo
+                repo.total_size = stats['total_size']
+                repo.unique_csize = stats['unique_csize']
+                repo.unique_size = stats['unique_size']
+                repo.total_unique_chunks = stats['total_unique_chunks']
+                repo.save()
 
     @classmethod
     def prepare_runner(cls):
@@ -79,13 +125,10 @@ class BorgThread(QtCore.QThread):
         Centralize it here and return the required arguments to the caller.
         """
         profile = BackupProfileModel.get(id=1)
-        app = QApplication.instance()
 
-        ret = {
-            'ok': False,
-        }
+        ret = {'ok': False}
 
-        if app.thread and app.thread.isRunning():
+        if cls.is_running():
             ret['message'] = 'Backup is already in progress.'
             return ret
 
@@ -101,9 +144,9 @@ class BorgThread(QtCore.QThread):
         current_wifi = get_current_wifi()
         if current_wifi is not None:
             wifi_is_disallowed = WifiSettingModel.select().where(
-                WifiSettingModel.ssid == current_wifi
-                & WifiSettingModel.allowed == 0
-                & WifiSettingModel.profile == profile
+                (WifiSettingModel.ssid == current_wifi)
+                & (WifiSettingModel.allowed == False)
+                & (WifiSettingModel.profile == profile.id)
             )
             if wifi_is_disallowed.count() > 0:
                 ret['message'] = 'Current Wifi is not allowed.'
