@@ -1,19 +1,18 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
 from ..utils import get_asset, get_sorted_wifis
-from ..models import EventLogModel, WifiSettingModel
+from ..models import EventLogModel, WifiSettingModel, BackupProfileMixin
 
 uifile = get_asset('UI/scheduletab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
 
-class ScheduleTab(ScheduleBase, ScheduleUI):
+class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.profile = self.window().profile
         self.app = QApplication.instance()
 
         # Set scheduler values
@@ -58,8 +57,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
 
     def save_wifi_item(self, item):
-        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile)
-        db_item.allowed = item.isSelected()
+        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile.id)
+        db_item.allowed = item.checkState() == 2
         db_item.save()
 
     def init_logs(self):
@@ -84,24 +83,26 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
         self.logTableWidget.setRowCount(len(event_logs))
 
     def on_scheduler_apply(self):
+        profile = self.profile
+
         # Save checking options
-        self.profile.validation_weeks = self.validationSpinBox.value()
-        self.profile.validation_on = self.validationCheckBox.isChecked()
+        profile.validation_weeks = self.validationSpinBox.value()
+        profile.validation_on = self.validationCheckBox.isChecked()
 
         # Save pruning options
-        self.profile.prune_on = self.pruneCheckBox.isChecked()
+        profile.prune_on = self.pruneCheckBox.isChecked()
         for i in self.prune_intervals:
-            setattr(self.profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
+            setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
 
         # Save scheduler timing and activate if needed.
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
-                self.profile.schedule_mode = label
-                self.profile.schedule_interval_hours = self.scheduleIntervalHours.value()
-                self.profile.schedule_interval_minutes = self.scheduleIntervalMinutes.value()
+                profile.schedule_mode = label
+                profile.schedule_interval_hours = self.scheduleIntervalHours.value()
+                profile.schedule_interval_minutes = self.scheduleIntervalMinutes.value()
                 qtime = self.scheduleFixedTime.time()
-                self.profile.schedule_fixed_hour, self.profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
-                self.profile.save()
+                profile.schedule_fixed_hour, profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
+                profile.save()
                 self.app.scheduler.reload()
                 self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
                 self.nextBackupDateTimeLabel.repaint()

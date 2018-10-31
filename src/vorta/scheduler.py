@@ -1,8 +1,12 @@
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 
+from .borg_runner import BorgThread
+from .models import BackupProfileMixin
 
-class VortaScheduler(QtScheduler):
+
+
+class VortaScheduler(QtScheduler, BackupProfileMixin):
     def __init__(self, parent):
         super().__init__()
         self.app = parent
@@ -11,17 +15,27 @@ class VortaScheduler(QtScheduler):
 
     def reload(self):
         self.remove_all_jobs()
-        profile = self.app.profile
-        if profile.schedule_mode == 'off':
+        if self.profile.schedule_mode == 'off':
             self.next_job = 'Manual Backups'
             return None
-        elif profile.schedule_mode == 'interval':
+        elif self.profile.schedule_mode == 'interval':
             trigger = cron.CronTrigger(hour=f'*/{profile.schedule_interval_hours}',
-                                       minute=profile.schedule_interval_minutes)
-        elif profile.schedule_mode == 'fixed':
-            trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
-                                       minute=profile.schedule_fixed_minute)
+                                       minute=self.profile.schedule_interval_minutes)
+        elif self.profile.schedule_mode == 'fixed':
+            trigger = cron.CronTrigger(hour=self.profile.schedule_fixed_hour,
+                                       minute=self.profile.schedule_fixed_minute)
 
-        self.add_job(self.app.create_backup, trigger, id='create-backup', misfire_grace_time=180)
+        self.add_job(self.create_backup, trigger, id='create-backup', misfire_grace_time=180)
+
+    @property
+    def next_job(self):
         job = self.get_job('create-backup')
-        self.next_job = f"Next run: {job.next_run_time.strftime('%Y-%m-%d %H:%M')}"
+        return job.next_run_time.strftime('%Y-%m-%d %H:%M')
+
+    @classmethod
+    def create_backup(cls):
+        msg = BorgThread.prepare_runner()
+        if msg['ok']:
+            thread = BorgThread(msg['cmd'], msg['params'])
+            thread.start()
+            thread.wait()

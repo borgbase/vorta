@@ -1,18 +1,19 @@
+import keyring
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
 from ..borg_runner import BorgThread
 from ..utils import get_asset
+from ..models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
 SnapshotUI, SnapshotBase = uic.loadUiType(uifile)
 
 
-class SnapshotTab(SnapshotBase, SnapshotUI):
+class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.profile = self.window().profile
 
         header = self.snapshotTable.horizontalHeader()
         header.setVisible(True)
@@ -44,17 +45,18 @@ class SnapshotTab(SnapshotBase, SnapshotUI):
             self.snapshotTable.setRowCount(len(snapshots))
 
     def snapshot_mount(self):
+        profile = self.profile
         cmd = ['borg', 'mount', '--log-json']
         row_selected = self.snapshotTable.selectionModel().selectedRows()
         if row_selected:
             snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 0)
             if snapshot_cell:
                 snapshot_name = snapshot_cell.text()
-                cmd.append(f'{self.profile.repo.url}::{snapshot_name}')
+                cmd.append(f'{profile.repo.url}::{snapshot_name}')
             else:
-                cmd.append(f'{self.profile.repo.url}')
+                cmd.append(f'{profile.repo.url}')
         else:
-            cmd.append(f'{self.profile.repo.url}')
+            cmd.append(f'{profile.repo.url}')
 
         options = QFileDialog.Options()
         options |= QFileDialog.ShowDirsOnly
@@ -65,8 +67,8 @@ class SnapshotTab(SnapshotBase, SnapshotUI):
             cmd.append(mountPoint)
 
             self.set_status('Mounting snapshot into folder...')
-            params = {'password': self.profile.repo.password}
-            thread = BorgThread(self, cmd, params)
+            params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
+            thread = BorgThread(self, cmd, params, parent=self)
             thread.updated.connect(self.mount_update_log)
             thread.result.connect(self.mount_get_result)
             thread.start()

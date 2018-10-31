@@ -1,17 +1,16 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog
-from ..models import SourceDirModel
+from ..models import SourceDirModel, BackupProfileMixin
 from ..utils import get_asset
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
 
-class SourceTab(SourceBase, SourceUI):
+class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.profile = self.window().profile
 
         self.sourceAdd.clicked.connect(self.source_add)
         self.sourceRemove.clicked.connect(self.source_remove)
@@ -43,9 +42,11 @@ class SourceTab(SourceBase, SourceUI):
         item = None
 
     def save_exclude_patterns(self):
-        self.profile.exclude_patterns = self.excludePatternsField.toPlainText()
-        self.profile.save()
+        profile = self.profile
+        profile.exclude_patterns = self.excludePatternsField.toPlainText()
+        profile.save()
 
     def save_exclude_if_present(self):
-        self.profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
-        self.profile.save()
+        profile = self.profile
+        profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
+        profile.save()
