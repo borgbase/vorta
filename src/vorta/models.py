@@ -51,6 +51,12 @@ class BackupProfileModel(peewee.Model):
     schedule_fixed_minute = peewee.IntegerField(default=42)
     validation_on = peewee.BooleanField(default=True)
     validation_weeks = peewee.IntegerField(default=3)
+    prune_on = peewee.BooleanField(default=False)
+    prune_hour = peewee.IntegerField(default=2)
+    prune_day = peewee.IntegerField(default=7)
+    prune_week = peewee.IntegerField(default=4)
+    prune_month = peewee.IntegerField(default=6)
+    prune_year = peewee.IntegerField(default=2)
 
     class Meta:
         database = db

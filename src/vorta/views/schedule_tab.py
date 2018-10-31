@@ -1,19 +1,22 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
 from ..utils import get_asset, get_sorted_wifis
-from ..scheduler import init_scheduler
-from ..models import EventLogModel
+from ..models import EventLogModel, WifiSettingModel
 
 uifile = get_asset('UI/scheduletab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
+
 class ScheduleTab(ScheduleBase, ScheduleUI):
+    prune_intervals = ['hour', 'day', 'week', 'month', 'year']
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
         self.profile = self.window().profile
         self.app = QApplication.instance()
 
+        # Set scheduler values
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
             'interval': self.scheduleIntervalRadio,
@@ -26,9 +29,19 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
         self.scheduleFixedTime.setTime(
             QtCore.QTime(self.profile.schedule_fixed_hour, self.profile.schedule_fixed_minute))
 
+        # Set checking options
+        self.validationCheckBox.setCheckState(self.profile.validation_on)
+        self.validationCheckBox.setTristate(False)
+        self.validationSpinBox.setValue(self.profile.validation_weeks)
+
+        # Set pruning options
+        self.pruneCheckBox.setCheckState(self.profile.prune_on)
+        for i in self.prune_intervals:
+            getattr(self, f'prune_{i}').setValue(getattr(self.profile, f'prune_{i}'))
+
         self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
 
-        self.set_next_backup_datetime()
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job())
         self.init_wifi()
         self.init_logs()
 
@@ -42,6 +55,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
             else:
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.wifiListWidget.addItem(item)
+        self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
+
+    def save_wifi_item(self, item):
+        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile)
+        db_item.allowed = item.isSelected()
+        db_item.save()
 
     def init_logs(self):
         header = self.logTableWidget.horizontalHeader()
@@ -64,15 +83,17 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
             self.logTableWidget.setItem(row, 4, QTableWidgetItem(str(log_line.returncode)))
         self.logTableWidget.setRowCount(len(event_logs))
 
-    def set_next_backup_datetime(self):
-        if self.app.scheduler is not None:
-            job = self.app.scheduler.get_job('create-backup')
-            self.nextBackupDateTimeLabel.setText(job.next_run_time.strftime('%Y-%m-%d %H:%M'))
-        else:
-            self.nextBackupDateTimeLabel.setText('Off')
-        self.nextBackupDateTimeLabel.repaint()
-
     def on_scheduler_apply(self):
+        # Save checking options
+        self.profile.validation_weeks = self.validationSpinBox.value()
+        self.profile.validation_on = self.validationCheckBox.isChecked()
+
+        # Save pruning options
+        self.profile.prune_on = self.pruneCheckBox.isChecked()
+        for i in self.prune_intervals:
+            setattr(self.profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
+
+        # Save scheduler timing and activate if needed.
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 self.profile.schedule_mode = label
@@ -81,10 +102,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
                 qtime = self.scheduleFixedTime.time()
                 self.profile.schedule_fixed_hour, self.profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
                 self.profile.save()
-                self.app.scheduler = init_scheduler()
-                self.set_next_backup_datetime()
-
-
-
-    def init_log(self):
-        pass
+                self.app.scheduler.reload()
+                self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job())
+                self.nextBackupDateTimeLabel.repaint()
