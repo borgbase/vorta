@@ -35,6 +35,11 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
+To run directly:
+```
+PYTHONPATH=src python -m vorta
+```
+
 To build a binary package:
 ```
 $ pyinstaller --clean --noconfirm vorta.spec 

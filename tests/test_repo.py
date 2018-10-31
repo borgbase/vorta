@@ -2,43 +2,41 @@
 import pytest
 import io
 import peewee
-from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon
 
 import vorta.borg_runner
 import vorta.models
-from vorta.views.main_window import MainWindow
+from vorta.application import VortaApp
 from vorta.views.repo_add import AddRepoWindow
+from vorta.models import EventLogModel, RepoModel
 from vorta.tray_menu import TrayMenu
-from vorta.scheduler import init_scheduler
-from vorta.models import BackupProfileModel, EventLogModel, RepoModel
 
 
 @pytest.fixture()
-def main(tmpdir, qtbot):
+def app(tmpdir):
     tmp_db = tmpdir.join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
+    return VortaApp([])
 
-    app = QApplication([])
-    app.thread = None
-    app.setQuitOnLastWindowClosed(False)
-    app.scheduler = init_scheduler()
-    TrayMenu(app)
-    app.profile = BackupProfileModel.get(id=1)
 
-    main = MainWindow(app)
-    main.show()
+@pytest.fixture()
+def main(app, qtbot):
+    main = app.main_window
     qtbot.addWidget(main)
-
     return main
 
+# def test_tray(app, qtbot):
+#     # app.tray.activated.emit(QSystemTrayIcon.Context)
+#     menu = app.tray.contextMenu()
+#     qtbot.addWidget(menu)
+#     menu.popup(QtCore.QPoint())
 
-def test_repo_tab(main, qtbot, mocker):
+
+def test_repo_tab(main, qtbot):
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.createProgressText.text() == 'Add a remote backup repository first.'
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
 
 
 def test_repo_add(main, qtbot, mocker):
