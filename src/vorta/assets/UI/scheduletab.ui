@@ -252,7 +252,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage.html#borg-prune&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage.html#borg-prune&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;How?&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>

@@ -32,7 +32,10 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Remote repository. The place to store your backups.</string>
+      <string>Configure your remote backup repository. First you will need a SSH key to login without a password. If you already have one, just keep it at the default. Next you can add a new or existing repository.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -53,14 +56,14 @@
      <property name="rightMargin">
       <number>25</number>
      </property>
-     <item row="0" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Repository:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="repoSelector">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -75,7 +78,7 @@
        </item>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="3" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Need hosting for your Borg repository? &lt;a href=&quot;https://www.borgbackup.org/support/commercial.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;View providers&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -85,14 +88,24 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_14">
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>SSH Key:</string>
+        <string>Compression:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="6" column="1">
+      <widget class="QComboBox" name="repoCompression"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>SSH Login Key:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
       <widget class="QComboBox" name="sshComboBox">
        <item>
         <property name="text">
@@ -106,20 +119,10 @@
        </item>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Compression:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="repoCompression"/>
-     </item>
-     <item row="3" column="1">
+     <item row="1" column="1">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>To access repository securely.</string>
+        <string>To access repository securely. Keep at default if you already have one. Or create new key.</string>
        </property>
       </widget>
      </item>
@@ -138,6 +141,9 @@
      </property>
      <property name="leftMargin">
       <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>20</number>
      </property>
      <property name="rightMargin">
       <number>25</number>

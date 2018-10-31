@@ -3,14 +3,12 @@ import pytest
 import io
 import peewee
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon
 
 import vorta.borg_runner
 import vorta.models
 from vorta.application import VortaApp
 from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel
-from vorta.tray_menu import TrayMenu
 
 
 @pytest.fixture()
@@ -26,12 +24,6 @@ def main(app, qtbot):
     main = app.main_window
     qtbot.addWidget(main)
     return main
-
-# def test_tray(app, qtbot):
-#     # app.tray.activated.emit(QSystemTrayIcon.Context)
-#     menu = app.tray.contextMenu()
-#     qtbot.addWidget(menu)
-#     menu.popup(QtCore.QPoint())
 
 
 def test_repo_tab(main, qtbot):

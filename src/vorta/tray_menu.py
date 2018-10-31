@@ -17,7 +17,7 @@ class TrayMenu(QSystemTrayIcon):
         self.app = parent
         menu = QMenu()
 
-        self.status = menu.addAction(self.app.scheduler.next_job())
+        self.status = menu.addAction(self.app.scheduler.next_job)
         self.status.setEnabled(False)
 
         self.create_action = menu.addAction("Backup Now")
@@ -53,5 +53,5 @@ class TrayMenu(QSystemTrayIcon):
             self.status.setText('Backup in Progress')
             self.create_action.setText('Cancel Backup')
         else:
-            self.status.setText(self.app.scheduler.next_job())
+            self.status.setText(self.app.scheduler.next_job)
             self.create_action.setText('Backup Now')

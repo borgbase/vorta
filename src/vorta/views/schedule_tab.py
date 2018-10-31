@@ -41,7 +41,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
 
         self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
 
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job())
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
         self.init_wifi()
         self.init_logs()
 
@@ -103,5 +103,5 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
                 self.profile.schedule_fixed_hour, self.profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
                 self.profile.save()
                 self.app.scheduler.reload()
-                self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job())
+                self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
                 self.nextBackupDateTimeLabel.repaint()
