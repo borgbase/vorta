@@ -45,8 +45,6 @@ app = BUNDLE(exe,
                      'CFBundleShortVersionString': '0.2.0'
                      },
              )
-
-# Debug package. (inspired by borg-spec)
 if False:
     coll = COLLECT(exe,
                    a.binaries,

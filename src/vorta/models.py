@@ -78,6 +78,8 @@ class SnapshotModel(peewee.Model):
     name = peewee.CharField()
     repo = peewee.ForeignKeyField(RepoModel, backref='snapshots')
     time = peewee.DateTimeField()
+    duration = peewee.FloatField(null=True)
+    size = peewee.IntegerField(null=True)
 
     def formatted_time(self):
         return
