@@ -19,9 +19,9 @@ Missing features: (PRs welcome)
 
 - [ ] Repo pruning
 - [ ] Repo checking
-- [ ] Full test coverage
-- [ ] Use static type checks via mypy
-- [ ] Packaging for Linux
+- [ ] Full test coverage (currently: 65%)
+- [ ] Use static type checks via mypy?
+- [ ] Packaging for Linux? How?
 
 ## Installation and Download
 ### macOS
@@ -55,8 +55,6 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
-[Peewee Migrate](https://github.com/klen/peewee_migrate) is used to manage database migrations. Add them to the `vorta.migrations` package.
-
 To build a binary package:
 ```
 $ pyinstaller --clean --noconfirm vorta.spec 
@@ -66,6 +64,12 @@ $ pyinstaller --clean --noconfirm vorta.spec
 Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
 ```
 $ pytest
+```
+
+To update and view coverage information
+```
+$ coverage run -m pytest
+$ coverage report
 ```
 
 ## Privacy Policy

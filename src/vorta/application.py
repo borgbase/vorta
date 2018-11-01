@@ -1,5 +1,5 @@
 import sys
-
+import os
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
@@ -47,8 +47,8 @@ class VortaApp(QApplication, BackupProfileMixin):
         return msg
 
     def on_open_main_window(self):
-        self.main_window = MainWindow(self)
         self.main_window.show()
+        self.main_window.raise_()
 
     def create_backup_result(self, result):
         self.backup_done.emit()

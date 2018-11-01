@@ -3,7 +3,7 @@ from PyQt5 import uic, QtCore
 
 from ..models import RepoModel, SnapshotModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
-from ..utils import prettyBytes, get_private_keys, get_asset, keyring
+from ..utils import pretty_bytes, get_private_keys, get_asset, keyring
 from .ssh_add import SSHAddWindow
 
 uifile = get_asset('UI/repotab.ui')
@@ -40,9 +40,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def init_repo_stats(self):
         repo = self.profile.repo
-        self.sizeCompressed.setText(prettyBytes(repo.unique_csize))
-        self.sizeDeduplicated.setText(prettyBytes(repo.unique_size))
-        self.sizeOriginal.setText(prettyBytes(repo.total_size))
+        self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
+        self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
+        self.sizeOriginal.setText(pretty_bytes(repo.total_size))
         self.repoEncryption.setText(str(repo.encryption))
         self.repo_changed.emit(repo.id)
 
