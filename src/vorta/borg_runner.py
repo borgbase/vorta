@@ -4,7 +4,6 @@ import sys
 import shutil
 import tempfile
 import platform
-import keyring
 from dateutil import parser
 from datetime import datetime as dt
 from PyQt5 import QtCore
@@ -12,7 +11,7 @@ from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
 from .models import SourceDirModel, BackupProfileModel, EventLogModel, WifiSettingModel, SnapshotModel, BackupProfileMixin
-from .utils import get_current_wifi
+from .utils import get_current_wifi, keyring
 
 
 

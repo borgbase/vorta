@@ -11,7 +11,7 @@ a = Analysis(['src/vorta/__main__.py'],
                 ('src/vorta/assets/UI/*', 'assets/UI'),
                 ('src/vorta/assets/icons/*', 'assets/icons'),
              ],
-             hiddenimports=[],
+             hiddenimports=['vorta.views.collection_rc'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -46,7 +46,7 @@ app = BUNDLE(exe,
                      },
              )
 
-# Debug package. (inspired from borg)
+# Debug package. (inspired by borg-spec)
 if False:
     coll = COLLECT(exe,
                    a.binaries,

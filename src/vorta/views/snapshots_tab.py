@@ -1,9 +1,8 @@
-import keyring
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
 from ..borg_runner import BorgThread
-from ..utils import get_asset
+from ..utils import get_asset, keyring
 from ..models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
