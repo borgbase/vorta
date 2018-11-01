@@ -1,30 +1,14 @@
 
 import pytest
 import io
-import peewee
 from PyQt5 import QtCore
 
 import vorta.borg_runner
 import vorta.models
-from vorta.application import VortaApp
 from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel
 
-
-@pytest.fixture()
-def app(tmpdir):
-    tmp_db = tmpdir.join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db))
-    vorta.models.init_db(mock_db)
-    return VortaApp([])
-
-
-@pytest.fixture()
-def main(app, qtbot):
-    main = app.main_window
-    qtbot.addWidget(main)
-    return main
-
+from .fixtures import *
 
 def test_repo_tab(main, qtbot):
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
