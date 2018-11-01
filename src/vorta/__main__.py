@@ -3,6 +3,7 @@ import os
 import peewee
 
 import vorta.models
+import vorta.migrations
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 
@@ -15,6 +16,10 @@ if getattr(sys, 'frozen', False):
 sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
 vorta.models.init_db(sqlite_db)
 
+# Run migrations
+from peewee_migrate.cli import get_router
+router = get_router(os.path.dirname(vorta.migrations.__file__), sqlite_db, True)
+router.run()
 
 app = VortaApp(sys.argv)
 sys.exit(app.exec_())

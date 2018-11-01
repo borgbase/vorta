@@ -55,6 +55,8 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
+[Peewee Migrate](https://github.com/klen/peewee_migrate) is used to manage database migrations. Add them to the `vorta.migrations` package.
+
 To build a binary package:
 ```
 $ pyinstaller --clean --noconfirm vorta.spec 
