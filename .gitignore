@@ -7,3 +7,5 @@ docs/
 bin/
 __pycache__
 Makefile
+.eggs
+vorta.egg-info
