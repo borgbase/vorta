@@ -49,7 +49,7 @@ def get_private_keys():
     return available_private_keys
 
 
-def prettyBytes(size):
+def pretty_bytes(size):
     """from https://stackoverflow.com/questions/12523586/
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
     if type(size) != int:

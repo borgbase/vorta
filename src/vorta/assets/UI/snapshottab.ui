@@ -49,6 +49,16 @@
        </column>
        <column>
         <property name="text">
+         <string>Size</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Duration</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>Date</string>
         </property>
        </column>
