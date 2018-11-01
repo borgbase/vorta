@@ -11,7 +11,7 @@ from ..borg_runner import BorgThread
 
 
 uifile = get_asset('UI/mainwindow.ui')
-MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
+MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
 class MainWindow(MainWindowBase, MainWindowUI):

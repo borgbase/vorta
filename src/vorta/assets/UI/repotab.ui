@@ -81,7 +81,7 @@
      <item row="3" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Needs Borg installed server-side. Or try &lt;a href=&quot;https://www.borgbase.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase.&lt;/span&gt;&lt;/a&gt; 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSH account with Borg installed server-side. Also try &lt;a href=&quot;https://www.borgbase.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase.&lt;/span&gt;&lt;/a&gt; 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>

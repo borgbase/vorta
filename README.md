@@ -2,31 +2,50 @@
 
 ![](https://files.qmax.us/vorta-screencast-2.gif)
 
-[Vorta](http://memory-alpha.wikia.com/wiki/Vorta) is a GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's in alpha status and currently has the following features:
+Vorta is a macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in alpha status. 
 
-- [x] Select and create SSH keys without using the Terminal
-- [x] Securely save repo password in Keychain.
-- [x] Initialize new remote Borg repositories
-- [x] Create new Borg snapshots (backups) from local folders
-- [x] Mount existing snapshots with FUSE
-- [x] Settings stored in sqlite
-- [x] Exclude options/patterns.
-- [x] Rule-based scheduling by time, Wifi SSID, etc.
-- [x] Scheduling for background backups.
-- [x] Tests (partly)
+## Main features
 
-Missing features:
+- Encrypted, deduplicated and compressed backups to remote repositories
+- Works with any remote SSH account that has `borg` installed. Or try [BorgBase](https://www.borgbase.com) for advanced features like append-only repositories and monitoring.
+- Add SSH keys and initialize repos directly from the GUI
+- Repo keys are securely stored in macOS Keychain, Secret Service or KWallet
+- Mount existing snapshots via FUSE
+- Flexible scheduling for automatic background backups.
+- View a list of snapshots and action logs
+- Exclude options/patterns.
+
+Missing features: (PRs welcome)
 
 - [ ] Repo pruning
 - [ ] Repo checking
+- [ ] Full test coverage
+- [ ] Packaging for Linux
 
-## Download
+## Installation and Download
+### macOS
 The app package under [Releases](https://github.com/borgbase/vorta/releases) should include everything. Just download, unzip and run.
 
-## Development
-Conda is used for dependency management. Create a new virtual env using:
+### Linux
+No package yet. First install Borg's own [dependencies](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install via
 ```
-$ conda env create environment.yml
+$ pip install vorta
+```
+
+After installation run with the `vorta` command.
+```
+$ vorta
+```
+
+## Development
+Install in development mode:
+```
+$ pip install -e .
+```
+
+Then run via
+```
+$ vorta
 ```
 
 Qt Creator is used to edit views. Install using Homebrew and then open the .ui files in `vorta/UI`:
@@ -35,19 +54,20 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
-To run directly:
-```
-PYTHONPATH=src python -m vorta
-```
-
 To build a binary package:
 ```
 $ pyinstaller --clean --noconfirm vorta.spec 
 ```
 
 ### Testing (work in progress)
-Tests are in the folder `/tests`. Run them with `PYTHONPATH=src pytest`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output.
+Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
+```
+$ python setup.py test
+```
 
+## Privacy Policy
+- No personal data is ever stored or transmitted by this application.
+- During beta, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs.
 
 ## Why the Name?
 [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) are a race referenced in Star Trek. They serve the Dominion and are replaced by their clones if they die. Just like our backups.
