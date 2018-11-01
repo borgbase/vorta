@@ -20,6 +20,7 @@ Missing features: (PRs welcome)
 - [ ] Repo pruning
 - [ ] Repo checking
 - [ ] Full test coverage
+- [ ] Use static type checks via mypy
 - [ ] Packaging for Linux
 
 ## Installation and Download
@@ -48,7 +49,7 @@ Then run via
 $ vorta
 ```
 
-Qt Creator is used to edit views. Install using Homebrew and then open the .ui files in `vorta/UI`:
+Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/UI`:
 ```
 $ brew cask install qt-creator
 $ brew install qt
@@ -62,7 +63,7 @@ $ pyinstaller --clean --noconfirm vorta.spec
 ### Testing (work in progress)
 Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
 ```
-$ python setup.py test
+$ pytest
 ```
 
 ## Privacy Policy
@@ -78,5 +79,5 @@ $ python setup.py test
 ## License and Credits
 - Licensed under GPLv3. See LICENSE.txt for details.
 - Uses the excellent [BorgBackup](https://www.borgbackup.org)
-- Based on PyQt and Qt.
+- Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
 - Icons by [FontAwesome](https://fontawesome.com)
