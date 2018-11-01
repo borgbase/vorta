@@ -1,10 +1,9 @@
 from dateutil import parser
 from PyQt5 import uic, QtCore
-import keyring
 
 from ..models import RepoModel, SnapshotModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
-from ..utils import prettyBytes, get_private_keys, get_asset
+from ..utils import prettyBytes, get_private_keys, get_asset, keyring
 from .ssh_add import SSHAddWindow
 
 uifile = get_asset('UI/repotab.ui')

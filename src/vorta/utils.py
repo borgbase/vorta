@@ -8,7 +8,21 @@ from paramiko import SSHException
 from PyQt5.QtWidgets import QApplication
 import subprocess
 
+"""Workaround for pyinstaller+keyring issue."""
+import keyring
+if sys.platform == 'darwin':
+    from keyring.backends import OS_X
+    keyring.set_keyring(OS_X.Keyring())
+elif sys.platform == 'win32':
+    from keyring.backends import Windows
+    keyring.set_keyring(Windows.WinVaultKeyring())
+else:
+    from keyring.backends import SecretService
+    keyring.set_keyring(SecretService.Keyring())
+
+
 from .models import WifiSettingModel
+
 
 def get_private_keys():
     """Find SSH keys in standard folder."""
@@ -90,4 +104,3 @@ def get_current_wifi():
         split_line = line.strip().split(':')
         if split_line[0] == 'SSID':
             return split_line[1].strip()
-
