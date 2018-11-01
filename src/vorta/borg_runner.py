@@ -96,7 +96,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.result.emit(result)
         self.mutex.unlock()
 
-
     def process_create_result(self, result):
         if result['returncode'] == 0:
             new_snapshot, created = SnapshotModel.get_or_create(
@@ -104,7 +103,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 defaults={
                     'name': result['data']['archive']['name'],
                     'time': parser.parse(result['data']['archive']['start']),
-                    'repo': self.profile.repo
+                    'repo': self.profile.repo,
+                    'duration': result['data']['archive']['duration'],
+                    'size': result['data']['archive']['stats']['deduplicated_size']
                 }
             )
             new_snapshot.save()
