@@ -81,7 +81,7 @@
      <item row="3" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Need hosting for your Borg repository? &lt;a href=&quot;https://www.borgbackup.org/support/commercial.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;View providers&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Needs Borg installed server-side. Or try &lt;a href=&quot;https://www.borgbase.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase.&lt;/span&gt;&lt;/a&gt; 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>
@@ -101,7 +101,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_14">
        <property name="text">
-        <string>SSH Login Key:</string>
+        <string>SSH Key:</string>
        </property>
       </widget>
      </item>
@@ -122,7 +122,7 @@
      <item row="1" column="1">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>To access repository securely. Keep at default if you already have one. Or create new key.</string>
+        <string>To access repository securely. Keep default to use all your existing keys. Or create new key.</string>
        </property>
       </widget>
      </item>
