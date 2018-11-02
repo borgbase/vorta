@@ -11,45 +11,37 @@ from .views.main_window import MainWindow
 
 
 class VortaApp(QApplication, BackupProfileMixin):
-    backup_done = QtCore.pyqtSignal()
-    backup_log = QtCore.pyqtSignal(str)
+    """
+    All windows and QWidgets are children of this app.
+
+    When running Borg-commands, the class `BorgThread` will emit events
+    via the `VortaApp` class to which other windows will subscribe to.
+    """
+
+    backup_started_event = QtCore.pyqtSignal()
+    backup_finished_event = QtCore.pyqtSignal(dict)
+    backup_cancelled_event = QtCore.pyqtSignal()
+    backup_log_event = QtCore.pyqtSignal(str)
 
     def __init__(self, args):
         super().__init__(args)
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
 
-        # Prepare tray and connect events.
+        # Prepare tray and main window
         self.tray = TrayMenu(self)
-        self.tray.start_backup.connect(self.create_backup)
-        self.tray.open_main_window.connect(self.on_open_main_window)
-
-        # Prepare main window
         self.main_window = MainWindow(self)
+        self.main_window.show()
 
-        if not getattr(sys, 'frozen', False):
-            self.main_window.show()
-
-    def cancel_backup(self):
-        """Can't cancel background backups."""
-        if self.thread and self.thread.isRunning():
-            self.thread.mutex.unlock()
-            self.thread.process.kill()
-            self.thread.terminate()
-
-    def create_backup(self):
-        msg = BorgThread.prepare_runner()
+    def create_backup_action(self):
+        msg = BorgThread.prepare_create_cmd()
         if msg['ok']:
             self.thread = BorgThread(msg['cmd'], msg['params'], parent=self)
-            self.thread.updated.connect(self.backup_log.emit)
-            self.thread.result.connect(self.create_backup_result)
             self.thread.start()
         return msg
 
-    def on_open_main_window(self):
+    def open_main_window_action(self):
         self.main_window.show()
         self.main_window.raise_()
 
-    def create_backup_result(self, result):
-        self.backup_done.emit()
 

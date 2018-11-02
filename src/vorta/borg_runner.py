@@ -14,21 +14,24 @@ from .models import SourceDirModel, BackupProfileModel, EventLogModel, WifiSetti
 from .utils import get_current_wifi, keyring
 
 
-
 class BorgThread(QtCore.QThread, BackupProfileMixin):
-    updated = QtCore.pyqtSignal(str)
-    result = QtCore.pyqtSignal(object)
     mutex = QtCore.QMutex()
 
     def __init__(self, cmd, params, parent=None):
         """
-        Thread to run Borg operations in.
+        Thread to run Borg operations in. It will connect to the main app instance and
+        emit events via it.
+
+        Functions, like `prepare_create_cmd` and `process_create_result` are structured
+        around Borg subcommands. They may move to their own class in the future.
 
         :param cmd: Borg command line
         :param params: To pass extra options that are later formatted centrally.
-        :param parent: Parent window. Needs `thread.wait()` if none.
+        :param parent: Parent window. Needs `thread.wait()` if none. (scheduler)
         """
         super().__init__(parent)
+        self.app = QApplication.instance()
+        self.app.backup_cancelled_event.connect(self.cancel)
 
         # Find packaged borg binary. Prefer globally installed.
         if not shutil.which('borg'):
@@ -59,6 +62,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return True
 
     def run(self):
+        self.app.backup_started_event.emit()
+        self.app.backup_log_event.emit('Backup started.')
         self.mutex.lock()
         log_entry = EventLogModel(category='borg-run', subcommand=self.cmd[1])
         log_entry.save()
@@ -67,11 +72,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             try:
                 parsed = json.loads(line)
                 if parsed['type'] == 'log_message':
-                    self.updated.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                    self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}')
                 elif parsed['type'] == 'file_status':
-                    self.updated.emit(f'{parsed["path"]} ({parsed["status"]})')
+                    self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
             except json.decoder.JSONDecodeError:
-                self.updated.emit(line.strip())
+                self.app.backup_log_event.emit(line.strip())
 
         self.process.wait()
         stdout = self.process.stdout.read()
@@ -93,8 +98,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if hasattr(self, result_func):
             getattr(self, result_func)(result)
 
-        self.result.emit(result)
+        self.app.backup_finished_event.emit(result)
         self.mutex.unlock()
+
+    def cancel(self):
+        if self.isRunning():
+            self.mutex.unlock()
+            self.process.kill()
+            self.terminate()
 
     def process_create_result(self, result):
         if result['returncode'] == 0:
@@ -119,7 +130,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 repo.save()
 
     @classmethod
-    def prepare_runner(cls):
+    def prepare_create_cmd(cls):
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.

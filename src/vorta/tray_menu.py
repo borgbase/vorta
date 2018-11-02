@@ -8,9 +8,6 @@ from .borg_runner import BorgThread
 
 
 class TrayMenu(QSystemTrayIcon):
-    start_backup = QtCore.pyqtSignal()
-    open_main_window = QtCore.pyqtSignal()
-
     def __init__(self, parent=None):
         icon = QIcon(get_asset('icons/hdd-o.png'))
         QSystemTrayIcon.__init__(self, icon, parent)
@@ -21,15 +18,19 @@ class TrayMenu(QSystemTrayIcon):
         self.status.setEnabled(False)
 
         self.create_action = menu.addAction("Backup Now")
-        self.create_action.triggered.connect(self.start_backup.emit)
+        self.create_action.triggered.connect(self.app.create_backup_action)
+
+        self.cancel_action = menu.addAction("Cancel Backup")
+        self.cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
+        self.cancel_action.setVisible(False)
 
         settings_action = menu.addAction("Settings")
-        settings_action.triggered.connect(self.open_main_window.emit)
+        settings_action.triggered.connect(self.app.open_main_window_action)
 
         menu.addSeparator()
 
         exit_action = menu.addAction("Exit")
-        exit_action.triggered.connect(self.on_exit_action)
+        exit_action.triggered.connect(self.app.quit)
 
         self.activated.connect(self.on_user_click)
 
@@ -37,14 +38,13 @@ class TrayMenu(QSystemTrayIcon):
         self.setVisible(True)
         self.show()
 
-    def on_exit_action(self):
-        self.app.quit()
-
     def on_user_click(self):
         """Adjust labels to reflect current status."""
         if BorgThread.is_running():
             self.status.setText('Backup in Progress')
-            self.create_action.setText('Cancel Backup')
+            self.create_action.setVisible(False)
+            self.cancel_action.setVisible(True)
         else:
             self.status.setText(f'Next Task: {self.app.scheduler.next_job}')
-            self.create_action.setText('Backup Now')
+            self.create_action.setVisible(True)
+            self.cancel_action.setVisible(False)

@@ -35,7 +35,7 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
 
     @classmethod
     def create_backup(cls):
-        msg = BorgThread.prepare_runner()
+        msg = BorgThread.prepare_create_cmd()
         if msg['ok']:
             thread = BorgThread(msg['cmd'], msg['params'])
             thread.start()
