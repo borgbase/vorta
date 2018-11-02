@@ -7,7 +7,7 @@ from ..utils import pretty_bytes, get_private_keys, get_asset, keyring
 from .ssh_add import SSHAddWindow
 
 uifile = get_asset('UI/repotab.ui')
-RepoUI, RepoBase = uic.loadUiType(uifile)
+RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
 class RepoTab(RepoBase, RepoUI, BackupProfileMixin):

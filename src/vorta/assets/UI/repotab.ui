@@ -63,21 +63,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="repoSelector">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>Select Backup Destination</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
@@ -105,26 +90,95 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="sshComboBox">
-       <item>
-        <property name="text">
-         <string>Automatically choose SSH Key (default)</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Create New Key</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>To access repository securely. Keep default to use all your existing keys. Or create new key.</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QComboBox" name="sshComboBox">
+         <item>
+          <property name="text">
+           <string>Automatically choose SSH Key (default)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Create New Key</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="sshKeyToClipboardButton">
+         <property name="toolTip">
+          <string>Copy public SSH key to clipboard.</string>
+         </property>
+         <property name="statusTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Copy</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/collection.qrc">
+           <normaloff>:/icons/copy.svg</normaloff>:/icons/copy.svg</iconset>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="arrowType">
+          <enum>Qt::NoArrow</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QComboBox" name="repoSelector">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>Select Backup Destination</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="repoRemoveToolbutton">
+         <property name="toolTip">
+          <string>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/collection.qrc">
+           <normaloff>:/icons/unlink.svg</normaloff>:/icons/unlink.svg</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -234,6 +288,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons/collection.qrc"/>
+ </resources>
  <connections/>
 </ui>
