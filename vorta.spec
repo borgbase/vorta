@@ -42,7 +42,7 @@ app = BUNDLE(exe,
              info_plist={
                      'NSHighResolutionCapable': 'True',
                      'LSUIElement': '1',
-                     'CFBundleShortVersionString': '0.2.4'
+                     'CFBundleShortVersionString': '0.2.5'
                      },
              )
 if False:
