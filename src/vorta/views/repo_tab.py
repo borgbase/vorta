@@ -165,7 +165,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.setParent(self, QtCore.Qt.Sheet)
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
-        if selected_repo_id is not None:
+        if selected_repo_index > 2:
             repo = RepoModel.get(id=selected_repo_id)
             repo.delete_instance()
             profile.repo = None

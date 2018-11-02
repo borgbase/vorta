@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 from playhouse.migrate import SqliteMigrator, migrate
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 db = pw.Proxy()
 
@@ -171,5 +171,10 @@ def init_db(con):
             current_schema, 4,
             migrator.add_column(SnapshotModel._meta.table_name, 'duration', pw.FloatField(null=True)),
             migrator.add_column(SnapshotModel._meta.table_name, 'size', pw.IntegerField(null=True))
+        )
+    if current_schema.version < 5:
+        _apply_schema_update(
+            current_schema, 5,
+            migrator.drop_not_null(WifiSettingModel._meta.table_name, 'last_connected'),
         )
 
