@@ -27,7 +27,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
 
-        self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
+        self.repoTab.repo_changed.connect(self.snapshotTab.populate)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 

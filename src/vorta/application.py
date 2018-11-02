@@ -38,7 +38,8 @@ class VortaApp(QApplication, BackupProfileMixin):
         if msg['ok']:
             self.thread = BorgThread(msg['cmd'], msg['params'], parent=self)
             self.thread.start()
-        return msg
+        else:
+            self.backup_log_event.emit(msg['message'])
 
     def open_main_window_action(self):
         self.main_window.show()

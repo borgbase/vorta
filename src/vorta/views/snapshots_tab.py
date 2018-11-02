@@ -51,6 +51,8 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
                 self.snapshotTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
                 self.snapshotTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
             self.snapshotTable.setRowCount(len(snapshots))
+        else:
+            self.snapshotTable.setRowCount(0)
 
     def snapshot_mount(self):
         profile = self.profile
