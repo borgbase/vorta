@@ -81,7 +81,7 @@ def get_sorted_wifis():
     wifis = plistlib.load(plist_file)['KnownNetworks']
     if wifis:
         for wifi in wifis.values():
-            timestamp = wifi['LastConnected']
+            timestamp = wifi.get('LastConnected', None)
             ssid = wifi['SSIDString']
             WifiSettingModel.get_or_create(ssid=ssid, profile=app.profile,
                                            defaults={'last_connected': timestamp,

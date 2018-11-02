@@ -1,1 +1,2 @@
+graft src/vorta/assets
 recursive-exclude tests *
