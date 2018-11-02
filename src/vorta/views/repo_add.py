@@ -1,6 +1,6 @@
 from PyQt5 import uic, QtCore
 from ..utils import get_private_keys, get_asset
-from ..borg_runner import BorgThread
+from ..borg_thread import BorgThread
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
@@ -87,4 +87,3 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText('Connect to existing Repository')
-

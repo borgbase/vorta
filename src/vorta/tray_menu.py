@@ -4,7 +4,7 @@ from .views.main_window import MainWindow
 from PyQt5.QtGui import QIcon
 
 from .utils import get_asset
-from .borg_runner import BorgThread
+from .borg_thread import BorgThread
 
 
 class TrayMenu(QSystemTrayIcon):
