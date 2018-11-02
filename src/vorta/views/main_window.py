@@ -28,11 +28,16 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
 
         self.repoTab.repo_changed.connect(lambda: self.snapshotTab.populate())
-        self.createStartBtn.clicked.connect(self.backup_start)
-        self.cancelButton.clicked.connect(self.backup_cancel)
+        self.createStartBtn.clicked.connect(self.app.create_backup_action)
+        self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
         QShortcut(QKeySequence("Ctrl+W"), self).activated.connect(self.on_close_window)
         QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(self.on_close_window)
+
+        self.app.backup_started_event.connect(self.backup_started_event)
+        self.app.backup_finished_event.connect(self.backup_finished_event)
+        self.app.backup_log_event.connect(self.set_status)
+        self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Connect to existing thread.
         if BorgThread.is_running():
@@ -50,30 +55,24 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createProgress.setRange(0, progress_max)
         self.createProgressText.repaint()
 
-    def backup_start(self):
-        msg = self.app.create_backup()
-        if msg['ok']:
-            self.set_status(msg['message'], progress_max=0)
+    def backup_started_event(self):
+            self.set_status(progress_max=0)
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.repaint()
-            self.app.backup_done.connect(self.backup_done)
-            self.app.backup_log.connect(self.create_update_log)
-        else:
-            self.set_status(msg['message'])
+            self.cancelButton.setEnabled(True)
+            self.cancelButton.repaint()
 
-    def create_update_log(self, text):
-        self.set_status(text)
-
-    def backup_cancel(self):
-        self.app.cancel_backup()
-        self.createStartBtn.setEnabled(True)
-        self.createStartBtn.repaint()
-        self.set_status(progress_max=100)
-        self.set_status('Backup cancelled')
-
-
-    def backup_done(self):
+    def backup_finished_event(self):
         self.createStartBtn.setEnabled(True)
         self.createStartBtn.repaint()
         self.set_status(progress_max=100)
         self.snapshotTab.populate()
+
+    def backup_cancelled_event(self):
+        self.createStartBtn.setEnabled(True)
+        self.createStartBtn.repaint()
+        self.cancelButton.setEnabled(False)
+        self.cancelButton.repaint()
+        self.set_status(progress_max=100)
+        self.set_status('Backup cancelled')
+

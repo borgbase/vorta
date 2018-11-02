@@ -1,5 +1,7 @@
+import os
 from dateutil import parser
 from PyQt5 import uic, QtCore
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from ..models import RepoModel, SnapshotModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
@@ -17,6 +19,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
 
+        # Populate dropdowns
         self.repoSelector.model().item(0).setEnabled(False)
         self.repoSelector.addItem('Initialize New Repository', 'init')
         self.repoSelector.addItem('Add Existing Repository', 'existing')
@@ -30,6 +33,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.addItem('LZ4 (default)', 'lz4')
         self.repoCompression.addItem('Zstandard (medium)', 'zstd')
         self.repoCompression.addItem('LZMA (high)', 'lzma,6')
+        self.repoCompression.addItem('No Compression', 'none')
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(self.profile.compression))
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
@@ -51,6 +55,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})', key['filename'])
         self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
+        self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
 
     def ssh_select_action(self, index):
         if index == 1:
@@ -63,6 +68,30 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             profile = self.profile
             profile.ssh_key = self.sshComboBox.itemData(index)
             profile.save()
+
+    def ssh_copy_to_clipboard_action(self):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setParent(self, QtCore.Qt.Sheet)
+
+        index = self.sshComboBox.currentIndex()
+        if index > 1:
+            ssh_key_filename = self.sshComboBox.itemData(index)
+            ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key_filename}.pub')
+            if os.path.isfile(ssh_key_path):
+                pub_key = open(ssh_key_path).read().strip()
+                clipboard = QApplication.clipboard()
+                clipboard.setText(pub_key)
+
+                msg.setText("Public Key Copied to Clipboard")
+                msg.setInformativeText(
+                    "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.")
+
+            else:
+                msg.setText("Couldn't find public key.")
+        else:
+            msg.setText("Select a public key from the dropdown first.")
+        msg.exec_()
 
 
     def compression_select_action(self, index):

@@ -169,6 +169,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="cancelButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="font">
           <font>
            <pointsize>11</pointsize>
