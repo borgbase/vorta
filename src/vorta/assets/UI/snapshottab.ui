@@ -44,7 +44,7 @@
        </attribute>
        <column>
         <property name="text">
-         <string>Name</string>
+         <string>Date</string>
         </property>
        </column>
        <column>
@@ -59,7 +59,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Date</string>
+         <string>Name</string>
         </property>
        </column>
       </widget>

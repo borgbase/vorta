@@ -17,10 +17,10 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
 
         header = self.snapshotTable.horizontalHeader()
         header.setVisible(True)
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.Stretch)
 
         self.snapshotTable.setSelectionBehavior(QTableView.SelectRows)
         self.snapshotTable.setEditTriggers(QTableView.NoEditTriggers)
@@ -41,15 +41,15 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
 
             for row, snapshot in enumerate(snapshots):
                 self.snapshotTable.insertRow(row)
-                self.snapshotTable.setItem(row, 0, QTableWidgetItem(snapshot.name))
+                formatted_time = snapshot.time.strftime('%Y-%m-%d %H:%M')
+                self.snapshotTable.setItem(row, 0, QTableWidgetItem(formatted_time))
                 self.snapshotTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(snapshot.size)))
                 if snapshot.duration:
                     formatted_duration = str(timedelta(seconds=round(snapshot.duration)))
                 else:
                     formatted_duration = 'N/A'
                 self.snapshotTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-                formatted_time = snapshot.time.strftime('%Y-%m-%d %H:%M')
-                self.snapshotTable.setItem(row, 3, QTableWidgetItem(formatted_time))
+                self.snapshotTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
             self.snapshotTable.setRowCount(len(snapshots))
 
     def snapshot_mount(self):
@@ -57,7 +57,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         cmd = ['borg', 'mount', '--log-json']
         row_selected = self.snapshotTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 0)
+            snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 3)
             if snapshot_cell:
                 snapshot_name = snapshot_cell.text()
                 cmd.append(f'{profile.repo.url}::{snapshot_name}')

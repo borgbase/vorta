@@ -5,5 +5,8 @@
         <file>clock-o.svg</file>
         <file>server.svg</file>
         <file>window-restore.svg</file>
+        <file>copy.svg</file>
+        <file>trash.svg</file>
+        <file>unlink.svg</file>
     </qresource>
 </RCC>
