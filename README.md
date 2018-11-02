@@ -2,7 +2,7 @@
 
 ![](https://files.qmax.us/vorta-screencast-3.gif)
 
-Vorta is a open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in alpha status. 
+Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in alpha status. 
 
 ## Main features
 
@@ -15,7 +15,7 @@ Vorta is a open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readt
 - View a list of snapshots and action logs
 - Exclude options/patterns.
 
-Planned features:
+Coming soon:
 
 - [ ] Support multiple backup profiles (in progress)
 - [ ] Repo pruning
