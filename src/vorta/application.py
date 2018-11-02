@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QApplication
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
 from .models import BackupProfileModel, SnapshotModel, BackupProfileMixin
-from .borg_runner import BorgThread
+from .borg_create import BorgCreateThread
 from .views.main_window import MainWindow
 
 
@@ -34,9 +34,9 @@ class VortaApp(QApplication, BackupProfileMixin):
         self.main_window.show()
 
     def create_backup_action(self):
-        msg = BorgThread.prepare_create_cmd()
+        msg = BorgCreateThread.prepare()
         if msg['ok']:
-            self.thread = BorgThread(msg['cmd'], msg['params'], parent=self)
+            self.thread = BorgCreateThread(msg['cmd'], msg['params'], parent=self)
             self.thread.start()
         else:
             self.backup_log_event.emit(msg['message'])

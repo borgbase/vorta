@@ -3,7 +3,7 @@ import pytest
 import io
 from PyQt5 import QtCore
 
-import vorta.borg_runner
+import vorta.borg_thread
 import vorta.models
 from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel
@@ -33,7 +33,7 @@ def test_repo_add(main, qtbot, mocker):
     popen_result =mocker.MagicMock(stdout=io.StringIO("some initial binary data"),
                               stderr=io.StringIO("some initial binary data"),
                               returncode=0)
-    mocker.patch.object(vorta.borg_runner, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
 

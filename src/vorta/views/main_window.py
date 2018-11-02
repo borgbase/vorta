@@ -7,7 +7,7 @@ from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
 from .schedule_tab import ScheduleTab
 from ..utils import get_asset
-from ..borg_runner import BorgThread
+from ..borg_thread import BorgThread
 
 
 uifile = get_asset('UI/mainwindow.ui')

@@ -1,7 +1,7 @@
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 
-from .borg_runner import BorgThread
+from .borg_create import BorgCreateThread
 from .models import BackupProfileMixin
 
 
@@ -35,8 +35,8 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
 
     @classmethod
     def create_backup(cls):
-        msg = BorgThread.prepare_create_cmd()
+        msg = BorgCreateThread.prepare()
         if msg['ok']:
-            thread = BorgThread(msg['cmd'], msg['params'])
+            thread = BorgCreateThread(msg['cmd'], msg['params'])
             thread.start()
             thread.wait()
