@@ -13,7 +13,7 @@ RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.
 
 
 class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
-    repo_changed = QtCore.pyqtSignal(int)
+    repo_changed = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -28,7 +28,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         if self.profile.repo:
             self.repoSelector.setCurrentIndex(self.repoSelector.findData(self.profile.repo.id))
+
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
+        self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
 
         self.repoCompression.addItem('LZ4 (default)', 'lz4')
         self.repoCompression.addItem('Zstandard (medium)', 'zstd')
@@ -38,17 +40,16 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
-
-        if self.profile.repo:
-            self.init_repo_stats()
+        self.init_repo_stats()
 
     def init_repo_stats(self):
         repo = self.profile.repo
-        self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
-        self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
-        self.sizeOriginal.setText(pretty_bytes(repo.total_size))
-        self.repoEncryption.setText(str(repo.encryption))
-        self.repo_changed.emit(repo.id)
+        if repo is not None:
+            self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
+            self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
+            self.sizeOriginal.setText(pretty_bytes(repo.total_size))
+            self.repoEncryption.setText(str(repo.encryption))
+            self.repo_changed.emit()
 
     def init_ssh(self):
         keys = get_private_keys()
@@ -93,13 +94,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.setText("Select a public key from the dropdown first.")
         msg.exec_()
 
-
     def compression_select_action(self, index):
         profile = self.profile
         profile.compression = self.repoCompression.currentData()
         profile.save()
 
     def repo_select_action(self, index):
+        if index == 0:
+            return
         if index <= 2:
             if index == 1:
                 window = AddRepoWindow()
@@ -153,4 +155,27 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                     new_snapshot.save()
             self.repoSelector.addItem(new_repo.url, new_repo.id)
             self.repoSelector.setCurrentIndex(self.repoSelector.count()-1)
-            self.repo_changed.emit(self.profile.repo.id)
+            self.repo_changed.emit()
+
+    def repo_unlink_action(self):
+        profile = self.profile
+        self.init_repo_stats()
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setParent(self, QtCore.Qt.Sheet)
+        selected_repo_id = self.repoSelector.currentData()
+        selected_repo_index = self.repoSelector.currentIndex()
+        if selected_repo_id is not None:
+            repo = RepoModel.get(id=selected_repo_id)
+            repo.delete_instance()
+            profile.repo = None
+            profile.save()
+            self.repoSelector.setCurrentIndex(0)
+            self.repoSelector.removeItem(selected_repo_index)
+            msg.setText('Repository was Unlinked')
+            msg.setInformativeText('You can always connect it again later.')
+            msg.exec_()
+
+            self.repo_changed.emit()
+
+
