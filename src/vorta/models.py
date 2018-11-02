@@ -100,7 +100,7 @@ class SnapshotModel(pw.Model):
 class WifiSettingModel(pw.Model):
     """Save Wifi Settings"""
     ssid = pw.CharField()
-    last_connected = pw.DateTimeField()
+    last_connected = pw.DateTimeField(null=True)
     allowed = pw.BooleanField(default=True)
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
 
