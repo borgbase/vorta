@@ -1,13 +1,13 @@
-import sys
-import os
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QIcon
 
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
-from .models import BackupProfileModel, SnapshotModel, BackupProfileMixin
-from .borg_create import BorgCreateThread
+from .models import BackupProfileMixin
+from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
+from .utils import get_asset
 
 
 class VortaApp(QApplication, BackupProfileMixin):
@@ -33,11 +33,14 @@ class VortaApp(QApplication, BackupProfileMixin):
         self.main_window = MainWindow(self)
         self.main_window.show()
 
+        self.backup_started_event.connect(self.backup_started_event_response)
+        self.backup_finished_event.connect(self.backup_finished_event_response)
+
     def create_backup_action(self):
         msg = BorgCreateThread.prepare()
         if msg['ok']:
-            self.thread = BorgCreateThread(msg['cmd'], msg['params'], parent=self)
-            self.thread.start()
+            thread = BorgCreateThread(msg['cmd'], msg['params'], parent=self)
+            thread.start()
         else:
             self.backup_log_event.emit(msg['message'])
 
@@ -45,4 +48,10 @@ class VortaApp(QApplication, BackupProfileMixin):
         self.main_window.show()
         self.main_window.raise_()
 
+    def backup_started_event_response(self):
+        icon = QIcon(get_asset('icons/hdd-o-active.png'))
+        self.tray.setIcon(icon)
 
+    def backup_finished_event_response(self):
+        icon = QIcon(get_asset('icons/hdd-o.png'))
+        self.tray.setIcon(icon)

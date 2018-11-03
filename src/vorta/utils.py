@@ -77,15 +77,16 @@ def get_sorted_wifis():
     """Get SSIDs from OS and merge with settings in DB."""
     app = QApplication.instance()
 
-    plist_file = open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb')
-    wifis = plistlib.load(plist_file)['KnownNetworks']
-    if wifis:
-        for wifi in wifis.values():
-            timestamp = wifi.get('LastConnected', None)
-            ssid = wifi['SSIDString']
-            WifiSettingModel.get_or_create(ssid=ssid, profile=app.profile,
-                                           defaults={'last_connected': timestamp,
-                                                    'allowed': True})
+    if sys.platform == 'darwin':
+        plist_file = open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb')
+        wifis = plistlib.load(plist_file)['KnownNetworks']
+        if wifis:
+            for wifi in wifis.values():
+                timestamp = wifi.get('LastConnected', None)
+                ssid = wifi['SSIDString']
+                WifiSettingModel.get_or_create(ssid=ssid, profile=app.profile,
+                                               defaults={'last_connected': timestamp,
+                                                        'allowed': True})
 
     return WifiSettingModel.select().order_by(-WifiSettingModel.last_connected)
 
@@ -96,11 +97,13 @@ def get_current_wifi():
 
     From https://gist.github.com/keithweaver/00edf356e8194b89ed8d3b7bbead000c
     """
-    cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport','-I']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    out, err = process.communicate()
-    process.wait()
-    for line in out.decode("utf-8").split('\n'):
-        split_line = line.strip().split(':')
-        if split_line[0] == 'SSID':
-            return split_line[1].strip()
+
+    if sys.platform == 'darwin':
+        cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport','-I']
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        out, err = process.communicate()
+        process.wait()
+        for line in out.decode("utf-8").split('\n'):
+            split_line = line.strip().split(':')
+            if split_line[0] == 'SSID':
+                return split_line[1].strip()

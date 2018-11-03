@@ -1,7 +1,7 @@
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 
-from .borg_create import BorgCreateThread
+from vorta.borg.create import BorgCreateThread
 from .models import BackupProfileMixin
 
 

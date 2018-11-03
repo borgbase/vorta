@@ -163,8 +163,6 @@ def init_db(con):
     else:
         migrator = SqliteMigrator(con)
 
-    if current_schema.version < 3:  # version 2 to 3
-        pass
 
     if current_schema.version < 4:  # version 3 to 4
         _apply_schema_update(

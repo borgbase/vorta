@@ -6,9 +6,8 @@ from vorta.views.schedule_tab import ScheduleTab
 
 from .fixtures import *
 
-def test_schedule_tab(main, qtbot):
-    tab = ScheduleTab(main.scheduleTabSlot)
-    # qtbot.addWidget(tab)
+def test_schedule_tab(app, qtbot):
+    tab = ScheduleTab(app.main_window.scheduleTabSlot)
     qtbot.mouseClick(tab.scheduleApplyButton, QtCore.Qt.LeftButton)
     assert tab.nextBackupDateTimeLabel.text() == 'Manual Backups'
 

@@ -7,7 +7,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from .models import EventLogModel
+from vorta.models import SourceDirModel, BackupProfileModel, WifiSettingModel, EventLogModel
+from vorta.utils import get_current_wifi, keyring
 
 mutex = QtCore.QMutex()
 
@@ -33,13 +34,9 @@ class BorgThread(QtCore.QThread):
         super().__init__(parent)
         self.app = QApplication.instance()
         self.app.backup_cancelled_event.connect(self.cancel)
-
-        # Find packaged borg binary. Prefer globally installed.
-        if not shutil.which('borg'):
-            meipass_borg = os.path.join(sys._MEIPASS, 'bin', 'borg')
-            if os.path.isfile(meipass_borg):
-                cmd[0] = meipass_borg
         self.cmd = cmd
+
+        self.cmd[0] = self.prepare_bin()
 
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
@@ -61,6 +58,60 @@ class BorgThread(QtCore.QThread):
             return False
         else:
             return True
+
+    @classmethod
+    def prepare(cls):
+        profile = BackupProfileModel.get(id=1)
+        ret = {'ok': False}
+
+        # Do checks to see if running Borg is possible.
+        if cls.is_running():
+            ret['message'] = 'Backup is already in progress.'
+            return ret
+
+        if profile.repo is None:
+            ret['message'] = 'Add a remote backup repository first.'
+            return ret
+
+        n_backup_folders = SourceDirModel.select().count()
+        if n_backup_folders == 0:
+            ret['message'] = 'Add some folders to back up first.'
+            return ret
+
+        current_wifi = get_current_wifi()
+        if current_wifi is not None:
+            wifi_is_disallowed = WifiSettingModel.select().where(
+                (WifiSettingModel.ssid == current_wifi)
+                & (WifiSettingModel.allowed == False)
+                & (WifiSettingModel.profile == profile.id)
+            )
+            if wifi_is_disallowed.count() > 0:
+                ret['message'] = 'Current Wifi is not allowed.'
+                return ret
+
+        if cls.prepare_bin() is None:
+            ret['message'] = 'Borg binary was not found.'
+            return ret
+
+        ret['params'] = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
+
+        return ret
+
+    @classmethod
+    def prepare_bin(cls):
+        """Find packaged borg binary. Prefer globally installed."""
+
+        # Look in current PATH.
+        if shutil.which('borg'):
+            return 'borg'
+        else:
+            # Look in pyinstaller package
+            cwd = getattr(sys, '_MEIPASS', os.getcwd())
+            meipass_borg = os.path.join(cwd, 'bin', 'borg')
+            if os.path.isfile(meipass_borg):
+                return meipass_borg
+            else:
+                return None
 
     def run(self):
         self.started_event()
