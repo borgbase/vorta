@@ -1,25 +1,23 @@
-
-import pytest
 import io
 from PyQt5 import QtCore
 
-import vorta.borg_thread
+import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel
 
 from .fixtures import *
 
-def test_repo_tab(main, qtbot):
+def test_repo_tab(app, qtbot):
+    main = app.main_window
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.createProgressText.text() == 'Add a remote backup repository first.'
 
 
-def test_repo_add(main, qtbot, mocker):
+def test_repo_add(app, qtbot, mocker):
     # Add new repo window
-    add_repo_window = AddRepoWindow(main)
-    qtbot.addWidget(add_repo_window)
-    add_repo_window.show()
+    main = app.main_window
+    add_repo_window = AddRepoWindow(main.repoTab)
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
     assert add_repo_window.errorText.text() == 'Please enter a valid repo URL including hostname and path.'
@@ -33,7 +31,7 @@ def test_repo_add(main, qtbot, mocker):
     popen_result =mocker.MagicMock(stdout=io.StringIO("some initial binary data"),
                               stderr=io.StringIO("some initial binary data"),
                               returncode=0)
-    mocker.patch.object(vorta.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
 
@@ -44,3 +42,4 @@ def test_repo_add(main, qtbot, mocker):
 
     assert EventLogModel.select().count() == 1
     assert RepoModel.get(id=1).url == 'aaabbb.com:repo'
+

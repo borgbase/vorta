@@ -156,6 +156,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoSelector.addItem(new_repo.url, new_repo.id)
             self.repoSelector.setCurrentIndex(self.repoSelector.count()-1)
             self.repo_changed.emit()
+            self.init_repo_stats()
 
     def repo_unlink_action(self):
         profile = self.profile
@@ -177,5 +178,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.exec_()
 
             self.repo_changed.emit()
+            self.init_repo_stats()
 
 

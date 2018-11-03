@@ -4,8 +4,7 @@ import platform
 from dateutil import parser
 from datetime import datetime as dt
 
-from .models import SourceDirModel, BackupProfileModel, WifiSettingModel, SnapshotModel, BackupProfileMixin
-from .utils import get_current_wifi, keyring
+from vorta.models import SourceDirModel, SnapshotModel, BackupProfileModel, BackupProfileMixin
 from .borg_thread import BorgThread
 
 
@@ -49,34 +48,10 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         Centralize it here and return the required arguments to the caller.
         """
         profile = BackupProfileModel.get(id=1)
-
-        ret = {'ok': False}
-
-        if cls.is_running():
-            ret['message'] = 'Backup is already in progress.'
+        ret = super().prepare()
+        if not ret['ok']:
             return ret
 
-        if profile.repo is None:
-            ret['message'] = 'Add a remote backup repository first.'
-            return ret
-
-        n_backup_folders = SourceDirModel.select().count()
-        if n_backup_folders == 0:
-            ret['message'] = 'Add some folders to back up first.'
-            return ret
-
-        current_wifi = get_current_wifi()
-        if current_wifi is not None:
-            wifi_is_disallowed = WifiSettingModel.select().where(
-                (WifiSettingModel.ssid == current_wifi)
-                & (WifiSettingModel.allowed == False)
-                & (WifiSettingModel.profile == profile.id)
-            )
-            if wifi_is_disallowed.count() > 0:
-                ret['message'] = 'Current Wifi is not allowed.'
-                return ret
-
-        params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', profile.compression]
 
         # Add excludes
@@ -108,6 +83,5 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         ret['message'] = 'Starting backup..'
         ret['ok'] = True
         ret['cmd'] = cmd
-        ret['params'] = params
 
         return ret

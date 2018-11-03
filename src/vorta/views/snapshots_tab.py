@@ -2,7 +2,7 @@ from datetime import timedelta
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
-from ..borg_thread import BorgThread
+from vorta.borg.borg_thread import BorgThread
 from ..utils import get_asset, keyring, pretty_bytes
 from ..models import BackupProfileMixin
 

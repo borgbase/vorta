@@ -11,9 +11,3 @@ def app(tmpdir):
     mock_db = peewee.SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
     return VortaApp([])
-
-
-@pytest.fixture()
-def main(app):
-    main = app.main_window
-    return main

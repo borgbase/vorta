@@ -7,7 +7,7 @@ from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
 from .schedule_tab import ScheduleTab
 from ..utils import get_asset
-from ..borg_thread import BorgThread
+from vorta.borg.borg_thread import BorgThread
 
 
 uifile = get_asset('UI/mainwindow.ui')
@@ -55,24 +55,24 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createProgress.setRange(0, progress_max)
         self.createProgressText.repaint()
 
+    def _toggle_buttons(self, create_enabled=True):
+        self.createStartBtn.setEnabled(create_enabled)
+        self.createStartBtn.repaint()
+        self.cancelButton.setEnabled(not create_enabled)
+        self.cancelButton.repaint()
+
     def backup_started_event(self):
             self.set_status(progress_max=0)
-            self.createStartBtn.setEnabled(False)
-            self.createStartBtn.repaint()
-            self.cancelButton.setEnabled(True)
-            self.cancelButton.repaint()
+            self._toggle_buttons(create_enabled=False)
 
     def backup_finished_event(self):
-        self.createStartBtn.setEnabled(True)
-        self.createStartBtn.repaint()
         self.set_status(progress_max=100)
+        self._toggle_buttons(create_enabled=True)
         self.snapshotTab.populate()
+        self.repoTab.init_repo_stats()
 
     def backup_cancelled_event(self):
-        self.createStartBtn.setEnabled(True)
-        self.createStartBtn.repaint()
-        self.cancelButton.setEnabled(False)
-        self.cancelButton.repaint()
+        self._toggle_buttons(create_enabled=True)
         self.set_status(progress_max=100)
         self.set_status('Backup cancelled')
 

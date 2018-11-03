@@ -42,7 +42,7 @@ $ vorta
 ## Development
 Install in development mode:
 ```
-$ pip install -e .
+$ python setup.py develop
 ```
 
 Then run via
@@ -64,7 +64,7 @@ $ pyinstaller --clean --noconfirm vorta.spec
 ### Testing (work in progress)
 Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
 ```
-$ pytest
+$ python setup.py test
 ```
 
 To update and view coverage information

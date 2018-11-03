@@ -1,10 +1,8 @@
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QMenu, QApplication, QSystemTrayIcon, QMessageBox, QDialog
-from .views.main_window import MainWindow
+from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
 from .utils import get_asset
-from .borg_thread import BorgThread
+from vorta.borg.borg_thread import BorgThread
 
 
 class TrayMenu(QSystemTrayIcon):
