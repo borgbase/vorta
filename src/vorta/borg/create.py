@@ -4,7 +4,8 @@ import platform
 from dateutil import parser
 from datetime import datetime as dt
 
-from vorta.models import SourceDirModel, SnapshotModel, BackupProfileModel, BackupProfileMixin
+from ..utils import get_current_wifi
+from ..models import SourceDirModel, SnapshotModel, BackupProfileModel, BackupProfileMixin, WifiSettingModel
 from .borg_thread import BorgThread
 
 
@@ -16,7 +17,7 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
                 defaults={
                     'name': result['data']['archive']['name'],
                     'time': parser.parse(result['data']['archive']['start']),
-                    'repo': self.profile.repo,
+                    'repo': self.profile().repo,
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size']
                 }
@@ -24,7 +25,7 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
             new_snapshot.save()
             if 'cache' in result['data'] and created:
                 stats = result['data']['cache']['stats']
-                repo = self.profile.repo
+                repo = self.profile().repo
                 repo.total_size = stats['total_size']
                 repo.unique_csize = stats['unique_csize']
                 repo.unique_size = stats['unique_size']
@@ -47,10 +48,28 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.
         """
-        profile = BackupProfileModel.get(id=1)
+        profile = cls.profile()
         ret = super().prepare()
         if not ret['ok']:
             return ret
+        else:
+            ret['ok'] = False  # Set back to false, so we can do our own checks here.
+
+        n_backup_folders = SourceDirModel.select().count()
+        if n_backup_folders == 0:
+            ret['message'] = 'Add some folders to back up first.'
+            return ret
+
+        current_wifi = get_current_wifi()
+        if current_wifi is not None:
+            wifi_is_disallowed = WifiSettingModel.select().where(
+                (WifiSettingModel.ssid == current_wifi)
+                & (WifiSettingModel.allowed == False)
+                & (WifiSettingModel.profile == profile.id)
+            )
+            if wifi_is_disallowed.count() > 0:
+                ret['message'] = 'Current Wifi is not allowed.'
+                return ret
 
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', profile.compression]
 
@@ -83,5 +102,6 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         ret['message'] = 'Starting backup..'
         ret['ok'] = True
         ret['cmd'] = cmd
+        ret['ssh_key'] = None  # TODO: implement
 
         return ret

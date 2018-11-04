@@ -17,8 +17,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for source in SourceDirModel.select():
             self.sourceDirectoriesWidget.addItem(source.dir)
 
-        self.excludePatternsField.appendPlainText(self.profile.exclude_patterns)
-        self.excludeIfPresentField.appendPlainText(self.profile.exclude_if_present)
+        self.excludePatternsField.appendPlainText(self.profile().exclude_patterns)
+        self.excludeIfPresentField.appendPlainText(self.profile().exclude_if_present)
 
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
@@ -42,11 +42,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         item = None
 
     def save_exclude_patterns(self):
-        profile = self.profile
+        profile = self.profile()
         profile.exclude_patterns = self.excludePatternsField.toPlainText()
         profile.save()
 
     def save_exclude_if_present(self):
-        profile = self.profile
+        profile = self.profile()
         profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
         profile.save()

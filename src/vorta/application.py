@@ -39,7 +39,7 @@ class VortaApp(QApplication, BackupProfileMixin):
     def create_backup_action(self):
         msg = BorgCreateThread.prepare()
         if msg['ok']:
-            thread = BorgCreateThread(msg['cmd'], msg['params'], parent=self)
+            thread = BorgCreateThread(msg['cmd'], msg, parent=self)
             thread.start()
         else:
             self.backup_log_event.emit(msg['message'])

@@ -1,13 +1,10 @@
-import pytest
 from datetime import datetime as dt, date, time
 from PyQt5 import QtCore
 
 from vorta.views.schedule_tab import ScheduleTab
 
-from .fixtures import *
-
 def test_schedule_tab(app, qtbot):
-    tab = ScheduleTab(app.main_window.scheduleTabSlot)
+    tab = ScheduleTab(app.main_window.scheduleTab)
     qtbot.mouseClick(tab.scheduleApplyButton, QtCore.Qt.LeftButton)
     assert tab.nextBackupDateTimeLabel.text() == 'Manual Backups'
 

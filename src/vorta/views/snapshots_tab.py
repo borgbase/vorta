@@ -1,16 +1,21 @@
 from datetime import timedelta
+import copy
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.borg_thread import BorgThread
-from ..utils import get_asset, keyring, pretty_bytes
-from ..models import BackupProfileMixin
+from vorta.borg.prune import BorgPruneThread
+from vorta.borg.list import BorgListThread
+from vorta.utils import get_asset, keyring, pretty_bytes
+from vorta.models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
 SnapshotUI, SnapshotBase = uic.loadUiType(uifile)
 
 
 class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
+    prune_intervals = ['hour', 'day', 'week', 'month', 'year']
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
@@ -25,9 +30,14 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         self.snapshotTable.setSelectionBehavior(QTableView.SelectRows)
         self.snapshotTable.setEditTriggers(QTableView.NoEditTriggers)
 
+        # Populate pruning options from database
+        for i in self.prune_intervals:
+            getattr(self, f'prune_{i}').setValue(getattr(self.profile(), f'prune_{i}'))
+            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+
         self.snapshotMountButton.clicked.connect(self.snapshot_mount)
-        self.snapshotDeleteButton.clicked.connect(self.snapshot_mount)
-        self.snapshotRefreshButton.clicked.connect(self.snapshot_mount)
+        self.listButton.clicked.connect(self.list_action)
+        self.pruneButton.clicked.connect(self.prune_action)
 
         self.populate()
 
@@ -36,8 +46,8 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def populate(self):
-        if self.profile.repo:
-            snapshots = [s for s in self.profile.repo.snapshots.select()]
+        if self.profile().repo:
+            snapshots = [s for s in self.profile().repo.snapshots.select()]
 
             for row, snapshot in enumerate(snapshots):
                 self.snapshotTable.insertRow(row)
@@ -54,8 +64,42 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         else:
             self.snapshotTable.setRowCount(0)
 
+    def prune_action(self):
+        params = BorgPruneThread.prepare()
+        if params['ok']:
+            thread = BorgPruneThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self.set_status)
+            thread.result.connect(self.prune_result)
+            self.pruneButton.setEnabled(False)
+            self.listButton.setEnabled(False)
+            thread.start()
+
+    def prune_result(self, result):
+        if result['returncode'] == 0:
+            self.set_status('Pruning finished.')
+            self.list_action()
+        else:
+            self.pruneButton.setEnabled(True)
+
+    def list_action(self):
+        params = BorgListThread.prepare()
+        if params['ok']:
+            thread = BorgListThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self.set_status)
+            thread.result.connect(self.list_result)
+            self.listButton.setEnabled(False)
+            self.pruneButton.setEnabled(False)
+            thread.start()
+
+    def list_result(self, result):
+        self.listButton.setEnabled(True)
+        self.refreshButton.setEnabled(True)
+        if result['returncode'] == 0:
+            self.set_status('Refreshed snapshots.')
+            self.populate()
+
     def snapshot_mount(self):
-        profile = self.profile
+        profile = self.profile()
         cmd = ['borg', 'mount', '--log-json']
         row_selected = self.snapshotTable.selectionModel().selectedRows()
         if row_selected:
@@ -77,18 +121,21 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
             cmd.append(mountPoint)
 
             self.set_status('Mounting snapshot into folder...')
-            params = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
-            self.snapshotMountButton.setEnabled(False)
-            thread = BorgThread(cmd, params, parent=self)
-            thread.updated.connect(self.mount_update_log)
-            thread.result.connect(self.mount_get_result)
-            thread.start()
-
-    def mount_update_log(self, text):
-        self.mountErrors.setText(text)
+            params = BorgThread.prepare()
+            if params['ok']:
+                self.snapshotMountButton.setEnabled(False)
+                thread = BorgThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self.mountErrors.setText)
+                thread.result.connect(self.mount_get_result)
+                thread.start()
 
     def mount_get_result(self, result):
         self.snapshotMountButton.setEnabled(True)
         if result['returncode'] == 0:
             self.set_status('Mounted successfully.')
 
+    def save_prune_setting(self, new_value):
+        profile = self.profile()
+        for i in self.prune_intervals:
+            setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
+        profile.save()

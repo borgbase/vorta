@@ -2,33 +2,32 @@ from .borg_thread import BorgThread
 
 
 class BorgPruneThread(BorgThread):
-    def process_result(self, result):
-        pass
-
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
 
     def started_event(self):
-        self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Backup started.')
-
-    def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
+        self.updated.emit('Pruning started')
 
     @classmethod
     def prepare(cls):
-        ret, params, profile = super().prepare()
-        cmd = ['borg', 'prune', '--list', '--stats', '--info', '--log-json', '--json', ]
+        profile = cls.profile()
+        ret = super().prepare()
+        if not ret['ok']:
+            return ret
+        else:
+            ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        # -H, --keep-hourly	number of hourly archives to keep
-        # -d, --keep-daily	number of daily archives to keep
-        # -w, --keep-weekly	number of weekly archives to keep
-        # -m, --keep-monthly	number of monthly archives to keep
-        # -y, --keep-yearly	number of yearly archives to keep
+        cmd = ['borg', 'prune', '--list', '--info', '--log-json']
 
-        ret['message'] = 'Pruning repository..'
+        pruning_opts = [
+            '--keep-hourly', str(profile.prune_hour),
+            '--keep-daily', str(profile.prune_day),
+            '--keep-weekly', str(profile.prune_week),
+            '--keep-monthly', str(profile.prune_month),
+            '--keep-yearly', str(profile.prune_year)
+        ]
+        cmd += pruning_opts
+        cmd.append(f'{profile.repo.url}')
+
         ret['ok'] = True
         ret['cmd'] = cmd
-        ret['params'] = params
 
         return ret

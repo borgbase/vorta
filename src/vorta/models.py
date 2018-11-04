@@ -133,8 +133,8 @@ class SchemaVersion(pw.Model):
 
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
-    @property
-    def profile(self):
+    @classmethod
+    def profile(cls):
         return BackupProfileModel.get(id=1)
 
 

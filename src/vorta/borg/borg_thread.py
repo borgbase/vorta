@@ -7,13 +7,13 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from vorta.models import SourceDirModel, BackupProfileModel, WifiSettingModel, EventLogModel
-from vorta.utils import get_current_wifi, keyring
+from ..models import SourceDirModel, BackupProfileModel, WifiSettingModel, EventLogModel, BackupProfileMixin
+from ..utils import get_current_wifi, keyring
 
 mutex = QtCore.QMutex()
 
 
-class BorgThread(QtCore.QThread):
+class BorgThread(QtCore.QThread, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or past-processing
     it should sublass `BorgThread`.
@@ -27,16 +27,16 @@ class BorgThread(QtCore.QThread):
         Thread to run Borg operations in.
 
         :param cmd: Borg command line
-        :param params: To pass extra options that are later formatted centrally.
+        :param params: Pass options that were used to build cmd and may be needed to
+                       process the result.
         :param parent: Parent window. Needs `thread.wait()` if none. (scheduler)
         """
 
         super().__init__(parent)
         self.app = QApplication.instance()
         self.app.backup_cancelled_event.connect(self.cancel)
-        self.cmd = cmd
 
-        self.cmd[0] = self.prepare_bin()
+        cmd[0] = self.prepare_bin()
 
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
@@ -48,6 +48,7 @@ class BorgThread(QtCore.QThread):
             env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
         self.env = env
+        self.cmd = cmd
         self.params = params
         self.process = None
 
@@ -61,7 +62,19 @@ class BorgThread(QtCore.QThread):
 
     @classmethod
     def prepare(cls):
-        profile = BackupProfileModel.get(id=1)
+        """
+        Prepare for running Borg. This function in the base class should be called from all
+        subclasses and calls that define their own `cmd`.
+
+        The `prepare()` step does these things:
+        - validate if all conditions to run command are met
+        - build borg command
+
+        `prepare()` is run 2x. First at the global level and then for each subcommand.
+
+        :return: dict(ok: book, message: str)
+        """
+        profile = cls.profile()
         ret = {'ok': False}
 
         # Do checks to see if running Borg is possible.
@@ -69,31 +82,16 @@ class BorgThread(QtCore.QThread):
             ret['message'] = 'Backup is already in progress.'
             return ret
 
-        if profile.repo is None:
-            ret['message'] = 'Add a remote backup repository first.'
-            return ret
-
-        n_backup_folders = SourceDirModel.select().count()
-        if n_backup_folders == 0:
-            ret['message'] = 'Add some folders to back up first.'
-            return ret
-
-        current_wifi = get_current_wifi()
-        if current_wifi is not None:
-            wifi_is_disallowed = WifiSettingModel.select().where(
-                (WifiSettingModel.ssid == current_wifi)
-                & (WifiSettingModel.allowed == False)
-                & (WifiSettingModel.profile == profile.id)
-            )
-            if wifi_is_disallowed.count() > 0:
-                ret['message'] = 'Current Wifi is not allowed.'
-                return ret
-
         if cls.prepare_bin() is None:
             ret['message'] = 'Borg binary was not found.'
             return ret
 
-        ret['params'] = {'password': keyring.get_password("vorta-repo", profile.repo.url)}
+        if profile.repo is None:
+            ret['message'] = 'Add a remote backup repository first.'
+            return ret
+
+        ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)  # None if no password.
+        ret['ok'] = True
 
         return ret
 
