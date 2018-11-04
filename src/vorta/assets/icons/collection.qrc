@@ -8,5 +8,9 @@
         <file>copy.svg</file>
         <file>trash.svg</file>
         <file>unlink.svg</file>
+        <file>cut.svg</file>
+        <file>refresh.svg</file>
+        <file>folder-open.svg</file>
+        <file>check-circle.svg</file>
     </qresource>
 </RCC>

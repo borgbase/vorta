@@ -1,9 +1,12 @@
+from datetime import date, timedelta
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 
 from vorta.borg.create import BorgCreateThread
-from .models import BackupProfileMixin
-
+from .models import BackupProfileMixin, EventLogModel
+from vorta.borg.prune import BorgPruneThread
+from vorta.borg.list import BorgListThread
+from vorta.borg.check import BorgCheckThread
 
 class VortaScheduler(QtScheduler, BackupProfileMixin):
     def __init__(self, parent):
@@ -34,9 +37,42 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
     def create_backup(self):
-        msg = BorgCreateThread.prepare()
+        msg = BorgCreateThread.prepare(self.profile())
         if msg['ok']:
-            thread = BorgCreateThread(msg['cmd'], msg['params'])
+            thread = BorgCreateThread(msg['cmd'], msg)
             thread.start()
             thread.wait()
+            if thread.process.returncode == 0:
+                self.post_backup_tasks()
 
+    def post_backup_tasks(self):
+        """
+        Pruning and checking after successful backup.
+        """
+        profile = self.profile()
+        if profile.prune_on:
+            msg = BorgPruneThread.prepare(profile)
+            if msg['ok']:
+                prune_thread = BorgPruneThread(msg['cmd'], msg)
+                prune_thread.start()
+                prune_thread.wait()
+
+                # Refresh snapshots
+                msg = BorgListThread.prepare(profile)
+                if msg['ok']:
+                    list_thread = BorgListThread(msg['cmd'], msg)
+                    list_thread.start()
+                    list_thread.wait()
+
+        validation_cutoff = date.today() - timedelta(days=7*profile.validation_weeks)
+        recent_validations = EventLogModel.select().where(
+            (EventLogModel.subcommand == 'check')
+            & (EventLogModel.start_time > validation_cutoff)
+            & (EventLogModel.repo_url == profile.repo.url)
+        ).count()
+        if profile.validation_on and recent_validations == 0:
+            msg = BorgCheckThread.prepare(profile)
+            if msg['ok']:
+                check_thread = BorgCheckThread(msg['cmd'], msg)
+                check_thread.start()
+                check_thread.wait()

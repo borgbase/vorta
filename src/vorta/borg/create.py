@@ -43,13 +43,12 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         self.app.backup_finished_event.emit(result)
 
     @classmethod
-    def prepare(cls):
+    def prepare(cls, profile):
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.
         """
-        profile = cls.profile()
-        ret = super().prepare()
+        ret = super().prepare(profile)
         if not ret['ok']:
             return ret
         else:

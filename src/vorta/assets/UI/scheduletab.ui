@@ -29,7 +29,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -240,6 +240,9 @@ font-weight: bold;
            <property name="text">
             <string>Prune old Snapshots after each backup.</string>
            </property>
+           <property name="tristate">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -334,8 +337,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>138</width>
-        <height>122</height>
+        <width>663</width>
+        <height>381</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -363,8 +366,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>100</width>
-        <height>98</height>
+        <width>663</width>
+        <height>381</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -408,7 +411,7 @@ font-weight: bold;
          </column>
          <column>
           <property name="text">
-           <string>Message</string>
+           <string>Repository</string>
           </property>
          </column>
          <column>
