@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 from playhouse.migrate import SqliteMigrator, migrate
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 db = pw.Proxy()
 
@@ -117,6 +117,7 @@ class EventLogModel(pw.Model):
     returncode = pw.IntegerField(default=1)
     params = JSONField(null=True)
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
+    repo_url = pw.CharField(null=True)
 
     class Meta:
         database = db
@@ -174,5 +175,11 @@ def init_db(con):
         _apply_schema_update(
             current_schema, 5,
             migrator.drop_not_null(WifiSettingModel._meta.table_name, 'last_connected'),
+        )
+
+    if current_schema.version < 6:
+        _apply_schema_update(
+            current_schema, 6,
+            migrator.add_column(EventLogModel._meta.table_name, 'repo_url', pw.CharField(null=True))
         )
 

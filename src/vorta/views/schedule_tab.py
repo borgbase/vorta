@@ -13,6 +13,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.app = QApplication.instance()
+        profile = self.profile()
 
         # Set scheduler values
         self.schedulerRadioMapping = {
@@ -20,22 +21,24 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             'interval': self.scheduleIntervalRadio,
             'fixed': self.scheduleFixedRadio
         }
-        self.schedulerRadioMapping[self.profile().schedule_mode].setChecked(True)
+        self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
-        self.scheduleIntervalHours.setValue(self.profile().schedule_interval_hours)
-        self.scheduleIntervalMinutes.setValue(self.profile().schedule_interval_minutes)
+        self.scheduleIntervalHours.setValue(profile.schedule_interval_hours)
+        self.scheduleIntervalMinutes.setValue(profile.schedule_interval_minutes)
         self.scheduleFixedTime.setTime(
-            QtCore.QTime(self.profile().schedule_fixed_hour, self.profile().schedule_fixed_minute))
+            QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
 
         # Set checking options
-        self.validationCheckBox.setCheckState(self.profile().validation_on)
+        self.validationCheckBox.setCheckState(profile.validation_on)
         self.validationCheckBox.setTristate(False)
-        self.validationSpinBox.setValue(self.profile().validation_weeks)
-        self.pruneCheckBox.setCheckState(self.profile().prune_on)
+        self.validationSpinBox.setValue(profile.validation_weeks)
+
+        self.pruneCheckBox.setCheckState(profile.prune_on)
+        self.pruneCheckBox.setTristate(False)
 
         self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
+        self.app.backup_finished_event.connect(self.init_logs)
 
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
         self.init_wifi()
         self.init_logs()
 
@@ -65,7 +68,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
 
-        event_logs = [s for s in EventLogModel.select()]
+        event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]
 
         for row, log_line in enumerate(event_logs):
             self.logTableWidget.insertRow(row)
@@ -73,9 +76,10 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             self.logTableWidget.setItem(row, 0, QTableWidgetItem(formatted_time))
             self.logTableWidget.setItem(row, 1, QTableWidgetItem(log_line.category))
             self.logTableWidget.setItem(row, 2, QTableWidgetItem(log_line.subcommand))
-            self.logTableWidget.setItem(row, 3, QTableWidgetItem(log_line.message))
+            self.logTableWidget.setItem(row, 3, QTableWidgetItem(log_line.repo_url))
             self.logTableWidget.setItem(row, 4, QTableWidgetItem(str(log_line.returncode)))
         self.logTableWidget.setRowCount(len(event_logs))
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
 
     def on_scheduler_apply(self):
         profile = self.profile()
@@ -83,6 +87,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         # Save checking options
         profile.validation_weeks = self.validationSpinBox.value()
         profile.validation_on = self.validationCheckBox.isChecked()
+        profile.prune_on = self.pruneCheckBox.isChecked()
 
         # Save scheduler timing and activate if needed.
         for label, obj in self.schedulerRadioMapping.items():

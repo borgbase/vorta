@@ -1,15 +1,14 @@
 from PyQt5 import uic
 from ..utils import get_private_keys, get_asset
-from vorta.borg.borg_thread import BorgThread
+from vorta.borg.init import BorgInitThread
+from vorta.borg.info import BorgInfoThread
+from vorta.borg.list import BorgListThread
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
 class AddRepoWindow(AddRepoBase, AddRepoUI):
-    connection_message = 'Setting up new repo...'
-    cmd = ["borg", "init", "--info", "--json", "--log-json"]
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -33,17 +32,15 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def run(self):
-        self.saveButton.setEnabled(False)
         if self.validate():
-            self._set_status(self.connection_message)
-            cmd = self.cmd + [self.values['repo_url']]
-            thread = BorgThread(cmd, self.values, parent=self)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.run_result)
-            self.thread = thread  # Needs to be connected to self for tests to work.
-            self.thread.start()
-        else:
-            self.saveButton.setEnabled(True)
+            params = BorgInitThread.prepare(self.values)
+            if params['ok']:
+                self.saveButton.setEnabled(False)
+                thread = BorgInitThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.run_result)
+                self.thread = thread  # Needs to be connected to self for tests to work.
+                self.thread.start()
 
     def _set_status(self, text):
         self.errorText.setText(text)
@@ -69,32 +66,34 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
-
         # TODO: valid repo is xx.xx:xx. add rex
         if len(self.values['repo_url']) < 5 or ':' not in self.values['repo_url']:
             self._set_status('Please enter a valid repo URL including hostname and path.')
             return False
 
-        if BorgThread.prepare_bin() is None:
-            self._set_status('Borg binary was not found.')
-            return False
-
         if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none' and len(self.values['password']) < 8:
-                self._set_status('Please use a longer password.')
-                return False
-
-            self.cmd.append(f"--encryption={self.values['encryption']}")
+            if self.values['encryption'] != 'none':
+                if len(self.values['password']) < 8:
+                    self._set_status('Please use a longer password.')
+                    return False
 
         return True
 
 
 class ExistingRepoWindow(AddRepoWindow):
-    connection_message = 'Validating existing repo...'
-    cmd = ["borg", "list", "--info", "--json", "--log-json"]
-
     def __init__(self):
         super().__init__()
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText('Connect to existing Repository')
+
+    def run(self):
+        if self.validate():
+            params = BorgInfoThread.prepare(self.values)
+            if params['ok']:
+                self.saveButton.setEnabled(False)
+                thread = BorgInfoThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.run_result)
+                self.thread = thread  # Needs to be connected to self for tests to work.
+                self.thread.start()

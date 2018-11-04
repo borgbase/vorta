@@ -3,14 +3,15 @@ import copy
 from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
 
-from vorta.borg.borg_thread import BorgThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
+from vorta.borg.check import BorgCheckThread
+from vorta.borg.mount import BorgMountThread
 from vorta.utils import get_asset, keyring, pretty_bytes
 from vorta.models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
-SnapshotUI, SnapshotBase = uic.loadUiType(uifile)
+SnapshotUI, SnapshotBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
 class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
@@ -35,15 +36,22 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
             getattr(self, f'prune_{i}').setValue(getattr(self.profile(), f'prune_{i}'))
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
 
-        self.snapshotMountButton.clicked.connect(self.snapshot_mount)
+        self.mountButton.clicked.connect(self.mount_action)
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
+        self.checkButton.clicked.connect(self.check_action)
 
         self.populate()
 
-    def set_status(self, text):
+    def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
+
+    def _toggle_all_buttons(self, enabled=True):
+        self.checkButton.setEnabled(enabled)
+        self.listButton.setEnabled(enabled)
+        self.pruneButton.setEnabled(enabled)
+        self.mountButton.setEnabled(enabled)
 
     def populate(self):
         if self.profile().repo:
@@ -64,53 +72,60 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         else:
             self.snapshotTable.setRowCount(0)
 
+
+    def check_action(self):
+        params = BorgCheckThread.prepare(self.profile())
+        if params['ok']:
+            thread = BorgCheckThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self._set_status)
+            thread.result.connect(self.check_result)
+            self._toggle_all_buttons(False)
+            thread.start()
+
+    def check_result(self, result):
+        if result['returncode'] == 0:
+            self._toggle_all_buttons(True)
+
     def prune_action(self):
-        params = BorgPruneThread.prepare()
+        params = BorgPruneThread.prepare(self.profile())
         if params['ok']:
             thread = BorgPruneThread(params['cmd'], params, parent=self)
-            thread.updated.connect(self.set_status)
+            thread.updated.connect(self._set_status)
             thread.result.connect(self.prune_result)
-            self.pruneButton.setEnabled(False)
-            self.listButton.setEnabled(False)
+            self._toggle_all_buttons(False)
             thread.start()
 
     def prune_result(self, result):
         if result['returncode'] == 0:
-            self.set_status('Pruning finished.')
+            self._set_status('Pruning finished.')
             self.list_action()
         else:
-            self.pruneButton.setEnabled(True)
+            self._toggle_all_buttons(True)
 
     def list_action(self):
-        params = BorgListThread.prepare()
+        params = BorgListThread.prepare(self.profile())
         if params['ok']:
             thread = BorgListThread(params['cmd'], params, parent=self)
-            thread.updated.connect(self.set_status)
+            thread.updated.connect(self._set_status)
             thread.result.connect(self.list_result)
-            self.listButton.setEnabled(False)
-            self.pruneButton.setEnabled(False)
+            self._toggle_all_buttons(False)
             thread.start()
 
     def list_result(self, result):
-        self.listButton.setEnabled(True)
-        self.refreshButton.setEnabled(True)
+        self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self.set_status('Refreshed snapshots.')
+            self._set_status('Refreshed snapshots.')
             self.populate()
 
-    def snapshot_mount(self):
+    def mount_action(self):
         profile = self.profile()
-        cmd = ['borg', 'mount', '--log-json']
+        params = BorgMountThread.prepare(profile)
         row_selected = self.snapshotTable.selectionModel().selectedRows()
         if row_selected:
             snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 3)
             if snapshot_cell:
                 snapshot_name = snapshot_cell.text()
-                cmd.append(f'{profile.repo.url}::{snapshot_name}')
-            else:
-                cmd.append(f'{profile.repo.url}')
-        else:
-            cmd.append(f'{profile.repo.url}')
+                params['cmd'][-1] += f'::{snapshot_name}'
 
         options = QFileDialog.Options()
         options |= QFileDialog.ShowDirsOnly
@@ -118,21 +133,18 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         mountPoint = QFileDialog.getExistingDirectory(
             self, "Choose Mount Point", "", options=options)
         if mountPoint:
-            cmd.append(mountPoint)
-
-            self.set_status('Mounting snapshot into folder...')
-            params = BorgThread.prepare()
+            params['cmd'].append(mountPoint)
             if params['ok']:
-                self.snapshotMountButton.setEnabled(False)
-                thread = BorgThread(params['cmd'], params, parent=self)
+                self._toggle_all_buttons(False)
+                thread = BorgMountThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self.mountErrors.setText)
-                thread.result.connect(self.mount_get_result)
+                thread.result.connect(self.mount_result)
                 thread.start()
 
-    def mount_get_result(self, result):
-        self.snapshotMountButton.setEnabled(True)
+    def mount_result(self, result):
+        self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self.set_status('Mounted successfully.')
+            self._set_status('Mounted successfully.')
 
     def save_prune_setting(self, new_value):
         profile = self.profile()

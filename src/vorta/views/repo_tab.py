@@ -14,6 +14,7 @@ RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.
 
 class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     repo_changed = QtCore.pyqtSignal()
+    repo_added = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -119,43 +120,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
-            new_repo, _ = RepoModel.get_or_create(
-                url=result['params']['repo_url'],
-                defaults={
-                    'encryption': result['params'].get('encryption', 'none')
-                }
-            )
-            if 'cache' in result['data']:
-                stats = result['data']['cache']['stats']
-                new_repo.total_size = stats['total_size']
-                new_repo.unique_csize = stats['unique_csize']
-                new_repo.unique_size = stats['unique_size']
-                new_repo.total_unique_chunks = stats['total_unique_chunks']
-            if 'encryption' in result['data']:
-                new_repo.encryption = result['data']['encryption']['mode']
-            if new_repo.encryption is not None and new_repo.encryption != 'none':
-                keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
-
-
-            new_repo.save()
+            new_repo = RepoModel.get(url=result['params']['repo_url'])
             profile = self.profile()
             profile.repo = new_repo.id
             profile.save()
 
-            if 'archives' in result['data'].keys():
-                for snapshot in result['data']['archives']:
-                    new_snapshot, _ = SnapshotModel.get_or_create(
-                        snapshot_id=snapshot['id'],
-                        defaults={
-                            'repo': new_repo.id,
-                            'name': snapshot['name'],
-                            'time': parser.parse(snapshot['time'])
-                        }
-                    )
-                    new_snapshot.save()
             self.repoSelector.addItem(new_repo.url, new_repo.id)
             self.repoSelector.setCurrentIndex(self.repoSelector.count()-1)
-            self.repo_changed.emit()
+            self.repo_added.emit()
             self.init_repo_stats()
 
     def repo_unlink_action(self):
@@ -168,6 +140,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_index = self.repoSelector.currentIndex()
         if selected_repo_index > 2:
             repo = RepoModel.get(id=selected_repo_id)
+            SnapshotModel.delete().where(SnapshotModel.repo_id == repo.id).execute()
             repo.delete_instance()
             profile.repo = None
             profile.save()

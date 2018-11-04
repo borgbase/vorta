@@ -61,7 +61,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return True
 
     @classmethod
-    def prepare(cls):
+    def prepare(cls, profile):
         """
         Prepare for running Borg. This function in the base class should be called from all
         subclasses and calls that define their own `cmd`.
@@ -74,7 +74,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         :return: dict(ok: book, message: str)
         """
-        profile = cls.profile()
         ret = {'ok': False}
 
         # Do checks to see if running Borg is possible.
@@ -90,6 +89,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = 'Add a remote backup repository first.'
             return ret
 
+        ret['repo_url'] = profile.repo.url
         ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)  # None if no password.
         ret['ok'] = True
 
@@ -143,6 +143,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             result['data'] = {}
 
         log_entry.returncode = self.process.returncode
+        log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.save()
 
         self.process_result(result)
@@ -166,3 +167,44 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def finished_event(self, result):
         self.result.emit(result)
+
+
+class BorgThreadChain(BorgThread):
+    """
+    Metaclass of `BorgThread` that can run multiple other BorgThread actions while providing the same
+    interface as a single action.
+    """
+
+    def __init__(self, cmds, input_values, parent=None):
+        """
+        Takes a list of tuples with `BorgThread` subclass and optional input parameters. Then all actions are exectuted
+        and a merged result object is returned to the caller. If there is any error, then current result is returned.
+
+        :param actions:
+        :return: dict(results)
+        """
+        self.parent = parent
+        self.threads = []
+        self.combined_result = {}
+
+        for cmd, input_value in zip(cmds, input_values):
+            if input_value is not None:
+                msg = cmd.prepare(input_value)
+            else:
+                msg = cmd.prepare()
+            if msg['ok']:
+                thread = cmd(msg['cmd'], msg, parent)
+                thread.updated.connect(self.updated.emit)  # All log entries are immediately sent to the parent.
+                thread.result.connect(self.partial_result)
+                self.threads.append(thread)
+        self.threads[0].start()
+
+    def partial_result(self, result):
+        if result['returncode'] == 0:
+            self.combined_result.update(result)
+            self.threads.pop(0)
+
+            if len(self.threads) > 0:
+                self.threads[0].start()
+            else:
+                self.result.emit(self.combined_result)

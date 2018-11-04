@@ -1,0 +1,56 @@
+from collections import namedtuple
+from .borg_thread import BorgThread
+from vorta.models import SnapshotModel, RepoModel
+from vorta.utils import keyring
+
+FakeRepo = namedtuple('Repo', ['url'])  # TODO: implement passing SSH key.
+FakeProfile = namedtuple('FakeProfile', ['repo'])
+
+
+class BorgInfoThread(BorgThread):
+
+    def started_event(self):
+        self.updated.emit('Validating existing repo...')
+
+    @classmethod
+    def prepare(cls, params):
+        """
+        Used to validate existing repository when added.
+        """
+
+        # Build fake profile because we don't have it in the DB yet.
+        profile = FakeProfile(
+            FakeRepo(params['repo_url'])
+        )
+
+        ret = super().prepare(profile)
+        if not ret['ok']:
+            return ret
+        else:
+            ret['ok'] = False  # Set back to false, so we can do our own checks here.
+
+        cmd = ["borg", "info", "--info", "--json", "--log-json"]
+        cmd.append(profile.repo.url)
+
+        ret['password'] = params['password']
+        ret['ok'] = True
+        ret['cmd'] = cmd
+
+        return ret
+
+    def process_result(self, result):
+        new_repo, _ = RepoModel.get_or_create(
+            url=result['cmd'][-1]
+        )
+        if 'cache' in result['data']:
+            stats = result['data']['cache']['stats']
+            new_repo.total_size = stats['total_size']
+            new_repo.unique_csize = stats['unique_csize']
+            new_repo.unique_size = stats['unique_size']
+            new_repo.total_unique_chunks = stats['total_unique_chunks']
+        if 'encryption' in result['data']:
+            new_repo.encryption = result['data']['encryption']['mode']
+        if new_repo.encryption != 'none':
+            keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
+
+        new_repo.save()

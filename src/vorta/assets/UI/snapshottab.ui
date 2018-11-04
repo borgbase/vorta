@@ -132,6 +132,11 @@
      <property name="enabled">
       <bool>true</bool>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount snapshots, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -140,7 +145,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="snapshotMountButton">
+      <widget class="QPushButton" name="mountButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -149,6 +154,21 @@
        </property>
        <property name="text">
         <string>Mount</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="checkButton">
+       <property name="text">
+        <string>Check Consistency</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
        </property>
       </widget>
      </item>
@@ -170,6 +190,10 @@
        <property name="text">
         <string>Prune</string>
        </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
+       </property>
       </widget>
      </item>
      <item>
@@ -186,12 +210,18 @@
        <property name="text">
         <string>Refresh</string>
        </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/refresh.svg</normaloff>:/icons/refresh.svg</iconset>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons/collection.qrc"/>
+ </resources>
  <connections/>
 </ui>
