@@ -26,8 +26,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
-        if self.profile.repo:
-            self.repoSelector.setCurrentIndex(self.repoSelector.findData(self.profile.repo.id))
+        if self.profile().repo:
+            self.repoSelector.setCurrentIndex(self.repoSelector.findData(self.profile().repo.id))
 
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
@@ -36,14 +36,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.addItem('Zstandard (medium)', 'zstd')
         self.repoCompression.addItem('LZMA (high)', 'lzma,6')
         self.repoCompression.addItem('No Compression', 'none')
-        self.repoCompression.setCurrentIndex(self.repoCompression.findData(self.profile.compression))
+        self.repoCompression.setCurrentIndex(self.repoCompression.findData(self.profile().compression))
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
         self.init_repo_stats()
 
     def init_repo_stats(self):
-        repo = self.profile.repo
+        repo = self.profile().repo
         if repo is not None:
             self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
             self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
@@ -66,7 +66,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             if ssh_add_window.exec_():
                 self.init_ssh()
         else:
-            profile = self.profile
+            profile = self.profile()
             profile.ssh_key = self.sshComboBox.itemData(index)
             profile.save()
 
@@ -95,7 +95,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.exec_()
 
     def compression_select_action(self, index):
-        profile = self.profile
+        profile = self.profile()
         profile.compression = self.repoCompression.currentData()
         profile.save()
 
@@ -112,7 +112,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             if window.exec_():
                 self.process_new_repo(window.result)
         else:
-            profile = self.profile
+            profile = self.profile()
             profile.repo = self.repoSelector.currentData()
             profile.save()
             self.init_repo_stats()
@@ -138,7 +138,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
 
             new_repo.save()
-            profile = self.profile
+            profile = self.profile()
             profile.repo = new_repo.id
             profile.save()
 
@@ -159,7 +159,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.init_repo_stats()
 
     def repo_unlink_action(self):
-        profile = self.profile
+        profile = self.profile()
         self.init_repo_stats()
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.Ok)

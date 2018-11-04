@@ -15,12 +15,12 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
     def reload(self):
         self.remove_all_jobs()
         trigger = None
-        if self.profile.schedule_mode == 'interval':
-            trigger = cron.CronTrigger(hour=f'*/{self.profile.schedule_interval_hours}',
-                                       minute=self.profile.schedule_interval_minutes)
-        elif self.profile.schedule_mode == 'fixed':
-            trigger = cron.CronTrigger(hour=self.profile.schedule_fixed_hour,
-                                       minute=self.profile.schedule_fixed_minute)
+        if self.profile().schedule_mode == 'interval':
+            trigger = cron.CronTrigger(hour=f'*/{self.profile().schedule_interval_hours}',
+                                       minute=self.profile().schedule_interval_minutes)
+        elif self.profile().schedule_mode == 'fixed':
+            trigger = cron.CronTrigger(hour=self.profile().schedule_fixed_hour,
+                                       minute=self.profile().schedule_fixed_minute)
 
         if trigger is not None:
             self.add_job(self.create_backup, trigger, id='create-backup', misfire_grace_time=180)
@@ -33,10 +33,10 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
         else:
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
-    @classmethod
-    def create_backup(cls):
+    def create_backup(self):
         msg = BorgCreateThread.prepare()
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg['params'])
             thread.start()
             thread.wait()
+

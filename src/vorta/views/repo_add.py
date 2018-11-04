@@ -40,7 +40,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             thread = BorgThread(cmd, self.values, parent=self)
             thread.updated.connect(self._set_status)
             thread.result.connect(self.run_result)
-            self.thread = thread  # Needs to be connected for tests to work.
+            self.thread = thread  # Needs to be connected to self for tests to work.
             self.thread.start()
         else:
             self.saveButton.setEnabled(True)

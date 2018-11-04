@@ -8,7 +8,6 @@ ScheduleUI, ScheduleBase = uic.loadUiType(uifile, from_imports=True, import_from
 
 
 class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
-    prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -21,22 +20,18 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             'interval': self.scheduleIntervalRadio,
             'fixed': self.scheduleFixedRadio
         }
-        self.schedulerRadioMapping[self.profile.schedule_mode].setChecked(True)
+        self.schedulerRadioMapping[self.profile().schedule_mode].setChecked(True)
 
-        self.scheduleIntervalHours.setValue(self.profile.schedule_interval_hours)
-        self.scheduleIntervalMinutes.setValue(self.profile.schedule_interval_minutes)
+        self.scheduleIntervalHours.setValue(self.profile().schedule_interval_hours)
+        self.scheduleIntervalMinutes.setValue(self.profile().schedule_interval_minutes)
         self.scheduleFixedTime.setTime(
-            QtCore.QTime(self.profile.schedule_fixed_hour, self.profile.schedule_fixed_minute))
+            QtCore.QTime(self.profile().schedule_fixed_hour, self.profile().schedule_fixed_minute))
 
         # Set checking options
-        self.validationCheckBox.setCheckState(self.profile.validation_on)
+        self.validationCheckBox.setCheckState(self.profile().validation_on)
         self.validationCheckBox.setTristate(False)
-        self.validationSpinBox.setValue(self.profile.validation_weeks)
-
-        # Set pruning options
-        self.pruneCheckBox.setCheckState(self.profile.prune_on)
-        for i in self.prune_intervals:
-            getattr(self, f'prune_{i}').setValue(getattr(self.profile, f'prune_{i}'))
+        self.validationSpinBox.setValue(self.profile().validation_weeks)
+        self.pruneCheckBox.setCheckState(self.profile().prune_on)
 
         self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
 
@@ -57,7 +52,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
 
     def save_wifi_item(self, item):
-        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile.id)
+        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)
         db_item.allowed = item.checkState() == 2
         db_item.save()
 
@@ -83,16 +78,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setRowCount(len(event_logs))
 
     def on_scheduler_apply(self):
-        profile = self.profile
+        profile = self.profile()
 
         # Save checking options
         profile.validation_weeks = self.validationSpinBox.value()
         profile.validation_on = self.validationCheckBox.isChecked()
-
-        # Save pruning options
-        profile.prune_on = self.pruneCheckBox.isChecked()
-        for i in self.prune_intervals:
-            setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
 
         # Save scheduler timing and activate if needed.
         for label, obj in self.schedulerRadioMapping.items():
