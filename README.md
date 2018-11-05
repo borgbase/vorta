@@ -8,28 +8,28 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 
 - Encrypted, deduplicated and compressed backups.
 - Works with any remote SSH account that has `borg` installed. Or try [BorgBase](https://www.borgbase.com) for advanced features like append-only repositories and monitoring.
-- Add SSH keys and initialize repos directly from the GUI
-- Repo keys are securely stored in macOS Keychain, Secret Service or KWallet
-- Mount existing snapshots via FUSE
+- Add SSH keys and initialize repos directly from the GUI.
+- Repo keys are securely stored in macOS Keychain, Secret Service or KWallet.
+- Mount existing snapshots via FUSE.
+- Prune and check backups periodically.
 - Flexible scheduling for automatic background backups. Only allow on certain Wifis.
-- View a list of snapshots and action logs
+- View a list of snapshots and action logs.
 - Exclude options/patterns.
 
 Coming soon:
 
 - [ ] Support multiple backup profiles (in progress)
-- [ ] Repo pruning
-- [ ] Repo checking
 - [ ] Full test coverage (currently: 65%)
-- [ ] Use static type checks via mypy?
 - [ ] Packaging for Linux? How?
 
 ## Installation and Download
+Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.
+
 ### macOS
-Download the pre-built binary from [Releases](https://github.com/borgbase/vorta/releases). Just download, unzip and run.
+Download the pre-built macOS binary from [Releases](https://github.com/borgbase/vorta/releases). Just download, unzip and run.
 
 ### Linux
-No package yet. First install Borg's own [dependencies](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install via
+First install Borg and its own [dependencies](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install Vorta from Pypi:
 ```
 $ pip install vorta
 ```
@@ -40,9 +40,10 @@ $ vorta
 ```
 
 ## Development
-Install in development mode:
+
+Install in development/editable mode while in the repo:
 ```
-$ python setup.py develop
+$ pip install -e .
 ```
 
 Then run via
@@ -62,6 +63,7 @@ $ pyinstaller --clean --noconfirm vorta.spec
 ```
 
 ### Testing (work in progress)
+
 Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
 ```
 $ python setup.py test
