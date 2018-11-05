@@ -16,17 +16,22 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
         self.reload()
 
     def reload(self):
-        self.remove_all_jobs()
-        trigger = None
-        if self.profile().schedule_mode == 'interval':
-            trigger = cron.CronTrigger(hour=f'*/{self.profile().schedule_interval_hours}',
-                                       minute=self.profile().schedule_interval_minutes)
-        elif self.profile().schedule_mode == 'fixed':
-            trigger = cron.CronTrigger(hour=self.profile().schedule_fixed_hour,
-                                       minute=self.profile().schedule_fixed_minute)
+        profile = self.profile()
 
-        if trigger is not None:
-            self.add_job(self.create_backup, trigger, id='create-backup', misfire_grace_time=180)
+        trigger = None
+        if profile.schedule_mode == 'interval':
+            trigger = cron.CronTrigger(hour=f'*/{self.profile().schedule_interval_hours}',
+                                       minute=profile.schedule_interval_minutes)
+        elif profile.schedule_mode == 'fixed':
+            trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
+                                       minute=profile.schedule_fixed_minute)
+
+        if self.get_jobs() and trigger is not None:
+            self.reschedule_job('create-backup', trigger=trigger)
+        elif trigger is not None:
+            self.add_job(func=self.create_backup, trigger=trigger, id='create-backup', misfire_grace_time=180)
+        else:
+            self.remove_all_jobs()
 
     @property
     def next_job(self):
