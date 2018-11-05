@@ -4,3 +4,4 @@ pytest-mock
 pytest-faulthandler
 pyinstaller
 tox
+bump2version
