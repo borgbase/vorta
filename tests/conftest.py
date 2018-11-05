@@ -5,6 +5,7 @@ import peewee
 import vorta
 from vorta.application import VortaApp
 
+
 @pytest.fixture()
 def app(tmpdir):
     tmp_db = tmpdir.join('settings.sqlite')

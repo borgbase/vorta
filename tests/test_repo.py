@@ -6,6 +6,7 @@ import vorta.models
 from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel
 
+
 def test_repo_tab(app, qtbot):
     main = app.main_window
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
