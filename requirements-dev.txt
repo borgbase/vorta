@@ -1,0 +1,6 @@
+pytest
+pytest-qt
+pytest-mock
+pytest-faulthandler
+pyinstaller
+tox

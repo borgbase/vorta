@@ -29,11 +29,11 @@ exe = EXE(pyz,
           [],
           name='vorta',
           debug=False,
-          bootloader_ignore_signals=False,
+          bootloader_ignore_signals=True,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False )
+          console=True )
 
 app = BUNDLE(exe,
              name='Vorta.app',
@@ -42,7 +42,8 @@ app = BUNDLE(exe,
              info_plist={
                      'NSHighResolutionCapable': 'True',
                      'LSUIElement': '1',
-                     'CFBundleShortVersionString': '0.2.8'
+                     'CFBundleShortVersionString': '0.2.8',
+                     'NSAppleEventsUsageDescription': 'Please allow',
                      },
              )
 if False:
@@ -51,5 +52,4 @@ if False:
                    a.zipfiles,
                    a.datas,
                    strip=False,
-                   upx=True,
                    name='vorta-dir')
