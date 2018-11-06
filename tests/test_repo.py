@@ -1,19 +1,18 @@
-import io
 from PyQt5 import QtCore
 
 import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add import AddRepoWindow
-from vorta.models import EventLogModel, RepoModel
+from vorta.models import EventLogModel, RepoModel, SnapshotModel
 
 
-def test_repo_tab(app, qtbot):
+def test_create_error(app, qtbot):
     main = app.main_window
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.createProgressText.text() == 'Add a remote backup repository first.'
 
 
-def test_repo_add(app, qtbot, mocker):
+def test_repo_add(app, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = app.main_window
     add_repo_window = AddRepoWindow(main.repoTab)
@@ -27,8 +26,9 @@ def test_repo_add(app, qtbot, mocker):
 
     qtbot.keyClicks(add_repo_window.passwordLineEdit, 'long-password-long')
 
-    popen_result =mocker.MagicMock(stdout=io.StringIO("some initial binary data"),
-                              stderr=io.StringIO("some initial binary data"),
+    stdout, stderr = borg_json_output('info')
+    popen_result =mocker.MagicMock(stdout=stdout,
+                              stderr=stderr,
                               returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
@@ -41,4 +41,21 @@ def test_repo_add(app, qtbot, mocker):
 
     # assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=1).url == 'aaabbb.com:repo'
+
+def test_create(app_with_repo, borg_json_output, mocker, qtbot):
+    main = app_with_repo.main_window
+    stdout, stderr = borg_json_output('create')
+    popen_result =mocker.MagicMock(stdout=stdout,
+                                   stderr=stderr,
+                                   returncode=0)
+    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('INFO: Remote'))
+    assert EventLogModel.select().count() == 1
+    assert SnapshotModel.select().count() == 1
+    assert RepoModel.get(id=1).unique_size == 15520474
+    assert main.createStartBtn.isEnabled()
+    assert main.snapshotTab.snapshotTable.rowCount() == 1
+    assert main.scheduleTab.logTableWidget.rowCount() == 1
 
