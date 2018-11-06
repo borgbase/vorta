@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QShortcut
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QKeySequence
 from ..config import APP_NAME
 from .repo_tab import RepoTab
@@ -20,6 +20,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setupUi(self)
         self.setWindowTitle(APP_NAME)
         self.app = parent
+        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
