@@ -1,0 +1,32 @@
+{"original_size": 0, "compressed_size": 0, "deduplicated_size": 0, "nfiles": 0, "time": 1541485444.8891299, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz"}
+{"message": "Initializing cache transaction: Reading config", "operation": 1, "msgid": "cache.begin_transaction", "type": "progress_message", "finished": false, "time": 1541485444.8924448}
+{"message": "Initializing cache transaction: Reading chunks", "operation": 1, "msgid": "cache.begin_transaction", "type": "progress_message", "finished": false, "time": 1541485444.893108}
+{"message": "Initializing cache transaction: Reading files", "operation": 1, "msgid": "cache.begin_transaction", "type": "progress_message", "finished": false, "time": 1541485444.893551}
+{"operation": 1, "msgid": "cache.begin_transaction", "type": "progress_message", "finished": true, "time": 1541485444.894015}
+{"original_size": 219715, "compressed_size": 201311, "deduplicated_size": 201311, "nfiles": 0, "time": 1541485446.009297, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/DOC-TOB-IN-EN-1114.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/DOC-TOB-IN-EN-1114.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/IBG_Nov_2013_1.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/cert-2014.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/cert-2015.pdf"}
+{"original_size": 2397780, "compressed_size": 2333367, "deduplicated_size": 2333367, "nfiles": 4, "time": 1541485447.7346282, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/cert-2018.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/cert-2018.pdf"}
+{"name": "borg.repository", "time": 1541485448.00131, "message": "Remote: Storage quota: 10.48 MB out of 1.00 GB used.", "type": "log_message", "levelname": "INFO"}
+{"original_size": 2476130, "compressed_size": 2407012, "deduplicated_size": 2407012, "nfiles": 5, "time": 1541485448.1266649, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/invoice-2016.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/invoice-2016.pdf"}
+{"original_size": 2579891, "compressed_size": 2508476, "deduplicated_size": 2508476, "nfiles": 6, "time": 1541485448.490915, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/invoice-2018.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/invoice-2018.pdf"}
+{"original_size": 2682858, "compressed_size": 2610103, "deduplicated_size": 2610103, "nfiles": 7, "time": 1541485448.794081, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/invoice-2017.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/invoice-2017.pdf"}
+{"type": "file_status", "status": "M", "path": "/Users/manu/Documents/financial/Allianz/membership card.pdf"}
+{"original_size": 3034142, "compressed_size": 2951714, "deduplicated_size": 2951714, "nfiles": 9, "time": 1541485449.0265841, "type": "archive_progress", "path": "Users/manu/Documents/financial/Allianz/invoice-2019"}
+{"type": "file_status", "status": "A", "path": "/Users/manu/Documents/financial/Allianz/invoice-2019"}
+{"type": "file_status", "status": "d", "path": "/Users/manu/Documents/financial/Allianz"}
+{"name": "borg.repository", "time": 1541485454.6220284, "message": "Remote: Storage quota: 13.44 MB out of 1.00 GB used.", "type": "log_message", "levelname": "INFO"}
+{"total": 2, "type": "progress_percent", "time": 1541485454.960747, "finished": false, "current": 1, "message": "Remote: Compacting segments   0%", "info": null, "msgid": "repository.compact_segments", "operation": 1}
+{"total": 2, "type": "progress_percent", "time": 1541485454.9839778, "finished": false, "current": 2, "message": "Remote: Compacting segments  50%", "info": null, "msgid": "repository.compact_segments", "operation": 1}
+{"time": 1541485454.9841166, "operation": 1, "finished": true, "type": "progress_percent", "msgid": "repository.compact_segments"}
+{"message": "Saving files cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1541485455.270078}
+{"message": "Saving chunks cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1541485455.273303}
+{"message": "Saving cache config", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1541485455.2741609}
+{"operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": true, "time": 1541485455.276022}
+{"original_size": 3038309, "compressed_size": 2954077, "deduplicated_size": 2954077, "nfiles": 10, "time": 1541485455.2761118, "type": "archive_progress", "path": ""}

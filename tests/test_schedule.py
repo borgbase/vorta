@@ -1,7 +1,6 @@
 from datetime import datetime as dt, date, time
 from PyQt5 import QtCore
 
-from vorta.views.schedule_tab import ScheduleTab
 
 def test_schedule_tab(app, qtbot):
     main = app.main_window

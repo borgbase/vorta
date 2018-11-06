@@ -67,6 +67,9 @@ class BackupProfileModel(pw.Model):
     prune_month = pw.IntegerField(default=6)
     prune_year = pw.IntegerField(default=2)
 
+    def refresh(self):
+        return type(self).get(self._pk_expr())
+
     class Meta:
         database = db
 

@@ -1,0 +1,22 @@
+{
+  "cache": {
+    "path": "/Users/manu/.cache/borg/daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb",
+    "stats": {
+      "total_chunks": 97,
+      "total_csize": 23892256,
+      "total_size": 27955635,
+      "total_unique_chunks": 63,
+      "unique_csize": 13435127,
+      "unique_size": 15520474
+    }
+  },
+  "encryption": {
+    "mode": "repokey-blake2"
+  },
+  "repository": {
+    "id": "daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb",
+    "last_modified": "2018-11-06T14:24:14.000000",
+    "location": "ssh://w66xh7lj@w66xh7lj.repo.borgbase.com/./repo"
+  },
+  "security_dir": "/Users/manu/.config/borg/security/daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb"
+}
