@@ -1,6 +1,6 @@
 # Vorta - A Boring Open Source GUI for BorgBackup
 
-![](https://files.qmax.us/vorta-screencast-3.gif)
+![](https://files.qmax.us/vorta-screencast-4.gif)
 
 Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in beta status. 
 
