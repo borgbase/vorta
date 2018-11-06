@@ -7,6 +7,8 @@ from .models import BackupProfileMixin, EventLogModel
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
 from vorta.borg.check import BorgCheckThread
+from .notifications import VortaNotifications
+
 
 class VortaScheduler(QtScheduler, BackupProfileMixin):
     def __init__(self, parent):
@@ -28,6 +30,8 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
 
         if self.get_jobs() and trigger is not None:
             self.reschedule_job('create-backup', trigger=trigger)
+            notifier = VortaNotifications.pick()()
+            notifier.deliver('Vorta Scheduler', 'New schedule was successfully applied.')
         elif trigger is not None:
             self.add_job(func=self.create_backup, trigger=trigger, id='create-backup', misfire_grace_time=180)
         else:
@@ -42,6 +46,7 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
     def create_backup(self):
+        notifier = VortaNotifications.pick()()
         msg = BorgCreateThread.prepare(self.profile())
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg)
@@ -49,6 +54,10 @@ class VortaScheduler(QtScheduler, BackupProfileMixin):
             thread.wait()
             if thread.process.returncode == 0:
                 self.post_backup_tasks()
+            else:
+                notifier.deliver('Vorta Backup', 'Error during backup creation.')
+        else:
+            notifier.deliver('Vorta Backup', msg['message'])
 
     def post_backup_tasks(self):
         """

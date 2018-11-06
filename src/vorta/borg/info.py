@@ -32,7 +32,10 @@ class BorgInfoThread(BorgThread):
         cmd = ["borg", "info", "--info", "--json", "--log-json"]
         cmd.append(profile.repo.url)
 
-        ret['password'] = params['password']
+        if params['password'] == '':
+            ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
+        else:
+            ret['password'] = params['password']
         ret['ok'] = True
         ret['cmd'] = cmd
 
