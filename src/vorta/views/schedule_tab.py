@@ -14,6 +14,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.setupUi(parent)
         self.app = QApplication.instance()
         profile = self.profile()
+        self.toolBox.setCurrentIndex(0)
 
         # Set scheduler values
         self.schedulerRadioMapping = {
