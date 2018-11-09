@@ -12,7 +12,9 @@ class VortaNotifications:
     def pick(cls):
         if sys.platform == 'darwin':
             return DarwinNotifications
-        elif sys.platform == 'linux2':
+        elif sys.platform == 'linux':
+            return LinuxNotifications
+        else:  # Save to sqlite as fallback?
             return LinuxNotifications
 
 
