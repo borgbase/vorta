@@ -25,7 +25,8 @@ class DarwinNotifications(VortaNotifications):
         notification.setTitle_(title)
         notification.setInformativeText_(text)
         center = NSUserNotificationCenter.defaultUserNotificationCenter()
-        center.deliverNotification_(notification)
+        if center is not None:  # Only works when run from app bundle.
+            center.deliverNotification_(notification)
 
 
 class LinuxNotifications(VortaNotifications):
