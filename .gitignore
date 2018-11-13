@@ -12,3 +12,5 @@ vorta.egg-info
 .coverage
 .tox
 .python-version
+.vagrant
+*.log
