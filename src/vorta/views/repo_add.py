@@ -41,6 +41,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
+            else:
+                self._set_status(params['message'])
 
     def _set_status(self, text):
         self.errorText.setText(text)
@@ -97,3 +99,5 @@ class ExistingRepoWindow(AddRepoWindow):
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
+            else:
+                self._set_status(params['message'])
