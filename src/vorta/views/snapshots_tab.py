@@ -120,6 +120,11 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
     def mount_action(self):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)
+        if not params['ok']:
+            self._set_status(params['message'])
+            return
+
+        # Conditions are met (borg binary available, etc)
         row_selected = self.snapshotTable.selectionModel().selectedRows()
         if row_selected:
             snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 3)
