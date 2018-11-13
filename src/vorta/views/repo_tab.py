@@ -41,6 +41,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
+        self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
+        self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
+
         self.init_repo_stats()
 
     def init_repo_stats(self):
@@ -54,10 +57,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def init_ssh(self):
         keys = get_private_keys()
+        self.sshComboBox.clear()
+        self.sshComboBox.addItem('Automatically choose SSH Key (default)', None)
+        self.sshComboBox.addItem('Create New Key', 'new')
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})', key['filename'])
-        self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
-        self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
 
     def ssh_select_action(self, index):
         if index == 1:
