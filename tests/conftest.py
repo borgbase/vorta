@@ -18,7 +18,7 @@ def app(tmpdir, qtbot):
 
 @pytest.fixture()
 def app_with_repo(app):
-    profile = app.profile()
+    profile = app.main_window.current_profile
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
     new_repo.save()
     profile.repo = new_repo

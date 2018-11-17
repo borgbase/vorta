@@ -13,7 +13,7 @@ class BorgInitThread(BorgThread):
 
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
-            FakeRepo(params['repo_url'])
+            FakeRepo(params['repo_url']), 'Init Repo'
         )
 
         ret = super().prepare(profile)

@@ -6,7 +6,7 @@ def test_schedule_tab(app, qtbot):
     main = app.main_window
     tab = main.scheduleTab
     qtbot.mouseClick(tab.scheduleApplyButton, QtCore.Qt.LeftButton)
-    assert tab.nextBackupDateTimeLabel.text() == 'Manual Backups'
+    assert tab.nextBackupDateTimeLabel.text() == 'None scheduled'
 
     tab.scheduleIntervalRadio.setChecked(True)
     tab.scheduleIntervalHours.setValue(5)
@@ -16,7 +16,7 @@ def test_schedule_tab(app, qtbot):
 
     tab.scheduleOffRadio.setChecked(True)
     qtbot.mouseClick(tab.scheduleApplyButton, QtCore.Qt.LeftButton)
-    assert tab.nextBackupDateTimeLabel.text() == 'Manual Backups'
+    assert tab.nextBackupDateTimeLabel.text() == 'None scheduled'
 
     tab.scheduleFixedRadio.setChecked(True)
     tab.scheduleFixedTime.setTime(QtCore.QTime(23, 59))
