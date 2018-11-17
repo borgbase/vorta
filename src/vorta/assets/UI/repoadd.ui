@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>555</width>
-    <height>257</height>
+    <height>270</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,27 +35,62 @@
       <number>5</number>
      </property>
      <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="repoLabel">
        <property name="text">
         <string>Repository URL:</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="repoURL">
-       <property name="placeholderText">
-        <string>csvis8xq@csvis8xq.repo.borgbase.com:repo</string>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
        </property>
-      </widget>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="repoURL">
+         <property name="placeholderText">
+          <string>csvis8xq@csvis8xq.repo.borgbase.com:repo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="chooseLocalFolderButton">
+         <property name="toolTip">
+          <string>Choose a local path as repository.</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/collection.qrc">
+           <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="useRemoteRepoButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/collection.qrc">
+           <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="encryptionLabel">
        <property name="text">
         <string>Encryption:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="3" column="1">
       <widget class="QComboBox" name="encryptionComboBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -65,14 +100,31 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="passwordLineEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>SSH Key:</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="5" column="1">
       <widget class="QComboBox" name="sshComboBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -87,7 +139,25 @@
        </item>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="saveButton">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="closeButton">
+         <property name="text">
+          <string>Cancel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="1">
       <widget class="QLabel" name="errorText">
        <property name="font">
         <font>
@@ -108,41 +178,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="passwordLineEdit">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QPushButton" name="saveButton">
-         <property name="text">
-          <string>Add</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="closeButton">
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
     </layout>
    </item>
    <item row="0" column="0" alignment="Qt::AlignHCenter">
@@ -160,6 +195,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons/collection.qrc"/>
+ </resources>
  <connections/>
 </ui>

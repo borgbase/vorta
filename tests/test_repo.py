@@ -18,7 +18,7 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
     add_repo_window = AddRepoWindow(main.repoTab)
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.errorText.text() == 'Please enter a valid repo URL including hostname and path.'
+    assert add_repo_window.errorText.text().startswith('Please enter a valid')
 
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
