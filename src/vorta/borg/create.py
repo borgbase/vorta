@@ -101,7 +101,5 @@ class BorgCreateThread(BorgThread):
         ret['message'] = 'Starting backup..'
         ret['ok'] = True
         ret['cmd'] = cmd
-        ret['repo_id'] = profile.repo.id
-        ret['ssh_key'] = None  # TODO: implement
 
         return ret

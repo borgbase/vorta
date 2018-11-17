@@ -68,7 +68,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
-        # TODO: valid repo is xx.xx:xx. add rex
         if len(self.values['repo_url']) < 5 or ':' not in self.values['repo_url']:
             self._set_status('Please enter a valid repo URL including hostname and path.')
             return False

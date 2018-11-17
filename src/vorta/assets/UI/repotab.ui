@@ -65,6 +65,14 @@
      </item>
      <item row="3" column="1">
       <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">margin-bottom: 10</string>
+       </property>
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSH account with Borg installed server-side. Or try &lt;a href=&quot;https://www.borgbase.com?utm_source=vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;. 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -92,6 +100,14 @@
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">margin-bottom: 10</string>
+       </property>
        <property name="text">
         <string>To access repository securely. Keep default to use all your existing keys. Or create new key.</string>
        </property>
