@@ -44,7 +44,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             env['BORG_PASSPHRASE'] = params['password']
 
         env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
-        if params.get('ssh_key') and params['ssh_key']:
+        if params.get('ssh_key') and params['ssh_key'] is not None:
             env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
         self.env = env
@@ -89,6 +89,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = 'Add a remote backup repository first.'
             return ret
 
+        ret['ssh_key'] = profile.ssh_key
+        ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
         ret['profile_name'] = profile.name
         ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)  # None if no password.

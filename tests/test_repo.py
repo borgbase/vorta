@@ -6,7 +6,7 @@ from vorta.views.repo_add import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel, SnapshotModel
 
 
-def test_create_error(app, qtbot):
+def test_create_fail(app, qtbot):
     main = app.main_window
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.createProgressText.text() == 'Add a remote backup repository first.'

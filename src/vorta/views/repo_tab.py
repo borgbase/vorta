@@ -74,7 +74,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshComboBox.addItem('Automatically choose SSH Key (default)', None)
         self.sshComboBox.addItem('Create New Key', 'new')
         for key in keys:
-            self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})', key['filename'])
+            self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
 
     def ssh_select_action(self, index):
         if index == 1:
