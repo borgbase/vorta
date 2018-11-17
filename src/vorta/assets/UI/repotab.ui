@@ -103,18 +103,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QComboBox" name="sshComboBox">
-         <item>
-          <property name="text">
-           <string>Automatically choose SSH Key (default)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Create New Key</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="sshComboBox"/>
        </item>
        <item>
         <widget class="QToolButton" name="sshKeyToClipboardButton">
@@ -183,7 +172,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QFormLayout" name="formLayout_2">
+    <layout class="QFormLayout" name="repoStats">
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>

@@ -5,11 +5,11 @@ from dateutil import parser
 from datetime import datetime as dt
 
 from ..utils import get_current_wifi
-from ..models import SourceDirModel, SnapshotModel, BackupProfileModel, BackupProfileMixin, WifiSettingModel
+from ..models import SourceDirModel, SnapshotModel, BackupProfileModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
 
-class BorgCreateThread(BorgThread, BackupProfileMixin):
+class BorgCreateThread(BorgThread):
     def process_result(self, result):
         if result['returncode'] == 0:
             new_snapshot, created = SnapshotModel.get_or_create(
@@ -17,7 +17,7 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
                 defaults={
                     'name': result['data']['archive']['name'],
                     'time': parser.parse(result['data']['archive']['start']),
-                    'repo': self.profile().repo,
+                    'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size']
                 }
@@ -25,7 +25,7 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
             new_snapshot.save()
             if 'cache' in result['data'] and created:
                 stats = result['data']['cache']['stats']
-                repo = self.profile().repo
+                repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
                 repo.unique_csize = stats['unique_csize']
                 repo.unique_size = stats['unique_size']
@@ -101,6 +101,7 @@ class BorgCreateThread(BorgThread, BackupProfileMixin):
         ret['message'] = 'Starting backup..'
         ret['ok'] = True
         ret['cmd'] = cmd
+        ret['repo_id'] = profile.repo.id
         ret['ssh_key'] = None  # TODO: implement
 
         return ret

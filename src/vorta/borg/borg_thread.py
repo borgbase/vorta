@@ -90,6 +90,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         ret['repo_url'] = profile.repo.url
+        ret['profile_name'] = profile.name
         ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)  # None if no password.
         ret['ok'] = True
 
@@ -114,7 +115,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def run(self):
         self.started_event()
         mutex.lock()
-        log_entry = EventLogModel(category='borg-run', subcommand=self.cmd[1])
+        log_entry = EventLogModel(category='borg-run',
+                                  subcommand=self.cmd[1],
+                                  profile=self.params.get('profile_name', None)
+                                  )
         log_entry.save()
 
         self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1,

@@ -6,7 +6,9 @@ from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .snapshots_tab import SnapshotTab
 from .schedule_tab import ScheduleTab
+from .profile_add_edit import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
+from ..models import BackupProfileModel
 from vorta.borg.borg_thread import BorgThread
 
 
@@ -20,6 +22,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setupUi(self)
         self.setWindowTitle(APP_NAME)
         self.app = parent
+        self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
         # Load tab models
@@ -28,8 +31,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
 
-        self.repoTab.repo_changed.connect(self.snapshotTab.populate)
+        self.repoTab.repo_changed.connect(self.snapshotTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.snapshotTab.list_action)
+
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -40,6 +44,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_finished_event.connect(self.backup_finished_event)
         self.app.backup_log_event.connect(self.set_status)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
+
+        # Init profile list
+        self.profileSelector.addItem('+ Add New Profile', None)
+        for profile in BackupProfileModel.select():
+            self.profileSelector.addItem(profile.name, profile.id)
+        self.profileSelector.setCurrentIndex(1)
+        self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
+        self.profileRenameButton.clicked.connect(self.profile_rename_action)
+        self.profileDeleteButton.clicked.connect(self.profile_delete_action)
 
         # Connect to existing thread.
         if BorgThread.is_running():
@@ -63,6 +76,37 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.cancelButton.setEnabled(not create_enabled)
         self.cancelButton.repaint()
 
+    def profile_select_action(self, index):
+        if index == 0:
+            window = AddProfileWindow()
+            window.setParent(self, QtCore.Qt.Sheet)
+            window.show()
+            if window.exec_():
+                self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
+                self.profileSelector.setCurrentIndex(self.profileSelector.count()-1)
+            else:
+                self.profileSelector.setCurrentIndex(1)
+
+        self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
+        self.snapshotTab.populate_from_profile()
+        self.repoTab.populate_from_profile()
+        self.sourceTab.populate_from_profile()
+        self.scheduleTab.populate_from_profile()
+
+    def profile_rename_action(self):
+        window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
+        if window.exec_():
+            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.edited_profile.name)
+
+    def profile_delete_action(self):
+        if self.profileSelector.count() >= 3:
+            to_delete = BackupProfileModel.get(id=self.profileSelector.currentData())
+            to_delete.delete_instance(recursive=True)
+            self.profileSelector.removeItem(self.profileSelector.currentIndex())
+            self.profile_select_action(1)
+
     def backup_started_event(self):
             self.set_status(progress_max=0)
             self._toggle_buttons(create_enabled=False)
@@ -70,7 +114,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_finished_event(self):
         self.set_status(progress_max=100)
         self._toggle_buttons(create_enabled=True)
-        self.snapshotTab.populate()
+        self.snapshotTab.populate_from_profile()
         self.repoTab.init_repo_stats()
 
     def backup_cancelled_event(self):

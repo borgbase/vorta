@@ -4,13 +4,13 @@ from PyQt5.QtGui import QIcon
 
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
-from .models import BackupProfileMixin
+from .models import BackupProfileModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
 from .utils import get_asset
 
 
-class VortaApp(QApplication, BackupProfileMixin):
+class VortaApp(QApplication):
     """
     All windows and QWidgets are children of this app.
 
@@ -36,8 +36,12 @@ class VortaApp(QApplication, BackupProfileMixin):
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
 
-    def create_backup_action(self):
-        msg = BorgCreateThread.prepare(self.profile())
+    def create_backup_action(self, profile_id=None):
+        if not profile_id:
+            profile_id = self.main_window.current_profile.id
+
+        profile = BackupProfileModel.get(id=profile_id)
+        msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg, parent=self)
             thread.start()

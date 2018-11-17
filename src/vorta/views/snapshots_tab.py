@@ -41,7 +41,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
 
-        self.populate()
+        self.populate_from_profile()
 
     def _set_status(self, text):
         self.mountErrors.setText(text)
@@ -53,9 +53,11 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         self.pruneButton.setEnabled(enabled)
         self.mountButton.setEnabled(enabled)
 
-    def populate(self):
-        if self.profile().repo:
-            snapshots = [s for s in self.profile().repo.snapshots.select()]
+    def populate_from_profile(self):
+        profile = self.profile()
+        if profile.repo:
+            self.currentRepoLabel.setText(profile.repo.url)
+            snapshots = [s for s in profile.repo.snapshots.select()]
 
             for row, snapshot in enumerate(snapshots):
                 self.snapshotTable.insertRow(row)
@@ -69,9 +71,11 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
                 self.snapshotTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
                 self.snapshotTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
             self.snapshotTable.setRowCount(len(snapshots))
+            self._toggle_all_buttons(enabled=True)
         else:
             self.snapshotTable.setRowCount(0)
-
+            self.currentRepoLabel.setText('N/A')
+            self._toggle_all_buttons(enabled=False)
 
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
@@ -115,7 +119,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status('Refreshed snapshots.')
-            self.populate()
+            self.populate_from_profile()
 
     def mount_action(self):
         profile = self.profile()

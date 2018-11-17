@@ -73,7 +73,7 @@ def get_asset(path):
     return os.path.join(bundle_dir, path)
 
 
-def get_sorted_wifis():
+def get_sorted_wifis(profile):
     """Get SSIDs from OS and merge with settings in DB."""
     app = QApplication.instance()
 
@@ -84,11 +84,11 @@ def get_sorted_wifis():
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
                 ssid = wifi['SSIDString']
-                WifiSettingModel.get_or_create(ssid=ssid, profile=app.profile().id,
+                WifiSettingModel.get_or_create(ssid=ssid, profile=profile.id,
                                                defaults={'last_connected': timestamp,
                                                         'allowed': True})
 
-    return WifiSettingModel.select().order_by(-WifiSettingModel.last_connected)
+    return WifiSettingModel.select().where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 
 
 def get_current_wifi():

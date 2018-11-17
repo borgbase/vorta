@@ -8,8 +8,9 @@ import peewee as pw
 import json
 from datetime import datetime
 from playhouse.migrate import SqliteMigrator, migrate
+from PyQt5.QtWidgets import QApplication
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 db = pw.Proxy()
 
@@ -77,7 +78,7 @@ class BackupProfileModel(pw.Model):
 class SourceDirModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
-    config = pw.ForeignKeyField(BackupProfileModel, default=1)
+    profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
     class Meta:
@@ -119,7 +120,7 @@ class EventLogModel(pw.Model):
     message = pw.CharField(null=True)
     returncode = pw.IntegerField(default=1)
     params = JSONField(null=True)
-    profile = pw.ForeignKeyField(BackupProfileModel, default=1)
+    profile = pw.CharField(null=True)
     repo_url = pw.CharField(null=True)
 
     class Meta:
@@ -137,10 +138,14 @@ class SchemaVersion(pw.Model):
 
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
-    @classmethod
-    def profile(cls):
-        return BackupProfileModel.get(id=1)
-
+    def profile(self):
+        return BackupProfileModel.get(id=self.window().current_profile.id)
+        # app = QApplication.instance()
+        # main_window = hasattr(app, 'main_window')
+        # if main_window:
+        #     return app.main_window.current_profile
+        # else:
+        #     return BackupProfileModel.select().first()
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with db.atomic():
@@ -156,7 +161,9 @@ def init_db(con):
     db.create_tables([RepoModel, BackupProfileModel, SourceDirModel,
                       SnapshotModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
-    BackupProfileModel.get_or_create(id=1, name='Default')
+    if BackupProfileModel.select().count() == 0:
+        default_profile = BackupProfileModel(name='Default Profile')
+        default_profile.save()
 
     # Migrations
     # See http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#schema-migrations
@@ -184,5 +191,13 @@ def init_db(con):
         _apply_schema_update(
             current_schema, 6,
             migrator.add_column(EventLogModel._meta.table_name, 'repo_url', pw.CharField(null=True))
+        )
+
+    if current_schema.version < 7:
+        _apply_schema_update(
+            current_schema, 7,
+            migrator.rename_column(SourceDirModel._meta.table_name, 'config_id', 'profile_id'),
+            migrator.drop_column(EventLogModel._meta.table_name, 'profile_id'),
+            migrator.add_column(EventLogModel._meta.table_name, 'profile', pw.CharField(null=True))
         )
 

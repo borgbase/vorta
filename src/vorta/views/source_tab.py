@@ -14,12 +14,23 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         self.sourceAdd.clicked.connect(self.source_add)
         self.sourceRemove.clicked.connect(self.source_remove)
-        for source in SourceDirModel.select():
+        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
+        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.populate_from_profile()
+
+    def populate_from_profile(self):
+        profile = self.profile()
+        self.excludePatternsField.textChanged.disconnect()
+        self.excludeIfPresentField.textChanged.disconnect()
+        self.sourceDirectoriesWidget.clear()
+        self.excludePatternsField.clear()
+        self.excludeIfPresentField.clear()
+
+        for source in SourceDirModel.select().where(SourceDirModel.profile == profile):
             self.sourceDirectoriesWidget.addItem(source.dir)
 
-        self.excludePatternsField.appendPlainText(self.profile().exclude_patterns)
-        self.excludeIfPresentField.appendPlainText(self.profile().exclude_if_present)
-
+        self.excludePatternsField.appendPlainText(profile.exclude_patterns)
+        self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
@@ -30,7 +41,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         fileName = QFileDialog.getExistingDirectory(
             self, "Choose Backup Directory", "", options=options)
         if fileName:
-            new_source, created = SourceDirModel.get_or_create(dir=fileName)
+            new_source, created = SourceDirModel.get_or_create(dir=fileName, profile=self.profile())
             if created:
                 self.sourceDirectoriesWidget.addItem(fileName)
                 new_source.save()

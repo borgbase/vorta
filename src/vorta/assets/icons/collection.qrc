@@ -12,5 +12,6 @@
         <file>refresh.svg</file>
         <file>folder-open.svg</file>
         <file>check-circle.svg</file>
+        <file>edit.svg</file>
     </qresource>
 </RCC>
