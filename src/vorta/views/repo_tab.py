@@ -27,9 +27,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
-        if self.profile().repo:
-            self.repoSelector.setCurrentIndex(self.repoSelector.findData(self.profile().repo.id))
-
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
 
@@ -37,13 +34,24 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.addItem('Zstandard (medium)', 'zstd')
         self.repoCompression.addItem('LZMA (high)', 'lzma,6')
         self.repoCompression.addItem('No Compression', 'none')
-        self.repoCompression.setCurrentIndex(self.repoCompression.findData(self.profile().compression))
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
         self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
         self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
 
+        self.init_repo_stats()
+        self.populate_from_profile()
+
+    def populate_from_profile(self):
+        profile = self.profile()
+        if profile.repo:
+            self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
+        else:
+            self.repoSelector.setCurrentIndex(0)
+
+        self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
+        self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
 
     def init_repo_stats(self):
@@ -53,7 +61,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
             self.sizeOriginal.setText(pretty_bytes(repo.total_size))
             self.repoEncryption.setText(str(repo.encryption))
-            self.repo_changed.emit()
+        else:
+            self.sizeCompressed.setText('')
+            self.sizeDeduplicated.setText('')
+            self.sizeOriginal.setText('')
+            self.repoEncryption.setText('')
+        self.repo_changed.emit()
 
     def init_ssh(self):
         keys = get_private_keys()

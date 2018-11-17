@@ -13,15 +13,22 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.app = QApplication.instance()
-        profile = self.profile()
         self.toolBox.setCurrentIndex(0)
 
-        # Set scheduler values
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
             'interval': self.scheduleIntervalRadio,
             'fixed': self.scheduleFixedRadio
         }
+
+        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
+        self.app.backup_finished_event.connect(self.init_logs)
+
+        self.init_logs()
+        self.populate_from_profile()
+
+    def populate_from_profile(self):
+        profile = self.profile()
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
         self.scheduleIntervalHours.setValue(profile.schedule_interval_hours)
@@ -31,20 +38,18 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         # Set checking options
         self.validationCheckBox.setCheckState(profile.validation_on)
-        self.validationCheckBox.setTristate(False)
         self.validationSpinBox.setValue(profile.validation_weeks)
 
         self.pruneCheckBox.setCheckState(profile.prune_on)
+        self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
 
-        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
-        self.app.backup_finished_event.connect(self.init_logs)
-
+        self._draw_next_scheduled_backup(profile.id)
         self.init_wifi()
-        self.init_logs()
 
     def init_wifi(self):
-        for wifi in get_sorted_wifis():
+        self.wifiListWidget.clear()
+        for wifi in get_sorted_wifis(self.profile()):
             item = QListWidgetItem()
             item.setText(wifi.ssid)
             item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
@@ -82,6 +87,10 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setRowCount(len(event_logs))
         self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
 
+    def _draw_next_scheduled_backup(self, profile_id):
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(profile_id))
+        self.nextBackupDateTimeLabel.repaint()
+
     def on_scheduler_apply(self):
         profile = self.profile()
 
@@ -100,5 +109,5 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.schedule_fixed_hour, profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
                 profile.save()
                 self.app.scheduler.reload()
-                self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
-                self.nextBackupDateTimeLabel.repaint()
+                self._draw_next_scheduled_backup(profile.id)
+
