@@ -131,11 +131,11 @@
      </item>
      <item>
       <widget class="QTabWidget" name="tabWidget">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
        <property name="currentIndex">
         <number>0</number>
+       </property>
+       <property name="documentMode">
+        <bool>false</bool>
        </property>
        <property name="tabsClosable">
         <bool>false</bool>

@@ -1,11 +1,11 @@
 from PyQt5 import uic
-from ..utils import get_private_keys, get_asset
+from ..utils import get_private_keys, get_asset, choose_folder_dialog
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.borg.list import BorgListThread
 
 uifile = get_asset('UI/repoadd.ui')
-AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
+AddRepoUI, AddRepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
 class AddRepoWindow(AddRepoBase, AddRepoUI):
@@ -16,6 +16,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         self.closeButton.clicked.connect(self.close)
         self.saveButton.clicked.connect(self.run)
+        self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
+        self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
 
         self.init_encryption()
         self.init_ssh_key()
@@ -30,6 +32,20 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    def choose_local_backup_folder(self):
+        folder = choose_folder_dialog(self, "Choose Location of Borg Repository")
+        if folder:
+            self.repoURL.setText(folder)
+            self.repoURL.setEnabled(False)
+            self.sshComboBox.setEnabled(False)
+            self.repoLabel.setText('Repository Path:')
+
+    def use_remote_repo_action(self):
+        self.repoURL.setText('')
+        self.repoURL.setEnabled(True)
+        self.sshComboBox.setEnabled(True)
+        self.repoLabel.setText('Repository URL:')
 
     def run(self):
         if self.validate():
@@ -68,8 +84,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
-        if len(self.values['repo_url']) < 5 or ':' not in self.values['repo_url']:
-            self._set_status('Please enter a valid repo URL including hostname and path.')
+        if len(self.values['repo_url']) < 5:
+            self._set_status('Please enter a valid repo URL or path.')
             return False
 
         if self.__class__ == AddRepoWindow:

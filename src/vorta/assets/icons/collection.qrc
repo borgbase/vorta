@@ -13,5 +13,6 @@
         <file>folder-open.svg</file>
         <file>check-circle.svg</file>
         <file>edit.svg</file>
+        <file>globe.svg</file>
     </qresource>
 </RCC>

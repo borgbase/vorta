@@ -7,7 +7,7 @@ from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
-from vorta.utils import get_asset, keyring, pretty_bytes
+from vorta.utils import get_asset, keyring, pretty_bytes, choose_folder_dialog
 from vorta.models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
@@ -136,13 +136,9 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
                 snapshot_name = snapshot_cell.text()
                 params['cmd'][-1] += f'::{snapshot_name}'
 
-        options = QFileDialog.Options()
-        options |= QFileDialog.ShowDirsOnly
-        options |= QFileDialog.DontUseNativeDialog
-        mountPoint = QFileDialog.getExistingDirectory(
-            self, "Choose Mount Point", "", options=options)
-        if mountPoint:
-            params['cmd'].append(mountPoint)
+        mount_point = choose_folder_dialog(self, "Choose Mount Point")
+        if mount_point:
+            params['cmd'].append(mount_point)
             if params['ok']:
                 self._toggle_all_buttons(False)
                 thread = BorgMountThread(params['cmd'], params, parent=self)

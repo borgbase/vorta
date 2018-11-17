@@ -6,6 +6,7 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QFileDialog
 import subprocess
 
 """Workaround for pyinstaller+keyring issue."""
@@ -23,6 +24,11 @@ else:
 
 from .models import WifiSettingModel
 
+def choose_folder_dialog(parent, title):
+    options = QFileDialog.Options()
+    options |= QFileDialog.ShowDirsOnly
+    options |= QFileDialog.DontUseNativeDialog
+    return QFileDialog.getExistingDirectory(parent, title, "", options=options)
 
 def get_private_keys():
     """Find SSH keys in standard folder."""
