@@ -1,4 +1,11 @@
-language: generic
+language: python
+python:
+- '3.6'
+addons:
+  apt:
+    packages:
+    - xvfb
+    - python3-venv
 
 cache:
 - pip
