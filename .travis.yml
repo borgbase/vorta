@@ -44,7 +44,7 @@ before_script:
 - sleep 1
 
 script:
-- pytest
+- xvfb-run pytest
 
 #after_script:
 #- |
