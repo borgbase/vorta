@@ -30,6 +30,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            sudo apt-get install -y xvfb herbstluftwm
             python3 -m venv venv
             . venv/bin/activate
             pip install .
@@ -48,7 +49,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            xvfb-run python setup.py test
 
       - store_artifacts:
           path: test-reports
