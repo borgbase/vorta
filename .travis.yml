@@ -1,7 +1,18 @@
-language: generic
+language: python
+python:
+- '3.6'
+addons:
+  apt:
+    packages:
+    - xvfb
+    - libssl-dev
+    - openssl
+    - libacl1-dev
+    - libacl1
+    - build-essential
 
 cache:
-- pip
+  - pip
 
 sudo: required
 
@@ -9,25 +20,13 @@ dist: trusty
 
 env:
   global:
-  # used by ci-helpers
   - SETUP_XVFB=true
-  - PIP_DEPENDENCIES='hacking pytest pytest-qt'
 
-  - MPLBACKEND=TkAgg  # for osx
 matrix:
   include:
-  - os: osx
-    env:
-    - PYTEST_QT_API=pyqt5
-    - PYQT_PACKAGE='pyqt=5'
-    - PYTHON_VERSION=3.6
-    - RUN_PYINSTALLER=true
   - os: linux
     dist: trusty
     env:
-    - PYTEST_QT_API=pyqt5
-    - PYQT_PACKAGE='pyqt=5'
-    - PYTHON_VERSION=3.6
     - RUN_PYINSTALLER=true
 
 install:
@@ -36,19 +35,21 @@ install:
     sudo apt-get update
     # Xvfb / window manager
     sudo apt-get install -y xvfb herbstluftwm
+    export DISPLAY=:99.0
+    /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+    sleep 3
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew cask install xquartz
   fi
 
-- python3 -m venv venv
-- source activate venv
 - pip install .
+- pip install borgbackup
 - pip install -r requirements-dev.txt
 
 before_script:
 - if [ $TRAVIS_OS_NAME = "linux" ]; then (herbstluftwm )& fi
 - if [ $TRAVIS_OS_NAME = "osx" ]; then (sudo Xvfb :99 -ac -screen 0 1024x768x8 )& fi
-- sleep 1
+- sleep 3
 
 script:
 - pytest
