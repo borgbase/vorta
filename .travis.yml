@@ -19,11 +19,10 @@ addons:
     - xquartz
     
 cache:
-  - pip
   directories:
     - $HOME/.cache/pip
-sudo: required
 
+sudo: required
 dist: trusty
 
 env:
