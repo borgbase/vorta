@@ -36,10 +36,10 @@ class VortaScheduler(QtScheduler):
                 changed = True
             elif self.get_job(job_id) is not None and trigger is None:
                 self.remove_job(job_id)
-                changed = True
 
-        notifier = VortaNotifications.pick()()
-        notifier.deliver('Vorta Scheduler', 'New schedule was successfully applied.')
+        if changed:
+            notifier = VortaNotifications.pick()()
+            notifier.deliver('Vorta Scheduler', 'New schedule was successfully applied.')
 
     @property
     def next_job(self):

@@ -50,3 +50,9 @@ class TrayMenu(QSystemTrayIcon):
             self.status.setText(f'Next Task: {self.app.scheduler.next_job}')
             self.profile_menu.setEnabled(True)
             self.cancel_action.setVisible(False)
+
+        self.profile_menu.clear()
+        for profile in BackupProfileModel.select():
+            new_item = self.profile_menu.addAction(profile.name)
+            new_item.setData(profile.id)
+            new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
