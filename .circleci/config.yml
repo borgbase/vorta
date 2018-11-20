@@ -30,7 +30,6 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            sudo apt-get install -y xvfb herbstluftwm
             python3 -m venv venv
             . venv/bin/activate
             pip install .
