@@ -10,10 +10,10 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import uic, QtCore
 import subprocess
 import keyring
-from keyring import backend
+from .models import WifiSettingModel
 
 
-class VortaKeyring(backend.KeyringBackend):
+class VortaKeyring(keyring.backend.KeyringBackend):
     """Fallback keyring service."""
     @classmethod
     def priority(cls):
@@ -55,23 +55,13 @@ else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaKeyring())
 
 
-from .models import WifiSettingModel
-
 def choose_folder_dialog(parent, title):
-    # messagebox.setWindowModality(QtCore.Qt.WindowModal)
-    # messagebox.setParent(messagebox.parentWidget(), QtCore.Qt.Sheet)
-    # messagebox.setResult(0)
-    # messagebox.show()
-
     options = QFileDialog.Options()
     options |= QFileDialog.ShowDirsOnly
-    # options |= QFileDialog.DontUseNativeDialog
     dialog = QFileDialog(parent, title, os.path.expanduser('~'), options=options)
-    # dialog.setWindowModality(QtCore.Qt.WindowModal)
     dialog.setParent(parent, QtCore.Qt.Sheet)
-    # dialog.setResult(0)
     return dialog
-    # return QFileDialog.getExistingDirectory(parent, title, "", options=options)
+
 
 def get_private_keys():
     """Find SSH keys in standard folder."""
@@ -133,9 +123,19 @@ def get_sorted_wifis(profile):
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
                 ssid = wifi['SSIDString']
-                WifiSettingModel.get_or_create(ssid=ssid, profile=profile.id,
+                db_wifi, created = WifiSettingModel.get_or_create(ssid=ssid, profile=profile.id,
                                                defaults={'last_connected': timestamp,
                                                         'allowed': True})
+
+                # update last connected time
+                if not created and db_wifi.last_connected != timestamp:
+                    db_wifi.last_connected = timestamp
+                    db_wifi.save()
+
+        # remove Wifis that were deleted in the system.
+        deleted_wifis = WifiSettingModel.select().where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
+        for wifi in deleted_wifis:
+            wifi.delete_instance()
 
     return WifiSettingModel.select().where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 
