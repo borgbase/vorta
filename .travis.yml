@@ -31,6 +31,8 @@ install:
     sudo apt-get update
     # Xvfb / window manager
     sudo apt-get install -y xvfb herbstluftwm
+    export DISPLAY=:99.0
+    sleep 3
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew cask install xquartz
   fi
@@ -44,7 +46,7 @@ before_script:
 - sleep 1
 
 script:
-- xvfb-run pytest
+- pytest
 
 #after_script:
 #- |
