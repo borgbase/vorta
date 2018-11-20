@@ -59,7 +59,7 @@ install:
   fi
   export PYENV_VERSION=3.6.7
   pyenv virtualenv venv 3.6.7
-  source venv/bin/activate
+  pyenv shell venv
 
 - pip install .
 - pip install borgbackup
