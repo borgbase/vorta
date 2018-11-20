@@ -11,6 +11,7 @@ addons:
     - libacl1
     - build-essential
   homebrew:
+    update: true
     packages:
     - openssl
     - readline
@@ -21,6 +22,8 @@ addons:
 cache:
   directories:
     - $HOME/.cache/pip
+    - $HOME/.pyenv/versions
+    - $HOME/Library/Caches/Homebrew
 
 sudo: required
 dist: trusty
@@ -55,7 +58,7 @@ install:
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
   export PYENV_VERSION=3.6.7
-  pyenv-virtualenv venv 3.6.7
+  pyenv virtualenv venv 3.6.7
   source venv/bin/activate
 
 - pip install .
