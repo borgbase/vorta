@@ -1,4 +1,4 @@
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from ..models import SourceDirModel, BackupProfileMixin
 from ..utils import get_asset, choose_folder_dialog
@@ -35,12 +35,17 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
     def source_add(self):
-        new_source_folder = choose_folder_dialog(self, "Choose Backup Directory")
-        if new_source_folder:
-            new_source, created = SourceDirModel.get_or_create(dir=new_source_folder, profile=self.profile())
-            if created:
-                self.sourceDirectoriesWidget.addItem(new_source_folder)
-                new_source.save()
+        def receive():
+            dir = dialog.selectedFiles()
+            if dir:
+                new_source, created = SourceDirModel.get_or_create(dir=dir[0], profile=self.profile())
+                if created:
+                    self.sourceDirectoriesWidget.addItem(dir[0])
+                    new_source.save()
+
+        dialog = choose_folder_dialog(self, "Choose Backup Directory")
+        dialog.open(receive)
+
 
     def source_remove(self):
         item = self.sourceDirectoriesWidget.takeItem(self.sourceDirectoriesWidget.currentRow())
