@@ -5,10 +5,18 @@ addons:
   apt:
     packages:
     - xvfb
-    - python3.6-venv
 
 cache:
-- pip
+  - pip
+  - directories:
+    - $HOME/.pyenv_cache
+
+before_install:
+  - |
+      if [[ -n "$PYENV_VERSION" ]]; then
+        wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
+        source setup-pyenv.sh
+      fi
 
 sudo: required
 
@@ -16,25 +24,15 @@ dist: trusty
 
 env:
   global:
-  # used by ci-helpers
   - SETUP_XVFB=true
   - PIP_DEPENDENCIES='hacking pytest pytest-qt'
 
-  - MPLBACKEND=TkAgg  # for osx
 matrix:
   include:
-  - os: osx
-    env:
-    - PYTEST_QT_API=pyqt5
-    - PYQT_PACKAGE='pyqt=5'
-    - PYTHON_VERSION=3.6
-    - RUN_PYINSTALLER=true
   - os: linux
     dist: trusty
     env:
-    - PYTEST_QT_API=pyqt5
-    - PYQT_PACKAGE='pyqt=5'
-    - PYTHON_VERSION=3.6
+    - PYENV_VERSION=py36
     - RUN_PYINSTALLER=true
 
 install:
@@ -47,8 +45,6 @@ install:
     brew cask install xquartz
   fi
 
-- python3 -m venv venv
-- source activate venv
 - pip install .
 - pip install -r requirements-dev.txt
 
