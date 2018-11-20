@@ -5,6 +5,7 @@ addons:
   apt:
     packages:
     - xvfb
+    - herbstluftwm
     - libssl-dev
     - openssl
     - libacl1-dev
@@ -28,13 +29,13 @@ matrix:
     dist: trusty
     env:
     - RUN_PYINSTALLER=true
+  - os: osx
+    env:
+      - RUN_PYINSTALLER=true
 
 install:
 - |
   if [ $TRAVIS_OS_NAME = "linux" ]; then
-    sudo apt-get update
-    # Xvfb / window manager
-    sudo apt-get install -y xvfb herbstluftwm
     export DISPLAY=:99.0
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
