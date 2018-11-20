@@ -59,3 +59,5 @@ class VortaApp(QApplication):
     def backup_finished_event_response(self):
         icon = QIcon(get_asset('icons/hdd-o.png'))
         self.tray.setIcon(icon)
+        self.main_window.scheduleTab._draw_next_scheduled_backup()
+

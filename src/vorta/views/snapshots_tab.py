@@ -55,7 +55,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         profile = self.profile()
-        if profile.repo:
+        if profile.repo is not None:
             self.currentRepoLabel.setText(profile.repo.url)
             snapshots = [s for s in profile.repo.snapshots.select()]
 

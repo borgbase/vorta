@@ -43,6 +43,8 @@ class VortaScheduler(QtScheduler):
 
     @property
     def next_job(self):
+        self.wakeup()
+        self._process_jobs()
         jobs = []
         for job in self.get_jobs():
             jobs.append((job.next_run_time, job.id))
@@ -55,6 +57,7 @@ class VortaScheduler(QtScheduler):
             return 'None scheduled'
 
     def next_job_for_profile(self, profile_id):
+        self.wakeup()
         job = self.get_job(str(profile_id))
         if job is None:
             return 'None scheduled'
