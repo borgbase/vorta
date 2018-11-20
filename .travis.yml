@@ -11,7 +11,14 @@ addons:
     - libacl1-dev
     - libacl1
     - build-essential
-
+  homebrew:
+    packages:
+    - openssl
+    - readline
+    - pyenv-virtualenv
+    casks:
+    - xquartz
+    
 cache:
   - pip
 
@@ -40,7 +47,11 @@ install:
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
-    brew cask install xquartz
+    CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install 3.6.7
+    export PYENV_VERSION=3.6.7
+    export PATH="/Users/travis/.pyenv/shims:${PATH}"
+    pyenv-virtualenv venv
+    source venv/bin/activate
   fi
 
 - pip install .
