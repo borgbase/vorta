@@ -15,6 +15,7 @@ addons:
     packages:
     - openssl
     - readline
+    - xz
     - pyenv
     - pyenv-virtualenv
     casks:
@@ -32,7 +33,7 @@ dist: trusty
 env:
   global:
   - SETUP_XVFB=true
-  - PYTHON=3.6.1
+  - PYTHON=3.6.4
 
 matrix:
   include:
@@ -50,16 +51,14 @@ install:
     #curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
     #git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
     #git clone git://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
-    pyenv install $PYTHON
-    export PATH="/home/travis/.pyenv/shims:${PATH}"
+    #export PATH="/home/travis/.pyenv/shims:${PATH}"
     export DISPLAY=:99.0
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
-    CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install $PYTHON
-    export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
+  pyenv install $PYTHON
   pyenv install --list
   eval "$(pyenv init -)"
   pyenv shell $PYTHON
