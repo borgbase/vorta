@@ -5,22 +5,14 @@ addons:
   apt:
     packages:
     - xvfb
+    - python3.6-venv
 
 cache:
   - pip
-  - directories:
-    - $HOME/.pyenv_cache
-
-before_install:
-  - |
-      if [[ -n "$PYENV_VERSION" ]]; then
-        wget https://github.com/praekeltfoundation/travis-pyenv/releases/download/0.4.0/setup-pyenv.sh
-        source setup-pyenv.sh
-      fi
 
 sudo: required
 
-dist: trusty
+dist: bionic
 
 env:
   global:
@@ -32,7 +24,6 @@ matrix:
   - os: linux
     dist: trusty
     env:
-    - PYENV_VERSION=py36
     - RUN_PYINSTALLER=true
 
 install:
