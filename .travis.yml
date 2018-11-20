@@ -1,0 +1,79 @@
+language: generic
+
+cache:
+- pip
+
+sudo: required
+
+dist: trusty
+
+env:
+  global:
+  # used by ci-helpers
+  - SETUP_XVFB=true
+  - PIP_DEPENDENCIES='hacking pytest pytest-qt'
+
+  - MPLBACKEND=TkAgg  # for osx
+matrix:
+  include:
+  - os: osx
+    env:
+    - PYTEST_QT_API=pyqt5
+    - PYQT_PACKAGE='pyqt=5'
+    - PYTHON_VERSION=3.6
+    - RUN_PYINSTALLER=true
+  - os: linux
+    dist: trusty
+    env:
+    - PYTEST_QT_API=pyqt5
+    - PYQT_PACKAGE='pyqt=5'
+    - PYTHON_VERSION=3.6
+    - RUN_PYINSTALLER=true
+
+install:
+- |
+  if [ $TRAVIS_OS_NAME = "linux" ]; then
+    sudo apt-get update
+    # Xvfb / window manager
+    sudo apt-get install -y xvfb herbstluftwm
+  elif [ $TRAVIS_OS_NAME = "osx" ]; then
+    brew cask install xquartz
+  fi
+
+- python3 -m venv venv
+- source activate venv
+- pip install .
+- pip install -r requirements-dev.txt
+
+before_script:
+- if [ $TRAVIS_OS_NAME = "linux" ]; then (herbstluftwm )& fi
+- if [ $TRAVIS_OS_NAME = "osx" ]; then (sudo Xvfb :99 -ac -screen 0 1024x768x8 )& fi
+- sleep 1
+
+script:
+- pytest
+
+#after_script:
+#- |
+#  if [ $RUN_PYINSTALLER = "true" ]; then
+#    # Cleanup
+#    pip uninstall -y $PIP_DEPENDENCIES
+#
+#    # https://github.com/wkentaro/labelme/issues/183
+#    if [ $TRAVIS_OS_NAME = "osx" ]; then
+#      pip uninstall -y Pillow
+#      conda install -y Pillow
+#    fi
+#
+#    # Build the standalone executable
+#    pip install pyinstaller
+#    pyinstaller labelme.spec
+#    dist/labelme --version
+#  fi
+
+branches:
+  only:
+  - master
+
+notifications:
+  email: false
