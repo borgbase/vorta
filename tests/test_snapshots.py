@@ -32,9 +32,7 @@ def test_repo_list(app_with_repo, qtbot, mocker, borg_json_output):
                                    returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    with qtbot.waitSignal(app_with_repo.backup_finished_event, timeout=3000) as blocker:
-        pass
-
+    qtbot.waitUntil(lambda: main.createProgressText.text() == 'Refreshing snapshots done.')
     assert SnapshotModel.select().count() == 6
     assert main.createProgressText.text() == 'Refreshing snapshots done.'
     assert tab.checkButton.isEnabled()
