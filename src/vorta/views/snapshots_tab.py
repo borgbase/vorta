@@ -136,15 +136,20 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
                 snapshot_name = snapshot_cell.text()
                 params['cmd'][-1] += f'::{snapshot_name}'
 
-        mount_point = choose_folder_dialog(self, "Choose Mount Point")
-        if mount_point:
-            params['cmd'].append(mount_point)
-            if params['ok']:
-                self._toggle_all_buttons(False)
-                thread = BorgMountThread(params['cmd'], params, parent=self)
-                thread.updated.connect(self.mountErrors.setText)
-                thread.result.connect(self.mount_result)
-                thread.start()
+        def receive():
+            dir = dialog.selectedFiles()
+            if dir:
+                params['cmd'].append(dir)
+                if params['ok']:
+                    self._toggle_all_buttons(False)
+                    thread = BorgMountThread(params['cmd'], params, parent=self)
+                    thread.updated.connect(self.mountErrors.setText)
+                    thread.result.connect(self.mount_result)
+                    thread.start()
+
+        dialog = choose_folder_dialog(self, "Choose Mount Point")
+        dialog.open(receive)
+
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)

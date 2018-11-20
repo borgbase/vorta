@@ -34,12 +34,16 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def choose_local_backup_folder(self):
-        folder = choose_folder_dialog(self, "Choose Location of Borg Repository")
-        if folder:
-            self.repoURL.setText(folder)
-            self.repoURL.setEnabled(False)
-            self.sshComboBox.setEnabled(False)
-            self.repoLabel.setText('Repository Path:')
+        def receive():
+            folder = dialog.selectedFiles()
+            if folder:
+                self.repoURL.setText(folder[0])
+                self.repoURL.setEnabled(False)
+                self.sshComboBox.setEnabled(False)
+                self.repoLabel.setText('Repository Path:')
+
+        dialog = choose_folder_dialog(self, "Choose Location of Borg Repository")
+        dialog.open(receive)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
