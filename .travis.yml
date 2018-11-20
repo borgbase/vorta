@@ -57,7 +57,8 @@ install:
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
-    brew update && brew upgrade pyenv
+    #brew update && brew upgrade pyenv
+    pyenv update
     CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install $PYTHON
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
