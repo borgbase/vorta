@@ -73,7 +73,7 @@ $ pyinstaller --clean --noconfirm vorta.spec
 
 Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
 ```
-$ python setup.py test
+$ pytest
 ```
 
 ## Why the Name?
