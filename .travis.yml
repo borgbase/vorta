@@ -20,7 +20,7 @@ addons:
     - pyenv-virtualenv
     casks:
     - xquartz
-    
+
 cache:
   directories:
     - $HOME/.cache/pip
@@ -73,7 +73,7 @@ before_script:
 - sleep 3
 
 script:
-- pytest
+- pytest --forked
 
 #after_script:
 #- |
