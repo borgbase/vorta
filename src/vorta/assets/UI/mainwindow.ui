@@ -244,7 +244,7 @@
           <string/>
          </property>
          <property name="wordWrap">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>

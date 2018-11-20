@@ -41,9 +41,20 @@ class RepoModel(pw.Model):
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
 
+    def is_remote_repo(self):
+        return not self.url.startswith('/')
+
     class Meta:
         database = db
 
+
+class RepoPassword(pw.Model):
+    """Fallback to save repo passwords. Only used if no Keyring available."""
+    url = pw.CharField(unique=True)
+    password = pw.CharField()
+
+    class Meta:
+        database = db
 
 class BackupProfileModel(pw.Model):
     """Allows the user to switch between different configurations."""
@@ -158,7 +169,7 @@ def _apply_schema_update(current_schema, version_after, *operations):
 def init_db(con):
     db.initialize(con)
     db.connect()
-    db.create_tables([RepoModel, BackupProfileModel, SourceDirModel,
+    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceDirModel,
                       SnapshotModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
     if BackupProfileModel.select().count() == 0:

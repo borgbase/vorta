@@ -44,7 +44,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
 
-        self._draw_next_scheduled_backup(profile.id)
+        self._draw_next_scheduled_backup()
         self.init_wifi()
 
     def init_wifi(self):
@@ -85,10 +85,10 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             self.logTableWidget.setItem(row, 3, QTableWidgetItem(log_line.repo_url))
             self.logTableWidget.setItem(row, 4, QTableWidgetItem(str(log_line.returncode)))
         self.logTableWidget.setRowCount(len(event_logs))
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job)
+        self._draw_next_scheduled_backup()
 
-    def _draw_next_scheduled_backup(self, profile_id):
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(profile_id))
+    def _draw_next_scheduled_backup(self):
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
         self.nextBackupDateTimeLabel.repaint()
 
     def on_scheduler_apply(self):
@@ -109,5 +109,5 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.schedule_fixed_hour, profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
                 profile.save()
                 self.app.scheduler.reload()
-                self._draw_next_scheduled_backup(profile.id)
+                self._draw_next_scheduled_backup()
 

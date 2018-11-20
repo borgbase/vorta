@@ -9,18 +9,50 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import uic, QtCore
 import subprocess
-
-"""Workaround for pyinstaller+keyring issue."""
 import keyring
+from keyring import backend
+
+
+class VortaKeyring(backend.KeyringBackend):
+    """Fallback keyring service."""
+    @classmethod
+    def priority(cls):
+        return 5
+
+    def set_password(self, service, repo_url, password):
+        from .models import RepoPassword
+        keyring_entry, created = RepoPassword.get_or_create(url=repo_url, defaults={'password': password})
+        keyring_entry.password = password
+        keyring_entry.save()
+
+    def get_password(self, service, repo_url):
+        from .models import RepoPassword
+        try:
+            keyring_entry = RepoPassword.get(url=repo_url)
+            return keyring_entry.password
+        except Exception:
+            return None
+
+    def delete_password(self, service, repo_url):
+        pass
+
+
+"""Select keyring/Workaround for pyinstaller+keyring issue."""
 if sys.platform == 'darwin':
     from keyring.backends import OS_X
     keyring.set_keyring(OS_X.Keyring())
 elif sys.platform == 'win32':
     from keyring.backends import Windows
     keyring.set_keyring(Windows.WinVaultKeyring())
-else:
+elif sys.platform == 'linux':
     from keyring.backends import SecretService
-    keyring.set_keyring(SecretService.Keyring())
+    try:
+        SecretService.Keyring.priority()  # Test if keyring works.
+        keyring.set_keyring(SecretService.Keyring())
+    except Exception:
+        keyring.set_keyring(VortaKeyring())
+else:  # Fall back to saving password to database.
+    keyring.set_keyring(VortaKeyring())
 
 
 from .models import WifiSettingModel
