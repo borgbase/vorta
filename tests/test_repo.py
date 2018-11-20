@@ -55,6 +55,7 @@ def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     assert EventLogModel.select().count() == 1
     assert SnapshotModel.select().count() == 1
     assert RepoModel.get(id=1).unique_size == 15520474
+    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled())
     assert main.createStartBtn.isEnabled()
     assert main.snapshotTab.snapshotTable.rowCount() == 1
     assert main.scheduleTab.logTableWidget.rowCount() == 1
