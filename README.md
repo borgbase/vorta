@@ -1,4 +1,5 @@
 # Vorta - A Boring Open Source GUI for BorgBackup
+[![Build Status](https://travis-ci.org/borgbase/vorta.svg?branch=master)](https://travis-ci.org/borgbase/vorta)
 
 ![](https://files.qmax.us/vorta-screencast-5.gif)
 
