@@ -5,6 +5,11 @@ addons:
   apt:
     packages:
     - xvfb
+    - libssl-dev
+    - openssl
+    - libacl1-dev
+    - libacl1
+    - build-essential
 
 cache:
   - pip
@@ -16,7 +21,6 @@ dist: trusty
 env:
   global:
   - SETUP_XVFB=true
-  - PIP_DEPENDENCIES='hacking pytest pytest-qt'
 
 matrix:
   include:
@@ -39,6 +43,7 @@ install:
   fi
 
 - pip install .
+- pip install borgbackup
 - pip install -r requirements-dev.txt
 
 before_script:
