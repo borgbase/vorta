@@ -58,7 +58,7 @@ install:
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
   fi
-  pyenv install $PYTHON
+  pyenv install -s $PYTHON
   eval "$(pyenv init -)"
   pyenv shell $PYTHON
 
