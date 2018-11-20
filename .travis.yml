@@ -11,10 +11,11 @@ addons:
     - libacl1
     - build-essential
   homebrew:
-    update: true
+    update: false
     packages:
     - openssl
     - readline
+    - pyenv
     - pyenv-virtualenv
     casks:
     - xquartz
@@ -46,7 +47,9 @@ install:
 - |
   if [ $TRAVIS_OS_NAME = "linux" ]; then
     curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-    git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+    #git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+    git clone git://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
+    pyenv update
     pyenv install 3.6.7
     export PATH="/home/travis/.pyenv/shims:${PATH}"
     export DISPLAY=:99.0
@@ -57,9 +60,8 @@ install:
     CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install 3.6.7
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
-  export PYENV_VERSION=3.6.7
-  pyenv virtualenv venv 3.6.7
-  pyenv shell venv
+  eval "$(pyenv init -)"
+  pyenv shell 3.6.7
 
 - pip install .
 - pip install borgbackup
