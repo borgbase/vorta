@@ -5,14 +5,13 @@ addons:
   apt:
     packages:
     - xvfb
-    - python3.6-venv
 
 cache:
   - pip
 
 sudo: required
 
-dist: bionic
+dist: trusty
 
 env:
   global:
