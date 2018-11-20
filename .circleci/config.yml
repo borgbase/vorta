@@ -49,7 +49,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            xvfb-run python setup.py test
+            xvfb-run pytest
 
       - store_artifacts:
           path: test-reports
