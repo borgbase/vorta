@@ -33,7 +33,7 @@ dist: trusty
 env:
   global:
   - SETUP_XVFB=true
-  - PYTHON=3.6.4
+  - PYTHON=3.6.3
 
 matrix:
   include:
@@ -59,7 +59,6 @@ install:
     brew upgrade pyenv
   fi
   pyenv install $PYTHON
-  pyenv install --list
   eval "$(pyenv init -)"
   pyenv shell $PYTHON
 
