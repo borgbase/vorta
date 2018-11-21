@@ -5,6 +5,7 @@ import peewee
 import vorta.models
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
+import vorta.updater
 from vorta._version import __version__
 
 
@@ -20,6 +21,7 @@ def main():
     vorta.models.init_db(sqlite_db)
 
     app = VortaApp(sys.argv)
+    app.updater = vorta.updater.get_updater()
     sys.exit(app.exec_())
 
 
