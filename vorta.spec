@@ -5,7 +5,7 @@ block_cipher = None
 a = Analysis(['src/vorta/__main__.py'],
              pathex=['/Users/manu/Workspace/vorta/src'],
              binaries=[
-                ('bin/macosx64/borg', 'bin')
+                ('bin/macosx64/borg', 'bin'),
              ],
              datas=[
                 ('src/vorta/assets/UI/*', 'assets/UI'),
@@ -43,7 +43,9 @@ app = BUNDLE(exe,
                      'NSHighResolutionCapable': 'True',
                      'LSUIElement': '1',
                      'CFBundleShortVersionString': '0.4.1',
+                     'CFBundleVersion': '0.4.1',
                      'NSAppleEventsUsageDescription': 'Please allow',
+                     'SUFeedURL': 'https://borgbase.github.io/vorta/appcast-pre.xml'
                      },
              )
 if False:

@@ -4,7 +4,8 @@ build/
 dist/
 docs/
 *.autosave
-bin/
+bin/macosx64/Sparkle.framework
+bin/macosx64/borg
 __pycache__
 Makefile
 .eggs
