@@ -59,6 +59,7 @@ def choose_folder_dialog(parent, title):
     options = QFileDialog.Options()
     options |= QFileDialog.ShowDirsOnly
     dialog = QFileDialog(parent, title, os.path.expanduser('~'), options=options)
+    dialog.setFileMode(QFileDialog.Directory)
     dialog.setParent(parent, QtCore.Qt.Sheet)
     return dialog
 
