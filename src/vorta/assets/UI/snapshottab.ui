@@ -104,6 +104,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="prune_hour">
+       <property name="toolTip">
+        <string>Use -1 for unlimited.</string>
+       </property>
        <property name="minimum">
         <number>-1</number>
        </property>
@@ -118,6 +121,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="prune_day">
+       <property name="toolTip">
+        <string>Use -1 for unlimited.</string>
+       </property>
        <property name="minimum">
         <number>-1</number>
        </property>
