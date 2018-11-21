@@ -23,6 +23,12 @@ pypi-release:
 	python setup.py sdist
 	twine upload dist/vorta-0.4.4.tar.gz
 
+bump-version:
+	bumpversion patch
+#	bumpversion minor
+	git push
+	git push --tags
+
 travis-debug:
 	  curl -s -X POST \
        -H "Content-Type: application/json" \
