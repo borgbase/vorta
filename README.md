@@ -48,7 +48,7 @@ Install in development/editable mode while in the repo:
 $ pip install -e .
 ```
 
-Then run via
+Then run as Python script:
 ```
 $ vorta
 ```
@@ -64,10 +64,10 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
-To build a binary package:
-```
-$ pyinstaller --clean --noconfirm vorta.spec 
-```
+To build a macOS app package:
+- add `Sparkle.framework` from [here](https://github.com/sparkle-project/Sparkle) and `borg` from [here](https://github.com/borgbackup/borg/releases) in `bin/macosx64`
+- then uncomment or change the Apple signing profile to be used in `Makefile`
+- finally run to `$ make Vorta.app` to build the app into the `dist` folder.
 
 ### Testing (work in progress)
 
