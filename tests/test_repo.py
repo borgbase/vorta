@@ -51,7 +51,7 @@ def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('INFO: Remote'))
+    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'))
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled())
     assert EventLogModel.select().count() == 1
     assert SnapshotModel.select().count() == 1
