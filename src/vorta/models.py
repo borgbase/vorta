@@ -17,7 +17,7 @@ db = pw.Proxy()
 
 class JSONField(pw.TextField):
     """
-    Class to "fake" a JSON field with a text field. Not efficient but works nicely
+    Class to "fake" a JSON field with a text field. Not efficient but works nicely.
 
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
