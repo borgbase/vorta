@@ -13,6 +13,10 @@ Vorta.dmg: Vorta.app
 github-release: Vorta.dmg
 	pytest
 	hub release create --prerelease --attach=dist/vorta-0.4.2.dmg v0.4.2
+	git checkout gh-pages
+	git commit -m 'rebuild pages' --allow-empty
+	git push origin gh-pages
+	git checkout master
 
 pypi-release:
 	pytest
