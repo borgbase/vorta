@@ -47,6 +47,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if params.get('ssh_key') and params['ssh_key'] is not None:
             env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
 
+        raise Exception
+
         self.env = env
         self.cmd = cmd
         self.params = params
