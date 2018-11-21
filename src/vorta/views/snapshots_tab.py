@@ -1,7 +1,7 @@
 from datetime import timedelta
 import copy
 from PyQt5 import uic
-from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
@@ -139,7 +139,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         def receive():
             dir = dialog.selectedFiles()
             if dir:
-                params['cmd'].append(dir)
+                params['cmd'].append(dir[0])
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     thread = BorgMountThread(params['cmd'], params, parent=self)
