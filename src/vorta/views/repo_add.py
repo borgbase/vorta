@@ -75,9 +75,9 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.accept()
 
     def init_encryption(self):
-        self.encryptionComboBox.addItem('Repokey-Blake2 (Recommended, key stored remotely)', 'repokey-blake2')
+        self.encryptionComboBox.addItem('Repokey-Blake2 (Recommended, key stored in repository)', 'repokey-blake2')
         self.encryptionComboBox.addItem('Repokey', 'repokey')
-        self.encryptionComboBox.addItem('Keyfile-Blake2 (Key stored locally)', 'keyfile-blake2')
+        self.encryptionComboBox.addItem('Keyfile-Blake2 (Key stored in home directory)', 'keyfile-blake2')
         self.encryptionComboBox.addItem('Keyfile', 'keyfile')
         self.encryptionComboBox.addItem('None (not recommended', 'none')
 

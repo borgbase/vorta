@@ -15,7 +15,7 @@ mutex = QtCore.QMutex()
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):
     """
-    Base class to run `borg` command line jobs. If a command needs more pre- or past-processing
+    Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
     it should sublass `BorgThread`.
     """
 
@@ -86,7 +86,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         if profile.repo is None:
-            ret['message'] = 'Add a remote backup repository first.'
+            ret['message'] = 'Add a backup repository first.'
             return ret
 
         ret['ssh_key'] = profile.ssh_key
@@ -183,7 +183,7 @@ class BorgThreadChain(BorgThread):
 
     def __init__(self, cmds, input_values, parent=None):
         """
-        Takes a list of tuples with `BorgThread` subclass and optional input parameters. Then all actions are exectuted
+        Takes a list of tuples with `BorgThread` subclass and optional input parameters. Then all actions are executed
         and a merged result object is returned to the caller. If there is any error, then current result is returned.
 
         :param actions:
