@@ -54,6 +54,7 @@ class VortaApp(QApplication):
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
+        self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
@@ -79,4 +80,8 @@ class VortaApp(QApplication):
         icon = QIcon(get_asset('icons/hdd-o.png'))
         self.tray.setIcon(icon)
         self.main_window.scheduleTab._draw_next_scheduled_backup()
+
+    def backup_cancelled_event_response(self):
+        icon = QIcon(get_asset('icons/hdd-o.png'))
+        self.tray.setIcon(icon)
 
