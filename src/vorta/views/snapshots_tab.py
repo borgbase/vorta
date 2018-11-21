@@ -1,7 +1,7 @@
 from datetime import timedelta
 import copy
 from PyQt5 import uic
-from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QTableView, QHeaderView
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
