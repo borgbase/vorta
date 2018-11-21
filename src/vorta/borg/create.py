@@ -100,7 +100,7 @@ class BorgCreateThread(BorgThread):
         # Add repo url and source dirs.
         cmd.append(f'{profile.repo.url}::{platform.node()}-{dt.now().isoformat()}')
 
-        for f in SourceDirModel.select():
+        for f in SourceDirModel.select().where(SourceDirModel.profile == profile.id):
             cmd.append(f.dir)
 
         ret['message'] = 'Starting backup..'
