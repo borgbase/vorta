@@ -20,7 +20,7 @@ def main():
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
     vorta.models.init_db(sqlite_db)
 
-    app = VortaApp(sys.argv)
+    app = VortaApp(sys.argv, single_app=True)
     app.updater = vorta.updater.get_updater()
     sys.exit(app.exec_())
 

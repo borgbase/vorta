@@ -1,3 +1,7 @@
+import os
+import sys
+import fcntl
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QIcon
@@ -8,6 +12,7 @@ from .models import BackupProfileModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
 from .utils import get_asset
+from vorta.config import SETTINGS_DIR
 
 
 class VortaApp(QApplication):
@@ -23,7 +28,21 @@ class VortaApp(QApplication):
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
 
-    def __init__(self, args):
+    def __init__(self, args, single_app=False):
+
+        # Ensure only one app instance is running.
+        # From https://stackoverflow.com/questions/220525/
+        #              ensure-a-single-instance-of-an-application-in-linux#221159
+        if single_app:
+            pid_file = os.path.join(SETTINGS_DIR, 'vorta.pid')
+            lockfile = open(pid_file, 'w+')
+            try:
+                fcntl.lockf(lockfile, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                self.lockfile = lockfile
+            except OSError:
+                print('An instance of Vorta is already running.')
+                sys.exit(1)
+
         super().__init__(args)
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
