@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>16777215</height>
+    <width>800</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -92,7 +92,7 @@
        <item>
         <widget class="QToolButton" name="profileRenameButton">
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset>
            <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
          </property>
          <property name="iconSize">
@@ -109,7 +109,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset>
            <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
          </property>
         </widget>
