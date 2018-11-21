@@ -11,7 +11,7 @@ from .borg_thread import BorgThread
 
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
-        if result['returncode'] == 0:
+        if result['returncode'] in [0, 1]:
             new_snapshot, created = SnapshotModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
@@ -41,6 +41,7 @@ class BorgCreateThread(BorgThread):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
+        self.app.backup_log_event.emit('Backup finished.')
 
     @classmethod
     def prepare(cls, profile):
@@ -70,7 +71,11 @@ class BorgCreateThread(BorgThread):
                 ret['message'] = 'Current Wifi is not allowed.'
                 return ret
 
-        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '-C', profile.compression]
+        if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
+            ret['message'] = 'Repo folder not mounted or moved.'
+            return ret
+
+        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py

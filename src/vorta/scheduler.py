@@ -72,7 +72,7 @@ class VortaScheduler(QtScheduler):
             thread = BorgCreateThread(msg['cmd'], msg)
             thread.start()
             thread.wait()
-            if thread.process.returncode == 0:
+            if thread.process.returncode in [0, 1]:
                 self.post_backup_tasks(profile_id)
             else:
                 notifier.deliver('Vorta Backup', 'Error during backup creation.')

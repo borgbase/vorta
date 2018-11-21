@@ -121,5 +121,5 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_status(progress_max=100)
-        self.set_status('Backup cancelled')
+        self.set_status('Task cancelled')
 

@@ -86,8 +86,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="plainText">
+        <string/>
+       </property>
        <property name="placeholderText">
-        <string>*/.DS_Store</string>
+        <string>**/.DS_Store</string>
        </property>
       </widget>
      </item>
