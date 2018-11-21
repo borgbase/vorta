@@ -9,7 +9,7 @@ from vorta.models import EventLogModel, RepoModel, SnapshotModel
 def test_create_fail(app, qtbot):
     main = app.main_window
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    assert main.createProgressText.text() == 'Add a remote backup repository first.'
+    assert main.createProgressText.text() == 'Add a backup repository first.'
 
 
 def test_repo_add(app, qtbot, mocker, borg_json_output):
