@@ -18,11 +18,12 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 - View a list of snapshots and action logs.
 - Exclude options/patterns.
 - Error notifications.
+- Automatic updates using Sparkle. (**NEW!**)
 
 Coming soon:
 
 - [ ] Full test coverage (currently: ~60%)
-- [ ] Packaging for Linux? How?
+- [ ] Packaging for Linux via Snapcraft
 
 ## Installation and Download
 Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.
