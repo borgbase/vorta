@@ -71,7 +71,7 @@ font-weight: bold;
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Backup Manually.</string>
+            <string>Backup manually.</string>
            </property>
           </widget>
          </item>

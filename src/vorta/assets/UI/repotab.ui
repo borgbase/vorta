@@ -32,7 +32,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Configure your remote backup repository. First you will need a SSH key to login without a password. If you already have one, just keep it at the default. Next you can add a new or existing repository.</string>
+      <string>Configure your backup repository (you can add a new or existing repository). For remote repositories, you will need a SSH key to log in without a password (if you already have a key, just keep it at the default).</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -113,7 +113,7 @@
         <string notr="true">margin-bottom: 10</string>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For secure remote bakcups, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;. 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For secure remote backups, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;. 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>
