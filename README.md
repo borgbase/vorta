@@ -82,7 +82,7 @@ $ pytest
 
 ## Privacy Policy
 - No personal data is ever stored or transmitted by this application.
-- During beta, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs. You can disable this by setting the env variable `NO_SENTRY=1`.
+- During beta, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs. You can disable this by setting the env variable `NO_SENTRY=1`. Your repo password will be scrubbed before the test report is transmitted, as detailed [here](https://docs.sentry.io/data-management/sensitive-data/#server-side-scrubbing)
 
 ## Author
 (C) 2018 Manuel Riel for [BorgBase.com](https://www.borgbase.com)
