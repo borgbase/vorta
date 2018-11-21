@@ -139,7 +139,7 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         def receive():
             dir = dialog.selectedFiles()
             if dir:
-                params['cmd'].append(dir)
+                params['cmd'].append(dir[0])
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     thread = BorgMountThread(params['cmd'], params, parent=self)
