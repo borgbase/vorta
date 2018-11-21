@@ -6,18 +6,18 @@ Vorta.app:
 	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
 
 Vorta.dmg: Vorta.app
-	# sleep 2; cd dist; zip -9rq vorta-0.4.1.zip Vorta.app
-	rm -rf dist/vorta-0.4.1.dmg
-	sleep 2; appdmg appdmg.json dist/vorta-0.4.1.dmg
+	# sleep 2; cd dist; zip -9rq vorta-0.4.2.zip Vorta.app
+	rm -rf dist/vorta-0.4.2.dmg
+	sleep 2; appdmg appdmg.json dist/vorta-0.4.2.dmg
 
 github-release: Vorta.dmg
 	pytest
-	hub release create --prerelease --attach=dist/vorta-0.4.1.dmg v0.4.1
+	hub release create --prerelease --attach=dist/vorta-0.4.2.dmg v0.4.2
 
 pypi-release:
 	pytest
 	python setup.py sdist
-	twine upload dist/vorta-0.4.1.tar.gz
+	twine upload dist/vorta-0.4.2.tar.gz
 
 travis-debug:
 	  curl -s -X POST \
