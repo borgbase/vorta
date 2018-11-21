@@ -94,13 +94,13 @@ def pretty_bytes(size):
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
     if type(size) != int:
         return ''
-    power = 2**10
+    power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
     Dic_powerN = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
     while size > power:
         size /= power
         n += 1
-    return str(round(size))+Dic_powerN[n]+'B'
+    return f'{round(size, 1)} {Dic_powerN[n]}B'
 
 
 def get_asset(path):
