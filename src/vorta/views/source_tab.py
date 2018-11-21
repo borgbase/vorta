@@ -1,5 +1,4 @@
 from PyQt5 import uic, QtGui
-from PyQt5.QtWidgets import QFileDialog
 from ..models import SourceDirModel, BackupProfileMixin
 from ..utils import get_asset, choose_folder_dialog
 
