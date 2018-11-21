@@ -7,7 +7,6 @@ docs/
 bin/macosx64/Sparkle.framework
 bin/macosx64/borg
 __pycache__
-Makefile
 .eggs
 vorta.egg-info
 .coverage
