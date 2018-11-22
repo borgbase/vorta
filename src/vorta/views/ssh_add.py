@@ -62,10 +62,10 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.sshproc.finished.connect(self.generate_key_result)
             self.sshproc.start('ssh-keygen', ['-t', format, '-b', length, '-f', output_path, '-N', ''])
 
-    def generate_key_result(self, exitCode,  exitStatus):
+    def generate_key_result(self, exitCode, exitStatus):
         if exitCode == 0:
             output_path = os.path.expanduser(self.outputFileTextBox.text())
-            pub_key = open(output_path+'.pub').read().strip()
+            pub_key = open(output_path + '.pub').read().strip()
             clipboard = QApplication.clipboard()
             clipboard.setText(pub_key)
             self.errors.setText(f'New key was copied to clipboard and written to {output_path}.')

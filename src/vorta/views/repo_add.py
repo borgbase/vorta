@@ -2,7 +2,6 @@ from PyQt5 import uic
 from ..utils import get_private_keys, get_asset, choose_folder_dialog
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
-from vorta.borg.list import BorgListThread
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')

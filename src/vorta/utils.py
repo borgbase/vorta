@@ -7,7 +7,7 @@ from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5 import uic, QtCore
+from PyQt5 import QtCore
 import subprocess
 import keyring
 from .models import WifiSettingModel
@@ -125,8 +125,8 @@ def get_sorted_wifis(profile):
                 timestamp = wifi.get('LastConnected', None)
                 ssid = wifi['SSIDString']
                 db_wifi, created = WifiSettingModel.get_or_create(ssid=ssid, profile=profile.id,
-                                               defaults={'last_connected': timestamp,
-                                                        'allowed': True})
+                                                                  defaults={'last_connected': timestamp,
+                                                                            'allowed': True})
 
                 # update last connected time
                 if not created and db_wifi.last_connected != timestamp:
@@ -149,7 +149,7 @@ def get_current_wifi():
     """
 
     if sys.platform == 'darwin':
-        cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport','-I']
+        cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I']
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         out, err = process.communicate()
         process.wait()

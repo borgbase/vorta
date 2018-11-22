@@ -1,4 +1,4 @@
-from PyQt5 import uic, QtGui
+from PyQt5 import uic
 from ..models import SourceDirModel, BackupProfileMixin
 from ..utils import get_asset, choose_folder_dialog
 
@@ -44,7 +44,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         dialog = choose_folder_dialog(self, "Choose Directory to back up")
         dialog.open(receive)
-
 
     def source_remove(self):
         item = self.sourceDirectoriesWidget.takeItem(self.sourceDirectoriesWidget.currentRow())

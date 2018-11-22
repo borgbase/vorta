@@ -27,9 +27,7 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordLineEdit, 'long-password-long')
 
     stdout, stderr = borg_json_output('info')
-    popen_result =mocker.MagicMock(stdout=stdout,
-                              stderr=stderr,
-                              returncode=0)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
@@ -42,12 +40,11 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
     # assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=1).url == 'aaabbb.com:repo'
 
+
 def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     main = app_with_repo.main_window
     stdout, stderr = borg_json_output('create')
-    popen_result =mocker.MagicMock(stdout=stdout,
-                                   stderr=stderr,
-                                   returncode=0)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
@@ -59,4 +56,3 @@ def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.snapshotTab.snapshotTable.rowCount() == 1
     assert main.scheduleTab.logTableWidget.rowCount() == 1
-
