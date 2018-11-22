@@ -228,7 +228,7 @@
         <string>Mount</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../icons/collection.qrc">
          <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
        </property>
       </widget>
@@ -236,11 +236,25 @@
      <item>
       <widget class="QPushButton" name="checkButton">
        <property name="text">
-        <string>Check Consistency</string>
+        <string>Check</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../icons/collection.qrc">
          <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Extract</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
        </property>
       </widget>
      </item>
@@ -263,7 +277,7 @@
         <string>Prune</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../icons/collection.qrc">
          <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
        </property>
       </widget>
@@ -283,7 +297,7 @@
         <string>Refresh</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../icons/collection.qrc">
          <normaloff>:/icons/refresh.svg</normaloff>:/icons/refresh.svg</iconset>
        </property>
       </widget>

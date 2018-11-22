@@ -30,6 +30,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
+        self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
