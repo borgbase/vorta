@@ -5,14 +5,14 @@ from dateutil import parser
 from datetime import datetime as dt
 
 from ..utils import get_current_wifi
-from ..models import SourceDirModel, SnapshotModel, WifiSettingModel, RepoModel
+from ..models import SourceDirModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
 
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
         if result['returncode'] in [0, 1]:
-            new_snapshot, created = SnapshotModel.get_or_create(
+            new_snapshot, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
                     'name': result['data']['archive']['name'],

@@ -95,7 +95,7 @@ class SourceDirModel(pw.Model):
         database = db
 
 
-class SnapshotModel(pw.Model):
+class ArchiveModel(pw.Model):
     """A snapshot to a specific remote repository."""
     snapshot_id = pw.CharField(unique=True)
     name = pw.CharField()
@@ -109,6 +109,7 @@ class SnapshotModel(pw.Model):
 
     class Meta:
         database = db
+        table_name = 'snapshotmodel'
 
 
 class WifiSettingModel(pw.Model):
@@ -170,7 +171,7 @@ def init_db(con):
     db.initialize(con)
     db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceDirModel,
-                      SnapshotModel, WifiSettingModel, EventLogModel, SchemaVersion])
+                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
     if BackupProfileModel.select().count() == 0:
         default_profile = BackupProfileModel(name='Default Profile')
@@ -188,8 +189,8 @@ def init_db(con):
     if current_schema.version < 4:  # version 3 to 4
         _apply_schema_update(
             current_schema, 4,
-            migrator.add_column(SnapshotModel._meta.table_name, 'duration', pw.FloatField(null=True)),
-            migrator.add_column(SnapshotModel._meta.table_name, 'size', pw.IntegerField(null=True))
+            migrator.add_column(ArchiveModel._meta.table_name, 'duration', pw.FloatField(null=True)),
+            migrator.add_column(ArchiveModel._meta.table_name, 'size', pw.IntegerField(null=True))
         )
     if current_schema.version < 5:
         _apply_schema_update(

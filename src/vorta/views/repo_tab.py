@@ -2,7 +2,7 @@ import os
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from ..models import RepoModel, SnapshotModel, BackupProfileMixin
+from ..models import RepoModel, ArchiveModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
 from ..utils import pretty_bytes, get_private_keys, get_asset
 from .ssh_add import SSHAddWindow
@@ -157,7 +157,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_index = self.repoSelector.currentIndex()
         if selected_repo_index > 2:
             repo = RepoModel.get(id=selected_repo_id)
-            SnapshotModel.delete().where(SnapshotModel.repo_id == repo.id).execute()
+            ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
             profile.repo = None
             profile.save()
             repo.delete_instance(recursive=True)  # This also deletes snapshots.
