@@ -1,11 +1,6 @@
-import os
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QTreeWidgetItem, QHeaderView
-
-from paramiko.rsakey import RSAKey
-from paramiko.ecdsakey import ECDSAKey
-from paramiko.ed25519key import Ed25519Key
+from PyQt5.QtWidgets import QTreeWidgetItem, QHeaderView
 
 from ..utils import get_asset
 
