@@ -98,7 +98,7 @@ class VortaScheduler(QtScheduler):
                     list_thread.start()
                     list_thread.wait()
 
-        validation_cutoff = date.today() - timedelta(days=7*profile.validation_weeks)
+        validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
             (EventLogModel.subcommand == 'check')
             & (EventLogModel.start_time > validation_cutoff)

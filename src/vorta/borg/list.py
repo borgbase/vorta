@@ -17,7 +17,6 @@ class BorgListThread(BorgThread):
         self.result.emit(result)
         self.app.backup_log_event.emit('Refreshing snapshots done.')
 
-
     @classmethod
     def prepare(cls, profile):
         ret = super().prepare(profile)

@@ -5,7 +5,7 @@ from dateutil import parser
 from datetime import datetime as dt
 
 from ..utils import get_current_wifi
-from ..models import SourceDirModel, SnapshotModel, BackupProfileModel, WifiSettingModel, RepoModel
+from ..models import SourceDirModel, SnapshotModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
 

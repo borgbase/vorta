@@ -3,6 +3,7 @@ from .info import FakeProfile, FakeRepo
 from vorta.models import RepoModel
 from vorta.utils import keyring
 
+
 class BorgInitThread(BorgThread):
 
     def started_event(self):
