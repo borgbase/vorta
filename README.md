@@ -36,6 +36,12 @@ After installation run with the `vorta` command.
 $ vorta
 ```
 
+## Debugging and Bugs
+Please report any errors you may encounter by [opening an issue](https://github.com/borgbase/vorta/issues) on Github. Please include steps to reproduce and all logging output. Logs can be found in these folders:
+
+- Linux: `$HOME/.cache/Vorta/log`
+- macOS: `$HOME/Library/Logs/Vorta`
+
 ## Development
 
 Install in development/editable mode while in the repo:
