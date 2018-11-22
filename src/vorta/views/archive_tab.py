@@ -7,6 +7,7 @@ from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
+from vorta.borg.umount import BorgUmountThread
 from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
 from vorta.models import BackupProfileMixin
 
@@ -20,6 +21,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
+        self.mount_point = None
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -140,9 +142,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 params['cmd'][-1] += f'::{snapshot_name}'
 
         def receive():
-            dir = dialog.selectedFiles()
-            if dir:
-                params['cmd'].append(dir[0])
+            mount_point = dialog.selectedFiles()
+            if mount_point:
+                params['cmd'].append(mount_point[0])
+                self.mount_point = mount_point[0]
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     thread = BorgMountThread(params['cmd'], params, parent=self)
@@ -157,6 +160,38 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status('Mounted successfully.')
+            self.mountButton.setText('Unmount')
+            self.mountButton.clicked.disconnect()
+            self.mountButton.clicked.connect(self.umount_action)
+        else:
+            self.mount_point = None
+
+    def umount_action(self):
+        if self.mount_point is not None:
+            profile = self.profile()
+            params = BorgUmountThread.prepare(profile)
+            if not params['ok']:
+                self._set_status(params['message'])
+                return
+
+            if self.mount_point in params['active_mount_points']:
+                params['cmd'].append(self.mount_point)
+                thread = BorgUmountThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self.mountErrors.setText)
+                thread.result.connect(self.umount_result)
+                thread.start()
+            else:
+                self._set_status('Mount point not active. Try restarting Vorta.')
+                return
+
+    def umount_result(self, result):
+        self._toggle_all_buttons(True)
+        if result['returncode'] == 0:
+            self._set_status('Un-mounted successfully.')
+            self.mountButton.setText('Mount')
+            self.mountButton.clicked.disconnect()
+            self.mountButton.clicked.connect(self.mount_action)
+            self.mount_point = None
 
     def save_prune_setting(self, new_value):
         profile = self.profile()
