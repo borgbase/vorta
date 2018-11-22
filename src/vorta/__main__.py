@@ -6,12 +6,13 @@ from vorta.models import init_db
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
+import vorta.sentry
 
 
 def main():
     # Send crashes to Sentry.
     if not os.environ.get('NO_SENTRY', False):
-        import vorta.sentry
+        vorta.sentry.init()
 
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))

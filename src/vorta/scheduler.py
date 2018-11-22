@@ -32,7 +32,13 @@ class VortaScheduler(QtScheduler):
                 self.reschedule_job(job_id, trigger=trigger)
                 changed = True
             elif trigger is not None:
-                self.add_job(func=self.create_backup, args=[profile.id], trigger=trigger, id=job_id, misfire_grace_time=180)
+                self.add_job(
+                    func=self.create_backup,
+                    args=[profile.id],
+                    trigger=trigger,
+                    id=job_id,
+                    misfire_grace_time=180
+                )
                 changed = True
             elif self.get_job(job_id) is not None and trigger is None:
                 self.remove_job(job_id)

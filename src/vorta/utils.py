@@ -5,7 +5,6 @@ from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtCore
 import subprocess
@@ -21,7 +20,10 @@ class VortaKeyring(keyring.backend.KeyringBackend):
 
     def set_password(self, service, repo_url, password):
         from .models import RepoPassword
-        keyring_entry, created = RepoPassword.get_or_create(url=repo_url, defaults={'password': password})
+        keyring_entry, created = RepoPassword.get_or_create(
+            url=repo_url,
+            defaults={'password': password}
+        )
         keyring_entry.password = password
         keyring_entry.save()
 
@@ -75,7 +77,9 @@ def get_private_keys():
         for key in os.listdir(ssh_folder):
             for key_format in key_formats:
                 try:
-                    parsed_key = key_format.from_private_key_file(os.path.join(ssh_folder, key))
+                    parsed_key = key_format.from_private_key_file(
+                        os.path.join(ssh_folder, key)
+                    )
                     key_details = {
                         'filename': key,
                         'format': parsed_key.get_name(),
@@ -115,18 +119,20 @@ def get_asset(path):
 
 def get_sorted_wifis(profile):
     """Get SSIDs from OS and merge with settings in DB."""
-    app = QApplication.instance()
 
     if sys.platform == 'darwin':
-        plist_file = open('/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist', 'rb')
+        plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
+        plist_file = open(plist_path, 'rb')
         wifis = plistlib.load(plist_file)['KnownNetworks']
         if wifis:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
                 ssid = wifi['SSIDString']
-                db_wifi, created = WifiSettingModel.get_or_create(ssid=ssid, profile=profile.id,
-                                                                  defaults={'last_connected': timestamp,
-                                                                            'allowed': True})
+                db_wifi, created = WifiSettingModel.get_or_create(
+                    ssid=ssid,
+                    profile=profile.id,
+                    defaults={'last_connected': timestamp, 'allowed': True}
+                )
 
                 # update last connected time
                 if not created and db_wifi.last_connected != timestamp:
@@ -134,11 +140,13 @@ def get_sorted_wifis(profile):
                     db_wifi.save()
 
         # remove Wifis that were deleted in the system.
-        deleted_wifis = WifiSettingModel.select().where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
+        deleted_wifis = WifiSettingModel.select() \
+            .where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
         for wifi in deleted_wifis:
             wifi.delete_instance()
 
-    return WifiSettingModel.select().where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
+    return WifiSettingModel.select() \
+        .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 
 
 def get_current_wifi():
