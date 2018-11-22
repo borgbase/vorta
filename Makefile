@@ -11,7 +11,6 @@ Vorta.dmg: Vorta.app
 	sleep 2; appdmg appdmg.json dist/vorta-0.4.5.dmg
 
 github-release: Vorta.dmg
-	pytest
 	hub release create --prerelease --attach=dist/vorta-0.4.5.dmg v0.4.5
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
@@ -19,7 +18,6 @@ github-release: Vorta.dmg
 	git checkout master
 
 pypi-release:
-	pytest
 	python setup.py sdist
 	twine upload dist/vorta-0.4.5.tar.gz
 
