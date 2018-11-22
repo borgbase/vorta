@@ -1,9 +1,7 @@
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QComboBox, QToolButton, QButtonGroup, QToolBar
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
