@@ -7,8 +7,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from ..models import SourceDirModel, BackupProfileModel, WifiSettingModel, EventLogModel, BackupProfileMixin
-from ..utils import get_current_wifi, keyring
+from ..models import EventLogModel, BackupProfileMixin
+from ..utils import keyring
 
 mutex = QtCore.QMutex()
 
@@ -145,7 +145,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         }
         try:
             result['data'] = json.loads(stdout)
-        except:
+        except:  # noqa
             result['data'] = {}
 
         log_entry.returncode = self.process.returncode

@@ -1,11 +1,10 @@
 import os
-from dateutil import parser
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from ..models import RepoModel, SnapshotModel, BackupProfileMixin
 from .repo_add import AddRepoWindow, ExistingRepoWindow
-from ..utils import pretty_bytes, get_private_keys, get_asset, keyring
+from ..utils import pretty_bytes, get_private_keys, get_asset
 from .ssh_add import SSHAddWindow
 
 uifile = get_asset('UI/repotab.ui')
@@ -104,7 +103,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
                 msg.setText("Public Key Copied to Clipboard")
                 msg.setInformativeText(
-                    "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.")
+                    "The selected public SSH key was copied to the clipboard. "
+                    "Use it to set up remote repo permissions.")
 
             else:
                 msg.setText("Couldn't find public key.")
@@ -143,7 +143,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             profile.save()
 
             self.repoSelector.addItem(new_repo.url, new_repo.id)
-            self.repoSelector.setCurrentIndex(self.repoSelector.count()-1)
+            self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
             self.repo_added.emit()
             self.init_repo_stats()
 
@@ -169,5 +169,3 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
             self.repo_changed.emit()
             self.init_repo_stats()
-
-

@@ -110,4 +110,3 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.save()
                 self.app.scheduler.reload()
                 self._draw_next_scheduled_backup()
-

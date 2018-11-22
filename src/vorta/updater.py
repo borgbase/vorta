@@ -6,7 +6,7 @@ def get_updater():
     if sys.platform == 'darwin' and getattr(sys, 'frozen', False):
         """
         Use sparkle framework on macOS.
-        
+
         Examples: https://programtalk.com/python-examples/objc.loadBundle/
         """
         from objc import loadBundle

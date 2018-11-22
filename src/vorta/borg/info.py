@@ -1,6 +1,6 @@
 from collections import namedtuple
 from .borg_thread import BorgThread
-from vorta.models import SnapshotModel, RepoModel
+from vorta.models import RepoModel
 from vorta.utils import keyring
 
 FakeRepo = namedtuple('Repo', ['url', 'id'])

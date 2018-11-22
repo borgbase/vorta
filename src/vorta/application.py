@@ -84,4 +84,3 @@ class VortaApp(QApplication):
     def backup_cancelled_event_response(self):
         icon = QIcon(get_asset('icons/hdd-o.png'))
         self.tray.setIcon(icon)
-

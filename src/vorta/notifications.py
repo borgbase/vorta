@@ -40,4 +40,3 @@ class LinuxNotifications(VortaNotifications):
     """
     def deliver(self, title, text):
         pass
-
