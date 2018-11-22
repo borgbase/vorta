@@ -12,7 +12,7 @@ def get_updater():
         from objc import loadBundle
         bundle_path = os.path.join(os.path.dirname(sys.executable), os.pardir, 'Frameworks', 'Sparkle.framework')
         loadBundle('Sparkle', globals(), bundle_path)
-        sparkle = SUUpdater.sharedUpdater()
+        sparkle = SUUpdater.sharedUpdater()  # noqa: F821
         sparkle.setAutomaticallyChecksForUpdates_(True)
         sparkle.setAutomaticallyDownloadsUpdates_(False)
         sparkle.checkForUpdatesInBackground()

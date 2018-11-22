@@ -24,6 +24,7 @@ def scrub_sensitive_data(event, hint):
     return event
 
 
-sentry_sdk.init("https://a4a23df3e44743d5b5c5f06417a9a809@sentry.io/1311799",
-                release=__version__,
-                before_send=scrub_sensitive_data)
+def init():
+    sentry_sdk.init("https://a4a23df3e44743d5b5c5f06417a9a809@sentry.io/1311799",
+                    release=__version__,
+                    before_send=scrub_sensitive_data)
