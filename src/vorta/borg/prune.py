@@ -1,3 +1,4 @@
+import platform
 from .borg_thread import BorgThread
 
 
@@ -30,7 +31,8 @@ class BorgPruneThread(BorgThread):
             '--keep-daily', str(profile.prune_day),
             '--keep-weekly', str(profile.prune_week),
             '--keep-monthly', str(profile.prune_month),
-            '--keep-yearly', str(profile.prune_year)
+            '--keep-yearly', str(profile.prune_year),
+            '--prefix', platform.node()
         ]
         cmd += pruning_opts
         cmd.append(f'{profile.repo.url}')
