@@ -1,3 +1,4 @@
+import sys
 from datetime import timedelta
 from PyQt5 import uic
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
@@ -26,6 +27,9 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.Stretch)
+
+        if sys.platform != 'darwin':
+            self._set_status('')  # Set platform-specific hints.
 
         self.snapshotTable.setSelectionBehavior(QTableView.SelectRows)
         self.snapshotTable.setEditTriggers(QTableView.NoEditTriggers)
