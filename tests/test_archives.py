@@ -5,7 +5,7 @@ import vorta.borg
 def test_prune_intervals(app, qtbot):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
     main = app.main_window
-    tab = main.snapshotTab
+    tab = main.archiveTab
     profile = BackupProfileModel.get(id=1)
 
     for i in prune_intervals:
@@ -17,7 +17,7 @@ def test_prune_intervals(app, qtbot):
 
 def test_repo_list(app_with_repo, qtbot, mocker, borg_json_output):
     main = app_with_repo.main_window
-    tab = main.snapshotTab
+    tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.list_action()
     assert not tab.checkButton.isEnabled()
