@@ -8,7 +8,6 @@ import peewee as pw
 import json
 from datetime import datetime
 from playhouse.migrate import SqliteMigrator, migrate
-from PyQt5.QtWidgets import QApplication
 
 SCHEMA_VERSION = 7
 
@@ -28,7 +27,6 @@ class JSONField(pw.TextField):
     def python_value(self, value):
         """Convert the database value to a pythonic value."""
         return value if value is None else json.loads(value)
-
 
 
 class RepoModel(pw.Model):
@@ -55,6 +53,7 @@ class RepoPassword(pw.Model):
 
     class Meta:
         database = db
+
 
 class BackupProfileModel(pw.Model):
     """Allows the user to switch between different configurations."""
@@ -158,6 +157,7 @@ class BackupProfileMixin:
         # else:
         #     return BackupProfileModel.select().first()
 
+
 def _apply_schema_update(current_schema, version_after, *operations):
     with db.atomic():
         migrate(*operations)
@@ -185,7 +185,6 @@ def init_db(con):
     else:
         migrator = SqliteMigrator(con)
 
-
     if current_schema.version < 4:  # version 3 to 4
         _apply_schema_update(
             current_schema, 4,
@@ -211,4 +210,3 @@ def init_db(con):
             migrator.drop_column(EventLogModel._meta.table_name, 'profile_id'),
             migrator.add_column(EventLogModel._meta.table_name, 'profile', pw.CharField(null=True))
         )
-

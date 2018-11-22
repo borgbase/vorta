@@ -1,5 +1,4 @@
 from datetime import timedelta
-import copy
 from PyQt5 import uic
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
@@ -7,7 +6,7 @@ from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
-from vorta.utils import get_asset, keyring, pretty_bytes, choose_folder_dialog
+from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
 from vorta.models import BackupProfileMixin
 
 uifile = get_asset('UI/snapshottab.ui')
@@ -149,7 +148,6 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
 
         dialog = choose_folder_dialog(self, "Choose Mount Point")
         dialog.open(receive)
-
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)

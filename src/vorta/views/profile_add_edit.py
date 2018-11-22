@@ -40,7 +40,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
             return False
 
         # Profile with this name already exists?
-        exists = BackupProfileModel.select().where(BackupProfileModel.name==name).count()
+        exists = BackupProfileModel.select().where(BackupProfileModel.name == name).count()
         if exists > 0:
             self._set_status('A profile with this name already exists.')
             return False

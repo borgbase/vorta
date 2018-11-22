@@ -84,7 +84,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             window.show()
             if window.exec_():
                 self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
-                self.profileSelector.setCurrentIndex(self.profileSelector.count()-1)
+                self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
             else:
                 self.profileSelector.setCurrentIndex(1)
 
@@ -122,4 +122,3 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self._toggle_buttons(create_enabled=True)
         self.set_status(progress_max=100)
         self.set_status('Task cancelled')
-

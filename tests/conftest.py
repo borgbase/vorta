@@ -16,6 +16,7 @@ def app(tmpdir, qtbot):
     qtbot.addWidget(app.main_window)
     return app
 
+
 @pytest.fixture()
 def app_with_repo(app):
     profile = app.main_window.current_profile
@@ -27,6 +28,7 @@ def app_with_repo(app):
     source_dir = SourceDirModel(dir='/tmp', repo=new_repo)
     source_dir.save()
     return app
+
 
 @pytest.fixture
 def borg_json_output():
