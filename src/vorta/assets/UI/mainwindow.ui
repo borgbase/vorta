@@ -132,7 +132,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="documentMode">
         <bool>false</bool>
@@ -161,9 +161,9 @@
          <string>Schedule</string>
         </attribute>
        </widget>
-       <widget class="QWidget" name="snapshotTabSlot">
+       <widget class="QWidget" name="archiveTabSlot">
         <attribute name="title">
-         <string>Snapshots</string>
+         <string>Archives</string>
         </attribute>
        </widget>
       </widget>

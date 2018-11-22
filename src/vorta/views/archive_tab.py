@@ -10,18 +10,18 @@ from vorta.borg.mount import BorgMountThread
 from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
 from vorta.models import BackupProfileMixin
 
-uifile = get_asset('UI/snapshottab.ui')
-SnapshotUI, SnapshotBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+uifile = get_asset('UI/archivetab.ui')
+ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
-class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
+class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
 
-        header = self.snapshotTable.horizontalHeader()
+        header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -31,8 +31,8 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
 
-        self.snapshotTable.setSelectionBehavior(QTableView.SelectRows)
-        self.snapshotTable.setEditTriggers(QTableView.NoEditTriggers)
+        self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
+        self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
 
         # Populate pruning options from database
         for i in self.prune_intervals:
@@ -63,20 +63,20 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
             snapshots = [s for s in profile.repo.snapshots.select()]
 
             for row, snapshot in enumerate(snapshots):
-                self.snapshotTable.insertRow(row)
+                self.archiveTable.insertRow(row)
                 formatted_time = snapshot.time.strftime('%Y-%m-%d %H:%M')
-                self.snapshotTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.snapshotTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(snapshot.size)))
+                self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
+                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(snapshot.size)))
                 if snapshot.duration:
                     formatted_duration = str(timedelta(seconds=round(snapshot.duration)))
                 else:
                     formatted_duration = 'N/A'
-                self.snapshotTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-                self.snapshotTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
-            self.snapshotTable.setRowCount(len(snapshots))
+                self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
+                self.archiveTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
+            self.archiveTable.setRowCount(len(snapshots))
             self._toggle_all_buttons(enabled=True)
         else:
-            self.snapshotTable.setRowCount(0)
+            self.archiveTable.setRowCount(0)
             self.currentRepoLabel.setText('N/A')
             self._toggle_all_buttons(enabled=False)
 
@@ -132,9 +132,9 @@ class SnapshotTab(SnapshotBase, SnapshotUI, BackupProfileMixin):
             return
 
         # Conditions are met (borg binary available, etc)
-        row_selected = self.snapshotTable.selectionModel().selectedRows()
+        row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.snapshotTable.item(row_selected[0].row(), 3)
+            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
             if snapshot_cell:
                 snapshot_name = snapshot_cell.text()
                 params['cmd'][-1] += f'::{snapshot_name}'

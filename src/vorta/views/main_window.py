@@ -4,7 +4,7 @@ from PyQt5.QtGui import QKeySequence
 from ..config import APP_NAME
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
-from .snapshots_tab import SnapshotTab
+from .archive_tab import ArchiveTab
 from .schedule_tab import ScheduleTab
 from .profile_add_edit import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
@@ -28,11 +28,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
-        self.snapshotTab = SnapshotTab(self.snapshotTabSlot)
+        self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
 
-        self.repoTab.repo_changed.connect(self.snapshotTab.populate_from_profile)
-        self.repoTab.repo_added.connect(self.snapshotTab.list_action)
+        self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_added.connect(self.archiveTab.list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
@@ -89,7 +89,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.profileSelector.setCurrentIndex(1)
 
         self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
-        self.snapshotTab.populate_from_profile()
+        self.archiveTab.populate_from_profile()
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
@@ -115,7 +115,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_finished_event(self):
         self.set_status(progress_max=100)
         self._toggle_buttons(create_enabled=True)
-        self.snapshotTab.populate_from_profile()
+        self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
 
     def backup_cancelled_event(self):
