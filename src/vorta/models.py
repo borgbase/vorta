@@ -6,7 +6,7 @@ At the bottom there is a simple schema migration system.
 
 import peewee as pw
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from playhouse.migrate import SqliteMigrator, migrate
 
 SCHEMA_VERSION = 7
@@ -176,6 +176,10 @@ def init_db(con):
     if BackupProfileModel.select().count() == 0:
         default_profile = BackupProfileModel(name='Default Profile')
         default_profile.save()
+
+    # Delete old log entries after 3 months.
+    three_months_ago = datetime.now() - timedelta(days=180)
+    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
 
     # Migrations
     # See http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#schema-migrations

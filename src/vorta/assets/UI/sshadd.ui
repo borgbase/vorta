@@ -131,6 +131,12 @@
     </item>
     <item alignment="Qt::AlignBottom">
      <widget class="QLabel" name="errors">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <pointsize>10</pointsize>
@@ -138,6 +144,9 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

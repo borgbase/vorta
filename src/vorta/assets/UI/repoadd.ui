@@ -65,7 +65,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset>
            <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
          </property>
         </widget>
@@ -76,7 +76,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset>
            <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
          </property>
         </widget>
@@ -159,13 +159,16 @@
      </item>
      <item row="7" column="1">
       <widget class="QLabel" name="errorText">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>11</pointsize>
         </font>
-       </property>
-       <property name="text">
-        <string/>
        </property>
        <property name="textFormat">
         <enum>Qt::PlainText</enum>
@@ -174,7 +177,7 @@
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
        <property name="wordWrap">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
