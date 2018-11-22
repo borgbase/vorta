@@ -18,7 +18,7 @@ logger = logging.getLogger('vorta')
 class BorgThread(QtCore.QThread, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
-    it should sublass `BorgThread`.
+    it should subclass `BorgThread`.
     """
 
     updated = QtCore.pyqtSignal(str)
