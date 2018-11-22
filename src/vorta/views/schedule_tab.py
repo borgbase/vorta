@@ -66,6 +66,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         db_item.save()
 
     def init_logs(self):
+        self.logTableWidget.setAlternatingRowColors(True)
         header = self.logTableWidget.horizontalHeader()
         header.setVisible(True)
         [header.setSectionResizeMode(i, QHeaderView.ResizeToContents) for i in range(5)]

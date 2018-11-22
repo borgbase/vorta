@@ -38,6 +38,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
+        self.archiveTable.setAlternatingRowColors(True)
 
         # Populate pruning options from database
         for i in self.prune_intervals:
