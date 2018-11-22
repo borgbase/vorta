@@ -1,6 +1,6 @@
 from dateutil import parser
 from .borg_thread import BorgThread
-from vorta.models import SnapshotModel, RepoModel
+from vorta.models import ArchiveModel, RepoModel
 
 
 class BorgListThread(BorgThread):
@@ -39,13 +39,13 @@ class BorgListThread(BorgThread):
             remote_snapshots = result['data'].get('archives', [])
 
             # Delete snapshots that don't exist on the remote side
-            for snapshot in SnapshotModel.select().where(SnapshotModel.repo == repo.id):
+            for snapshot in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
                 if not list(filter(lambda s: s['id'] == snapshot.snapshot_id, remote_snapshots)):
                     snapshot.delete_instance()
 
             # Add remote snapshots we don't have locally.
             for snapshot in result['data'].get('archives', []):
-                new_snapshot, _ = SnapshotModel.get_or_create(
+                new_snapshot, _ = ArchiveModel.get_or_create(
                     snapshot_id=snapshot['id'],
                     defaults={
                         'repo': repo.id,

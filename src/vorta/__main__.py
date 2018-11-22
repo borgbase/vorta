@@ -2,10 +2,10 @@ import sys
 import os
 import peewee
 
-import vorta.models
+from vorta.models import init_db
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
-import vorta.updater
+from vorta.updater import get_updater
 
 
 def main():
@@ -15,10 +15,10 @@ def main():
 
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
-    vorta.models.init_db(sqlite_db)
+    init_db(sqlite_db)
 
     app = VortaApp(sys.argv, single_app=True)
-    app.updater = vorta.updater.get_updater()
+    app.updater = get_updater()
     sys.exit(app.exec_())
 
 

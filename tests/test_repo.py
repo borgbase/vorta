@@ -3,7 +3,7 @@ from PyQt5 import QtCore
 import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add import AddRepoWindow
-from vorta.models import EventLogModel, RepoModel, SnapshotModel
+from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
 def test_create_fail(app, qtbot):
@@ -51,7 +51,7 @@ def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'))
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled())
     assert EventLogModel.select().count() == 1
-    assert SnapshotModel.select().count() == 1
+    assert ArchiveModel.select().count() == 1
     assert RepoModel.get(id=1).unique_size == 15520474
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 1
