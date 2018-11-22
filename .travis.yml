@@ -74,6 +74,7 @@ before_script:
 
 script:
 - pytest --forked
+- if [ $TRAVIS_OS_NAME = "linux" ]; then tox -e flake8; fi
 
 #after_script:
 #- |
