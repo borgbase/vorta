@@ -1,6 +1,6 @@
 import sys
 from datetime import timedelta
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QComboBox, QToolButton, QButtonGroup, QToolBar
@@ -10,6 +10,7 @@ from vorta.borg.list import BorgListThread
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.umount import BorgUmountThread
+from vorta.views.extract_dialog import ExtractDialog
 from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
 from vorta.models import BackupProfileMixin, ArchiveModel
 
@@ -49,6 +50,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
+        self.extractButton.clicked.connect(self.extract_action)
 
         self.populate_from_profile()
 
@@ -203,3 +205,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         for i in self.prune_intervals:
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
         profile.save()
+
+    def extract_action(self):
+        window = ExtractDialog()
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
