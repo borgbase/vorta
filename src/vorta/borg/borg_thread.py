@@ -3,6 +3,7 @@ import os
 import sys
 import shutil
 import signal
+import logging
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
@@ -11,6 +12,7 @@ from ..models import EventLogModel, BackupProfileMixin
 from ..utils import keyring
 
 mutex = QtCore.QMutex()
+logger = logging.getLogger('vorta')
 
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):
@@ -131,10 +133,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 parsed = json.loads(line)
                 if parsed['type'] == 'log_message':
                     self.log_event(f'{parsed["levelname"]}: {parsed["message"]}')
+                    level_int = getattr(logging, parsed["levelname"])
+                    logger.log(level_int, parsed["message"])
                 elif parsed['type'] == 'file_status':
                     self.log_event(f'{parsed["path"]} ({parsed["status"]})')
             except json.decoder.JSONDecodeError:
-                self.log_event(line.strip())
+                msg = line.strip()
+                self.log_event(msg)
+                logger.warning(msg)
 
         self.process.wait()
         stdout = self.process.stdout.read()
