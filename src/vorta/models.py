@@ -99,7 +99,7 @@ class ArchiveModel(pw.Model):
     """A snapshot to a specific remote repository."""
     snapshot_id = pw.CharField(unique=True)
     name = pw.CharField()
-    repo = pw.ForeignKeyField(RepoModel, backref='snapshots')
+    repo = pw.ForeignKeyField(RepoModel, backref='archives')
     time = pw.DateTimeField()
     duration = pw.FloatField(null=True)
     size = pw.IntegerField(null=True)

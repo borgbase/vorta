@@ -14,5 +14,6 @@
         <file>check-circle.svg</file>
         <file>edit.svg</file>
         <file>globe.svg</file>
+        <file>cloud-download.svg</file>
     </qresource>
 </RCC>

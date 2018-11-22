@@ -1,7 +1,9 @@
 import sys
 from datetime import timedelta
 from PyQt5 import uic
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QComboBox, QToolButton, QButtonGroup, QToolBar
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list import BorgListThread
@@ -9,7 +11,7 @@ from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
-from vorta.models import BackupProfileMixin
+from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
@@ -29,6 +31,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.Stretch)
+        header.setStretchLastSection(True)
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
@@ -62,20 +65,21 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         if profile.repo is not None:
             self.currentRepoLabel.setText(profile.repo.url)
-            snapshots = [s for s in profile.repo.snapshots.select()]
+            archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
-            for row, snapshot in enumerate(snapshots):
+            for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
-                formatted_time = snapshot.time.strftime('%Y-%m-%d %H:%M')
+
+                formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(snapshot.size)))
-                if snapshot.duration:
-                    formatted_duration = str(timedelta(seconds=round(snapshot.duration)))
+                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(archive.size)))
+                if archive.duration is not None:
+                    formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
-                    formatted_duration = 'N/A'
+                    formatted_duration = ''
                 self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-                self.archiveTable.setItem(row, 3, QTableWidgetItem(snapshot.name))
-            self.archiveTable.setRowCount(len(snapshots))
+                self.archiveTable.setItem(row, 3, QTableWidgetItem(archive.name))
+            self.archiveTable.setRowCount(len(archives))
             self._toggle_all_buttons(enabled=True)
         else:
             self.archiveTable.setRowCount(0)

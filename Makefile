@@ -22,11 +22,11 @@ pypi-release:
 	twine upload dist/vorta-0.4.6.tar.gz
 
 bump-version:
+	git log $$(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s"
 	bumpversion patch
 #	bumpversion minor
 	git push
 	git push --tags
-	git log $$(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s"
 
 travis-debug:
 	  curl -s -X POST \
