@@ -7,6 +7,7 @@ from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
 import vorta.sentry
+import vorta.log
 
 
 def main():
