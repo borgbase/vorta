@@ -113,9 +113,13 @@ class VortaScheduler(QtScheduler):
 
         validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
-            (EventLogModel.subcommand == 'check')
-            & (EventLogModel.start_time > validation_cutoff)
-            & (EventLogModel.repo_url == profile.repo.url)
+            (
+                EventLogModel.subcommand == 'check'
+            ) & (
+                EventLogModel.start_time > validation_cutoff
+            ) & (
+                EventLogModel.repo_url == profile.repo.url
+            )
         ).count()
         if profile.validation_on and recent_validations == 0:
             msg = BorgCheckThread.prepare(profile)

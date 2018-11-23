@@ -110,8 +110,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profile_select_action(1)
 
     def backup_started_event(self):
-            self.set_status(progress_max=0)
-            self._toggle_buttons(create_enabled=False)
+        self.set_status(progress_max=0)
+        self._toggle_buttons(create_enabled=False)
 
     def backup_finished_event(self):
         self.set_status(progress_max=100)

@@ -18,7 +18,7 @@ logger = logging.getLogger('vorta')
 class BorgThread(QtCore.QThread, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
-    it should sublass `BorgThread`.
+    it should subclass `BorgThread`.
     """
 
     updated = QtCore.pyqtSignal(str)
@@ -42,12 +42,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
-        if params.get('password') and params['password'] is not None:
-            env['BORG_PASSPHRASE'] = params['password']
+        password = params.get('password')
+        if password is not None:
+            env['BORG_PASSPHRASE'] = password
 
         env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
-        if params.get('ssh_key') and params['ssh_key'] is not None:
-            env['BORG_RSH'] += f' -i ~/.ssh/{params["ssh_key"]}'
+        ssh_key = params.get('ssh_key')
+        if ssh_key is not None:
+            env['BORG_RSH'] += f' -i ~/.ssh/{ssh_key}'
 
         self.env = env
         self.cmd = cmd

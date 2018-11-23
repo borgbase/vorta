@@ -39,7 +39,7 @@ class VortaKeyring(keyring.backend.KeyringBackend):
         pass
 
 
-"""Select keyring/Workaround for pyinstaller+keyring issue."""
+# Select keyring/Workaround for pyinstaller+keyring issue.
 if sys.platform == 'darwin':
     from keyring.backends import OS_X
     keyring.set_keyring(OS_X.Keyring())
