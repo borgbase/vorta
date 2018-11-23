@@ -1,17 +1,13 @@
-import os
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QTreeWidgetItem, QHeaderView
-
-from paramiko.rsakey import RSAKey
-from paramiko.ecdsakey import ECDSAKey
-from paramiko.ed25519key import Ed25519Key
+from PyQt5.QtWidgets import QTreeWidgetItem, QHeaderView
 
 from ..utils import get_asset
 
 uifile = get_asset('UI/extractdialog.ui')
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 n = 0
+
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
     def __init__(self):
@@ -30,7 +26,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
                                 'another key2': ['value2', 'value', 'value4']}
             for j in range(50):
                 d[f'folder-{i}'][f'large folder {j}'] = {'another key1': 'another value1',
-                                                        'another key2': ['value2', 'value', 'value4']}
+                                                         'another key2': ['value2', 'value', 'value4']}
 
         # add top-level folders to test scroll performance
         for f in range(1000000):
@@ -55,6 +51,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         fill_item(self.fileTree.invisibleRootItem(), self.d)
         print('Added test items', n)
 
+
 def fill_item(item, value):
     global n
     # item.setExpanded(True)
@@ -67,7 +64,7 @@ def fill_item(item, value):
             child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
             child.setCheckState(0, Qt.Unchecked)
             item.addChild(child)
-            n+=1
+            n += 1
             fill_item(child, val)
     elif type(value) is list:
         for val in value:
@@ -75,7 +72,7 @@ def fill_item(item, value):
             child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
             child.setCheckState(0, Qt.Unchecked)
             item.addChild(child)
-            n+=1
+            n += 1
             if type(val) is dict:
                 child.setText(0, '[dict]')
                 fill_item(child, val)
@@ -90,5 +87,4 @@ def fill_item(item, value):
         child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
         child.setCheckState(0, Qt.Unchecked)
         item.addChild(child)
-        n+=1
-
+        n += 1
