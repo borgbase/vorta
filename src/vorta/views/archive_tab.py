@@ -91,12 +91,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
-        if params['ok']:
-            thread = BorgCheckThread(params['cmd'], params, parent=self)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.check_result)
-            self._toggle_all_buttons(False)
-            thread.start()
+        if not params['ok']:
+            self._set_status(params['message'])
+            return
+
+        # Conditions are met (borg binary available, etc)
+        row_selected = self.archiveTable.selectionModel().selectedRows()
+        if row_selected:
+            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            if snapshot_cell:
+                snapshot_name = snapshot_cell.text()
+                params['cmd'][-1] += f'::{snapshot_name}'
+
+        thread = BorgCheckThread(params['cmd'], params, parent=self)
+        thread.updated.connect(self._set_status)
+        thread.result.connect(self.check_result)
+        self._toggle_all_buttons(False)
+        thread.start()
 
     def check_result(self, result):
         if result['returncode'] == 0:
