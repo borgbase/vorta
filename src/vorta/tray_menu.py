@@ -30,17 +30,15 @@ class TrayMenu(QSystemTrayIcon):
         exit_action.triggered.connect(self.app.quit)
 
         self.on_user_click()
-        self.activated.connect(self.on_user_click)
+        # https://stackoverflow.com/questions/43657890/pyqt5-qsystemtrayicon-activated-signal-not-working
+        menu.aboutToShow.connect(self.on_user_click)
 
         self.setContextMenu(menu)
         self.setVisible(True)
         self.show()
 
-    def on_user_click(self, reason=0):
+    def on_user_click(self):
         """Adjust labels to reflect current status."""
-        # BUG on ubuntu 18.04 (standard edition with gnome):
-        # a single LMB click on the tray icon does not fire the "activated" signal (documented reason 3).
-        # working: double LMB click (reason reported 3, should be 2), MMB click (reason 4)
         if BorgThread.is_running():
             self.status.setText('Backup in Progress')
             self.profile_menu.setEnabled(False)
