@@ -197,6 +197,40 @@
     </layout>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,1">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>No matter what, keep all archives of the last:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="prune_keep_within">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>24H, 1d, 52w, 12m, 1y</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QLabel" name="mountErrors">
      <property name="enabled">
       <bool>true</bool>
