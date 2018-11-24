@@ -36,8 +36,11 @@ class TrayMenu(QSystemTrayIcon):
         self.setVisible(True)
         self.show()
 
-    def on_user_click(self):
+    def on_user_click(self, reason=0):
         """Adjust labels to reflect current status."""
+        # BUG on ubuntu 18.04 (standard edition with gnome):
+        # a single LMB click on the tray icon does not fire the "activated" signal (documented reason 3).
+        # working: double LMB click (reason reported 3, should be 2), MMB click (reason 4)
         if BorgThread.is_running():
             self.status.setText('Backup in Progress')
             self.profile_menu.setEnabled(False)
