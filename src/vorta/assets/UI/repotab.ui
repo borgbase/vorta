@@ -92,7 +92,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/unlink.svg</normaloff>:/icons/unlink.svg</iconset>
          </property>
          <property name="autoRaise">
@@ -114,6 +114,9 @@
        </property>
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For secure remote backups, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;. 100GB free during Beta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>
@@ -157,7 +160,7 @@
           <string>Copy</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/copy.svg</normaloff>:/icons/copy.svg</iconset>
          </property>
          <property name="checkable">
@@ -182,6 +185,9 @@
        </property>
        <property name="text">
         <string>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

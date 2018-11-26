@@ -13,23 +13,6 @@ class TrayMenu(QSystemTrayIcon):
         self.app = parent
         menu = QMenu()
 
-        self.status = menu.addAction(self.app.scheduler.next_job)
-        self.status.setEnabled(False)
-
-        self.profile_menu = menu.addMenu('Backup Now')
-
-        self.cancel_action = menu.addAction("Cancel Backup")
-        self.cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
-
-        settings_action = menu.addAction("Settings")
-        settings_action.triggered.connect(self.app.open_main_window_action)
-
-        menu.addSeparator()
-
-        exit_action = menu.addAction("Exit")
-        exit_action.triggered.connect(self.app.quit)
-
-        self.on_user_click()
         # https://stackoverflow.com/questions/43657890/pyqt5-qsystemtrayicon-activated-signal-not-working
         menu.aboutToShow.connect(self.on_user_click)
 
@@ -38,18 +21,42 @@ class TrayMenu(QSystemTrayIcon):
         self.show()
 
     def on_user_click(self):
-        """Adjust labels to reflect current status."""
-        if BorgThread.is_running():
-            self.status.setText('Backup in Progress')
-            self.profile_menu.setEnabled(False)
-            self.cancel_action.setVisible(True)
-        else:
-            self.status.setText(f'Next Task: {self.app.scheduler.next_job}')
-            self.profile_menu.setEnabled(True)
-            self.cancel_action.setVisible(False)
+        """
+        Build system tray menu based on current status.
 
-        self.profile_menu.clear()
-        for profile in BackupProfileModel.select():
-            new_item = self.profile_menu.addAction(profile.name)
-            new_item.setData(profile.id)
-            new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
+        """
+
+        menu = self.contextMenu()
+        menu.clear()
+
+        status = menu.addAction(self.app.scheduler.next_job)
+        status.setEnabled(False)
+
+        profiles = BackupProfileModel.select()
+        if profiles.count() > 1:
+            profile_menu = menu.addMenu('Backup Now')
+            for profile in profiles:
+                new_item = profile_menu.addAction(profile.name)
+                new_item.setData(profile.id)
+                new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
+        else:
+            profile = profiles.first()
+            profile_menu = menu.addAction('Backup Now')
+            profile_menu.triggered.connect((lambda profile_id=profile.id: self.app.create_backup_action(profile_id)))
+
+        if BorgThread.is_running():
+            status.setText('Backup in Progress')
+            profile_menu.setVisible(False)
+            cancel_action = menu.addAction("Cancel Backup")
+            cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
+        else:
+            status.setText(f'Next Task: {self.app.scheduler.next_job}')
+            profile_menu.setEnabled(True)
+
+        settings_action = menu.addAction("Settings")
+        settings_action.triggered.connect(self.app.open_main_window_action)
+
+        menu.addSeparator()
+
+        exit_action = menu.addAction("Exit")
+        exit_action.triggered.connect(self.app.quit)

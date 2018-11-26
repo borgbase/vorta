@@ -11,7 +11,7 @@ from .borg_thread import BorgThread
 
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
-        if result['returncode'] in [0, 1]:
+        if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_snapshot, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
@@ -32,6 +32,8 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
+            self.app.backup_log_event.emit('Backup finished.')
+
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
@@ -41,7 +43,6 @@ class BorgCreateThread(BorgThread):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
-        self.app.backup_log_event.emit('Backup finished.')
 
     @classmethod
     def prepare(cls, profile):
@@ -102,7 +103,7 @@ class BorgCreateThread(BorgThread):
                     cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
-        cmd.append(f'{profile.repo.url}::{platform.node()}-{dt.now().isoformat()}')
+        cmd.append(f"{profile.repo.url}::{platform.node()}-{profile.id}-{dt.now().isoformat(timespec='seconds')}")
 
         for f in SourceDirModel.select().where(SourceDirModel.profile == profile.id):
             cmd.append(f.dir)
