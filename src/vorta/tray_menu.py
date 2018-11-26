@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMenu, QSystemTrayIcon, QAction
+from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
 from .utils import get_asset
@@ -46,7 +46,7 @@ class TrayMenu(QSystemTrayIcon):
 
         if BorgThread.is_running():
             status.setText('Backup in Progress')
-            profile_menu.setEnabled(False)
+            profile_menu.setVisible(False)
             cancel_action = menu.addAction("Cancel Backup")
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
