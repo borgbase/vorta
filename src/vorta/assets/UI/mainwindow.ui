@@ -181,7 +181,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>35</height>
+           <height>45</height>
           </size>
          </property>
          <property name="font">
