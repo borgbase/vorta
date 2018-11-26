@@ -3,9 +3,9 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from ..models import RepoModel, ArchiveModel, BackupProfileMixin
-from .repo_add import AddRepoWindow, ExistingRepoWindow
+from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from ..utils import pretty_bytes, get_private_keys, get_asset
-from .ssh_add import SSHAddWindow
+from .ssh_dialog import SSHAddWindow
 
 uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')

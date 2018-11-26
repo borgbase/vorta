@@ -1,4 +1,5 @@
 import io
+import random
 import pytest
 import peewee
 
@@ -6,6 +7,9 @@ import vorta
 from vorta.application import VortaApp
 from vorta.models import RepoModel, SourceDirModel
 
+def pytest_configure(config):
+    import sys
+    sys._called_from_test = True
 
 @pytest.fixture()
 def app(tmpdir, qtbot):
@@ -29,11 +33,20 @@ def app_with_repo(app):
     source_dir.save()
     return app
 
+class VortaStringIO(io.StringIO):
+    """Adds fileno support"""
+
+    def __init__(self, s):
+        super().__init__(s)
+        self._fileno = random.randint(5, 15)
+
+    def fileno(self):
+        return self._fileno
 
 @pytest.fixture
 def borg_json_output():
     def _read_json(subcommand):
-        stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json').read()
-        stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json').read()
-        return io.StringIO(stdout), io.StringIO(stderr)
+        stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json')
+        stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
+        return stdout, stderr
     return _read_json

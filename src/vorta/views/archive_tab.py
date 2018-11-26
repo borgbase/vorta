@@ -4,9 +4,11 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.prune import BorgPruneThread
-from vorta.borg.list import BorgListThread
+from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.list_archive import BorgListArchiveThread
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
+from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
 from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
@@ -51,7 +53,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
-        self.extractButton.clicked.connect(self.extract_action)
+        self.extractButton.clicked.connect(self.list_archive_action)
 
         self.populate_from_profile()
 
@@ -64,6 +66,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.listButton.setEnabled(enabled)
         self.pruneButton.setEnabled(enabled)
         self.mountButton.setEnabled(enabled)
+        self.extractButton.setEnabled(enabled)
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -131,9 +134,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(True)
 
     def list_action(self):
-        params = BorgListThread.prepare(self.profile())
+        params = BorgListRepoThread.prepare(self.profile())
         if params['ok']:
-            thread = BorgListThread(params['cmd'], params, parent=self)
+            thread = BorgListRepoThread(params['cmd'], params, parent=self)
             thread.updated.connect(self._set_status)
             thread.result.connect(self.list_result)
             self._toggle_all_buttons(False)
@@ -219,7 +222,57 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
 
-    def extract_action(self):
-        window = ExtractDialog()
-        window.setParent(self, QtCore.Qt.Sheet)
-        window.show()
+    def list_archive_action(self):
+        profile = self.profile()
+
+        row_selected = self.archiveTable.selectionModel().selectedRows()
+        if row_selected:
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            if archive_cell:
+                archive_name = archive_cell.text()
+                params = BorgListArchiveThread.prepare(profile)
+
+                if not params['ok']:
+                    self._set_status(params['message'])
+                    return
+                params['cmd'][-1] += f'::{archive_name}'
+                params['archive_name'] = archive_name
+                self._toggle_all_buttons(False)
+
+                thread = BorgListArchiveThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self.mountErrors.setText)
+                thread.result.connect(self.list_archive_result)
+                thread.start()
+        else:
+            self._set_status('Select an archive to restore first.')
+
+    def list_archive_result(self, result):
+        self._set_status('')
+        if result['returncode'] == 0:
+            archive = ArchiveModel.get(name=result['params']['archive_name'])
+            window = ExtractDialog(result['data'], archive)
+            self._toggle_all_buttons(True)
+            window.setParent(self, QtCore.Qt.Sheet)
+            window.show()
+
+            if window.exec_():
+                def receive():
+                    extraction_folder = dialog.selectedFiles()
+                    if extraction_folder:
+                        params = BorgExtractThread.prepare(
+                            self.profile(), archive.name, window.selected, extraction_folder[0])
+                        if params['ok']:
+                            self._toggle_all_buttons(False)
+                            thread = BorgExtractThread(params['cmd'], params, parent=self)
+                            thread.updated.connect(self.mountErrors.setText)
+                            thread.result.connect(self.extract_archive_result)
+                            thread.start()
+                        else:
+                            self._set_status(params['message'])
+
+                dialog = choose_folder_dialog(self, "Choose Extraction Point")
+                dialog.open(receive)
+
+    def extract_archive_result(self, result):
+        self._toggle_all_buttons(True)
+

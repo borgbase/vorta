@@ -13,7 +13,7 @@ class TrayMenu(QSystemTrayIcon):
         self.app = parent
         menu = QMenu()
 
-        # https://stackoverflow.com/questions/43657890/pyqt5-qsystemtrayicon-activated-signal-not-working
+        # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
         menu.aboutToShow.connect(self.on_user_click)
 
         self.setContextMenu(menu)
@@ -21,10 +21,7 @@ class TrayMenu(QSystemTrayIcon):
         self.show()
 
     def on_user_click(self):
-        """
-        Build system tray menu based on current status.
-
-        """
+        """Build system tray menu based on current state."""
 
         menu = self.contextMenu()
         menu.clear()

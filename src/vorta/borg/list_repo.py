@@ -3,7 +3,7 @@ from .borg_thread import BorgThread
 from vorta.models import ArchiveModel, RepoModel
 
 
-class BorgListThread(BorgThread):
+class BorgListRepoThread(BorgThread):
 
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)

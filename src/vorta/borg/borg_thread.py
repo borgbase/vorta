@@ -3,6 +3,10 @@ import os
 import sys
 import shutil
 import signal
+import select
+import fcntl
+import errno
+import time
 import logging
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -55,6 +59,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.env = env
         self.cmd = cmd
+        self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
 
@@ -135,39 +140,73 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                                   profile=self.params.get('profile_name', None)
                                   )
         log_entry.save()
+        logger.info('Running command %s', ' '.join(self.cmd))
 
-        self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1,
-                             universal_newlines=True, env=self.env, preexec_fn=os.setsid)
+        p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
+                  env=self.env, cwd=self.cwd, preexec_fn=os.setsid)
+        self.process = p
 
-        for line in iter(self.process.stderr.readline, ''):
+        # Prevent blocking. via https://stackoverflow.com/a/7730201/3983708
+
+        # Helper function to add the O_NONBLOCK flag to a file descriptor
+        def make_async(fd):
+            fcntl.fcntl(fd, fcntl.F_SETFL, fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK)
+
+        # Helper function to read some data from a file descriptor, ignoring EAGAIN errors
+        def read_async(fd):
             try:
-                parsed = json.loads(line)
-                if parsed['type'] == 'log_message':
-                    self.log_event(f'{parsed["levelname"]}: {parsed["message"]}')
-                    level_int = getattr(logging, parsed["levelname"])
-                    logger.log(level_int, parsed["message"])
-                elif parsed['type'] == 'file_status':
-                    self.log_event(f'{parsed["path"]} ({parsed["status"]})')
-            except json.decoder.JSONDecodeError:
-                msg = line.strip()
-                self.log_event(msg)
-                logger.warning(msg)
+                return fd.read()
+            except (IOError, TypeError):
+                return ''
 
-        self.process.wait()
-        stdout = self.process.stdout.read()
+        make_async(p.stdout)
+        make_async(p.stderr)
+
+        stdout = []
+        while True:
+            # Wait for new output
+            select.select([p.stdout, p.stderr], [], [])
+
+            stdout.append(read_async(p.stdout))
+            stderr = read_async(p.stderr)
+            if stderr:
+                for line in stderr.split('\n'):
+                    try:
+                        parsed = json.loads(line)
+                        if parsed['type'] == 'log_message':
+                            self.log_event(f'{parsed["levelname"]}: {parsed["message"]}')
+                            level_int = getattr(logging, parsed["levelname"])
+                            logger.log(level_int, parsed["message"])
+                        elif parsed['type'] == 'file_status':
+                            self.log_event(f'{parsed["path"]} ({parsed["status"]})')
+                    except json.decoder.JSONDecodeError:
+                        msg = line.strip()
+                        self.log_event(msg)
+                        logger.warning(msg)
+
+            if p.poll() is not None:
+                stdout.append(read_async(p.stdout))
+                break
+
         result = {
             'params': self.params,
             'returncode': self.process.returncode,
-            'cmd': self.cmd
+            'cmd': self.cmd,
         }
+        stdout = ''.join(stdout)
+
         try:
             result['data'] = json.loads(stdout)
-        except:  # noqa
-            result['data'] = {}
+        except ValueError:
+            result['data'] = stdout
 
-        log_entry.returncode = self.process.returncode
+        log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.save()
+
+        # Ensure async reading of mock stdout/stderr is finished.
+        if hasattr(sys, '_called_from_test'):
+            time.sleep(1)
 
         self.process_result(result)
         self.finished_event(result)
@@ -191,43 +230,3 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def finished_event(self, result):
         self.result.emit(result)
 
-
-class BorgThreadChain(BorgThread):
-    """
-    Metaclass of `BorgThread` that can run multiple other BorgThread actions while providing the same
-    interface as a single action.
-    """
-
-    def __init__(self, cmds, input_values, parent=None):
-        """
-        Takes a list of tuples with `BorgThread` subclass and optional input parameters. Then all actions are executed
-        and a merged result object is returned to the caller. If there is any error, then current result is returned.
-
-        :param actions:
-        :return: dict(results)
-        """
-        self.parent = parent
-        self.threads = []
-        self.combined_result = {}
-
-        for cmd, input_value in zip(cmds, input_values):
-            if input_value is not None:
-                msg = cmd.prepare(input_value)
-            else:
-                msg = cmd.prepare()
-            if msg['ok']:
-                thread = cmd(msg['cmd'], msg, parent)
-                thread.updated.connect(self.updated.emit)  # All log entries are immediately sent to the parent.
-                thread.result.connect(self.partial_result)
-                self.threads.append(thread)
-        self.threads[0].start()
-
-    def partial_result(self, result):
-        if result['returncode'] == 0:
-            self.combined_result.update(result)
-            self.threads.pop(0)
-
-            if len(self.threads) > 0:
-                self.threads[0].start()
-            else:
-                self.result.emit(self.combined_result)

@@ -57,6 +57,29 @@ else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaKeyring())
 
 
+from collections import defaultdict
+from functools import reduce
+import operator
+
+"""
+Combination of two idioms to build dicts from lists:
+
+- https://stackoverflow.com/questions/16724788/how-can-i-get-python-to-automatically-create-missing-key-value-pairs-in-a-dictio/16724937
+- https://stackoverflow.com/questions/14692690/access-nested-dictionary-items-via-a-list-of-keys
+"""
+
+
+nested_dict = lambda: defaultdict(nested_dict)
+
+
+def get_dict_from_list(dataDict, mapList):
+    return reduce(operator.getitem, mapList, dataDict)
+
+
+def set_dict_from_list(dataDict, mapList, value):
+    get_dict_from_list(dataDict, mapList[:-1])[mapList[-1]] = value
+
+
 def choose_folder_dialog(parent, title, want_folder=True):
     options = QFileDialog.Options()
     if want_folder:
