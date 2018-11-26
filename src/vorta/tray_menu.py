@@ -17,14 +17,9 @@ class TrayMenu(QSystemTrayIcon):
         self.status.setEnabled(False)
 
         self.profile_menu = menu.addMenu('Backup Now')
-        for profile in BackupProfileModel.select():
-            new_item = self.profile_menu.addAction(profile.name)
-            new_item.setData(profile.id)
-            new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
 
         self.cancel_action = menu.addAction("Cancel Backup")
         self.cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
-        self.cancel_action.setVisible(False)
 
         settings_action = menu.addAction("Settings")
         settings_action.triggered.connect(self.app.open_main_window_action)
@@ -34,7 +29,9 @@ class TrayMenu(QSystemTrayIcon):
         exit_action = menu.addAction("Exit")
         exit_action.triggered.connect(self.app.quit)
 
-        self.activated.connect(self.on_user_click)
+        self.on_user_click()
+        # https://stackoverflow.com/questions/43657890/pyqt5-qsystemtrayicon-activated-signal-not-working
+        menu.aboutToShow.connect(self.on_user_click)
 
         self.setContextMenu(menu)
         self.setVisible(True)
