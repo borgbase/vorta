@@ -103,7 +103,7 @@ class BorgCreateThread(BorgThread):
                     cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
-        cmd.append(f'{profile.repo.url}::{platform.node()}-{dt.now().isoformat()}')
+        cmd.append(f"{profile.repo.url}::{platform.node()}-{profile.id}-{dt.now().isoformat(timespec='seconds')}")
 
         for f in SourceDirModel.select().where(SourceDirModel.profile == profile.id):
             cmd.append(f.dir)
