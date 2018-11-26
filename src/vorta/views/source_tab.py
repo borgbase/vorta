@@ -11,7 +11,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
 
-        self.sourceAdd.clicked.connect(self.source_add)
+        self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
+        self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
         self.sourceRemove.clicked.connect(self.source_remove)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
@@ -33,7 +34,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
-    def source_add(self):
+    def source_add(self, want_folder):
         def receive():
             dir = dialog.selectedFiles()
             if dir:
@@ -42,7 +43,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.sourceDirectoriesWidget.addItem(dir[0])
                     new_source.save()
 
-        dialog = choose_folder_dialog(self, "Choose Directory to back up")
+        item = "directory" if want_folder else "file"
+        dialog = choose_folder_dialog(self, "Choose %s to back up" % item, want_folder=want_folder)
         dialog.open(receive)
 
     def source_remove(self):
