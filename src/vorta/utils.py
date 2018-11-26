@@ -57,11 +57,12 @@ else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaKeyring())
 
 
-def choose_folder_dialog(parent, title):
+def choose_folder_dialog(parent, title, want_folder=True):
     options = QFileDialog.Options()
-    options |= QFileDialog.ShowDirsOnly
+    if want_folder:
+        options |= QFileDialog.ShowDirsOnly
     dialog = QFileDialog(parent, title, os.path.expanduser('~'), options=options)
-    dialog.setFileMode(QFileDialog.Directory)
+    dialog.setFileMode(QFileDialog.Directory if want_folder else QFileDialog.AnyFile)
     dialog.setParent(parent, QtCore.Qt.Sheet)
     return dialog
 
