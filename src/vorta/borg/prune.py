@@ -34,6 +34,8 @@ class BorgPruneThread(BorgThread):
             '--keep-yearly', str(profile.prune_year),
             '--prefix', f'{platform.node()}-'
         ]
+        if profile.prune_keep_within:
+            pruning_opts += ['--keep-within', profile.prune_keep_within]
         cmd += pruning_opts
         cmd.append(f'{profile.repo.url}')
 

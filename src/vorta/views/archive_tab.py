@@ -40,9 +40,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setAlternatingRowColors(True)
 
         # Populate pruning options from database
+        profile = self.profile()
         for i in self.prune_intervals:
-            getattr(self, f'prune_{i}').setValue(getattr(self.profile(), f'prune_{i}'))
+            getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+        self.prune_keep_within.setText(profile.prune_keep_within)
+        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
         self.mountButton.clicked.connect(self.mount_action)
         self.listButton.clicked.connect(self.list_action)
@@ -209,10 +212,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.mountButton.clicked.connect(self.mount_action)
             self.mount_point = None
 
-    def save_prune_setting(self, new_value):
+    def save_prune_setting(self, new_value=None):
         profile = self.profile()
         for i in self.prune_intervals:
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
+        profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
 
     def extract_action(self):

@@ -9,7 +9,7 @@ import json
 from datetime import datetime, timedelta
 from playhouse.migrate import SqliteMigrator, migrate
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 db = pw.Proxy()
 
@@ -77,6 +77,7 @@ class BackupProfileModel(pw.Model):
     prune_week = pw.IntegerField(default=4)
     prune_month = pw.IntegerField(default=6)
     prune_year = pw.IntegerField(default=2)
+    prune_keep_within = pw.CharField(default='10H', null=True)
 
     def refresh(self):
         return type(self).get(self._pk_expr())
@@ -215,3 +216,9 @@ def init_db(con):
             migrator.drop_column(EventLogModel._meta.table_name, 'profile_id'),
             migrator.add_column(EventLogModel._meta.table_name, 'profile', pw.CharField(null=True))
         )
+
+    if current_schema.version < 8:
+        _apply_schema_update(
+            current_schema, 8,
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'prune_keep_within', pw.CharField(null=True)))
