@@ -45,6 +45,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         password = params.get('password')
         if password is not None:
             env['BORG_PASSPHRASE'] = password
+        else:
+            env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
         env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
         ssh_key = params.get('ssh_key')
@@ -93,11 +95,18 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = 'Add a backup repository first.'
             return ret
 
+        # Try to get password from chosen keyring backend.
+        try:
+            ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)
+        except keyring.backends._OS_X_API.Error:
+            ret['message'] = 'Please make sure you grant Vorta permission to use the Keychain.'
+            return ret
+
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
         ret['profile_name'] = profile.name
-        ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)  # None if no password.
+
         ret['ok'] = True
 
         return ret

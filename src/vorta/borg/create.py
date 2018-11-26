@@ -32,6 +32,8 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
+            self.app.backup_log_event.emit('Backup finished.')
+
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
@@ -41,7 +43,6 @@ class BorgCreateThread(BorgThread):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
-        self.app.backup_log_event.emit('Backup finished.')
 
     @classmethod
     def prepare(cls, profile):
