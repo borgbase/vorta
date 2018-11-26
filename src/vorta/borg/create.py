@@ -11,7 +11,7 @@ from .borg_thread import BorgThread
 
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
-        if result['returncode'] in [0, 1]:
+        if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_snapshot, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
