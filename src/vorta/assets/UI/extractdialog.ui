@@ -15,28 +15,27 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Archive: &lt;span style=&quot; font-weight:600;&quot;&gt;nyx2.local-2018-11-16T09:49:58 from November 16, 2018&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <property name="topMargin">
       <number>10</number>
      </property>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Select All</string>
+        <string>Archive:</string>
        </property>
       </widget>
      </item>
-     <item alignment="Qt::AlignLeft">
-      <widget class="QPushButton" name="pushButton_3">
+     <item>
+      <widget class="QLabel" name="archiveNameLabel">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Unselect All</string>
+        <string>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</string>
        </property>
       </widget>
      </item>
@@ -53,23 +52,10 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string>Exclude Patterns</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
-    <widget class="QTreeWidget" name="fileTree">
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QTreeView" name="treeView"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -90,7 +76,7 @@
       </spacer>
      </item>
      <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="cancelButton">
        <property name="text">
         <string>Cancel</string>
        </property>

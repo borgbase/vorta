@@ -1,10 +1,14 @@
-import io
 import pytest
 import peewee
 
 import vorta
 from vorta.application import VortaApp
 from vorta.models import RepoModel, SourceDirModel
+
+
+def pytest_configure(config):
+    import sys
+    sys._called_from_test = True
 
 
 @pytest.fixture()
@@ -33,7 +37,7 @@ def app_with_repo(app):
 @pytest.fixture
 def borg_json_output():
     def _read_json(subcommand):
-        stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json').read()
-        stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json').read()
-        return io.StringIO(stdout), io.StringIO(stderr)
+        stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json')
+        stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
+        return stdout, stderr
     return _read_json

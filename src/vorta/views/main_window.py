@@ -6,7 +6,7 @@ from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .archive_tab import ArchiveTab
 from .schedule_tab import ScheduleTab
-from .profile_add_edit import AddProfileWindow, EditProfileWindow
+from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
 from ..models import BackupProfileModel
 from vorta.borg.borg_thread import BorgThread

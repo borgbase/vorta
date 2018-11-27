@@ -67,9 +67,9 @@ class BorgCreateThread(BorgThread):
                 (
                     WifiSettingModel.ssid == current_wifi
                 ) & (
-                    WifiSettingModel.allowed is False
+                    WifiSettingModel.allowed == False  # noqa
                 ) & (
-                    WifiSettingModel.profile == profile.id
+                    WifiSettingModel.profile == profile
                 )
             )
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():

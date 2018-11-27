@@ -231,7 +231,37 @@
     </layout>
    </item>
    <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="extractButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Extract</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons/collection.qrc">
+         <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="mountButton">
        <property name="sizePolicy">
@@ -257,20 +287,6 @@
        <property name="icon">
         <iconset resource="../icons/collection.qrc">
          <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="extractButton">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Extract</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../icons/collection.qrc">
-         <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
        </property>
       </widget>
      </item>

@@ -6,7 +6,7 @@ from apscheduler.triggers import cron
 from vorta.borg.create import BorgCreateThread
 from .models import BackupProfileModel, EventLogModel
 from vorta.borg.prune import BorgPruneThread
-from vorta.borg.list import BorgListThread
+from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.check import BorgCheckThread
 from .notifications import VortaNotifications
 
@@ -105,9 +105,9 @@ class VortaScheduler(QtScheduler):
                 prune_thread.wait()
 
                 # Refresh snapshots
-                msg = BorgListThread.prepare(profile)
+                msg = BorgListRepoThread.prepare(profile)
                 if msg['ok']:
-                    list_thread = BorgListThread(msg['cmd'], msg)
+                    list_thread = BorgListRepoThread(msg['cmd'], msg)
                     list_thread.start()
                     list_thread.wait()
 

@@ -2,7 +2,7 @@ from PyQt5 import QtCore
 
 import vorta.borg.borg_thread
 import vorta.models
-from vorta.views.repo_add import AddRepoWindow
+from vorta.views.repo_add_dialog import AddRepoWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
@@ -32,7 +32,7 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
 
-    with qtbot.waitSignal(add_repo_window.thread.result, timeout=1000) as blocker:
+    with qtbot.waitSignal(add_repo_window.thread.result, timeout=3000) as blocker:
         pass
 
     main.repoTab.process_new_repo(blocker.args[0])
@@ -48,8 +48,8 @@ def test_create(app_with_repo, borg_json_output, mocker, qtbot):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'))
-    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled())
+    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'), timeout=3000)
+    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)
     assert EventLogModel.select().count() == 1
     assert ArchiveModel.select().count() == 1
     assert RepoModel.get(id=1).unique_size == 15520474
