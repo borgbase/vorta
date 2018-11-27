@@ -62,11 +62,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
-        self.checkButton.setEnabled(enabled)
-        self.listButton.setEnabled(enabled)
-        self.pruneButton.setEnabled(enabled)
-        self.mountButton.setEnabled(enabled)
-        self.extractButton.setEnabled(enabled)
+        for button in [self.checkButton, self.listButton, self.pruneButton, self.mountButton, self.extractButton]:
+            button.setEnabled(enabled)
+            button.repaint()
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -237,6 +235,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     return
                 params['cmd'][-1] += f'::{archive_name}'
                 params['archive_name'] = archive_name
+                self._set_status('')
                 self._toggle_all_buttons(False)
 
                 thread = BorgListArchiveThread(params['cmd'], params, parent=self)
