@@ -275,4 +275,3 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
-

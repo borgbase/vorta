@@ -5,7 +5,6 @@ import shutil
 import signal
 import select
 import fcntl
-import errno
 import time
 import logging
 from PyQt5 import QtCore
@@ -229,4 +228,3 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def finished_event(self, result):
         self.result.emit(result)
-

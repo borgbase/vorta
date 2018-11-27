@@ -1,6 +1,11 @@
 import os
 import sys
 import plistlib
+
+from collections import defaultdict
+from functools import reduce
+import operator
+
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
@@ -57,27 +62,18 @@ else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaKeyring())
 
 
-from collections import defaultdict
-from functools import reduce
-import operator
+def nested_dict():
+    """
+    Combination of two idioms to quickly build dicts from lists of keys:
 
-"""
-Combination of two idioms to build dicts from lists:
-
-- https://stackoverflow.com/questions/16724788/how-can-i-get-python-to-automatically-create-missing-key-value-pairs-in-a-dictio/16724937
-- https://stackoverflow.com/questions/14692690/access-nested-dictionary-items-via-a-list-of-keys
-"""
-
-
-nested_dict = lambda: defaultdict(nested_dict)
+    - https://stackoverflow.com/a/16724937/3983708
+    - https://stackoverflow.com/a/14692747/3983708
+    """
+    return defaultdict(nested_dict)
 
 
 def get_dict_from_list(dataDict, mapList):
     return reduce(operator.getitem, mapList, dataDict)
-
-
-def set_dict_from_list(dataDict, mapList, value):
-    get_dict_from_list(dataDict, mapList[:-1])[mapList[-1]] = value
 
 
 def choose_folder_dialog(parent, title, want_folder=True):

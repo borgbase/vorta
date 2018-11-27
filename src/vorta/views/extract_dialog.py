@@ -4,7 +4,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PyQt5.QtWidgets import QApplication, QHeaderView
 
-from vorta.utils import get_asset, pretty_bytes, get_dict_from_list, set_dict_from_list, nested_dict
+from vorta.utils import get_asset, pretty_bytes, get_dict_from_list, nested_dict
 
 uifile = get_asset('UI/extractdialog.ui')
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
