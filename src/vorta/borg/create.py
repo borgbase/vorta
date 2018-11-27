@@ -72,7 +72,6 @@ class BorgCreateThread(BorgThread):
                     WifiSettingModel.profile == profile
                 )
             )
-            print(wifi_is_disallowed.count())
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
                 ret['message'] = 'Current Wifi is not allowed.'
                 return ret

@@ -67,6 +67,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             button.repaint()
 
     def populate_from_profile(self):
+        """Populate archive list and prune settings from profile."""
+
         profile = self.profile()
         if profile.repo is not None:
             self.currentRepoLabel.setText(profile.repo.url)
@@ -85,6 +87,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
                 self.archiveTable.setItem(row, 3, QTableWidgetItem(archive.name))
             self.archiveTable.setRowCount(len(archives))
+            item = self.archiveTable.item(0, 0)
+            self.archiveTable.scrollToItem(item)
             self._toggle_all_buttons(enabled=True)
         else:
             self.archiveTable.setRowCount(0)
