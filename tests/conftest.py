@@ -1,5 +1,6 @@
 import pytest
 import peewee
+import sys
 
 import vorta
 from vorta.application import VortaApp
@@ -7,7 +8,6 @@ from vorta.models import RepoModel, SourceDirModel
 
 
 def pytest_configure(config):
-    import sys
     sys._called_from_test = True
 
 
