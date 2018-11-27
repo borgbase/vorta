@@ -1,6 +1,11 @@
 import os
 import sys
 import plistlib
+
+from collections import defaultdict
+from functools import reduce
+import operator
+
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
@@ -55,6 +60,20 @@ elif sys.platform == 'linux':
         keyring.set_keyring(VortaKeyring())
 else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaKeyring())
+
+
+def nested_dict():
+    """
+    Combination of two idioms to quickly build dicts from lists of keys:
+
+    - https://stackoverflow.com/a/16724937/3983708
+    - https://stackoverflow.com/a/14692747/3983708
+    """
+    return defaultdict(nested_dict)
+
+
+def get_dict_from_list(dataDict, mapList):
+    return reduce(operator.getitem, mapList, dataDict)
 
 
 def choose_folder_dialog(parent, title, want_folder=True):

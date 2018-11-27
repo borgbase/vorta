@@ -13,7 +13,7 @@ class TrayMenu(QSystemTrayIcon):
         self.app = parent
         menu = QMenu()
 
-        # https://stackoverflow.com/questions/43657890/pyqt5-qsystemtrayicon-activated-signal-not-working
+        # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
         menu.aboutToShow.connect(self.on_user_click)
 
         self.setContextMenu(menu)
@@ -21,10 +21,7 @@ class TrayMenu(QSystemTrayIcon):
         self.show()
 
     def on_user_click(self):
-        """
-        Build system tray menu based on current status.
-
-        """
+        """Build system tray menu based on current state."""
 
         menu = self.contextMenu()
         menu.clear()
@@ -32,26 +29,23 @@ class TrayMenu(QSystemTrayIcon):
         status = menu.addAction(self.app.scheduler.next_job)
         status.setEnabled(False)
 
-        profiles = BackupProfileModel.select()
-        if profiles.count() > 1:
-            profile_menu = menu.addMenu('Backup Now')
-            for profile in profiles:
-                new_item = profile_menu.addAction(profile.name)
-                new_item.setData(profile.id)
-                new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
-        else:
-            profile = profiles.first()
-            profile_menu = menu.addAction('Backup Now')
-            profile_menu.triggered.connect((lambda profile_id=profile.id: self.app.create_backup_action(profile_id)))
-
         if BorgThread.is_running():
             status.setText('Backup in Progress')
-            profile_menu.setVisible(False)
             cancel_action = menu.addAction("Cancel Backup")
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
             status.setText(f'Next Task: {self.app.scheduler.next_job}')
-            profile_menu.setEnabled(True)
+            profiles = BackupProfileModel.select()
+            if profiles.count() > 1:
+                profile_menu = menu.addMenu('Backup Now')
+                for profile in profiles:
+                    new_item = profile_menu.addAction(profile.name)
+                    new_item.setData(profile.id)
+                    new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
+            else:
+                profile = profiles.first()
+                profile_menu = menu.addAction('Backup Now')
+                profile_menu.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
 
         settings_action = menu.addAction("Settings")
         settings_action.triggered.connect(self.app.open_main_window_action)

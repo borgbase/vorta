@@ -26,7 +26,7 @@ def test_repo_list(app_with_repo, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    qtbot.waitUntil(lambda: main.createProgressText.text() == 'Refreshing snapshots done.')
+    qtbot.waitUntil(lambda: main.createProgressText.text() == 'Refreshing snapshots done.', timeout=3000)
     assert ArchiveModel.select().count() == 6
     assert main.createProgressText.text() == 'Refreshing snapshots done.'
     assert tab.checkButton.isEnabled()
