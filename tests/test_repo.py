@@ -1,8 +1,11 @@
+import os
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QApplication
 
 import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add_dialog import AddRepoWindow
+from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
@@ -39,6 +42,31 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
 
     # assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=1).url == 'aaabbb.com:repo'
+
+
+def test_ssh_dialog(app, qtbot, tmpdir):
+    main = app.main_window
+    ssh_dialog = SSHAddWindow()
+    ssh_dir = tmpdir
+    key_tmpfile = ssh_dir.join("id_rsa-test")
+    pub_tmpfile = ssh_dir.join("id_rsa-test.pub")
+    key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
+    ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
+    qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
+
+    qtbot.waitUntil(lambda: key_tmpfile.check(file=1))
+
+    key_tmpfile_content = key_tmpfile.read()
+    pub_tmpfile_content = pub_tmpfile.read()
+    assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
+    assert pub_tmpfile_content.startswith('ssh-ed25519')
+    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'))
+
+    clipboard = QApplication.clipboard()
+    assert clipboard.text().startswith('ssh-ed25519')
+
+    qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))
 
 
 def test_create(app_with_repo, borg_json_output, mocker, qtbot):
