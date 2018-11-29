@@ -1,10 +1,9 @@
 import psutil
 from collections import namedtuple
 from PyQt5 import QtCore
-from vorta.models import BackupProfileModel, ArchiveModel, RepoModel
+from vorta.models import BackupProfileModel, ArchiveModel
 import vorta.borg
 import vorta.views.archive_tab
-from vorta.views.extract_dialog import ExtractDialog
 import vorta.utils
 
 
@@ -106,6 +105,7 @@ def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose
 
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=5000)
 
+
 def test_archive_extract(app, qtbot, mocker, borg_json_output, monkeypatch):
     main = app.main_window
     tab = main.archiveTab
@@ -134,5 +134,3 @@ def test_archive_extract(app, qtbot, mocker, borg_json_output, monkeypatch):
 
     assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
     tab._window.accept()
-
-

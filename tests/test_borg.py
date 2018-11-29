@@ -2,6 +2,7 @@ import vorta.borg
 import vorta.models
 from vorta.borg.prune import BorgPruneThread
 
+
 def test_borg_prune(app, qtbot, mocker, borg_json_output):
     stdout, stderr = borg_json_output('prune')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)

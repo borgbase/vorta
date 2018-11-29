@@ -52,6 +52,7 @@ def test_repo_unlink(app, qtbot, monkeypatch):
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.createProgressText.text() == 'Add a backup repository first.'
 
+
 def test_ssh_dialog(qtbot, tmpdir):
     ssh_dialog = SSHAddWindow()
     ssh_dir = tmpdir
