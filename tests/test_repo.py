@@ -45,7 +45,6 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
 
 
 def test_ssh_dialog(app, qtbot, tmpdir):
-    main = app.main_window
     ssh_dialog = SSHAddWindow()
     ssh_dir = tmpdir
     key_tmpfile = ssh_dir.join("id_rsa-test")

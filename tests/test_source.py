@@ -1,6 +1,7 @@
-from PyQt5 import QtCore
 import logging
+from PyQt5 import QtCore
 import vorta.models
+
 
 def test_add_folder(app_with_repo, qtbot, tmpdir):
     main = app_with_repo.main_window

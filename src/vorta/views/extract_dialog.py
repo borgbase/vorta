@@ -1,5 +1,8 @@
 import sys
 import os
+import datetime
+from collections import namedtuple
+
 from PyQt5 import uic
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PyQt5.QtWidgets import QApplication, QHeaderView
@@ -111,8 +114,10 @@ class FolderItem(FileItem):
                 self._filtered_children.append((0, '', root_folder, '', ))
         else:
             self._filtered_children = [f for f in full_list if search_path == f[3]]
-            if self.childCount() == 0:  # If there are no immediate children, we try the next-deepest folder.
-                for immediate_child in get_dict_from_list(folder_list, search_path.split('/')).keys():
+
+            # Add nested folders
+            for immediate_child in get_dict_from_list(folder_list, search_path.split('/')).keys():
+                if not [True for child in self._filtered_children if child[2] == immediate_child]:
                     self._filtered_children.append((0, '', immediate_child, search_path))
 
         self.is_loaded = False
@@ -254,8 +259,16 @@ class TreeModel(QAbstractItemModel):
 
 
 if __name__ == '__main__':
+    """
+    For local testing:
+
+    borg list --progress --info --log-json --format="{size:8d}{TAB}{mtime}{TAB}{path}{NL}"
+    """
+    FakeArchive = namedtuple('Archive', ['name', 'time'])
     app = QApplication(sys.argv)
-    test_list = open('/Users/manu/Downloads/archive_list.txt').read()
-    view = ExtractDialog(test_list.split('\n'))
+    test_list = open('/Users/manu/Downloads/nyx2-list.txt').read()
+
+    archive = FakeArchive('test-archive', datetime.datetime.now())
+    view = ExtractDialog(test_list, archive)
     view.show()
     sys.exit(app.exec_())
