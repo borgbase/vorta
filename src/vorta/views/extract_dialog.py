@@ -13,29 +13,30 @@ uifile = get_asset('UI/extractdialog.ui')
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
-full_list = []
-folder_list = nested_dict()
-selected = set()
+files_with_attributes = []
+nested_file_list = nested_dict()
+selected_files_folders = set()
 
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
     def __init__(self, fs_data, archive):
         super().__init__()
         self.setupUi(self)
-        global full_list, folder_list, selected
+        global files_with_attributes, nested_file_list, selected_files_folders
 
         def parse_line(line):
             size, modified, full_path = line.split('\t')
             size = int(size)
             dir, name = os.path.split(full_path)
-            if size == 0:
-                d = get_dict_from_list(folder_list, dir.split('/'))
-                if name not in d:
-                    d[name] = {}
+
+            # add to nested dict of folders to find nested dirs.
+            d = get_dict_from_list(nested_file_list, dir.split('/'))
+            if name not in d:
+                d[name] = {}
 
             return size, modified, name, dir
 
-        full_list = [parse_line(l) for l in fs_data.split('\n')[:-1]]
+        files_with_attributes = [parse_line(l) for l in fs_data.split('\n')[:-1]]
 
         model = TreeModel()
 
@@ -52,7 +53,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.archiveNameLabel.setText(f'{archive.name}, {archive.time}')
         self.cancelButton.clicked.connect(self.close)
         self.extractButton.clicked.connect(self.accept)
-        self.selected = selected
+        self.selected = selected_files_folders
 
 
 class FileItem:
@@ -84,11 +85,11 @@ class FileItem:
     def setCheckedState(self, value):
         if value == 2:
             self.checkedState = True
-            selected.add(
+            selected_files_folders.add(
                 os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
         else:
             self.checkedState = False
-            selected.remove(
+            selected_files_folders.remove(
                 os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
 
     def getCheckedState(self):
@@ -110,13 +111,14 @@ class FolderItem(FileItem):
         self._filtered_children = []
         search_path = os.path.join(self.path, name)
         if parent is None:  # Find path for root folder
-            for root_folder in folder_list.keys():
+            for root_folder in nested_file_list.keys():
                 self._filtered_children.append((0, '', root_folder, '', ))
         else:
-            self._filtered_children = [f for f in full_list if search_path == f[3]]
+            # This adds direct children.
+            self._filtered_children = [f for f in files_with_attributes if search_path == f[3]]
 
-            # Add nested folders
-            for immediate_child in get_dict_from_list(folder_list, search_path.split('/')).keys():
+            # Add nested folders.
+            for immediate_child in get_dict_from_list(nested_file_list, search_path.split('/')).keys():
                 if not [True for child in self._filtered_children if child[2] == immediate_child]:
                     self._filtered_children.append((0, '', immediate_child, search_path))
 

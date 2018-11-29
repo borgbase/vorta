@@ -256,6 +256,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             window = ExtractDialog(result['data'], archive)
             self._toggle_all_buttons(True)
             window.setParent(self, QtCore.Qt.Sheet)
+            self._window = window  # for testing
             window.show()
 
             if window.exec_():
