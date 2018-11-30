@@ -1,0 +1,20 @@
+{"type": "log_message", "time": 1541485706.185808, "message": "using builtin fallback logging configuration", "levelname": "DEBUG", "name": "borg.logger"}
+{"type": "log_message", "time": 1541485706.329196, "message": "35 self tests completed in 0.14 seconds", "levelname": "DEBUG", "name": "borg.archiver"}
+{"type": "log_message", "time": 1541485706.32982, "message": "SSH command line: ['ssh', 'w66xh7lj@w66xh7lj.repo.borgbase.com', 'borg', 'serve', '--umask=077', '--debug']", "levelname": "DEBUG", "name": "borg.remote"}
+{"type": "log_message", "time": 1541485712.0352168, "message": "Remote: using builtin fallback logging configuration", "levelname": "DEBUG", "name": "borg.logger"}
+{"type": "log_message", "time": 1541485712.10305, "message": "Remote: 35 self tests completed in 0.16 seconds", "levelname": "DEBUG", "name": "borg.archiver"}
+{"type": "log_message", "time": 1541485711.9786682, "levelname": "DEBUG", "message": "Remote: using builtin fallback logging configuration", "name": "borg.logger"}
+{"type": "log_message", "time": 1541485711.9788692, "levelname": "DEBUG", "message": "Remote: Initialized logging system for JSON-based protocol", "name": "borg.remote"}
+{"type": "log_message", "time": 1541485712.2395813, "levelname": "DEBUG", "message": "Remote: Resolving repository path b'repo'", "name": "root"}
+{"type": "log_message", "time": 1541485712.240386, "levelname": "DEBUG", "message": "Remote: Resolved repository path to '/srv/repos/w66xh7lj/repo'", "name": "root"}
+{"type": "log_message", "time": 1541485712.7960937, "levelname": "DEBUG", "message": "Remote: Verified integrity of /srv/repos/w66xh7lj/repo/index.153", "name": "borg.crypto.file_integrity"}
+{"type": "log_message", "time": 1541485713.763066, "message": "TAM-verified manifest", "levelname": "DEBUG", "name": "borg.crypto.key"}
+{"type": "log_message", "time": 1541485713.779689, "message": "security: read previous location 'ssh://w66xh7lj@w66xh7lj.repo.borgbase.com/./repo'", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.780284, "message": "security: read manifest timestamp '2018-11-06T06:24:14.199720'", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.780406, "message": "security: determined newest manifest timestamp as 2018-11-06T06:24:14.199720", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.7819798, "message": "security: repository checks ok, allowing access", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.7866921, "message": "Verified integrity of /Users/manu/.cache/borg/daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb/chunks", "levelname": "DEBUG", "name": "borg.crypto.file_integrity"}
+{"type": "log_message", "time": 1541485713.7872949, "message": "security: read previous location 'ssh://w66xh7lj@w66xh7lj.repo.borgbase.com/./repo'", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.787873, "message": "security: read manifest timestamp '2018-11-06T06:24:14.199720'", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.788007, "message": "security: determined newest manifest timestamp as 2018-11-06T06:24:14.199720", "levelname": "DEBUG", "name": "borg.cache"}
+{"type": "log_message", "time": 1541485713.788181, "message": "security: repository checks ok, allowing access", "levelname": "DEBUG", "name": "borg.cache"}

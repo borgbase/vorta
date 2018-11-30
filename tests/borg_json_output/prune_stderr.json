@@ -1,0 +1,2 @@
+{"levelname": "INFO", "message": "Remote: Storage quota: 10.51 MB out of 1.00 GB used.", "time": 1543489279.0468729, "type": "log_message", "name": "borg.repository"}
+{"levelname": "INFO", "message": "Remote: Storage quota: 10.49 MB out of 1.00 GB used.", "time": 1543489282.1030364, "type": "log_message", "name": "borg.repository"}

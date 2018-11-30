@@ -14,3 +14,4 @@ vorta.egg-info
 .python-version
 .vagrant
 *.log
+htmlcov

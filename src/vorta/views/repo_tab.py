@@ -82,6 +82,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             ssh_add_window.show()
             if ssh_add_window.exec_():
                 self.init_ssh()
+            else:
+                self.sshComboBox.setCurrentIndex(0)
         else:
             profile = self.profile()
             profile.ssh_key = self.sshComboBox.itemData(index)
@@ -129,6 +131,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             window.show()
             if window.exec_():
                 self.process_new_repo(window.result)
+            else:
+                self.repoSelector.setCurrentIndex(0)
+
         else:
             profile = self.profile()
             profile.repo = self.repoSelector.currentData()

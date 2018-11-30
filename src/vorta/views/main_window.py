@@ -83,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             window = AddProfileWindow()
             window.setParent(self, QtCore.Qt.Sheet)
             window.show()
-            if window.exec_():
+            if window.exec_() and window.edited_profile:
                 self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
                 self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
             else:

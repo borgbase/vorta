@@ -4,7 +4,6 @@ import sys
 import shutil
 import signal
 import select
-import fcntl
 import time
 import logging
 from PyQt5 import QtCore
@@ -145,26 +144,20 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                   env=self.env, cwd=self.cwd, preexec_fn=os.setsid)
         self.process = p
 
-        # Prevent blocking. via https://stackoverflow.com/a/7730201/3983708
+        # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
+        os.set_blocking(p.stdout.fileno(), False)
+        os.set_blocking(p.stderr.fileno(), False)
 
-        # Helper function to add the O_NONBLOCK flag to a file descriptor
-        def make_async(fd):
-            fcntl.fcntl(fd, fcntl.F_SETFL, fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK)
-
-        # Helper function to read some data from a file descriptor, ignoring EAGAIN errors
         def read_async(fd):
             try:
                 return fd.read()
             except (IOError, TypeError):
                 return ''
 
-        make_async(p.stdout)
-        make_async(p.stderr)
-
         stdout = []
         while True:
             # Wait for new output
-            select.select([p.stdout, p.stderr], [], [])
+            select.select([p.stdout, p.stderr], [], [], 0.1)
 
             stdout.append(read_async(p.stdout))
             stderr = read_async(p.stderr)
@@ -184,6 +177,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                         logger.warning(msg)
 
             if p.poll() is not None:
+                time.sleep(0.1)
                 stdout.append(read_async(p.stdout))
                 break
 
@@ -202,10 +196,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.save()
-
-        # Ensure async reading of mock stdout/stderr is finished.
-        if hasattr(sys, '_called_from_test'):
-            time.sleep(1)
 
         self.process_result(result)
         self.finished_event(result)
