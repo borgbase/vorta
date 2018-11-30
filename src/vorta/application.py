@@ -50,7 +50,7 @@ class VortaApp(QApplication):
         # Prepare tray and main window
         self.tray = TrayMenu(self)
         self.main_window = MainWindow(self)
-        self.main_window.show()
+        # self.main_window.show()
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)

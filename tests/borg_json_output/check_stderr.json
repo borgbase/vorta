@@ -1,0 +1,6 @@
+{"name": "borg.repository", "message": "Remote: Starting repository check", "type": "log_message", "levelname": "INFO", "time": 1543501427.3991857}
+{"name": "borg.repository", "message": "Remote: Starting repository index check", "type": "log_message", "levelname": "INFO", "time": 1543501428.2007568}
+{"name": "borg.repository", "message": "Remote: Completed repository check, no problems found.", "type": "log_message", "levelname": "INFO", "time": 1543501428.201012}
+{"type": "log_message", "time": 1543501427.141906, "message": "Starting archive consistency check...", "levelname": "INFO", "name": "borg.archive"}
+{"type": "log_message", "time": 1543501429.413376, "message": "Analyzing archive nyx2.local-1-2018-11-26T15:33:25 (1/1)", "levelname": "INFO", "name": "borg.archive"}
+{"type": "log_message", "time": 1543501430.631774, "message": "Archive consistency check complete, no problems found.", "levelname": "INFO", "name": "borg.archive"}

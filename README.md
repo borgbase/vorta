@@ -7,17 +7,12 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 
 ## Main features
 
-- Encrypted, deduplicated and compressed backups.
+- Encrypted, deduplicated and compressed backups using `borg` as battle-tested backend.
 - Works with any local or remote Borg repo. Try [BorgBase](https://www.borgbase.com) for advanced features like append-only repositories and monitoring.
-- Add SSH keys and initialize repos directly from the GUI.
-- Repo keys are securely stored in macOS Keychain, SecretService or KWallet.
-- Mount existing archives via FUSE.
+- Repo keys are securely stored in macOS Keychain, SecretService or KWallet. Create SSH keys directly from the GUI.
 - Manage multiple backup profiles with different source folders, destinations and settings.
-- Prune and check backups periodically.
 - Flexible scheduling for automatic background backups. Only allow on certain Wifis.
-- View a list of archives and action logs.
-- Exclude options/patterns.
-- Automatic updates using Sparkle (on macOS)
+- Restore files from mounts or using the built-in backup browser.
 
 ## Installation and Download
 Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.

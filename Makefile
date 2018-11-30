@@ -14,7 +14,7 @@ github-release: Vorta.dmg
 	hub release create --prerelease --attach=dist/vorta-0.5.0.dmg v0.5.0
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
-	git push origin gh-pages
+	git push upstream gh-pages
 	git checkout master
 
 pypi-release:

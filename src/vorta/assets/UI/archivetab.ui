@@ -257,7 +257,7 @@
         <string>Extract</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons/collection.qrc">
+        <iconset>
          <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
        </property>
       </widget>
@@ -274,7 +274,7 @@
         <string>Mount</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons/collection.qrc">
+        <iconset>
          <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
        </property>
       </widget>
@@ -285,7 +285,7 @@
         <string>Check</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons/collection.qrc">
+        <iconset>
          <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
        </property>
       </widget>
@@ -309,7 +309,7 @@
         <string>Prune</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons/collection.qrc">
+        <iconset>
          <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
        </property>
       </widget>
@@ -329,7 +329,7 @@
         <string>Refresh</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons/collection.qrc">
+        <iconset>
          <normaloff>:/icons/refresh.svg</normaloff>:/icons/refresh.svg</iconset>
        </property>
       </widget>
