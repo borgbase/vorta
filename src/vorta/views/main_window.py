@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import QShortcut
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QKeySequence
@@ -55,6 +56,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+
+        # OS-specific startup options:
+        if sys.platform != 'darwin':
+            # Hide Wifi-rule section in schedule tab.
+            self.scheduleTab.wifiListLabel.hide()
+            self.scheduleTab.wifiListWidget.hide()
+            self.scheduleTab.page_2.hide()
+            self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
         if BorgThread.is_running():
