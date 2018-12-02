@@ -34,7 +34,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
     def validate(self):
         name = self.profileNameField.text()
-        # Name as entered?
+        # A name was entered?
         if len(name) == 0:
             self._set_status('Please enter a profile name.')
             return False

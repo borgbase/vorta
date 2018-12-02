@@ -2,6 +2,8 @@ import os
 import sys
 import plistlib
 import argparse
+import unicodedata
+import re
 
 from collections import defaultdict
 from functools import reduce
@@ -15,7 +17,6 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtCore
 import subprocess
 import keyring
-from .models import WifiSettingModel
 
 
 class VortaKeyring(keyring.backend.KeyringBackend):
@@ -142,6 +143,7 @@ def get_sorted_wifis(profile):
     """Get SSIDs from OS and merge with settings in DB."""
 
     if sys.platform == 'darwin':
+        from vorta.models import WifiSettingModel
         plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
         plist_file = open(plist_path, 'rb')
         wifis = plistlib.load(plist_file)['KnownNetworks']
@@ -194,3 +196,16 @@ def parse_args():
                         action='store_true',
                         help="Don't fork into background and open main window on startup.")
     return parser.parse_args()
+
+
+def slugify(value):
+    """
+    Converts to lowercase, removes non-word characters (alphanumerics and
+    underscores) and converts spaces to hyphens. Also strips leading and
+    trailing whitespace.
+
+    Copied from Django.
+    """
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
+    return re.sub(r'[-\s]+', '-', value)

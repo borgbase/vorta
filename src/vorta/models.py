@@ -4,10 +4,11 @@ This module provides the app's data store using Peewee with SQLite.
 At the bottom there is a simple schema migration system.
 """
 
-import peewee as pw
 import json
+import peewee as pw
 from datetime import datetime, timedelta
 from playhouse.migrate import SqliteMigrator, migrate
+from vorta.utils import slugify
 
 SCHEMA_VERSION = 8
 
@@ -81,6 +82,9 @@ class BackupProfileModel(pw.Model):
 
     def refresh(self):
         return type(self).get(self._pk_expr())
+
+    def slug(self):
+        return slugify(self.name)
 
     class Meta:
         database = db
