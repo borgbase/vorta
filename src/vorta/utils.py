@@ -1,6 +1,7 @@
 import os
 import sys
 import plistlib
+import argparse
 
 from collections import defaultdict
 from functools import reduce
@@ -185,3 +186,11 @@ def get_current_wifi():
             split_line = line.strip().split(':')
             if split_line[0] == 'SSID':
                 return split_line[1].strip()
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Vorta Backup GUI for Borg.')
+    parser.add_argument('--foreground', '-f',
+                        action='store_true',
+                        help="Don't fork into background and open main window on startup.")
+    return parser.parse_args()
