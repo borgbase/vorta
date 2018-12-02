@@ -142,8 +142,9 @@ def get_asset(path):
 def get_sorted_wifis(profile):
     """Get SSIDs from OS and merge with settings in DB."""
 
+    from vorta.models import WifiSettingModel
+
     if sys.platform == 'darwin':
-        from vorta.models import WifiSettingModel
         plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
         plist_file = open(plist_path, 'rb')
         wifis = plistlib.load(plist_file)['KnownNetworks']

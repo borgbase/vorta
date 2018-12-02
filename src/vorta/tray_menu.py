@@ -3,12 +3,15 @@ from PyQt5.QtGui import QIcon
 
 from .utils import get_asset
 from .borg.borg_thread import BorgThread
-from .models import BackupProfileModel
+from .models import BackupProfileModel, SettingsModel
 
 
 class TrayMenu(QSystemTrayIcon):
     def __init__(self, parent=None):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
+        if SettingsModel.get(key='use_light_icon').value:
+            icon = QIcon(get_asset('icons/hdd-o-light.png'))
+        else:
+            icon = QIcon(get_asset('icons/hdd-o.png'))
         QSystemTrayIcon.__init__(self, icon, parent)
         self.app = parent
         menu = QMenu()

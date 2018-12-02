@@ -132,7 +132,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>4</number>
        </property>
        <property name="documentMode">
         <bool>false</bool>
@@ -164,6 +164,11 @@
        <widget class="QWidget" name="archiveTabSlot">
         <attribute name="title">
          <string>Archives</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="settingsTabSlot">
+        <attribute name="title">
+         <string>Settings</string>
         </attribute>
        </widget>
       </widget>

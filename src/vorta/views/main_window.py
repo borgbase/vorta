@@ -7,6 +7,7 @@ from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .archive_tab import ArchiveTab
 from .schedule_tab import ScheduleTab
+from .settings_tab import SettingsTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
 from ..models import BackupProfileModel
@@ -31,6 +32,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
+        self.settingsTabSlot = SettingsTab(self.settingsTabSlot)
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)

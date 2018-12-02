@@ -8,7 +8,7 @@ from PyQt5.QtGui import QIcon
 
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
-from .models import BackupProfileModel
+from .models import BackupProfileModel, SettingsModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
 from .utils import get_asset, parse_args
@@ -76,7 +76,11 @@ class VortaApp(QApplication):
         self.main_window.raise_()
 
     def backup_started_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o-active.png'))
+        if SettingsModel.get(key='use_light_icon').value:
+            icon = QIcon(get_asset('icons/hdd-o-active-light.png'))
+        else:
+            icon = QIcon(get_asset('icons/hdd-o-active.png'))
+
         self.tray.setIcon(icon)
 
     def backup_finished_event_response(self):
