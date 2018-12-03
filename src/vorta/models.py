@@ -191,22 +191,22 @@ def init_db(con):
     # Default settings
     settings = [
         {'key': 'use_light_icon', 'value': False, 'type': 'checkbox',
-         'label': 'Use light system tray icon (Applies after restart, useful for dark themes.)'}
+         'label': 'Use light system tray icon (applies after restart, useful for dark themes).'}
     ]
     if sys.platform == 'darwin':
         settings += [
             {'key': 'autostart', 'value': False, 'type': 'checkbox',
-             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items'},
+             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
             {'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
-             'label': 'Display notification when background tasks fail.'},
+             'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
              'label': 'Check for updates on startup.'},
         ]
 
-    for setting in settings:
+    for setting in settings:  # Create missing settings and update labels.
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        if created:
-            s.save()
+        s.label = setting['label']
+        s.save()
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)

@@ -4,11 +4,11 @@ from vorta.utils import get_asset
 from vorta.models import SettingsModel
 from vorta._version import __version__
 
-uifile = get_asset('UI/settingstab.ui')
-SettingsTabUI, SettingsTabBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+uifile = get_asset('UI/misctab.ui')
+MiscTabUI, MiscTabBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
 
 
-class SettingsTab(SettingsTabBase, SettingsTabUI):
+class MiscTab(MiscTabBase, MiscTabUI):
 
     def __init__(self, parent=None):
         super().__init__(parent)

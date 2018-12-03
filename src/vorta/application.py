@@ -4,14 +4,13 @@ import fcntl
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QIcon
 
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
-from .models import BackupProfileModel, SettingsModel
+from .models import BackupProfileModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
-from .utils import get_asset, parse_args
+from .utils import parse_args, set_tray_icon
 from vorta.config import SETTINGS_DIR
 
 
@@ -76,18 +75,11 @@ class VortaApp(QApplication):
         self.main_window.raise_()
 
     def backup_started_event_response(self):
-        if SettingsModel.get(key='use_light_icon').value:
-            icon = QIcon(get_asset('icons/hdd-o-active-light.png'))
-        else:
-            icon = QIcon(get_asset('icons/hdd-o-active.png'))
-
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray, active=True)
 
     def backup_finished_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray)
         self.main_window.scheduleTab._draw_next_scheduled_backup()
 
     def backup_cancelled_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray)
