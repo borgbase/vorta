@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import QShortcut
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QKeySequence
@@ -6,6 +7,7 @@ from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .archive_tab import ArchiveTab
 from .schedule_tab import ScheduleTab
+from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
 from ..models import BackupProfileModel
@@ -30,6 +32,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
+        self.miscTabSlot = MiscTab(self.miscTabSlot)
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
@@ -55,6 +58,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+
+        # OS-specific startup options:
+        if sys.platform != 'darwin':
+            # Hide Wifi-rule section in schedule tab.
+            self.scheduleTab.wifiListLabel.hide()
+            self.scheduleTab.wifiListWidget.hide()
+            self.scheduleTab.page_2.hide()
+            self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
         if BorgThread.is_running():

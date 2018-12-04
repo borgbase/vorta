@@ -28,10 +28,11 @@ def app(tmpdir, qtbot):
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive.save()
 
-    source_dir = SourceDirModel(dir='/tmp', repo=new_repo)
+    source_dir = SourceDirModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
     app = VortaApp([])
+    app.main_window.show()
     qtbot.addWidget(app.main_window)
     return app
 
@@ -39,7 +40,7 @@ def app(tmpdir, qtbot):
 @pytest.fixture
 def choose_folder_dialog(*args):
     class MockFileDialog:
-        def __init__(self, *args):
+        def __init__(self, *args, **kwargs):
             pass
 
         def open(self, func):

@@ -1,6 +1,9 @@
 import os
 import sys
 import plistlib
+import argparse
+import unicodedata
+import re
 
 from collections import defaultdict
 from functools import reduce
@@ -11,10 +14,10 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko import SSHException
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import subprocess
 import keyring
-from .models import WifiSettingModel
 
 
 class VortaKeyring(keyring.backend.KeyringBackend):
@@ -140,6 +143,8 @@ def get_asset(path):
 def get_sorted_wifis(profile):
     """Get SSIDs from OS and merge with settings in DB."""
 
+    from vorta.models import WifiSettingModel
+
     if sys.platform == 'darwin':
         plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
         plist_file = open(plist_path, 'rb')
@@ -185,3 +190,32 @@ def get_current_wifi():
             split_line = line.strip().split(':')
             if split_line[0] == 'SSID':
                 return split_line[1].strip()
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Vorta Backup GUI for Borg.')
+    parser.add_argument('--foreground', '-f',
+                        action='store_true',
+                        help="Don't fork into background and open main window on startup.")
+    return parser.parse_args()
+
+
+def slugify(value):
+    """
+    Converts to lowercase, removes non-word characters (alphanumerics and
+    underscores) and converts spaces to hyphens. Also strips leading and
+    trailing whitespace.
+
+    Copied from Django.
+    """
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
+    return re.sub(r'[-\s]+', '-', value)
+
+
+def set_tray_icon(tray, active=False):
+    from vorta.models import SettingsModel
+    use_light_style = SettingsModel.get(key='use_light_icon').value
+    icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
+    icon = QIcon(get_asset(icon_name))
+    tray.setIcon(icon)

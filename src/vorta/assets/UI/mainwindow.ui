@@ -54,7 +54,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="topMargin">
-        <number>5</number>
+        <number>12</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
@@ -92,7 +92,7 @@
        <item>
         <widget class="QToolButton" name="profileRenameButton">
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
          </property>
          <property name="iconSize">
@@ -109,7 +109,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
          </property>
         </widget>
@@ -132,7 +132,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>4</number>
        </property>
        <property name="documentMode">
         <bool>false</bool>
@@ -166,6 +166,11 @@
          <string>Archives</string>
         </attribute>
        </widget>
+       <widget class="QWidget" name="miscTabSlot">
+        <attribute name="title">
+         <string>Misc</string>
+        </attribute>
+       </widget>
       </widget>
      </item>
      <item>
@@ -181,7 +186,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>45</height>
+           <height>55</height>
           </size>
          </property>
          <property name="font">

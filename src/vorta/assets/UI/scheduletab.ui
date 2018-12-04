@@ -29,7 +29,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -353,7 +353,7 @@ font-weight: bold;
         <widget class="QListWidget" name="wifiListWidget"/>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="wifiListLabel">
          <property name="text">
           <string>Allowed Networks:</string>
          </property>

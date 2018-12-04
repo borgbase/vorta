@@ -45,7 +45,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         item = "directory" if want_folder else "file"
         dialog = choose_folder_dialog(self, "Choose %s to back up" % item, want_folder=want_folder)
-        self._file_dialog = dialog  # for pytest
         dialog.open(receive)
 
     def source_remove(self):

@@ -1,16 +1,15 @@
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
-from PyQt5.QtGui import QIcon
 
-from .utils import get_asset
 from .borg.borg_thread import BorgThread
 from .models import BackupProfileModel
+from .utils import set_tray_icon
 
 
 class TrayMenu(QSystemTrayIcon):
     def __init__(self, parent=None):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
-        QSystemTrayIcon.__init__(self, icon, parent)
+        QSystemTrayIcon.__init__(self, parent)
         self.app = parent
+        set_tray_icon(self)
         menu = QMenu()
 
         # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708

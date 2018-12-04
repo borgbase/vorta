@@ -32,7 +32,7 @@ class BorgPruneThread(BorgThread):
             '--keep-weekly', str(profile.prune_week),
             '--keep-monthly', str(profile.prune_month),
             '--keep-yearly', str(profile.prune_year),
-            '--prefix', f'{platform.node()}-'
+            '--prefix', f'{platform.node()}-{profile.slug()}'
         ]
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
