@@ -98,7 +98,7 @@ def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose
     )
 
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), timeout=1000)
+    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), timeout=5000)
 
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
     # qtbot.waitUntil(lambda: tab.mountErrors.text() == 'No active Borg mounts found.')
@@ -127,7 +127,7 @@ def test_archive_extract(app, qtbot, mocker, borg_json_output, monkeypatch):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: hasattr(tab, '_window'))
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=5000)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()

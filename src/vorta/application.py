@@ -4,14 +4,13 @@ import fcntl
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QIcon
 
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
 from .models import BackupProfileModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
-from .utils import get_asset
+from .utils import parse_args, set_tray_icon
 from vorta.config import SETTINGS_DIR
 
 
@@ -28,7 +27,7 @@ class VortaApp(QApplication):
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
 
-    def __init__(self, args, single_app=False):
+    def __init__(self, args_raw, single_app=False):
 
         # Ensure only one app instance is running.
         # From https://stackoverflow.com/questions/220525/
@@ -43,14 +42,17 @@ class VortaApp(QApplication):
                 print('An instance of Vorta is already running.')
                 sys.exit(1)
 
-        super().__init__(args)
+        super().__init__(args_raw)
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
 
         # Prepare tray and main window
         self.tray = TrayMenu(self)
         self.main_window = MainWindow(self)
-        # self.main_window.show()
+
+        args = parse_args()
+        if args.foreground:
+            self.main_window.show()
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
@@ -73,14 +75,11 @@ class VortaApp(QApplication):
         self.main_window.raise_()
 
     def backup_started_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o-active.png'))
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray, active=True)
 
     def backup_finished_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray)
         self.main_window.scheduleTab._draw_next_scheduled_backup()
 
     def backup_cancelled_event_response(self):
-        icon = QIcon(get_asset('icons/hdd-o.png'))
-        self.tray.setIcon(icon)
+        set_tray_icon(self.tray)

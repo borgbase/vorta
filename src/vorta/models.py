@@ -4,10 +4,12 @@ This module provides the app's data store using Peewee with SQLite.
 At the bottom there is a simple schema migration system.
 """
 
-import peewee as pw
+import sys
 import json
+import peewee as pw
 from datetime import datetime, timedelta
 from playhouse.migrate import SqliteMigrator, migrate
+from vorta.utils import slugify
 
 SCHEMA_VERSION = 8
 
@@ -82,6 +84,9 @@ class BackupProfileModel(pw.Model):
     def refresh(self):
         return type(self).get(self._pk_expr())
 
+    def slug(self):
+        return slugify(self.name)
+
     class Meta:
         database = db
 
@@ -148,16 +153,21 @@ class SchemaVersion(pw.Model):
         database = db
 
 
+class SettingsModel(pw.Model):
+    """App settings unrelated to a single profile or repo"""
+    key = pw.CharField(unique=True)
+    value = pw.BooleanField()
+    label = pw.CharField()
+    type = pw.CharField()
+
+    class Meta:
+        database = db
+
+
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
-        # app = QApplication.instance()
-        # main_window = hasattr(app, 'main_window')
-        # if main_window:
-        #     return app.main_window.current_profile
-        # else:
-        #     return BackupProfileModel.select().first()
 
 
 def _apply_schema_update(current_schema, version_after, *operations):
@@ -171,12 +181,32 @@ def _apply_schema_update(current_schema, version_after, *operations):
 def init_db(con):
     db.initialize(con)
     db.connect()
-    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceDirModel,
+    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceDirModel, SettingsModel,
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
     if BackupProfileModel.select().count() == 0:
         default_profile = BackupProfileModel(name='Default Profile')
         default_profile.save()
+
+    # Default settings
+    settings = [
+        {'key': 'use_light_icon', 'value': False, 'type': 'checkbox',
+         'label': 'Use light system tray icon (applies after restart, useful for dark themes).'}
+    ]
+    if sys.platform == 'darwin':
+        settings += [
+            {'key': 'autostart', 'value': False, 'type': 'checkbox',
+             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
+            {'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
+             'label': 'Display notifications when background tasks fail.'},
+            {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
+             'label': 'Check for updates on startup.'},
+        ]
+
+    for setting in settings:  # Create missing settings and update labels.
+        s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
+        s.label = setting['label']
+        s.save()
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)

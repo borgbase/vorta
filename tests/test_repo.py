@@ -1,6 +1,7 @@
 import os
+import uuid
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
 import vorta.borg.borg_thread
 import vorta.models
@@ -9,10 +10,12 @@ from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
-def test_repo_add(app, qtbot, mocker, borg_json_output):
+def test_repo_add_failures(app, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = app.main_window
-    add_repo_window = AddRepoWindow(main.repoTab)
+    add_repo_window = AddRepoWindow(main)
+    qtbot.addWidget(add_repo_window)
+
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid')
@@ -21,6 +24,15 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
     assert add_repo_window.errorText.text() == 'Please use a longer password.'
 
+
+def test_repo_add_success(app, qtbot, mocker, borg_json_output):
+    # Add new repo window
+    main = app.main_window
+    add_repo_window = AddRepoWindow(main)
+    qtbot.addWidget(add_repo_window)
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+
+    qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, 'long-password-long')
 
     stdout, stderr = borg_json_output('info')
@@ -34,8 +46,9 @@ def test_repo_add(app, qtbot, mocker, borg_json_output):
 
     main.repoTab.process_new_repo(blocker.args[0])
 
-    # assert EventLogModel.select().count() == 2
-    assert RepoModel.get(id=2).url == 'aaabbb.com:repo'
+    qtbot.waitUntil(lambda: EventLogModel.select().count() == 2)
+    assert EventLogModel.select().count() == 2
+    assert RepoModel.get(id=2).url == test_repo_url
 
 
 def test_repo_unlink(app, qtbot, monkeypatch):
@@ -69,9 +82,6 @@ def test_ssh_dialog(qtbot, tmpdir):
     assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
     assert pub_tmpfile_content.startswith('ssh-ed25519')
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'))
-
-    clipboard = QApplication.clipboard()
-    assert clipboard.text().startswith('ssh-ed25519')
 
     qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))

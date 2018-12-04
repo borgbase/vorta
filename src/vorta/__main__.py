@@ -8,9 +8,22 @@ from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
 import vorta.sentry
 import vorta.log
+from vorta.utils import parse_args
 
 
 def main():
+    args = parse_args()
+
+    frozen_binary = getattr(sys, 'frozen', False)
+
+    # Don't fork if user specifies it or when running from onedir app bundle on macOS.
+    if args.foreground or (frozen_binary and sys.platform == 'darwin'):
+        pass
+    else:
+        print('Forking to background (see system tray).')
+        if os.fork():
+            sys.exit()
+
     # Send crashes to Sentry.
     if not os.environ.get('NO_SENTRY', False):
         vorta.sentry.init()
@@ -21,6 +34,7 @@ def main():
 
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
+
     sys.exit(app.exec_())
 
 
