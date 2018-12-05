@@ -1,6 +1,6 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
-from vorta.utils import get_asset
+from vorta.utils import get_asset, open_app_at_startup
 from vorta.models import SettingsModel
 from vorta._version import __version__
 
@@ -26,3 +26,6 @@ class MiscTab(MiscTabBase, MiscTabUI):
         setting = SettingsModel.get(key=key)
         setting.value = bool(new_value)
         setting.save()
+
+        if key == 'autostart':
+            open_app_at_startup(new_value)

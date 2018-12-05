@@ -56,56 +56,13 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.selected = selected_files_folders
 
 
-class FileItem:
-    def __init__(self, name, modified, size, parent=None):
-        self.parentItem = parent
-        self.itemData = [name, modified, size]  # dt.strptime(modified, ISO_FORMAT)
-        self.checkedState = False
-
-    def childCount(self):
-        return 0
-
-    def columnCount(self):
-        return 3
-
-    def data(self, column):
-        if column == 1:
-            return self.itemData[column]  # .strftime('%Y-%m-%dT%H:%M')
-        elif column == 2:
-            return pretty_bytes(self.itemData[column])
-        elif column == 0:
-            return self.itemData[column]
-
-    def parent(self):
-        return self.parentItem
-
-    def row(self):
-        return self.parentItem.childItems.index(self)
-
-    def setCheckedState(self, value):
-        if value == 2:
-            self.checkedState = True
-            selected_files_folders.add(
-                os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
-        else:
-            self.checkedState = False
-            selected_files_folders.remove(
-                os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
-
-    def getCheckedState(self):
-        if self.checkedState:
-            return Qt.Checked
-        else:
-            return Qt.Unchecked
-
-
-class FolderItem(FileItem):
+class FolderItem:
     def __init__(self, path, name, modified, parent=None):
         self.parentItem = parent
         self.path = path
         self.itemData = [name, modified]
-        self.checkedState = False
         self.childItems = []
+        self.checkedState = False
 
         # Pre-filter children
         self._filtered_children = []
@@ -114,6 +71,8 @@ class FolderItem(FileItem):
             for root_folder in nested_file_list.keys():
                 self._filtered_children.append((0, '', root_folder, '', ))
         else:
+            self.checkedState = parent.checkedState  # If there is a parent, use its checked-status.
+
             # This adds direct children.
             self._filtered_children = [f for f in files_with_attributes if search_path == f[3]]
 
@@ -142,6 +101,27 @@ class FolderItem(FileItem):
 
         self.is_loaded = True
 
+    def setCheckedState(self, value):
+        if value == 2:
+            self.checkedState = True
+            selected_files_folders.add(
+                os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
+        else:
+            self.checkedState = False
+            path_to_remove = os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0])
+            if path_to_remove in selected_files_folders:
+                selected_files_folders.remove(path_to_remove)
+
+        if hasattr(self, 'childItems'):
+            for child in self.childItems:
+                child.setCheckedState(value)
+
+    def getCheckedState(self):
+        if self.checkedState:
+            return Qt.Checked
+        else:
+            return Qt.Unchecked
+
     def child(self, row):
         return self.childItems[row]
 
@@ -165,6 +145,33 @@ class FolderItem(FileItem):
             return self.parentItem.childItems.index(self)
 
         return 0
+
+
+class FileItem(FolderItem):
+    def __init__(self, name, modified, size, parent=None):
+        self.parentItem = parent
+        self.itemData = [name, modified, size]  # dt.strptime(modified, ISO_FORMAT)
+        self.checkedState = parent.checkedState
+
+    def childCount(self):
+        return 0
+
+    def columnCount(self):
+        return 3
+
+    def data(self, column):
+        if column == 1:
+            return self.itemData[column]  # .strftime('%Y-%m-%dT%H:%M')
+        elif column == 2:
+            return pretty_bytes(self.itemData[column])
+        elif column == 0:
+            return self.itemData[column]
+
+    def parent(self):
+        return self.parentItem
+
+    def row(self):
+        return self.parentItem.childItems.index(self)
 
 
 class TreeModel(QAbstractItemModel):
@@ -196,6 +203,7 @@ class TreeModel(QAbstractItemModel):
         if role == Qt.CheckStateRole:
             item = index.internalPointer()
             item.setCheckedState(value)
+            self.dataChanged.emit(QModelIndex(), QModelIndex(), [])
 
         return True
 

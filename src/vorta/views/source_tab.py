@@ -1,6 +1,6 @@
 from PyQt5 import uic
-from ..models import SourceDirModel, BackupProfileMixin
-from ..utils import get_asset, choose_folder_dialog
+from ..models import SourceFileModel, BackupProfileMixin
+from ..utils import get_asset, choose_file_dialog
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -22,12 +22,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         profile = self.profile()
         self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
-        self.sourceDirectoriesWidget.clear()
+        self.sourceFilesWidget.clear()
         self.excludePatternsField.clear()
         self.excludeIfPresentField.clear()
 
-        for source in SourceDirModel.select().where(SourceDirModel.profile == profile):
-            self.sourceDirectoriesWidget.addItem(source.dir)
+        for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
+            self.sourceFilesWidget.addItem(source.dir)
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
@@ -38,18 +38,18 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         def receive():
             dir = dialog.selectedFiles()
             if dir:
-                new_source, created = SourceDirModel.get_or_create(dir=dir[0], profile=self.profile())
+                new_source, created = SourceFileModel.get_or_create(dir=dir[0], profile=self.profile())
                 if created:
-                    self.sourceDirectoriesWidget.addItem(dir[0])
+                    self.sourceFilesWidget.addItem(dir[0])
                     new_source.save()
 
         item = "directory" if want_folder else "file"
-        dialog = choose_folder_dialog(self, "Choose %s to back up" % item, want_folder=want_folder)
+        dialog = choose_file_dialog(self, "Choose %s to back up" % item, want_folder=want_folder)
         dialog.open(receive)
 
     def source_remove(self):
-        item = self.sourceDirectoriesWidget.takeItem(self.sourceDirectoriesWidget.currentRow())
-        db_item = SourceDirModel.get(dir=item.text())
+        item = self.sourceFilesWidget.takeItem(self.sourceFilesWidget.currentRow())
+        db_item = SourceFileModel.get(dir=item.text())
         db_item.delete_instance()
         item = None
 

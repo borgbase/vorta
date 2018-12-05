@@ -5,7 +5,7 @@ from dateutil import parser
 from datetime import datetime as dt
 
 from ..utils import get_current_wifi
-from ..models import SourceDirModel, ArchiveModel, WifiSettingModel, RepoModel
+from ..models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
 
@@ -56,7 +56,7 @@ class BorgCreateThread(BorgThread):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        n_backup_folders = SourceDirModel.select().count()
+        n_backup_folders = SourceFileModel.select().count()
         if n_backup_folders == 0:
             ret['message'] = 'Add some folders to back up first.'
             return ret
@@ -105,7 +105,7 @@ class BorgCreateThread(BorgThread):
         # Add repo url and source dirs.
         cmd.append(f"{profile.repo.url}::{platform.node()}-{profile.slug()}-{dt.now().isoformat(timespec='seconds')}")
 
-        for f in SourceDirModel.select().where(SourceDirModel.profile == profile.id):
+        for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
 
         ret['message'] = 'Starting backup..'
