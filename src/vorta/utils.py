@@ -79,7 +79,7 @@ def get_dict_from_list(dataDict, mapList):
     return reduce(operator.getitem, mapList, dataDict)
 
 
-def choose_folder_dialog(parent, title, want_folder=True):
+def choose_file_dialog(parent, title, want_folder=True):
     options = QFileDialog.Options()
     if want_folder:
         options |= QFileDialog.ShowDirsOnly

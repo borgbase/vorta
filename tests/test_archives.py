@@ -74,7 +74,7 @@ def test_check(app, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: main.createProgressText.text().startswith(success_text), timeout=3000)
 
 
-def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose_folder_dialog):
+def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', '/tmp')]
@@ -94,7 +94,7 @@ def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     monkeypatch.setattr(
-        vorta.views.archive_tab, "choose_folder_dialog", choose_folder_dialog
+        vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
     )
 
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)

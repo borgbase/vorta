@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from ..utils import get_private_keys, get_asset, choose_folder_dialog
+from ..utils import get_private_keys, get_asset, choose_file_dialog
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 
@@ -41,7 +41,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 self.sshComboBox.setEnabled(False)
                 self.repoLabel.setText('Repository Path:')
 
-        dialog = choose_folder_dialog(self, "Choose Location of Borg Repository")
+        dialog = choose_file_dialog(self, "Choose Location of Borg Repository")
         dialog.open(receive)
 
     def use_remote_repo_action(self):
