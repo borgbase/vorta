@@ -6,12 +6,12 @@ Vorta.app:
 	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
 
 Vorta.dmg: Vorta.app
-	# sleep 2; cd dist; zip -9rq vorta-0.5.2.zip Vorta.app
-	rm -rf dist/vorta-0.5.2.dmg
-	sleep 2; appdmg appdmg.json dist/vorta-0.5.2.dmg
+	# sleep 2; cd dist; zip -9rq vorta-0.5.3.zip Vorta.app
+	rm -rf dist/vorta-0.5.3.dmg
+	sleep 2; appdmg appdmg.json dist/vorta-0.5.3.dmg
 
 github-release: Vorta.dmg
-	hub release create --prerelease --attach=dist/vorta-0.5.2.dmg v0.5.2
+	hub release create --prerelease --attach=dist/vorta-0.5.3.dmg v0.5.3
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
 	git push upstream gh-pages
@@ -19,7 +19,7 @@ github-release: Vorta.dmg
 
 pypi-release:
 	python setup.py sdist
-	twine upload dist/vorta-0.5.2.tar.gz
+	twine upload dist/vorta-0.5.3.tar.gz
 
 bump-version:
 	git log $$(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s"
