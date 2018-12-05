@@ -219,3 +219,23 @@ def set_tray_icon(tray, active=False):
     icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
     icon = QIcon(get_asset(icon_name))
     tray.setIcon(icon)
+
+
+def open_app_at_startup(enabled=True):
+    if sys.platform == 'darwin':
+        # From https://stackoverflow.com/questions/26213884/cocoa-add-app-to-startup-in-sandbox-using-pyobjc
+        from Foundation import NSDictionary
+        from Cocoa import NSBundle, NSURL
+        from CoreFoundation import kCFAllocatorDefault
+        from LaunchServices import (LSSharedFileListCreate, kLSSharedFileListSessionLoginItems,
+                                    LSSharedFileListInsertItemURL, kLSSharedFileListItemHidden,
+                                    kLSSharedFileListItemLast, LSSharedFileListItemRemove)
+        app_path = NSBundle.mainBundle().bundlePath()
+        url = NSURL.alloc().initFileURLWithPath_(app_path)
+        login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
+        props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
+
+        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast,
+                                                 None, None, url, props, None)
+        if not enabled:
+            LSSharedFileListItemRemove(login_items, new_item)
