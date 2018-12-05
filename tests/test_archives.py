@@ -71,7 +71,7 @@ def test_check(app, mocker, borg_json_output, qtbot):
 
     qtbot.mouseClick(tab.checkButton, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith(success_text))
+    qtbot.waitUntil(lambda: main.createProgressText.text().startswith(success_text), timeout=3000)
 
 
 def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose_folder_dialog):
