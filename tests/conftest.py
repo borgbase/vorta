@@ -5,7 +5,7 @@ from datetime import datetime as dt
 
 import vorta
 from vorta.application import VortaApp
-from vorta.models import RepoModel, SourceDirModel, ArchiveModel, BackupProfileModel
+from vorta.models import RepoModel, SourceFileModel, ArchiveModel, BackupProfileModel
 
 
 def pytest_configure(config):
@@ -28,7 +28,7 @@ def app(tmpdir, qtbot):
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive.save()
 
-    source_dir = SourceDirModel(dir='/tmp/another', repo=new_repo)
+    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
     app = VortaApp([])
@@ -38,7 +38,7 @@ def app(tmpdir, qtbot):
 
 
 @pytest.fixture
-def choose_folder_dialog(*args):
+def choose_file_dialog(*args):
     class MockFileDialog:
         def __init__(self, *args, **kwargs):
             pass

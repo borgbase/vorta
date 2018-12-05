@@ -39,12 +39,11 @@ class TrayMenu(QSystemTrayIcon):
                 profile_menu = menu.addMenu('Backup Now')
                 for profile in profiles:
                     new_item = profile_menu.addAction(profile.name)
-                    new_item.setData(profile.id)
-                    new_item.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
+                    new_item.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
             else:
                 profile = profiles.first()
                 profile_menu = menu.addAction('Backup Now')
-                profile_menu.triggered.connect(lambda profile_id=profile.id: self.app.create_backup_action(profile_id))
+                profile_menu.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
 
         settings_action = menu.addAction("Settings")
         settings_action.triggered.connect(self.app.open_main_window_action)

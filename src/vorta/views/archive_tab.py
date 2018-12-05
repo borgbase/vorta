@@ -11,7 +11,7 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.utils import get_asset, pretty_bytes, choose_folder_dialog
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -177,7 +177,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.result.connect(self.mount_result)
                     thread.start()
 
-        dialog = choose_folder_dialog(self, "Choose Mount Point")
+        dialog = choose_file_dialog(self, "Choose Mount Point")
         dialog.open(receive)
 
     def mount_result(self, result):
@@ -274,7 +274,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                         else:
                             self._set_status(params['message'])
 
-                dialog = choose_folder_dialog(self, "Choose Extraction Point")
+                dialog = choose_file_dialog(self, "Choose Extraction Point")
                 dialog.open(receive)
 
     def extract_archive_result(self, result):

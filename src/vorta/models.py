@@ -91,7 +91,7 @@ class BackupProfileModel(pw.Model):
         database = db
 
 
-class SourceDirModel(pw.Model):
+class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
@@ -99,6 +99,7 @@ class SourceDirModel(pw.Model):
 
     class Meta:
         database = db
+        table_name = 'sourcedirmodel'
 
 
 class ArchiveModel(pw.Model):
@@ -181,7 +182,7 @@ def _apply_schema_update(current_schema, version_after, *operations):
 def init_db(con):
     db.initialize(con)
     db.connect()
-    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceDirModel, SettingsModel,
+    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
     if BackupProfileModel.select().count() == 0:
@@ -201,6 +202,8 @@ def init_db(con):
              'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
              'label': 'Check for updates on startup.'},
+            {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
+             'label': 'Include pre-release versions when checking for updates.'},
         ]
 
     for setting in settings:  # Create missing settings and update labels.
@@ -242,7 +245,7 @@ def init_db(con):
     if current_schema.version < 7:
         _apply_schema_update(
             current_schema, 7,
-            migrator.rename_column(SourceDirModel._meta.table_name, 'config_id', 'profile_id'),
+            migrator.rename_column(SourceFileModel._meta.table_name, 'config_id', 'profile_id'),
             migrator.drop_column(EventLogModel._meta.table_name, 'profile_id'),
             migrator.add_column(EventLogModel._meta.table_name, 'profile', pw.CharField(null=True))
         )

@@ -58,6 +58,13 @@
     <widget class="QTreeView" name="treeView"/>
    </item>
    <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Note: If you select a top-level folder and deselect its children, they will still be restored.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="topMargin">
       <number>10</number>
