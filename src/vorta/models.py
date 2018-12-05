@@ -197,7 +197,7 @@ def init_db(con):
     if sys.platform == 'darwin':
         settings += [
             {'key': 'autostart', 'value': False, 'type': 'checkbox',
-             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
+             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items. (not implemented)'},
             {'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
              'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
