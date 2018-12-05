@@ -202,6 +202,8 @@ def init_db(con):
              'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
              'label': 'Check for updates on startup.'},
+            {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
+             'label': 'Include pre-release versions when checking for updates.'},
         ]
 
     for setting in settings:  # Create missing settings and update labels.
