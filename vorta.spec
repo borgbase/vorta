@@ -43,8 +43,8 @@ app = BUNDLE(exe,
              info_plist={
                      'NSHighResolutionCapable': 'True',
                      'LSUIElement': '1',
-                     'CFBundleShortVersionString': '0.5.3',
-                     'CFBundleVersion': '0.5.3',
+                     'CFBundleShortVersionString': '0.5.4',
+                     'CFBundleVersion': '0.5.4',
                      'NSAppleEventsUsageDescription': 'Please allow',
                      'SUFeedURL': 'https://borgbase.github.io/vorta/appcast-pre.xml'
                      },
