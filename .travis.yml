@@ -67,7 +67,7 @@ install:
 - pip install -U setuptools pip
 - pip install .
 - pip install borgbackup
-- pip install -r requirements-dev.txt
+- pip install -r requirements.d/dev.txt
 
 before_script:
 - if [ $TRAVIS_OS_NAME = "linux" ]; then (herbstluftwm )& fi
