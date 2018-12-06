@@ -1,0 +1,23 @@
+name: vorta
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.6.7
+  - appdirs
+  - paramiko
+  - pyqt
+  - peewee
+  - python-dateutil
+  - keyring
+  - apscheduler
+  - sentry-sdk
+  - psutil
+  - pyobjc-core
+  - pyobjc-framework-Cocoa
+  - pyinstaller
+  - pip:
+      - sentry-sdk
+
