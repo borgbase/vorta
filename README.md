@@ -51,7 +51,7 @@ $ vorta
 
 Install developer packages we use (pytest, tox, pyinstaller):
 ```
-pip install -r requirements-dev.txt
+pip install -r requirements.d/dev.txt
 ```
 
 Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/UI`:
