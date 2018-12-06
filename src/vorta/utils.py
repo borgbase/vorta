@@ -18,39 +18,23 @@ from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import subprocess
 import keyring
+from vorta.keyring_db import VortaDBKeyring
 
 
-class VortaKeyring(keyring.backend.KeyringBackend):
-    """Fallback keyring service."""
-    @classmethod
-    def priority(cls):
-        return 5
+"""
+Set the most appropriate Keyring backend for the current system.
 
-    def set_password(self, service, repo_url, password):
-        from .models import RepoPassword
-        keyring_entry, created = RepoPassword.get_or_create(
-            url=repo_url,
-            defaults={'password': password}
-        )
-        keyring_entry.password = password
-        keyring_entry.save()
+For macOS we use our own implementation due to conflicts between
+Keyring and the autostart code.
 
-    def get_password(self, service, repo_url):
-        from .models import RepoPassword
-        try:
-            keyring_entry = RepoPassword.get(url=repo_url)
-            return keyring_entry.password
-        except Exception:
-            return None
-
-    def delete_password(self, service, repo_url):
-        pass
-
-
-# Select keyring/Workaround for pyinstaller+keyring issue.
+For Linux not every system has SecretService available, so it will
+fall back to a simple database keystore if needed.
+"""
 if sys.platform == 'darwin':
-    from keyring.backends import OS_X
-    keyring.set_keyring(OS_X.Keyring())
+    # from keyring.backends import OS_X
+    # keyring.set_keyring(OS_X.Keyring())
+    from vorta.keyring_darwin import VortaDarwinKeyring
+    keyring.set_keyring(VortaDarwinKeyring())
 elif sys.platform == 'win32':
     from keyring.backends import Windows
     keyring.set_keyring(Windows.WinVaultKeyring())
@@ -60,9 +44,9 @@ elif sys.platform == 'linux':
         SecretService.Keyring.priority()  # Test if keyring works.
         keyring.set_keyring(SecretService.Keyring())
     except Exception:
-        keyring.set_keyring(VortaKeyring())
+        keyring.set_keyring(VortaDBKeyring())
 else:  # Fall back to saving password to database.
-    keyring.set_keyring(VortaKeyring())
+    keyring.set_keyring(VortaDBKeyring())
 
 
 def nested_dict():
@@ -222,22 +206,25 @@ def set_tray_icon(tray, active=False):
 
 
 def open_app_at_startup(enabled=True):
+    """
+    This function adds/removes the current app bundle from Login items in macOS
+    """
     if sys.platform == 'darwin':
-        print('Not implemented due to conflict with keyring package.')
-        # From https://stackoverflow.com/questions/26213884/cocoa-add-app-to-startup-in-sandbox-using-pyobjc
-        # from Foundation import NSDictionary
-        # from Cocoa import NSBundle, NSURL
-        # from CoreFoundation import kCFAllocatorDefault
-        # from LaunchServices import (LSSharedFileListCreate, kLSSharedFileListSessionLoginItems,
-        #                             LSSharedFileListInsertItemURL, kLSSharedFileListItemHidden,
-        #                             kLSSharedFileListItemLast, LSSharedFileListItemRemove)
-        #
-        # app_path = NSBundle.mainBundle().bundlePath()
-        # url = NSURL.alloc().initFileURLWithPath_(app_path)
-        # login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
-        # props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
-        #
-        # new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast,
-        #                                          None, None, url, props, None)
-        # if not enabled:
-        #     LSSharedFileListItemRemove(login_items, new_item)
+        from Foundation import NSDictionary
+
+        from Cocoa import NSBundle, NSURL
+        from CoreFoundation import kCFAllocatorDefault
+        # CF = CDLL(find_library('CoreFoundation'))
+        from LaunchServices import (LSSharedFileListCreate, kLSSharedFileListSessionLoginItems,
+                                    LSSharedFileListInsertItemURL, kLSSharedFileListItemHidden,
+                                    kLSSharedFileListItemLast, LSSharedFileListItemRemove)
+
+        app_path = NSBundle.mainBundle().bundlePath()
+        url = NSURL.alloc().initFileURLWithPath_(app_path)
+        login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
+        props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
+
+        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast,
+                                                 None, None, url, props, None)
+        if not enabled:
+            LSSharedFileListItemRemove(login_items, new_item)
