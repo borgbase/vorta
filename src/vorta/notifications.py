@@ -1,4 +1,5 @@
 import sys
+from vorta.models import SettingsModel
 
 
 class VortaNotifications:
@@ -20,15 +21,16 @@ class VortaNotifications:
 
 class DarwinNotifications(VortaNotifications):
     def deliver(self, title, text):
-        from Foundation import NSUserNotification
-        from Foundation import NSUserNotificationCenter
+        if SettingsModel.get(key='enable_notifications').value:
+            from Foundation import NSUserNotification
+            from Foundation import NSUserNotificationCenter
 
-        notification = NSUserNotification.alloc().init()
-        notification.setTitle_(title)
-        notification.setInformativeText_(text)
-        center = NSUserNotificationCenter.defaultUserNotificationCenter()
-        if center is not None:  # Only works when run from app bundle.
-            center.deliverNotification_(notification)
+            notification = NSUserNotification.alloc().init()
+            notification.setTitle_(title)
+            notification.setInformativeText_(text)
+            center = NSUserNotificationCenter.defaultUserNotificationCenter()
+            if center is not None:  # Only works when run from app bundle.
+                center.deliverNotification_(notification)
 
 
 class LinuxNotifications(VortaNotifications):
