@@ -46,7 +46,7 @@ app = BUNDLE(exe,
                      'CFBundleShortVersionString': '0.5.4',
                      'CFBundleVersion': '0.5.4',
                      'NSAppleEventsUsageDescription': 'Please allow',
-                     'SUFeedURL': 'https://borgbase.github.io/vorta/appcast-pre.xml'
+                     'SUFeedURL': 'https://borgbase.github.io/vorta/appcast.xml'
                      },
              )
 if False:
