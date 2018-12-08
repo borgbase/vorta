@@ -197,7 +197,7 @@ def init_db(con):
     if sys.platform == 'darwin':
         settings += [
             {'key': 'autostart', 'value': False, 'type': 'checkbox',
-             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items. (not implemented)'},
+             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
             {'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
              'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
@@ -206,7 +206,7 @@ def init_db(con):
              'label': 'Include pre-release versions when checking for updates.'},
         ]
 
-    for setting in settings:  # Create missing settings and update labels.
+    for setting in settings:  # Create missing settings and update labels. Leave setting values untouched.
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         s.label = setting['label']
         s.save()
