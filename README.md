@@ -18,7 +18,7 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.
 
 ### macOS
-Install the latest stable version via [Homebrew](https://brew.sh/) [Cask](http://caskroom.io/):
+Install the latest stable version via [Homebrew Cask](https://brew.sh/):
 ```
 $ brew cask install vorta
 ```
