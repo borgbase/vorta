@@ -18,7 +18,12 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.
 
 ### macOS
-Download the pre-built macOS (10.13+) binary from [Releases](https://github.com/borgbase/vorta/releases). For detailed setup steps, see the [tutorial](https://docs.borgbase.com/macos/how-to-backup-your-mac-using-the-vorta-backup-gui/).
+Install the latest stable version via [Homebrew](https://brew.sh/) [Cask](http://caskroom.io/):
+```
+$ brew cask install vorta
+```
+
+Or directly download pre-built app bundles for macOS (10.13+) from [Releases](https://github.com/borgbase/vorta/releases). For detailed setup steps, see the [tutorial](https://docs.borgbase.com/macos/how-to-backup-your-mac-using-the-vorta-backup-gui/).
 
 ### Linux
 First install Borg using the package of your distribution or via PyPI. The latter needs some additional [source packages](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install Vorta from PyPI. Your local Python version should be >= 3.6. Python 2 is not supported.
