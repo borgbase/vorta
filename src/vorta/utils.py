@@ -181,7 +181,7 @@ def parse_args():
     parser.add_argument('--foreground', '-f',
                         action='store_true',
                         help="Don't fork into background and open main window on startup.")
-    return parser.parse_args()
+    return parser.parse_known_args()
 
 
 def slugify(value):
