@@ -108,7 +108,7 @@ def pretty_bytes(size):
     power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
     Dic_powerN = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
-    while size > power:
+    while size >= power:
         size /= power
         n += 1
     return f'{round(size, 1)} {Dic_powerN[n]}B'
