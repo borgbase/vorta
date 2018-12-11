@@ -1,10 +1,12 @@
 import os
 import sys
+import platform
 import plistlib
 import argparse
 import unicodedata
 import re
-
+from datetime import datetime as dt
+import getpass
 from collections import defaultdict
 from functools import reduce
 import operator
@@ -181,7 +183,7 @@ def parse_args():
     parser.add_argument('--foreground', '-f',
                         action='store_true',
                         help="Don't fork into background and open main window on startup.")
-    return parser.parse_known_args()
+    return parser.parse_known_args()[0]
 
 
 def slugify(value):
@@ -228,3 +230,19 @@ def open_app_at_startup(enabled=True):
                                                  None, None, url, props, None)
         if not enabled:
             LSSharedFileListItemRemove(login_items, new_item)
+
+
+def format_archive_name(profile, archive_name_tpl):
+    """
+    Generate an archive name. Default:
+    {hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}
+    """
+    available_vars = {
+        'hostname': platform.node(),
+        'profile_id': profile.id,
+        'profile_slug': profile.slug(),
+        'now': dt.now(),
+        'utc_now': dt.utcnow(),
+        'user': getpass.getuser()
+    }
+    return archive_name_tpl.format(**available_vars)

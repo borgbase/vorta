@@ -93,7 +93,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
-        if self.is_remote_repo and not re.match(r'.+\..+:.+', self.values['repo_url']):
+        if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
             self._set_status('Please enter a valid repo URL or select a local path.')
             return False
 

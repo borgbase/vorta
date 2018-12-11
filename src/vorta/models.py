@@ -4,14 +4,15 @@ This module provides the app's data store using Peewee with SQLite.
 At the bottom there is a simple schema migration system.
 """
 
-import sys
 import json
-import peewee as pw
+import sys
 from datetime import datetime, timedelta
+import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
+
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 db = pw.Proxy()
 
@@ -157,8 +158,9 @@ class SchemaVersion(pw.Model):
 class SettingsModel(pw.Model):
     """App settings unrelated to a single profile or repo"""
     key = pw.CharField(unique=True)
-    value = pw.BooleanField()
-    label = pw.CharField()
+    value = pw.BooleanField(null=True)
+    value_text = pw.CharField(null=True)
+    label = pw.CharField(null=True)
     type = pw.CharField()
 
     class Meta:
@@ -189,10 +191,26 @@ def init_db(con):
         default_profile = BackupProfileModel(name='Default Profile')
         default_profile.save()
 
-    # Default settings
+    # Default settings for all platforms.
     settings = [
-        {'key': 'use_light_icon', 'value': False, 'type': 'checkbox',
-         'label': 'Use light system tray icon (applies after restart, useful for dark themes).'}
+        {
+            'key': 'use_light_icon',
+            'value': False,
+            'type': 'checkbox',
+            'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
+        },
+        {
+            'key': 'archive_name',
+            'value_text': "{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}",
+            'type': 'text',
+            'label': 'Template used to generate archive name.'
+        },
+        {
+            'key': 'prune_prefix',
+            'value_text': "{hostname}-{profile_slug}-",
+            'type': 'text',
+            'label': 'Template used to prune old archives.'
+        }
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -206,11 +224,6 @@ def init_db(con):
              'label': 'Include pre-release versions when checking for updates.'},
         ]
 
-    for setting in settings:  # Create missing settings and update labels. Leave setting values untouched.
-        s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        s.label = setting['label']
-        s.save()
-
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
@@ -220,7 +233,7 @@ def init_db(con):
     current_schema, created = SchemaVersion.get_or_create(id=1, defaults={'version': SCHEMA_VERSION})
     current_schema.save()
     if created or current_schema.version == SCHEMA_VERSION:
-        return
+        pass
     else:
         migrator = SqliteMigrator(con)
 
@@ -255,3 +268,18 @@ def init_db(con):
             current_schema, 8,
             migrator.add_column(BackupProfileModel._meta.table_name,
                                 'prune_keep_within', pw.CharField(null=True)))
+
+    if current_schema.version < 9:
+        _apply_schema_update(
+            current_schema, 9,
+            migrator.add_column(SettingsModel._meta.table_name,
+                                'value_text', pw.CharField(null=True)),
+            migrator.drop_not_null(SettingsModel._meta.table_name, 'value'),
+            migrator.drop_not_null(SettingsModel._meta.table_name, 'label'),
+        )
+
+    # Create missing settings and update labels. Leave setting values untouched.
+    for setting in settings:
+        s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
+        s.label = setting['label']
+        s.save()
