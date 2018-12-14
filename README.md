@@ -1,7 +1,7 @@
 # Vorta - A Boring Open Source GUI for BorgBackup
 [![Build Status](https://travis-ci.org/borgbase/vorta.svg?branch=master)](https://travis-ci.org/borgbase/vorta)
 
-![](https://files.qmax.us/vorta-screencast-5.gif)
+![](https://files.qmax.us/vorta-screencast-6.gif)
 
 Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in beta status. 
 
@@ -11,7 +11,7 @@ Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.read
 - Works with any local or remote Borg repo. Try [BorgBase](https://www.borgbase.com) for advanced features like append-only repositories and monitoring.
 - Repo keys are securely stored in macOS Keychain, SecretService or KWallet. Create SSH keys directly from the GUI.
 - Manage multiple backup profiles with different source folders, destinations and settings.
-- Flexible scheduling for automatic background backups. Only allow on certain Wifis.
+- Flexible scheduling for automatic background backups. Only allow on certain WiFis.
 - Restore files from mounts or using the built-in backup browser.
 
 ## Installation and Download
