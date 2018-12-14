@@ -52,9 +52,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # Init profile list
         self.profileSelector.addItem('+ Add New Profile', None)
+        self.profileSelector.insertSeparator(2)
         for profile in BackupProfileModel.select():
             self.profileSelector.addItem(profile.name, profile.id)
-        self.profileSelector.setCurrentIndex(1)
+        self.profileSelector.setCurrentIndex(2)
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)

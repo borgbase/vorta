@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="topMargin">
+    <number>5</number>
+   </property>
    <item row="0" column="0">
     <widget class="QToolBox" name="toolBox">
      <property name="font">
@@ -29,7 +32,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -37,7 +40,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>381</height>
+        <height>388</height>
        </rect>
       </property>
       <property name="font">
@@ -338,7 +341,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>381</height>
+        <height>393</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -367,7 +370,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>381</height>
+        <height>393</height>
        </rect>
       </property>
       <attribute name="icon">

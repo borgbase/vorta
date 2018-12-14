@@ -51,9 +51,9 @@ class VortaDarwinKeyring(KeyringBackend):
 
         SecKeychainAddGenericPassword(
             self.login_keychain,
-            len(service), service.encode(),
-            len(repo_url), repo_url.encode(),
-            len(password), password.encode(),
+            len(service.encode()), service.encode(),
+            len(repo_url.encode()), repo_url.encode(),
+            len(password.encode()), password.encode(),
             None)
 
     def get_password(self, service, repo_url):
@@ -73,4 +73,5 @@ class VortaDarwinKeyring(KeyringBackend):
 
 def _resolve_password(password_length, password_buffer):
     from ctypes import c_char
-    return (c_char * password_length).from_address(password_buffer.__pointer__)[:].decode('utf-8')
+    s = (c_char*password_length).from_address(password_buffer.__pointer__)[:]
+    return s.decode()

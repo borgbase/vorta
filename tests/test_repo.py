@@ -26,6 +26,7 @@ def test_repo_add_failures(app, qtbot, mocker, borg_json_output):
 
 
 def test_repo_add_success(app, qtbot, mocker, borg_json_output):
+    LONG_PASSWORD = 'long-password-long'
     # Add new repo window
     main = app.main_window
     add_repo_window = AddRepoWindow(main)
@@ -33,7 +34,7 @@ def test_repo_add_success(app, qtbot, mocker, borg_json_output):
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, 'long-password-long')
+    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -50,6 +51,9 @@ def test_repo_add_success(app, qtbot, mocker, borg_json_output):
     assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=2).url == test_repo_url
 
+    from vorta.utils import keyring
+    assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
+
 
 def test_repo_unlink(app, qtbot, monkeypatch):
     monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
@@ -58,8 +62,7 @@ def test_repo_unlink(app, qtbot, monkeypatch):
     main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 3, timeout=5000)
-    assert tab.repoSelector.count() == 3
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, timeout=5000)
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)

@@ -102,7 +102,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         # Try to get password from chosen keyring backend.
         try:
             ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)
-        except keyring.backends._OS_X_API.Error:
+        except Exception:
             ret['message'] = 'Please make sure you grant Vorta permission to use the Keychain.'
             return ret
 

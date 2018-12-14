@@ -44,18 +44,19 @@ class BorgInfoThread(BorgThread):
         return ret
 
     def process_result(self, result):
-        new_repo, _ = RepoModel.get_or_create(
-            url=result['cmd'][-1]
-        )
-        if 'cache' in result['data']:
-            stats = result['data']['cache']['stats']
-            new_repo.total_size = stats['total_size']
-            new_repo.unique_csize = stats['unique_csize']
-            new_repo.unique_size = stats['unique_size']
-            new_repo.total_unique_chunks = stats['total_unique_chunks']
-        if 'encryption' in result['data']:
-            new_repo.encryption = result['data']['encryption']['mode']
-        if new_repo.encryption != 'none':
-            keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
+        if result['returncode'] == 0:
+            new_repo, _ = RepoModel.get_or_create(
+                url=result['cmd'][-1]
+            )
+            if 'cache' in result['data']:
+                stats = result['data']['cache']['stats']
+                new_repo.total_size = stats['total_size']
+                new_repo.unique_csize = stats['unique_csize']
+                new_repo.unique_size = stats['unique_size']
+                new_repo.total_unique_chunks = stats['total_unique_chunks']
+            if 'encryption' in result['data']:
+                new_repo.encryption = result['data']['encryption']['mode']
+            if new_repo.encryption != 'none':
+                keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
 
-        new_repo.save()
+            new_repo.save()
