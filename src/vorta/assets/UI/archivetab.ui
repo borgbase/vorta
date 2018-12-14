@@ -35,7 +35,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="archivesToolBox">
       <property name="geometry">
@@ -54,6 +54,9 @@ font-weight: bold;
        <string>Archives</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="topMargin">
         <number>0</number>
        </property>
@@ -238,6 +241,9 @@ font-weight: bold;
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <property name="topMargin">
           <number>0</number>
          </property>
@@ -261,7 +267,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>hourly,</string>
+            <string> hourly, </string>
            </property>
           </widget>
          </item>
@@ -278,7 +284,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_7">
            <property name="text">
-            <string>daily,</string>
+            <string> daily, </string>
            </property>
           </widget>
          </item>
@@ -292,7 +298,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_8">
            <property name="text">
-            <string>weekly,</string>
+            <string> weekly, </string>
            </property>
           </widget>
          </item>
@@ -306,7 +312,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_9">
            <property name="text">
-            <string>monthly and</string>
+            <string> monthly and</string>
            </property>
           </widget>
          </item>
@@ -320,7 +326,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;annual archives.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string> annual archives.</string>
            </property>
            <property name="openExternalLinks">
             <bool>true</bool>
@@ -388,6 +394,12 @@ font-weight: bold;
          <property name="topMargin">
           <number>10</number>
          </property>
+         <property name="horizontalSpacing">
+          <number>-1</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>0</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
@@ -407,13 +419,28 @@ font-weight: bold;
          </item>
          <item row="1" column="2">
           <widget class="QLabel" name="archiveNamePreview">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <pointsize>11</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">color: grey</string>
+           </property>
            <property name="text">
             <string>TextLabel</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="margin">
+            <number>1</number>
            </property>
           </widget>
          </item>
@@ -441,8 +468,14 @@ font-weight: bold;
              <pointsize>11</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">color: grey</string>
+           </property>
            <property name="text">
             <string>TextLabel</string>
+           </property>
+           <property name="margin">
+            <number>1</number>
            </property>
           </widget>
          </item>
