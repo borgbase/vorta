@@ -81,6 +81,8 @@ class BackupProfileModel(pw.Model):
     prune_month = pw.IntegerField(default=6)
     prune_year = pw.IntegerField(default=2)
     prune_keep_within = pw.CharField(default='10H', null=True)
+    new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
+    prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
 
     def refresh(self):
         return type(self).get(self._pk_expr())
@@ -158,9 +160,8 @@ class SchemaVersion(pw.Model):
 class SettingsModel(pw.Model):
     """App settings unrelated to a single profile or repo"""
     key = pw.CharField(unique=True)
-    value = pw.BooleanField(null=True)
-    value_text = pw.CharField(null=True)
-    label = pw.CharField(null=True)
+    value = pw.BooleanField()
+    label = pw.CharField()
     type = pw.CharField()
 
     class Meta:
@@ -198,18 +199,6 @@ def init_db(con):
             'value': False,
             'type': 'checkbox',
             'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
-        },
-        {
-            'key': 'archive_name',
-            'value_text': "{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}",
-            'type': 'text',
-            'label': 'Template used to generate archive name.'
-        },
-        {
-            'key': 'prune_prefix',
-            'value_text': "{hostname}-{profile_slug}-",
-            'type': 'text',
-            'label': 'Template used to prune old archives.'
         }
     ]
     if sys.platform == 'darwin':
@@ -223,6 +212,12 @@ def init_db(con):
             {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
              'label': 'Include pre-release versions when checking for updates.'},
         ]
+
+    # Create missing settings and update labels. Leave setting values untouched.
+    for setting in settings:
+        s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
+        s.label = setting['label']
+        s.save()
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)
@@ -272,14 +267,8 @@ def init_db(con):
     if current_schema.version < 9:
         _apply_schema_update(
             current_schema, 9,
-            migrator.add_column(SettingsModel._meta.table_name,
-                                'value_text', pw.CharField(null=True)),
-            migrator.drop_not_null(SettingsModel._meta.table_name, 'value'),
-            migrator.drop_not_null(SettingsModel._meta.table_name, 'label'),
+            migrator.add_column(BackupProfileModel._meta.table_name, 'new_archive_name',
+                                pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")),
+            migrator.add_column(BackupProfileModel._meta.table_name, 'prune_prefix',
+                                pw.CharField(default="{hostname}-{profile_slug}-")),
         )
-
-    # Create missing settings and update labels. Leave setting values untouched.
-    for setting in settings:
-        s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        s.label = setting['label']
-        s.save()

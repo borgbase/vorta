@@ -11,7 +11,7 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -25,6 +25,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_point = None
+        self.toolBox.setCurrentIndex(0)
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -55,6 +56,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.checkButton.clicked.connect(self.check_action)
         self.extractButton.clicked.connect(self.list_archive_action)
 
+        self.archiveNameTemplate.textChanged.connect(
+            lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
+        self.prunePrefixTemplate.textChanged.connect(
+            lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
+
         self.populate_from_profile()
 
     def _set_status(self, text):
@@ -71,7 +77,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         profile = self.profile()
         if profile.repo is not None:
-            self.currentRepoLabel.setText(profile.repo.url)
+            self.toolBox.setItemText(0, f'Archives for {profile.repo.url}')
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             for row, archive in enumerate(archives):
@@ -92,8 +98,25 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(enabled=True)
         else:
             self.archiveTable.setRowCount(0)
-            self.currentRepoLabel.setText('N/A')
+            self.toolBox.setItemText(0, 'Archives')
             self._toggle_all_buttons(enabled=False)
+
+        self.archiveNameTemplate.setText(profile.new_archive_name)
+        self.prunePrefixTemplate.setText(profile.prune_prefix)
+
+    def save_archive_template(self, tpl, key):
+        profile = self.profile()
+        try:
+            preview = 'Preview: ' + format_archive_name(profile, tpl)
+            setattr(profile, key, tpl)
+            profile.save()
+        except Exception:
+            preview = 'Error in archive name template.'
+
+        if key == 'new_archive_name':
+            self.archiveNamePreview.setText(preview)
+        else:
+            self.prunePrefixPreview.setText(preview)
 
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())

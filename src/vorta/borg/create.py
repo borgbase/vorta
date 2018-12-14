@@ -1,10 +1,8 @@
 import os
 import tempfile
-import platform
 from dateutil import parser
-from datetime import datetime as dt
 
-from ..utils import get_current_wifi
+from ..utils import get_current_wifi, format_archive_name
 from ..models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
@@ -103,7 +101,8 @@ class BorgCreateThread(BorgThread):
                     cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
-        cmd.append(f"{profile.repo.url}::{platform.node()}-{profile.slug()}-{dt.now().isoformat(timespec='seconds')}")
+        new_archive_name = format_archive_name(profile, profile.new_archive_name)
+        cmd.append(f"{profile.repo.url}::{new_archive_name}")
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
