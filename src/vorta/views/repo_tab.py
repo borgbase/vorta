@@ -21,8 +21,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         # Populate dropdowns
         self.repoSelector.model().item(0).setEnabled(False)
-        self.repoSelector.addItem('Initialize New Repository', 'init')
-        self.repoSelector.addItem('Add Existing Repository', 'existing')
+        self.repoSelector.addItem('+ Initialize New Repository', 'new')
+        self.repoSelector.addItem('+ Add Existing Repository', 'existing')
+        self.repoSelector.insertSeparator(3)
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
@@ -120,10 +121,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         profile.save()
 
     def repo_select_action(self, index):
+        item_data = self.repoSelector.itemData(index)
         if index == 0:
             return
-        if index <= 2:
-            if index == 1:
+        elif item_data in ['new', 'existing']:
+            if item_data == 'new':
                 window = AddRepoWindow()
             else:
                 window = ExistingRepoWindow()
@@ -133,7 +135,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 self.process_new_repo(window.result)
             else:
                 self.repoSelector.setCurrentIndex(0)
-
         else:
             profile = self.profile()
             profile.repo = self.repoSelector.currentData()

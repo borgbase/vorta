@@ -1,5 +1,5 @@
-import platform
 from .borg_thread import BorgThread
+from vorta.utils import format_archive_name
 
 
 class BorgPruneThread(BorgThread):
@@ -25,6 +25,7 @@ class BorgPruneThread(BorgThread):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'prune', '--list', '--info', '--log-json']
+        formatted_prune_prefix = format_archive_name(profile, profile.prune_prefix)
 
         pruning_opts = [
             '--keep-hourly', str(profile.prune_hour),
@@ -32,7 +33,7 @@ class BorgPruneThread(BorgThread):
             '--keep-weekly', str(profile.prune_week),
             '--keep-monthly', str(profile.prune_month),
             '--keep-yearly', str(profile.prune_year),
-            '--prefix', f'{platform.node()}-{profile.slug()}'
+            '--prefix', formatted_prune_prefix
         ]
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
