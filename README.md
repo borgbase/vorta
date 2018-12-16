@@ -1,93 +1,53 @@
-# Vorta - A Boring Open Source GUI for BorgBackup
-[![Build Status](https://travis-ci.org/borgbase/vorta.svg?branch=master)](https://travis-ci.org/borgbase/vorta)
+# Vorta <img alt="Logo" src="https://files.qmax.us/vorta/vorta-512px.png" align="right" height="50">
+
+Vorta is a backup client for macOS and Linux desktops. It integrates the powerful [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from drive failure, ransomware and theft.
 
 ![](https://files.qmax.us/vorta-screencast-6.gif)
 
-Vorta is an open source macOS/Linux GUI for [BorgBackup](https://borgbackup.readthedocs.io). It's currently in beta status. 
+## Why is this great? 🤩
 
-## Main features
+- **Encrypted, deduplicated and compressed backups** using [Borg](https://borgbackup.readthedocs.io) as backend.
+- **No vendor lock-in** – back up to local drives, your own server or [BorgBase](https://www.borgbase.com).
+- **Open source** – free to use, modify, improve and audit.
+- **Flexible profiles** to group source folders, backup destinations and schedules.
 
-- Encrypted, deduplicated and compressed backups using `borg` as battle-tested backend.
-- Works with any local or remote Borg repo. Try [BorgBase](https://www.borgbase.com) for advanced features like append-only repositories and monitoring.
-- Repo keys are securely stored in macOS Keychain, SecretService or KWallet. Create SSH keys directly from the GUI.
-- Manage multiple backup profiles with different source folders, destinations and settings.
-- Flexible scheduling for automatic background backups. Only allow on certain WiFis.
-- Restore files from mounts or using the built-in backup browser.
 
-## Installation and Download
-Vorta should work on all platforms that support Qt and Borg. Currently Borg doesn't support Windows, but this may change in the future. Setting allowed Wifi networks is currently not supported on Linux, but everything else should work.
+## Learn More
+
+- Hosting – [BorgBase](https://www.borgbase.com) protects your backups with two-factor authentication and append-only mode.
+- Detailed [tutorial](https://docs.borgbase.com/macos/how-to-backup-your-mac-using-the-vorta-backup-gui/) on setting up Vorta.
+- [Description](https://borgbackup.readthedocs.io/en/stable/internals.html) of Borg's internal workings and security.
+- For management: Practical Steps to a Comprehensive [Backup Strategy](https://docs.borgbase.com/backup-strategy/steps-with-template/) – with template.
+
+
+## Installation
+Vorta should work on all platforms that support Qt and Borg.
 
 ### macOS
-Install the latest stable version via [Homebrew Cask](https://brew.sh/):
+Install via [Homebrew Cask](https://brew.sh/) or directly download pre-built app bundles for macOS (10.13+) from [Releases](https://github.com/borgbase/vorta/releases).
 ```
 $ brew cask install vorta
 ```
 
-Or directly download pre-built app bundles for macOS (10.13+) from [Releases](https://github.com/borgbase/vorta/releases). For detailed setup steps, see the [tutorial](https://docs.borgbase.com/macos/how-to-backup-your-mac-using-the-vorta-backup-gui/).
-
-### Linux
-First install Borg using the package of your distribution or via PyPI. The latter needs some additional [source packages](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install Vorta from PyPI. Your local Python version should be >= 3.6. Python 2 is not supported.
+### As Python Package
+First [install](https://borgbackup.readthedocs.io/en/stable/installation.html) Borg using the package of your distribution or via PyPI. The latter needs some additional [source packages](https://borgbackup.readthedocs.io/en/stable/installation.html#dependencies). Then install Vorta from PyPI. Your local Python version should be >= 3.6. Python 2 is not supported.
 ```
 $ pip3 install vorta
 ```
 
-After installation run with the `vorta` command.
-```
-$ vorta
-```
+## Development and Bug Reports
+- Report bugs and feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
+- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Debugging and Bugs
-Please report any errors you may encounter by [opening an issue](https://github.com/borgbase/vorta/issues) on Github. Please include steps to reproduce and all logging output. Logs can be found in these folders:
-
-- Linux: `$HOME/.cache/Vorta/log`
-- macOS: `$HOME/Library/Logs/Vorta`
-
-## Development
-
-Install in development/editable mode while in the repo:
-```
-$ pip install -e .
-```
-
-Then run as Python script:
-```
-$ vorta
-```
-
-Install developer packages we use (pytest, tox, pyinstaller):
-```
-pip install -r requirements.d/dev.txt
-```
-
-Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/UI`:
-```
-$ brew cask install qt-creator
-$ brew install qt
-```
-
-To build a macOS app package:
-- add `Sparkle.framework` from [here](https://github.com/sparkle-project/Sparkle) and `borg` from [here](https://github.com/borgbackup/borg/releases) in `bin/macosx64`
-- then uncomment or change the Apple signing profile to be used in `Makefile`
-- finally run to `$ make Vorta.app` to build the app into the `dist` folder.
-
-### Testing (work in progress)
-
-Tests are in the folder `/tests`. Testing happens at the level of UI components. Calls to `borg` are mocked and can be replaced with some example json-output. To run tests:
-```
-$ pytest
-```
-
-## Why the Name?
+### Why the Name?
 [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) are a race referenced in Star Trek. They serve the Dominion and are replaced by their clones if they die. Just like our backups.
 
 ## Privacy Policy
 - No personal data is ever stored or transmitted by this application.
-- During beta, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs. You can disable this by setting the env variable `NO_SENTRY=1`. Your repo password will be scrubbed *before* the test report is transmitted.
+- During beta-testing, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs. You can disable this by setting the env variable `NO_SENTRY=1`. Your repo password will be scrubbed *before* the test report is transmitted.
 
-## Author
-(C) 2018 Manuel Riel for [BorgBase.com](https://www.borgbase.com)
-
-## License and Credits
+### License and Credits
+- Ⓒ 2018 Manuel Riel for [BorgBase.com](https://www.borgbase.com). All rights reserved.
 - Licensed under GPLv3. See LICENSE.txt for details.
 - Uses the excellent [BorgBackup](https://www.borgbackup.org)
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
