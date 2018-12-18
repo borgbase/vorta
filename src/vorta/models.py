@@ -199,6 +199,12 @@ def init_db(con):
             'value': False,
             'type': 'checkbox',
             'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
+        },
+        {
+            'key': 'send_sentry_reports',
+            'value': True,
+            'type': 'checkbox',
+            'label': 'Send errors to Sentry. This helps us quickly find bugs.'
         }
     ]
     if sys.platform == 'darwin':

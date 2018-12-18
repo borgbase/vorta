@@ -11,7 +11,7 @@ Vorta.dmg: Vorta.app
 	sleep 2; appdmg appdmg.json dist/vorta-0.6.1.dmg
 
 github-release: Vorta.dmg
-	hub release create --prerelease --attach=dist/vorta-0.6.1.dmg v0.6.1
+	hub release create --attach=dist/vorta-0.6.1.dmg v0.6.1
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
 	git push upstream gh-pages
@@ -22,7 +22,6 @@ pypi-release:
 	twine upload dist/vorta-0.6.1.tar.gz
 
 bump-version:
-	git log $$(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s"
 	bumpversion patch
 #	bumpversion minor
 	git push
