@@ -56,7 +56,7 @@ def test_repo_prune(app, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.pruneButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Refreshing snapshots'))
+    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Refreshing snapshots'), timeout=5000)
 
 
 def test_check(app, mocker, borg_json_output, qtbot):

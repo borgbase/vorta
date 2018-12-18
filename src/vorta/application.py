@@ -51,7 +51,7 @@ class VortaApp(QApplication):
         self.main_window = MainWindow(self)
 
         args = parse_args()
-        if hasattr(args, 'foreground'):
+        if hasattr(args, 'foreground') and args.foreground:
             self.main_window.show()
 
         self.backup_started_event.connect(self.backup_started_event_response)

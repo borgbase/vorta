@@ -2,7 +2,7 @@ import sys
 import os
 import peewee
 
-from vorta.models import init_db
+from vorta.models import init_db, SettingsModel
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
@@ -24,13 +24,13 @@ def main():
         if os.fork():
             sys.exit()
 
-    # Send crashes to Sentry.
-    if not os.environ.get('NO_SENTRY', False):
-        vorta.sentry.init()
-
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
     init_db(sqlite_db)
+
+    # Send crashes to Sentry.
+    if SettingsModel.get(key='send_sentry_reports').value:
+        vorta.sentry.init()
 
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
