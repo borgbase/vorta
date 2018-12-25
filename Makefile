@@ -23,9 +23,8 @@ pypi-release:
 
 bump-version:
 	bumpversion patch
-#	bumpversion minor
-	git push
-	git push --tags
+	#bumpversion minor
+	git push upstream
 
 travis-debug:
 	  curl -s -X POST \
