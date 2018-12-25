@@ -101,7 +101,7 @@ font-weight: bold;
             <number>1</number>
            </property>
            <property name="maximum">
-            <number>48</number>
+            <number>740</number>
            </property>
           </widget>
          </item>
@@ -341,7 +341,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>393</height>
+        <height>388</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -370,7 +370,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>393</height>
+        <height>388</height>
        </rect>
       </property>
       <attribute name="icon">
