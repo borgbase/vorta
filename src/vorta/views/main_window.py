@@ -115,8 +115,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.edited_profile.name)
 
     def profile_delete_action(self):
-        if self.profileSelector.count() >= 3:
+        if self.profileSelector.count() > 3:
             to_delete = BackupProfileModel.get(id=self.profileSelector.currentData())
+
+            # Remove pending background jobs
+            to_delete_id = str(to_delete.id)
+            if self.app.scheduler.get_job(to_delete_id):
+                self.app.scheduler.remove_job(to_delete_id)
+
             to_delete.delete_instance(recursive=True)
             self.profileSelector.removeItem(self.profileSelector.currentIndex())
             self.profile_select_action(1)
