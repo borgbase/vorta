@@ -12,7 +12,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 10
 
 db = pw.Proxy()
 
@@ -83,6 +83,8 @@ class BackupProfileModel(pw.Model):
     prune_keep_within = pw.CharField(default='10H', null=True)
     new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
     prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
+    pre_backup_cmd = pw.CharField(default='')
+    post_backup_cmd = pw.CharField(default='')
 
     def refresh(self):
         return type(self).get(self._pk_expr())
@@ -277,4 +279,13 @@ def init_db(con):
                                 pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")),
             migrator.add_column(BackupProfileModel._meta.table_name, 'prune_prefix',
                                 pw.CharField(default="{hostname}-{profile_slug}-")),
+        )
+
+    if current_schema.version < 10:
+        _apply_schema_update(
+            current_schema, 10,
+            migrator.add_column(BackupProfileModel._meta.table_name, 'pre_backup_cmd',
+                                pw.CharField(default='')),
+            migrator.add_column(BackupProfileModel._meta.table_name, 'post_backup_cmd',
+                                pw.CharField(default='')),
         )

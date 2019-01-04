@@ -32,7 +32,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -40,7 +40,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>388</height>
+        <height>354</height>
        </rect>
       </property>
       <property name="font">
@@ -341,7 +341,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>388</height>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -370,7 +370,7 @@ font-weight: bold;
         <x>0</x>
         <y>0</y>
         <width>663</width>
-        <height>388</height>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -423,6 +423,78 @@ font-weight: bold;
           </property>
          </column>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_3">
+      <attribute name="icon">
+       <iconset resource="../icons/collection.qrc">
+        <normaloff>:/icons/terminal.svg</normaloff>:/icons/terminal.svg</iconset>
+      </attribute>
+      <attribute name="label">
+       <string>Advanced</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>To run custom shell commands before and after each backup, enter them below. The backup will only run, if your pre-backup command exits without error.</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="preBackupCmdLineEdit">
+         <property name="styleSheet">
+          <string notr="true">font-family:'Courier';</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Pre-backup command to run BEFORE backups.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="postBackupCmdLineEdit">
+         <property name="styleSheet">
+          <string notr="true">font-family:'Courier';</string>
+         </property>
+         <property name="placeholderText">
+          <string>Post-backup command to run AFTER backups.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:'Courier';&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
