@@ -44,6 +44,13 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
 
+        self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
+        self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
+        self.postBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='post_backup_cmd': self.save_backup_cmd(attr, new_val))
+        self.preBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='pre_backup_cmd': self.save_backup_cmd(attr, new_val))
+
         self._draw_next_scheduled_backup()
         self.init_wifi()
 
@@ -64,6 +71,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)
         db_item.allowed = item.checkState() == 2
         db_item.save()
+
+    def save_backup_cmd(self, attr, new_value):
+        profile = self.profile()
+        setattr(profile, attr, new_value)
+        profile.save()
 
     def init_logs(self):
         self.logTableWidget.setAlternatingRowColors(True)
