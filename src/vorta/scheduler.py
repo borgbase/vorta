@@ -25,11 +25,17 @@ class VortaScheduler(QtScheduler):
             trigger = None
             job_id = f'{profile.id}'
             if profile.schedule_mode == 'interval':
-                if profile.schedule_interval_hours > 23:
+                if profile.schedule_interval_hours >= 24:
                     days = profile.schedule_interval_hours // 24
                     leftover_hours = profile.schedule_interval_hours % 24
+
+                    if leftover_hours == 0:
+                        cron_hours = '1'
+                    else:
+                        cron_hours = f'*/{leftover_hours}'
+
                     trigger = cron.CronTrigger(day=f'*/{days}',
-                                               hour=f'*/{leftover_hours}',
+                                               hour=cron_hours,
                                                minute=profile.schedule_interval_minutes)
                 else:
                     trigger = cron.CronTrigger(hour=f'*/{profile.schedule_interval_hours}',

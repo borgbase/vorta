@@ -1,6 +1,7 @@
 import os
 import tempfile
 from dateutil import parser
+import subprocess
 
 from ..utils import get_current_wifi, format_archive_name
 from ..models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
@@ -41,6 +42,23 @@ class BorgCreateThread(BorgThread):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
+        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
+
+    @classmethod
+    def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
+        cmd = getattr(params['profile'], cmd)
+        if cmd:
+            env = {
+                **os.environ.copy(),
+                'repo_url': params['repo'].url,
+                'profile_name': params['profile'].name,
+                'profile_slug': params['profile'].slug(),
+                'returncode': str(returncode)
+            }
+            proc = subprocess.run(cmd, shell=True, env=env)
+            return proc.returncode
+        else:
+            return 0  # 0 if no command was run.
 
     @classmethod
     def prepare(cls, profile):
@@ -52,7 +70,7 @@ class BorgCreateThread(BorgThread):
         if not ret['ok']:
             return ret
         else:
-            ret['ok'] = False  # Set back to false, so we can do our own checks here.
+            ret['ok'] = False  # Set back to False, so we can do our own checks here.
 
         n_backup_folders = SourceFileModel.select().count()
         if n_backup_folders == 0:
@@ -106,6 +124,13 @@ class BorgCreateThread(BorgThread):
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
+
+        # Run user-supplied pre-backup command
+        ret['profile'] = profile
+        ret['repo'] = profile.repo
+        if cls.pre_post_backup_cmd(ret) != 0:
+            ret['message'] = 'Pre-backup command returned non-zero exit code.'
+            return ret
 
         ret['message'] = 'Starting backup..'
         ret['ok'] = True
