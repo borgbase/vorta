@@ -87,7 +87,10 @@ class VortaScheduler(QtScheduler):
     def create_backup(self, profile_id):
         notifier = VortaNotifications.pick()()
         profile = BackupProfileModel.get(id=profile_id)
+
         logger.info('Starting background backup for %s', profile.name)
+        notifier.deliver('Vorta Backup', 'Starting background backup for %s.' % profile.name, level='info')
+
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
             logger.info('Preparation for backup successful.')
@@ -95,14 +98,16 @@ class VortaScheduler(QtScheduler):
             thread.start()
             thread.wait()
             if thread.process.returncode in [0, 1]:
+                notifier.deliver('Vorta Backup', 'Backup successful for %s.' % profile.name, level='info')
+                logger.info('Backup creation successful.')
                 self.post_backup_tasks(profile_id)
             else:
-                notifier.deliver('Vorta Backup', 'Error during backup creation.')
+                notifier.deliver('Vorta Backup', 'Error during backup creation.', level='error')
                 logger.error('Error during backup creation.')
         else:
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
-            notifier.deliver('Vorta Backup', msg['message'])
+            notifier.deliver('Vorta Backup', msg['message'], level='error')
 
     def post_backup_tasks(self, profile_id):
         """
