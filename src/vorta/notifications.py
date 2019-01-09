@@ -23,9 +23,9 @@ class DarwinNotifications(VortaNotifications):
 
     def deliver(self, title, text, level='info'):
         if not SettingsModel.get(key='enable_notifications').value:
-            return
+            return False
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
-            return
+            return False
 
         from Foundation import NSUserNotification
         from Foundation import NSUserNotificationCenter
@@ -35,7 +35,7 @@ class DarwinNotifications(VortaNotifications):
         notification.setInformativeText_(text)
         center = NSUserNotificationCenter.defaultUserNotificationCenter()
         if center is not None:  # Only works when run from app bundle.
-            center.deliverNotification_(notification)
+            return center.deliverNotification_(notification)
 
 
 class LinuxNotifications(VortaNotifications):
@@ -57,10 +57,10 @@ class LinuxNotifications(VortaNotifications):
 
     def deliver(self, title, text, level='info'):
         if not SettingsModel.get(key='enable_notifications').value:
-            return
+            return False
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
-            return
+            return False
 
         n = self.notify2.Notification(title, text)
         n.set_urgency(self.NOTIFY2_LEVEL[level])
-        n.show()
+        return n.show()

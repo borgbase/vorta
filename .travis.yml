@@ -10,6 +10,7 @@ addons:
     - libacl1-dev
     - libacl1
     - build-essential
+    - python3-dbus
     - dbus
   homebrew:
     update: false
