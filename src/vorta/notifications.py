@@ -20,7 +20,7 @@ class VortaNotifications:
 
 
 class DarwinNotifications(VortaNotifications):
-    def deliver(self, title, text):
+    def deliver(self, title, text, level='info'):
         if SettingsModel.get(key='enable_notifications').value:
             from Foundation import NSUserNotification
             from Foundation import NSUserNotificationCenter
@@ -35,10 +35,27 @@ class DarwinNotifications(VortaNotifications):
 
 class LinuxNotifications(VortaNotifications):
     """
-    Could use the Gnome libs or the binary
+    Use notify2 for emitting notifications on Linux.
 
-    https://wiki.archlinux.org/index.php/Desktop_notifications#Python
-    http://manpages.ubuntu.com/manpages/cosmic/man1/notify-send.1.html
+    https://notify2.readthedocs.io/en/latest/
+    Follows https://developer.gnome.org/notification-spec/
     """
-    def deliver(self, title, text):
-        pass
+    import notify2
+
+    NOTIFY2_LEVEL = {
+        'info': notify2.URGENCY_NORMAL,
+        'error': notify2.URGENCY_CRITICAL,
+    }
+
+    def __init__(self):
+        self.notify2.init('vorta')
+
+    def deliver(self, title, text, level='info'):
+        if not SettingsModel.get(key='enable_notifications').value:
+            return
+        if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
+            return
+
+        n = self.notify2.Notification(title, text)
+        n.set_urgency(self.NOTIFY2_LEVEL[level])
+        n.show()
