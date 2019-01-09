@@ -11,5 +11,5 @@ def test_linux_background_notifications(app, qtbot, mocker, borg_json_output):
     result_info = notifier.deliver('Vorta Test', 'test notification', level='info')
 
     assert vorta.notifications.LinuxNotifications.deliver.call_count == 2
-    assert result_err == True
-    assert result_info == False
+    assert result_err is True
+    assert result_info is False
