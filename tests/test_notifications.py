@@ -1,8 +1,12 @@
+import sys
+import pytest
+
 import vorta.borg
 import vorta.models
 import vorta.notifications
 
 
+@pytest.mark.skipif(sys.platform != 'linux', reason="notify2 only on linux")
 def test_linux_background_notifications(app, qtbot, mocker, borg_json_output):
     mocker.spy(vorta.notifications.LinuxNotifications, 'deliver')
 
