@@ -1,21 +1,20 @@
 import sys
 import pytest
+from PyQt5 import QtDBus
 
 import vorta.borg
 import vorta.models
 import vorta.notifications
 
 
-@pytest.mark.skipif(sys.platform != 'linux', reason="notify2 only on linux")
-def test_linux_background_notifications(app, qtbot, mocker, borg_json_output):
-    import notify2
-
-    mocker.spy(notify2.Notification, 'show')
+@pytest.mark.skipif(sys.platform != 'linux', reason="DBus notifications only on Linux")
+def test_linux_background_notifications(app, mocker):
+    """We can't see notifications, but we watch for exceptions and errors."""
 
     notifier = vorta.notifications.VortaNotifications.pick()
     assert isinstance(notifier, vorta.notifications.LinuxNotifications)
     notifier.deliver('Vorta Test', 'test notification', level='error')
-    notifier.deliver('Vorta Test', 'test notification', level='info')
 
-    assert notify2.Notification.show.call_count == 2
-
+    mocker.spy(QtDBus.QDBusInterface, 'call')
+    notifier.deliver('Vorta Test', 'test notification', level='info')  # fails if called.
+    assert QtDBus.QDBusInterface.call.call_count == 0

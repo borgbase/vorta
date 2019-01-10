@@ -58,7 +58,7 @@ font-weight: bold;
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
-        <number>0</number>
+        <number>2</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -289,6 +289,22 @@ font-weight: bold;
           </widget>
          </item>
          <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="QLabel" name="label_3">
            <property name="font">
             <font>
@@ -343,8 +359,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>138</width>
-        <height>122</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -372,8 +388,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>98</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="icon">

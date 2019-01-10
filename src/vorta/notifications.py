@@ -14,10 +14,11 @@ class VortaNotifications:
     def pick(cls):
         if sys.platform == 'darwin':
             return DarwinNotifications()
-        elif sys.platform == 'linux':
-            try:
+        elif sys.platform == 'linux':  # test if dbus exists. Else fall back to dummy.
+            bus = QtDBus.QDBusConnection.sessionBus()
+            if bus.isConnected():
                 return LinuxNotifications()
-            except ModuleNotFoundError:
+            else:
                 return cls()
         else:
             return cls()
@@ -56,20 +57,21 @@ class DarwinNotifications(VortaNotifications):
 
 class LinuxNotifications(VortaNotifications):
     """
-    Use notify2 for emitting notifications on Linux.
+    Use qt-dbus to send notifications.
 
-    https://notify2.readthedocs.io/en/latest/
-    Follows https://developer.gnome.org/notification-spec/
+    Adapted from http://codito.in/notifications-in-qt-over-dbus/
     """
+
+    URGENCY = {'info': 1, 'error': 2}
 
     def __init__(self):
         pass
 
-    def _dbus_notify(self, header, msg):
+    def _dbus_notify(self, header, msg, level='info'):
         item = "org.freedesktop.Notifications"
         path = "/org/freedesktop/Notifications"
         interface = "org.freedesktop.Notifications"
-        app_name = "dbus_demo"
+        app_name = "vorta"
         v = QtCore.QVariant(12321)  # random int to identify all notifications
         if v.convert(QtCore.QVariant.UInt):
             id_replace = v
@@ -77,12 +79,10 @@ class LinuxNotifications(VortaNotifications):
         title = header
         text = msg
         actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
-        hint = []
-        time = 100   # milliseconds for display timeout
+        hint = {'urgency': self.URGENCY[level]}
+        time = 5000   # milliseconds for display timeout
 
         bus = QtDBus.QDBusConnection.sessionBus()
-        if not bus.isConnected():
-            print("Not connected to dbus!")
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
         if notify.isValid():
             x = notify.call(QtDBus.QDBus.AutoDetect, "Notify", app_name,
@@ -98,6 +98,4 @@ class LinuxNotifications(VortaNotifications):
         if self.notifications_suppressed(level):
             return
 
-        self.dbus_notify(title, text)
-        # n.set_urgency(self.NOTIFY2_LEVEL[level])
-        # return n.show()
+        self._dbus_notify(title, text)
