@@ -10,7 +10,8 @@ addons:
     - libacl1-dev
     - libacl1
     - build-essential
-    - python3-dbus
+    - libdbus-1-dev
+    - libdbus-glib-1-dev
     - dbus
   homebrew:
     update: false
@@ -58,6 +59,7 @@ install:
     pyenv install -s $PYTHON36
     eval "$(pyenv init -)"
     pyenv shell $PYTHON36
+    pip install dbus-python
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
     pyenv install -s $PYTHON37
