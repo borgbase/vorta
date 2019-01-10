@@ -1,4 +1,5 @@
 import sys
+from PyQt5 import QtCore, QtDBus
 from vorta.models import SettingsModel
 
 
@@ -62,20 +63,41 @@ class LinuxNotifications(VortaNotifications):
     """
 
     def __init__(self):
-        import notify2
+        pass
 
-        self.NOTIFY2_LEVEL = {
-            'info': notify2.URGENCY_NORMAL,
-            'error': notify2.URGENCY_CRITICAL,
-        }
+    def _dbus_notify(self, header, msg):
+        item = "org.freedesktop.Notifications"
+        path = "/org/freedesktop/Notifications"
+        interface = "org.freedesktop.Notifications"
+        app_name = "dbus_demo"
+        v = QtCore.QVariant(12321)  # random int to identify all notifications
+        if v.convert(QtCore.QVariant.UInt):
+            id_replace = v
+        icon = ""
+        title = header
+        text = msg
+        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
+        hint = []
+        time = 100   # milliseconds for display timeout
 
-        notify2.init('vorta')
+        bus = QtDBus.QDBusConnection.sessionBus()
+        if not bus.isConnected():
+            print("Not connected to dbus!")
+        notify = QtDBus.QDBusInterface(item, path, interface, bus)
+        if notify.isValid():
+            x = notify.call(QtDBus.QDBus.AutoDetect, "Notify", app_name,
+                            id_replace, icon, title, text,
+                            actions_list, hint, time)
+            if x.errorName():
+                print("Failed to send notification!")
+                print(x.errorMessage())
+        else:
+            print("Invalid dbus interface")
 
     def deliver(self, title, text, level='info'):
         if self.notifications_suppressed(level):
             return
 
-        import notify2
-        n = notify2.Notification(title, text)
-        n.set_urgency(self.NOTIFY2_LEVEL[level])
-        return n.show()
+        self.dbus_notify(title, text)
+        # n.set_urgency(self.NOTIFY2_LEVEL[level])
+        # return n.show()

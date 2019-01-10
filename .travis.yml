@@ -10,9 +10,6 @@ addons:
     - libacl1-dev
     - libacl1
     - build-essential
-    - libdbus-1-dev
-    - libdbus-glib-1-dev
-    - dbus
   homebrew:
     update: false
     packages:
