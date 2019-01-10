@@ -48,12 +48,13 @@ class LinuxNotifications(VortaNotifications):
     Follows https://developer.gnome.org/notification-spec/
     """
 
-    NOTIFY2_LEVEL = {
-        'info': notify2.URGENCY_NORMAL,
-        'error': notify2.URGENCY_CRITICAL,
-    }
-
     def __init__(self):
+
+        self.NOTIFY2_LEVEL = {
+            'info': notify2.URGENCY_NORMAL,
+            'error': notify2.URGENCY_CRITICAL,
+        }
+
         notify2.init('vorta')
 
     def deliver(self, title, text, level='info'):
