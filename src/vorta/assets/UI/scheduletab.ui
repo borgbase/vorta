@@ -32,7 +32,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -57,6 +57,9 @@ font-weight: bold;
        <string>Schedule</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="sizeConstraint">
@@ -340,8 +343,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>138</width>
+        <height>122</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -369,8 +372,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>98</width>
+        <height>98</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -427,6 +430,14 @@ font-weight: bold;
       </layout>
      </widget>
      <widget class="QWidget" name="page_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>663</width>
+        <height>354</height>
+       </rect>
+      </property>
       <attribute name="icon">
        <iconset resource="../icons/collection.qrc">
         <normaloff>:/icons/terminal.svg</normaloff>:/icons/terminal.svg</iconset>

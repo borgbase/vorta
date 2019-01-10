@@ -1,11 +1,6 @@
 import sys
 from vorta.models import SettingsModel
 
-if sys.platform == 'darwin':
-    from Foundation import NSUserNotification, NSUserNotificationCenter
-elif sys.platform == 'linux':
-    import notify2
-
 
 class VortaNotifications:
     """
@@ -17,21 +12,39 @@ class VortaNotifications:
     @classmethod
     def pick(cls):
         if sys.platform == 'darwin':
-            return DarwinNotifications
+            return DarwinNotifications()
         elif sys.platform == 'linux':
-            return LinuxNotifications
-        else:  # Save to sqlite as fallback?
-            return LinuxNotifications
+            try:
+                return LinuxNotifications()
+            except ModuleNotFoundError:
+                return cls()
+        else:
+            return cls()
+
+    def deliver(self, title, text, level='info'):
+        """Dummy notifier if we're not on macOS or Linux notifier isn't available."""
+        pass
+
+    def notifications_suppressed(self, level):
+        """Decide if notification is sent or not based on settings and level."""
+        if not SettingsModel.get(key='enable_notifications').value:
+            return True
+        if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
+            return True
+
+        return False
 
 
 class DarwinNotifications(VortaNotifications):
+    """
+    Notify via notification center and pyobjc bridge.
+    """
 
     def deliver(self, title, text, level='info'):
-        if not SettingsModel.get(key='enable_notifications').value:
-            return False
-        if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
-            return False
+        if self.notifications_suppressed(level):
+            return
 
+        from Foundation import NSUserNotification, NSUserNotificationCenter
         notification = NSUserNotification.alloc().init()
         notification.setTitle_(title)
         notification.setInformativeText_(text)
@@ -49,6 +62,7 @@ class LinuxNotifications(VortaNotifications):
     """
 
     def __init__(self):
+        import notify2
 
         self.NOTIFY2_LEVEL = {
             'info': notify2.URGENCY_NORMAL,
@@ -58,11 +72,10 @@ class LinuxNotifications(VortaNotifications):
         notify2.init('vorta')
 
     def deliver(self, title, text, level='info'):
-        if not SettingsModel.get(key='enable_notifications').value:
-            return False
-        if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
-            return False
+        if self.notifications_suppressed(level):
+            return
 
+        import notify2
         n = notify2.Notification(title, text)
         n.set_urgency(self.NOTIFY2_LEVEL[level])
         return n.show()

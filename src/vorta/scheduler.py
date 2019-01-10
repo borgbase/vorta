@@ -45,7 +45,7 @@ class VortaScheduler(QtScheduler):
                                            minute=profile.schedule_fixed_minute)
             if self.get_job(job_id) is not None and trigger is not None:
                 self.reschedule_job(job_id, trigger=trigger)
-                notifier = VortaNotifications.pick()()
+                notifier = VortaNotifications.pick()
                 notifier.deliver('Vorta Scheduler', 'Background scheduler was changed.')
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
@@ -85,7 +85,7 @@ class VortaScheduler(QtScheduler):
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
     def create_backup(self, profile_id):
-        notifier = VortaNotifications.pick()()
+        notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get(id=profile_id)
 
         logger.info('Starting background backup for %s', profile.name)
