@@ -1,6 +1,11 @@
 import sys
 from vorta.models import SettingsModel
 
+if sys.platform == 'darwin':
+    from Foundation import NSUserNotification, NSUserNotificationCenter
+elif sys.platform == 'linux':
+    import notify2
+
 
 class VortaNotifications:
     """
@@ -27,9 +32,6 @@ class DarwinNotifications(VortaNotifications):
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
             return False
 
-        from Foundation import NSUserNotification
-        from Foundation import NSUserNotificationCenter
-
         notification = NSUserNotification.alloc().init()
         notification.setTitle_(title)
         notification.setInformativeText_(text)
@@ -45,7 +47,6 @@ class LinuxNotifications(VortaNotifications):
     https://notify2.readthedocs.io/en/latest/
     Follows https://developer.gnome.org/notification-spec/
     """
-    import notify2
 
     NOTIFY2_LEVEL = {
         'info': notify2.URGENCY_NORMAL,
@@ -53,7 +54,7 @@ class LinuxNotifications(VortaNotifications):
     }
 
     def __init__(self):
-        self.notify2.init('vorta')
+        notify2.init('vorta')
 
     def deliver(self, title, text, level='info'):
         if not SettingsModel.get(key='enable_notifications').value:
@@ -61,6 +62,6 @@ class LinuxNotifications(VortaNotifications):
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
             return False
 
-        n = self.notify2.Notification(title, text)
+        n = notify2.Notification(title, text)
         n.set_urgency(self.NOTIFY2_LEVEL[level])
         return n.show()
