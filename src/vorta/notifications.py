@@ -14,12 +14,8 @@ class VortaNotifications:
     def pick(cls):
         if sys.platform == 'darwin':
             return DarwinNotifications()
-        elif sys.platform == 'linux':  # test if dbus exists. Else fall back to dummy.
-            bus = QtDBus.QDBusConnection.sessionBus()
-            if bus.isConnected():
-                return LinuxNotifications()
-            else:
-                return cls()
+        elif QtDBus.QDBusConnection.sessionBus().isConnected():
+            return DBusNotifications()
         else:
             return cls()
 
@@ -55,7 +51,7 @@ class DarwinNotifications(VortaNotifications):
             return center.deliverNotification_(notification)
 
 
-class LinuxNotifications(VortaNotifications):
+class DBusNotifications(VortaNotifications):
     """
     Use qt-dbus to send notifications.
 
