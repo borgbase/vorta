@@ -1,16 +1,17 @@
 import logging
 from datetime import date, timedelta
+
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
-
-from vorta.borg.create import BorgCreateThread
-from .models import BackupProfileModel, EventLogModel
-from vorta.borg.prune import BorgPruneThread
-from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.check import BorgCheckThread
+from vorta.borg.create import BorgCreateThread
+from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.prune import BorgPruneThread
+
+from .models import BackupProfileModel, EventLogModel
 from .notifications import VortaNotifications
 
-logger = logging.getLogger('vorta')
+logger = logging.getLogger(__name__)
 
 
 class VortaScheduler(QtScheduler):

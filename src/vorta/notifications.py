@@ -1,6 +1,9 @@
 import sys
+import logging
 from PyQt5 import QtCore, QtDBus
 from vorta.models import SettingsModel
+
+logger = logging.getLogger(__name__)
 
 
 class VortaNotifications:
@@ -17,6 +20,7 @@ class VortaNotifications:
         elif QtDBus.QDBusConnection.sessionBus().isConnected():
             return DBusNotifications()
         else:
+            logger.warning('could not pick valid notification class')
             return cls()
 
     def deliver(self, title, text, level='info'):
@@ -26,10 +30,13 @@ class VortaNotifications:
     def notifications_suppressed(self, level):
         """Decide if notification is sent or not based on settings and level."""
         if not SettingsModel.get(key='enable_notifications').value:
+            logger.debug('notifications suppressed')
             return True
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
+            logger.debug('success notifications suppressed')
             return True
 
+        logger.debug('notification not suppressed')
         return False
 
 
@@ -85,10 +92,10 @@ class DBusNotifications(VortaNotifications):
                             id_replace, icon, title, text,
                             actions_list, hint, time)
             if x.errorName():
-                print("Failed to send notification!")
-                print(x.errorMessage())
+                logger.warning("Failed to send notification!")
+                logger.warning(x.errorMessage())
         else:
-            print("Invalid dbus interface")
+            logger.warning("Invalid dbus interface")
 
     def deliver(self, title, text, level='info'):
         if self.notifications_suppressed(level):
