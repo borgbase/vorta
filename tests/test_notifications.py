@@ -12,7 +12,7 @@ def test_linux_background_notifications(app, mocker):
     """We can't see notifications, but we watch for exceptions and errors."""
 
     notifier = vorta.notifications.VortaNotifications.pick()
-    assert isinstance(notifier, vorta.notifications.LinuxNotifications)
+    assert isinstance(notifier, vorta.notifications.DBusNotifications)
     notifier.deliver('Vorta Test', 'test notification', level='error')
 
     mocker.spy(QtDBus.QDBusInterface, 'call')
