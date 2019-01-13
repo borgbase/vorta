@@ -15,10 +15,9 @@ def main():
     args = parse_args()
 
     frozen_binary = getattr(sys, 'frozen', False)
-    # Don't fork if user specifies it or when running from onedir app bundle on macOS.
-    if (hasattr(args, 'foreground') and args.foreground) or (frozen_binary and sys.platform == 'darwin'):
-        pass
-    else:
+    need_foreground = frozen_binary and sys.platform in ('darwin', 'linux')
+    want_foreground = getattr(args, 'foreground', False)
+    if not (want_foreground or need_foreground):
         print('Forking to background (see system tray).')
         if os.fork():
             sys.exit()
