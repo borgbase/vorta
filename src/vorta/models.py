@@ -191,7 +191,7 @@ def init_db(con):
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
     if BackupProfileModel.select().count() == 0:
-        default_profile = BackupProfileModel(name='Default Profile')
+        default_profile = BackupProfileModel(name='Default')
         default_profile.save()
 
     # Default settings for all platforms.
