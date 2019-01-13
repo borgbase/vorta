@@ -14,7 +14,7 @@ from ..models import EventLogModel, BackupProfileMixin
 from ..utils import keyring
 
 mutex = QtCore.QMutex()
-logger = logging.getLogger('vorta')
+logger = logging.getLogger(__name__)
 
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):

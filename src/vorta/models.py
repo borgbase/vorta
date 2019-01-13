@@ -207,14 +207,20 @@ def init_db(con):
             'value': True,
             'type': 'checkbox',
             'label': 'Send errors to Sentry. This helps us quickly find bugs.'
+        },
+        {
+            'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
+            'label': 'Display notifications when background tasks fail.'
+        },
+        {
+            'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
+            'label': 'Also notify about successful background tasks.'
         }
     ]
     if sys.platform == 'darwin':
         settings += [
             {'key': 'autostart', 'value': False, 'type': 'checkbox',
              'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
-            {'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
-             'label': 'Display notifications when background tasks fail.'},
             {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
              'label': 'Check for updates on startup.'},
             {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
