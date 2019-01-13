@@ -7,6 +7,7 @@ from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
 from vorta.utils import parse_args
+from vorta.log import init_logger
 
 
 def main():
@@ -19,6 +20,8 @@ def main():
         print('Forking to background (see system tray).')
         if os.fork():
             sys.exit()
+
+    init_logger(foreground=want_foreground)
 
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
