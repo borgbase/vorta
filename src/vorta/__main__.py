@@ -2,7 +2,7 @@ import sys
 import os
 import peewee
 
-from vorta.models import init_db, SettingsModel
+from vorta.models import init_db
 from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
