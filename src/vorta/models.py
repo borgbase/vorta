@@ -203,12 +203,6 @@ def init_db(con):
             'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
         },
         {
-            'key': 'send_sentry_reports',
-            'value': True,
-            'type': 'checkbox',
-            'label': 'Send errors to Sentry. This helps us quickly find bugs.'
-        },
-        {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
             'label': 'Display notifications when background tasks fail.'
         },
