@@ -10,8 +10,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from ..models import EventLogModel, BackupProfileMixin
-from ..utils import keyring
+from vorta.models import EventLogModel, BackupProfileMixin
+from vorta.utils import keyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
@@ -174,8 +174,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.log_event(f'{parsed["path"]} ({parsed["status"]})')
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
-                        self.log_event(msg)
-                        logger.warning(msg)
+                        if msg:  # Log only if there is something to log.
+                            self.log_event(msg)
+                            logger.warning(msg)
 
             if p.poll() is not None:
                 time.sleep(0.1)
