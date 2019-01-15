@@ -5,6 +5,7 @@ import fcntl
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
+from .i18n import init_translations
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
 from .models import BackupProfileModel
@@ -43,6 +44,8 @@ class VortaApp(QApplication):
                 sys.exit(1)
 
         super().__init__(args_raw)
+        init_translations(self)
+
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
 

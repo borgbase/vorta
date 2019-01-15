@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# parse src code (.py) and QT's UI files (.ui), update files for translators (*.ts).
+# compile the *.ts xml text files to loadable *.qm binary files.
+
+# blank-separated list of languages to generate:
+LANGS="de_DE"
+
+# version of QT tools to use:
+export QT_SELECT=5
+
+# it is assumed we are in src/vorta/i18n now.
+pushd ..
+# invoke tools from src/vorta directory
+VORTA=`pwd`
+
+for L in $LANGS; do
+    pylupdate5 -verbose $VORTA/*.py $VORTA/views/*.py $VORTA/borg/*.py \
+                        $VORTA/assets/UI/*.ui \
+                        -ts $VORTA/i18n/ts/vorta.$L.ts
+    lrelease $VORTA/i18n/ts/vorta.$L.ts -qm $VORTA/i18n/qm/vorta.$L.qm
+done
+
+popd

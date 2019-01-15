@@ -53,3 +53,70 @@ To test for style errors:
 ```
 $ flake8
 ```
+
+## Working with translations
+
+NOTE: we are currently still working on the original strings.
+      DO NO TRANSLATION WORK EXCEPT IF YOU ARE WILLING TO DO DOUBLE WORK.
+
+Translations are updated there: https://www.transifex.com/borgbase/vorta/
+
+### Policy for translations
+
+- no google translate or other automated translation.
+- only native or as-good-as-native speakers should translate.
+- as there is a need for continued maintenance, a translator should be also a
+  user of vorta, having some own interest in the translation (one-time
+  translations are not that helpful if there is noone updating them regularly)
+- a translation must have >90% translated strings. if a translation falls
+  and stays below that for a longer time, it will not be used by vorta and
+  ultimately, it will get removed from the repository also.
+
+### Adding a new language
+
+- Only add a new language if you are willing to also update the translation
+  in future, when new strings are added and existing strings change.
+- Update LANGS variable in update-translations script.
+- Execute the update-translations script (current directory must be i18n/ ).
+- This will create a new file in i18n/ts/*.ts for the new language.
+- git add / git commit / make a pull request
+
+### Updating a language
+
+- Please only work on a translation if you are a native speaker or you have
+  similar language skills.
+- Edit the file i18n/*.ts that corresponds to your language.
+  You can use a simple editor or QT's "linguist" graphical editor.
+- Execute the update-translations script (current directory must be i18n/ ).
+
+### Notes for developers
+
+- original strings in .ui and .py must be American English (en_US)
+- in English, not translated:
+
+  - log messages (log file as well as log output on console or elsewhere)
+  - other console output, print().
+  - docs
+  - py source code, comments, docstrings
+- translated:
+
+  - GUI texts / messages
+- in Qt (sub)classes, use self.tr("English string"), scope will
+  be the instance class name.
+- elsewhere use vorta.i18n.translate("scopename", "English string")
+- to only mark for string extraction, but not immediately translate,
+  use vorta.i18n.trans_late function.
+  Later, to translate, use vorta.i18n.translate (giving same scope).
+
+### Required Software
+
+To successfully execute the update-translations script, you'll need:
+
+- bash shell
+- pylupdate5
+- lrelease
+- optional: "linguist" QT's graphical translation file editor
+
+Debian 9 "Stretch":
+
+apt install qttools5-dev-tools pyqt5-dev-tools
