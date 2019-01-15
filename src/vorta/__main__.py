@@ -14,9 +14,10 @@ def main():
     args = parse_args()
 
     frozen_binary = getattr(sys, 'frozen', False)
-    need_foreground = frozen_binary and sys.platform in ('darwin', 'linux')
     want_foreground = getattr(args, 'foreground', False)
-    if not (want_foreground or need_foreground):
+    # We assume that a frozen binary is a fat single-file binary made with
+    # PyInstaller. These are not compatible with forking into background here:
+    if not (want_foreground or frozen_binary):
         print('Forking to background (see system tray).')
         if os.fork():
             sys.exit()
