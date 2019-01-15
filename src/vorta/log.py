@@ -10,23 +10,25 @@ import os
 import logging
 from .config import LOG_DIR
 
-logger = logging.getLogger('vorta')
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger()
 
-# create handlers
-fh = logging.FileHandler(os.path.join(LOG_DIR, 'vorta.log'))
-# fh.setLevel(logging.DEBUG)
 
-ch = logging.StreamHandler()
-ch.setLevel(logging.WARNING)
+def init_logger(foreground=False):
+    logger.setLevel(logging.DEBUG)
+    logging.getLogger('peewee').setLevel(logging.INFO)
+    logging.getLogger('apscheduler').setLevel(logging.INFO)
 
-# create logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # create logging format
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-# apply formatter
-fh.setFormatter(formatter)
-ch.setFormatter(formatter)
+    # create handlers
+    fh = logging.FileHandler(os.path.join(LOG_DIR, 'vorta.log'))
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
 
-# add handlers
-logger.addHandler(fh)
-logger.addHandler(ch)
+    if foreground:  # log to console, when running in foreground
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)

@@ -7,6 +7,9 @@ The generic way is to install it as Python package using [PIP](https://pip.readt
 $ pip3 install vorta
 ```
 
+### Desktop Tray Icon
+Unless Vorta is started with the `--foreground` option, it will minimize to the system tray without opening a settings window. Be sure your desktop environment supports tray icons by e.g. installing this [Gnome extension](https://extensions.gnome.org/extension/615/appindicator-support/).
+
 ## Distribution Packages
 If available, prefer distribution-specific packages, as they offer better integration. (If you added Vorta to a Linux distribution, open an issue or PR and it will be added here.)
 
