@@ -1,3 +1,4 @@
+import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
@@ -221,7 +222,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status(params['message'])
                 return
 
-            if self.mount_point in params['active_mount_points']:
+            if os.path.normpath(self.mount_point) in params['active_mount_points']:
                 params['cmd'].append(self.mount_point)
                 thread = BorgUmountThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self.mountErrors.setText)
