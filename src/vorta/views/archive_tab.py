@@ -201,7 +201,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.result.connect(self.mount_result)
                     thread.start()
 
-        dialog = choose_file_dialog(self, "Choose Mount Point")
+        dialog = choose_file_dialog(self, "Choose Mount Point", want_folder=True)
         dialog.open(receive)
 
     def mount_result(self, result):
@@ -298,7 +298,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                         else:
                             self._set_status(params['message'])
 
-                dialog = choose_file_dialog(self, "Choose Extraction Point")
+                dialog = choose_file_dialog(self, "Choose Extraction Point", want_folder=True)
                 dialog.open(receive)
 
     def extract_archive_result(self, result):
