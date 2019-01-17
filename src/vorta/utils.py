@@ -247,10 +247,9 @@ def format_archive_name(profile, archive_name_tpl):
     }
     return archive_name_tpl.format(**available_vars)
 
+
 def open_folder(folder):
-    """
-    Opens a file browser on a folder
-    """
+    """Open a file browser on a folder."""
     if sys.platform == 'darwin':
         cmd = 'open'
     else:
