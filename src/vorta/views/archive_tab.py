@@ -223,10 +223,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def umount_action(self):
         snapshot_name = self.selected_archive_name()
 
-        try:
-            mount_point = self.mount_points[snapshot_name]
-        except KeyError:
-            mount_point = None
+        mount_point = self.mount_points.get(snapshot_name)
 
         if mount_point is not None:
             profile = self.profile()
@@ -331,22 +328,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not snapshot_name:
             return
 
-        if snapshot_name in self.mount_points:
-            self.set_mount_button_mode('Unmount')
-        else:
-            self.set_mount_button_mode('Mount')
+        mode = 'Unmount' if snapshot_name in self.mount_points else 'Mount'
+        self.set_mount_button_mode(mode)
 
     def open_folder_action(self):
         snapshot_name = self.selected_archive_name()
         if not snapshot_name:
             return
 
-        try:
-            mount_point = self.mount_points[snapshot_name]
-        except KeyError:
-            mount_point = None
+        mount_point = self.mount_points.get(snapshot_name)
 
-        if mount_point:
+        if mount_point is not None:
             open_folder(mount_point)
 
     def eventFilter(self, obj, event):

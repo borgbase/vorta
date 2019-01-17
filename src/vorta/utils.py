@@ -250,9 +250,5 @@ def format_archive_name(profile, archive_name_tpl):
 
 def open_folder(folder):
     """Open a file browser on a folder."""
-    if sys.platform == 'darwin':
-        cmd = 'open'
-    else:
-        cmd = 'xdg-open'
-
+    cmd = 'open' if sys.platform == 'darwin' else 'xdg-open'
     subprocess.Popen([cmd, folder])
