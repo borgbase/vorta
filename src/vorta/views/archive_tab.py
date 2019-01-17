@@ -2,7 +2,7 @@ import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMenu
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list_repo import BorgListRepoThread
@@ -12,7 +12,7 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -26,6 +26,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}
+        self.menu = None
         self.toolBox.setCurrentIndex(0)
 
         header = self.archiveTable.horizontalHeader()
@@ -40,9 +41,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status('')  # Set platform-specific hints.
 
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
+        self.archiveTable.setSelectionMode(QTableView.SingleSelection)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
+        self.archiveTable.installEventFilter(self)
 
         # Populate pruning options from database
         profile = self.profile()
@@ -332,3 +335,56 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.set_mount_button_mode('Unmount')
         else:
             self.set_mount_button_mode('Mount')
+
+    def open_folder_action(self):
+        snapshot_name = self.selected_archive_name()
+        if not snapshot_name:
+            return
+
+        try:
+            mount_point = self.mount_points[snapshot_name]
+        except KeyError:
+            mount_point = None
+
+        if mount_point:
+            open_folder(mount_point)
+
+    def eventFilter(self, obj, event):
+        if obj == self.archiveTable and event.type() == QtCore.QEvent.ContextMenu:
+            self.archiveTable_context_menu_event(event)
+            return True
+
+        return super(ArchiveTabBase, self).eventFilter(obj, event)
+
+    def archiveTable_context_menu_event(self, event):
+        snapshot_name = self.selected_archive_name()
+        if not snapshot_name or not self.archiveTable.indexAt(event.pos()).isValid():
+            event.ignore()
+            return
+
+        if not self.menu:
+            self.menu = QMenu(self)
+        else:
+            self.menu.clear()
+
+        if snapshot_name in self.mount_points:
+            open_folder = self.menu.addAction("Open Folder...")
+            open_folder.triggered.connect(self.open_folder_action)
+            self.menu.addSeparator()
+
+        extract_action = self.menu.addAction("Extract...")
+        extract_action.triggered.connect(self.list_archive_action)
+
+        if snapshot_name in self.mount_points:
+            mount_action = self.menu.addAction("Unmount")
+            mount_action.triggered.connect(self.umount_action)
+        else:
+            mount_action = self.menu.addAction("Mount...")
+            mount_action.triggered.connect(self.mount_action)
+
+        check_action = self.menu.addAction("Check")
+        check_action.triggered.connect(self.check_action)
+
+        self.menu.exec(event.globalPos())
+
+        event.accept()
