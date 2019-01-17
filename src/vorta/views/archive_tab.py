@@ -25,7 +25,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.mount_point = None
+        self.mount_points = {}
         self.toolBox.setCurrentIndex(0)
 
         header = self.archiveTable.horizontalHeader()
@@ -42,6 +42,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
         self.archiveTable.setAlternatingRowColors(True)
+        self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
 
         # Populate pruning options from database
         profile = self.profile()
@@ -174,6 +175,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status('Refreshed snapshots.')
             self.populate_from_profile()
 
+    def selected_archive_name(self):
+        row_selected = self.archiveTable.selectionModel().selectedRows()
+        if row_selected:
+            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            if snapshot_cell:
+                return snapshot_cell.text()
+        return None
+
     def mount_action(self):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)
@@ -182,18 +191,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return
 
         # Conditions are met (borg binary available, etc)
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
-            if snapshot_cell:
-                snapshot_name = snapshot_cell.text()
-                params['cmd'][-1] += f'::{snapshot_name}'
+        snapshot_name = self.selected_archive_name()
+        if snapshot_name:
+            params['cmd'][-1] += f'::{snapshot_name}'
+            params['current_archive'] = snapshot_name
 
         def receive():
             mount_point = dialog.selectedFiles()
             if mount_point:
                 params['cmd'].append(mount_point[0])
-                self.mount_point = mount_point[0]
+                self.mount_points[params['current_archive']] = mount_point[0]
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     thread = BorgMountThread(params['cmd'], params, parent=self)
@@ -208,38 +215,50 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status('Mounted successfully.')
-            self.mountButton.setText('Unmount')
-            self.mountButton.clicked.disconnect()
-            self.mountButton.clicked.connect(self.umount_action)
-        else:
-            self.mount_point = None
+            self.update_mount_button_text()
 
     def umount_action(self):
-        if self.mount_point is not None:
+        snapshot_name = self.selected_archive_name()
+
+        try:
+            mount_point = self.mount_points[snapshot_name]
+        except KeyError:
+            mount_point = None
+
+        if mount_point is not None:
             profile = self.profile()
             params = BorgUmountThread.prepare(profile)
             if not params['ok']:
                 self._set_status(params['message'])
                 return
 
-            if os.path.normpath(self.mount_point) in params['active_mount_points']:
-                params['cmd'].append(self.mount_point)
+            params['current_archive'] = snapshot_name
+
+            if os.path.normpath(mount_point) in params['active_mount_points']:
+                params['cmd'].append(mount_point)
                 thread = BorgUmountThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self.mountErrors.setText)
                 thread.result.connect(self.umount_result)
                 thread.start()
             else:
-                self._set_status('Mount point not active. Try restarting Vorta.')
+                self._set_status('Mount point not active.')
                 return
+
+    def set_mount_button_mode(self, mode):
+        self.mountButton.clicked.disconnect()
+        if mode == 'Mount':
+            self.mountButton.setText('Mount')
+            self.mountButton.clicked.connect(self.mount_action)
+        elif mode == 'Unmount':
+            self.mountButton.setText('Unmount')
+            self.mountButton.clicked.connect(self.umount_action)
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status('Un-mounted successfully.')
-            self.mountButton.setText('Mount')
-            self.mountButton.clicked.disconnect()
-            self.mountButton.clicked.connect(self.mount_action)
-            self.mount_point = None
+            del self.mount_points[result['params']['current_archive']]
+            self.update_mount_button_text()
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
@@ -303,3 +322,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
+
+    def update_mount_button_text(self):
+        snapshot_name = self.selected_archive_name()
+        if not snapshot_name:
+            return
+
+        if snapshot_name in self.mount_points:
+            self.set_mount_button_mode('Unmount')
+        else:
+            self.set_mount_button_mode('Mount')
