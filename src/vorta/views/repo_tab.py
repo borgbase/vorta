@@ -21,8 +21,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         # Populate dropdowns
         self.repoSelector.model().item(0).setEnabled(False)
-        self.repoSelector.addItem('+ Initialize New Repository', 'new')
-        self.repoSelector.addItem('+ Add Existing Repository', 'existing')
+        self.repoSelector.addItem(self.tr('+ Initialize New Repository'), 'new')
+        self.repoSelector.addItem(self.tr('+ Add Existing Repository'), 'existing')
         self.repoSelector.insertSeparator(3)
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
@@ -30,10 +30,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
 
-        self.repoCompression.addItem('LZ4 (default)', 'lz4')
-        self.repoCompression.addItem('Zstandard (medium)', 'zstd')
-        self.repoCompression.addItem('LZMA (high)', 'lzma,6')
-        self.repoCompression.addItem('No Compression', 'none')
+        self.repoCompression.addItem(self.tr('LZ4 (default)'), 'lz4')
+        self.repoCompression.addItem(self.tr('Zstandard (medium)'), 'zstd')
+        self.repoCompression.addItem(self.tr('LZMA (high)'), 'lzma,6')
+        self.repoCompression.addItem(self.tr('No Compression'), 'none')
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
@@ -71,8 +71,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def init_ssh(self):
         keys = get_private_keys()
         self.sshComboBox.clear()
-        self.sshComboBox.addItem('Automatically choose SSH Key (default)', None)
-        self.sshComboBox.addItem('Create New Key', 'new')
+        self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
+        self.sshComboBox.addItem(self.tr('Create New Key'), 'new')
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
 
@@ -104,15 +104,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 clipboard = QApplication.clipboard()
                 clipboard.setText(pub_key)
 
-                msg.setText("Public Key Copied to Clipboard")
-                msg.setInformativeText(
+                msg.setText(self.tr("Public Key Copied to Clipboard"))
+                msg.setInformativeText(self.tr(
                     "The selected public SSH key was copied to the clipboard. "
-                    "Use it to set up remote repo permissions.")
+                    "Use it to set up remote repo permissions."))
 
             else:
-                msg.setText("Couldn't find public key.")
+                msg.setText(self.tr("Couldn't find public key."))
         else:
-            msg.setText("Select a public key from the dropdown first.")
+            msg.setText(self.tr("Select a public key from the dropdown first."))
         msg.exec_()
 
     def compression_select_action(self, index):
@@ -169,8 +169,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             repo.delete_instance(recursive=True)  # This also deletes snapshots.
             self.repoSelector.setCurrentIndex(0)
             self.repoSelector.removeItem(selected_repo_index)
-            msg.setText('Repository was Unlinked')
-            msg.setInformativeText('You can always connect it again later.')
+            msg.setText(self.tr('Repository was Unlinked'))
+            msg.setInformativeText(self.tr('You can always connect it again later.'))
             msg.exec_()
 
             self.repo_changed.emit()

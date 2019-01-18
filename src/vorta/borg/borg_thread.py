@@ -216,7 +216,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.updated.emit(msg)
 
     def started_event(self):
-        self.updated.emit('Task started')
+        self.updated.emit(self.tr('Task started'))
 
     def finished_event(self, result):
         self.result.emit(result)

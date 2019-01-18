@@ -21,6 +21,10 @@ class VortaScheduler(QtScheduler):
         self.start()
         self.reload()
 
+    def tr(self, *args, **kwargs):
+        scope = self.__class__.__name__
+        return translate(scope, *args, **kwargs)
+
     def reload(self):
         for profile in BackupProfileModel.select():
             trigger = None
@@ -47,7 +51,7 @@ class VortaScheduler(QtScheduler):
             if self.get_job(job_id) is not None and trigger is not None:
                 self.reschedule_job(job_id, trigger=trigger)
                 notifier = VortaNotifications.pick()
-                notifier.deliver('Vorta Scheduler', 'Background scheduler was changed.')
+                notifier.deliver(self.tr('Vorta Scheduler'), self.tr('Background scheduler was changed.'))
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
                 self.add_job(
@@ -75,13 +79,13 @@ class VortaScheduler(QtScheduler):
             profile = BackupProfileModel.get(id=int(jobs[0][1]))
             return f"{jobs[0][0].strftime('%H:%M')} ({profile.name})"
         else:
-            return 'None scheduled'
+            return self.tr('None scheduled')
 
     def next_job_for_profile(self, profile_id):
         self.wakeup()
         job = self.get_job(str(profile_id))
         if job is None:
-            return 'None scheduled'
+            return self.tr('None scheduled')
         else:
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
@@ -90,7 +94,9 @@ class VortaScheduler(QtScheduler):
         profile = BackupProfileModel.get(id=profile_id)
 
         logger.info('Starting background backup for %s', profile.name)
-        notifier.deliver('Vorta Backup', 'Starting background backup for %s.' % profile.name, level='info')
+        notifier.deliver(self.tr('Vorta Backup'),
+                         self.tr('Starting background backup for %s.') % profile.name,
+                         level='info')
 
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
@@ -99,16 +105,18 @@ class VortaScheduler(QtScheduler):
             thread.start()
             thread.wait()
             if thread.process.returncode in [0, 1]:
-                notifier.deliver('Vorta Backup', 'Backup successful for %s.' % profile.name, level='info')
+                notifier.deliver(self.tr('Vorta Backup'),
+                                 self.tr('Backup successful for %s.') % profile.name,
+                                 level='info')
                 logger.info('Backup creation successful.')
                 self.post_backup_tasks(profile_id)
             else:
-                notifier.deliver('Vorta Backup', 'Error during backup creation.', level='error')
+                notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
                 logger.error('Error during backup creation.')
         else:
             logger.error('Conditions for backup not met. Aborting.')
-            logger.error(msg['message'])
-            notifier.deliver('Vorta Backup', msg['message'], level='error')
+            logger.error(msg['message'])  # XXX: in the log, we usually use english, but this might be translated.
+            notifier.deliver(self.tr('Vorta Backup'), msg['message'], level='error')
 
     def post_backup_tasks(self, profile_id):
         """

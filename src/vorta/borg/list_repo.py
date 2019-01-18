@@ -10,12 +10,12 @@ class BorgListRepoThread(BorgThread):
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Refreshing snapshots..')
+        self.app.backup_log_event.emit(self.tr('Refreshing snapshots..'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_log_event.emit('Refreshing snapshots done.')
+        self.app.backup_log_event.emit(self.tr('Refreshing snapshots done.'))
 
     @classmethod
     def prepare(cls, profile):

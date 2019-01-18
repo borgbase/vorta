@@ -31,14 +31,14 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            self.app.backup_log_event.emit('Backup finished.')
+            self.app.backup_log_event.emit(self.tr('Backup finished.'))
 
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Backup started.')
+        self.app.backup_log_event.emit(self.tr('Backup started.'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)

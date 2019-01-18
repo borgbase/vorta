@@ -5,7 +5,7 @@ from .borg_thread import BorgThread
 class BorgUmountThread(BorgThread):
 
     def started_event(self):
-        self.updated.emit('Unmounting archive...')
+        self.updated.emit(self.tr('Unmounting archive...'))
 
     @classmethod
     def prepare(cls, profile):

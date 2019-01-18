@@ -7,7 +7,7 @@ from vorta.utils import keyring
 class BorgInitThread(BorgThread):
 
     def started_event(self):
-        self.updated.emit('Setting up new repo...')
+        self.updated.emit(self.tr('Setting up new repo...'))
 
     @classmethod
     def prepare(cls, params):

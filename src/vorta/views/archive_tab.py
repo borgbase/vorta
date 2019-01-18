@@ -77,7 +77,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         profile = self.profile()
         if profile.repo is not None:
-            self.toolBox.setItemText(0, f'Archives for {profile.repo.url}')
+            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             for row, archive in enumerate(archives):
@@ -98,7 +98,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(enabled=True)
         else:
             self.archiveTable.setRowCount(0)
-            self.toolBox.setItemText(0, 'Archives')
+            self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
         self.archiveNameTemplate.setText(profile.new_archive_name)
@@ -107,11 +107,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def save_archive_template(self, tpl, key):
         profile = self.profile()
         try:
-            preview = 'Preview: ' + format_archive_name(profile, tpl)
+            preview = self.tr('Preview: %s') % format_archive_name(profile, tpl)
             setattr(profile, key, tpl)
             profile.save()
         except Exception:
-            preview = 'Error in archive name template.'
+            preview = self.tr('Error in archive name template.')
 
         if key == 'new_archive_name':
             self.archiveNamePreview.setText(preview)
@@ -153,7 +153,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def prune_result(self, result):
         if result['returncode'] == 0:
-            self._set_status('Pruning finished.')
+            self._set_status(self.tr('Pruning finished.'))
             self.list_action()
         else:
             self._toggle_all_buttons(True)
@@ -170,7 +170,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Refreshed snapshots.')
+            self._set_status(self.tr('Refreshed snapshots.'))
             self.populate_from_profile()
 
     def mount_action(self):
@@ -200,14 +200,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.result.connect(self.mount_result)
                     thread.start()
 
-        dialog = choose_file_dialog(self, "Choose Mount Point")
+        dialog = choose_file_dialog(self, self.tr("Choose Mount Point"))
         dialog.open(receive)
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Mounted successfully.')
-            self.mountButton.setText('Unmount')
+            self._set_status(self.tr('Mounted successfully.'))
+            self.mountButton.setText(self.tr('Unmount'))
             self.mountButton.clicked.disconnect()
             self.mountButton.clicked.connect(self.umount_action)
         else:
@@ -228,14 +228,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 thread.result.connect(self.umount_result)
                 thread.start()
             else:
-                self._set_status('Mount point not active. Try restarting Vorta.')
+                self._set_status(self.tr('Mount point not active. Try restarting Vorta.'))
                 return
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Un-mounted successfully.')
-            self.mountButton.setText('Mount')
+            self._set_status(self.tr('Un-mounted successfully.'))
+            self.mountButton.setText(self.tr('Mount'))
             self.mountButton.clicked.disconnect()
             self.mountButton.clicked.connect(self.mount_action)
             self.mount_point = None
@@ -270,7 +270,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 thread.result.connect(self.list_archive_result)
                 thread.start()
         else:
-            self._set_status('Select an archive to restore first.')
+            self._set_status(self.tr('Select an archive to restore first.'))
 
     def list_archive_result(self, result):
         self._set_status('')
@@ -297,7 +297,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                         else:
                             self._set_status(params['message'])
 
-                dialog = choose_file_dialog(self, "Choose Extraction Point")
+                dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"))
                 dialog.open(receive)
 
     def extract_archive_result(self, result):

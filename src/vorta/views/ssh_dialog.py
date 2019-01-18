@@ -31,9 +31,9 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.init_length()
 
     def init_format(self):
-        self.formatSelect.addItem('ED25519 (Recommended)', 'ed25519')
-        self.formatSelect.addItem('RSA (Legacy)', 'rsa')
-        self.formatSelect.addItem('ECDSA', 'ecdsa')
+        self.formatSelect.addItem(self.tr('ED25519 (Recommended)'), 'ed25519')
+        self.formatSelect.addItem(self.tr('RSA (Legacy)'), 'rsa')
+        self.formatSelect.addItem(self.tr('ECDSA'), 'ecdsa')
         self.outputFileTextBox.setText('~/.ssh/id_ed25519')
         self.formatSelect.currentIndexChanged.connect(self.format_select_change)
 
@@ -42,8 +42,8 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.outputFileTextBox.setText(new_output)
 
     def init_length(self):
-        self.lengthSelect.addItem('High (Recommended)', ('4096', '521'))
-        self.lengthSelect.addItem('Medium', ('2048', '384'))
+        self.lengthSelect.addItem(self.tr('High (Recommended)'), ('4096', '521'))
+        self.lengthSelect.addItem(self.tr('Medium'), ('2048', '384'))
 
     def generate_key(self):
         format = self.formatSelect.currentData()
@@ -56,7 +56,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
 
         output_path = os.path.expanduser(self.outputFileTextBox.text())
         if os.path.isfile(output_path):
-            self.errors.setText('Key file already exists. Not overwriting.')
+            self.errors.setText(self.tr('Key file already exists. Not overwriting.'))
         else:
             self.sshproc = QProcess(self)
             self.sshproc.finished.connect(self.generate_key_result)
@@ -68,9 +68,9 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             pub_key = open(output_path + '.pub').read().strip()
             clipboard = QApplication.clipboard()
             clipboard.setText(pub_key)
-            self.errors.setText(f'New key was copied to clipboard and written to {output_path}.')
+            self.errors.setText(self.tr('New key was copied to clipboard and written to %s.') % output_path)
         else:
-            self.errors.setText('Error during key generation.')
+            self.errors.setText(self.tr('Error during key generation.'))
 
     def get_values(self):
         return {

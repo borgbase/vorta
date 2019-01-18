@@ -10,7 +10,7 @@ FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 class BorgInfoThread(BorgThread):
 
     def started_event(self):
-        self.updated.emit('Validating existing repo...')
+        self.updated.emit(self.tr('Validating existing repo...'))
 
     @classmethod
     def prepare(cls, params):

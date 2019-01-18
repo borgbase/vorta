@@ -41,17 +41,17 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 self.repoURL.setText(folder[0])
                 self.repoURL.setEnabled(False)
                 self.sshComboBox.setEnabled(False)
-                self.repoLabel.setText('Repository Path:')
+                self.repoLabel.setText(self.tr('Repository Path:'))
                 self.is_remote_repo = False
 
-        dialog = choose_file_dialog(self, "Choose Location of Borg Repository")
+        dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
         dialog.open(receive)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
         self.repoURL.setEnabled(True)
         self.sshComboBox.setEnabled(True)
-        self.repoLabel.setText('Repository URL:')
+        self.repoLabel.setText(self.tr('Repository URL:'))
         self.is_remote_repo = True
 
     def run(self):
@@ -77,14 +77,19 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.result = result
             self.accept()
         else:
-            self._set_status('Unable to add your repository.')
+            self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
-        self.encryptionComboBox.addItem('Repokey-Blake2 (Recommended, key stored in repository)', 'repokey-blake2')
-        self.encryptionComboBox.addItem('Repokey', 'repokey')
-        self.encryptionComboBox.addItem('Keyfile-Blake2 (Key stored in home directory)', 'keyfile-blake2')
-        self.encryptionComboBox.addItem('Keyfile', 'keyfile')
-        self.encryptionComboBox.addItem('None (not recommended', 'none')
+        self.encryptionComboBox.addItem(self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
+                                        'repokey-blake2')
+        self.encryptionComboBox.addItem(self.tr('Repokey'),
+                                        'repokey')
+        self.encryptionComboBox.addItem(self.tr('Keyfile-Blake2 (Key stored in home directory)'),
+                                        'keyfile-blake2')
+        self.encryptionComboBox.addItem(self.tr('Keyfile'),
+                                        'keyfile')
+        self.encryptionComboBox.addItem(self.tr('None (not recommended'),
+                                        'none')
 
     def init_ssh_key(self):
         keys = get_private_keys()
@@ -94,13 +99,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
         if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
-            self._set_status('Please enter a valid repo URL or select a local path.')
+            self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
             return False
 
         if self.__class__ == AddRepoWindow:
             if self.values['encryption'] != 'none':
                 if len(self.values['password']) < 8:
-                    self._set_status('Please use a longer password.')
+                    self._set_status(self.tr('Please use a longer password.'))
                     return False
 
         return True
@@ -111,7 +116,7 @@ class ExistingRepoWindow(AddRepoWindow):
         super().__init__()
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
-        self.title.setText('Connect to existing Repository')
+        self.title.setText(self.tr('Connect to existing Repository'))
 
     def run(self):
         if self.validate():
