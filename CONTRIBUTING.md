@@ -28,7 +28,7 @@ $ vorta
 ```
 
 ## Working on the GUI
-Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/UI` with Qt Creator:
+Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/assets/UI` with Qt Creator:
 ```
 $ brew cask install qt-creator
 $ brew install qt
