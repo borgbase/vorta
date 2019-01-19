@@ -40,17 +40,20 @@ travis-debug:  ## Prepare connecting to Travis instance via SSH.
        -d '{ "quiet": true }' \
        https://api.travis-ci.org/job/${TRAVIS_JOB_ID}/debug
 
-translations-from-source:  ## Search source code for strings and upload them to Transifex.
+translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
 	pylupdate5 -verbose -translate-function trans_late \
 			   $$VORTA_SRC/*.py $$VORTA_SRC/views/*.py $$VORTA_SRC/borg/*.py \
 			   $$VORTA_SRC/assets/UI/*.ui \
 			   -ts $$VORTA_SRC/i18n/ts/vorta.en_US.ts
+
+translations-push: translations-from-source  ## Upload .ts to Transifex.
 	tx push -s
 
-translations-to-qm:  ## Download latest translations and compile them as .qm file.
+translations-pull:  ## Download .ts from Transifex.
 	tx pull -a
-	for f in $$(ls $$VORTA_SRC/i18n/ts/vorta.*.ts); do lrelease $$f -qm $$VORTA_SRC/i18n/qm/$$(basename $$f .ts).qm; done
 
+translations-to-qm:  ## Compile .ts text files to binary .qm files.
+	for f in $$(ls $$VORTA_SRC/i18n/ts/vorta.*.ts); do lrelease $$f -qm $$VORTA_SRC/i18n/qm/$$(basename $$f .ts).qm; done
 
 
 help:

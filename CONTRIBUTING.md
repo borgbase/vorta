@@ -87,8 +87,10 @@ Translations are updated there: https://www.transifex.com/borgbase/vorta/
 
 ### Data Flow to/from transifex
 
-- extract/push: make translations-from-source:
-- pull/compile: make translations-to-qm
+- extract: make translations-from-source
+- push: make translations-push
+- pull: make translations-pull
+- compile: make translations-to-qm
 
 
 ### Notes for developers
