@@ -76,18 +76,20 @@ Translations are updated there: https://www.transifex.com/borgbase/vorta/
 
 - Only add a new language if you are willing to also update the translation
   in future, when new strings are added and existing strings change.
-- Update LANGS variable in update-translations script.
-- Execute the update-translations script (current directory must be i18n/ ).
-- This will create a new file in i18n/ts/*.ts for the new language.
-- git add / git commit / make a pull request
+- Request a new language via transifex.
+- TODO: add notes here what the maintainer has to do
 
 ### Updating a language
 
 - Please only work on a translation if you are a native speaker or you have
   similar language skills.
-- Edit the file i18n/*.ts that corresponds to your language.
-  You can use a simple editor or QT's "linguist" graphical editor.
-- Execute the update-translations script (current directory must be i18n/ ).
+- Edit the language on transifex.
+
+### Data Flow to/from transifex
+
+- extract/push: make translations-from-source:
+- pull/compile: make translations-to-qm
+
 
 ### Notes for developers
 
@@ -110,12 +112,14 @@ Translations are updated there: https://www.transifex.com/borgbase/vorta/
 
 ### Required Software
 
-To successfully execute the update-translations script, you'll need:
+To successfully run the translation-related Makefile targets, the translations
+maintainer needs:
 
-- bash shell
+- make tool
 - pylupdate5
 - lrelease
-- optional: "linguist" QT's graphical translation file editor
+- transifex-client pypi package
+  (should be already there via requirements.d/dev.txt)
 
 Debian 9 "Stretch":
 
