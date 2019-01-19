@@ -11,6 +11,7 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
+from vorta.i18n import translate
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name
 from vorta.models import BackupProfileMixin, ArchiveModel
 
@@ -121,7 +122,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
         if not params['ok']:
-            self._set_status(params['message'])
+            self._set_status(translate(params['message']))
             return
 
         # Conditions are met (borg binary available, etc)
@@ -177,7 +178,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)
         if not params['ok']:
-            self._set_status(params['message'])
+            self._set_status(translate(params['message']))
             return
 
         # Conditions are met (borg binary available, etc)
@@ -218,7 +219,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             profile = self.profile()
             params = BorgUmountThread.prepare(profile)
             if not params['ok']:
-                self._set_status(params['message'])
+                self._set_status(translate(params['message']))
                 return
 
             if self.mount_point in params['active_mount_points']:
@@ -258,7 +259,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 params = BorgListArchiveThread.prepare(profile)
 
                 if not params['ok']:
-                    self._set_status(params['message'])
+                    self._set_status(translate(params['message']))
                     return
                 params['cmd'][-1] += f'::{archive_name}'
                 params['archive_name'] = archive_name
@@ -295,7 +296,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
                         else:
-                            self._set_status(params['message'])
+                            self._set_status(translate(params['message']))
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"))
                 dialog.open(receive)

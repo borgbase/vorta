@@ -15,9 +15,10 @@ pushd ..
 VORTA=`pwd`
 
 for L in $LANGS; do
-    pylupdate5 -verbose $VORTA/*.py $VORTA/views/*.py $VORTA/borg/*.py \
-                        $VORTA/assets/UI/*.ui \
-                        -ts $VORTA/i18n/ts/vorta.$L.ts
+    pylupdate5 -verbose -translate-function trans_late \
+               $VORTA/*.py $VORTA/views/*.py $VORTA/borg/*.py \
+               $VORTA/assets/UI/*.ui \
+               -ts $VORTA/i18n/ts/vorta.$L.ts
     lrelease $VORTA/i18n/ts/vorta.$L.ts -qm $VORTA/i18n/qm/vorta.$L.qm
 done
 

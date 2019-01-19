@@ -7,6 +7,7 @@ from vorta.borg.check import BorgCheckThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.prune import BorgPruneThread
+from vorta.i18n import translate
 
 from .models import BackupProfileModel, EventLogModel
 from .notifications import VortaNotifications
@@ -115,8 +116,8 @@ class VortaScheduler(QtScheduler):
                 logger.error('Error during backup creation.')
         else:
             logger.error('Conditions for backup not met. Aborting.')
-            logger.error(msg['message'])  # XXX: in the log, we usually use english, but this might be translated.
-            notifier.deliver(self.tr('Vorta Backup'), msg['message'], level='error')
+            logger.error(msg['message'])
+            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
 
     def post_backup_tasks(self, profile_id):
         """

@@ -5,7 +5,7 @@ import fcntl
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from .i18n import init_translations
+from .i18n import init_translations, translate
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
 from .models import BackupProfileModel
@@ -71,7 +71,7 @@ class VortaApp(QApplication):
             thread = BorgCreateThread(msg['cmd'], msg, parent=self)
             thread.start()
         else:
-            self.backup_log_event.emit(msg['message'])
+            self.backup_log_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
         self.main_window.show()
