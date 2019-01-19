@@ -16,8 +16,14 @@ class TrayMenu(QSystemTrayIcon):
         menu.aboutToShow.connect(self.on_user_click)
 
         self.setContextMenu(menu)
+
+        self.activated.connect(self.on_activation)
         self.setVisible(True)
         self.show()
+
+    def on_activation(self, reason):
+        if reason == QSystemTrayIcon.Trigger:
+            self.app.toggle_main_window_visibility()
 
     def on_user_click(self):
         """Build system tray menu based on current state."""
