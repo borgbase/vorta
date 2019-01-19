@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[vorta.vorta-en-ts]
+file_filter = src/vorta/i18n/ts/vorta.<lang>.ts
+minimum_perc = 0
+source_file = src/vorta/i18n/ts/vorta.en_US.ts
+source_lang = en_US
+type = QT
+

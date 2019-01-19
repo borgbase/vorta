@@ -90,7 +90,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                                         'keyfile-blake2')
         self.encryptionComboBox.addItem(self.tr('Keyfile'),
                                         'keyfile')
-        self.encryptionComboBox.addItem(self.tr('None (not recommended'),
+        self.encryptionComboBox.addItem(self.tr('None (not recommended)'),
                                         'none')
 
     def init_ssh_key(self):

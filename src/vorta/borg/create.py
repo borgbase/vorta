@@ -12,7 +12,7 @@ from .borg_thread import BorgThread
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
-            new_snapshot, created = ArchiveModel.get_or_create(
+            new_archive, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
                     'name': result['data']['archive']['name'],
@@ -22,7 +22,7 @@ class BorgCreateThread(BorgThread):
                     'size': result['data']['archive']['stats']['deduplicated_size']
                 }
             )
-            new_snapshot.save()
+            new_archive.save()
             if 'cache' in result['data'] and created:
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])

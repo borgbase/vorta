@@ -166,7 +166,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
             profile.repo = None
             profile.save()
-            repo.delete_instance(recursive=True)  # This also deletes snapshots.
+            repo.delete_instance(recursive=True)  # This also deletes archives.
             self.repoSelector.setCurrentIndex(0)
             self.repoSelector.removeItem(selected_repo_index)
             msg.setText(self.tr('Repository was Unlinked'))

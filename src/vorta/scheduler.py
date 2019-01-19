@@ -132,7 +132,7 @@ class VortaScheduler(QtScheduler):
                 prune_thread.start()
                 prune_thread.wait()
 
-                # Refresh snapshots
+                # Refresh archives
                 msg = BorgListRepoThread.prepare(profile)
                 if msg['ok']:
                     list_thread = BorgListRepoThread(msg['cmd'], msg)

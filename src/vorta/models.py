@@ -108,7 +108,7 @@ class SourceFileModel(pw.Model):
 
 
 class ArchiveModel(pw.Model):
-    """A snapshot to a specific remote repository."""
+    """An archive in a remote repository."""
     snapshot_id = pw.CharField(unique=True)
     name = pw.CharField()
     repo = pw.ForeignKeyField(RepoModel, backref='archives')

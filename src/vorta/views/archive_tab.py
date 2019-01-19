@@ -128,10 +128,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # Conditions are met (borg binary available, etc)
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
-            if snapshot_cell:
-                snapshot_name = snapshot_cell.text()
-                params['cmd'][-1] += f'::{snapshot_name}'
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            if archive_cell:
+                archive_name = archive_cell.text()
+                params['cmd'][-1] += f'::{archive_name}'
 
         thread = BorgCheckThread(params['cmd'], params, parent=self)
         thread.updated.connect(self._set_status)
@@ -171,7 +171,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status(self.tr('Refreshed snapshots.'))
+            self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def mount_action(self):
@@ -184,10 +184,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # Conditions are met (borg binary available, etc)
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
-            if snapshot_cell:
-                snapshot_name = snapshot_cell.text()
-                params['cmd'][-1] += f'::{snapshot_name}'
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            if archive_cell:
+                archive_name = archive_cell.text()
+                params['cmd'][-1] += f'::{archive_name}'
 
         def receive():
             mount_point = dialog.selectedFiles()
