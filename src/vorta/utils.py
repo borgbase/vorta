@@ -10,6 +10,7 @@ import getpass
 from collections import defaultdict
 from functools import reduce
 import operator
+import psutil
 
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
@@ -252,3 +253,22 @@ def open_folder(folder):
     """Open a file browser on a folder."""
     cmd = 'open' if sys.platform == 'darwin' else 'xdg-open'
     subprocess.Popen([cmd, folder])
+
+
+def get_mount_points(repo_url):
+    processes = [p for p in psutil.process_iter() if 'borg' in p.name() and 'mount' in p.cmdline()]
+
+    mount_points = {}
+    for proc in psutil.process_iter():
+        if proc.name() != 'borg':
+            continue
+
+        if 'mount' not in proc.cmdline():
+            continue
+
+        if proc.cmdline()[-2].startswith(repo_url):
+            archive_name = proc.cmdline()[-2][len(repo_url) + 2:]
+            mount_point = proc.cmdline()[-1]
+            mount_points[archive_name] = mount_point
+
+    return mount_points

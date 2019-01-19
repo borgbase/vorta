@@ -2,6 +2,7 @@ import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMenu
 
 from vorta.borg.prune import BorgPruneThread
@@ -12,7 +13,8 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder, \
+    get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -29,12 +31,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.toolBox.setCurrentIndex(0)
 
+        self.folder_icon = QIcon(':/icons/folder-open.svg')
+        self.archiveTable.setHorizontalHeaderItem(3, QTableWidgetItem(self.folder_icon, ''))
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.Fixed)
+        header.setMinimumSectionSize(32)
+        header.resizeSection(3, 32)
+        header.setSectionResizeMode(4, QHeaderView.Stretch)
         header.setStretchLastSection(True)
 
         if sys.platform != 'darwin':
@@ -81,6 +88,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Populate archive list and prune settings from profile."""
 
         profile = self.profile()
+        self.mount_points = get_mount_points(profile.repo.url)
         if profile.repo is not None:
             self.toolBox.setItemText(0, f'Archives for {profile.repo.url}')
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
@@ -96,7 +104,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 else:
                     formatted_duration = ''
                 self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-                self.archiveTable.setItem(row, 3, QTableWidgetItem(archive.name))
+                mount_point = self.mount_points.get(archive.name)
+                if mount_point is not None:
+                    item = QTableWidgetItem(self.folder_icon, '')
+                else:
+                    item = QTableWidgetItem('')
+                self.archiveTable.setItem(row, 3, item)
+                self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
             self.archiveTable.setRowCount(len(archives))
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
@@ -132,7 +146,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # Conditions are met (borg binary available, etc)
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if snapshot_cell:
                 snapshot_name = snapshot_cell.text()
                 params['cmd'][-1] += f'::{snapshot_name}'
@@ -181,10 +195,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def selected_archive_name(self):
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if snapshot_cell:
                 return snapshot_cell.text()
         return None
+
+    def set_mount_button_mode(self, mode):
+        self.mountButton.clicked.disconnect()
+        if mode == 'Mount':
+            self.mountButton.setText('Mount')
+            self.mountButton.clicked.connect(self.mount_action)
+        elif mode == 'Unmount':
+            self.mountButton.setText('Unmount')
+            self.mountButton.clicked.connect(self.umount_action)
 
     def mount_action(self):
         profile = self.profile()
@@ -219,6 +242,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if result['returncode'] == 0:
             self._set_status('Mounted successfully.')
             self.update_mount_button_text()
+            archive_name = result['params']['current_archive']
+            row = self.row_of_archive(archive_name)
+            item = QTableWidgetItem(self.folder_icon, '')
+            self.archiveTable.setItem(row, 3, item)
 
     def umount_action(self):
         snapshot_name = self.selected_archive_name()
@@ -244,21 +271,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status('Mount point not active.')
                 return
 
-    def set_mount_button_mode(self, mode):
-        self.mountButton.clicked.disconnect()
-        if mode == 'Mount':
-            self.mountButton.setText('Mount')
-            self.mountButton.clicked.connect(self.mount_action)
-        elif mode == 'Unmount':
-            self.mountButton.setText('Unmount')
-            self.mountButton.clicked.connect(self.umount_action)
-
     def umount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status('Un-mounted successfully.')
-            del self.mount_points[result['params']['current_archive']]
+            archive_name = result['params']['current_archive']
+            del self.mount_points[archive_name]
             self.update_mount_button_text()
+            row = self.row_of_archive(archive_name)
+            item = QTableWidgetItem('')
+            self.archiveTable.setItem(row, 3, item)
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
@@ -272,7 +294,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 3)
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if archive_cell:
                 archive_name = archive_cell.text()
                 params = BorgListArchiveThread.prepare(profile)
@@ -380,3 +402,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu.exec(event.globalPos())
 
         event.accept()
+
+    def row_of_archive(self, archive_name):
+        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
+        rows = [item.row() for item in items if item.column() == 4]
+        if rows == []:
+            return None
+
+        return rows[0]
