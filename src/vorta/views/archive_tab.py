@@ -51,6 +51,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setSelectionMode(QTableView.SingleSelection)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
         self.archiveTable.setAlternatingRowColors(True)
+        self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
         self.archiveTable.installEventFilter(self)
 
@@ -405,6 +406,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu.exec(event.globalPos())
 
         event.accept()
+
+    def cell_double_clicked(self, row, column):
+        if column == 3:
+            self.open_folder_action()
 
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
