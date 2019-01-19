@@ -388,6 +388,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         extract_action = self.menu.addAction("Extract...")
         extract_action.triggered.connect(self.list_archive_action)
+        extract_action.setEnabled(self.extractButton.isEnabled())
 
         if snapshot_name in self.mount_points:
             mount_action = self.menu.addAction("Unmount")
@@ -395,9 +396,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             mount_action = self.menu.addAction("Mount...")
             mount_action.triggered.connect(self.mount_action)
+        mount_action.setEnabled(self.mountButton.isEnabled())
 
         check_action = self.menu.addAction("Check")
         check_action.triggered.connect(self.check_action)
+        check_action.setEnabled(self.checkButton.isEnabled())
 
         self.menu.exec(event.globalPos())
 
