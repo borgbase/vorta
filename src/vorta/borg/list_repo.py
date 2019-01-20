@@ -10,12 +10,12 @@ class BorgListRepoThread(BorgThread):
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Refreshing snapshots..')
+        self.app.backup_log_event.emit(self.tr('Refreshing archives...'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_log_event.emit('Refreshing snapshots done.')
+        self.app.backup_log_event.emit(self.tr('Refreshing archives done.'))
 
     @classmethod
     def prepare(cls, profile):
@@ -36,21 +36,23 @@ class BorgListRepoThread(BorgThread):
     def process_result(self, result):
         if result['returncode'] == 0:
             repo, created = RepoModel.get_or_create(url=result['cmd'][-1])
-            remote_snapshots = result['data'].get('archives', [])
+            if not result['data']:
+                result['data'] = {}  # TODO: Workaround for tests. Can't read mock results 2x.
+            remote_archives = result['data'].get('archives', [])
 
-            # Delete snapshots that don't exist on the remote side
-            for snapshot in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
-                if not list(filter(lambda s: s['id'] == snapshot.snapshot_id, remote_snapshots)):
-                    snapshot.delete_instance()
+            # Delete archives that don't exist on the remote side
+            for archive in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
+                if not list(filter(lambda s: s['id'] == archive.snapshot_id, remote_archives)):
+                    archive.delete_instance()
 
-            # Add remote snapshots we don't have locally.
-            for snapshot in result['data'].get('archives', []):
-                new_snapshot, _ = ArchiveModel.get_or_create(
-                    snapshot_id=snapshot['id'],
+            # Add remote archives we don't have locally.
+            for archive in result['data'].get('archives', []):
+                new_archive, _ = ArchiveModel.get_or_create(
+                    snapshot_id=archive['id'],
                     defaults={
                         'repo': repo.id,
-                        'name': snapshot['name'],
-                        'time': parser.parse(snapshot['time'])
+                        'name': archive['name'],
+                        'time': parser.parse(archive['time'])
                     }
                 )
-                new_snapshot.save()
+                new_archive.save()

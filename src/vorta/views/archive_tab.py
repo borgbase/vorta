@@ -13,8 +13,8 @@ from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder, \
-    get_mount_points
+from vorta.i18n import translate
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -91,7 +91,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         self.mount_points = get_mount_points(profile.repo.url)
         if profile.repo is not None:
-            self.toolBox.setItemText(0, f'Archives for {profile.repo.url}')
+            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             for row, archive in enumerate(archives):
@@ -118,7 +118,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(enabled=True)
         else:
             self.archiveTable.setRowCount(0)
-            self.toolBox.setItemText(0, 'Archives')
+            self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
         self.archiveNameTemplate.setText(profile.new_archive_name)
@@ -127,11 +127,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def save_archive_template(self, tpl, key):
         profile = self.profile()
         try:
-            preview = 'Preview: ' + format_archive_name(profile, tpl)
+            preview = self.tr('Preview: %s') % format_archive_name(profile, tpl)
             setattr(profile, key, tpl)
             profile.save()
         except Exception:
-            preview = 'Error in archive name template.'
+            preview = self.tr('Error in archive name template.')
 
         if key == 'new_archive_name':
             self.archiveNamePreview.setText(preview)
@@ -141,16 +141,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
         if not params['ok']:
-            self._set_status(params['message'])
+            self._set_status(translate(params['message']))
             return
 
         # Conditions are met (borg binary available, etc)
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if snapshot_cell:
-                snapshot_name = snapshot_cell.text()
-                params['cmd'][-1] += f'::{snapshot_name}'
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
+            if archive_cell:
+                archive_name = archive_cell.text()
+                params['cmd'][-1] += f'::{archive_name}'
 
         thread = BorgCheckThread(params['cmd'], params, parent=self)
         thread.updated.connect(self._set_status)
@@ -173,7 +173,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def prune_result(self, result):
         if result['returncode'] == 0:
-            self._set_status('Pruning finished.')
+            self._set_status(self.tr('Pruning finished.'))
             self.list_action()
         else:
             self._toggle_all_buttons(True)
@@ -190,7 +190,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Refreshed snapshots.')
+            self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):
@@ -214,14 +214,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)
         if not params['ok']:
-            self._set_status(params['message'])
+            self._set_status(translate(params['message']))
             return
 
         # Conditions are met (borg binary available, etc)
-        snapshot_name = self.selected_archive_name()
-        if snapshot_name:
-            params['cmd'][-1] += f'::{snapshot_name}'
-            params['current_archive'] = snapshot_name
+        archive_name = self.selected_archive_name()
+        if archive_name:
+            params['cmd'][-1] += f'::{archive_name}'
+            params['current_archive'] = archive_name
 
         def receive():
             mount_point = dialog.selectedFiles()
@@ -235,18 +235,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.result.connect(self.mount_result)
                     thread.start()
 
-        dialog = choose_file_dialog(self, "Choose Mount Point", want_folder=True)
+        dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
         dialog.open(receive)
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Mounted successfully.')
+            self._set_status(self.tr('Mounted successfully.'))
             self.update_mount_button_text()
             archive_name = result['params']['current_archive']
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem(self.folder_icon, '')
             self.archiveTable.setItem(row, 3, item)
+        else:
+            self.mount_point = None
 
     def umount_action(self):
         snapshot_name = self.selected_archive_name()
@@ -257,7 +259,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             profile = self.profile()
             params = BorgUmountThread.prepare(profile)
             if not params['ok']:
-                self._set_status(params['message'])
+                self._set_status(translate(params['message']))
                 return
 
             params['current_archive'] = snapshot_name
@@ -269,13 +271,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 thread.result.connect(self.umount_result)
                 thread.start()
             else:
-                self._set_status('Mount point not active.')
+                self._set_status(self.tr('Mount point not active.'))
                 return
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status('Un-mounted successfully.')
+            self._set_status(self.tr('Un-mounted successfully.'))
             archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
             self.update_mount_button_text()
@@ -301,7 +303,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 params = BorgListArchiveThread.prepare(profile)
 
                 if not params['ok']:
-                    self._set_status(params['message'])
+                    self._set_status(translate(params['message']))
                     return
                 params['cmd'][-1] += f'::{archive_name}'
                 params['archive_name'] = archive_name
@@ -313,7 +315,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 thread.result.connect(self.list_archive_result)
                 thread.start()
         else:
-            self._set_status('Select an archive to restore first.')
+            self._set_status(self.tr('Select an archive to restore first.'))
 
     def list_archive_result(self, result):
         self._set_status('')
@@ -338,9 +340,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
                         else:
-                            self._set_status(params['message'])
+                            self._set_status(translate(params['message']))
 
-                dialog = choose_file_dialog(self, "Choose Extraction Point", want_folder=True)
+                dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
                 dialog.open(receive)
 
     def extract_archive_result(self, result):

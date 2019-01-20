@@ -28,7 +28,7 @@ $ vorta
 ```
 
 ## Working on the GUI
-Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/UI` with Qt Creator:
+Qt Creator is used to edit views. Install from [their site](https://www.qt.io/download) or using Homebrew and then open the .ui files in `vorta/assets/UI` with Qt Creator:
 ```
 $ brew cask install qt-creator
 $ brew install qt
@@ -53,3 +53,76 @@ To test for style errors:
 ```
 $ flake8
 ```
+
+## Working with translations
+
+NOTE: we are currently still working on the original strings.
+      DO NO TRANSLATION WORK EXCEPT IF YOU ARE WILLING TO DO DOUBLE WORK.
+
+Translations are updated there: https://www.transifex.com/borgbase/vorta/
+
+### Policy for translations
+
+- no google translate or other automated translation.
+- only native or as-good-as-native speakers should translate.
+- as there is a need for continued maintenance, a translator should be also a
+  user of vorta, having some own interest in the translation (one-time
+  translations are not that helpful if there is noone updating them regularly)
+- a translation must have >90% translated strings. if a translation falls
+  and stays below that for a longer time, it will not be used by vorta and
+  ultimately, it will get removed from the repository also.
+
+### Adding a new language
+
+- Only add a new language if you are willing to also update the translation
+  in future, when new strings are added and existing strings change.
+- Request a new language via transifex.
+- TODO: add notes here what the maintainer has to do
+
+### Updating a language
+
+- Please only work on a translation if you are a native speaker or you have
+  similar language skills.
+- Edit the language on transifex.
+
+### Data Flow to/from transifex
+
+- extract: make translations-from-source
+- push: make translations-push
+- pull: make translations-pull
+- compile: make translations-to-qm
+
+
+### Notes for developers
+
+- original strings in .ui and .py must be American English (en_US)
+- in English, not translated:
+
+  - log messages (log file as well as log output on console or elsewhere)
+  - other console output, print().
+  - docs
+  - py source code, comments, docstrings
+- translated:
+
+  - GUI texts / messages
+- in Qt (sub)classes, use self.tr("English string"), scope will
+  be the instance class name.
+- elsewhere use vorta.i18n.translate("scopename", "English string")
+- to only mark for string extraction, but not immediately translate,
+  use vorta.i18n.trans_late function.
+  Later, to translate, use vorta.i18n.translate (giving same scope).
+
+### Required Software
+
+To successfully run the translation-related Makefile targets, the translations
+maintainer needs:
+
+- make tool
+- pylupdate5
+- lrelease
+- transifex-client pypi package
+  (should be already there via requirements.d/dev.txt)
+
+Debian 9 "Stretch":
+
+apt install qttools5-dev-tools pyqt5-dev-tools

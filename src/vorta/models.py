@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
+from vorta.i18n import trans_late
 from vorta.utils import slugify
 
 SCHEMA_VERSION = 10
@@ -108,7 +109,7 @@ class SourceFileModel(pw.Model):
 
 
 class ArchiveModel(pw.Model):
-    """A snapshot to a specific remote repository."""
+    """An archive in a remote repository."""
     snapshot_id = pw.CharField(unique=True)
     name = pw.CharField()
     repo = pw.ForeignKeyField(RepoModel, backref='archives')
@@ -184,6 +185,49 @@ def _apply_schema_update(current_schema, version_after, *operations):
         current_schema.save()
 
 
+def get_misc_settings():
+    # Default settings for all platforms.
+    settings = [
+        {
+            'key': 'use_light_icon',
+            'value': False,
+            'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Use light system tray icon (applies after restart, useful for dark themes).')
+        },
+        {
+            'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Display notifications when background tasks fail.')
+        },
+        {
+            'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Also notify about successful background tasks.')
+        }
+    ]
+    if sys.platform == 'darwin':
+        settings += [
+            {
+                'key': 'autostart', 'value': False, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.')
+            },
+            {
+                'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Check for updates on startup.')
+            },
+            {
+                'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Include pre-release versions when checking for updates.')
+            },
+        ]
+
+    return settings
+
+
 def init_db(con):
     db.initialize(con)
     db.connect()
@@ -194,35 +238,8 @@ def init_db(con):
         default_profile = BackupProfileModel(name='Default')
         default_profile.save()
 
-    # Default settings for all platforms.
-    settings = [
-        {
-            'key': 'use_light_icon',
-            'value': False,
-            'type': 'checkbox',
-            'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
-        },
-        {
-            'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
-            'label': 'Display notifications when background tasks fail.'
-        },
-        {
-            'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
-            'label': 'Also notify about successful background tasks.'
-        }
-    ]
-    if sys.platform == 'darwin':
-        settings += [
-            {'key': 'autostart', 'value': False, 'type': 'checkbox',
-             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
-            {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
-             'label': 'Check for updates on startup.'},
-            {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
-             'label': 'Include pre-release versions when checking for updates.'},
-        ]
-
     # Create missing settings and update labels. Leave setting values untouched.
-    for setting in settings:
+    for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         s.label = setting['label']
         s.save()

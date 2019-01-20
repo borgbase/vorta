@@ -29,7 +29,6 @@ For available packages and instructions, see [INSTALL.md](INSTALL.md)
 ## Development and Bug Reports
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See [CONTRIBUTING.md](CONTRIBUTING.md)
-- During beta-testing, crash reports are sent to [Sentry](https://sentry.io) to quickly find bugs. You can disable bug reports under the **Misc** settings tab. Your repo password will always be scrubbed *before* the test report is transmitted.
 
 ## License and Credits
 - Ⓒ 2018 [Manuel Riel](https://twitter.com/_m3nu) for [BorgBase.com](https://www.borgbase.com). All rights reserved.
