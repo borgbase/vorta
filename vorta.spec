@@ -18,6 +18,7 @@ a = Analysis(['src/vorta/__main__.py'],
              datas=[
                 ('src/vorta/assets/UI/*', 'assets/UI'),
                 ('src/vorta/assets/icons/*', 'assets/icons'),
+                ('src/vorta/i18n/qm/*', 'vorta/i18n/qm'),
              ],
              hiddenimports=[
                  'vorta.views.collection_rc',
