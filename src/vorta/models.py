@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
+from vorta.i18n import trans_late
 from vorta.utils import slugify
 
 SCHEMA_VERSION = 10
@@ -191,25 +192,37 @@ def get_misc_settings():
             'key': 'use_light_icon',
             'value': False,
             'type': 'checkbox',
-            'label': 'Use light system tray icon (applies after restart, useful for dark themes).'
+            'label': trans_late('settings',
+                                'Use light system tray icon (applies after restart, useful for dark themes).')
         },
         {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
-            'label': 'Display notifications when background tasks fail.'
+            'label': trans_late('settings',
+                                'Display notifications when background tasks fail.')
         },
         {
             'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
-            'label': 'Also notify about successful background tasks.'
+            'label': trans_late('settings',
+                                'Also notify about successful background tasks.')
         }
     ]
     if sys.platform == 'darwin':
         settings += [
-            {'key': 'autostart', 'value': False, 'type': 'checkbox',
-             'label': 'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.'},
-            {'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
-             'label': 'Check for updates on startup.'},
-            {'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
-             'label': 'Include pre-release versions when checking for updates.'},
+            {
+                'key': 'autostart', 'value': False, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.')
+            },
+            {
+                'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Check for updates on startup.')
+            },
+            {
+                'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Include pre-release versions when checking for updates.')
+            },
         ]
 
     return settings
