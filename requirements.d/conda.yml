@@ -18,6 +18,3 @@ dependencies:
   - pyobjc-core
   - pyobjc-framework-Cocoa
   - pyinstaller
-  - pip:
-      - sentry-sdk
-

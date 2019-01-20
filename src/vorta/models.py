@@ -184,16 +184,7 @@ def _apply_schema_update(current_schema, version_after, *operations):
         current_schema.save()
 
 
-def init_db(con):
-    db.initialize(con)
-    db.connect()
-    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
-                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
-
-    if BackupProfileModel.select().count() == 0:
-        default_profile = BackupProfileModel(name='Default')
-        default_profile.save()
-
+def get_misc_settings():
     # Default settings for all platforms.
     settings = [
         {
@@ -221,8 +212,21 @@ def init_db(con):
              'label': 'Include pre-release versions when checking for updates.'},
         ]
 
+    return settings
+
+
+def init_db(con):
+    db.initialize(con)
+    db.connect()
+    db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
+                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
+
+    if BackupProfileModel.select().count() == 0:
+        default_profile = BackupProfileModel(name='Default')
+        default_profile.save()
+
     # Create missing settings and update labels. Leave setting values untouched.
-    for setting in settings:
+    for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         s.label = setting['label']
         s.save()
