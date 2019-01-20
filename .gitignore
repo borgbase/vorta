@@ -1,12 +1,10 @@
 .DS_Store
 .idea/
+bin/
 build/
 dist/
 docs/
 *.autosave
-bin/macosx64/Sparkle.framework
-bin/macosx64/borg
-bin/*
 __pycache__
 .eggs
 vorta.egg-info
