@@ -10,6 +10,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
+from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import keyring
 
@@ -88,22 +89,22 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         # Do checks to see if running Borg is possible.
         if cls.is_running():
-            ret['message'] = 'Backup is already in progress.'
+            ret['message'] = trans_late('messages', 'Backup is already in progress.')
             return ret
 
         if cls.prepare_bin() is None:
-            ret['message'] = 'Borg binary was not found.'
+            ret['message'] = trans_late('messages', 'Borg binary was not found.')
             return ret
 
         if profile.repo is None:
-            ret['message'] = 'Add a backup repository first.'
+            ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 
         # Try to get password from chosen keyring backend.
         try:
             ret['password'] = keyring.get_password("vorta-repo", profile.repo.url)
         except Exception:
-            ret['message'] = 'Please make sure you grant Vorta permission to use the Keychain.'
+            ret['message'] = trans_late('messages', 'Please make sure you grant Vorta permission to use the Keychain.')
             return ret
 
         ret['ssh_key'] = profile.ssh_key
@@ -216,7 +217,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.updated.emit(msg)
 
     def started_event(self):
-        self.updated.emit('Task started')
+        self.updated.emit(self.tr('Task started'))
 
     def finished_event(self, result):
         self.result.emit(result)

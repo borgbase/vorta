@@ -1,11 +1,12 @@
 import psutil
 from .borg_thread import BorgThread
+from ..i18n import trans_late
 
 
 class BorgUmountThread(BorgThread):
 
     def started_event(self):
-        self.updated.emit('Unmounting archive...')
+        self.updated.emit(self.tr('Unmounting archive...'))
 
     @classmethod
     def prepare(cls, profile):
@@ -22,7 +23,7 @@ class BorgUmountThread(BorgThread):
                 ret['active_mount_points'].append(p.mountpoint)
 
         if len(ret['active_mount_points']) == 0:
-            ret['message'] = 'No active Borg mounts found.'
+            ret['message'] = trans_late('messages', 'No active Borg mounts found.')
             return ret
 
         cmd = ['borg', 'umount', '--log-json']

@@ -244,7 +244,7 @@ font-weight: bold;
          <item>
           <widget class="QCheckBox" name="pruneCheckBox">
            <property name="text">
-            <string>Prune old Snapshots after each backup.</string>
+            <string>Prune old Archives after each backup.</string>
            </property>
            <property name="tristate">
             <bool>false</bool>

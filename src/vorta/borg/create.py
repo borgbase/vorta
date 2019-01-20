@@ -3,6 +3,7 @@ import tempfile
 from dateutil import parser
 import subprocess
 
+from ..i18n import trans_late
 from ..utils import get_current_wifi, format_archive_name
 from ..models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
@@ -11,7 +12,7 @@ from .borg_thread import BorgThread
 class BorgCreateThread(BorgThread):
     def process_result(self, result):
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
-            new_snapshot, created = ArchiveModel.get_or_create(
+            new_archive, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
                     'name': result['data']['archive']['name'],
@@ -21,7 +22,7 @@ class BorgCreateThread(BorgThread):
                     'size': result['data']['archive']['stats']['deduplicated_size']
                 }
             )
-            new_snapshot.save()
+            new_archive.save()
             if 'cache' in result['data'] and created:
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
@@ -31,14 +32,14 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            self.app.backup_log_event.emit('Backup finished.')
+            self.app.backup_log_event.emit(self.tr('Backup finished.'))
 
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Backup started.')
+        self.app.backup_log_event.emit(self.tr('Backup started.'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
@@ -74,7 +75,7 @@ class BorgCreateThread(BorgThread):
 
         n_backup_folders = SourceFileModel.select().count()
         if n_backup_folders == 0:
-            ret['message'] = 'Add some folders to back up first.'
+            ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
 
         current_wifi = get_current_wifi()
@@ -89,11 +90,11 @@ class BorgCreateThread(BorgThread):
                 )
             )
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
-                ret['message'] = 'Current Wifi is not allowed.'
+                ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
 
         if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
-            ret['message'] = 'Repo folder not mounted or moved.'
+            ret['message'] = trans_late('messages', 'Repo folder not mounted or moved.')
             return ret
 
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
@@ -129,10 +130,10 @@ class BorgCreateThread(BorgThread):
         ret['profile'] = profile
         ret['repo'] = profile.repo
         if cls.pre_post_backup_cmd(ret) != 0:
-            ret['message'] = 'Pre-backup command returned non-zero exit code.'
+            ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
             return ret
 
-        ret['message'] = 'Starting backup..'
+        ret['message'] = trans_late('messages', 'Starting backup..')
         ret['ok'] = True
         ret['cmd'] = cmd
 

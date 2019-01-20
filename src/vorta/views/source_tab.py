@@ -43,8 +43,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.sourceFilesWidget.addItem(dir[0])
                     new_source.save()
 
-        item = "directory" if want_folder else "file"
-        dialog = choose_file_dialog(self, "Choose %s to back up" % item, want_folder=want_folder)
+        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file to back up")
+        dialog = choose_file_dialog(self, msg, want_folder=want_folder)
         dialog.open(receive)
 
     def source_remove(self):

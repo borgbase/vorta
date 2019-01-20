@@ -15,3 +15,4 @@ vorta.egg-info
 .vagrant
 *.log
 htmlcov
+*.qm
