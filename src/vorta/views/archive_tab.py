@@ -203,12 +203,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def set_mount_button_mode(self, mode):
         self.mountButton.clicked.disconnect()
-        if mode == 'Mount':
-            self.mountButton.setText('Mount')
-            self.mountButton.clicked.connect(self.mount_action)
-        elif mode == 'Unmount':
-            self.mountButton.setText('Unmount')
-            self.mountButton.clicked.connect(self.umount_action)
+        mount = (mode == 'Mount')
+        self.mountButton.setText('Mount' if mount else 'Unmount')
+        self.mountButton.clicked.connect(self.mount_action if mount else self.umount_action)
 
     def mount_action(self):
         profile = self.profile()
@@ -416,7 +413,4 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
         rows = [item.row() for item in items if item.column() == 4]
-        if rows == []:
-            return None
-
-        return rows[0]
+        return rows[0] if rows else None
