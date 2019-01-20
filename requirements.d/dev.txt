@@ -1,3 +1,4 @@
+transifex-client
 pytest
 pytest-qt
 pytest-mock

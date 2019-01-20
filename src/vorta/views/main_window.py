@@ -51,7 +51,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Init profile list
-        self.profileSelector.addItem('+ Add New Profile', None)
+        self.profileSelector.addItem(self.tr('+ Add New Profile'), None)
         self.profileSelector.insertSeparator(2)
         for profile in BackupProfileModel.select():
             self.profileSelector.addItem(profile.name, profile.id)
@@ -72,7 +72,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if BorgThread.is_running():
             self.createStartBtn.setEnabled(False)
             self.cancelButton.setEnabled(True)
-            self.set_status('Backup in progress.', progress_max=0)
+            self.set_status(self.tr('Backup in progress.'), progress_max=0)
 
     def on_close_window(self):
         self.close()
@@ -140,4 +140,4 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_status(progress_max=100)
-        self.set_status('Task cancelled')
+        self.set_status(self.tr('Task cancelled'))

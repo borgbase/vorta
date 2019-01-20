@@ -4,7 +4,7 @@ from .borg_thread import BorgThread
 class BorgMountThread(BorgThread):
 
     def started_event(self):
-        self.updated.emit('Mounting archive into folder...')
+        self.updated.emit(self.tr('Mounting archive into folder...'))
 
     @classmethod
     def prepare(cls, profile):

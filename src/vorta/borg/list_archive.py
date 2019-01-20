@@ -8,11 +8,11 @@ class BorgListArchiveThread(BorgThread):
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit('Getting archive content..')
+        self.app.backup_log_event.emit(self.tr('Getting archive content..'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
-        self.app.backup_log_event.emit('Done getting archive content.')
+        self.app.backup_log_event.emit(self.tr('Done getting archive content.'))
         self.result.emit(result)
 
     @classmethod

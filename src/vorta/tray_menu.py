@@ -29,26 +29,26 @@ class TrayMenu(QSystemTrayIcon):
         status.setEnabled(False)
 
         if BorgThread.is_running():
-            status.setText('Backup in Progress')
-            cancel_action = menu.addAction("Cancel Backup")
+            status.setText(self.tr('Backup in Progress'))
+            cancel_action = menu.addAction(self.tr('Cancel Backup'))
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
-            status.setText(f'Next Task: {self.app.scheduler.next_job}')
+            status.setText(self.tr('Next Task: %s') % self.app.scheduler.next_job)
             profiles = BackupProfileModel.select()
             if profiles.count() > 1:
-                profile_menu = menu.addMenu('Backup Now')
+                profile_menu = menu.addMenu(self.tr('Backup Now'))
                 for profile in profiles:
                     new_item = profile_menu.addAction(profile.name)
                     new_item.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
             else:
                 profile = profiles.first()
-                profile_menu = menu.addAction('Backup Now')
+                profile_menu = menu.addAction(self.tr('Backup Now'))
                 profile_menu.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
 
-        settings_action = menu.addAction("Settings")
+        settings_action = menu.addAction(self.tr('Settings'))
         settings_action.triggered.connect(self.app.open_main_window_action)
 
         menu.addSeparator()
 
-        exit_action = menu.addAction("Exit")
+        exit_action = menu.addAction(self.tr('Exit'))
         exit_action.triggered.connect(self.app.quit)
