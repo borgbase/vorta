@@ -4,7 +4,7 @@ export QT_SELECT=5
 .PHONY : help
 .DEFAULT_GOAL := help
 
-Vorta.app:
+Vorta.app: translations-to-qm
 	#pyrcc5 -o src/vorta/views/collection_rc.py src/vorta/assets/icons/collection.qrc
 	pyinstaller --clean --noconfirm vorta.spec
 	cp -R bin/macosx64/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
@@ -22,7 +22,7 @@ github-release: Vorta.dmg
 	git push upstream gh-pages
 	git checkout master
 
-pypi-release:
+pypi-release: translations-to-qm
 	python setup.py sdist
 	twine upload dist/vorta-0.6.5.tar.gz
 
