@@ -84,6 +84,8 @@ def get_private_keys():
     available_private_keys = []
     if os.path.isdir(ssh_folder):
         for key in os.listdir(ssh_folder):
+            if not os.path.isfile(os.path.join(ssh_folder, key)):
+                continue
             for key_format in key_formats:
                 try:
                     parsed_key = key_format.from_private_key_file(
