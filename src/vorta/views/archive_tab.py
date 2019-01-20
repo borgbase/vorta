@@ -196,9 +196,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def selected_archive_name(self):
         row_selected = self.archiveTable.selectionModel().selectedRows()
         if row_selected:
-            snapshot_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if snapshot_cell:
-                return snapshot_cell.text()
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
+            if archive_cell:
+                return archive_cell.text()
         return None
 
     def set_mount_button_mode(self, mode):
@@ -248,9 +248,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.mount_point = None
 
     def umount_action(self):
-        snapshot_name = self.selected_archive_name()
+        archive_name = self.selected_archive_name()
 
-        mount_point = self.mount_points.get(snapshot_name)
+        mount_point = self.mount_points.get(archive_name)
 
         if mount_point is not None:
             profile = self.profile()
@@ -259,7 +259,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status(translate(params['message']))
                 return
 
-            params['current_archive'] = snapshot_name
+            params['current_archive'] = archive_name
 
             if os.path.normpath(mount_point) in params['active_mount_points']:
                 params['cmd'].append(mount_point)
@@ -346,19 +346,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
 
     def update_mount_button_text(self):
-        snapshot_name = self.selected_archive_name()
-        if not snapshot_name:
+        archive_name = self.selected_archive_name()
+        if not archive_name:
             return
 
-        mode = 'Unmount' if snapshot_name in self.mount_points else 'Mount'
+        mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
         self.set_mount_button_mode(mode)
 
     def open_folder_action(self):
-        snapshot_name = self.selected_archive_name()
-        if not snapshot_name:
+        archive_name = self.selected_archive_name()
+        if not archive_name:
             return
 
-        mount_point = self.mount_points.get(snapshot_name)
+        mount_point = self.mount_points.get(archive_name)
 
         if mount_point is not None:
             open_folder(mount_point)
@@ -371,8 +371,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         return super(ArchiveTabBase, self).eventFilter(obj, event)
 
     def archiveTable_context_menu_event(self, event):
-        snapshot_name = self.selected_archive_name()
-        if not snapshot_name or not self.archiveTable.indexAt(event.pos()).isValid():
+        archive_name = self.selected_archive_name()
+        if not archive_name or not self.archiveTable.indexAt(event.pos()).isValid():
             event.ignore()
             return
 
@@ -381,7 +381,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.menu.clear()
 
-        if snapshot_name in self.mount_points:
+        if archive_name in self.mount_points:
             open_folder = self.menu.addAction("Open Folder...")
             open_folder.triggered.connect(self.open_folder_action)
             self.menu.addSeparator()
@@ -390,7 +390,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         extract_action.triggered.connect(self.list_archive_action)
         extract_action.setEnabled(self.extractButton.isEnabled())
 
-        if snapshot_name in self.mount_points:
+        if archive_name in self.mount_points:
             mount_action = self.menu.addAction("Unmount")
             mount_action.triggered.connect(self.umount_action)
         else:
