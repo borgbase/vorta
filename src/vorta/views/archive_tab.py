@@ -87,7 +87,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
-
         profile = self.profile()
         if profile.repo is not None:
             self.mount_points = get_mount_points(profile.repo.url)
@@ -366,12 +365,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def eventFilter(self, obj, event):
         if obj == self.archiveTable and event.type() == QtCore.QEvent.ContextMenu:
-            self.archiveTable_context_menu_event(event)
+            self.archive_table_context_menu_event(event)
             return True
 
         return super(ArchiveTabBase, self).eventFilter(obj, event)
 
-    def archiveTable_context_menu_event(self, event):
+    def archive_table_context_menu_event(self, event):
         archive_name = self.selected_archive_name()
         if not archive_name or not self.archiveTable.indexAt(event.pos()).isValid():
             event.ignore()
