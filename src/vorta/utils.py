@@ -208,10 +208,9 @@ def set_tray_icon(tray, active=False):
     tray.setIcon(icon)
 
 
-def detect_use_light_icon():
+def uses_dark_mode():
     """
-    This function detects if we should use a light tray icon (e.g. when running
-    macOS in dark mode).
+    This function detects if we are running in dark mode (e.g. macOS dark mode).
     """
     if sys.platform == 'darwin':
         from Foundation import NSUserDefaults
