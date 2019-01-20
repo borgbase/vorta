@@ -256,8 +256,6 @@ def open_folder(folder):
 
 
 def get_mount_points(repo_url):
-    processes = [p for p in psutil.process_iter() if 'borg' in p.name() and 'mount' in p.cmdline()]
-
     mount_points = {}
     for proc in psutil.process_iter():
         if proc.name() != 'borg':
