@@ -264,9 +264,15 @@ def get_mount_points(repo_url):
         if 'mount' not in proc.cmdline():
             continue
 
-        if proc.cmdline()[-2].startswith(repo_url):
-            archive_name = proc.cmdline()[-2][len(repo_url) + 2:]
-            mount_point = proc.cmdline()[-1]
-            mount_points[archive_name] = mount_point
+        for idx, parameter in enumerate(proc.cmdline()):
+            if parameter.startswith(repo_url + '::'):
+                archive_name = parameter[len(repo_url) + 2:]
+
+                # The borg mount command specifies that the mount_point
+                # parameter comes after the archive name
+                if len(proc.cmdline()) > idx + 1:
+                    mount_point = proc.cmdline()[idx + 1]
+                    mount_points[archive_name] = mount_point
+                break
 
     return mount_points
