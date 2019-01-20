@@ -89,8 +89,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Populate archive list and prune settings from profile."""
 
         profile = self.profile()
-        self.mount_points = get_mount_points(profile.repo.url)
         if profile.repo is not None:
+            self.mount_points = get_mount_points(profile.repo.url)
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
@@ -117,6 +117,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.scrollToItem(item)
             self._toggle_all_buttons(enabled=True)
         else:
+            self.mount_points = {}
             self.archiveTable.setRowCount(0)
             self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
