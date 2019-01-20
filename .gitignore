@@ -1,17 +1,46 @@
-.DS_Store
-.idea/
-bin/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
 build/
 dist/
+.eggs/
+lib/
+*.egg-info/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+
+# Django stuff:
+*.log
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Other stuff
+.DS_Store
+.idea/
 docs/
 *.autosave
-__pycache__
-.eggs
-vorta.egg-info
-.coverage
-.tox
-.python-version
 .vagrant
-*.log
-htmlcov
 *.qm
