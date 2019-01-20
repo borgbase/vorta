@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 
 from .borg.borg_thread import BorgThread
@@ -17,7 +18,8 @@ class TrayMenu(QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
-        self.activated.connect(self.on_activation)
+        if sys.platform != 'darwin':
+            self.activated.connect(self.on_activation)
         self.setVisible(True)
         self.show()
 
