@@ -50,7 +50,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
-        self.archiveTable.installEventFilter(self)
 
         # Populate pruning options from database
         profile = self.profile()
