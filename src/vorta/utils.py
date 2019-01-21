@@ -10,6 +10,7 @@ import getpass
 from collections import defaultdict
 from functools import reduce
 import operator
+import psutil
 
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
@@ -247,3 +248,30 @@ def format_archive_name(profile, archive_name_tpl):
         'user': getpass.getuser()
     }
     return archive_name_tpl.format(**available_vars)
+
+
+def open_folder(folder):
+    """Open a file browser on a folder."""
+    cmd = 'open' if sys.platform == 'darwin' else 'xdg-open'
+    subprocess.Popen([cmd, folder])
+
+
+def get_mount_points(repo_url):
+    mount_points = {}
+    for proc in psutil.process_iter():
+        if proc.name() == 'borg' or proc.name().startswith('python'):
+            if 'mount' not in proc.cmdline():
+                continue
+
+            for idx, parameter in enumerate(proc.cmdline()):
+                if parameter.startswith(repo_url + '::'):
+                    archive_name = parameter[len(repo_url) + 2:]
+
+                    # The borg mount command specifies that the mount_point
+                    # parameter comes after the archive name
+                    if len(proc.cmdline()) > idx + 1:
+                        mount_point = proc.cmdline()[idx + 1]
+                        mount_points[archive_name] = mount_point
+                    break
+
+    return mount_points
