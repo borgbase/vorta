@@ -6,9 +6,10 @@ from ..models import RepoModel, ArchiveModel, BackupProfileMixin
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from ..utils import pretty_bytes, get_private_keys, get_asset
 from .ssh_dialog import SSHAddWindow
+from vorta.views.utils import get_icon_class
 
 uifile = get_asset('UI/repotab.ui')
-RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
 
 
 class RepoTab(RepoBase, RepoUI, BackupProfileMixin):

@@ -1,10 +1,11 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
-from ..utils import get_asset, get_sorted_wifis
-from ..models import EventLogModel, WifiSettingModel, BackupProfileMixin
+from vorta.utils import get_asset, get_sorted_wifis
+from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin
+from vorta.views.utils import get_icon_class
 
 uifile = get_asset('UI/scheduletab.ui')
-ScheduleUI, ScheduleBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+ScheduleUI, ScheduleBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
 
 
 class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
