@@ -27,6 +27,7 @@ def main():
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
     init_db(sqlite_db)
 
+    # Init app after database is available
     from vorta.application import VortaApp
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
