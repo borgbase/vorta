@@ -2,7 +2,7 @@ import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMenu
 
 from vorta.borg.prune import BorgPruneThread
@@ -14,8 +14,7 @@ from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.views.extract_dialog import ExtractDialog
 from vorta.i18n import translate
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, open_folder, \
-    get_mount_points
+from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
 
 uifile = get_asset('UI/archivetab.ui')
@@ -359,7 +358,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         mount_point = self.mount_points.get(archive_name)
 
         if mount_point is not None:
-            open_folder(mount_point)
+            QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
     def eventFilter(self, obj, event):
         if obj == self.archiveTable and event.type() == QtCore.QEvent.ContextMenu:
