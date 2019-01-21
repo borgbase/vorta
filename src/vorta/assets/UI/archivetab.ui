@@ -94,6 +94,11 @@ font-weight: bold;
          </column>
          <column>
           <property name="text">
+           <string>Mounted</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
            <string>Name</string>
           </property>
          </column>
