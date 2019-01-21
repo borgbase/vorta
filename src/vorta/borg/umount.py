@@ -1,3 +1,4 @@
+import os.path
 import psutil
 from .borg_thread import BorgThread
 from ..i18n import trans_late
@@ -20,7 +21,7 @@ class BorgUmountThread(BorgThread):
         partitions = psutil.disk_partitions(all=True)
         for p in partitions:
             if p.device == 'borgfs':
-                ret['active_mount_points'].append(p.mountpoint)
+                ret['active_mount_points'].append(os.path.normpath(p.mountpoint))
 
         if len(ret['active_mount_points']) == 0:
             ret['message'] = trans_late('messages', 'No active Borg mounts found.')
