@@ -242,7 +242,7 @@ def init_db(con):
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         if created and setting['key'] == "use_light_icon":
-            s.value = uses_dark_mode()
+            s.value = bool(uses_dark_mode())
         s.label = setting['label']
         s.save()
 
