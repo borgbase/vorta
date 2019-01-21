@@ -3,7 +3,7 @@ import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QIcon, QDesktopServices
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMenu
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list_repo import BorgListRepoThread
@@ -38,7 +38,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        header.setMinimumSectionSize(32)
         header.setSectionResizeMode(4, QHeaderView.Stretch)
         header.setStretchLastSection(True)
 
@@ -101,14 +100,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
                     formatted_duration = ''
+
                 self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
+
                 mount_point = self.mount_points.get(archive.name)
                 if mount_point is not None:
                     item = QTableWidgetItem(f'…{mount_point[-5:]}')
-                else:
-                    item = QTableWidgetItem('')
-                self.archiveTable.setItem(row, 3, item)
+                    self.archiveTable.setItem(row, 3, item)
+
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
+
             self.archiveTable.setRowCount(len(archives))
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
@@ -350,62 +351,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
         self.set_mount_button_mode(mode)
 
-    def open_folder_action(self):
-        archive_name = self.selected_archive_name()
-        if not archive_name:
-            return
-
-        mount_point = self.mount_points.get(archive_name)
-
-        if mount_point is not None:
-            QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
-
-    def eventFilter(self, obj, event):
-        if obj == self.archiveTable and event.type() == QtCore.QEvent.ContextMenu:
-            self.archive_table_context_menu_event(event)
-            return True
-
-        return super(ArchiveTabBase, self).eventFilter(obj, event)
-
-    def archive_table_context_menu_event(self, event):
-        archive_name = self.selected_archive_name()
-        if not archive_name or not self.archiveTable.indexAt(event.pos()).isValid():
-            event.ignore()
-            return
-
-        if not self.menu:
-            self.menu = QMenu(self)
-        else:
-            self.menu.clear()
-
-        if archive_name in self.mount_points:
-            open_folder = self.menu.addAction("Open Folder...")
-            open_folder.triggered.connect(self.open_folder_action)
-            self.menu.addSeparator()
-
-        extract_action = self.menu.addAction("Extract...")
-        extract_action.triggered.connect(self.list_archive_action)
-        extract_action.setEnabled(self.extractButton.isEnabled())
-
-        if archive_name in self.mount_points:
-            mount_action = self.menu.addAction("Unmount")
-            mount_action.triggered.connect(self.umount_action)
-        else:
-            mount_action = self.menu.addAction("Mount...")
-            mount_action.triggered.connect(self.mount_action)
-        mount_action.setEnabled(self.mountButton.isEnabled())
-
-        check_action = self.menu.addAction("Check")
-        check_action.triggered.connect(self.check_action)
-        check_action.setEnabled(self.checkButton.isEnabled())
-
-        self.menu.exec(event.globalPos())
-
-        event.accept()
-
     def cell_double_clicked(self, row, column):
         if column == 3:
-            self.open_folder_action()
+            archive_name = self.selected_archive_name()
+            if not archive_name:
+                return
+
+            mount_point = self.mount_points.get(archive_name)
+
+            if mount_point is not None:
+                QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
