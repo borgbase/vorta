@@ -32,15 +32,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.toolBox.setCurrentIndex(0)
 
         self.folder_icon = QIcon(':/icons/folder-open.svg')
-        self.archiveTable.setHorizontalHeaderItem(3, QTableWidgetItem(self.folder_icon, ''))
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.Fixed)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
         header.setMinimumSectionSize(32)
-        header.resizeSection(3, 32)
         header.setSectionResizeMode(4, QHeaderView.Stretch)
         header.setStretchLastSection(True)
 
@@ -106,7 +104,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
                 mount_point = self.mount_points.get(archive.name)
                 if mount_point is not None:
-                    item = QTableWidgetItem(self.folder_icon, '')
+                    item = QTableWidgetItem(f'…{mount_point[-5:]}')
                 else:
                     item = QTableWidgetItem('')
                 self.archiveTable.setItem(row, 3, item)
@@ -242,7 +240,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.update_mount_button_text()
             archive_name = result['params']['current_archive']
             row = self.row_of_archive(archive_name)
-            item = QTableWidgetItem(self.folder_icon, '')
+            item = QTableWidgetItem(f"…{result['cmd'][-1][-5:]}")
             self.archiveTable.setItem(row, 3, item)
         else:
             self.mount_point = None

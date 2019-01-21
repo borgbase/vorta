@@ -259,21 +259,19 @@ def open_folder(folder):
 def get_mount_points(repo_url):
     mount_points = {}
     for proc in psutil.process_iter():
-        if proc.name() != 'borg':
-            continue
+        if proc.name() == 'borg' or proc.name().startswith('python'):
+            if 'mount' not in proc.cmdline():
+                continue
 
-        if 'mount' not in proc.cmdline():
-            continue
+            for idx, parameter in enumerate(proc.cmdline()):
+                if parameter.startswith(repo_url + '::'):
+                    archive_name = parameter[len(repo_url) + 2:]
 
-        for idx, parameter in enumerate(proc.cmdline()):
-            if parameter.startswith(repo_url + '::'):
-                archive_name = parameter[len(repo_url) + 2:]
-
-                # The borg mount command specifies that the mount_point
-                # parameter comes after the archive name
-                if len(proc.cmdline()) > idx + 1:
-                    mount_point = proc.cmdline()[idx + 1]
-                    mount_points[archive_name] = mount_point
-                break
+                    # The borg mount command specifies that the mount_point
+                    # parameter comes after the archive name
+                    if len(proc.cmdline()) > idx + 1:
+                        mount_point = proc.cmdline()[idx + 1]
+                        mount_points[archive_name] = mount_point
+                    break
 
     return mount_points
