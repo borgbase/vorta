@@ -35,7 +35,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="archivesToolBox">
       <property name="geometry">
@@ -94,7 +94,7 @@ font-weight: bold;
          </column>
          <column>
           <property name="text">
-           <string>Mounted</string>
+           <string>Mount Point</string>
           </property>
          </column>
          <column>

@@ -433,11 +433,6 @@
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="97"/>
-        <source>Mounted</source>
-        <translation>Eingehängepunkt</translation>
-    </message>
-    <message>
         <location filename="../../assets/UI/archivetab.ui" line="102"/>
         <source>Name</source>
         <translation>Name</translation>
@@ -807,6 +802,11 @@
         <source>Exclude If Present (exclude folders with these files):</source>
         <translation>Ausschließen, Wenn Vorhanden (schließe Ordner mit diesen Dateien aus):</translation>
     </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="97"/>
+        <source>Mount Point</source>
+        <translation>Einhängepunkt</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -1030,7 +1030,7 @@
     <message>
         <location filename="../../tray_menu.py" line="28"/>
         <source>Vorta for Borg Backup</source>
-        <translation type="unfinished"/>
+        <translation>Vorta for Borg Backup</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="37"/>
