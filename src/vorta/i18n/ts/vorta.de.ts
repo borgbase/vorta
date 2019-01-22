@@ -836,54 +836,64 @@
         <translation>Aktuelles Profil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="82"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="88"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="124"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="130"/>
         <source>Repository</source>
         <translation>Repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="129"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="135"/>
         <source>Sources</source>
         <translation>Quellen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="134"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="140"/>
         <source>Schedule</source>
         <translation>Zeitplan</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="139"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="145"/>
         <source>Archives</source>
         <translation>Archive</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="144"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="150"/>
         <source>Misc</source>
         <translation>Diverses</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="195"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="201"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="258"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="264"/>
         <source>Start Backup</source>
         <translation>Datensicherung starten</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="272"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="278"/>
         <source>Latest</source>
         <translation>Neuestes</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="277"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="283"/>
         <source>Reset App</source>
         <translation>App zurücksetzen</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="68"/>
+        <source>Rename Profile</source>
+        <translation>Profil umbenennen</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="85"/>
+        <source>Delete Profile</source>
+        <translation>Profil entfernen</translation>
     </message>
 </context>
 <context>
