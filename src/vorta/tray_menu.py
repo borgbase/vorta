@@ -25,6 +25,11 @@ class TrayMenu(QSystemTrayIcon):
         menu = self.contextMenu()
         menu.clear()
 
+        open_action = menu.addAction(self.tr('Vorta for Borg Backup'))
+        open_action.triggered.connect(self.app.open_main_window_action)
+
+        menu.addSeparator()
+
         status = menu.addAction(self.app.scheduler.next_job)
         status.setEnabled(False)
 
@@ -45,10 +50,7 @@ class TrayMenu(QSystemTrayIcon):
                 profile_menu = menu.addAction(self.tr('Backup Now'))
                 profile_menu.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
 
-        settings_action = menu.addAction(self.tr('Settings'))
-        settings_action.triggered.connect(self.app.open_main_window_action)
-
         menu.addSeparator()
 
-        exit_action = menu.addAction(self.tr('Exit'))
+        exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)
