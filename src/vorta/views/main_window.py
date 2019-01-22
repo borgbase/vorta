@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QShortcut
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QKeySequence
-from ..config import APP_NAME
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .archive_tab import ArchiveTab
