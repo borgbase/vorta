@@ -193,17 +193,17 @@ def get_misc_settings():
             'value': False,
             'type': 'checkbox',
             'label': trans_late('settings',
-                                'Use light system tray icon (applies after restart, useful for dark themes).')
+                                'Use light system tray icon (applies after restart, useful for dark themes)')
         },
         {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Display notifications when background tasks fail.')
+                                'Display notifications when background tasks fail')
         },
         {
             'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Also notify about successful background tasks.')
+                                'Also notify about successful background tasks')
         }
     ]
     if sys.platform == 'darwin':
@@ -211,17 +211,17 @@ def get_misc_settings():
             {
                 'key': 'autostart', 'value': False, 'type': 'checkbox',
                 'label': trans_late('settings',
-                                    'Add Vorta to Login Items in Preferences > Users and Groups > Login Items.')
+                                    'Add Vorta to Login Items in Preferences > Users and Groups > Login Items')
             },
             {
                 'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
                 'label': trans_late('settings',
-                                    'Check for updates on startup.')
+                                    'Check for updates on startup')
             },
             {
                 'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
                 'label': trans_late('settings',
-                                    'Include pre-release versions when checking for updates.')
+                                    'Include pre-release versions when checking for updates')
             },
         ]
 
