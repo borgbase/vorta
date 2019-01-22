@@ -52,5 +52,5 @@ class TrayMenu(QSystemTrayIcon):
 
         menu.addSeparator()
 
-        exit_action = menu.addAction(self.tr('Exit'))
+        exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)

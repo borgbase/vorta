@@ -22,7 +22,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle('Vorta for Borg Backup')
         self.app = parent
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
