@@ -1167,11 +1167,6 @@
         <translation>Auch über erfolgreiche Hintergrund-Aufgaben benachrichtigen</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="213"/>
-        <source>Add Vorta to Login Items in Preferences &gt; Users and Groups &gt; Login Items</source>
-        <translation>Starte Vorta automatisch bei der Anmeldung (via Einstellungen &gt; Benutzer und Gruppen &gt; Autostart)</translation>
-    </message>
-    <message>
         <location filename="../../models.py" line="218"/>
         <source>Check for updates on startup</source>
         <translation>Prüfe beim Start auf Aktualisierungen</translation>
@@ -1180,6 +1175,11 @@
         <location filename="../../models.py" line="223"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Auch Vorab-Versionen mit einbeziehen bei der Prüfung auf Aktualisierungen</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="213"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Starte Vorta automatisch bei der Anmeldung</translation>
     </message>
 </context>
 </TS>

@@ -211,7 +211,7 @@ def get_misc_settings():
             {
                 'key': 'autostart', 'value': False, 'type': 'checkbox',
                 'label': trans_late('settings',
-                                    'Add Vorta to Login Items in Preferences > Users and Groups > Login Items')
+                                    'Automatically start Vorta at login')
             },
             {
                 'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
