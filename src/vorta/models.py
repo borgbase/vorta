@@ -11,7 +11,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import slugify
+from vorta.utils import slugify, uses_dark_mode
 
 SCHEMA_VERSION = 10
 
@@ -241,6 +241,8 @@ def init_db(con):
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
+        if created and setting['key'] == "use_light_icon":
+            s.value = bool(uses_dark_mode())
         s.label = setting['label']
         s.save()
 

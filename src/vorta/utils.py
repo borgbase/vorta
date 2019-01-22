@@ -209,6 +209,19 @@ def set_tray_icon(tray, active=False):
     tray.setIcon(icon)
 
 
+def uses_dark_mode():
+    """
+    This function detects if we are running in dark mode (e.g. macOS dark mode).
+
+    Returns None if the interface style cannot be determined, otherwise a boolean.
+    """
+    if sys.platform == 'darwin':
+        from Foundation import NSUserDefaults
+        stdud = NSUserDefaults.standardUserDefaults()
+        return stdud.stringForKey_("AppleInterfaceStyle") == "Dark"
+    return None
+
+
 def open_app_at_startup(enabled=True):
     """
     This function adds/removes the current app bundle from Login items in macOS
