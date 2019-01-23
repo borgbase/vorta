@@ -29,7 +29,7 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
+      <enum>QLayout::SetMinimumSize</enum>
      </property>
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
@@ -333,6 +333,9 @@
    </item>
    <item>
     <layout class="QFormLayout" name="repoStats">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>

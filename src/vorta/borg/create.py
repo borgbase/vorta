@@ -133,7 +133,7 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
             return ret
 
-        ret['message'] = trans_late('messages', 'Starting backup..')
+        ret['message'] = trans_late('messages', 'Starting backup...')
         ret['ok'] = True
         ret['cmd'] = cmd
 

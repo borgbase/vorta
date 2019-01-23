@@ -7,11 +7,8 @@
     <x>0</x>
     <y>0</y>
     <width>555</width>
-    <height>277</height>
+    <height>281</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -78,7 +75,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
          </property>
         </widget>
@@ -89,7 +86,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../icons/collection.qrc">
            <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
          </property>
         </widget>
@@ -116,7 +113,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Password</string>
+        <string>Password:</string>
        </property>
       </widget>
      </item>
