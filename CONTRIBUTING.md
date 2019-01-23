@@ -54,75 +54,86 @@ To test for style errors:
 $ flake8
 ```
 
-## Working with translations
+## Translations
 
-NOTE: we are currently still working on the original strings.
-      DO NO TRANSLATION WORK EXCEPT IF YOU ARE WILLING TO DO DOUBLE WORK.
+Translations are updated there: https://www.Transifex.com/borgbase/vorta/
 
-Translations are updated there: https://www.transifex.com/borgbase/vorta/
+### Policy for Translations
 
-### Policy for translations
-
-- no google translate or other automated translation.
-- only native or as-good-as-native speakers should translate.
-- as there is a need for continued maintenance, a translator should be also a
+- No google translate or other automated translation.
+- Only native or as-good-as-native speakers should translate.
+- As there is a need for continued maintenance, a translator should be also a
   user of vorta, having some own interest in the translation (one-time
-  translations are not that helpful if there is noone updating them regularly)
-- a translation must have >90% translated strings. if a translation falls
+  translations are not that helpful if there is no one updating them regularly)
+- A translation must have >90% translated strings. If a translation falls
   and stays below that for a longer time, it will not be used by vorta and
   ultimately, it will get removed from the repository also.
 
-### Adding a new language
+### Adding a New Language
 
 - Only add a new language if you are willing to also update the translation
   in future, when new strings are added and existing strings change.
-- Request a new language via transifex.
-- TODO: add notes here what the maintainer has to do
+- Request a new language by opening a new issue on Github. We will then add it on Transifex.
 
-### Updating a language
+### Updating a Language
 
 - Please only work on a translation if you are a native speaker or you have
   similar language skills.
-- Edit the language on transifex.
+- Open a new issue on Github.
+- Edit the language on Transifex.
 
-### Data Flow to/from transifex
+### Data Flow to/from Transifex
 
-- extract: make translations-from-source
-- push: make translations-push
-- pull: make translations-pull
-- compile: make translations-to-qm
+- Extract from source files: `make translations-from-source`
+- Push to Transifex: `make translations-push`
+- Pull finished translations from Transifex: `make translations-pull`
+- Compile: `make translations-to-qm`
 
+### Notes for Developers
 
-### Notes for developers
-
-- original strings in .ui and .py must be American English (en_US)
-- in English, not translated:
-
+- Original strings in `.ui` and `.py` must be American English (en_US) and ASCII.
+- In English, not translated:
   - log messages (log file as well as log output on console or elsewhere)
   - other console output, print().
   - docs
   - py source code, comments, docstrings
-- translated:
 
+- Translated:
   - GUI texts / messages
-- in Qt (sub)classes, use self.tr("English string"), scope will
+
+- In Qt (sub)classes, use self.tr("English string"), scope will
   be the instance class name.
-- elsewhere use vorta.i18n.translate("scopename", "English string")
-- to only mark for string extraction, but not immediately translate,
+- Elsewhere use vorta.i18n.translate("scopename", "English string")
+- To only mark for string extraction, but not immediately translate,
   use vorta.i18n.trans_late function.
   Later, to translate, use vorta.i18n.translate (giving same scope).
+  
+### Style Guide/Glossary
+
+- Headings, buttons and dropdowns are titleized: "Apply Changes"
+- Field labels (same or next line) end with a colon and are titleized. "Allowed Networks:"
+- No full stop `.` at the end of short labels, but when it's a full sentence.
+- If something is in progress, use three dots (no ellipsis): "Starting backup..."
+- **Repo/repository** = local or remote folder where Borg stores files.
+- **Archive** (not snapshot) = result of `borg create` execution, an identifier to find a
+  collection of files in a repo, as they existed at a past point in time.
 
 ### Required Software
 
 To successfully run the translation-related Makefile targets, the translations
 maintainer needs:
 
-- make tool
-- pylupdate5
-- lrelease
-- transifex-client pypi package
-  (should be already there via requirements.d/dev.txt)
+- `make` tool
+- `pylupdate5` (from PyQt)
+- `lrelease` (from Qt package)
+- `tx` Transifex client (PyPI package `transifex-client`, contained in requirements.d/dev.txt)
 
-Debian 9 "Stretch":
+Install on Debian 9 "Stretch":
+```
+$ apt install qttools5-dev-tools pyqt5-dev-tools
+```
 
-apt install qttools5-dev-tools pyqt5-dev-tools
+Install on macOS via Homebrew:
+```
+$ cd requirements.d && brew bundle
+```

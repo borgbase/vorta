@@ -94,7 +94,7 @@ font-weight: bold;
          </column>
          <column>
           <property name="text">
-           <string>Mounted</string>
+           <string>Mount Point</string>
           </property>
          </column>
          <column>
@@ -331,7 +331,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string> annual archives.</string>
+            <string> annual archives</string>
            </property>
            <property name="openExternalLinks">
             <bool>true</bool>
@@ -438,9 +438,6 @@ font-weight: bold;
            <property name="styleSheet">
             <string notr="true">color: grey</string>
            </property>
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
            </property>
@@ -475,9 +472,6 @@ font-weight: bold;
            </property>
            <property name="styleSheet">
             <string notr="true">color: grey</string>
-           </property>
-           <property name="text">
-            <string>TextLabel</string>
            </property>
            <property name="margin">
             <number>1</number>

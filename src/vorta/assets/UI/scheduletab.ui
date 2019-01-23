@@ -32,7 +32,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -50,7 +50,7 @@ font-weight: bold;
        </font>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset>
         <normaloff>:/icons/clock-o.svg</normaloff>:/icons/clock-o.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -59,6 +59,9 @@ font-weight: bold;
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
         <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -77,7 +80,7 @@ font-weight: bold;
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Backup manually.</string>
+            <string>Backup manually</string>
            </property>
           </widget>
          </item>
@@ -137,7 +140,7 @@ font-weight: bold;
             </sizepolicy>
            </property>
            <property name="text">
-            <string>minutes past the hour.</string>
+            <string>minutes past the hour</string>
            </property>
           </widget>
          </item>
@@ -217,7 +220,7 @@ font-weight: bold;
          <item>
           <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>weeks.</string>
+            <string>weeks</string>
            </property>
           </widget>
          </item>
@@ -244,7 +247,7 @@ font-weight: bold;
          <item>
           <widget class="QCheckBox" name="pruneCheckBox">
            <property name="text">
-            <string>Prune old Archives after each backup.</string>
+            <string>Prune old Archives after each backup</string>
            </property>
            <property name="tristate">
             <bool>false</bool>
@@ -364,13 +367,16 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset>
         <normaloff>:/icons/wifi.svg</normaloff>:/icons/wifi.svg</iconset>
       </attribute>
       <attribute name="label">
        <string>Networks</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <item row="1" column="0">
         <widget class="QListWidget" name="wifiListWidget"/>
        </item>
@@ -393,13 +399,16 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset>
         <normaloff>:/icons/tasks.svg</normaloff>:/icons/tasks.svg</iconset>
       </attribute>
       <attribute name="label">
        <string>Log</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QTableWidget" name="logTableWidget">
          <property name="font">
@@ -455,13 +464,16 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset>
         <normaloff>:/icons/terminal.svg</normaloff>:/icons/terminal.svg</iconset>
       </attribute>
       <attribute name="label">
        <string>Shell Commands</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
@@ -484,7 +496,7 @@ font-weight: bold;
           <string/>
          </property>
          <property name="placeholderText">
-          <string>Pre-backup command to run BEFORE backups.</string>
+          <string>Pre-backup command to run BEFORE backups</string>
          </property>
         </widget>
        </item>
@@ -494,7 +506,7 @@ font-weight: bold;
           <string notr="true">font-family:'Courier';</string>
          </property>
          <property name="placeholderText">
-          <string>Post-backup command to run AFTER backups.</string>
+          <string>Post-backup command to run AFTER backups</string>
          </property>
         </widget>
        </item>
@@ -530,7 +542,7 @@ font-weight: bold;
   </layout>
  </widget>
  <resources>
-  <include location="../icons/collection.qrc"/>
+  <include location="../icons/light/collection.qrc"/>
  </resources>
  <connections/>
 </ui>
