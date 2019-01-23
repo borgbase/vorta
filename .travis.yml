@@ -64,7 +64,7 @@ install:
     pyenv shell $PYTHON36 $PYTHON37
   fi
 
-- pip install -U setuptools pip
+- pip install -U setuptools pip==18.1
 - pip install .
 - pip install borgbackup
 - pip install -r requirements.d/dev.txt

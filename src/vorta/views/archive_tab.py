@@ -375,19 +375,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(translate(params['message']))
             return
 
-        # Conditions are met (borg binary available, etc)
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if archive_cell:
-                archive_name = archive_cell.text()
-                params['cmd'][-1] += f'::{archive_name}'
+        archive_name = self.selected_archive_name()
+        if archive_name is not None:
+            params['cmd'][-1] += f'::{archive_name}'
 
-        thread = BorgDeleteThread(params['cmd'], params, parent=self)
-        thread.updated.connect(self._set_status)
-        thread.result.connect(self.delete_result)
-        self._toggle_all_buttons(False)
-        thread.start()
+            thread = BorgDeleteThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self._set_status)
+            thread.result.connect(self.delete_result)
+            self._toggle_all_buttons(False)
+            thread.start()
+        else:
+            self._set_status("No archive selected")
 
     def delete_result(self, result):
         if result['returncode'] == 0:
