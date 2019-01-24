@@ -4,6 +4,7 @@ import sys
 from datetime import datetime as dt
 
 import vorta
+from vorta.application import VortaApp
 from vorta.models import RepoModel, SourceFileModel, ArchiveModel, BackupProfileModel
 
 
@@ -30,7 +31,6 @@ def app(tmpdir, qtbot):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
-    from vorta.application import VortaApp
     app = VortaApp([])
     app.main_window.show()
     qtbot.addWidget(app.main_window)
