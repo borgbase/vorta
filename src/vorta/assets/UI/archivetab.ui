@@ -30,7 +30,6 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QToolBox::tab {
-color: black;
 font-weight: bold;
 }</string>
      </property>
@@ -47,7 +46,7 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset resource="../icons/dark/collection.qrc">
         <normaloff>:/icons/tasks.svg</normaloff>:/icons/tasks.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -115,7 +114,7 @@ font-weight: bold;
             <string>Extract</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
            </property>
           </widget>
@@ -132,7 +131,7 @@ font-weight: bold;
             <string>Mount</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -143,7 +142,7 @@ font-weight: bold;
             <string>Check</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
            </property>
           </widget>
@@ -178,7 +177,7 @@ font-weight: bold;
             <string>Prune</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
            </property>
           </widget>
@@ -198,7 +197,7 @@ font-weight: bold;
             <string>Refresh</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/refresh.svg</normaloff>:/icons/refresh.svg</iconset>
            </property>
           </widget>
@@ -235,7 +234,7 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset resource="../icons/collection.qrc">
+       <iconset resource="../icons/dark/collection.qrc">
         <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -511,7 +510,7 @@ font-weight: bold;
   </layout>
  </widget>
  <resources>
-  <include location="../icons/collection.qrc"/>
+  <include location="../icons/dark/collection.qrc"/>
  </resources>
  <connections/>
 </ui>
