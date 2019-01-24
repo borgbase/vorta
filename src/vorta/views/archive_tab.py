@@ -12,6 +12,7 @@ from vorta.borg.check import BorgCheckThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
+from vorta.borg.delete import BorgDeleteThread
 from vorta.views.extract_dialog import ExtractDialog
 from vorta.i18n import translate
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
@@ -64,6 +65,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
         self.extractButton.clicked.connect(self.list_archive_action)
+        self.deleteButton.clicked.connect(self.delete_action)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -77,7 +79,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
-        for button in [self.checkButton, self.listButton, self.pruneButton, self.mountButton, self.extractButton]:
+        for button in [self.checkButton, self.listButton, self.pruneButton,
+                       self.mountButton, self.extractButton, self.deleteButton]:
             button.setEnabled(enabled)
             button.repaint()
 
@@ -365,3 +368,28 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
         rows = [item.row() for item in items if item.column() == 4]
         return rows[0] if rows else None
+
+    def delete_action(self):
+        params = BorgDeleteThread.prepare(self.profile())
+        if not params['ok']:
+            self._set_status(translate(params['message']))
+            return
+
+        archive_name = self.selected_archive_name()
+        if archive_name is not None:
+            params['cmd'][-1] += f'::{archive_name}'
+
+            thread = BorgDeleteThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self._set_status)
+            thread.result.connect(self.delete_result)
+            self._toggle_all_buttons(False)
+            thread.start()
+        else:
+            self._set_status("No archive selected")
+
+    def delete_result(self, result):
+        if result['returncode'] == 0:
+            self._set_status(self.tr('Archive deleted.'))
+            self.list_action()
+        else:
+            self._toggle_all_buttons(True)
