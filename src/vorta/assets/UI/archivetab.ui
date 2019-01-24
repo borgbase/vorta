@@ -42,8 +42,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>787</width>
+        <height>443</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -149,6 +149,17 @@ font-weight: bold;
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="deleteButton">
+           <property name="text">
+            <string>Delete</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../icons/collection.qrc">
+             <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -219,8 +230,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>658</width>
+        <height>318</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -400,7 +411,7 @@ font-weight: bold;
           <number>10</number>
          </property>
          <property name="horizontalSpacing">
-          <number>-1</number>
+          <number>6</number>
          </property>
          <property name="verticalSpacing">
           <number>0</number>
