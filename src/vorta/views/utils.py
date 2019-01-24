@@ -1,4 +1,3 @@
-from peewee import Proxy
 from vorta.models import SettingsModel
 
 
