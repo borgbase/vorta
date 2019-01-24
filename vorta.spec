@@ -22,6 +22,8 @@ a = Analysis(['src/vorta/__main__.py'],
              ],
              hiddenimports=[
                  'vorta.views.collection_rc',
+                 'vorta.views.dark.collection_rc',
+                 'vorta.views.light.collection_rc',
              ],
              hookspath=[],
              runtime_hooks=[],
