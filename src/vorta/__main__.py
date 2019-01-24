@@ -3,7 +3,6 @@ import os
 import peewee
 
 from vorta.models import init_db
-from vorta.application import VortaApp
 from vorta.config import SETTINGS_DIR
 from vorta.updater import get_updater
 from vorta.utils import parse_args
@@ -28,6 +27,8 @@ def main():
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
     init_db(sqlite_db)
 
+    # Init app after database is available
+    from vorta.application import VortaApp
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
 

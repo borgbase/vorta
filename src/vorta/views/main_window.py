@@ -11,10 +11,11 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from ..utils import get_asset
 from ..models import BackupProfileModel
 from vorta.borg.borg_thread import BorgThread
+from vorta.views.utils import get_icon_class
 
 
 uifile = get_asset('UI/mainwindow.ui')
-MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
 
 
 class MainWindow(MainWindowBase, MainWindowUI):

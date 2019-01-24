@@ -4,8 +4,11 @@ export QT_SELECT=5
 .PHONY : help
 .DEFAULT_GOAL := help
 
+icon-resources:  ## Compile SVG icons to importable resource files.
+	pyrcc5 -o src/vorta/views/dark/collection_rc.py src/vorta/assets/icons/dark/collection.qrc
+	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
+
 Vorta.app: translations-to-qm
-	#pyrcc5 -o src/vorta/views/collection_rc.py src/vorta/assets/icons/collection.qrc
 	pyinstaller --clean --noconfirm vorta.spec
 	cp -R bin/macosx64/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app

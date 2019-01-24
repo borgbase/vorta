@@ -4,11 +4,12 @@ import fcntl
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
+import qdarkstyle
 
 from .i18n import init_translations, translate
 from .tray_menu import TrayMenu
 from .scheduler import VortaScheduler
-from .models import BackupProfileModel
+from .models import BackupProfileModel, SettingsModel
 from .borg.create import BorgCreateThread
 from .views.main_window import MainWindow
 from .utils import parse_args, set_tray_icon
@@ -52,6 +53,10 @@ class VortaApp(QApplication):
         # Prepare tray and main window
         self.tray = TrayMenu(self)
         self.main_window = MainWindow(self)
+
+        # Apply dark stylesheet
+        if SettingsModel.get(key='use_light_icon').value:
+            self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
         args = parse_args()
         if hasattr(args, 'foreground') and args.foreground:
