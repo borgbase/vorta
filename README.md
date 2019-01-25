@@ -31,7 +31,7 @@ For available packages and instructions, see [INSTALL.md](INSTALL.md)
 - Want to contribute to Vorta? Great! See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License and Credits
-- Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://www.transifex.com/borgbase/teams/)
+- Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
 - Licensed under GPLv3. See [LICENSE.txt](LICENSE.txt) for details.
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
 - Icons by [FontAwesome](https://fontawesome.com)
