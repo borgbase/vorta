@@ -16,7 +16,7 @@ Vorta is a backup client for macOS and Linux desktops. It integrates the mighty 
 ## Installation
 Vorta should work on all platforms that support Qt and Borg. This includes macOS, Ubuntu, Debian, Fedora, Arch Linux and many others. Windows is currently not supported by Borg, but this may change in the future.
 
-For available packages and instructions, see [INSTALL.md](INSTALL.md)
+For available packages and instructions, see [INSTALL.md](https://github.com/borgbase/vorta/blob/master/INSTALL.md)
 
 
 ## Learn More
@@ -28,7 +28,7 @@ For available packages and instructions, see [INSTALL.md](INSTALL.md)
 
 ## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
-- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](CONTRIBUTING.md)
+- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](https://github.com/borgbase/vorta/blob/master/CONTRIBUTING.md)
 
 ## License and Credits
 - Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
