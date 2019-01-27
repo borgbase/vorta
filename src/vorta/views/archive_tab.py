@@ -17,9 +17,10 @@ from vorta.views.extract_dialog import ExtractDialog
 from vorta.i18n import translate
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
+from vorta.views.utils import get_icon_class
 
 uifile = get_asset('UI/archivetab.ui')
-ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile, from_imports=True, import_from='vorta.views')
+ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
 
 
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):

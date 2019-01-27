@@ -4,19 +4,22 @@ export QT_SELECT=5
 .PHONY : help
 .DEFAULT_GOAL := help
 
+icon-resources:  ## Compile SVG icons to importable resource files.
+	pyrcc5 -o src/vorta/views/dark/collection_rc.py src/vorta/assets/icons/dark/collection.qrc
+	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
+
 Vorta.app: translations-to-qm
-	#pyrcc5 -o src/vorta/views/collection_rc.py src/vorta/assets/icons/collection.qrc
 	pyinstaller --clean --noconfirm vorta.spec
 	cp -R bin/macosx64/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
 
 Vorta.dmg: Vorta.app
-	# sleep 2; cd dist; zip -9rq vorta-0.6.5.zip Vorta.app
-	rm -rf dist/vorta-0.6.5.dmg
-	sleep 2; appdmg appdmg.json dist/vorta-0.6.5.dmg
+	# sleep 2; cd dist; zip -9rq vorta-0.6.6.zip Vorta.app
+	rm -rf dist/vorta-0.6.6.dmg
+	sleep 2; appdmg appdmg.json dist/vorta-0.6.6.dmg
 
 github-release: Vorta.dmg
-	hub release create --attach=dist/vorta-0.6.5.dmg v0.6.5
+	hub release create --attach=dist/vorta-0.6.6.dmg v0.6.6
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
 	git push upstream gh-pages
@@ -24,7 +27,7 @@ github-release: Vorta.dmg
 
 pypi-release: translations-to-qm
 	python setup.py sdist
-	twine upload dist/vorta-0.6.5.tar.gz
+	twine upload dist/vorta-0.6.6.tar.gz
 
 bump-version:  ## Add new version tag and push to upstream repo.
 	bumpversion patch

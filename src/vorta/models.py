@@ -193,7 +193,7 @@ def get_misc_settings():
             'value': False,
             'type': 'checkbox',
             'label': trans_late('settings',
-                                'Use light system tray icon (applies after restart, useful for dark themes)')
+                                'Use dark theme and light system tray icon (applies after restart)')
         },
         {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',

@@ -142,7 +142,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset resource="../icons/dark/collection.qrc">
            <normaloff>:/icons/unlink.svg</normaloff>:/icons/unlink.svg</iconset>
          </property>
          <property name="autoRaise">
@@ -194,7 +194,7 @@
           <string>Copy</string>
          </property>
          <property name="icon">
-          <iconset resource="../icons/collection.qrc">
+          <iconset resource="../icons/dark/collection.qrc">
            <normaloff>:/icons/copy.svg</normaloff>:/icons/copy.svg</iconset>
          </property>
          <property name="checkable">
@@ -441,7 +441,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../icons/collection.qrc"/>
+  <include location="../icons/dark/collection.qrc"/>
  </resources>
  <connections/>
 </ui>

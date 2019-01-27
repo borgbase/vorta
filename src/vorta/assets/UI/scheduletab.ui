@@ -27,7 +27,6 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QToolBox::tab {
-color: black;
 font-weight: bold;
 }</string>
      </property>
@@ -50,7 +49,7 @@ font-weight: bold;
        </font>
       </property>
       <attribute name="icon">
-       <iconset>
+       <iconset resource="../icons/light/collection.qrc">
         <normaloff>:/icons/clock-o.svg</normaloff>:/icons/clock-o.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -121,6 +120,9 @@ font-weight: bold;
            </property>
            <property name="text">
             <string>hours at</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
            </property>
           </widget>
          </item>
@@ -367,7 +369,7 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset>
+       <iconset resource="../icons/light/collection.qrc">
         <normaloff>:/icons/wifi.svg</normaloff>:/icons/wifi.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -399,7 +401,7 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset>
+       <iconset resource="../icons/light/collection.qrc">
         <normaloff>:/icons/tasks.svg</normaloff>:/icons/tasks.svg</iconset>
       </attribute>
       <attribute name="label">
@@ -464,7 +466,7 @@ font-weight: bold;
        </rect>
       </property>
       <attribute name="icon">
-       <iconset>
+       <iconset resource="../icons/light/collection.qrc">
         <normaloff>:/icons/terminal.svg</normaloff>:/icons/terminal.svg</iconset>
       </attribute>
       <attribute name="label">

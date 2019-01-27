@@ -16,7 +16,7 @@ Vorta is a backup client for macOS and Linux desktops. It integrates the mighty 
 ## Installation
 Vorta should work on all platforms that support Qt and Borg. This includes macOS, Ubuntu, Debian, Fedora, Arch Linux and many others. Windows is currently not supported by Borg, but this may change in the future.
 
-For available packages and instructions, see [INSTALL.md](INSTALL.md)
+For available packages and instructions, see [INSTALL.md](https://github.com/borgbase/vorta/blob/master/INSTALL.md)
 
 
 ## Learn More
@@ -26,12 +26,12 @@ For available packages and instructions, see [INSTALL.md](INSTALL.md)
 - Why the name? [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) are a race referenced in Star Trek. After dying they are replaced by their cloned backup.
 
 
-## Development and Bug Reports
+## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
-- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](CONTRIBUTING.md)
+- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](https://github.com/borgbase/vorta/blob/master/CONTRIBUTING.md)
 
 ## License and Credits
-- Ⓒ 2018 [Manuel Riel](https://twitter.com/_m3nu) for [BorgBase.com](https://www.borgbase.com). All rights reserved.
+- Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
 - Licensed under GPLv3. See [LICENSE.txt](LICENSE.txt) for details.
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
 - Icons by [FontAwesome](https://fontawesome.com)
