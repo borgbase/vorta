@@ -39,7 +39,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.Interactive)
         header.setSectionResizeMode(4, QHeaderView.Stretch)
         header.setStretchLastSection(True)
 
@@ -49,6 +49,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
         self.archiveTable.setSelectionMode(QTableView.SingleSelection)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
+        self.archiveTable.setWordWrap(False)
+        self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
@@ -108,7 +110,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 mount_point = self.mount_points.get(archive.name)
                 if mount_point is not None:
-                    item = QTableWidgetItem(f'…{mount_point[-5:]}')
+                    item = QTableWidgetItem(mount_point)
                     self.archiveTable.setItem(row, 3, item)
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
@@ -244,7 +246,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.update_mount_button_text()
             archive_name = result['params']['current_archive']
             row = self.row_of_archive(archive_name)
-            item = QTableWidgetItem(f"…{result['cmd'][-1][-5:]}")
+            item = QTableWidgetItem(result['cmd'][-1])
             self.archiveTable.setItem(row, 3, item)
 
     def umount_action(self):
