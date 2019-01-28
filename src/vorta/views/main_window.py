@@ -99,7 +99,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
                 self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
             else:
-                self.profileSelector.setCurrentIndex(1)
+                self.profileSelector.setCurrentIndex(2)
 
         self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
         self.archiveTab.populate_from_profile()
