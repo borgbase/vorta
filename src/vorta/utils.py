@@ -268,7 +268,7 @@ def get_mount_points(repo_url):
     for proc in psutil.process_iter():
         try:
             name = proc.name()
-        except:
+        except Exception:
             # Getting the process name may fail (e.g. zombie process on macOS)
             continue
         if name == 'borg' or name.startswith('python'):
