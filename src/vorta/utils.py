@@ -266,7 +266,12 @@ def format_archive_name(profile, archive_name_tpl):
 def get_mount_points(repo_url):
     mount_points = {}
     for proc in psutil.process_iter():
-        if proc.name() == 'borg' or proc.name().startswith('python'):
+        try:
+            name = proc.name()
+        except:
+            # Getting the process name may fail (e.g. zombie process on macOS)
+            continue
+        if name == 'borg' or name.startswith('python'):
             if 'mount' not in proc.cmdline():
                 continue
 
