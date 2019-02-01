@@ -193,7 +193,14 @@ def get_misc_settings():
             'value': False,
             'type': 'checkbox',
             'label': trans_late('settings',
-                                'Use dark theme and light system tray icon (applies after restart)')
+                                'Use light system tray icon (applies after restart)')
+        },
+        {
+            'key': 'use_dark_theme',
+            'value': False,
+            'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Use dark theme (applies after restart)')
         },
         {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
@@ -241,7 +248,7 @@ def init_db(con):
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        if created and setting['key'] == "use_light_icon":
+        if created and setting['key'] == "use_dark_theme":
             s.value = bool(uses_dark_mode())
         s.label = setting['label']
         s.save()
