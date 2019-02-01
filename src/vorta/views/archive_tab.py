@@ -2,7 +2,7 @@ import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QIcon, QDesktopServices
+from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMessageBox
 
 from vorta.borg.prune import BorgPruneThread
@@ -33,7 +33,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.toolBox.setCurrentIndex(0)
 
-        self.folder_icon = QIcon(':/icons/folder-open.svg')
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
@@ -277,7 +276,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
-            self._set_status('Un-mounted successfully.')
             archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
             self.update_mount_button_text()
@@ -396,7 +394,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(False)
             thread.start()
         else:
-            self._set_status("No archive selected")
+            self._set_status(self.tr("No archive selected"))
 
     def delete_result(self, result):
         if result['returncode'] == 0:
