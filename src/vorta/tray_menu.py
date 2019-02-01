@@ -1,4 +1,4 @@
-import sys
+import os
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 
 from .borg.borg_thread import BorgThread
@@ -18,14 +18,16 @@ class TrayMenu(QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
-        if sys.platform != 'darwin':
-            self.activated.connect(self.on_activation)
+        self.activated.connect(self.on_activation)
         self.setVisible(True)
         self.show()
 
     def on_activation(self, reason):
         if reason == QSystemTrayIcon.Trigger:
-            self.app.toggle_main_window_visibility()
+            if os.environ.get('XDG_CURRENT_DESKTOP', '') == 'KDE':
+                self.app.toggle_main_window_visibility()
+            else:
+                self.on_user_click()
 
     def on_user_click(self):
         """Build system tray menu based on current state."""
