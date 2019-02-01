@@ -55,7 +55,7 @@ class VortaApp(QApplication):
         self.main_window = MainWindow(self)
 
         # Apply dark stylesheet
-        if SettingsModel.get(key='use_light_icon').value:
+        if SettingsModel.get(key='use_dark_theme').value:
             self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
         args = parse_args()
