@@ -47,7 +47,7 @@ def init_translations(app):
     global application, translator, locale  # if we don't keep a reference on these, it stops working. pyqt bug?
     application = app
     translator = VortaTranslator()
-    locale = QLocale()
+    locale = QLocale(os.environ.get('LANG', None))
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
     ui_langs = locale.uiLanguages()
     succeeded = translator.load(locale, 'vorta', prefix='.', directory=qm_path)  # e.g. vorta/i18n/qm/vorta.de_DE.qm
