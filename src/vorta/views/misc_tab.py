@@ -5,10 +5,10 @@ from vorta.i18n import translate
 from vorta.utils import get_asset, open_app_at_startup
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
-from vorta.views.utils import get_icon_class
+from vorta.views.utils import get_theme_class
 
 uifile = get_asset('UI/misctab.ui')
-MiscTabUI, MiscTabBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
+MiscTabUI, MiscTabBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
 
 
 class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):

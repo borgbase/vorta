@@ -5,10 +5,10 @@ from ..i18n import translate
 from ..utils import get_private_keys, get_asset, choose_file_dialog
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
-from vorta.views.utils import get_icon_class
+from vorta.views.utils import get_theme_class
 
 uifile = get_asset('UI/repoadd.ui')
-AddRepoUI, AddRepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_icon_class())
+AddRepoUI, AddRepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
 
 
 class AddRepoWindow(AddRepoBase, AddRepoUI):
