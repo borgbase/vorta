@@ -82,12 +82,15 @@ Translations are updated there: https://www.Transifex.com/borgbase/vorta/
 - Open a new issue on Github.
 - Edit the language on Transifex.
 
-### Data Flow to/from Transifex
+### Using and Testing Transifex Translations
 
-- Extract from source files: `make translations-from-source`
+- Extract from source files (needed after most code changes to update line number):
+  `make translations-from-source`
 - Push to Transifex: `make translations-push`
 - Pull finished translations from Transifex: `make translations-pull`
 - Compile: `make translations-to-qm`
+- Test with specific translation: `LANG=de vorta`
+- Scale strings to test UI: `LANG=de TRANS_SCALE=200 vorta --foreground`
 
 ### Notes for Developers
 
