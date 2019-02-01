@@ -82,6 +82,12 @@ class VortaApp(QApplication):
         self.main_window.show()
         self.main_window.raise_()
 
+    def toggle_main_window_visibility(self):
+        if self.main_window.isVisible():
+            self.main_window.hide()
+        else:
+            self.open_main_window_action()
+
     def backup_started_event_response(self):
         set_tray_icon(self.tray, active=True)
 
