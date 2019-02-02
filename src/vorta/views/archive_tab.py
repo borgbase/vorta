@@ -2,8 +2,8 @@ import os.path
 import sys
 from datetime import timedelta
 from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QIcon, QDesktopServices
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView
+from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMessageBox
 
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.list_repo import BorgListRepoThread
@@ -33,7 +33,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.toolBox.setCurrentIndex(0)
 
-        self.folder_icon = QIcon(':/icons/folder-open.svg')
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
@@ -277,7 +276,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
-            self._set_status('Un-mounted successfully.')
             archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
             self.update_mount_button_text()
@@ -372,6 +370,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         rows = [item.row() for item in items if item.column() == 4]
         return rows[0] if rows else None
 
+    def confirm_dialog(self, title, text):
+        result = QMessageBox.question(self, title, text)
+        return result == QMessageBox.Yes
+
     def delete_action(self):
         params = BorgDeleteThread.prepare(self.profile())
         if not params['ok']:
@@ -380,6 +382,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         archive_name = self.selected_archive_name()
         if archive_name is not None:
+            if not self.confirm_dialog(self.tr("Confirm deletion"),
+                                       self.tr(f"Are you sure you want to delete the archive {archive_name}?")):
+                self._set_status(self.tr("Deletion cancelled"))
+                return
             params['cmd'][-1] += f'::{archive_name}'
 
             thread = BorgDeleteThread(params['cmd'], params, parent=self)
@@ -388,7 +394,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(False)
             thread.start()
         else:
-            self._set_status("No archive selected")
+            self._set_status(self.tr("No archive selected"))
 
     def delete_result(self, result):
         if result['returncode'] == 0:
