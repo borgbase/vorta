@@ -14,7 +14,7 @@ from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.borg.delete import BorgDeleteThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.i18n import translate
+from vorta.i18n import translate, trans_late
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
 from vorta.views.utils import get_theme_class
@@ -371,8 +371,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         return rows[0] if rows else None
 
     def confirm_dialog(self, title, text):
-        result = QMessageBox.question(self, title, text)
-        return result == QMessageBox.Yes
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(text)
+        msg.setWindowTitle(title)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        msg.button(msg.Yes).setText(self.tr("Yes"))
+        msg.button(msg.Cancel).setText(self.tr("Cancel"))
+        return msg.exec_() == QMessageBox.Yes
 
     def delete_action(self):
         params = BorgDeleteThread.prepare(self.profile())
@@ -382,9 +388,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         archive_name = self.selected_archive_name()
         if archive_name is not None:
-            if not self.confirm_dialog(self.tr("Confirm deletion"),
-                                       self.tr(f"Are you sure you want to delete the archive {archive_name}?")):
-                self._set_status(self.tr("Deletion cancelled"))
+            if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
+                                       trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
                 return
             params['cmd'][-1] += f'::{archive_name}'
 

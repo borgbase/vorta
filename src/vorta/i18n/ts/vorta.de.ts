@@ -136,52 +136,52 @@
 <context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="93"/>
+        <location filename="../../views/archive_tab.py" line="94"/>
         <source>Archives for %s</source>
         <translation>Archive für %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="124"/>
+        <location filename="../../views/archive_tab.py" line="125"/>
         <source>Archives</source>
         <translation>Archive</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="133"/>
+        <location filename="../../views/archive_tab.py" line="134"/>
         <source>Preview: %s</source>
         <translation>Vorschau: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="137"/>
+        <location filename="../../views/archive_tab.py" line="138"/>
         <source>Error in archive name template.</source>
         <translation>Fehler in der Archiv-Namens-Vorlage.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="179"/>
+        <location filename="../../views/archive_tab.py" line="180"/>
         <source>Pruning finished.</source>
         <translation>Ausdünnen beendet.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="196"/>
+        <location filename="../../views/archive_tab.py" line="197"/>
         <source>Refreshed archives.</source>
         <translation>Archive aufgefrischt.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="238"/>
+        <location filename="../../views/archive_tab.py" line="239"/>
         <source>Choose Mount Point</source>
         <translation>Einhängepunkt auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="244"/>
+        <location filename="../../views/archive_tab.py" line="245"/>
         <source>Mounted successfully.</source>
         <translation>Erfolgreich eingehängt.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="272"/>
+        <location filename="../../views/archive_tab.py" line="273"/>
         <source>Mount point not active.</source>
         <translation>Einhängepunkt nicht aktive.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="278"/>
+        <location filename="../../views/archive_tab.py" line="279"/>
         <source>Un-mounted successfully.</source>
         <translation>Erfolgreich ausgehängt.</translation>
     </message>
@@ -196,9 +196,39 @@
         <translation>Extrahierungs-Punkt auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="394"/>
+        <location filename="../../views/archive_tab.py" line="409"/>
         <source>Archive deleted.</source>
         <translation>Archiv gelöscht.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="393"/>
+        <source>Confirm deletion</source>
+        <translation>Löschen bestätigen</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="395"/>
+        <source>Deletion cancelled</source>
+        <translation>Löschen abgebrochen</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="405"/>
+        <source>No archive selected</source>
+        <translation>Kein Archive ausgewählt</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="393"/>
+        <source>Are you sure you want to delete the archive?</source>
+        <translation>Soll das gewählte Archiv gelöscht werden?</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="380"/>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="381"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -1051,32 +1081,32 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="28"/>
+        <location filename="../../tray_menu.py" line="38"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta for Borg Backup</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="37"/>
+        <location filename="../../tray_menu.py" line="47"/>
         <source>Backup in Progress</source>
         <translation>Datensicherung läuft</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="38"/>
+        <location filename="../../tray_menu.py" line="48"/>
         <source>Cancel Backup</source>
         <translation>Datensicherung abbrechen</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="41"/>
+        <location filename="../../tray_menu.py" line="51"/>
         <source>Next Task: %s</source>
         <translation>Nächste Aufgabe: %s</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="50"/>
+        <location filename="../../tray_menu.py" line="60"/>
         <source>Backup Now</source>
         <translation>Datensicherung starten</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="55"/>
+        <location filename="../../tray_menu.py" line="65"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
@@ -1175,34 +1205,39 @@
 <context>
     <name>settings</name>
     <message>
-        <location filename="../../models.py" line="195"/>
-        <source>Use dark theme and light system tray icon (applies after restart)</source>
-        <translation>Dunkles Theme und helle Icons benutzen (wird nach Neustart angewandt)</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="200"/>
+        <location filename="../../models.py" line="207"/>
         <source>Display notifications when background tasks fail</source>
         <translation>Benachrichtigungen anzeigen, wenn Hintergrund-Aufgaben fehlschlagen</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="205"/>
+        <location filename="../../models.py" line="212"/>
         <source>Also notify about successful background tasks</source>
         <translation>Auch über erfolgreiche Hintergrund-Aufgaben benachrichtigen</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="213"/>
+        <location filename="../../models.py" line="220"/>
         <source>Automatically start Vorta at login</source>
         <translation>Starte Vorta automatisch bei der Anmeldung</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="218"/>
+        <location filename="../../models.py" line="225"/>
         <source>Check for updates on startup</source>
         <translation>Prüfe beim Start auf Aktualisierungen</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="223"/>
+        <location filename="../../models.py" line="230"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Auch Vorab-Versionen mit einbeziehen bei der Prüfung auf Aktualisierungen</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="195"/>
+        <source>Use light system tray icon (applies after restart)</source>
+        <translation>Helles System-Tray-Icon benutzen (wird nach Neustart angewandt)</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="202"/>
+        <source>Use dark theme (applies after restart)</source>
+        <translation>Dunkles Theme benutzen (wird nach Neustart angewandt)</translation>
     </message>
 </context>
 </TS>
