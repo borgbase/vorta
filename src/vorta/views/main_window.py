@@ -51,14 +51,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Init profile list
-        self.profileSelector.addItem(self.tr('+ Add New Profile'), None)
-        self.profileSelector.insertSeparator(2)
         for profile in BackupProfileModel.select():
             self.profileSelector.addItem(profile.name, profile.id)
-        self.profileSelector.setCurrentIndex(2)
-        self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
+        self.profileSelector.setCurrentIndex(0)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+        self.profileAddButton.clicked.connect(self.profile_add_action)
 
         # OS-specific startup options:
         if sys.platform != 'darwin':
@@ -91,16 +89,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.cancelButton.repaint()
 
     def profile_select_action(self, index):
-        if index == 0:
-            window = AddProfileWindow()
-            window.setParent(self, QtCore.Qt.Sheet)
-            window.show()
-            if window.exec_() and window.edited_profile:
-                self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
-                self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
-            else:
-                self.profileSelector.setCurrentIndex(2)
-
         self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
         self.archiveTab.populate_from_profile()
         self.repoTab.populate_from_profile()
@@ -115,7 +103,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.edited_profile.name)
 
     def profile_delete_action(self):
-        if self.profileSelector.count() > 3:
+        if self.profileSelector.count() > 1:
             to_delete = BackupProfileModel.get(id=self.profileSelector.currentData())
 
             # Remove pending background jobs
@@ -125,7 +113,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             to_delete.delete_instance(recursive=True)
             self.profileSelector.removeItem(self.profileSelector.currentIndex())
-            self.profile_select_action(1)
+            self.profile_select_action(0)
+
+    def profile_add_action(self):
+        window = AddProfileWindow()
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
+        if window.exec_() and window.edited_profile:
+            self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
+            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+        else:
+            self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
 
     def backup_started_event(self):
         self.set_status(progress_max=0)
