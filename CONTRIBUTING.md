@@ -34,7 +34,7 @@ $ brew cask install qt-creator
 $ brew install qt
 ```
 
-For UI icons, we use Fontawesome. You can browse available icons [here](https://fontawesome.com/icons) and download them as SVG [here](https://github.com/encharm/Font-Awesome-SVG-PNG). New icons are first added to `vorta/assets/icons.collection.qrc` and then the command `pyrcc5 -o src/vorta/views/collection_rc.py src/vorta/assets/icons/collection.qrc` is run to compile them to a resource file, which is used by the UI files.
+For UI icons, we use Fontawesome. You can browse available icons [here](https://fontawesome.com/icons) and download them as SVG [here](https://github.com/encharm/Font-Awesome-SVG-PNG). New icons are first added to both `src/vorta/assets/icons/dark/collection.qrc` and `src/vorta/assets/icons/light/collection.qrc`. Then, the command `make icon-resources` is run to compile them to a resource file which is used by the UI files.
 
 ## Building Binaries
 To build a macOS app package:
