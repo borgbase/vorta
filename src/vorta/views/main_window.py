@@ -54,6 +54,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         for profile in BackupProfileModel.select():
             self.profileSelector.addItem(profile.name, profile.id)
         self.profileSelector.setCurrentIndex(0)
+        self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
         self.profileAddButton.clicked.connect(self.profile_add_action)
