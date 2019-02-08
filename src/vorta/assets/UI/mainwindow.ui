@@ -63,12 +63,29 @@
        </widget>
       </item>
       <item>
+       <widget class="QToolButton" name="profileAddButton">
+        <property name="text">
+         <string>Add Profile</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/plus.svg</normaloff>:/icons/plus.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="profileRenameButton">
         <property name="toolTip">
          <string>Rename Profile</string>
         </property>
         <property name="icon">
-         <iconset resource="../icons/collection.qrc">
+         <iconset>
           <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
         </property>
         <property name="iconSize">
@@ -88,7 +105,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../icons/collection.qrc">
+         <iconset>
           <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
         </property>
        </widget>
@@ -111,7 +128,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>

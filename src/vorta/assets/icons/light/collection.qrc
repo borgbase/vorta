@@ -16,5 +16,6 @@
         <file>globe.svg</file>
         <file>cloud-download.svg</file>
         <file>terminal.svg</file>
+        <file>plus.svg</file>
     </qresource>
 </RCC>
