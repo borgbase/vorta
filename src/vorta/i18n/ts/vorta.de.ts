@@ -2,19 +2,29 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="22"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Rename Profile</source>
         <translation>Profil umbenennen</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="39"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="43"/>
         <source>Please enter a profile name.</source>
         <translation>Bitte einen Profilnamen eingeben.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="45"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="49"/>
         <source>A profile with this name already exists.</source>
         <translation>Ein Profil mit diesem Namen existiert bereits.</translation>
+    </message>
+    <message>
+        <location filename="../../views/profile_add_edit_dialog.py" line="19"/>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <location filename="../../views/profile_add_edit_dialog.py" line="20"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -196,27 +206,22 @@
         <translation>Extrahierungs-Punkt auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="409"/>
+        <location filename="../../views/archive_tab.py" line="407"/>
         <source>Archive deleted.</source>
         <translation>Archiv gelöscht.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="393"/>
+        <location filename="../../views/archive_tab.py" line="392"/>
         <source>Confirm deletion</source>
         <translation>Löschen bestätigen</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="395"/>
-        <source>Deletion cancelled</source>
-        <translation>Löschen abgebrochen</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="405"/>
+        <location filename="../../views/archive_tab.py" line="403"/>
         <source>No archive selected</source>
         <translation>Kein Archive ausgewählt</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="393"/>
+        <location filename="../../views/archive_tab.py" line="392"/>
         <source>Are you sure you want to delete the archive?</source>
         <translation>Soll das gewählte Archiv gelöscht werden?</translation>
     </message>

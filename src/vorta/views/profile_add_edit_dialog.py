@@ -1,4 +1,5 @@
 from PyQt5 import uic
+from PyQt5.QtWidgets import QDialogButtonBox
 from ..utils import get_asset
 from ..models import BackupProfileModel
 
@@ -14,6 +15,9 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.save)
+
+        self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
         if rename_existing_id is not None:
             existing_profile = BackupProfileModel.get(id=rename_existing_id)
