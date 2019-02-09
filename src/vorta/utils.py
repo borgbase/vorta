@@ -265,7 +265,8 @@ def open_app_at_startup(enabled=True):
                                       f"X-GNOME-Autostart-enabled=true\n")
             autostart_file_path.write_text(autostart_file_content)
         else:
-            autostart_file_path.unlink()
+            if autostart_file_path.exists():
+                autostart_file_path.unlink()
 
 
 def format_archive_name(profile, archive_name_tpl):
