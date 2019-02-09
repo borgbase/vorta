@@ -11,6 +11,7 @@ from collections import defaultdict
 from functools import reduce
 import operator
 import psutil
+from pathlib import Path
 
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
@@ -19,6 +20,8 @@ from paramiko import SSHException
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
+from setuptools import Distribution
+from setuptools.command.install import install
 import subprocess
 import keyring
 from vorta.keyring_db import VortaDBKeyring
@@ -245,6 +248,24 @@ def open_app_at_startup(enabled=True):
                                                  None, None, url, props, None)
         if not enabled:
             LSSharedFileListItemRemove(login_items, new_item)
+    elif sys.platform == 'linux':
+        config_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.ConfigLocation)
+        autostart_file_path = Path(config_path) / 'autostart' / 'vorta.desktop'
+        if enabled:
+            dir_entry_point = get_setuptools_script_dir()
+            autostart_file_content = (f"[Desktop Entry]\n"
+                                      f"Name=Vorta\n"
+                                      f"GenericName=Backup Software\n"
+                                      f"Exec={dir_entry_point}/vorta\n"
+                                      f"Terminal=false\n"
+                                      f"Icon=vorta\n"
+                                      f"Categories=Utility\n"
+                                      f"Type=Application\n"
+                                      f"StartupNotify=false\n"
+                                      f"X-GNOME-Autostart-enabled=true\n")
+            autostart_file_path.write_text(autostart_file_content)
+        else:
+            autostart_file_path.unlink()
 
 
 def format_archive_name(profile, archive_name_tpl):
@@ -287,3 +308,22 @@ def get_mount_points(repo_url):
                     break
 
     return mount_points
+
+
+# Get entry point of vorta
+# From https://stackoverflow.com/questions/
+#      25066084/get-entry-point-script-file-location-in-setuputils-package
+class OnlyGetScriptPath(install):
+    def run(self):
+        # does not call install.run() by design
+        self.distribution.install_scripts = self.install_scripts
+
+
+def get_setuptools_script_dir():
+    dist = Distribution({'cmdclass': {'install': OnlyGetScriptPath}})
+    dist.dry_run = True  # not sure if necessary, but to be safe
+    dist.parse_config_files()
+    command = dist.get_command_obj('install')
+    command.ensure_finalized()
+    command.run()
+    return dist.install_scripts
