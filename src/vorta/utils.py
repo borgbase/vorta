@@ -248,7 +248,7 @@ def open_app_at_startup(enabled=True):
                                                  None, None, url, props, None)
         if not enabled:
             LSSharedFileListItemRemove(login_items, new_item)
-    elif sys.platform == 'linux':
+    elif sys.platform.startswith('linux'):
         config_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.ConfigLocation)
         autostart_file_path = Path(config_path) / 'autostart' / 'vorta.desktop'
         if enabled:
