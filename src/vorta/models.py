@@ -13,7 +13,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify, uses_dark_mode
 
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 db = pw.Proxy()
 
@@ -315,3 +315,12 @@ def init_db(con):
             migrator.add_column(BackupProfileModel._meta.table_name, 'post_backup_cmd',
                                 pw.CharField(default='')),
         )
+
+    if current_schema.version < 11:
+        _apply_schema_update(current_schema, 11)
+        for profile in BackupProfileModel:
+            if profile.compression == 'zstd':
+                profile.compression = 'zstd,3'
+            if profile.compression == 'lzma,6':
+                profile.compression = 'auto,lzma,6'
+            profile.save()

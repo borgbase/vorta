@@ -48,7 +48,7 @@ def init_translations(app):
         translator = QTranslator()
     else:
         translator = VortaTranslator()  # Doesn't fall back to EN on empty strings.
-        
+
     locale = QLocale(os.environ.get('LANG', None))
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
     ui_langs = locale.uiLanguages()

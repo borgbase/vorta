@@ -37,7 +37,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # "auto" is used for some slower / older algorithms to avoid wasting a lot of time
         # on uncompressible data.
         self.repoCompression.addItem(self.tr('LZ4 (modern, default)'), 'lz4')
-        self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd')
+        self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd,3')
         self.repoCompression.addItem(self.tr('Zstandard Level 8 (modern)'), 'zstd,8')
         # zlib and lzma come from python stdlib and are there (and in borg) since long.
         # but maybe not much reason to start with these nowadays, considering zstd supports
