@@ -21,8 +21,6 @@ class VortaTranslator(QTranslator):
     def translate(self, context, text, disambiguation=None, n=-1):
         translated = super().translate(context, text, disambiguation=disambiguation, n=n)
         scale = trans_scale
-        if scale == 100:  # normal, production usage
-            return translated
 
         # for UI layout debugging:
         has_placeholders = '%' in translated
@@ -46,7 +44,11 @@ class VortaTranslator(QTranslator):
 def init_translations(app):
     global application, translator, locale  # if we don't keep a reference on these, it stops working. pyqt bug?
     application = app
-    translator = VortaTranslator()
+    if trans_scale == 100:
+        translator = QTranslator()
+    else:
+        translator = VortaTranslator()  # Doesn't fall back to EN on empty strings.
+        
     locale = QLocale(os.environ.get('LANG', None))
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
     ui_langs = locale.uiLanguages()
