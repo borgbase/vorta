@@ -18,6 +18,10 @@ trans_scale = int(os.environ.get('TRANS_SCALE', '100'))
 
 
 class VortaTranslator(QTranslator):
+    """
+    Extends QTranslator to increase the length of strings for testing. Fallback for untranslated
+    strings to English doesn't work currently. So only use for testing.
+    """
     def translate(self, context, text, disambiguation=None, n=-1):
         translated = super().translate(context, text, disambiguation=disambiguation, n=n)
         scale = trans_scale
@@ -42,12 +46,13 @@ class VortaTranslator(QTranslator):
 
 
 def init_translations(app):
+    """
+    Loads translations for a given input app. If a scaling factor is defined for testing, we use
+    our own subclass of QTranslator.
+    """
     global application, translator, locale  # if we don't keep a reference on these, it stops working. pyqt bug?
     application = app
-    if trans_scale == 100:
-        translator = QTranslator()
-    else:
-        translator = VortaTranslator()  # Doesn't fall back to EN on empty strings.
+    translator = QTranslator() if trans_scale == 100 else VortaTranslator()
 
     locale = QLocale(os.environ.get('LANG', None))
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
