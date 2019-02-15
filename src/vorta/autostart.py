@@ -5,10 +5,11 @@ from setuptools import Distribution
 from setuptools.command.install import install
 
 
-GNOME_STARTUP_FILE = """[Desktop Entry]
+LINUX_STARTUP_FILE = """\
+[Desktop Entry]
 Name=Vorta
 GenericName=Backup Software
-"Exec={}/vorta
+Exec={}/vorta
 Terminal=false
 Icon=vorta
 Categories=Utility
@@ -20,7 +21,7 @@ X-GNOME-Autostart-enabled=true
 
 def open_app_at_startup(enabled=True):
     """
-    This function adds/removes the current app bundle from Login items in macOS or Linux (Gnome desktop)
+    This function adds/removes the current app bundle from Login items in macOS or most Linux desktops
     """
     if sys.platform == 'darwin':
         from Foundation import NSDictionary
@@ -46,7 +47,7 @@ def open_app_at_startup(enabled=True):
         autostart_file_path = Path(config_path) / 'autostart' / 'vorta.desktop'
         if enabled:
             dir_entry_point = get_setuptools_script_dir()
-            autostart_file_path.write_text(GNOME_STARTUP_FILE.format(dir_entry_point))
+            autostart_file_path.write_text(LINUX_STARTUP_FILE.format(dir_entry_point))
         else:
             if autostart_file_path.exists():
                 autostart_file_path.unlink()
