@@ -129,7 +129,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def compression_select_action(self, index):
         profile = self.profile()
-        profile.compression = self.repoCompression.currentData() or ''
+        profile.compression = self.repoCompression.currentData()
         profile.save()
 
     def repo_select_action(self, index):
