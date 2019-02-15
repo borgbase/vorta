@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import shutil
+import shlex
 import signal
 import select
 import time
@@ -110,6 +111,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
+        ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
 
         ret['ok'] = True
@@ -142,8 +144,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         log_entry.save()
         logger.info('Running command %s', ' '.join(self.cmd))
 
-        p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
+        extra_args = shlex.split(self.params.get('extra_borg_arguments', ''))
+        p = Popen(self.cmd + extra_args, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
                   env=self.env, cwd=self.cwd, start_new_session=True)
+
         self.process = p
 
         # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708

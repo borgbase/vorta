@@ -30,7 +30,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         out = dict(
             ssh_key=self.sshComboBox.currentData(),
             repo_url=self.repoURL.text(),
-            password=self.passwordLineEdit.text()
+            password=self.passwordLineEdit.text(),
+            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text()
         )
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
@@ -53,6 +54,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.repoURL.setText('')
         self.repoURL.setEnabled(True)
         self.sshComboBox.setEnabled(True)
+        self.extraBorgArgumentsLineEdit.setText('')
         self.repoLabel.setText(self.tr('Repository URL:'))
         self.is_remote_repo = True
 

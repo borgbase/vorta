@@ -13,7 +13,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify, uses_dark_mode
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
 
 db = pw.Proxy()
 
@@ -42,6 +42,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
+    extra_borg_arguments = pw.CharField(default='', null=True)
 
     def is_remote_repo(self):
         return not self.url.startswith('/')
@@ -326,3 +327,9 @@ def init_db(con):
             if profile.compression == 'lzma,6':
                 profile.compression = 'auto,lzma,6'
             profile.save()
+
+    if current_schema.version < 12:
+        _apply_schema_update(
+            current_schema, 12,
+            migrator.add_column(RepoModel._meta.table_name,
+                                'extra_borg_arguments', pw.CharField(default='', null=True)))
