@@ -1,15 +1,12 @@
-import keyring
+from .keyring_backend import KeyringBackend
 
 
-class VortaDBKeyring(keyring.backend.KeyringBackend):
+class VortaDBKeyring(KeyringBackend):
     """
     Our own fallback keyring service. Uses the main database
     to store repo passwords if no other (more secure) backend
     is available.
     """
-    @classmethod
-    def priority(cls):
-        return 5
 
     def set_password(self, service, repo_url, password):
         from .models import RepoPassword

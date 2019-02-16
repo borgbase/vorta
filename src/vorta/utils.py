@@ -21,7 +21,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import subprocess
 import keyring
-from vorta.keyring_db import VortaDBKeyring
+from vorta.keyring.keyring_db import VortaDBKeyring
 
 
 """
@@ -34,20 +34,8 @@ For Linux not every system has SecretService available, so it will
 fall back to a simple database keystore if needed.
 """
 if sys.platform == 'darwin':
-    # from keyring.backends import OS_X
-    # keyring.set_keyring(OS_X.Keyring())
-    from vorta.keyring_darwin import VortaDarwinKeyring
+    from vorta.keyring.keyring_darwin import VortaDarwinKeyring
     keyring.set_keyring(VortaDarwinKeyring())
-elif sys.platform == 'win32':
-    from keyring.backends import Windows
-    keyring.set_keyring(Windows.WinVaultKeyring())
-elif sys.platform == 'linux':
-    from keyring.backends import SecretService
-    try:
-        SecretService.Keyring.priority()  # Test if keyring works.
-        keyring.set_keyring(SecretService.Keyring())
-    except Exception:
-        keyring.set_keyring(VortaDBKeyring())
 else:  # Fall back to saving password to database.
     keyring.set_keyring(VortaDBKeyring())
 
