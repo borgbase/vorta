@@ -24,6 +24,3 @@ class VortaDBKeyring(KeyringBackend):
             return keyring_entry.password
         except Exception:
             return None
-
-    def delete_password(self, service, repo_url):
-        pass
