@@ -143,7 +143,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         logger.info('Running command %s', ' '.join(self.cmd))
 
         p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
-                  env=self.env, cwd=self.cwd, preexec_fn=os.setsid)
+                  env=self.env, cwd=self.cwd, start_new_session=True)
         self.process = p
 
         # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
