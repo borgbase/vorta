@@ -9,7 +9,7 @@ class VortaDBKeyring(KeyringBackend):
     """
 
     def set_password(self, service, repo_url, password):
-        from .models import RepoPassword
+        from ..models import RepoPassword
         keyring_entry, created = RepoPassword.get_or_create(
             url=repo_url,
             defaults={'password': password}
@@ -18,7 +18,7 @@ class VortaDBKeyring(KeyringBackend):
         keyring_entry.save()
 
     def get_password(self, service, repo_url):
-        from .models import RepoPassword
+        from ..models import RepoPassword
         try:
             keyring_entry = RepoPassword.get(url=repo_url)
             return keyring_entry.password

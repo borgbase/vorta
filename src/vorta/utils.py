@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import subprocess
-import keyring
+import vorta.keyring.keyring_core as keyring
 from vorta.keyring.keyring_db import VortaDBKeyring
 
 
