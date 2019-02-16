@@ -1,6 +1,7 @@
 from .keyring_backend import KeyringBackend
 import secretstorage
 
+
 class VortaSecretStorageKeyring(KeyringBackend):
     """A wrapper for the secretstorage package to support the custom keyring backend"""
 
