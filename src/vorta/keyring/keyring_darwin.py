@@ -8,7 +8,7 @@ objc modules.
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 
-from keyring.backend import KeyringBackend
+from .keyring_backend import KeyringBackend
 
 
 class VortaDarwinKeyring(KeyringBackend):
@@ -41,10 +41,6 @@ class VortaDarwinKeyring(KeyringBackend):
         # Get the login keychain
         result, login_keychain = SecKeychainOpen(b'login.keychain', None)
         self.login_keychain = login_keychain
-
-    @classmethod
-    def priority(cls):
-        return 5
 
     def set_password(self, service, repo_url, password):
         if not self.login_keychain: self._set_keychain()
