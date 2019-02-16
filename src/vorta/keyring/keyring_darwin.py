@@ -63,9 +63,6 @@ class VortaDarwinKeyring(KeyringBackend):
             password = _resolve_password(password_length, password_buffer)
         return password
 
-    def delete_password(self, service, repo_url):
-        pass
-
 
 def _resolve_password(password_length, password_buffer):
     from ctypes import c_char
