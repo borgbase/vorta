@@ -1,3 +1,10 @@
+"""
+Custom errors
+Based on the keyring package
+https://github.com/jaraco/keyring/blob/master/keyring/errors.py
+"""
+
+
 class KeyringError(Exception):
     """Base class for exceptions in keyring
     """
