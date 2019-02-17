@@ -42,7 +42,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app = QApplication.instance()
         self.app.backup_cancelled_event.connect(self.cancel)
 
-        cmd[0] = self.prepare_bin()
+        extra_args = shlex.split(params.get('extra_borg_arguments', ''))
+        cmd = [self.prepare_bin()] + extra_args + cmd[1:]
 
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
@@ -144,8 +145,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         log_entry.save()
         logger.info('Running command %s', ' '.join(self.cmd))
 
-        extra_args = shlex.split(self.params.get('extra_borg_arguments', ''))
-        p = Popen(self.cmd + extra_args, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
+        p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
                   env=self.env, cwd=self.cwd, start_new_session=True)
 
         self.process = p
