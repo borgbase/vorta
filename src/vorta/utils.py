@@ -222,31 +222,6 @@ def uses_dark_mode():
     return None
 
 
-def open_app_at_startup(enabled=True):
-    """
-    This function adds/removes the current app bundle from Login items in macOS
-    """
-    if sys.platform == 'darwin':
-        from Foundation import NSDictionary
-
-        from Cocoa import NSBundle, NSURL
-        from CoreFoundation import kCFAllocatorDefault
-        # CF = CDLL(find_library('CoreFoundation'))
-        from LaunchServices import (LSSharedFileListCreate, kLSSharedFileListSessionLoginItems,
-                                    LSSharedFileListInsertItemURL, kLSSharedFileListItemHidden,
-                                    kLSSharedFileListItemLast, LSSharedFileListItemRemove)
-
-        app_path = NSBundle.mainBundle().bundlePath()
-        url = NSURL.alloc().initFileURLWithPath_(app_path)
-        login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
-        props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
-
-        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast,
-                                                 None, None, url, props, None)
-        if not enabled:
-            LSSharedFileListItemRemove(login_items, new_item)
-
-
 def format_archive_name(profile, archive_name_tpl):
     """
     Generate an archive name. Default:

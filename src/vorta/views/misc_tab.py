@@ -2,7 +2,8 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
 
 from vorta.i18n import translate
-from vorta.utils import get_asset, open_app_at_startup
+from vorta.utils import get_asset
+from vorta.autostart import open_app_at_startup
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
 from vorta.views.utils import get_theme_class

@@ -211,15 +211,15 @@ def get_misc_settings():
             'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Also notify about successful background tasks')
+        },
+        {
+            'key': 'autostart', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Automatically start Vorta at login')
         }
     ]
     if sys.platform == 'darwin':
         settings += [
-            {
-                'key': 'autostart', 'value': False, 'type': 'checkbox',
-                'label': trans_late('settings',
-                                    'Automatically start Vorta at login')
-            },
             {
                 'key': 'check_for_updates', 'value': True, 'type': 'checkbox',
                 'label': trans_late('settings',
