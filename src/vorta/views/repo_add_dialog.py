@@ -1,7 +1,6 @@
 import re
 from PyQt5 import uic
 
-from ..i18n import translate
 from ..utils import get_private_keys, get_asset, choose_file_dialog
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
@@ -68,7 +67,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
             else:
-                self._set_status(translate('messages', params['message']))
+                self._set_status(params['message'])
 
     def _set_status(self, text):
         self.errorText.setText(text)
@@ -132,4 +131,4 @@ class ExistingRepoWindow(AddRepoWindow):
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
             else:
-                self._set_status(translate('messages', params['message']))
+                self._set_status(params['message'])
