@@ -250,6 +250,8 @@ def init_db(con):
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         if created and setting['key'] == "use_dark_theme":
             s.value = bool(uses_dark_mode())
+        if created and setting['key'] == "use_light_icon":
+            s.value = bool(uses_dark_mode())
         s.label = setting['label']
         s.save()
 
