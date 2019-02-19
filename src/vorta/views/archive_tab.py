@@ -14,7 +14,7 @@ from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.borg.delete import BorgDeleteThread
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.i18n import translate, trans_late
+from vorta.i18n import trans_late
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
 from vorta.views.utils import get_theme_class
@@ -144,7 +144,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
         if not params['ok']:
-            self._set_status(translate(params['message']))
+            self._set_status(params['message'])
             return
 
         # Conditions are met (borg binary available, etc)
@@ -214,7 +214,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)
         if not params['ok']:
-            self._set_status(translate(params['message']))
+            self._set_status(params['message'])
             return
 
         # Conditions are met (borg binary available, etc)
@@ -257,7 +257,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             profile = self.profile()
             params = BorgUmountThread.prepare(profile)
             if not params['ok']:
-                self._set_status(translate(params['message']))
+                self._set_status(params['message'])
                 return
 
             params['current_archive'] = archive_name
@@ -301,7 +301,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 params = BorgListArchiveThread.prepare(profile)
 
                 if not params['ok']:
-                    self._set_status(translate(params['message']))
+                    self._set_status(params['message'])
                     return
                 params['cmd'][-1] += f'::{archive_name}'
                 params['archive_name'] = archive_name
@@ -338,7 +338,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
                         else:
-                            self._set_status(translate(params['message']))
+                            self._set_status(params['message'])
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
                 dialog.open(receive)
@@ -383,7 +383,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_action(self):
         params = BorgDeleteThread.prepare(self.profile())
         if not params['ok']:
-            self._set_status(translate(params['message']))
+            self._set_status(params['message'])
             return
 
         archive_name = self.selected_archive_name()
