@@ -257,7 +257,7 @@ def get_mount_points(repo_url):
                             mount_point = proc.cmdline()[idx + 1]
                             mount_points[archive_name] = mount_point
                         break
-        except psutil._exceptions.ZombieProcess:
+        except psutil.ZombieProcess:
             # Getting process details may fail (e.g. zombie process on macOS)
             # Also see https://github.com/giampaolo/psutil/issues/783
             continue
