@@ -136,8 +136,8 @@ def get_sorted_wifis(profile):
     if sys.platform == 'darwin':
         plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
         plist_file = open(plist_path, 'rb')
-        wifis = plistlib.load(plist_file)['KnownNetworks']
-        if wifis:
+        wifis = plistlib.load(plist_file).get('KnownNetworks')
+        if wifis is not None:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
                 ssid = wifi['SSIDString']
@@ -152,11 +152,11 @@ def get_sorted_wifis(profile):
                     db_wifi.last_connected = timestamp
                     db_wifi.save()
 
-        # remove Wifis that were deleted in the system.
-        deleted_wifis = WifiSettingModel.select() \
-            .where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
-        for wifi in deleted_wifis:
-            wifi.delete_instance()
+            # remove Wifis that were deleted in the system.
+            deleted_wifis = WifiSettingModel.select() \
+                .where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
+            for wifi in deleted_wifis:
+                wifi.delete_instance()
 
     return WifiSettingModel.select() \
         .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
