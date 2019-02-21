@@ -43,7 +43,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app.backup_cancelled_event.connect(self.cancel)
 
         extra_args = shlex.split(params.get('extra_borg_arguments', ''))
-        cmd = [self.prepare_bin()] + extra_args + cmd[1:]
+        cmd[0] = self.prepare_bin()
+        cmd = cmd[:2] + extra_args + cmd[2:]
 
         env = os.environ.copy()
         env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
