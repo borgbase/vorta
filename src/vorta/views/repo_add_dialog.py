@@ -21,6 +21,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
