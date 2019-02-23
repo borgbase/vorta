@@ -8,10 +8,10 @@ objc modules.
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 
-from .keyring_backend import KeyringBackend
+from .keyring_factory import VortaKeyring
 
 
-class VortaDarwinKeyring(KeyringBackend):
+class VortaDarwinKeyring(VortaKeyring):
     """Homemade macOS Keychain Service"""
 
     login_keychain = None

@@ -20,31 +20,9 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import subprocess
-import vorta.keyring.keyring_core as keyring
-from vorta.keyring.keyring_db import VortaDBKeyring
-import secretstorage
+from .keyring.keyring_factory import VortaKeyring
 
-"""
-Set the most appropriate Keyring backend for the current system.
-
-For macOS we use our own implementation due to conflicts between
-Keyring and the autostart code.
-
-For Linux not every system has SecretService available, so it will
-fall back to a simple database keystore if needed.
-"""
-if sys.platform == 'darwin':
-    from vorta.keyring.keyring_darwin import VortaDarwinKeyring
-    keyring.set_keyring(VortaDarwinKeyring())
-elif sys.platform.startswith("linux"):
-    from vorta.keyring.keyring_secretstorage import VortaSecretStorageKeyring
-    try:
-        secretstorage.dbus_init()
-        keyring.set_keyring(VortaSecretStorageKeyring())
-    except secretstorage.SecretServiceNotAvailableException:
-        keyring.set_keyring(VortaDBKeyring())
-else:  # Fall back to saving password to database.
-    keyring.set_keyring(VortaDBKeyring())
+keyring = VortaKeyring.get_keyring()
 
 
 def nested_dict():

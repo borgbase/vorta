@@ -1,7 +1,7 @@
-from .keyring_backend import KeyringBackend
+from .keyring_factory import VortaKeyring
 
 
-class VortaDBKeyring(KeyringBackend):
+class VortaDBKeyring(VortaKeyring):
     """
     Our own fallback keyring service. Uses the main database
     to store repo passwords if no other (more secure) backend
