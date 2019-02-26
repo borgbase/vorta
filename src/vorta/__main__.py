@@ -1,6 +1,7 @@
 import sys
 import os
 import peewee
+import signal
 
 from vorta.models import init_db
 from vorta.config import SETTINGS_DIR
@@ -11,6 +12,7 @@ from vorta.log import init_logger
 
 def main():
     args = parse_args()
+    signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
 
     frozen_binary = getattr(sys, 'frozen', False)
     want_foreground = getattr(args, 'foreground', False)
