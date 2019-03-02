@@ -1,15 +1,12 @@
 import sys
 from pathlib import Path
 from PyQt5 import QtCore
-from setuptools import Distribution
-from setuptools.command.install import install
-
 
 LINUX_STARTUP_FILE = """\
 [Desktop Entry]
 Name=Vorta
 GenericName=Backup Software
-Exec={}/vorta
+Exec=vorta
 Terminal=false
 Icon=vorta
 Categories=Utility
@@ -42,31 +39,12 @@ def open_app_at_startup(enabled=True):
                                                  None, None, url, props, None)
         if not enabled:
             LSSharedFileListItemRemove(login_items, new_item)
+
     elif sys.platform.startswith('linux'):
         config_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.ConfigLocation)
         autostart_file_path = Path(config_path) / 'autostart' / 'vorta.desktop'
         if enabled:
-            dir_entry_point = get_setuptools_script_dir()
-            autostart_file_path.write_text(LINUX_STARTUP_FILE.format(dir_entry_point))
+            autostart_file_path.write_text(LINUX_STARTUP_FILE)
         else:
             if autostart_file_path.exists():
                 autostart_file_path.unlink()
-
-
-# Get entry point of vorta
-# From https://stackoverflow.com/questions/
-#      25066084/get-entry-point-script-file-location-in-setuputils-package
-class OnlyGetScriptPath(install):
-    def run(self):
-        # does not call install.run() by design
-        self.distribution.install_scripts = self.install_scripts
-
-
-def get_setuptools_script_dir():
-    dist = Distribution({'cmdclass': {'install': OnlyGetScriptPath}})
-    dist.dry_run = True  # not sure if necessary, but to be safe
-    dist.parse_config_files()
-    command = dist.get_command_obj('install')
-    command.ensure_finalized()
-    command.run()
-    return dist.install_scripts
