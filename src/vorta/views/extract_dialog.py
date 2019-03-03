@@ -24,6 +24,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.setupUi(self)
         global files_with_attributes, nested_file_list, selected_files_folders
 
+        # Clear global file lists
+        files_with_attributes = []
+        nested_file_list = nested_dict()
+        selected_files_folders = set()
+
         def parse_line(line):
             size, modified, full_path = line.split('\t')
             size = int(size)
