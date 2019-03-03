@@ -36,7 +36,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
             return size, modified, name, dir
 
-        files_with_attributes = [parse_line(l) for l in fs_data.split('\n')[:-1]]
+        for l in fs_data.split('\n')[:-1]:
+            try:
+                files_with_attributes.append(parse_line(l))
+            except ValueError:
+                pass
 
         model = TreeModel()
 
