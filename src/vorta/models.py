@@ -42,7 +42,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
-    extra_borg_arguments = pw.CharField(default='', null=True)
+    extra_borg_arguments = pw.CharField(default='')
 
     def is_remote_repo(self):
         return not self.url.startswith('/')
@@ -332,4 +332,4 @@ def init_db(con):
         _apply_schema_update(
             current_schema, 12,
             migrator.add_column(RepoModel._meta.table_name,
-                                'extra_borg_arguments', pw.CharField(default='', null=True)))
+                                'extra_borg_arguments', pw.CharField(default='')))
