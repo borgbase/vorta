@@ -50,9 +50,8 @@ class VortaApp(QApplication):
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
 
-        # Prepare tray and main window
+        # Prepare system tray icon
         self.tray = TrayMenu(self)
-        self.main_window = MainWindow(self)
 
         # Apply dark stylesheet
         if SettingsModel.get(key='use_dark_theme').value:
@@ -60,7 +59,7 @@ class VortaApp(QApplication):
 
         args = parse_args()
         if hasattr(args, 'foreground') and args.foreground:
-            self.main_window.show()
+            self.open_main_window_action()
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
@@ -79,6 +78,7 @@ class VortaApp(QApplication):
             self.backup_log_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
+        self.main_window = MainWindow(self)
         self.main_window.show()
         self.main_window.raise_()
 
@@ -93,7 +93,6 @@ class VortaApp(QApplication):
 
     def backup_finished_event_response(self):
         set_tray_icon(self.tray)
-        self.main_window.scheduleTab._draw_next_scheduled_backup()
 
     def backup_cancelled_event_response(self):
         set_tray_icon(self.tray)
