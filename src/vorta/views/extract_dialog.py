@@ -13,9 +13,9 @@ uifile = get_asset('UI/extractdialog.ui')
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
-files_with_attributes = []
-nested_file_list = nested_dict()
-selected_files_folders = set()
+files_with_attributes = None
+nested_file_list = None
+selected_files_folders = None
 
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
@@ -23,6 +23,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         super().__init__()
         self.setupUi(self)
         global files_with_attributes, nested_file_list, selected_files_folders
+
+        # Clear global file lists
+        files_with_attributes = []
+        nested_file_list = nested_dict()
+        selected_files_folders = set()
 
         def parse_line(line):
             size, modified, full_path = line.split('\t')
@@ -36,7 +41,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
             return size, modified, name, dir
 
-        for l in fs_data.split('\n')[:-1]:
+        for l in fs_data.split('\n'):
             try:
                 files_with_attributes.append(parse_line(l))
             except ValueError:
