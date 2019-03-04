@@ -32,7 +32,7 @@ def app(tmpdir, qtbot):
     source_dir.save()
 
     app = VortaApp([])
-    app.main_window.show()
+    app.open_main_window_action()
     qtbot.addWidget(app.main_window)
     return app
 
