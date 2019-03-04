@@ -10,8 +10,8 @@ class VortaKeyring:
     @classmethod
     def get_keyring(cls):
         if sys.platform == 'darwin':
-            from .keyring_darwin import DarwinKeyring
-            return DarwinKeyring()
+            from .keyring_darwin import VortaDarwinKeyring
+            return VortaDarwinKeyring()
         elif sys.platform.startswith('linux'):
             from .keyring_secretstorage import VortaSecretStorageKeyring, secretstorage
             try:
