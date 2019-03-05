@@ -1,4 +1,5 @@
-from .keyring_factory import VortaKeyring
+import peewee
+from .abc import VortaKeyring
 
 
 class VortaDBKeyring(VortaKeyring):
@@ -9,7 +10,7 @@ class VortaDBKeyring(VortaKeyring):
     """
 
     def set_password(self, service, repo_url, password):
-        from ..models import RepoPassword
+        from vorta.models import RepoPassword
         keyring_entry, created = RepoPassword.get_or_create(
             url=repo_url,
             defaults={'password': password}
@@ -18,9 +19,13 @@ class VortaDBKeyring(VortaKeyring):
         keyring_entry.save()
 
     def get_password(self, service, repo_url):
-        from ..models import RepoPassword
+        from vorta.models import RepoPassword
         try:
             keyring_entry = RepoPassword.get(url=repo_url)
             return keyring_entry.password
-        except Exception:
+        except peewee.DoesNotExist:
             return None
+
+    @property
+    def is_primary(self):
+        return False

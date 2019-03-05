@@ -8,7 +8,7 @@ objc modules.
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 
-from .keyring_factory import VortaKeyring
+from .abc import VortaKeyring
 
 
 class VortaDarwinKeyring(VortaKeyring):

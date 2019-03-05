@@ -7,6 +7,7 @@ import unicodedata
 import re
 from datetime import datetime as dt
 import getpass
+import subprocess
 from collections import defaultdict
 from functools import reduce
 import operator
@@ -19,8 +20,7 @@ from paramiko import SSHException
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
-import subprocess
-from .keyring.keyring_factory import VortaKeyring
+from vorta.keyring.abc import VortaKeyring
 
 keyring = VortaKeyring.get_keyring()
 
