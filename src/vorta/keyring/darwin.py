@@ -8,10 +8,10 @@ objc modules.
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 
-from keyring.backend import KeyringBackend
+from .abc import VortaKeyring
 
 
-class VortaDarwinKeyring(KeyringBackend):
+class VortaDarwinKeyring(VortaKeyring):
     """Homemade macOS Keychain Service"""
 
     login_keychain = None
@@ -42,10 +42,6 @@ class VortaDarwinKeyring(KeyringBackend):
         result, login_keychain = SecKeychainOpen(b'login.keychain', None)
         self.login_keychain = login_keychain
 
-    @classmethod
-    def priority(cls):
-        return 5
-
     def set_password(self, service, repo_url, password):
         if not self.login_keychain: self._set_keychain()
 
@@ -66,9 +62,6 @@ class VortaDarwinKeyring(KeyringBackend):
             # We apparently were able to find a password
             password = _resolve_password(password_length, password_buffer)
         return password
-
-    def delete_password(self, service, repo_url):
-        pass
 
 
 def _resolve_password(password_length, password_buffer):
