@@ -7,6 +7,7 @@ import unicodedata
 import re
 from datetime import datetime as dt
 import getpass
+import subprocess
 from collections import defaultdict
 from functools import reduce
 import operator
@@ -19,37 +20,9 @@ from paramiko import SSHException
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
-import subprocess
-import keyring
-from vorta.keyring_db import VortaDBKeyring
+from vorta.keyring.abc import VortaKeyring
 
-
-"""
-Set the most appropriate Keyring backend for the current system.
-
-For macOS we use our own implementation due to conflicts between
-Keyring and the autostart code.
-
-For Linux not every system has SecretService available, so it will
-fall back to a simple database keystore if needed.
-"""
-if sys.platform == 'darwin':
-    # from keyring.backends import OS_X
-    # keyring.set_keyring(OS_X.Keyring())
-    from vorta.keyring_darwin import VortaDarwinKeyring
-    keyring.set_keyring(VortaDarwinKeyring())
-elif sys.platform == 'win32':
-    from keyring.backends import Windows
-    keyring.set_keyring(Windows.WinVaultKeyring())
-elif sys.platform == 'linux':
-    from keyring.backends import SecretService
-    try:
-        SecretService.Keyring.priority()  # Test if keyring works.
-        keyring.set_keyring(SecretService.Keyring())
-    except Exception:
-        keyring.set_keyring(VortaDBKeyring())
-else:  # Fall back to saving password to database.
-    keyring.set_keyring(VortaDBKeyring())
+keyring = VortaKeyring.get_keyring()
 
 
 def nested_dict():

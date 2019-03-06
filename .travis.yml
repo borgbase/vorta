@@ -1,4 +1,6 @@
 language: generic
+sudo: required
+dist: xenial
 
 addons:
   apt:
@@ -10,6 +12,7 @@ addons:
     - libacl1-dev
     - libacl1
     - build-essential
+    - libxkbcommon-x11-0
   homebrew:
     update: false
     packages:
@@ -27,9 +30,6 @@ cache:
     - $HOME/.pyenv/versions
     - $HOME/Library/Caches/Homebrew
 
-sudo: required
-dist: trusty
-
 env:
   global:
   - SETUP_XVFB=true
@@ -39,9 +39,9 @@ env:
 matrix:
   include:
   - os: linux
-    dist: trusty
+    dist: xenial
     env:
-    - RUN_PYINSTALLER=true
+      - RUN_PYINSTALLER=true
   - os: osx
     env:
       - RUN_PYINSTALLER=true
@@ -52,17 +52,13 @@ install:
     export DISPLAY=:99.0
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
-    # cd /opt/pyenv && git pull origin master
-    pyenv install -s $PYTHON36
-    eval "$(pyenv init -)"
-    pyenv shell $PYTHON36
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
-    pyenv install -s $PYTHON37
-    pyenv install -s $PYTHON36
-    eval "$(pyenv init -)"
-    pyenv shell $PYTHON36 $PYTHON37
   fi
+  pyenv install -s $PYTHON37
+  pyenv install -s $PYTHON36
+  eval "$(pyenv init -)"
+  pyenv shell $PYTHON36 $PYTHON37
 
 - pip install -U setuptools pip==18.1
 - pip install .
@@ -70,7 +66,7 @@ install:
 - pip install -r requirements.d/dev.txt
 
 before_script:
-- if [ $TRAVIS_OS_NAME = "linux" ]; then (herbstluftwm )& fi
+- if [ $TRAVIS_OS_NAME = "linux" ]; then (herbstluftwm)& fi
 - sleep 3
 
 script:

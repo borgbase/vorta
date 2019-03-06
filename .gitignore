@@ -6,6 +6,7 @@ dist/
 docs/
 *.autosave
 __pycache__
+.pytest_cache
 .eggs
 vorta.egg-info
 .coverage
