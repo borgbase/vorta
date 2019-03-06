@@ -5,8 +5,10 @@ At the bottom there is a simple schema migration system.
 """
 
 import json
+import os
 import sys
 from datetime import datetime, timedelta
+
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
@@ -250,9 +252,11 @@ def init_db(con):
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         if created and setting['key'] == "use_dark_theme":
+            # Check if macOS with enabled dark mode
             s.value = bool(uses_dark_mode())
         if created and setting['key'] == "use_light_icon":
-            s.value = bool(uses_dark_mode())
+            # Check if macOS with enabled dark mode or Linux with GNOME DE
+            s.value = bool(uses_dark_mode()) or os.environ.get('XDG_CURRENT_DESKTOP', '') == 'GNOME'
         s.label = setting['label']
         s.save()
 
