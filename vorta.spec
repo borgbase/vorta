@@ -1,6 +1,7 @@
 # -*- mode: python -*-
 
 import os
+import sys
 
 CREATE_VORTA_DIR = False  # create dist/vorta-dir/ output?
 BLOCK_CIPHER = None
@@ -9,11 +10,10 @@ BLOCK_CIPHER = None
 REPO_DIR = os.path.abspath('.')
 SRC_DIR = os.path.join(REPO_DIR, 'src')
 
-
 a = Analysis(['src/vorta/__main__.py'],
              pathex=[SRC_DIR],
              binaries=[
-                ('bin/borg', 'bin'),  # (<borg fat binary for this platform>, <dest. folder>)
+                (f"bin/{sys.platform}/borg", 'bin'),  # (<borg fat binary for this platform>, <dest. folder>)
              ],
              datas=[
                 ('src/vorta/assets/UI/*', 'assets/UI'),
@@ -41,7 +41,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='vorta',
+          name=f"vorta-{sys.platform}",
           debug=False,
           bootloader_ignore_signals=True,
           strip=False,
