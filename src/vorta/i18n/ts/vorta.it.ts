@@ -30,57 +30,57 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="47"/>
+        <location filename="../../views/repo_add_dialog.py" line="48"/>
         <source>Repository Path:</source>
         <translation>Percorso della Repository</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="50"/>
+        <location filename="../../views/repo_add_dialog.py" line="51"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Seleziona la locazione della repository di Borg</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="57"/>
+        <location filename="../../views/repo_add_dialog.py" line="59"/>
         <source>Repository URL:</source>
         <translation>Url della repository</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/repo_add_dialog.py" line="85"/>
         <source>Unable to add your repository.</source>
         <translation>Impossibile aggiungere la tua repository</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="86"/>
+        <location filename="../../views/repo_add_dialog.py" line="88"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (Raccomandata, chiave salvata nella repository)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="88"/>
+        <location filename="../../views/repo_add_dialog.py" line="90"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="90"/>
+        <location filename="../../views/repo_add_dialog.py" line="92"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (chiave salvata nella directory home)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="92"/>
+        <location filename="../../views/repo_add_dialog.py" line="94"/>
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="94"/>
+        <location filename="../../views/repo_add_dialog.py" line="96"/>
         <source>None (not recommended)</source>
         <translation>Nessuna (Sconsigliato)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="105"/>
+        <location filename="../../views/repo_add_dialog.py" line="107"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Per favore inserisci una repo URL valida o seleziona un percorso locale</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="111"/>
+        <location filename="../../views/repo_add_dialog.py" line="113"/>
         <source>Please use a longer password.</source>
         <translation>Per favore utilizza una password più lunga</translation>
     </message>
@@ -88,32 +88,32 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="26"/>
+        <location filename="../../assets/UI/repoadd.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Inizializza una nuova Backup Repository </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="50"/>
+        <location filename="../../assets/UI/repoadd.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>Repository Url</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="65"/>
+        <location filename="../../assets/UI/repoadd.ui" line="82"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="72"/>
+        <location filename="../../assets/UI/repoadd.ui" line="89"/>
         <source>Choose a local path as repository.</source>
         <translation>Seleziona un percorso locale come repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="86"/>
+        <location filename="../../assets/UI/repoadd.ui" line="103"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="99"/>
+        <location filename="../../assets/UI/repoadd.ui" line="177"/>
         <source>Encryption:</source>
         <translation>Cifratura:</translation>
     </message>
@@ -123,24 +123,39 @@
         <translation>Password:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="133"/>
+        <location filename="../../assets/UI/repoadd.ui" line="155"/>
         <source>SSH Key:</source>
         <translation>SSH Key:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="147"/>
+        <location filename="../../assets/UI/repoadd.ui" line="169"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Scegli automaticamente la Key SSH (default)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="193"/>
+        <location filename="../../assets/UI/repoadd.ui" line="223"/>
         <source>Add</source>
         <translation>Aggiungi</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="200"/>
+        <location filename="../../assets/UI/repoadd.ui" line="230"/>
         <source>Cancel</source>
         <translation>Cancella</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repoadd.ui" line="33"/>
+        <source>General</source>
+        <translation>Generale</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repoadd.ui" line="134"/>
+        <source>Advanced</source>
+        <translation>Avanzate</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repoadd.ui" line="194"/>
+        <source>Extra Borg Arguments:</source>
+        <translation>Argomenti extra per Borg:</translation>
     </message>
 </context>
 <context>
@@ -176,64 +191,74 @@
         <translation>Archivi aggiornati.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="239"/>
+        <location filename="../../views/archive_tab.py" line="240"/>
         <source>Choose Mount Point</source>
         <translation>Selezione il punto di Mount</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="245"/>
+        <location filename="../../views/archive_tab.py" line="246"/>
         <source>Mounted successfully.</source>
         <translation>Montato correttamente.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="273"/>
+        <location filename="../../views/archive_tab.py" line="275"/>
         <source>Mount point not active.</source>
         <translation>Punto di Mount non attivo.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="279"/>
+        <location filename="../../views/archive_tab.py" line="281"/>
         <source>Un-mounted successfully.</source>
         <translation>Smontato correttamente.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="317"/>
+        <location filename="../../views/archive_tab.py" line="319"/>
         <source>Select an archive to restore first.</source>
         <translation>Seleziona un archivio da fare il restore per primo.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="344"/>
+        <location filename="../../views/archive_tab.py" line="346"/>
         <source>Choose Extraction Point</source>
         <translation>Seleziona il punto per l&apos;estrazione</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="407"/>
+        <location filename="../../views/archive_tab.py" line="409"/>
         <source>Archive deleted.</source>
         <translation>Archivio Cancellato.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="392"/>
+        <location filename="../../views/archive_tab.py" line="394"/>
         <source>Confirm deletion</source>
         <translation>Conferma l&apos;eliminazione</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="403"/>
+        <location filename="../../views/archive_tab.py" line="405"/>
         <source>No archive selected</source>
         <translation>Nessun archivio selezionato</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="392"/>
+        <location filename="../../views/archive_tab.py" line="394"/>
         <source>Are you sure you want to delete the archive?</source>
         <translation>Sei sicuro che vuoi eliminare l&apos;archivio?</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="380"/>
+        <location filename="../../views/archive_tab.py" line="382"/>
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="381"/>
+        <location filename="../../views/archive_tab.py" line="383"/>
         <source>Cancel</source>
         <translation>Annulla</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="211"/>
+        <source>Unmount</source>
+        <translation>Smonta</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="211"/>
+        <source>Mount</source>
+        <translation>Monta</translation>
     </message>
 </context>
 <context>
@@ -349,7 +374,7 @@
 <context>
     <name>BorgThread</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="221"/>
+        <location filename="../../borg/borg_thread.py" line="227"/>
         <source>Task started</source>
         <translation>Operazione partita</translation>
     </message>
@@ -453,7 +478,7 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="122"/>
+        <location filename="../../views/repo_add_dialog.py" line="124"/>
         <source>Connect to existing Repository</source>
         <translation>Connetti ad una repository esistente</translation>
     </message>
@@ -683,7 +708,7 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="360"/>
         <source>Encryption:</source>
-        <translation>Criptazione:</translation>
+        <translation>Crittografia:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="400"/>
@@ -869,17 +894,12 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="54"/>
-        <source>+ Add New Profile</source>
-        <translation>+ Aggiungi Nuovo Profilo</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="75"/>
+        <location filename="../../views/main_window.py" line="74"/>
         <source>Backup in progress.</source>
         <translation>Backup in esecuzione</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="143"/>
+        <location filename="../../views/main_window.py" line="142"/>
         <source>Task cancelled</source>
         <translation>Task cancellato</translation>
     </message>
@@ -894,64 +914,69 @@
         <translation>Profilo corrente:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="68"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="85"/>
         <source>Rename Profile</source>
         <translation>Rinomina Profilo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="85"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="102"/>
         <source>Delete Profile</source>
         <translation>Cancella Profilo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="88"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="105"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="130"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="147"/>
         <source>Repository</source>
         <translation>Repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="135"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="152"/>
         <source>Sources</source>
-        <translation>Origini</translation>
+        <translation>Fonti</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="140"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="157"/>
         <source>Schedule</source>
-        <translation>Schedulazione</translation>
+        <translation>Pianificazione</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="145"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="162"/>
         <source>Archives</source>
         <translation>Archivi</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="150"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="167"/>
         <source>Misc</source>
         <translation>Varie</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="201"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="218"/>
         <source>Cancel</source>
         <translation>Cancella</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="264"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="281"/>
         <source>Start Backup</source>
-        <translation>Fai partire il Backup</translation>
+        <translation>Inizia Backup</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="278"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="295"/>
         <source>Latest</source>
         <translation>Ultimo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="283"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="300"/>
         <source>Reset App</source>
         <translation>Ripristina App</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="68"/>
+        <source>Add Profile</source>
+        <translation>Aggiungi Profilo</translation>
     </message>
 </context>
 <context>
@@ -967,64 +992,74 @@
         <translation>+ Aggiungi una Repository Esistente</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="34"/>
-        <source>LZ4 (default)</source>
-        <translation>LZ4 (default)</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="35"/>
-        <source>Zstandard (medium)</source>
-        <translation>Zstandard (medium)</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="36"/>
-        <source>LZMA (high)</source>
-        <translation>LZMA (high)</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="37"/>
+        <location filename="../../views/repo_tab.py" line="48"/>
         <source>No Compression</source>
         <translation>Nessuna compressione</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="75"/>
+        <location filename="../../views/repo_tab.py" line="86"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Seleziona automaticamente SSH Key (default)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="76"/>
+        <location filename="../../views/repo_tab.py" line="87"/>
         <source>Create New Key</source>
         <translation>Crea una nuova key</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="108"/>
+        <location filename="../../views/repo_tab.py" line="119"/>
         <source>Public Key Copied to Clipboard</source>
         <translation>Key Pubblica Copiata negli Appunti</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="109"/>
+        <location filename="../../views/repo_tab.py" line="120"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
         <translation>La Key SSH pubblica è stata copiata negli appunti. Usala per la creazione della repo remota.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="114"/>
+        <location filename="../../views/repo_tab.py" line="125"/>
         <source>Couldn&apos;t find public key.</source>
         <translation>Non trovo la Key pubblica.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="116"/>
+        <location filename="../../views/repo_tab.py" line="127"/>
         <source>Select a public key from the dropdown first.</source>
         <translation>Seleziona una Key pubblica dal menu.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="173"/>
+        <location filename="../../views/repo_tab.py" line="184"/>
         <source>Repository was Unlinked</source>
         <translation>La Repository è stata scollegata.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="174"/>
+        <location filename="../../views/repo_tab.py" line="185"/>
         <source>You can always connect it again later.</source>
         <translation>Puoi sempre connetterlo di nuovo dopo.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="39"/>
+        <source>LZ4 (modern, default)</source>
+        <translation>LZ4 (moderna, default)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="40"/>
+        <source>Zstandard Level 3 (modern)</source>
+        <translation>Zstandard Level 3 (moderna)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="41"/>
+        <source>Zstandard Level 8 (modern)</source>
+        <translation>Zstandard Level 8 (moderna)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="46"/>
+        <source>ZLIB Level 6 (auto, legacy)</source>
+        <translation>ZLIB Level 6 (auto, arcaica)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="47"/>
+        <source>LZMA Level 6 (auto, legacy)</source>
+        <translation>LZMA Level 6 (auto, arcaica)</translation>
     </message>
 </context>
 <context>
@@ -1088,7 +1123,7 @@
     <message>
         <location filename="../../tray_menu.py" line="38"/>
         <source>Vorta for Borg Backup</source>
-        <translation>Vorta per Borg Backu</translation>
+        <translation>Vorta per Borg Backup</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="47"/>
@@ -1131,7 +1166,7 @@
     <message>
         <location filename="../../scheduler.py" line="89"/>
         <source>None scheduled</source>
-        <translation>Nessuna schedulazione.</translation>
+        <translation>Nessuna pianificazione.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="120"/>
@@ -1157,22 +1192,22 @@
 <context>
     <name>messages</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="92"/>
+        <location filename="../../borg/borg_thread.py" line="96"/>
         <source>Backup is already in progress.</source>
         <translation>Il Backup è già in corso</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="96"/>
+        <location filename="../../borg/borg_thread.py" line="100"/>
         <source>Borg binary was not found.</source>
         <translation>Eseguibile Borg non trovato.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="100"/>
+        <location filename="../../borg/borg_thread.py" line="104"/>
         <source>Add a backup repository first.</source>
         <translation>Aggiungi prima una repository.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="107"/>
+        <location filename="../../borg/borg_thread.py" line="111"/>
         <source>Please make sure you grant Vorta permission to use the Keychain.</source>
         <translation>Per favore verifica di aver garantito a Vorta i permessi per utilizzare la Keychain.</translation>
     </message>
@@ -1210,37 +1245,37 @@
 <context>
     <name>settings</name>
     <message>
-        <location filename="../../models.py" line="207"/>
+        <location filename="../../models.py" line="208"/>
         <source>Display notifications when background tasks fail</source>
         <translation>Mostra una notifica quando le attività in background falliscono</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="212"/>
+        <location filename="../../models.py" line="213"/>
         <source>Also notify about successful background tasks</source>
         <translation>Notifica anche le attività in background che terminano correttamente</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="220"/>
+        <location filename="../../models.py" line="218"/>
         <source>Automatically start Vorta at login</source>
         <translation>Fai partire automaticamente Vorta all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="225"/>
+        <location filename="../../models.py" line="226"/>
         <source>Check for updates on startup</source>
         <translation>Verifica aggiornamenti all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="230"/>
+        <location filename="../../models.py" line="231"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Includi le versioni pre-release quando controlli la presenza di aggiornamenti</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="195"/>
+        <location filename="../../models.py" line="196"/>
         <source>Use light system tray icon (applies after restart)</source>
         <translation>Usa l&apos;icona chiara (si applica al restart)</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="202"/>
+        <location filename="../../models.py" line="203"/>
         <source>Use dark theme (applies after restart)</source>
         <translation>Usa il tema scuro (Si applica dopo un restart)</translation>
     </message>
