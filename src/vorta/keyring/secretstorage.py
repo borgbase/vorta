@@ -21,6 +21,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
         collection.create_item(repo_url, attributes, password, replace=True)
 
     def get_password(self, service, repo_url):
+        asyncio.set_event_loop(asyncio.new_event_loop())
         collection = secretstorage.get_default_collection(self.connection)
         if collection.is_locked():
             collection.unlock()
