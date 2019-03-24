@@ -21,8 +21,10 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 from vorta.keyring.abc import VortaKeyring
+from vorta.log import logger
 
 keyring = VortaKeyring.get_keyring()
+logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
 
 
 def nested_dict():

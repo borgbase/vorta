@@ -8,7 +8,12 @@ class VortaSecretStorageKeyring(VortaKeyring):
     """A wrapper for the secretstorage package to support the custom keyring backend"""
 
     def __init__(self):
+        """
+        Test whether DBus and Gnome-Keyring are available.
+        """
         self.connection = secretstorage.dbus_init()
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        secretstorage.get_default_collection(self.connection)
 
     def set_password(self, service, repo_url, password):
         asyncio.set_event_loop(asyncio.new_event_loop())

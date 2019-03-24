@@ -12,12 +12,13 @@ class VortaKeyring:
         if sys.platform == 'darwin':  # Use Keychain on macOS
             from .darwin import VortaDarwinKeyring
             return VortaDarwinKeyring()
-        else:  # Try to use DBus (available on Linux and *BSD)
+        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
             import secretstorage
             from .secretstorage import VortaSecretStorageKeyring
             try:
                 return VortaSecretStorageKeyring()
-            except secretstorage.SecretServiceNotAvailableException:  # Save passwords in DB, if all else fails.
+            # Save passwords in DB, if all else fails.
+            except secretstorage.SecretServiceNotAvailableException:
                 from .db import VortaDBKeyring
                 return VortaDBKeyring()
 
