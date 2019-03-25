@@ -1,6 +1,7 @@
 import os
 import sys
 import fcntl
+import sip
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -83,8 +84,9 @@ class VortaApp(QApplication):
         self.main_window.raise_()
 
     def toggle_main_window_visibility(self):
-        if self.main_window.isVisible():
-            self.main_window.hide()
+        main_window_open = hasattr(self, 'main_window') and not sip.isdeleted(self.main_window)
+        if main_window_open:
+            self.main_window.close()
         else:
             self.open_main_window_action()
 
