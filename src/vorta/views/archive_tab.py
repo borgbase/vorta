@@ -207,7 +207,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def set_mount_button_mode(self, mode):
         self.mountButton.clicked.disconnect()
         mount = (mode == 'Mount')
-        self.mountButton.setText('Mount' if mount else 'Unmount')
+        self.mountButton.setText(self.tr('Mount') if mount else self.tr('Unmount'))
         self.mountButton.clicked.connect(self.mount_action if mount else self.umount_action)
 
     def mount_action(self):
@@ -227,7 +227,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             mount_point = dialog.selectedFiles()
             if mount_point:
                 params['cmd'].append(mount_point[0])
-                self.mount_points[params['current_archive']] = mount_point[0]
+                if params.get('current_archive', False):
+                    self.mount_points[params['current_archive']] = mount_point[0]
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     thread = BorgMountThread(params['cmd'], params, parent=self)
@@ -243,10 +244,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if result['returncode'] == 0:
             self._set_status(self.tr('Mounted successfully.'))
             self.update_mount_button_text()
-            archive_name = result['params']['current_archive']
-            row = self.row_of_archive(archive_name)
-            item = QTableWidgetItem(result['cmd'][-1])
-            self.archiveTable.setItem(row, 3, item)
+            if result['params'].get('current_archive'):
+                archive_name = result['params']['current_archive']
+                row = self.row_of_archive(archive_name)
+                item = QTableWidgetItem(result['cmd'][-1])
+                self.archiveTable.setItem(row, 3, item)
 
     def umount_action(self):
         archive_name = self.selected_archive_name()
