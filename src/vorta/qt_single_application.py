@@ -5,7 +5,11 @@ from PyQt5.QtCore import pyqtSignal
 
 
 class QtSingleApplication(QApplication):
-    """Adapted from https://stackoverflow.com/a/12712362/11038610"""
+    """
+    Adapted from https://stackoverflow.com/a/12712362/11038610
+
+    Published by Johan Rade under 2-clause BSD license, opensource.org/licenses/BSD-2-Clause
+    """
     message_received_event = pyqtSignal(str)
 
     def __init__(self, id, *argv):

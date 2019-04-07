@@ -2,13 +2,12 @@ import sys
 
 import qdarkstyle
 from PyQt5 import QtCore
-
 import sip
 
 from .borg.create import BorgCreateThread
 from .i18n import init_translations, translate
 from .models import BackupProfileModel, SettingsModel
-from .QtSingleApplication import QtSingleApplication
+from .qt_single_application import QtSingleApplication
 from .scheduler import VortaScheduler
 from .tray_menu import TrayMenu
 from .utils import parse_args, set_tray_icon
@@ -35,6 +34,7 @@ class VortaApp(QtSingleApplication):
         super().__init__(APP_ID, args_raw)
         if self.isRunning() and single_app:
             self.sendMessage("open main window")
+            print('An instance of Vorta is already running. Opening main window.')
             sys.exit()
 
         init_translations(self)
