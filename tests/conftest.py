@@ -13,10 +13,11 @@ def pytest_configure(config):
 
 
 @pytest.fixture
-def app(tmpdir, qtbot):
+def app(tmpdir, qtbot, mocker):
     tmp_db = tmpdir.join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
+    mocker.patch.object(vorta.application.VortaApp, 'set_borg_details_action', return_value=None)
 
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
     new_repo.save()
