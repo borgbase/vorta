@@ -19,7 +19,6 @@ def main():
     # We assume that a frozen binary is a fat single-file binary made with
     # PyInstaller. These are not compatible with forking into background here:
     if not (want_foreground or frozen_binary):
-        print('Forking to background (see system tray).')
         if os.fork():
             sys.exit()
 
