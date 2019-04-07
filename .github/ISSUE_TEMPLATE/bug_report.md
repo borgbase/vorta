@@ -21,6 +21,4 @@ Steps to reproduce the behavior:
  - OS: [e.g. Ubuntu]
 
 **Additional context**
-If appropriate include logs from
-- Linux: `$HOME/.cache/Vorta/log`
-- macOS: `$HOME/Library/Logs/Vorta`
+If appropriate include logs. Can be found in Main Window > Misc Tab > Log.

@@ -138,8 +138,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         """Find packaged borg binary. Prefer globally installed."""
 
         # Look in current PATH.
-        if shutil.which('borg'):
-            return 'borg'
+        borg_in_path = shutil.which('borg')
+        if borg_in_path:
+            return borg_in_path
         else:
             # Look in pyinstaller package
             cwd = getattr(sys, '_MEIPASS', os.getcwd())

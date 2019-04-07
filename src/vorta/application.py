@@ -12,6 +12,8 @@ from .scheduler import VortaScheduler
 from .tray_menu import TrayMenu
 from .utils import parse_args, set_tray_icon
 from .views.main_window import MainWindow
+from vorta.borg.version import BorgVersionThread
+
 
 APP_ID = "vorta"
 
@@ -28,6 +30,7 @@ class VortaApp(QtSingleApplication):
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
+    borg_details = {'version': '0.0', 'path': 'borg'}
 
     def __init__(self, args_raw, single_app=False):
 
@@ -58,6 +61,8 @@ class VortaApp(QtSingleApplication):
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
 
+        self.set_borg_details_action()
+
     def create_backup_action(self, profile_id=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
@@ -75,9 +80,11 @@ class VortaApp(QtSingleApplication):
         self.main_window.show()
         self.main_window.raise_()
 
+    def _main_window_exists(self):
+        return hasattr(self, 'main_window') and not sip.isdeleted(self.main_window)
+
     def toggle_main_window_visibility(self):
-        main_window_open = hasattr(self, 'main_window') and not sip.isdeleted(self.main_window)
-        if main_window_open:
+        if self._main_window_exists():
             self.main_window.close()
         else:
             self.open_main_window_action()
@@ -94,3 +101,18 @@ class VortaApp(QtSingleApplication):
     def message_received_event_response(self, message):
         if message == "open main window":
             self.open_main_window_action()
+
+    def set_borg_details_action(self):
+        params = BorgVersionThread.prepare()
+        if not params['ok']:
+            self._set_status(params['message'])
+            return
+        thread = BorgVersionThread(params['cmd'], params, parent=self)
+        thread.result.connect(self.set_borg_details_result)
+        thread.start()
+
+    def set_borg_details_result(self, result):
+        self.borg_details['version'] = result['data']['version']
+        self.borg_details['path'] = result['data']['path']
+        if self._main_window_exists():
+            self.main_window.miscTab.set_borg_details(self.borg_details)
