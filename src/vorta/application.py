@@ -1,23 +1,22 @@
-import os
 import sys
-import fcntl
+
+import qdarkstyle
+from PyQt5 import QtCore
 import sip
 
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
-import qdarkstyle
-
-from .i18n import init_translations, translate
-from .tray_menu import TrayMenu
-from .scheduler import VortaScheduler
-from .models import BackupProfileModel, SettingsModel
 from .borg.create import BorgCreateThread
-from .views.main_window import MainWindow
+from .i18n import init_translations, translate
+from .models import BackupProfileModel, SettingsModel
+from .qt_single_application import QtSingleApplication
+from .scheduler import VortaScheduler
+from .tray_menu import TrayMenu
 from .utils import parse_args, set_tray_icon
-from vorta.config import SETTINGS_DIR
+from .views.main_window import MainWindow
+
+APP_ID = "vorta"
 
 
-class VortaApp(QApplication):
+class VortaApp(QtSingleApplication):
     """
     All windows and QWidgets are children of this app.
 
@@ -32,20 +31,12 @@ class VortaApp(QApplication):
 
     def __init__(self, args_raw, single_app=False):
 
-        # Ensure only one app instance is running.
-        # From https://stackoverflow.com/questions/220525/
-        #              ensure-a-single-instance-of-an-application-in-linux#221159
-        if single_app:
-            pid_file = os.path.join(SETTINGS_DIR, 'vorta.pid')
-            lockfile = open(pid_file, 'w+')
-            try:
-                fcntl.lockf(lockfile, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                self.lockfile = lockfile
-            except OSError:
-                print('An instance of Vorta is already running.')
-                sys.exit(1)
+        super().__init__(APP_ID, args_raw)
+        if self.isRunning() and single_app:
+            self.sendMessage("open main window")
+            print('An instance of Vorta is already running. Opening main window.')
+            sys.exit()
 
-        super().__init__(args_raw)
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
@@ -65,6 +56,7 @@ class VortaApp(QApplication):
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
+        self.message_received_event.connect(self.message_received_event_response)
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
@@ -98,3 +90,7 @@ class VortaApp(QApplication):
 
     def backup_cancelled_event_response(self):
         set_tray_icon(self.tray)
+
+    def message_received_event_response(self, message):
+        if message == "open main window":
+            self.open_main_window_action()
