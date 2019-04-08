@@ -34,7 +34,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.miscTabSlot)
-        self.miscTab.set_borg_details(self.app.borg_details)
+        self.miscTab.set_borg_details(self.app.borg_compat.version, self.app.borg_compat.path)
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)

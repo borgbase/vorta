@@ -5,6 +5,7 @@ from PyQt5 import QtCore
 import sip
 
 from .borg.create import BorgCreateThread
+from .borg._compatibility import BorgCompatibility
 from .i18n import init_translations, translate
 from .models import BackupProfileModel, SettingsModel
 from .qt_single_application import QtSingleApplication
@@ -30,7 +31,7 @@ class VortaApp(QtSingleApplication):
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
-    borg_details = {'version': '0.0', 'path': 'borg'}
+    borg_compat = BorgCompatibility()
 
     def __init__(self, args_raw, single_app=False):
 
@@ -112,7 +113,6 @@ class VortaApp(QtSingleApplication):
         thread.start()
 
     def set_borg_details_result(self, result):
-        self.borg_details['version'] = result['data']['version']
-        self.borg_details['path'] = result['data']['path']
+        self.borg_compat.set_version(result['data']['version'], result['data']['path'])
         if self._main_window_exists():
-            self.main_window.miscTab.set_borg_details(self.borg_details)
+            self.main_window.miscTab.set_borg_details(self.borg_compat.version, self.borg_compat.path)
