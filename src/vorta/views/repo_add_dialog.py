@@ -1,8 +1,7 @@
 import re
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication
 
-from ..utils import get_private_keys, get_asset, choose_file_dialog
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.views.utils import get_theme_class
@@ -86,16 +85,15 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
-        app = QApplication.instance()
 
-        if app.borg_compat.check('REPOKEY_BLAKE2'):
+        if borg_compat.check('BLAKE2'):
             self.encryptionComboBox.addItem(self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
                                             'repokey-blake2')
 
         self.encryptionComboBox.addItem(self.tr('Repokey'),
                                         'repokey')
 
-        if app.borg_compat.check('REPOKEY_BLAKE2'):
+        if borg_compat.check('BLAKE2'):
             self.encryptionComboBox.addItem(self.tr('Keyfile-Blake2 (Key stored in home directory)'),
                                             'keyfile-blake2')
 

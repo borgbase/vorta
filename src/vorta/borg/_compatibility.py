@@ -1,7 +1,8 @@
 from pkg_resources import parse_version
 
 MIN_BORG_FOR_FEATURE = {
-    'REPOKEY_BLAKE2': parse_version('1.1.4'),
+    'BLAKE2': parse_version('1.1.4'),
+    'ZSTD': parse_version('1.1.4'),
     # add new version-checks here.
 }
 
