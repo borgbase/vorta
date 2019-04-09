@@ -85,22 +85,21 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
+        encryption_algos = [
+            ['Repokey-Blake2 (Recommended, key stored in repository)', 'repokey-blake2'],
+            ['Repokey', 'repokey'],
+            ['Keyfile-Blake2 (Key stored in home directory)', 'keyfile-blake2'],
+            ['Keyfile', 'keyfile'],
+            ['None (not recommended)', 'none']
+        ]
 
-        if borg_compat.check('BLAKE2'):
-            self.encryptionComboBox.addItem(self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
-                                            'repokey-blake2')
+        for desc, name in encryption_algos:
+            self.encryptionComboBox.addItem(self.tr(desc), name)
 
-        self.encryptionComboBox.addItem(self.tr('Repokey'),
-                                        'repokey')
-
-        if borg_compat.check('BLAKE2'):
-            self.encryptionComboBox.addItem(self.tr('Keyfile-Blake2 (Key stored in home directory)'),
-                                            'keyfile-blake2')
-
-        self.encryptionComboBox.addItem(self.tr('Keyfile'),
-                                        'keyfile')
-        self.encryptionComboBox.addItem(self.tr('None (not recommended)'),
-                                        'none')
+        if not borg_compat.check('BLAKE2'):
+            self.encryptionComboBox.model().item(0).setEnabled(False)
+            self.encryptionComboBox.model().item(2).setEnabled(False)
+            self.encryptionComboBox.setCurrentIndex(1)
 
     def init_ssh_key(self):
         keys = get_private_keys()
