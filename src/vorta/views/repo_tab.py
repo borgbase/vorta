@@ -94,8 +94,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def toggle_available_compression(self):
         use_zstd = borg_compat.check('ZSTD')
-        self.repoCompression.model().item(1).setEnabled(use_zstd)
-        self.repoCompression.model().item(2).setEnabled(use_zstd)
+        for algo in ['zstd,3', 'zstd,8']:
+            ix = self.repoCompression.findData(algo)
+            self.repoCompression.model().item(ix).setEnabled(use_zstd)
 
     def ssh_select_action(self, index):
         if index == 1:
