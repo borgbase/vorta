@@ -2,17 +2,17 @@ import sys
 from PyQt5.QtWidgets import QShortcut
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QKeySequence
+
+from vorta.utils import get_asset, borg_compat
+from vorta.models import BackupProfileModel
+from vorta.borg.borg_thread import BorgThread
+from vorta.views.utils import get_theme_class
 from .repo_tab import RepoTab
 from .source_tab import SourceTab
 from .archive_tab import ArchiveTab
 from .schedule_tab import ScheduleTab
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
-from ..utils import get_asset
-from ..models import BackupProfileModel
-from vorta.borg.borg_thread import BorgThread
-from vorta.views.utils import get_theme_class
-
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
@@ -34,7 +34,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.miscTabSlot)
-        self.miscTab.set_borg_details(self.app.borg_details)
+        self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)

@@ -22,9 +22,12 @@ from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
+from vorta.borg._compatibility import BorgCompatibility
 
 keyring = VortaKeyring.get_keyring()
 logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
+
+borg_compat = BorgCompatibility()
 
 
 def nested_dict():
