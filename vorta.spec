@@ -21,7 +21,6 @@ a = Analysis(['src/vorta/__main__.py'],
                 ('src/vorta/i18n/qm/*', 'vorta/i18n/qm'),
              ],
              hiddenimports=[
-                 'vorta.views.collection_rc',
                  'vorta.views.dark.collection_rc',
                  'vorta.views.light.collection_rc',
              ],
@@ -60,6 +59,9 @@ app = BUNDLE(exe,
                  'CFBundleVersion': '0.6.16',
                  'NSAppleEventsUsageDescription': 'Please allow',
                  'SUFeedURL': 'https://borgbase.github.io/vorta/appcast.xml',
+                 'LSEnvironment': {
+                             'LC_CTYPE': 'en_US.UTF-8'
+                         }
              })
 
 if CREATE_VORTA_DIR:
