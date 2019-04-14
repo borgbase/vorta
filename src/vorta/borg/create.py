@@ -3,9 +3,9 @@ import tempfile
 from dateutil import parser
 import subprocess
 
-from ..i18n import trans_late
-from ..utils import get_current_wifi, format_archive_name
-from ..models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
+from vorta.i18n import trans_late
+from vorta.utils import get_current_wifi, format_archive_name, borg_compat
+from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
 
@@ -95,6 +95,10 @@ class BorgCreateThread(BorgThread):
 
         if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
             ret['message'] = trans_late('messages', 'Repo folder not mounted or moved.')
+            return ret
+
+        if 'zstd' in profile.compression and not borg_compat.check('ZSTD'):
+            ret['message'] = trans_late('messages', 'Your current Borg version does not support ZStd compression.')
             return ret
 
         cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]

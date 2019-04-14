@@ -2,11 +2,11 @@ import os
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from ..models import RepoModel, ArchiveModel, BackupProfileMixin
-from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
-from ..utils import pretty_bytes, get_private_keys, get_asset
+from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
+from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
 from .ssh_dialog import SSHAddWindow
-from vorta.views.utils import get_theme_class
+from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
+from .utils import get_theme_class
 
 uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
@@ -39,6 +39,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.addItem(self.tr('LZ4 (modern, default)'), 'lz4')
         self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd,3')
         self.repoCompression.addItem(self.tr('Zstandard Level 8 (modern)'), 'zstd,8')
+
         # zlib and lzma come from python stdlib and are there (and in borg) since long.
         # but maybe not much reason to start with these nowadays, considering zstd supports
         # a very wide range of compression levels and has great speed. if speed is more
@@ -46,6 +47,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.addItem(self.tr('ZLIB Level 6 (auto, legacy)'), 'auto,zlib,6')
         self.repoCompression.addItem(self.tr('LZMA Level 6 (auto, legacy)'), 'auto,lzma,6')
         self.repoCompression.addItem(self.tr('No Compression'), 'none')
+        self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
+
+        self.toggle_available_compression()
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
@@ -87,6 +91,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshComboBox.addItem(self.tr('Create New Key'), 'new')
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
+
+    def toggle_available_compression(self):
+        use_zstd = borg_compat.check('ZSTD')
+        for algo in ['zstd,3', 'zstd,8']:
+            ix = self.repoCompression.findData(algo)
+            self.repoCompression.model().item(ix).setEnabled(use_zstd)
 
     def ssh_select_action(self, index):
         if index == 1:

@@ -10,7 +10,7 @@ from .models import BackupProfileModel, SettingsModel
 from .qt_single_application import QtSingleApplication
 from .scheduler import VortaScheduler
 from .tray_menu import TrayMenu
-from .utils import parse_args, set_tray_icon
+from .utils import parse_args, set_tray_icon, borg_compat
 from .views.main_window import MainWindow
 from vorta.borg.version import BorgVersionThread
 
@@ -30,7 +30,6 @@ class VortaApp(QtSingleApplication):
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
-    borg_details = {'version': '0.0', 'path': 'borg'}
 
     def __init__(self, args_raw, single_app=False):
 
@@ -112,7 +111,7 @@ class VortaApp(QtSingleApplication):
         thread.start()
 
     def set_borg_details_result(self, result):
-        self.borg_details['version'] = result['data']['version']
-        self.borg_details['path'] = result['data']['path']
+        borg_compat.set_version(result['data']['version'], result['data']['path'])
         if self._main_window_exists():
-            self.main_window.miscTab.set_borg_details(self.borg_details)
+            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+            self.main_window.repoTab.toggle_available_compression()

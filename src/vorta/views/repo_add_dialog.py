@@ -1,7 +1,7 @@
 import re
 from PyQt5 import uic
 
-from ..utils import get_private_keys, get_asset, choose_file_dialog
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.views.utils import get_theme_class
@@ -85,16 +85,21 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
-        self.encryptionComboBox.addItem(self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
-                                        'repokey-blake2')
-        self.encryptionComboBox.addItem(self.tr('Repokey'),
-                                        'repokey')
-        self.encryptionComboBox.addItem(self.tr('Keyfile-Blake2 (Key stored in home directory)'),
-                                        'keyfile-blake2')
-        self.encryptionComboBox.addItem(self.tr('Keyfile'),
-                                        'keyfile')
-        self.encryptionComboBox.addItem(self.tr('None (not recommended)'),
-                                        'none')
+        encryption_algos = [
+            ['Repokey-Blake2 (Recommended, key stored in repository)', 'repokey-blake2'],
+            ['Repokey', 'repokey'],
+            ['Keyfile-Blake2 (Key stored in home directory)', 'keyfile-blake2'],
+            ['Keyfile', 'keyfile'],
+            ['None (not recommended)', 'none']
+        ]
+
+        for desc, name in encryption_algos:
+            self.encryptionComboBox.addItem(self.tr(desc), name)
+
+        if not borg_compat.check('BLAKE2'):
+            self.encryptionComboBox.model().item(0).setEnabled(False)
+            self.encryptionComboBox.model().item(2).setEnabled(False)
+            self.encryptionComboBox.setCurrentIndex(1)
 
     def init_ssh_key(self):
         keys = get_private_keys()
