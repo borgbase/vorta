@@ -256,7 +256,7 @@ def init_db(con):
             s.value = bool(uses_dark_mode())
         if created and setting['key'] == "use_light_icon":
             # Check if macOS with enabled dark mode or Linux with GNOME DE
-            s.value = bool(uses_dark_mode()) or os.environ.get('XDG_CURRENT_DESKTOP', '') == 'GNOME'
+            s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
         s.label = setting['label']
         s.save()
 
