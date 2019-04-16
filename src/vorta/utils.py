@@ -180,6 +180,11 @@ def parse_args():
     parser.add_argument('--foreground', '-f',
                         action='store_true',
                         help="Don't fork into background and open main window on startup.")
+    if sys.platform.startswith("linux"):
+        parser.add_argument('--background', '-b',
+                            action='store_true',
+                            help="Fork into background. This option takes precedence over other settings.")
+
     return parser.parse_known_args()[0]
 
 
