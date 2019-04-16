@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
+from PyQt5.QtWidgets import QApplication, QSystemTrayIcon
 
 from vorta.i18n import trans_late
 from vorta.utils import slugify, uses_dark_mode
@@ -218,7 +219,7 @@ def get_misc_settings():
             'key': 'autostart', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Automatically start Vorta at login')
-        }
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -231,6 +232,14 @@ def get_misc_settings():
                 'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
                 'label': trans_late('settings',
                                     'Include pre-release versions when checking for updates')
+            },
+        ]
+    if sys.platform.startswith('linux'):
+        settings += [
+            {
+                'key': 'foreground', 'value': False, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Run Vorta in the foreground when started manually')
             },
         ]
 
@@ -257,6 +266,8 @@ def init_db(con):
         if created and setting['key'] == "use_light_icon":
             # Check if macOS with enabled dark mode or Linux with GNOME DE
             s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
+        if created and setting['key'] == "foreground":
+            s.value = not bool(is_system_tray_available())
         s.label = setting['label']
         s.save()
 
@@ -354,3 +365,12 @@ def init_db(con):
                     ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
+
+
+def is_system_tray_available():
+    ''' Can only be called when the event loop isn't running yet '''
+    app = QApplication([])
+    tray = QSystemTrayIcon()
+    is_available = tray.isSystemTrayAvailable()
+    app.quit()
+    return is_available
