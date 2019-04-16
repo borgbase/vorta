@@ -5,7 +5,7 @@ LINUX_STARTUP_FILE = """\
 [Desktop Entry]
 Name=Vorta
 GenericName=Backup Software
-Exec={}
+Exec={} --background
 Terminal=false
 Icon=vorta
 Categories=Utility
@@ -18,7 +18,8 @@ X-GNOME-Autostart-Delay=20
 
 def open_app_at_startup(enabled=True):
     """
-    This function adds/removes the current app bundle from Login items in macOS or most Linux desktops
+    On macOS, this function adds/removes the current app bundle from Login items
+    while on Linux it adds a .desktop file at ~/.config/autostart
     """
     if sys.platform == 'darwin':
         from Foundation import NSDictionary
@@ -51,7 +52,7 @@ def open_app_at_startup(enabled=True):
         if enabled:
             if Path('/.flatpak-info').exists():
                 # Vorta runs as flatpak
-                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('flatpak run com.borgbase.vorta'))
+                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('flatpak run com.borgbase.Vorta'))
             else:
                 autostart_file_path.write_text(LINUX_STARTUP_FILE.format('vorta'))
 
