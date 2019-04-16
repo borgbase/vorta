@@ -49,9 +49,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def source_remove(self):
         item = self.sourceFilesWidget.takeItem(self.sourceFilesWidget.currentRow())
-        db_item = SourceFileModel.get(dir=item.text())
-        db_item.delete_instance()
-        item = None
+        if item:
+            db_item = SourceFileModel.get(dir=item.text())
+            db_item.delete_instance()
 
     def save_exclude_patterns(self):
         profile = self.profile()
