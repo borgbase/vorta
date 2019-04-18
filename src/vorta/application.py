@@ -104,7 +104,6 @@ class VortaApp(QtSingleApplication):
     def set_borg_details_action(self):
         params = BorgVersionThread.prepare()
         if not params['ok']:
-            self._set_status(params['message'])
             return
         thread = BorgVersionThread(params['cmd'], params, parent=self)
         thread.result.connect(self.set_borg_details_result)
