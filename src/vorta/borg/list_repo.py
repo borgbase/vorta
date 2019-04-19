@@ -49,8 +49,8 @@ class BorgListRepoThread(BorgThread):
             for archive in result['data'].get('archives', []):
                 new_archive, _ = ArchiveModel.get_or_create(
                     snapshot_id=archive['id'],
+                    repo=repo.id,
                     defaults={
-                        'repo': repo.id,
                         'name': archive['name'],
                         'time': parser.parse(archive['time'])
                     }
