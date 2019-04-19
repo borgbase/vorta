@@ -15,7 +15,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify, uses_dark_mode
 
-SCHEMA_VERSION = 12
+SCHEMA_VERSION = 13
 
 db = pw.Proxy()
 
@@ -113,7 +113,7 @@ class SourceFileModel(pw.Model):
 
 class ArchiveModel(pw.Model):
     """An archive in a remote repository."""
-    snapshot_id = pw.CharField(unique=True)
+    snapshot_id = pw.CharField()
     name = pw.CharField()
     repo = pw.ForeignKeyField(RepoModel, backref='archives')
     time = pw.DateTimeField()
@@ -125,7 +125,6 @@ class ArchiveModel(pw.Model):
 
     class Meta:
         database = db
-        table_name = 'snapshotmodel'
 
 
 class WifiSettingModel(pw.Model):
@@ -337,3 +336,18 @@ def init_db(con):
             current_schema, 12,
             migrator.add_column(RepoModel._meta.table_name,
                                 'extra_borg_arguments', pw.CharField(default='')))
+
+    if current_schema.version < 13:
+        """
+        Migrate ArchiveModel data to new table to remove unique constraint from snapshot_id column.
+        """
+        tables = db.get_tables()
+        if ArchiveModel.select().count() == 0 and 'snapshotmodel' in tables:
+            cursor = db.execute_sql('select * from snapshotmodel;')
+            fields = [ArchiveModel.id, ArchiveModel.snapshot_id, ArchiveModel.name, ArchiveModel.repo,
+                      ArchiveModel.time, ArchiveModel.duration, ArchiveModel.size]
+            data = [row for row in cursor.fetchall()]
+            with db.atomic():
+                ArchiveModel.insert_many(data, fields=fields).execute()
+
+        _apply_schema_update(current_schema, 13)
