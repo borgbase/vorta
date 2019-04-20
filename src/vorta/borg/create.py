@@ -92,6 +92,12 @@ class BorgCreateThread(BorgThread):
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
+        ret['profile'] = profile
+        ret['repo'] = profile.repo
+
+        if cls.pre_post_backup_cmd(ret) != 0:
+            ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
+            return ret
 
         if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
             ret['message'] = trans_late('messages', 'Repo folder not mounted or moved.')
@@ -131,12 +137,6 @@ class BorgCreateThread(BorgThread):
             cmd.append(f.dir)
 
         # Run user-supplied pre-backup command
-        ret['profile'] = profile
-        ret['repo'] = profile.repo
-        if cls.pre_post_backup_cmd(ret) != 0:
-            ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
-            return ret
-
         ret['message'] = trans_late('messages', 'Starting backup...')
         ret['ok'] = True
         ret['cmd'] = cmd
