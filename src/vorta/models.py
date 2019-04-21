@@ -348,6 +348,8 @@ def init_db(con):
                       ArchiveModel.time, ArchiveModel.duration, ArchiveModel.size]
             data = [row for row in cursor.fetchall()]
             with db.atomic():
-                ArchiveModel.insert_many(data, fields=fields).execute()
+                size = 1000
+                for i in range(0, len(data), size):
+                    ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
