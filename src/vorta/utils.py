@@ -1,4 +1,5 @@
 import os
+import errno
 import sys
 import platform
 import plistlib
@@ -78,6 +79,12 @@ def get_private_keys():
                     available_private_keys.append(key_details)
                 except (SSHException, UnicodeDecodeError, IsADirectoryError):
                     continue
+                except OSError as e:
+                    if e.errno == errno.ENXIO:
+                        # when key_file is a (ControlPath) socket
+                        continue
+                    else:
+                        raise
 
     return available_private_keys
 
