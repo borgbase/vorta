@@ -1,8 +1,12 @@
+import os
 import sys
 
 import qdarkstyle
 from PyQt5 import QtCore
+
 import sip
+from vorta.borg.version import BorgVersionThread
+from vorta.config import STATE_DIR
 
 from .borg.create import BorgCreateThread
 from .i18n import init_translations, translate
@@ -10,12 +14,10 @@ from .models import BackupProfileModel, SettingsModel
 from .qt_single_application import QtSingleApplication
 from .scheduler import VortaScheduler
 from .tray_menu import TrayMenu
-from .utils import parse_args, set_tray_icon, borg_compat
+from .utils import borg_compat, parse_args, set_tray_icon
 from .views.main_window import MainWindow
-from vorta.borg.version import BorgVersionThread
 
-
-APP_ID = "vorta"
+APP_ID = os.path.join(STATE_DIR, "socket")
 
 
 class VortaApp(QtSingleApplication):
