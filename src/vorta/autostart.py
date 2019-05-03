@@ -1,18 +1,18 @@
 import sys
 from pathlib import Path
-from PyQt5 import QtCore
 
 LINUX_STARTUP_FILE = """\
 [Desktop Entry]
 Name=Vorta
 GenericName=Backup Software
-Exec=vorta
+Exec={}
 Terminal=false
 Icon=vorta
 Categories=Utility
 Type=Application
 StartupNotify=false
 X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=20
 """
 
 
@@ -41,10 +41,20 @@ def open_app_at_startup(enabled=True):
             LSSharedFileListItemRemove(login_items, new_item)
 
     elif sys.platform.startswith('linux'):
-        config_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.ConfigLocation)
-        autostart_file_path = Path(config_path) / 'autostart' / 'vorta.desktop'
+        autostart_path = Path.home() / '.config' / 'autostart'
+
+        if not autostart_path.exists():
+            autostart_path.mkdir()
+
+        autostart_file_path = autostart_path / 'vorta.desktop'
+
         if enabled:
-            autostart_file_path.write_text(LINUX_STARTUP_FILE)
+            if Path('/.flatpak-info').exists():
+                # Vorta runs as flatpak
+                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('flatpak run com.borgbase.vorta'))
+            else:
+                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('vorta'))
+
         else:
             if autostart_file_path.exists():
                 autostart_file_path.unlink()
