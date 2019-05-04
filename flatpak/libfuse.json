@@ -1,0 +1,29 @@
+{
+    "name" : "libfuse",
+    "config-opts" : [
+        "UDEV_RULES_PATH=/app/etc/udev/rules.d",
+        "INIT_D_PATH=/app/etc/init.d"
+    ],
+    "post-install": [
+        "install -m a+rx fusermount-wrapper.sh /app/bin/fusermount"
+    ],
+    "sources" : [
+        {
+            "type" : "archive",
+            "url" : "https://github.com/libfuse/libfuse/releases/download/fuse-2.9.9/fuse-2.9.9.tar.gz",
+            "sha256" : "d0e69d5d608cc22ff4843791ad097f554dd32540ddc9bed7638cc6fea7c1b4b5"
+        },
+        {
+            "type" : "patch",
+            "path" : "fuse-2.9.2-namespace-conflict-fix.patch"
+        },
+        {
+            "type" : "patch",
+            "path" : "fuse-disable-sys-mount-under-flatpak.patch"
+        },
+        {
+            "type" : "file",
+            "path" : "fusermount-wrapper.sh"
+        }
+    ]
+}

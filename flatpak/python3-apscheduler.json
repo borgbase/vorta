@@ -1,0 +1,39 @@
+{
+    "name": "python3-apscheduler",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} apscheduler"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/cb/89/e3687d3ed99bc882793f82634e9824e62499fdfdc4b1ae39e211c5b05017/tzlocal-1.5.1.tar.gz",
+            "sha256": "4ebeb848845ac898da6519b9b31879cf13b6626f7184c496037b818e238f2c4e"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/df/d5/3e3ff673e8f3096921b3f1b79ce04b832e0100b4741573154b72b756a681/pytz-2019.1.tar.gz",
+            "sha256": "d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz",
+            "sha256": "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ed/69/c805067de1feedbb98c53174b0f2df44cc05e0e9ee73bb85eebc59e508c6/setuptools-41.0.0.zip",
+            "sha256": "79d30254b6fe7a8e672e43cd85f13a9f3f2a50080bc81d851143e2219ef0dcb1"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/54/85/514ba3ca2a022bddd68819f187ae826986051d130ec5b972076e4f58a9f3/setuptools_scm-3.2.0.tar.gz",
+            "sha256": "52ab47715fa0fc7d8e6cd15168d1a69ba995feb1505131c3e814eb7087b57358"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/3d/e7/c63d49e5ac6feea330e837eaa6af1ce5c7ac9242288facc0aa71cb268a75/APScheduler-3.6.0.tar.gz",
+            "sha256": "8f56b888fdc9dc57dd18d79c124b5093a01e29144be84e3e99130600eea34260"
+        }
+    ]
+}
