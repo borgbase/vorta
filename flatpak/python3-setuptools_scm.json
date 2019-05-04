@@ -1,0 +1,14 @@
+{
+    "name": "python3-setuptools_scm",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} setuptools_scm"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/54/85/514ba3ca2a022bddd68819f187ae826986051d130ec5b972076e4f58a9f3/setuptools_scm-3.2.0.tar.gz",
+            "sha256": "52ab47715fa0fc7d8e6cd15168d1a69ba995feb1505131c3e814eb7087b57358"
+        }
+    ]
+}

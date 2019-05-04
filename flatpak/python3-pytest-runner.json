@@ -1,0 +1,14 @@
+{
+    "name": "python3-pytest-runner",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pytest-runner"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/15/0a/1e73c3a3d3f4f5faf5eacac4e55675c1627b15d84265b80b8fef3f8a3fb5/pytest-runner-4.4.tar.gz",
+            "sha256": "00ad6cd754ce55b01b868a6d00b77161e4d2006b3918bde882376a0a884d0df4"
+        }
+    ]
+}

@@ -1,0 +1,94 @@
+{
+    "name": "python3-pytest",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pytest pytest-qt pytest-mock pytest-xdist pytest-faulthandler setuptools-scm wheel"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/a8/af/07a13b1560ebcc9bf4dd439aeb63243cbd8d374f4f328691470d6a9b9804/apipkg-1.5.tar.gz",
+            "sha256": "37228cda29411948b422fae072f57e31d3396d2ee1c9783775980ee9c9990af6"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/30/be/cb5dc4f0fa5ba121943305f4f235dc1a30fae53daac20094ab89f4618578/pytest-forked-1.0.2.tar.gz",
+            "sha256": "d352aaced2ebd54d42a65825722cb433004b4446ab5d2044851d9cc7a00c9e38"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/fe/9c/215c0b6a82a6b01a89d46559f401045aba2e166a91e545c16960e2bb62df/execnet-1.6.0.tar.gz",
+            "sha256": "752a3786f17416d491f833a29217dda3ea4a471fc5269c492eebcee8cc4772d3"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/29/ed/3a85eb4afdce6dc33e78dad885e17c678db8055bf65353e0de4944c72a40/more-itertools-7.0.0.tar.gz",
+            "sha256": "c3e4748ba1aad8dba30a4886b0b1a2004f9a863837b8654e7059eebf727afa5a"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/a7/8c/55c629849c64e665258d8976322dfdad171fa2f57117590662d8a67618a4/pluggy-0.9.0.tar.gz",
+            "sha256": "19ecf9ce9db2fce065a7a0586e07cfb4ac8614fe96edf628a264b1c70116cf8f"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ec/0f/cd484ac8820fed363b374af30049adc8fd13065720fd4f4c6be8a2309da7/atomicwrites-1.3.0.tar.gz",
+            "sha256": "75a9445bac02d8d058d5e1fe689654ba5a6556a1dfd8ce6ec55a0ed79866cfa6"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/cc/d9/931a24cc5394f19383fbbe3e1147a0291276afa43a0dc3ed0d6cd9fda813/attrs-19.1.0.tar.gz",
+            "sha256": "f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ed/69/c805067de1feedbb98c53174b0f2df44cc05e0e9ee73bb85eebc59e508c6/setuptools-41.0.0.zip",
+            "sha256": "79d30254b6fe7a8e672e43cd85f13a9f3f2a50080bc81d851143e2219ef0dcb1"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz",
+            "sha256": "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/f1/5a/87ca5909f400a2de1561f1648883af74345fe96349f34f737cdfc94eba8c/py-1.8.0.tar.gz",
+            "sha256": "dc639b046a6e2cff5bbe40194ad65936d6ba360b52b3c3fe1d08a82dd50b5e53"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/b7/cf/1ea0f5b3ce55cacde1e84cdde6cee1ebaff51bd9a3e6c7ba4082199af6f6/wheel-0.33.1.tar.gz",
+            "sha256": "66a8fd76f28977bb664b098372daef2b27f60dc4d1688cfab7b37a09448f0e9d"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/54/85/514ba3ca2a022bddd68819f187ae826986051d130ec5b972076e4f58a9f3/setuptools_scm-3.2.0.tar.gz",
+            "sha256": "52ab47715fa0fc7d8e6cd15168d1a69ba995feb1505131c3e814eb7087b57358"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/b9/f0/d67a894cd3b49a8177c6fd7f883f275b27d8b71690cde9b5ba9e5f490f2d/pytest-faulthandler-1.5.0.tar.gz",
+            "sha256": "bf8634c3fd6309ef786ec03b913a5366163fdb094ebcfdebc35626400d790e0d"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/9b/d7/4f03c373d589b55925af8dc6d17850588babf7e41a9803aab96d6c4906d6/pytest-xdist-1.28.0.tar.gz",
+            "sha256": "f83a485293e81fd57c8a5a85a3f12473a532c5ca7dec518857cbb72766bb526c"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/18/01/92e33e69c1704bb26672f6043748c9ee3bb2d958bcf41cc8b9d447fa6746/pytest-mock-1.10.4.tar.gz",
+            "sha256": "5bf5771b1db93beac965a7347dc81c675ec4090cb841e49d9d34637a25c30568"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/7c/9a/092c4a8ba026ed99b9741bf11d20fef24753e1cba49ed6d03c2077c35ae5/pytest-qt-3.2.2.tar.gz",
+            "sha256": "f6ecf4b38088ae1092cbd5beeaf714516d1f81f8938626a2eac546206cdfe7fa"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/2b/b1/c9a84f79fc3bad226a9085289da11ecdd9bd2779a2c654195962b37d4110/pytest-4.4.1.tar.gz",
+            "sha256": "b7802283b70ca24d7119b32915efa7c409982f59913c1a6c0640aacf118b95f5"
+        }
+    ]
+}
