@@ -1,0 +1,14 @@
+{
+    "name": "python3-qdarkstyle",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} qdarkstyle"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ce/76/bfb8e53e53c11432390fab04976791741dd5434c78fb6f862b27beb21ac6/QDarkStyle-2.6.5.tar.gz",
+            "sha256": "96b14cd0440a0f73db4e14c5accdaa08072625d0395ae011d444508cbd73eb9e"
+        }
+    ]
+}

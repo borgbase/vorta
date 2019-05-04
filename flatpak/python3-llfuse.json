@@ -1,0 +1,15 @@
+{
+    "name": "python3-llfuse",
+    "buildsystem": "simple",
+    "build-commands": [
+        "python3 setup.py build_ext --inplace",
+        "python3 setup.py install --prefix=/app"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "https://files.pythonhosted.org/packages/75/b4/5248459ec0e7e1608814915479cb13e5baf89034b572e3d74d5c9219dd31/llfuse-1.3.6.tar.bz2",
+            "sha256": "31a267f7ec542b0cd62e0f1268e1880fdabf3f418ec9447def99acfa6eff2ec9"
+        }
+    ]
+}

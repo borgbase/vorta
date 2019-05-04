@@ -1,0 +1,14 @@
+{
+    "name": "python3-peewee",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} peewee"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/95/4f/97404f265299f3e6584efa3890bd325802b4076ea75e184c46c3c6c8c7ba/peewee-3.9.4.tar.gz",
+            "sha256": "92f5a20ff90d46f1f78e8d53d461061ef0ee192d7a7880efd41894b86fa4762d"
+        }
+    ]
+}

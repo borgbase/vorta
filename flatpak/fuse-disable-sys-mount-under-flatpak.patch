@@ -1,0 +1,26 @@
+From 1ec935f4abecd08957affc7b21bae6bf5be78931 Mon Sep 17 00:00:00 2001
+From: Christian Hergert <chergert@redhat.com>
+Date: Thu, 12 Apr 2018 01:47:57 -0700
+Subject: [PATCH] libfuse: disable sys mount under flatpak
+
+---
+ lib/mount.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lib/mount.c b/lib/mount.c
+index 7a18c11..1667db2 100644
+--- a/lib/mount.c
++++ b/lib/mount.c
+@@ -392,6 +392,9 @@ static int fuse_mount_sys(const char *mnt, struct mount_opts *mo,
+ 	int fd;
+ 	int res;
+ 
++	/* disable in flatpak */
++	return -2;
++
+ 	if (!mnt) {
+ 		fprintf(stderr, "fuse: missing mountpoint parameter\n");
+ 		return -1;
+-- 
+2.17.0.rc2
+
