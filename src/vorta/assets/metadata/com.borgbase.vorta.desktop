@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Vorta
+GenericName=Backup Software
+Exec=vorta
+Type=Application
+Icon=com.borgbase.vorta
+Categories=Utility
