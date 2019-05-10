@@ -17,6 +17,7 @@ finish-args:
   # Filesystem access
   - --filesystem=home
   - --filesystem=/run/media
+  - --filesystem=/media
   # dconf access
   - --filesystem=xdg-run/dconf
   - --filesystem=~/.config/dconf:ro
