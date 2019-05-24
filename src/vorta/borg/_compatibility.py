@@ -3,6 +3,7 @@ from pkg_resources import parse_version
 MIN_BORG_FOR_FEATURE = {
     'BLAKE2': parse_version('1.1.4'),
     'ZSTD': parse_version('1.1.4'),
+    'JSON_LOG': parse_version('1.1.0')
     # add new version-checks here.
 }
 
