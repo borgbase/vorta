@@ -96,6 +96,14 @@ def run_tests(boxname)
   EOF
 end
 
+def prepare_macos()
+  return <<-EOF
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew install python
+  EOF
+end
+
+
 Vagrant.configure(2) do |config|
   # use rsync to copy content to the folder
   config.vm.synced_folder ".", "/vagrant/vorta", :type => "rsync", :rsync__args => ["--verbose", "--archive", "--delete", "-z"], :rsync__chown => false
@@ -117,7 +125,31 @@ Vagrant.configure(2) do |config|
 #     b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("jessie64")
    end
 
+    config.vm.define "darwin64" do |b|
+        b.vm.box = "monsenso/macos-10.13"
+        b.vm.provider :virtualbox do |v|
+          v.memory = 1536 + $wmem
+          v.customize ['modifyvm', :id, '--ostype', 'MacOS_64']
+          v.customize ['modifyvm', :id, '--paravirtprovider', 'default']
+          # Adjust CPU settings according to
+          # https://github.com/geerlingguy/macos-virtualbox-vm
+          v.customize ['modifyvm', :id, '--cpuidset',
+                       '00000001', '000306a9', '00020800', '80000201', '178bfbff']
+          # Disable USB variant requiring Virtualbox proprietary extension pack
+          v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
+        end
 
+     b.vm.provision "prepare_macos", :type => :shell, :inline => prepare_macos()
+#     b.vm.provision "packages darwin", :type => :shell, :privileged => false, :inline => packages_darwin
+#     b.vm.provision "install pyenv", :type => :shell, :privileged => false, :inline => install_pyenv("darwin64")
+#     b.vm.provision "fix pyenv", :type => :shell, :privileged => false, :inline => fix_pyenv_darwin("darwin64")
+#     b.vm.provision "install pythons", :type => :shell, :privileged => false, :inline => install_pythons("darwin64")
+#     b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_pyenv_venv("darwin64")
+#     b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
+#     b.vm.provision "install pyinstaller", :type => :shell, :privileged => false, :inline => install_pyinstaller()
+#     b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("darwin64")
+#     b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("darwin64")
+    end
 
   # config.vm.define "arch64" do |b|
   #   b.vm.box = "terrywang/archlinux"
@@ -145,32 +177,6 @@ Vagrant.configure(2) do |config|
   #   b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("freebsd64")
   #   b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("freebsd64")
   # end
-
-#  config.vm.define "darwin64" do |b|
-#    b.vm.box = "ashiq/osx-10.14"
-#    b.vm.provider :virtualbox do |v|
-#      v.memory = 1536 + $wmem
-#      v.customize ['modifyvm', :id, '--ostype', 'MacOS_64']
-#      v.customize ['modifyvm', :id, '--paravirtprovider', 'default']
-#      # Adjust CPU settings according to
-#      # https://github.com/geerlingguy/macos-virtualbox-vm
-#      v.customize ['modifyvm', :id, '--cpuidset',
-#                   '00000001', '000306a9', '00020800', '80000201', '178bfbff']
-#      # Disable USB variant requiring Virtualbox proprietary extension pack
-#      v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
-#    end
-
-    # b.vm.provision "fs init", :type => :shell, :inline => fs_init("vagrant")
-    # b.vm.provision "packages darwin", :type => :shell, :privileged => false, :inline => packages_darwin
-    # b.vm.provision "install pyenv", :type => :shell, :privileged => false, :inline => install_pyenv("darwin64")
-    # b.vm.provision "fix pyenv", :type => :shell, :privileged => false, :inline => fix_pyenv_darwin("darwin64")
-    # b.vm.provision "install pythons", :type => :shell, :privileged => false, :inline => install_pythons("darwin64")
-    # b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_pyenv_venv("darwin64")
-    # b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
-    # b.vm.provision "install pyinstaller", :type => :shell, :privileged => false, :inline => install_pyinstaller()
-    # b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("darwin64")
-    # b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("darwin64")
-#  end
 
   # TODO: create more VMs with python 3.6 and openssl 1.1.
   # See branch 1.1-maint for a better equipped Vagrantfile (but still on py34 and openssl 1.0).
