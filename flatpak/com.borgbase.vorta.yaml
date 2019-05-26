@@ -29,6 +29,8 @@ finish-args:
   - --own-name=org.freedesktop.*
   # allow access to keyring
   - --talk-name=org.freedesktop.secrets
+  ## SSH
+  - --socket=ssh-auth
 
 build-options:
   env:
@@ -53,6 +55,7 @@ modules:
   - dependencies/python3-pytest.json
   - dependencies/libfuse.json
   - dependencies/python3-llfuse.json
+  - dependencies/openssh.json
 
 
   - name: vorta
