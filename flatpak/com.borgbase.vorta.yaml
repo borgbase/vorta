@@ -37,7 +37,7 @@ build-options:
     MOUNT_FUSE_PATH: ../tmp/
 
 modules:
-  - dependencies/python3-pyqt5.json  
+  - dependencies/pyqt5.json  
   - dependencies/python3-setuptools_scm.json
   - dependencies/python3-appdirs.json
   - dependencies/python3-apscheduler.json
