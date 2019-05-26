@@ -29,7 +29,7 @@ finish-args:
   - --own-name=org.freedesktop.*
   # allow access to keyring
   - --talk-name=org.freedesktop.secrets
-  ## SSH
+  # SSH
   - --socket=ssh-auth
 
 build-options:
