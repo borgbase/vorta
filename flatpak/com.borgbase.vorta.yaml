@@ -23,11 +23,13 @@ finish-args:
   - --filesystem=~/.config/dconf:ro
   - --talk-name=ca.desrt.dconf
   - --env=DCONF_USER_CONFIG_DIR=.config/dconf
-  # without it, no tray icon is displayed
-  - --own-name=org.kde.*
-  # without it mounting does not work
-  - --own-name=org.freedesktop.*
-  # allow access to keyring
+  # Tray icon
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-2-1
+  - --own-name=org.kde.StatusNotifierItem-4-1
+  # Mounting
+  - --talk-name=org.freedesktop.*
+  # Allow access to keyring
   - --talk-name=org.freedesktop.secrets
   # SSH
   - --socket=ssh-auth
