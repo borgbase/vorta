@@ -43,6 +43,15 @@
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/borgbase/vorta</url>
+  <releases>
+​    <release version="v0.6.20" date="2019-05-16">
+​      <description>
+​        <p>Add Flatpak support. By @Hofer-Julian</p>
+        <p>Handle OSError 6 when trying to read a socket in .ssh. By @srgvg</p>
+        <p>Pre-backup command runs before repository checks. By @rossomah</p>
+​      </description>
+​    </release>
+​  </releases>
   <content_rating type="oars-1.0">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
