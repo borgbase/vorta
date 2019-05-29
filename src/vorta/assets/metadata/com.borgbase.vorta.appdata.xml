@@ -46,9 +46,7 @@
   <releases>
 ​    <release version="v0.6.20" date="2019-05-16">
 ​      <description>
-​        <p>Add Flatpak support. By @Hofer-Julian</p>
-        <p>Handle OSError 6 when trying to read a socket in .ssh. By @srgvg</p>
-        <p>Pre-backup command runs before repository checks. By @rossomah</p>
+​        <p>For details see: https://github.com/borgbase/vorta/releases/tag/v0.6.20</p>
 ​      </description>
 ​    </release>
 ​  </releases>
