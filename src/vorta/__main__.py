@@ -1,13 +1,14 @@
-import sys
 import os
-import peewee
 import signal
+import sys
 
-from vorta.models import init_db
+import peewee
+from vorta._version import __version__
 from vorta.config import SETTINGS_DIR
+from vorta.log import init_logger
+from vorta.models import init_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
-from vorta.log import init_logger
 
 
 def main():
@@ -15,7 +16,13 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
 
     frozen_binary = getattr(sys, 'frozen', False)
+    want_version = getattr(args, 'version', False)
     want_foreground = getattr(args, 'foreground', False)
+
+    if want_version:
+        print(f"Vorta {__version__}")
+        sys.exit()
+
     # We assume that a frozen binary is a fat single-file binary made with
     # PyInstaller. These are not compatible with forking into background here:
     if not (want_foreground or frozen_binary):

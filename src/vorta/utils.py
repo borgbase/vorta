@@ -167,6 +167,9 @@ def get_current_wifi():
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Vorta Backup GUI for Borg.')
+    parser.add_argument('--version', '-V',
+                        action='store_true',
+                        help="Show version and exit.")
     parser.add_argument('--foreground', '-f',
                         action='store_true',
                         help="Don't fork into background and open main window on startup.")
