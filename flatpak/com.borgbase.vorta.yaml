@@ -3,6 +3,7 @@ app-id: com.borgbase.vorta
 runtime: org.kde.Platform
 runtime-version: '5.12'
 sdk: org.kde.Sdk
+branch: devel
 
 command: vorta
 
@@ -28,11 +29,15 @@ finish-args:
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --own-name=org.kde.StatusNotifierItem-4-1
   # Mounting
-  - --talk-name=org.freedesktop.*
+  - --talk-name=org.freedesktop.DBus.*
+  - --talk-name=org.freedesktop.Flatpak.*
   # Allow access to keyring
   - --talk-name=org.freedesktop.secrets
   # SSH
   - --socket=ssh-auth
+  - --own-name=org.KDE.*
+  # Notifications
+  - --talk-name=org.freedesktop.Notifications.*
 
 build-options:
   env:
@@ -40,7 +45,15 @@ build-options:
 
 modules:
   - dependencies/pyqt5.json  
+  - dependencies/openssl.json
+  - dependencies/openssh.json
+  - dependencies/libfuse.json
+  - dependencies/python3-setuptools.json
+  - dependencies/python3-setuptools_git.json
   - dependencies/python3-setuptools_scm.json
+  - dependencies/python3-borgbackup.json
+  - dependencies/python3-pytest.json
+  - dependencies/python3-llfuse.json
   - dependencies/python3-appdirs.json
   - dependencies/python3-apscheduler.json
   - dependencies/python3-paramiko.json
@@ -49,15 +62,8 @@ modules:
   - dependencies/python3-python-dateutil.json
   - dependencies/python3-qdarkstyle.json
   - dependencies/python3-secretstorage.json
-  - dependencies/python3-setuptools.json
-  - dependencies/python3-setuptools_git.json
   - dependencies/python3-pytest-runner.json
-  - dependencies/openssl.json
-  - dependencies/python3-borgbackup.json
-  - dependencies/python3-pytest.json
-  - dependencies/libfuse.json
-  - dependencies/python3-llfuse.json
-  - dependencies/openssh.json
+
 
 
   - name: vorta
