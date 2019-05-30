@@ -1,0 +1,14 @@
+{
+    "name": "python3-borgbackup",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} borgbackup"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/24/13/77cd0bed77fa80cf79e18d1fb1806641e895878bda389771ea63f30560de/borgbackup-1.1.10.tar.gz",
+            "sha256": "efb41416d24ff1d13c7952c7f4eaf41ef6fc5e1000354217db55cd62c905e7de"
+        }
+    ]
+}

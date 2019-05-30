@@ -27,11 +27,6 @@
         },
         {
             "type": "file",
-            "url": "https://files.pythonhosted.org/packages/54/85/514ba3ca2a022bddd68819f187ae826986051d130ec5b972076e4f58a9f3/setuptools_scm-3.2.0.tar.gz",
-            "sha256": "52ab47715fa0fc7d8e6cd15168d1a69ba995feb1505131c3e814eb7087b57358"
-        },
-        {
-            "type": "file",
             "url": "https://files.pythonhosted.org/packages/3d/e7/c63d49e5ac6feea330e837eaa6af1ce5c7ac9242288facc0aa71cb268a75/APScheduler-3.6.0.tar.gz",
             "sha256": "8f56b888fdc9dc57dd18d79c124b5093a01e29144be84e3e99130600eea34260"
         }
