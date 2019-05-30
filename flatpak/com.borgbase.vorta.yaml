@@ -3,6 +3,7 @@ app-id: com.borgbase.vorta
 runtime: org.kde.Platform
 runtime-version: '5.12'
 sdk: org.kde.Sdk
+branch: devel
 
 command: vorta
 
@@ -23,36 +24,46 @@ finish-args:
   - --filesystem=~/.config/dconf:ro
   - --talk-name=ca.desrt.dconf
   - --env=DCONF_USER_CONFIG_DIR=.config/dconf
-  # without it, no tray icon is displayed
-  - --own-name=org.kde.*
-  # without it mounting does not work
-  - --own-name=org.freedesktop.*
-  # allow access to keyring
+  # Tray icon
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-2-1
+  - --own-name=org.kde.StatusNotifierItem-4-1
+  # Mounting
+  - --talk-name=org.freedesktop.DBus.*
+  - --talk-name=org.freedesktop.Flatpak.*
+  # Allow access to keyring
   - --talk-name=org.freedesktop.secrets
+  # SSH
+  - --socket=ssh-auth
+  - --own-name=org.KDE.*
+  # Notifications
+  - --talk-name=org.freedesktop.Notifications.*
 
 build-options:
   env:
     MOUNT_FUSE_PATH: ../tmp/
 
 modules:
-  - python3-pyqt5.json  
-  - python3-setuptools_scm.json
-  - python3-appdirs.json
-  - python3-apscheduler.json
-  - python3-paramiko.json
-  - python3-peewee.json
-  - python3-psutil.json
-  - python3-python-dateutil.json
-  - python3-qdarkstyle.json
-  - python3-secretstorage.json
-  - python3-setuptools.json
-  - python3-setuptools_git.json
-  - python3-pytest-runner.json
-  - openssl.json
-  - python3-borgbackup.json
-  - python3-pytest.json
-  - libfuse.json
-  - python3-llfuse.json
+  - dependencies/pyqt5.json  
+  - dependencies/openssl.json
+  - dependencies/openssh.json
+  - dependencies/libfuse.json
+  - dependencies/python3-setuptools.json
+  - dependencies/python3-setuptools_git.json
+  - dependencies/python3-setuptools_scm.json
+  - dependencies/python3-borgbackup.json
+  - dependencies/python3-pytest.json
+  - dependencies/python3-llfuse.json
+  - dependencies/python3-appdirs.json
+  - dependencies/python3-apscheduler.json
+  - dependencies/python3-paramiko.json
+  - dependencies/python3-peewee.json
+  - dependencies/python3-psutil.json
+  - dependencies/python3-python-dateutil.json
+  - dependencies/python3-qdarkstyle.json
+  - dependencies/python3-secretstorage.json
+  - dependencies/python3-pytest-runner.json
+
 
 
   - name: vorta

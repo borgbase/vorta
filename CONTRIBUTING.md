@@ -7,6 +7,8 @@ All contributions that improve Vorta for everyone are welcome. Before coding a n
 
 ## Local Development Setup
 
+### macOS (or Linux if Flatpak is not an option) with pip
+
 Clone the latest version of this repo:
 ```
 $ git clone https://github.com/borgbase/vorta/
@@ -27,7 +29,7 @@ Then run as Python script. Any changes from your source folder should be reflect
 $ vorta
 ```
 
-### Package with Flatpak
+### Linux with Flatpak
 
 Follow the setup guide on [flatpak.org](http://flatpak.org/setup/) to make sure you have ``flatpak`` and ``flathub`` installed.
 
@@ -49,14 +51,20 @@ Next, in Vorta’s source directory, use ``flatpak-builder`` to build a Vorta fl
 $ cd vorta/flatpak/
 $ mkdir app
 $ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.vorta.yaml
-$ flatpak install --user my-flatpak-builds com.borgbase.vorta -y
+$ flatpak install --user my-flatpak-builds com.borgbase.vorta//devel -y
 ```
 
 Now you can work on the codebase.
 When you want to test your changes you can execute inside of ``vorta/flatpak/``
 ```
-$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.vorta.yaml --force-clean && flatpak update com.borgbase.vorta -y
-$ flatpak run com.borgbase.vorta 
+$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.vorta.yaml --force-clean && flatpak update com.borgbase.vorta//devel -y
+$ flatpak run com.borgbase.vorta//devel 
+```
+
+To set which branch of Vorta (master from flathub or devel from local development setup) will be used in your OS you can use
+
+```
+$ flatpak make-current com.borgbase.vorta [master|devel]
 ```
 
 
