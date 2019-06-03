@@ -100,15 +100,21 @@ def prepare_macos()
   return <<-EOF
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew install python
+    echo 'export PATH="/usr/local/opt/qt/bin/:$PATH"' >> ~/.bash_profile
+    cd /vagrant
+    pip3 install -e .
+    pip3 install -r requirements.d/dev.txt
+    brew bundle --file=requirements.d/Brewfile
   EOF
 end
 
+def build_macos()
+  return <<-EOF
+
+  EOF
+end
 
 Vagrant.configure(2) do |config|
-  # use rsync to copy content to the folder
-  config.vm.synced_folder ".", "/vagrant/vorta", :type => "rsync", :rsync__args => ["--verbose", "--archive", "--delete", "-z"], :rsync__chown => false
-  # do not let the VM access . on the host machine via the default shared folder!
-  config.vm.synced_folder ".", "/vagrant", disabled: true
 
    config.vm.define "jessie64" do |b|
      b.vm.box = "debian/jessie64"
@@ -131,37 +137,35 @@ Vagrant.configure(2) do |config|
           v.memory = 1536 + $wmem
           v.customize ['modifyvm', :id, '--ostype', 'MacOS_64']
           v.customize ['modifyvm', :id, '--paravirtprovider', 'default']
+          v.customize ["setextradata", :id, "VBoxInternal/CPUM/SSE4.1", "1"]
+          v.customize ["setextradata", :id, "VBoxInternal/CPUM/SSE4.2", "1"]
           # Adjust CPU settings according to
           # https://github.com/geerlingguy/macos-virtualbox-vm
-          v.customize ['modifyvm', :id, '--cpuidset',
-                       '00000001', '000306a9', '00020800', '80000201', '178bfbff']
+#          v.customize ['modifyvm', :id, '--cpuidset',
+#                       '00000001', '000306a9', '00020800', '80000201', '178bfbff']
           # Disable USB variant requiring Virtualbox proprietary extension pack
-          v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
+#          v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
         end
 
-     b.vm.provision "prepare_macos", :type => :shell, :inline => prepare_macos()
-#     b.vm.provision "packages darwin", :type => :shell, :privileged => false, :inline => packages_darwin
-#     b.vm.provision "install pyenv", :type => :shell, :privileged => false, :inline => install_pyenv("darwin64")
-#     b.vm.provision "fix pyenv", :type => :shell, :privileged => false, :inline => fix_pyenv_darwin("darwin64")
-#     b.vm.provision "install pythons", :type => :shell, :privileged => false, :inline => install_pythons("darwin64")
-#     b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_pyenv_venv("darwin64")
-#     b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
-#     b.vm.provision "install pyinstaller", :type => :shell, :privileged => false, :inline => install_pyinstaller()
-#     b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("darwin64")
-#     b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("darwin64")
+        b.vm.synced_folder ".", "/vagrant", type: "rsync", user: "vagrant", group: "staff"
+        b.vm.provision "prepare_macos", :type => :shell, :privileged => false, :inline => prepare_macos()
+    #     b.vm.provision "packages darwin", :type => :shell, :privileged => false, :inline => packages_darwin
+    #     b.vm.provision "install pyenv", :type => :shell, :privileged => false, :inline => install_pyenv("darwin64")
+    #     b.vm.provision "fix pyenv", :type => :shell, :privileged => false, :inline => fix_pyenv_darwin("darwin64")
+    #     b.vm.provision "install pythons", :type => :shell, :privileged => false, :inline => install_pythons("darwin64")
+    #     b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_pyenv_venv("darwin64")
+    #     b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
+    #     b.vm.provision "install pyinstaller", :type => :shell, :privileged => false, :inline => install_pyinstaller()
+    #     b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("darwin64")
+    #     b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("darwin64")
     end
 
-  # config.vm.define "arch64" do |b|
-  #   b.vm.box = "terrywang/archlinux"
-  #   b.vm.provider :virtualbox do |v|
-  #     v.memory = 1024 + $wmem
-  #   end
-  #   b.vm.provision "fs init", :type => :shell, :inline => fs_init("vagrant")
-  #   b.vm.provision "packages arch", :type => :shell, :privileged => true, :inline => packages_arch
-  #   b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_sys_venv("arch64")
-  #   b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
-  #   b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("arch64")
-  # end
+   config.vm.define "win64" do |b|
+     b.vm.box = "gusztavvargadr/windows-10"
+     b.vm.provider :virtualbox do |v|
+       v.memory = 1024 + $wmem
+     end
+   end
 
   # config.vm.define "freebsd64" do |b|
   #   b.vm.box = "freebsd12-amd64"
