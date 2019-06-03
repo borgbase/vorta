@@ -96,7 +96,7 @@ def run_tests(boxname)
   EOF
 end
 
-def prepare_macos()
+def darwin_prepare()
   return <<-EOF
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew install python
@@ -108,9 +108,10 @@ def prepare_macos()
   EOF
 end
 
-def build_macos()
+def darwin_build()
   return <<-EOF
-
+    cd /vagrant
+    make Vorta.app
   EOF
 end
 
@@ -144,20 +145,12 @@ Vagrant.configure(2) do |config|
 #          v.customize ['modifyvm', :id, '--cpuidset',
 #                       '00000001', '000306a9', '00020800', '80000201', '178bfbff']
           # Disable USB variant requiring Virtualbox proprietary extension pack
-#          v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
+          v.customize ["modifyvm", :id, '--usbehci', 'off', '--usbxhci', 'off']
         end
 
         b.vm.synced_folder ".", "/vagrant", type: "rsync", user: "vagrant", group: "staff"
-        b.vm.provision "prepare_macos", :type => :shell, :privileged => false, :inline => prepare_macos()
-    #     b.vm.provision "packages darwin", :type => :shell, :privileged => false, :inline => packages_darwin
-    #     b.vm.provision "install pyenv", :type => :shell, :privileged => false, :inline => install_pyenv("darwin64")
-    #     b.vm.provision "fix pyenv", :type => :shell, :privileged => false, :inline => fix_pyenv_darwin("darwin64")
-    #     b.vm.provision "install pythons", :type => :shell, :privileged => false, :inline => install_pythons("darwin64")
-    #     b.vm.provision "build env", :type => :shell, :privileged => false, :inline => build_pyenv_venv("darwin64")
-    #     b.vm.provision "install borg", :type => :shell, :privileged => false, :inline => install_borg(true)
-    #     b.vm.provision "install pyinstaller", :type => :shell, :privileged => false, :inline => install_pyinstaller()
-    #     b.vm.provision "build binary with pyinstaller", :type => :shell, :privileged => false, :inline => build_binary_with_pyinstaller("darwin64")
-    #     b.vm.provision "run tests", :type => :shell, :privileged => false, :inline => run_tests("darwin64")
+        b.vm.provision "darwin_prepare", :type => :shell, :privileged => false, :inline => darwin_prepare()
+        b.vm.provision "darwin_build", :type => :shell, :privileged => false, run: "always", :inline => darwin_build()
     end
 
    config.vm.define "win64" do |b|
