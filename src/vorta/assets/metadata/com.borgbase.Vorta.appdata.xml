@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.borgbase.vorta</id>
+  <id>com.borgbase.Vorta</id>
   <name>Vorta</name>
   <project_license>GPL-3.0</project_license>
   <metadata_license>CC0-1.0</metadata_license>
@@ -38,7 +38,7 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="v0.6.20" date="2019-05-16">
+    <release version="v0.6.20">
     </release>
   </releases>
   <url type="homepage">https://github.com/borgbase/vorta</url>
