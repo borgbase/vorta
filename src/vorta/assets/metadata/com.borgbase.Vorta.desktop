@@ -3,5 +3,5 @@ Name=Vorta
 GenericName=Backup Software
 Exec=vorta
 Type=Application
-Icon=com.borgbase.vorta
+Icon=com.borgbase.Vorta
 Categories=Utility
