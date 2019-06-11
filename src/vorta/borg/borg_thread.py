@@ -60,6 +60,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         else:
             env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
+        if env.get('BORG_PASSCOMMAND', False):
+            env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
+
         env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
         ssh_key = params.get('ssh_key')
         if ssh_key is not None:
