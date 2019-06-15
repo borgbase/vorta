@@ -50,15 +50,15 @@ Next, in Vorta’s source directory, use ``flatpak-builder`` to build a Vorta fl
 ```
 $ cd vorta/flatpak/
 $ mkdir app
-$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.vorta.yaml
-$ flatpak install --user my-flatpak-builds com.borgbase.vorta//devel -y
+$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.Vorta.yaml
+$ flatpak install --user my-flatpak-builds com.borgbase.Vorta//devel -y
 ```
 
 Now you can work on the codebase.
 When you want to test your changes you can execute inside of ``vorta/flatpak/``
 ```
-$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.vorta.yaml --force-clean && flatpak update com.borgbase.vorta//devel -y
-$ flatpak run com.borgbase.vorta//devel 
+$ flatpak-builder --repo=$HOME/my-flatpak-builds app com.borgbase.Vorta.yaml --force-clean && flatpak update com.borgbase.Vorta//devel -y
+$ flatpak run com.borgbase.Vorta//devel 
 ```
 
 To set which branch of Vorta (master from flathub or devel from local development setup) will be used in your OS you can use
