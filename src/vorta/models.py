@@ -238,6 +238,7 @@ def get_misc_settings():
 
 
 def init_db(con):
+    os.umask(0o0077)
     db.initialize(con)
     db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
