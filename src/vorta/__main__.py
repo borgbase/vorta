@@ -34,16 +34,15 @@ def main():
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
     init_db(sqlite_db)
-
-    # Force fusion style on Linux
-    sys_argv = sys.argv
-    if sys.platform.startswith('linux'):
-        sys_argv += ['--style=fusion']
-
+    
     # Init app after database is available
     from vorta.application import VortaApp
-    app = VortaApp(sys_argv, single_app=True)
+    app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
+
+    # Force fusion style on Linux
+    if sys.platform.startswith('linux'):
+        app.setStyle('Fusion')
 
     sys.exit(app.exec_())
 
