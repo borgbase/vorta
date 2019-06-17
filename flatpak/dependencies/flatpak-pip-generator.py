@@ -26,6 +26,7 @@ parser.add_argument('--output',
                     help='Specify output file name')
 opts = parser.parse_args()
 
+
 def get_pypi_url(name: str, filename: str) -> str:
     url = 'https://pypi.python.org/pypi/{}/json'.format(name)
     print('Extracting download url for', name)

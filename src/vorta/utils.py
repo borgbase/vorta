@@ -13,6 +13,7 @@ from collections import defaultdict
 from functools import reduce
 import operator
 import psutil
+import xml
 
 from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
@@ -120,8 +121,14 @@ def get_sorted_wifis(profile):
 
     if sys.platform == 'darwin':
         plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
-        plist_file = open(plist_path, 'rb')
-        wifis = plistlib.load(plist_file).get('KnownNetworks')
+
+        try:
+            plist_file = open(plist_path, 'rb')
+            wifis = plistlib.load(plist_file).get('KnownNetworks')
+        except xml.parsers.expat.ExpatError:
+            logger.error('Unable to parse list of Wifi networks.')
+            return
+
         if wifis is not None:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
