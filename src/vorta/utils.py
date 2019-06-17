@@ -128,7 +128,7 @@ def get_sorted_wifis(profile):
         except xml.parsers.expat.ExpatError:
             logger.error('Unable to parse list of Wifi networks.')
             return
-        
+
         if wifis is not None:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
