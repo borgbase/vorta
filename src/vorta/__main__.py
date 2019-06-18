@@ -40,6 +40,10 @@ def main():
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
 
+    # Force fusion style on Linux
+    if sys.platform.startswith('linux'):
+        app.setStyle('Fusion')
+
     sys.exit(app.exec_())
 
 
