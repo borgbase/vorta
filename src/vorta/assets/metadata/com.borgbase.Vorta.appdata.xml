@@ -14,14 +14,14 @@
     </p>
     <p>
       Why is this great?
-      <ul>
+    </p>
+    <ul>
       <li>Encrypted, deduplicated and compressed backups using Borg as backend.</li>
       <li>No vendor lock-in – back up to local drives, your own server or BorgBase, a hosting service for Borg backups.</li>
       <li>Open source – free to use, modify, improve and audit.</li>
       <li>Flexible profiles to group source folders, backup destinations and schedules.</li>
       <li>One place to view all point-in-time archives and restore individual files.</li>
-      </ul>
-    </p>
+    </ul>    
   </description>
   <screenshots>
     <screenshot type="default">
