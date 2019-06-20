@@ -3,6 +3,7 @@ export QT_SELECT=5
 
 .PHONY : help
 .DEFAULT_GOAL := help
+DATE = "$(shell date +%F)"
 
 icon-resources:  ## Compile SVG icons to importable resource files.
 	pyrcc5 -o src/vorta/views/dark/collection_rc.py src/vorta/assets/icons/dark/collection.qrc
@@ -38,6 +39,7 @@ pypi-release: translations-to-qm
 
 bump-version:  ## Add new version tag and push to upstream repo.
 	bumpversion patch
+	xmlstarlet ed -L -u 'component/releases/release/@date' -v $$(date +%F) src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 	#bumpversion minor
 	git push upstream
 
