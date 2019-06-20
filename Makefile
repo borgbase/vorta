@@ -19,15 +19,15 @@ Vorta.dmg-Vagrant:
 	vagrant halt darwin64
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
-	sleep 2; appdmg appdmg.json dist/vorta-0.6.20.dmg
+	sleep 2; appdmg appdmg.json dist/vorta-0.6.21.dmg
 
 Vorta.dmg: Vorta.app
-	# sleep 2; cd dist; zip -9rq vorta-0.6.20.zip Vorta.app
-	rm -rf dist/vorta-0.6.20.dmg
-	sleep 2; appdmg appdmg.json dist/vorta-0.6.20.dmg
+	# sleep 2; cd dist; zip -9rq vorta-0.6.21.zip Vorta.app
+	rm -rf dist/vorta-0.6.21.dmg
+	sleep 2; appdmg appdmg.json dist/vorta-0.6.21.dmg
 
 github-release: Vorta.dmg
-	hub release create --attach=dist/vorta-0.6.20.dmg v0.6.20
+	hub release create --attach=dist/vorta-0.6.21.dmg v0.6.21
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
 	git push upstream gh-pages
@@ -35,12 +35,13 @@ github-release: Vorta.dmg
 
 pypi-release: translations-to-qm
 	python setup.py sdist
-	twine upload dist/vorta-0.6.20.tar.gz
+	twine upload dist/vorta-0.6.21.tar.gz
 
 bump-version:  ## Add new version tag and push to upstream repo.
 	bumpversion patch
-	xmlstarlet ed -L -u 'component/releases/release/@date' -v $$(date +%F) src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 	#bumpversion minor
+	xmlstarlet ed -L -u 'component/releases/release/@date' -v $$(date +%F) src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
+	git commit -a -m 'Bump version'
 	git push upstream
 
 travis-debug:  ## Prepare connecting to Travis instance via SSH.
