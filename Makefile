@@ -26,7 +26,7 @@ Vorta.dmg: Vorta.app
 	rm -rf dist/vorta-0.6.21.dmg
 	sleep 2; appdmg appdmg.json dist/vorta-0.6.21.dmg
 
-github-release: Vorta.dmg
+github-release: Vorta.dmg-Vagrant
 	hub release create --attach=dist/vorta-0.6.21.dmg v0.6.21
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
