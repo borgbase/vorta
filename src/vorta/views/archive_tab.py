@@ -14,6 +14,7 @@ from vorta.borg.extract import BorgExtractThread
 from vorta.borg.umount import BorgUmountThread
 from vorta.borg.delete import BorgDeleteThread
 from vorta.views.extract_dialog import ExtractDialog
+from vorta.views.diff_dialog import DiffDialog
 from vorta.i18n import trans_late
 from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
 from vorta.models import BackupProfileMixin, ArchiveModel
@@ -67,6 +68,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
         self.extractButton.clicked.connect(self.list_archive_action)
+        self.diffButton.clicked.connect(self.diff_action)
         self.deleteButton.clicked.connect(self.delete_action)
 
         self.archiveNameTemplate.textChanged.connect(
@@ -409,3 +411,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.list_action()
         else:
             self._toggle_all_buttons(True)
+
+    def diff_action(self):
+        window = DiffDialog(self.archiveTable)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.Sheet)
+        self._window = window  # for testing
+        window.show()
+        window.exec_()
