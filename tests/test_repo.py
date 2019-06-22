@@ -22,7 +22,7 @@ def test_repo_add_failures(app, qtbot, mocker, borg_json_output):
 
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.errorText.text() == 'Please use a longer password.'
+    assert add_repo_window.errorText.text() == 'Please use a longer passphrase.'
 
 
 def test_repo_add_success(app, qtbot, mocker, borg_json_output):

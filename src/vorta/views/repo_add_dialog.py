@@ -115,7 +115,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             if self.values['encryption'] != 'none':
                 if len(self.values['password']) < 8:
-                    self._set_status(self.tr('Please use a longer password.'))
+                    self._set_status(self.tr('Please use a longer passphrase.'))
                     return False
 
         return True
