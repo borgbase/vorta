@@ -1,11 +1,8 @@
-import sys
 import os
-import datetime
-from collections import namedtuple
 
 from PyQt5 import uic
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
-from PyQt5.QtWidgets import QApplication, QHeaderView
+from PyQt5.QtWidgets import QHeaderView
 
 from vorta.utils import get_asset, pretty_bytes, get_dict_from_list, nested_dict
 
@@ -19,7 +16,7 @@ selected_files_folders = None
 
 
 class DiffResult(DiffResultBase, DiffResultUI):
-    def __init__(self, fs_data, archive):
+    def __init__(self, fs_data):
         super().__init__()
         self.setupUi(self)
         global files_with_attributes, nested_file_list, selected_files_folders
@@ -30,8 +27,32 @@ class DiffResult(DiffResultBase, DiffResultUI):
         selected_files_folders = set()
 
         def parse_line(line):
-            size, modified, full_path = line.split('\t')
-            size = int(size)
+
+            if line:
+                line_splitted = line.split()
+            else:
+                return 0, "", "", ""
+
+            change_type = line_splitted[0]
+
+            if line_splitted[1] != 'directory':
+                size = line_splitted[1]
+                unit = line_splitted[2]
+                if unit == 'B':
+                    size = int(size)
+                elif unit == 'kB':
+                    size = int(float(size) * 10**3)
+                elif unit == 'MB':
+                    size = int(float(size) * 10**6)
+                elif unit == 'GB':
+                    size = int(float(size) * 10**9)
+                elif unit == 'TB':
+                    size = int(float(size) * 10**12)
+                full_path = ''.join(line_splitted[3:])
+            else:
+                size = 0
+                full_path = ''.join(line_splitted[2:])
+
             dir, name = os.path.split(full_path)
 
             # add to nested dict of folders to find nested dirs.
@@ -39,7 +60,7 @@ class DiffResult(DiffResultBase, DiffResultUI):
             if name not in d:
                 d[name] = {}
 
-            return size, modified, name, dir
+            return size, change_type, name, dir
 
         for l in fs_data.split('\n'):
             try:
@@ -59,7 +80,6 @@ class DiffResult(DiffResultBase, DiffResultUI):
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
 
-        self.archiveNameLabel.setText(f'{archive.name}, {archive.time}')
         self.cancelButton.clicked.connect(self.close)
         self.extractButton.clicked.connect(self.accept)
         self.selected = selected_files_folders
@@ -107,7 +127,6 @@ class FolderItem:
                         name=child_item[2],
                         modified=child_item[1],
                         parent=self))
-
         self.is_loaded = True
 
     def setCheckedState(self, value):
@@ -203,18 +222,8 @@ class TreeModel(QAbstractItemModel):
 
         if role == Qt.DisplayRole:
             return item.data(index.column())
-        elif role == Qt.CheckStateRole and index.column() == 0:
-            return item.getCheckedState()
         else:
             return None
-
-    def setData(self, index, value, role=Qt.EditRole):
-        if role == Qt.CheckStateRole:
-            item = index.internalPointer()
-            item.setCheckedState(value)
-            self.dataChanged.emit(QModelIndex(), QModelIndex(), [])
-
-        return True
 
     def canFetchMore(self, index):
         if not index.isValid():
@@ -229,8 +238,7 @@ class TreeModel(QAbstractItemModel):
     def flags(self, index):
         if not index.isValid():
             return Qt.NoItemFlags
-
-        return Qt.ItemIsEnabled | Qt.ItemIsUserCheckable
+        return Qt.ItemIsEnabled
 
     def headerData(self, section, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
@@ -275,19 +283,3 @@ class TreeModel(QAbstractItemModel):
             parentItem = parent.internalPointer()
 
         return parentItem.childCount()
-
-
-if __name__ == '__main__':
-    """
-    For local testing:
-
-    borg list --progress --info --log-json --format="{size:8d}{TAB}{mtime}{TAB}{path}{NL}"
-    """
-    FakeArchive = namedtuple('Archive', ['name', 'time'])
-    app = QApplication(sys.argv)
-    test_list = open('/Users/manu/Downloads/nyx2-list.txt').read()
-
-    archive = FakeArchive('test-archive', datetime.datetime.now())
-    view = DiffResult(test_list, archive)
-    view.show()
-    sys.exit(app.exec_())

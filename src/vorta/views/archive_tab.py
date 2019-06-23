@@ -448,8 +448,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_diff_result(self, result):
         self._set_status('')
         if result['returncode'] == 0:
-            archive = ArchiveModel.get(name=result['params']['archive_name'])
-            window = DiffResult(result['data'], archive)
+
+            window = DiffResult(result['data'])
             self._toggle_all_buttons(True)
             window.setParent(self, QtCore.Qt.Sheet)
             self._window = window  # for testing
