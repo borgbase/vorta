@@ -48,7 +48,13 @@ class DiffDialog(DiffDialogBase, DiffDialogUI):
 
     def diff_action(self):
         rows_selected = self.archiveTable.selectionModel().selectedRows()
-        self.selected_archives = (rows_selected[0].row(), rows_selected[1].row())
+
+        # Makes sure that first element in the tuple is the newer archive
+        if rows_selected[0].row() < rows_selected[1].row():
+            self.selected_archives = (rows_selected[0].row(), rows_selected[1].row())
+        else:
+            self.selected_archives = (rows_selected[1].row(), rows_selected[0].row())
+
         self.accept()
 
     def itemSelectionChanged_action(self):

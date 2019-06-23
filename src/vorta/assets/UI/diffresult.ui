@@ -22,12 +22,12 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Archive:</string>
+        <string>Difference between</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="archiveNameLabel">
+      <widget class="QLabel" name="archiveNameLabel_1">
        <property name="font">
         <font>
          <weight>75</weight>
@@ -35,7 +35,27 @@
         </font>
        </property>
        <property name="text">
-        <string>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</string>
+        <string>nyx2.local-2018-11-16T09:49:58 </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>and</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="archiveNameLabel_2">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>nyx2.local-2018-10-16T09:49:58 </string>
        </property>
       </widget>
      </item>
@@ -58,13 +78,6 @@
     <widget class="QTreeView" name="treeView"/>
    </item>
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Note: If you select a top-level folder and deselect its children, they will still be restored.</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="topMargin">
       <number>10</number>
@@ -82,17 +95,10 @@
        </property>
       </spacer>
      </item>
-     <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="cancelButton">
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
      <item>
-      <widget class="QPushButton" name="extractButton">
+      <widget class="QPushButton" name="okButton">
        <property name="text">
-        <string>Extract</string>
+        <string>Ok</string>
        </property>
       </widget>
      </item>

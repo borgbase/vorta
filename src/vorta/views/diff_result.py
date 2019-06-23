@@ -17,7 +17,7 @@ selected_files_folders = None
 
 
 class DiffResult(DiffResultBase, DiffResultUI):
-    def __init__(self, fs_data):
+    def __init__(self, fs_data, archive_newer, archive_older):
         super().__init__()
         self.setupUi(self)
         global files_with_attributes, nested_file_list, selected_files_folders
@@ -91,8 +91,9 @@ class DiffResult(DiffResultBase, DiffResultUI):
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
 
-        self.cancelButton.clicked.connect(self.close)
-        self.extractButton.clicked.connect(self.accept)
+        self.archiveNameLabel_1.setText(f'{archive_newer.name}')
+        self.archiveNameLabel_2.setText(f'{archive_older.name}')
+        self.okButton.clicked.connect(self.accept)
         self.selected = selected_files_folders
 
 
