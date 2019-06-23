@@ -1,8 +1,9 @@
 import os
 
 from PyQt5 import uic
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt, QVariant
 from PyQt5.QtWidgets import QHeaderView
+from PyQt5.QtGui import QColor
 
 from vorta.utils import get_asset, pretty_bytes, get_dict_from_list, nested_dict
 
@@ -33,11 +34,17 @@ class DiffResult(DiffResultBase, DiffResultUI):
             else:
                 return 0, "", "", ""
 
-            change_type = line_splitted[0]
-
-            if line_splitted[1] != 'directory':
+            if line_splitted[0] == 'added' or line_splitted[0] == 'removed':
+                change_type = line_splitted[0]
                 size = line_splitted[1]
                 unit = line_splitted[2]
+            else:
+                change_type = "modified"
+                # Remove '+' or '-' sign at the front
+                size = line_splitted[0][1:]
+                unit = line_splitted[1]
+
+            if line_splitted[1] != 'directory':
                 if unit == 'B':
                     size = int(size)
                 elif unit == 'kB':
@@ -48,10 +55,14 @@ class DiffResult(DiffResultBase, DiffResultUI):
                     size = int(float(size) * 10**9)
                 elif unit == 'TB':
                     size = int(float(size) * 10**12)
-                full_path = ''.join(line_splitted[3:])
+
+                if change_type == 'added' or change_type == 'removed':
+                    full_path = line[line.find(line_splitted[3]):]
+                elif change_type == "modified":
+                    full_path = line[line.find(line_splitted[4]):]
             else:
                 size = 0
-                full_path = ''.join(line_splitted[2:])
+                full_path = line[line.find(line_splitted[2]):]
 
             dir, name = os.path.split(full_path)
 
@@ -219,6 +230,14 @@ class TreeModel(QAbstractItemModel):
             return None
 
         item = index.internalPointer()
+
+        if role == Qt.ForegroundRole:
+            if item.itemData[1] == 'removed':
+                return QVariant(QColor(Qt.red))
+            elif item.itemData[1] == 'added':
+                return QVariant(QColor(Qt.green))
+            elif item.itemData[1] == 'modified':
+                return QVariant(QColor(Qt.darkYellow))
 
         if role == Qt.DisplayRole:
             return item.data(index.column())

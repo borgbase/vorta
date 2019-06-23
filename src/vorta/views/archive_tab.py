@@ -429,12 +429,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if window.exec_():
             selected_archives = window.selected_archives
-            archive_cell_1 = self.archiveTable.item(selected_archives[0], 4)
-            archive_cell_2 = self.archiveTable.item(selected_archives[1], 4)
-            if archive_cell_1 and archive_cell_2:
-                archive_name_1 = archive_cell_1.text()
-                archive_name_2 = archive_cell_2.text()
-                params = BorgDiffThread.prepare(profile, archive_name_1, archive_name_2)
+            archive_cell_newer = self.archiveTable.item(selected_archives[0], 4)
+            archive_cell_older = self.archiveTable.item(selected_archives[1], 4)
+            if archive_cell_older and archive_cell_newer:
+                archive_name_newer = archive_cell_newer.text()
+                archive_name_older = archive_cell_older.text()
+                params = BorgDiffThread.prepare(profile, archive_name_older, archive_name_newer)
 
                 if params['ok']:
                     self._toggle_all_buttons(False)
