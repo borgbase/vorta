@@ -1,23 +1,28 @@
 import os.path
 import sys
 from datetime import timedelta
-from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMessageBox
 
-from vorta.borg.prune import BorgPruneThread
-from vorta.borg.list_repo import BorgListRepoThread
-from vorta.borg.list_archive import BorgListArchiveThread
+from PyQt5 import QtCore, uic
+from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
+                             QTableWidgetItem)
+
 from vorta.borg.check import BorgCheckThread
-from vorta.borg.mount import BorgMountThread
-from vorta.borg.extract import BorgExtractThread
-from vorta.borg.umount import BorgUmountThread
 from vorta.borg.delete import BorgDeleteThread
-from vorta.views.extract_dialog import ExtractDialog
-from vorta.views.diff_dialog import DiffDialog
+from vorta.borg.diff import BorgDiffThread
+from vorta.borg.extract import BorgExtractThread
+from vorta.borg.list_archive import BorgListArchiveThread
+from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.mount import BorgMountThread
+from vorta.borg.prune import BorgPruneThread
+from vorta.borg.umount import BorgUmountThread
 from vorta.i18n import trans_late
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
-from vorta.models import BackupProfileMixin, ArchiveModel
+from vorta.models import ArchiveModel, BackupProfileMixin
+from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
+                         get_mount_points, pretty_bytes)
+from vorta.views.diff_dialog import DiffDialog
+from vorta.views.diff_result import DiffResult
+from vorta.views.extract_dialog import ExtractDialog
 from vorta.views.utils import get_theme_class
 
 uifile = get_asset('UI/archivetab.ui')
@@ -84,7 +89,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def _toggle_all_buttons(self, enabled=True):
         for button in [self.checkButton, self.listButton, self.pruneButton,
-                       self.mountButton, self.extractButton, self.deleteButton]:
+                       self.mountButton, self.extractButton, self.deleteButton,
+                       self.diffButton]:
             button.setEnabled(enabled)
             button.repaint()
 
@@ -413,9 +419,38 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(True)
 
     def diff_action(self):
+        profile = self.profile()
+
         window = DiffDialog(self.archiveTable)
         self._toggle_all_buttons(True)
         window.setParent(self, QtCore.Qt.Sheet)
         self._window = window  # for testing
         window.show()
-        window.exec_()
+
+        if window.exec_():
+            selected_archives = window.selected_archives
+            archive_cell_1 = self.archiveTable.item(selected_archives[0], 4)
+            archive_cell_2 = self.archiveTable.item(selected_archives[1], 4)
+            if archive_cell_1 and archive_cell_2:
+                archive_name_1 = archive_cell_1.text()
+                archive_name_2 = archive_cell_2.text()
+                params = BorgDiffThread.prepare(profile, archive_name_1, archive_name_2)
+
+                if params['ok']:
+                    self._toggle_all_buttons(False)
+                    thread = BorgDiffThread(params['cmd'], params, parent=self)
+                    thread.updated.connect(self.mountErrors.setText)
+                    thread.result.connect(self.list_diff_result)
+                    thread.start()
+                else:
+                    self._set_status(params['message'])
+
+    def list_diff_result(self, result):
+        self._set_status('')
+        if result['returncode'] == 0:
+            archive = ArchiveModel.get(name=result['params']['archive_name'])
+            window = DiffResult(result['data'], archive)
+            self._toggle_all_buttons(True)
+            window.setParent(self, QtCore.Qt.Sheet)
+            self._window = window  # for testing
+            window.show()
