@@ -2,14 +2,14 @@ import os
 
 from PyQt5 import uic
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt, QVariant
-from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QHeaderView
 
-from vorta.utils import get_asset, pretty_bytes, get_dict_from_list, nested_dict
+from vorta.utils import (get_asset, get_dict_from_list, nested_dict,
+                         pretty_bytes)
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
-ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
 files_with_attributes = None
 nested_file_list = None
@@ -103,7 +103,6 @@ class FolderItem:
         self.path = path
         self.itemData = [name, modified]
         self.childItems = []
-        self.checkedState = False
 
         # Pre-filter children
         self._filtered_children = []
@@ -112,7 +111,6 @@ class FolderItem:
             for root_folder in nested_file_list.keys():
                 self._filtered_children.append((0, '', root_folder, '', ))
         else:
-            self.checkedState = parent.checkedState  # If there is a parent, use its checked-status.
 
             # This adds direct children.
             self._filtered_children = [f for f in files_with_attributes if search_path == f[3]]
@@ -140,27 +138,6 @@ class FolderItem:
                         modified=child_item[1],
                         parent=self))
         self.is_loaded = True
-
-    def setCheckedState(self, value):
-        if value == 2:
-            self.checkedState = True
-            selected_files_folders.add(
-                os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0]))
-        else:
-            self.checkedState = False
-            path_to_remove = os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0])
-            if path_to_remove in selected_files_folders:
-                selected_files_folders.remove(path_to_remove)
-
-        if hasattr(self, 'childItems'):
-            for child in self.childItems:
-                child.setCheckedState(value)
-
-    def getCheckedState(self):
-        if self.checkedState:
-            return Qt.Checked
-        else:
-            return Qt.Unchecked
 
     def child(self, row):
         return self.childItems[row]
@@ -190,8 +167,7 @@ class FolderItem:
 class FileItem(FolderItem):
     def __init__(self, name, modified, size, parent=None):
         self.parentItem = parent
-        self.itemData = [name, modified, size]  # dt.strptime(modified, ISO_FORMAT)
-        self.checkedState = parent.checkedState
+        self.itemData = [name, modified, size]
 
     def childCount(self):
         return 0
@@ -201,7 +177,7 @@ class FileItem(FolderItem):
 
     def data(self, column):
         if column == 1:
-            return self.itemData[column]  # .strftime('%Y-%m-%dT%H:%M')
+            return self.itemData[column]
         elif column == 2:
             return pretty_bytes(self.itemData[column])
         elif column == 0:
