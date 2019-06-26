@@ -1,7 +1,9 @@
+import os
 from collections import namedtuple
-from .borg_thread import BorgThread
+
 from vorta.models import RepoModel
 from vorta.utils import keyring
+from .borg_thread import BorgThread
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
@@ -34,7 +36,9 @@ class BorgInfoThread(BorgThread):
         cmd = ["borg", "info", "--info", "--json", "--log-json"]
         cmd.append(profile.repo.url)
 
-        if params['password'] == '':
+        if os.environ.get('BORG_PASSCOMMAND', False):
+            ret['password'] = None
+        elif params['password'] == '':
             ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
         else:
             ret['password'] = params['password']
@@ -56,7 +60,7 @@ class BorgInfoThread(BorgThread):
                 new_repo.total_unique_chunks = stats['total_unique_chunks']
             if 'encryption' in result['data']:
                 new_repo.encryption = result['data']['encryption']['mode']
-            if new_repo.encryption != 'none':
+            if new_repo.encryption != 'none' and result['params']['password'] is not None:
                 keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
 
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']

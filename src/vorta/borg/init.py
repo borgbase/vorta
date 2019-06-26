@@ -1,7 +1,9 @@
-from .borg_thread import BorgThread
-from .info import FakeProfile, FakeRepo
+import os
+
 from vorta.models import RepoModel
 from vorta.utils import keyring
+from .borg_thread import BorgThread
+from .info import FakeProfile, FakeRepo
 
 
 class BorgInitThread(BorgThread):
@@ -28,7 +30,11 @@ class BorgInitThread(BorgThread):
         cmd.append(params['repo_url'])
 
         ret['encryption'] = params['encryption']
-        ret['password'] = params['password']
+        if os.environ.get('BORG_PASSCOMMAND', False):
+            ret['password'] = None
+        else:
+            ret['password'] = params['password']
+
         ret['ok'] = True
         ret['cmd'] = cmd
 
@@ -43,6 +49,6 @@ class BorgInitThread(BorgThread):
                     'extra_borg_arguments': result['params']['extra_borg_arguments'],
                 }
             )
-            if new_repo.encryption != 'none':
+            if new_repo.encryption != 'none' and result['params']['password'] is not None:
                 keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
             new_repo.save()

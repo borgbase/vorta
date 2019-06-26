@@ -1,4 +1,5 @@
 import re
+import os
 from PyQt5 import uic
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
@@ -113,7 +114,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             return False
 
         if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none':
+            if self.values['encryption'] != 'none' and not os.environ.get('BORG_PASSCOMMAND', False):
                 if len(self.values['password']) < 8:
                     self._set_status(self.tr('Please use a longer passphrase.'))
                     return False
