@@ -54,6 +54,7 @@ def test_repo_add_success(app, qtbot, mocker, borg_json_output):
     from vorta.utils import keyring
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
 
+
 def test_repo_add_success_with_borg_passcommand(app, qtbot, mocker, monkeypatch, borg_json_output):
 
     with monkeypatch.context() as m:
@@ -84,6 +85,7 @@ def test_repo_add_success_with_borg_passcommand(app, qtbot, mocker, monkeypatch,
 
         from vorta.utils import keyring
         assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) is None
+
 
 def test_repo_unlink(app, qtbot, monkeypatch):
     monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
