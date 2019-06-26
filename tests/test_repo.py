@@ -54,6 +54,36 @@ def test_repo_add_success(app, qtbot, mocker, borg_json_output):
     from vorta.utils import keyring
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
 
+def test_repo_add_success_with_borg_passcommand(app, qtbot, mocker, monkeypatch, borg_json_output):
+
+    with monkeypatch.context() as m:
+        m.setattr(os, 'environ', {'BORG_PASSCOMMAND': 'true'})
+
+        # Add new repo window
+        main = app.main_window
+        add_repo_window = AddRepoWindow(main)
+        qtbot.addWidget(add_repo_window)
+        test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+
+        qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
+
+        stdout, stderr = borg_json_output('info')
+        popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+        mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+
+        qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+
+        with qtbot.waitSignal(add_repo_window.thread.result, timeout=300000) as blocker:
+            pass
+
+        main.repoTab.process_new_repo(blocker.args[0])
+
+        qtbot.waitUntil(lambda: EventLogModel.select().count() == 2)
+        assert EventLogModel.select().count() == 2
+        assert RepoModel.get(id=2).url == test_repo_url
+
+        from vorta.utils import keyring
+        assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) is None
 
 def test_repo_unlink(app, qtbot, monkeypatch):
     monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
