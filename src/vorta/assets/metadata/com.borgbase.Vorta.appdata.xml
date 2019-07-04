@@ -41,5 +41,8 @@
     <release version="v0.6.21" date="2019-06-20">
     </release>
   </releases>
+  <url type="bugtracker">https://github.com/borgbase/vorta/issues</url>
+  <url type="help">https://github.com/borgbase/vorta/issues</url>
   <url type="homepage">https://github.com/borgbase/vorta</url>
+  <url type="translate">https://www.transifex.com/borgbase/vorta/</url>
 </component>
