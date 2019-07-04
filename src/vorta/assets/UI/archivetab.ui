@@ -153,7 +153,7 @@ font-weight: bold;
             <string>Delete</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/collection.qrc">
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
            </property>
           </widget>
@@ -170,6 +170,17 @@ font-weight: bold;
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="diffButton">
+           <property name="text">
+            <string>Diff</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../icons/dark/collection.qrc">
+             <normaloff>:/icons/stream-solid.svg</normaloff>:/icons/stream-solid.svg</iconset>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pruneButton">
@@ -229,8 +240,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>658</width>
-        <height>318</height>
+        <width>787</width>
+        <height>443</height>
        </rect>
       </property>
       <attribute name="icon">

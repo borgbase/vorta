@@ -1,22 +1,28 @@
 import os.path
 import sys
 from datetime import timedelta
-from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QTableWidgetItem, QTableView, QHeaderView, QMessageBox
 
-from vorta.borg.prune import BorgPruneThread
-from vorta.borg.list_repo import BorgListRepoThread
-from vorta.borg.list_archive import BorgListArchiveThread
+from PyQt5 import QtCore, uic
+from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
+                             QTableWidgetItem)
+
 from vorta.borg.check import BorgCheckThread
-from vorta.borg.mount import BorgMountThread
-from vorta.borg.extract import BorgExtractThread
-from vorta.borg.umount import BorgUmountThread
 from vorta.borg.delete import BorgDeleteThread
-from vorta.views.extract_dialog import ExtractDialog
+from vorta.borg.diff import BorgDiffThread
+from vorta.borg.extract import BorgExtractThread
+from vorta.borg.list_archive import BorgListArchiveThread
+from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.mount import BorgMountThread
+from vorta.borg.prune import BorgPruneThread
+from vorta.borg.umount import BorgUmountThread
 from vorta.i18n import trans_late
-from vorta.utils import get_asset, pretty_bytes, choose_file_dialog, format_archive_name, get_mount_points
-from vorta.models import BackupProfileMixin, ArchiveModel
+from vorta.models import ArchiveModel, BackupProfileMixin
+from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
+                         get_mount_points, pretty_bytes)
+from vorta.views.diff_dialog import DiffDialog
+from vorta.views.diff_result import DiffResult
+from vorta.views.extract_dialog import ExtractDialog
 from vorta.views.utils import get_theme_class
 
 uifile = get_asset('UI/archivetab.ui')
@@ -67,6 +73,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
         self.extractButton.clicked.connect(self.list_archive_action)
+        self.diffButton.clicked.connect(self.diff_action)
         self.deleteButton.clicked.connect(self.delete_action)
 
         self.archiveNameTemplate.textChanged.connect(
@@ -82,7 +89,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def _toggle_all_buttons(self, enabled=True):
         for button in [self.checkButton, self.listButton, self.pruneButton,
-                       self.mountButton, self.extractButton, self.deleteButton]:
+                       self.mountButton, self.extractButton, self.deleteButton,
+                       self.diffButton]:
             button.setEnabled(enabled)
             button.repaint()
 
@@ -409,3 +417,44 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.list_action()
         else:
             self._toggle_all_buttons(True)
+
+    def diff_action(self):
+        profile = self.profile()
+
+        window = DiffDialog(self.archiveTable)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.Sheet)
+        self._window = window  # for testing
+        window.show()
+
+        if window.exec_():
+            selected_archives = window.selected_archives
+            archive_cell_newer = self.archiveTable.item(selected_archives[0], 4)
+            archive_cell_older = self.archiveTable.item(selected_archives[1], 4)
+            if archive_cell_older and archive_cell_newer:
+                archive_name_newer = archive_cell_newer.text()
+                archive_name_older = archive_cell_older.text()
+
+                params = BorgDiffThread.prepare(profile, archive_name_older, archive_name_newer)
+                params['archive_name_newer'] = archive_name_newer
+                params['archive_name_older'] = archive_name_older
+
+                if params['ok']:
+                    self._toggle_all_buttons(False)
+                    thread = BorgDiffThread(params['cmd'], params, parent=self)
+                    thread.updated.connect(self.mountErrors.setText)
+                    thread.result.connect(self.list_diff_result)
+                    thread.start()
+                else:
+                    self._set_status(params['message'])
+
+    def list_diff_result(self, result):
+        self._set_status('')
+        if result['returncode'] == 0:
+            archive_newer = ArchiveModel.get(name=result['params']['archive_name_newer'])
+            archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
+            window = DiffResult(result['data'], archive_newer, archive_older)
+            self._toggle_all_buttons(True)
+            window.setParent(self, QtCore.Qt.Sheet)
+            self._window = window  # for testing
+            window.show()
