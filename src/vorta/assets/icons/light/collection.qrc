@@ -17,5 +17,6 @@
         <file>cloud-download.svg</file>
         <file>terminal.svg</file>
         <file>plus.svg</file>
+        <file>stream-solid.svg</file>
     </qresource>
 </RCC>
