@@ -29,6 +29,7 @@ For available packages and instructions, see [INSTALL.md](https://github.com/bor
 ## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See [CONTRIBUTING.md](https://github.com/borgbase/vorta/blob/master/CONTRIBUTING.md)
+- Get in touch with us via [Matrix](https://matrix.to/#/#vorta:matrix.org)
 
 ## License and Credits
 - Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
