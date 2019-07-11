@@ -16,9 +16,7 @@ finish-args:
   # Sync
   - --share=network
   # Filesystem access
-  - --filesystem=home
-  - --filesystem=/run/media
-  - --filesystem=/media
+  - --filesystem=host
   # dconf access
   - --filesystem=xdg-run/dconf
   - --filesystem=~/.config/dconf:ro
@@ -37,15 +35,14 @@ finish-args:
   - --socket=ssh-auth
   - --own-name=org.KDE.*
   # Notifications
-  - --talk-name=org.freedesktop.Notifications.*
+  - --talk-name=org.freedesktop.Notifications
 
 build-options:
   env:
     MOUNT_FUSE_PATH: ../tmp/
 
 modules:
-  - dependencies/pyqt5.json  
-  - dependencies/openssl.json
+  - dependencies/pyqt5.json
   - dependencies/openssh.json
   - dependencies/libfuse.json
   - dependencies/python3-setuptools.json
@@ -64,11 +61,10 @@ modules:
   - dependencies/python3-secretstorage.json
   - dependencies/python3-pytest-runner.json
 
-
-
   - name: vorta
     buildsystem: simple
     build-commands:
+      - make translations-to-qm
       - pip3 install --prefix=/app --no-deps .
       - mkdir -p /app/share/metainfo/
       - cp src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml /app/share/metainfo/
