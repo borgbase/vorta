@@ -12,7 +12,7 @@ $ brew cask install vorta
 
 <a href='https://flathub.org/apps/details/com.borgbase.Vorta'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
-Settings can be transfered by copying ~/.local/share/Vorta/settings.db to ~/.var/app/com.borgbase.Vorta/data/Vorta/.
+Settings can be transferred by copying ~/.local/share/Vorta/settings.db to ~/.var/app/com.borgbase.Vorta/data/Vorta/.
 
 ### Distribution Packages
 If you added Vorta to a Linux distribution, open an issue or PR and it will be added here.
