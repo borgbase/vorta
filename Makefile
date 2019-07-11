@@ -68,6 +68,26 @@ translations-pull:  ## Download .ts from Transifex.
 translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls $$VORTA_SRC/i18n/ts/vorta.*.ts); do lrelease $$f -qm $$VORTA_SRC/i18n/qm/$$(basename $$f .ts).qm; done
 
+flatpak-install: translations-to-qm
+	pip3 install --prefix=/app --no-deps .
+	mkdir -p /app/share/metainfo/
+	cp src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml /app/share/metainfo/
+	mkdir -p /app/share/icons/hicolor/512x512/apps/
+	cp src/vorta/assets/icons/512x512/com.borgbase.Vorta.png /app/share/icons/hicolor/512x512/apps/
+	mkdir -p /app/share/icons/hicolor/256x256/apps/
+	cp src/vorta/assets/icons/256x256/com.borgbase.Vorta.png /app/share/icons/hicolor/256x256/apps/
+	mkdir -p /app/share/icons/hicolor/128x128/apps/
+	cp src/vorta/assets/icons/128x128/com.borgbase.Vorta.png /app/share/icons/hicolor/128x128/apps/
+	mkdir -p /app/share/icons/hicolor/64x64/apps/
+	cp src/vorta/assets/icons/64x64/com.borgbase.Vorta.png /app/share/icons/hicolor/64x64/apps/
+	mkdir -p /app/share/icons/hicolor/48x48/apps/
+	cp src/vorta/assets/icons/48x48/com.borgbase.Vorta.png /app/share/icons/hicolor/48x48/apps/
+	mkdir -p /app/share/icons/hicolor/32x32/apps/
+	cp src/vorta/assets/icons/32x32/com.borgbase.Vorta.png /app/share/icons/hicolor/32x32/apps/
+	mkdir -p /app/share/icons/hicolor/24x24/apps/
+	cp src/vorta/assets/icons/24x24/com.borgbase.Vorta.png /app/share/icons/hicolor/24x24/apps/
+	mkdir -p /app/share/applications/
+	cp src/vorta/assets/metadata/com.borgbase.Vorta.desktop /app/share/applications/
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
