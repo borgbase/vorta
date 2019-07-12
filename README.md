@@ -29,7 +29,10 @@ For available packages and instructions, see [INSTALL.md](https://github.com/bor
 ## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See [CONTRIBUTING.md](https://github.com/borgbase/vorta/blob/master/CONTRIBUTING.md)
-- Get in touch with us via [Matrix](https://matrix.to/#/#vorta:matrix.org)
+
+## Get in touch
+- If you have questions or simply want to talk about Vorta hit us up at [Matrix](https://matrix.to/#/#vorta:matrix.org)
+- If your questions are Borg-specific it might be advisable to join the #borgbackup IRC channel on chat.freenode.net instead (Note: borg currently requires registered nicknames). Matrix is very suitable to be used as an always-on IRC-client as explained in this [tutorial](https://gist.github.com/fstab/ce805d3001600ac147b79d413668770d).
 
 ## License and Credits
 - Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
