@@ -60,24 +60,24 @@ class DiffResult(DiffResultBase, DiffResultUI):
                     full_path = line[line.find(line_splitted[3]):]
                 elif change_type == "modified":
                     full_path = line[line.find(line_splitted[4]):]
+
+                dir, name = os.path.split(full_path)
+                # add to nested dict of folders to find nested dirs.
+                d = get_dict_from_list(nested_file_list, dir.split('/'))
+                if name not in d:
+                    d[name] = {}
             else:
                 size = 0
                 full_path = line[line.find(line_splitted[2]):]
 
-            dir, name = os.path.split(full_path)
-
-            # add to nested dict of folders to find nested dirs.
-            d = get_dict_from_list(nested_file_list, dir.split('/'))
-            if name not in d:
-                d[name] = {}
+                dir, name = os.path.split(full_path)
+                # add to nested dict of folders to find nested dirs.
+                d = get_dict_from_list(nested_file_list, full_path.split('/'))
 
             return size, change_type, name, dir
 
         for l in fs_data.split('\n'):
-            try:
-                files_with_attributes.append(parse_line(l))
-            except ValueError:
-                pass
+            files_with_attributes.append(parse_line(l))
 
         model = TreeModel()
 
