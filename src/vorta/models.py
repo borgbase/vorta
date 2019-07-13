@@ -11,10 +11,9 @@ from datetime import datetime, timedelta
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
-from PyQt5.QtWidgets import QApplication, QSystemTrayIcon
 
 from vorta.i18n import trans_late
-from vorta.utils import slugify, uses_dark_mode
+from vorta.utils import is_system_tray_available, slugify, uses_dark_mode
 
 SCHEMA_VERSION = 13
 
@@ -220,6 +219,11 @@ def get_misc_settings():
             'label': trans_late('settings',
                                 'Automatically start Vorta at login')
         },
+        {
+            'key': 'foreground', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Run Vorta in the foreground when started manually')
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -234,15 +238,6 @@ def get_misc_settings():
                                     'Include pre-release versions when checking for updates')
             },
         ]
-    if sys.platform.startswith('linux'):
-        settings += [
-            {
-                'key': 'foreground', 'value': False, 'type': 'checkbox',
-                'label': trans_late('settings',
-                                    'Run Vorta in the foreground when started manually')
-            },
-        ]
-
     return settings
 
 
@@ -365,12 +360,3 @@ def init_db(con):
                     ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
-
-
-def is_system_tray_available():
-    ''' Can only be called when the event loop isn't running yet '''
-    app = QApplication([])
-    tray = QSystemTrayIcon()
-    is_available = tray.isSystemTrayAvailable()
-    app.quit()
-    return is_available
