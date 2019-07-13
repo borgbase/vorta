@@ -26,6 +26,7 @@ finish-args:
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --own-name=org.kde.StatusNotifierItem-4-1
+  - --own-name=org.kde.StatusNotifierItem-4-3
   # Mounting
   - --talk-name=org.freedesktop.DBus.*
   - --talk-name=org.freedesktop.Flatpak.*

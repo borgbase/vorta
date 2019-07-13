@@ -1,30 +1,31 @@
-import os
+import argparse
 import errno
-import sys
+import getpass
+import operator
+import os
 import platform
 import plistlib
-import argparse
-import unicodedata
 import re
-from datetime import datetime as dt
-import getpass
 import subprocess
-from collections import defaultdict
-from functools import reduce
-import operator
-import psutil
+import sys
+import unicodedata
 import xml
+from collections import defaultdict
+from datetime import datetime as dt
+from functools import reduce
 
-from paramiko.rsakey import RSAKey
+import psutil
+from paramiko import SSHException
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
-from paramiko import SSHException
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtGui import QIcon
+from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+
+from vorta.borg._compatibility import BorgCompatibility
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
-from vorta.borg._compatibility import BorgCompatibility
 
 keyring = VortaKeyring.get_keyring()
 logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
@@ -264,3 +265,17 @@ def get_mount_points(repo_url):
             continue
 
     return mount_points
+
+
+def is_system_tray_available():
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication([])
+        tray = QSystemTrayIcon()
+        is_available = tray.isSystemTrayAvailable()
+        app.quit()
+    else:
+        tray = QSystemTrayIcon()
+        is_available = tray.isSystemTrayAvailable()
+
+    return is_available
