@@ -62,7 +62,6 @@ class VortaApp(QtSingleApplication):
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
-
         self.set_borg_details_action()
 
     def create_backup_action(self, profile_id=None):
