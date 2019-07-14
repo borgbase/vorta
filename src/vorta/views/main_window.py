@@ -1,18 +1,21 @@
 import sys
-from PyQt5.QtWidgets import QShortcut
-from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QKeySequence
 
-from vorta.utils import get_asset, borg_compat
-from vorta.models import BackupProfileModel
+from PyQt5 import QtCore, uic
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QMessageBox, QShortcut
+
 from vorta.borg.borg_thread import BorgThread
+from vorta.i18n import trans_late
+from vorta.models import BackupProfileModel
+from vorta.utils import borg_compat, get_asset, is_system_tray_available
 from vorta.views.utils import get_theme_class
-from .repo_tab import RepoTab
-from .source_tab import SourceTab
+
 from .archive_tab import ArchiveTab
-from .schedule_tab import ScheduleTab
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
+from .repo_tab import RepoTab
+from .schedule_tab import ScheduleTab
+from .source_tab import SourceTab
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
@@ -27,6 +30,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app = parent
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
+
+        self.tests_running = False
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -143,3 +148,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self._toggle_buttons(create_enabled=True)
         self.set_status(progress_max=100)
         self.set_status(self.tr('Task cancelled'))
+
+    def closeEvent(self, event):
+        if not is_system_tray_available() and not self.tests_running:
+            run_in_background = QMessageBox.question(self,
+                                                     trans_late("MainWindow QMessagebox",
+                                                                "Quit"),
+                                                     trans_late("MainWindow QMessagebox",
+                                                                "Should Vorta continue to run in the background?"),
+                                                     QMessageBox.Yes | QMessageBox.No)
+            if run_in_background == QMessageBox.No:
+                self.app.quit()
+        event.accept()
