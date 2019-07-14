@@ -35,6 +35,7 @@ def app(tmpdir, qtbot, mocker):
     app = VortaApp([])
     app.open_main_window_action()
     qtbot.addWidget(app.main_window)
+    app.main_window.tests_running = True
     return app
 
 
