@@ -5,7 +5,7 @@ LINUX_STARTUP_FILE = """\
 [Desktop Entry]
 Name=Vorta
 GenericName=Backup Software
-Exec={} --background
+Exec={} --daemonize
 Terminal=false
 Icon=com.borgbase.Vorta
 Categories=Utility
