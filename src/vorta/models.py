@@ -263,6 +263,8 @@ def init_db(con):
             s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
         if created and setting['key'] == "foreground":
             s.value = not bool(is_system_tray_available())
+        if created and setting['key'] == "enable_notifications_success":
+            s.value = not bool(is_system_tray_available())
         s.label = setting['label']
         s.save()
 
