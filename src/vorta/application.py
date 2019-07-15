@@ -54,7 +54,7 @@ class VortaApp(QtSingleApplication):
             self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
         args = parse_args()
-        if not (hasattr(args, 'background') and args.background):
+        if not (hasattr(args, 'daemonize') and args.daemonize):
             if (hasattr(args, 'foreground') and args.foreground) or SettingsModel.get(key='foreground').value:
                 self.open_main_window_action()
 

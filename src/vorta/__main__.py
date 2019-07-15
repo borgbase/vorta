@@ -17,7 +17,7 @@ def main():
 
     frozen_binary = getattr(sys, 'frozen', False)
     want_version = getattr(args, 'version', False)
-    want_foreground = getattr(args, 'foreground', False)
+    want_foreground = getattr(args, 'foreground', False) and not getattr(args, 'daemonize', False)
 
     if want_version:
         print(f"Vorta {__version__}")
