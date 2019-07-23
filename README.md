@@ -12,23 +12,17 @@ Vorta is a backup client for macOS and Linux desktops. It integrates the mighty 
 - **Flexible profiles** to group source folders, backup destinations and schedules.
 - **One place** to view all point-in-time archives and restore individual files.
 
+Learn more on [Vorta's website](https://vorta.borgbase.com).
 
 ## Installation
 Vorta should work on all platforms that support Qt and Borg. This includes macOS, Ubuntu, Debian, Fedora, Arch Linux and many others. Windows is currently not supported by Borg, but this may change in the future.
 
-For available packages and instructions, see [INSTALL.md](https://github.com/borgbase/vorta/blob/master/INSTALL.md)
-
-
-## Learn More
-- [Description](https://borgbackup.readthedocs.io/en/stable/internals.html) of Borg's internal workings and security
-- [High level guide and template](https://docs.borgbase.com/backup-strategy/steps-with-template/) on setting up a complete backup strategy
-- [Detailed tutorial](https://docs.borgbase.com/macos/how-to-backup-your-mac-using-the-vorta-backup-gui/) on setting up Vorta
-- Why the name? [Vorta](http://memory-alpha.wikia.com/wiki/Vorta) are a race referenced in Star Trek. After dying they are replaced by their cloned backup.
+See our website for [download links and and install instructions](https://vorta.borgbase.com/download).
 
 
 ## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
-- Want to contribute to Vorta? Great! See [CONTRIBUTING.md](https://github.com/borgbase/vorta/blob/master/CONTRIBUTING.md)
+- Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
 
 ## Get in touch
 - If you have questions or simply want to talk about Vorta hit us up at [Matrix](https://matrix.to/#/#vorta:matrix.org)
