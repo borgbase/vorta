@@ -1,6 +1,6 @@
 # Vorta Backup Client <img alt="Logo" src="https://files.qmax.us/vorta/vorta-512px.png" align="right" height="50">
 
-Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft.
+Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft. More on the [official website](https://vorta.borgbase.com).
 
 ![](https://files.qmax.us/vorta-screencast-6.gif)
 
@@ -19,14 +19,10 @@ Vorta should work on all platforms that support Qt and Borg. This includes macOS
 
 See our website for [download links and and install instructions](https://vorta.borgbase.com/download).
 
-
 ## Development and Bugs
 - Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
-
-## Get in touch
-- If you have questions or simply want to talk about Vorta hit us up at [Matrix](https://matrix.to/#/#vorta:matrix.org)
-- If your questions are Borg-specific it might be advisable to join the #borgbackup IRC channel on chat.freenode.net instead. Matrix is very suitable to be used as an always-on IRC-client, simply [register/identify to NickServ](https://github.com/matrix-org/matrix-appservice-irc/wiki/End-user-FAQ#how-do-i-registeridentify-to-nickserv) and then join the room `#freenode_#borgbackup:matrix.org`.
+- If you have questions or simply want to talk about Vorta, find us on [Matrix](https://matrix.to/#/#vorta:matrix.org). For Borg-specific topics, join the `#borgbackup` IRC channel on `chat.freenode.net` instead.
 
 ## License and Credits
 - Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
