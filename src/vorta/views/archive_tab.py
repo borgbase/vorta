@@ -60,14 +60,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
 
-        # Populate pruning options from database
-        profile = self.profile()
-        for i in self.prune_intervals:
-            getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
-            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
-        self.prune_keep_within.setText(profile.prune_keep_within)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
-
         self.mountButton.clicked.connect(self.mount_action)
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
@@ -134,6 +126,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.archiveNameTemplate.setText(profile.new_archive_name)
         self.prunePrefixTemplate.setText(profile.prune_prefix)
+
+        # Populate pruning options from database
+        profile = self.profile()
+        for i in self.prune_intervals:
+            getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
+            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+        self.prune_keep_within.setText(profile.prune_keep_within)
+        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
     def save_archive_template(self, tpl, key):
         profile = self.profile()

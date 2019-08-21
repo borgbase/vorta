@@ -11,6 +11,8 @@ icon-resources:  ## Compile SVG icons to importable resource files.
 
 Vorta.app: translations-to-qm
 	pyinstaller --clean --noconfirm vorta.spec
+	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
 
 Vorta.dmg-Vagrant:
 	vagrant up darwin64
@@ -22,11 +24,10 @@ Vorta.dmg-Vagrant:
 	sleep 2; appdmg appdmg.json dist/vorta-0.6.22.dmg
 
 Vorta.dmg: Vorta.app
-	# sleep 2; cd dist; zip -9rq vorta-0.6.22.zip Vorta.app
 	rm -rf dist/vorta-0.6.22.dmg
 	sleep 2; appdmg appdmg.json dist/vorta-0.6.22.dmg
 
-github-release: Vorta.dmg-Vagrant
+github-release: Vorta.dmg
 	hub release create --attach=dist/vorta-0.6.22.dmg v0.6.22
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
