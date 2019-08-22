@@ -44,7 +44,7 @@ class DiffResult(DiffResultBase, DiffResultUI):
                 size = line_splitted[0][1:]
                 unit = line_splitted[1]
 
-            if line_splitted[1] != 'directory':
+            if line_splitted[1] not in ['directory', 'link']:
                 if unit == 'B':
                     size = int(size)
                 elif unit == 'kB':
