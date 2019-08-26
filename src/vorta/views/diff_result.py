@@ -29,7 +29,8 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
         def parse_line(line):
 
-            if line:
+            # Ignore empty lines and permission changes
+            if line and not line.startswith("["):
                 line_splitted = line.split()
             else:
                 return 0, "", "", ""
