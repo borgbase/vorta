@@ -44,7 +44,14 @@ class DiffResult(DiffResultBase, DiffResultUI):
                 size = line_splitted[0][1:]
                 unit = line_splitted[1]
 
-            if line_splitted[1] not in ['directory', 'link']:
+            if line_splitted[0].startswith("["):
+                size = 0
+                change_type = line[:line.find(line_splitted[3])]
+                full_path = line[line.find(line_splitted[3]):]
+                dir, name = os.path.split(full_path)
+                # add to nested dict of folders to find nested dirs.
+                d = get_dict_from_list(nested_file_list, full_path.split('/'))
+            elif line_splitted[1] not in ['directory', 'link']:
                 if unit == 'B':
                     size = int(size)
                 elif unit == 'kB':
@@ -213,7 +220,7 @@ class TreeModel(QAbstractItemModel):
                 return QVariant(QColor(Qt.red))
             elif item.itemData[1] == 'added':
                 return QVariant(QColor(Qt.green))
-            elif item.itemData[1] == 'modified':
+            elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
                 return QVariant(QColor(Qt.darkYellow))
 
         if role == Qt.DisplayRole:
