@@ -40,9 +40,11 @@ class DiffResult(DiffResultBase, DiffResultUI):
                 unit = line_splitted[2]
             else:
                 change_type = "modified"
-                # Remove '+' or '-' sign at the front
-                size = line_splitted[0][1:]
+                size = line_splitted[0]
                 unit = line_splitted[1]
+                # If present remove '+' or '-' sign at the front
+                if '+' in size or '-' in size:
+                    size = size[1:]   
 
             if line_splitted[0].startswith("["):
                 size = 0
