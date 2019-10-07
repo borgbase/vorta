@@ -1,3 +1,4 @@
+import os
 from .borg_thread import BorgThread
 
 
@@ -14,8 +15,7 @@ class BorgMountThread(BorgThread):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'mount', '--log-json']
-        cmd.append(f'{profile.repo.url}')
+        cmd = ['borg', '--log-json', 'mount', '-o', f"umask=0277,uid={os.getuid()}", f"{profile.repo.url}"]
 
         ret['ok'] = True
         ret['cmd'] = cmd
