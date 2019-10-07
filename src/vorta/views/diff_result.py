@@ -30,30 +30,30 @@ class DiffResult(DiffResultBase, DiffResultUI):
         def parse_line(line):
 
             if line:
-                line_splitted = line.split()
+                line_split = line.split()
             else:
                 return 0, "", "", ""
 
-            if line_splitted[0] == 'added' or line_splitted[0] == 'removed':
-                change_type = line_splitted[0]
-                size = line_splitted[1]
-                unit = line_splitted[2]
+            if line_split[0] == 'added' or line_split[0] == 'removed':
+                change_type = line_split[0]
+                size = line_split[1]
+                unit = line_split[2]
             else:
                 change_type = "modified"
-                size = line_splitted[0]
-                unit = line_splitted[1]
+                size = line_split[0]
+                unit = line_split[1]
                 # If present remove '+' or '-' sign at the front
                 if size[0] in ('+', '-'):
                     size = size[1:]
 
-            if line_splitted[0].startswith("["):
+            if line_split[0].startswith("["):
                 size = 0
-                change_type = line[:line.find(line_splitted[3])]
-                full_path = line[line.find(line_splitted[3]):]
+                change_type = line[:line.find(line_split[3])]
+                full_path = line[line.find(line_split[3]):]
                 dir, name = os.path.split(full_path)
                 # add to nested dict of folders to find nested dirs.
                 d = get_dict_from_list(nested_file_list, full_path.split('/'))
-            elif line_splitted[1] not in ['directory', 'link']:
+            elif line_split[1] not in ['directory', 'link']:
                 if unit == 'B':
                     size = int(size)
                 elif unit == 'kB':
@@ -66,9 +66,9 @@ class DiffResult(DiffResultBase, DiffResultUI):
                     size = int(float(size) * 10**12)
 
                 if change_type == 'added' or change_type == 'removed':
-                    full_path = line[line.find(line_splitted[3]):]
+                    full_path = line[line.find(line_split[3]):]
                 elif change_type == "modified":
-                    full_path = line[line.find(line_splitted[4]):]
+                    full_path = line[line.find(line_split[4]):]
 
                 dir, name = os.path.split(full_path)
                 # add to nested dict of folders to find nested dirs.
@@ -77,7 +77,7 @@ class DiffResult(DiffResultBase, DiffResultUI):
                     d[name] = {}
             else:
                 size = 0
-                full_path = line[line.find(line_splitted[2]):]
+                full_path = line[line.find(line_split[2]):]
 
                 dir, name = os.path.split(full_path)
                 # add to nested dict of folders to find nested dirs.
