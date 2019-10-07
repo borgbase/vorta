@@ -43,7 +43,7 @@ class DiffResult(DiffResultBase, DiffResultUI):
                 size = line_split[0]
                 unit = line_split[1]
                 # If present remove '+' or '-' sign at the front
-                if '+' in size or '-' in size:
+                if size[0] in ('+', '-'):
                     size = size[1:]
 
             if line_split[0].startswith("["):
