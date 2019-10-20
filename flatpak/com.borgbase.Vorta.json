@@ -21,21 +21,18 @@
         "--own-name=org.KDE.*",
         "--talk-name=org.freedesktop.Notifications"
     ],
-    "build-options" : {
-        "env" : {
-            "BASH_COMPLETIONSDIR" : "/app/share/bash-completion/completions",
-            "MOUNT_FUSE_PATH" : "../tmp/",
-            "V" : "1"
+    "build-options": {
+        "env": {
+            "BASH_COMPLETIONSDIR": "/app/share/bash-completion/completions",
+            "MOUNT_FUSE_PATH": "../tmp/",
+            "V": "1"
         }
     },
     "modules": [
         "dependencies/pyqt5.json",
         "dependencies/libfuse.json",
-        "dependencies/python3-setuptools.json",
-        "dependencies/python3-setuptools_git.json",
         "dependencies/python3-setuptools_scm.json",
         "dependencies/python3-borgbackup.json",
-        "dependencies/python3-pytest.json",
         "dependencies/python3-llfuse.json",
         "dependencies/python3-appdirs.json",
         "dependencies/python3-apscheduler.json",
@@ -45,10 +42,9 @@
         "dependencies/python3-python-dateutil.json",
         "dependencies/python3-qdarkstyle.json",
         "dependencies/python3-secretstorage.json",
-        "dependencies/python3-pytest-runner.json",
         {
             "name": "vorta",
-            "buildsystem" : "simple",
+            "buildsystem": "simple",
             "build-commands": [
                 "make flatpak-install"
             ],
