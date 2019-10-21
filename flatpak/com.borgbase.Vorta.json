@@ -4,6 +4,7 @@
     "runtime-version": "5.13",
     "sdk": "org.kde.Sdk",
     "command": "vorta",
+    "branch": "devel",
     "finish-args": [
         "--socket=fallback-x11",
         "--share=ipc",
@@ -32,6 +33,7 @@
         "dependencies/pyqt5.json",
         "dependencies/libfuse.json",
         "dependencies/python3-setuptools_scm.json",
+        "dependencies/python3-setuptools_git.json",
         "dependencies/python3-borgbackup.json",
         "dependencies/python3-llfuse.json",
         "dependencies/python3-appdirs.json",
@@ -42,6 +44,7 @@
         "dependencies/python3-python-dateutil.json",
         "dependencies/python3-qdarkstyle.json",
         "dependencies/python3-secretstorage.json",
+        "dependencies/python3-pytest-runner.json",
         {
             "name": "vorta",
             "buildsystem": "simple",
@@ -50,10 +53,8 @@
             ],
             "sources": [
                 {
-                    "type": "git",
-                    "url": "https://github.com/borgbase/vorta",
-                    "sha256": "2e21fff7686db2e1be3b8761be67c654964d7eea",
-                    "tag": "v0.6.23"
+                    "type": "dir",
+                    "path": "../"
                 }
             ]
         }
