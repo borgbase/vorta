@@ -1,4 +1,5 @@
 import os
+import re
 
 from PyQt5 import uic
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt, QVariant
@@ -28,7 +29,6 @@ class DiffResult(DiffResultBase, DiffResultUI):
         selected_files_folders = set()
 
         def parse_line(line):
-
             if line:
                 line_split = line.split()
             else:
@@ -36,52 +36,41 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
             if line_split[0] == 'added' or line_split[0] == 'removed':
                 change_type = line_split[0]
-                size = line_split[1]
-                unit = line_split[2]
+                if line_split[1] in ['directory', 'link']:
+                    size = 0
+                    full_path = re.search(r'^\w+ \w+ +(.*)', line).group(1)
+                else:
+                    significand = line_split[1]
+                    unit = line_split[2]
+                    size = calc_size(significand, unit)
+                    full_path = re.search(r'^\w+ +\S+ \w?B (.*)', line).group(1)
             else:
-                change_type = "modified"
-                size = line_split[0]
-                unit = line_split[1]
-                # If present remove '+' or '-' sign at the front
-                if size[0] in ('+', '-'):
-                    size = size[1:]
+                size_change = re.search(r' *[\+-]?(\d+\.*\d*) (\w?B) +[\+-]?.+\w?B ', line)
+                if size_change:
+                    significand = size_change.group(1)
+                    unit = size_change.group(2)
+                    size = calc_size(significand, unit)
+                    full_path_index = size_change.end(0)
+                else:
+                    size = 0
 
-            if line_split[0].startswith("["):
-                size = 0
-                change_type = line[:line.find(line_split[3])]
-                full_path = line[line.find(line_split[3]):]
-                dir, name = os.path.split(full_path)
-                # add to nested dict of folders to find nested dirs.
-                d = get_dict_from_list(nested_file_list, full_path.split('/'))
-            elif line_split[1] not in ['directory', 'link']:
-                if unit == 'B':
-                    size = int(size)
-                elif unit == 'kB':
-                    size = int(float(size) * 10**3)
-                elif unit == 'MB':
-                    size = int(float(size) * 10**6)
-                elif unit == 'GB':
-                    size = int(float(size) * 10**9)
-                elif unit == 'TB':
-                    size = int(float(size) * 10**12)
+                permission_change = re.search(r' *(\[.{24}\]) ', line)
+                if permission_change:
+                    change_type = permission_change.group(1)
+                    full_path_index = permission_change.end(0)
+                else:
+                    change_type = "modified"
 
-                if change_type == 'added' or change_type == 'removed':
-                    full_path = line[line.find(line_split[3]):]
-                elif change_type == "modified":
-                    full_path = line[line.find(line_split[4]):]
+                if size_change and permission_change:
+                    full_path_index = max(size_change.end(0), permission_change.end(0))
+                full_path = line[full_path_index:]
 
-                dir, name = os.path.split(full_path)
-                # add to nested dict of folders to find nested dirs.
-                d = get_dict_from_list(nested_file_list, dir.split('/'))
-                if name not in d:
-                    d[name] = {}
-            else:
-                size = 0
-                full_path = line[line.find(line_split[2]):]
+            dir, name = os.path.split(full_path)
 
-                dir, name = os.path.split(full_path)
-                # add to nested dict of folders to find nested dirs.
-                d = get_dict_from_list(nested_file_list, full_path.split('/'))
+            # add to nested dict of folders to find nested dirs.
+            d = get_dict_from_list(nested_file_list, dir.split('/'))
+            if name not in d:
+                d[name] = {}
 
             return size, change_type, name, dir
 
@@ -104,6 +93,19 @@ class DiffResult(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
         self.okButton.clicked.connect(self.accept)
         self.selected = selected_files_folders
+
+
+def calc_size(significand, unit):
+    if unit == 'B':
+        return int(significand)
+    elif unit == 'kB':
+        return int(float(significand) * 10**3)
+    elif unit == 'MB':
+        return int(float(significand) * 10**6)
+    elif unit == 'GB':
+        return int(float(significand) * 10**9)
+    elif unit == 'TB':
+        return int(float(significand) * 10**12)
 
 
 class FolderItem:
