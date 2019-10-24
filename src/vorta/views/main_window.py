@@ -99,7 +99,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_select_action(self, index):
         self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
         self.archiveTab.populate_from_profile()
-        self.archiveTab.list_action()
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
