@@ -3,10 +3,12 @@ from datetime import date, timedelta
 
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.prune import BorgPruneThread
+from vorta.config import DB_PATH
 from vorta.i18n import translate
 
 from .models import BackupProfileModel, EventLogModel
@@ -15,10 +17,32 @@ from .notifications import VortaNotifications
 logger = logging.getLogger(__name__)
 
 
+def trigger_equal(trig1, trig2):
+    if not isinstance(trig1, type(trig2)):
+        return False
+
+    if hasattr(trig1, 'run_date'):
+        # DateTrigger
+        return trig1.run_date == trig2.run_date
+    elif hasattr(trig1, 'interval_length'):
+        # IntervalTrigger
+        return trig1.interval_length == trig2.interval_length
+    elif hasattr(trig1, 'fields'):
+        # CronTrigger
+        return trig1.fields == trig2.fields
+    else:
+        # unhandled trigger type
+        raise NotImplementedError
+
+
 class VortaScheduler(QtScheduler):
     def __init__(self, parent):
         super().__init__()
         self.app = parent
+
+        # persist jobs to database to continue schedule of relative interval jobs
+        self.configure(jobstores={'default': SQLAlchemyJobStore(url=f'sqlite:///{DB_PATH}')})
+
         self.start()
         self.reload()
 
@@ -50,22 +74,27 @@ class VortaScheduler(QtScheduler):
             elif profile.schedule_mode == 'fixed':
                 trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
                                            minute=profile.schedule_fixed_minute)
-            if self.get_job(job_id) is not None and trigger is not None:
-                self.reschedule_job(job_id, trigger=trigger)
-                notifier = VortaNotifications.pick()
-                notifier.deliver(self.tr('Vorta Scheduler'), self.tr('Background scheduler was changed.'))
-                logger.debug('Job for profile %s was rescheduled.', profile.name)
+
+            job = self.get_job(job_id)
+            if job is not None and trigger is not None:
+                if not trigger_equal(job.trigger, trigger):
+                    self.reschedule_job(job_id, trigger=trigger)
+                    notifier = VortaNotifications.pick()
+                    notifier.deliver(self.tr('Vorta Scheduler'), self.tr('Background scheduler was changed.'))
+                    logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
                 self.add_job(
                     func=self.create_backup,
                     args=[profile.id],
                     trigger=trigger,
                     id=job_id,
-                    misfire_grace_time=180
+                    misfire_grace_time=180,
+                    coalesce=True,
+                    replace_existing=True,
                 )
                 logger.debug('New job for profile %s was added.', profile.name)
-            elif self.get_job(job_id) is not None and trigger is None:
-                self.remove_job(job_id)
+            elif job is not None and trigger is None:
+                job.remove()
                 logger.debug('Job for profile %s was removed.', profile.name)
 
     @property
