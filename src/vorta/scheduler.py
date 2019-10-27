@@ -1,9 +1,10 @@
 import logging
-from datetime import date, timedelta
+import datetime
 
 from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import cron, interval
+from apscheduler.triggers import cron, interval, date
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from apscheduler.events import EVENT_JOB_EXECUTED
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.list_repo import BorgListRepoThread
@@ -36,6 +37,8 @@ def trigger_equal(trig1, trig2):
 
 
 class VortaScheduler(QtScheduler):
+    failed_profiles = set()
+
     def __init__(self, parent):
         super().__init__()
         self.app = parent
@@ -43,8 +46,59 @@ class VortaScheduler(QtScheduler):
         # persist jobs to database to continue schedule of relative interval jobs
         self.configure(jobstores={'default': SQLAlchemyJobStore(url=f'sqlite:///{DB_PATH}')})
 
+        # used for rescheduling of failed jobs
+        self.add_listener(self.backup_done, EVENT_JOB_EXECUTED)
+
         self.start()
         self.reload()
+
+    def backup_done(self, event):
+        job_id = event.job_id
+
+        # remove prefix of retry job if it was one
+        regular_job_id = job_id.split('retry_')[-1]
+        profile_id = int(regular_job_id)
+
+        # schedule retry if job has failed
+        if profile_id in self.failed_profiles:
+            self.retry_job(regular_job_id, minutes=5)
+            logger.debug(f"Job {job_id} failed, profile {profile_id} will be retried shortly")
+        else:
+            logger.debug(f"Job {job_id} was successful")
+
+    def is_regular_job(self, job_id):
+        return not job_id.startswith('retry_')
+
+    def get_retry_jobs(self):
+        return [job for job in super().get_jobs() if not self.is_regular_job(job.id)]
+
+    def get_jobs(self):
+        # filter out retry jobs so other parts of the code don't hiccup
+        return [job for job in super().get_jobs() if self.is_regular_job(job.id)]
+
+    def retry_job(self, job_id, *args, **kwargs):
+        job = self.get_job(f'{job_id}')
+        if job is None:
+            logger.warn(f"Cannot find job {job_id}, cannot retry")
+            return
+
+        run_date = datetime.datetime.now() + datetime.timedelta(*args, **kwargs)
+        trig = date.DateTrigger(run_date)
+
+        # apscheduler times are aware, but it is easier to compare naive timestamps
+        if job.next_run_time.replace(tzinfo=None) < run_date:
+            logger.debug("Next job trigger is sooner than planned retry, give up retrying")
+            return
+
+        self.add_job(
+            job.func,
+            args=[int(job_id)],
+            trigger=trig,
+            id=f"retry_{job_id}",
+            misfire_grace_time=180,
+            coalesce=True,
+            replace_existing=True,
+        )
 
     @classmethod
     def tr(cls, *args, **kwargs):
@@ -145,7 +199,9 @@ class VortaScheduler(QtScheduler):
                                  cls.tr('Backup successful for %s.') % profile.name,
                                  level='info')
                 logger.info('Backup creation successful.')
+                cls.failed_profiles = cls.failed_profiles - set([profile_id])
                 cls.post_backup_tasks(profile_id)
+                return
             else:
                 notifier.deliver(cls.tr('Vorta Backup'), cls.tr('Error during backup creation.'), level='error')
                 logger.error('Error during backup creation.')
@@ -153,6 +209,9 @@ class VortaScheduler(QtScheduler):
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
             notifier.deliver(cls.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+
+        # backup failed, so mark for retrying
+        cls.failed_profiles.add(profile_id)
 
     @classmethod
     def post_backup_tasks(cls, profile_id):
@@ -175,7 +234,7 @@ class VortaScheduler(QtScheduler):
                     list_thread.start()
                     list_thread.wait()
 
-        validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
+        validation_cutoff = datetime.date.today() - datetime.timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
             (
                 EventLogModel.subcommand == 'check'
