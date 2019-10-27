@@ -7,6 +7,7 @@ dirs = appdirs.AppDirs(APP_NAME, APP_AUTHOR)
 SETTINGS_DIR = dirs.user_data_dir
 LOG_DIR = dirs.user_log_dir
 STATE_DIR = dirs.user_state_dir
+DB_PATH = os.path.join(SETTINGS_DIR, 'settings.db')
 
 if not os.path.exists(SETTINGS_DIR):
     os.makedirs(SETTINGS_DIR)
