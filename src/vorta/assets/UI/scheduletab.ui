@@ -31,15 +31,15 @@ font-weight: bold;
 }</string>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <property name="font">
@@ -82,6 +82,30 @@ font-weight: bold;
             <string>Backup manually</string>
            </property>
           </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QRadioButton" name="scheduleEverydayRadio">
+           <property name="text">
+            <string>Backup everyday</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -364,8 +388,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -396,8 +420,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -461,8 +485,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="icon">

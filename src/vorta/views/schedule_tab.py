@@ -18,6 +18,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
+            'everyday': self.scheduleEverydayRadio,
             'interval': self.scheduleIntervalRadio,
             'fixed': self.scheduleFixedRadio
         }

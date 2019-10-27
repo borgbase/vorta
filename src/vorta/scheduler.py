@@ -2,7 +2,7 @@ import logging
 from datetime import date, timedelta
 
 from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import cron
+from apscheduler.triggers import cron, interval
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.create import BorgCreateThread
@@ -71,6 +71,10 @@ class VortaScheduler(QtScheduler):
                 else:
                     trigger = cron.CronTrigger(hour=f'*/{profile.schedule_interval_hours}',
                                                minute=profile.schedule_interval_minutes)
+
+            elif profile.schedule_mode == 'everyday':
+                trigger = interval.IntervalTrigger(days=1)
+
             elif profile.schedule_mode == 'fixed':
                 trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
                                            minute=profile.schedule_fixed_minute)
