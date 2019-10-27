@@ -22,8 +22,9 @@ class VortaScheduler(QtScheduler):
         self.start()
         self.reload()
 
-    def tr(self, *args, **kwargs):
-        scope = self.__class__.__name__
+    @classmethod
+    def tr(cls, *args, **kwargs):
+        scope = cls.__class__.__name__
         return translate(scope, *args, **kwargs)
 
     def reload(self):
@@ -90,13 +91,14 @@ class VortaScheduler(QtScheduler):
         else:
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
-    def create_backup(self, profile_id):
+    @classmethod
+    def create_backup(cls, profile_id):
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get(id=profile_id)
 
         logger.info('Starting background backup for %s', profile.name)
-        notifier.deliver(self.tr('Vorta Backup'),
-                         self.tr('Starting background backup for %s.') % profile.name,
+        notifier.deliver(cls.tr('Vorta Backup'),
+                         cls.tr('Starting background backup for %s.') % profile.name,
                          level='info')
 
         msg = BorgCreateThread.prepare(profile)
@@ -106,20 +108,21 @@ class VortaScheduler(QtScheduler):
             thread.start()
             thread.wait()
             if thread.process.returncode in [0, 1]:
-                notifier.deliver(self.tr('Vorta Backup'),
-                                 self.tr('Backup successful for %s.') % profile.name,
+                notifier.deliver(cls.tr('Vorta Backup'),
+                                 cls.tr('Backup successful for %s.') % profile.name,
                                  level='info')
                 logger.info('Backup creation successful.')
-                self.post_backup_tasks(profile_id)
+                cls.post_backup_tasks(profile_id)
             else:
-                notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
+                notifier.deliver(cls.tr('Vorta Backup'), cls.tr('Error during backup creation.'), level='error')
                 logger.error('Error during backup creation.')
         else:
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
-            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+            notifier.deliver(cls.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
 
-    def post_backup_tasks(self, profile_id):
+    @classmethod
+    def post_backup_tasks(cls, profile_id):
         """
         Pruning and checking after successful backup.
         """
