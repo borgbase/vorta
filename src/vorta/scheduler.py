@@ -76,6 +76,10 @@ class VortaScheduler(QtScheduler):
         # filter out retry jobs so other parts of the code don't hiccup
         return [job for job in super().get_jobs() if self.is_regular_job(job.id)]
 
+    def get_retry_job(self, job_id):
+        retry_job_id = f'retry_{job_id}'
+        return self.get_job(retry_job_id)
+
     def retry_job(self, job_id, *args, **kwargs):
         job = self.get_job(f'{job_id}')
         if job is None:
@@ -172,7 +176,7 @@ class VortaScheduler(QtScheduler):
 
     def next_job_for_profile(self, profile_id):
         self.wakeup()
-        job = self.get_job(str(profile_id))
+        job = self.get_retry_job(str(profile_id)) or self.get_job(str(profile_id))
         if job is None:
             return self.tr('None scheduled')
         else:
