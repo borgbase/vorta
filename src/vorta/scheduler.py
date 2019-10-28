@@ -95,7 +95,7 @@ class VortaScheduler(QtScheduler):
             args=[int(job_id)],
             trigger=trig,
             id=f"retry_{job_id}",
-            misfire_grace_time=180,
+            misfire_grace_time=None,
             coalesce=True,
             replace_existing=True,
         )
@@ -146,7 +146,7 @@ class VortaScheduler(QtScheduler):
                     args=[profile.id],
                     trigger=trigger,
                     id=job_id,
-                    misfire_grace_time=180,
+                    misfire_grace_time=None,
                     coalesce=True,
                     replace_existing=True,
                 )
