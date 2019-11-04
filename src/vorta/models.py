@@ -222,7 +222,7 @@ def get_misc_settings():
         {
             'key': 'foreground', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Run Vorta in the foreground when started manually')
+                                'Open main window on startup')
         },
     ]
     if sys.platform == 'darwin':
