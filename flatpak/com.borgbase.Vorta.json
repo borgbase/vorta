@@ -1,0 +1,62 @@
+{
+    "app-id": "com.borgbase.Vorta",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "5.13",
+    "sdk": "org.kde.Sdk",
+    "command": "vorta",
+    "branch": "devel",
+    "finish-args": [
+        "--socket=fallback-x11",
+        "--share=ipc",
+        "--socket=wayland",
+        "--device=dri",
+        "--share=network",
+        "--filesystem=host",
+        "--talk-name=org.kde.StatusNotifierWatcher",
+        "--own-name=org.kde.StatusNotifierItem-2-1",
+        "--own-name=org.kde.StatusNotifierItem-4-1",
+        "--talk-name=org.freedesktop.DBus.*",
+        "--talk-name=org.freedesktop.Flatpak.*",
+        "--talk-name=org.freedesktop.secrets",
+        "--socket=ssh-auth",
+        "--own-name=org.KDE.*",
+        "--talk-name=org.freedesktop.Notifications"
+    ],
+    "build-options": {
+        "env": {
+            "BASH_COMPLETIONSDIR": "/app/share/bash-completion/completions",
+            "MOUNT_FUSE_PATH": "../tmp/",
+            "V": "1"
+        }
+    },
+    "modules": [
+        "dependencies/pyqt5.json",
+        "dependencies/libfuse.json",
+        "dependencies/python3-setuptools_scm.json",
+        "dependencies/python3-setuptools_git.json",
+        "dependencies/python3-borgbackup.json",
+        "dependencies/python3-llfuse.json",
+        "dependencies/python3-appdirs.json",
+        "dependencies/python3-apscheduler.json",
+        "dependencies/python3-paramiko.json",
+        "dependencies/python3-peewee.json",
+        "dependencies/python3-psutil.json",
+        "dependencies/python3-python-dateutil.json",
+        "dependencies/python3-qdarkstyle.json",
+        "dependencies/python3-secretstorage.json",
+        "dependencies/python3-pytest-runner.json",
+        {
+            "name": "vorta",
+            "buildsystem": "simple",
+            "build-commands": [
+                "make flatpak-install"
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "../"
+                }
+            ]
+        }
+    ]
+}
