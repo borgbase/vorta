@@ -22,8 +22,6 @@ def main():
         print(f"Vorta {__version__}")
         sys.exit()
 
-    # We assume that a frozen binary is a fat single-file binary made with
-    # PyInstaller. These are not compatible with forking into background here:
     if want_background:
         if os.fork():
             sys.exit()
