@@ -42,7 +42,7 @@
     </release>
   </releases>
   <url type="bugtracker">https://github.com/borgbase/vorta/issues</url>
-  <url type="help">https://github.com/borgbase/vorta/issues</url>
-  <url type="homepage">https://github.com/borgbase/vorta</url>
+  <url type="help">https://vorta.borgbase.com/usage/</url>
+  <url type="homepage">https://vorta.borgbase.com/</url>
   <url type="translate">https://www.transifex.com/borgbase/vorta/</url>
 </component>
