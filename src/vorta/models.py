@@ -220,9 +220,9 @@ def get_misc_settings():
                                 'Automatically start Vorta at login')
         },
         {
-            'key': 'foreground', 'value': False, 'type': 'checkbox',
+            'key': 'foreground', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Run Vorta in the foreground when started manually')
+                                'Open main window on startup')
         },
     ]
     if sys.platform == 'darwin':
@@ -261,8 +261,6 @@ def init_db(con):
         if created and setting['key'] == "use_light_icon":
             # Check if macOS with enabled dark mode or Linux with GNOME DE
             s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
-        if created and setting['key'] == "foreground":
-            s.value = not bool(is_system_tray_available())
         if created and setting['key'] == "enable_notifications_success":
             s.value = not bool(is_system_tray_available())
         s.label = setting['label']

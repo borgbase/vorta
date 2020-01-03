@@ -15,21 +15,18 @@ def main():
     args = parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
 
-    frozen_binary = getattr(sys, 'frozen', False)
     want_version = getattr(args, 'version', False)
-    want_foreground = getattr(args, 'foreground', False) and not getattr(args, 'daemonize', False)
+    want_background = getattr(args, 'daemonize', False)
 
     if want_version:
         print(f"Vorta {__version__}")
         sys.exit()
 
-    # We assume that a frozen binary is a fat single-file binary made with
-    # PyInstaller. These are not compatible with forking into background here:
-    if not (want_foreground or frozen_binary):
+    if want_background:
         if os.fork():
             sys.exit()
 
-    init_logger(foreground=want_foreground)
+    init_logger(background=want_background)
 
     # Init database
     sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))

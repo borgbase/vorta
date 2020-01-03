@@ -14,7 +14,7 @@ from .config import LOG_DIR
 logger = logging.getLogger()
 
 
-def init_logger(foreground=False):
+def init_logger(background=False):
     logger.setLevel(logging.DEBUG)
     logging.getLogger('peewee').setLevel(logging.INFO)
     logging.getLogger('apscheduler').setLevel(logging.INFO)
@@ -32,7 +32,9 @@ def init_logger(foreground=False):
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
-    if foreground:  # log to console, when running in foreground
+    if background:
+        pass
+    else:  # log to console, when running in foreground
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         ch.setFormatter(formatter)
