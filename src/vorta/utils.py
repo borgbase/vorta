@@ -178,13 +178,9 @@ def parse_args():
     parser.add_argument('--version', '-V',
                         action='store_true',
                         help="Show version and exit.")
-    parser.add_argument('--foreground', '-f',
+    parser.add_argument('--daemonize', '-d',
                         action='store_true',
-                        help="Don't fork into background and open main window on startup.")
-    if sys.platform.startswith("linux"):
-        parser.add_argument('--daemonize', '-d',
-                            action='store_true',
-                            help="Daemonize and don't open window on startup.")
+                        help="Fork to background and don't open window on startup.")
 
     return parser.parse_known_args()[0]
 
