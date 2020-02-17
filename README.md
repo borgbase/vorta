@@ -25,7 +25,7 @@ See our website for [download links and and install instructions](https://vorta.
 - If you have questions or simply want to talk about Vorta, find us on [Matrix](https://matrix.to/#/#vorta:matrix.org). For Borg-specific topics, join the `#borgbackup` IRC channel on `chat.freenode.net` instead.
 
 ## License and Credits
-- Thank you to all the people who already contributed to Vorta: [code](https://github.com/borgbase/vorta/graphs/contributors), [translations](https://github.com/borgbase/vorta/issues/159)
-- Licensed under GPLv3. See [LICENSE.txt](LICENSE.txt) for details.
+- See [CONTRIBUTORS.txt](CONTRIBUTORS.txt) to see who programmed and translated Vorta.
+- Licensed under [GPLv3](LICENSE.txt). © 2018-2020 Manuel Riel and Vorta contributors
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
 - Icons by [FontAwesome](https://fontawesome.com)
