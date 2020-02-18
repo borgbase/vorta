@@ -27,3 +27,5 @@ The following authors contributed translations:
 - German: [Thomas Waldmann](https://github.com/ThomasWaldmann)
 - Italian: [Luigi Operoso](https://github.com/brokenpip3)
 - French: [David Brassard](https://github.com/dbrassard)
+- Czech: [Pavel Borecki](https://www.transifex.com/user/profile/pavelb/)
+- Finnish: [Jiri Grönroos](https://en.liberapay.com/artnay/)
