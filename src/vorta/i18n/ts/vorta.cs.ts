@@ -1,30 +1,30 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.0">
 <context>
     <name>AddProfileWindow</name>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Rename Profile</source>
-        <translation>Renommer le profil</translation>
+        <translation>Přejmenovat profil</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="43"/>
         <source>Please enter a profile name.</source>
-        <translation>Veuillez entrer un nom de profil.</translation>
+        <translation>Zadejte název pro profil.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="49"/>
         <source>A profile with this name already exists.</source>
-        <translation>Un profil avec ce nom existe déjà.</translation>
+        <translation>Takto nazvaný profil už v systému existuje.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="19"/>
         <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <translation>Uložit</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="20"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Storno</translation>
     </message>
 </context>
 <context>
@@ -32,57 +32,57 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="48"/>
         <source>Repository Path:</source>
-        <translation>Chemin d&apos;accès du dépôt :</translation>
+        <translation>Popis umístění repozitáře:</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="51"/>
         <source>Choose Location of Borg Repository</source>
-        <translation>Choisissez l&apos;emplacement du dépôt Borg</translation>
+        <translation>Zvolte umístění Borg repozitáře</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="59"/>
         <source>Repository URL:</source>
-        <translation>URL du dépôt :</translation>
+        <translation>URL adresa repozitáře:</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="85"/>
         <source>Unable to add your repository.</source>
-        <translation>Impossible d&apos;ajouter le dépôt.</translation>
+        <translation>Vámi zadaný repozitář se nedaří přidat.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="88"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
-        <translation>Clé de dépôt BLAKE2 (Recommandé, clé stockée dans le dépôt)</translation>
+        <translation>Repokey-Blake2 (Doporučeno, klíč uložen v repozitáři)</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="90"/>
         <source>Repokey</source>
-        <translation>Clé de dépôt</translation>
+        <translation>Repokey</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="92"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
-        <translation>Fichier clé BLAKE2 (Clé stocké dans le répertoire personnel)</translation>
+        <translation>Keyfile-Blake2 (Klíč uložen v domovské složce)</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="94"/>
         <source>Keyfile</source>
-        <translation>Fichier clé</translation>
+        <translation>Keyfile</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="96"/>
         <source>None (not recommended)</source>
-        <translation>Aucun (déconseillé)</translation>
+        <translation>Žádné (nedoporučováno)</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="107"/>
         <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Saisissez un chemin d&apos;accès URL valide ou sélectionnez un répertoire local</translation>
+        <translation>Zadejte platnou URL adresu repozitáře nebo vyberte popis umístění v tomto stroji</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="113"/>
         <source>Please use a longer password.</source>
-        <translation>Utilisez un mot de passe plus long</translation>
+        <translation>Použijte delší heslo (odolnost).</translation>
     </message>
 </context>
 <context>
@@ -90,12 +90,12 @@
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
-        <translation>Initialiser un nouveau dépôt de sauvegarde</translation>
+        <translation>Inicializovat nový repozitář pro zálohy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="67"/>
         <source>Repository URL:</source>
-        <translation>URL du dépôt :</translation>
+        <translation>URL adresa repozitáře:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="82"/>
@@ -105,57 +105,57 @@
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="89"/>
         <source>Choose a local path as repository.</source>
-        <translation>Choisir un emplacement local comme dépôt.</translation>
+        <translation>Vybrat jako repozitář umístění nacházející se na tomto stroji.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="103"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation>…</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="177"/>
         <source>Encryption:</source>
-        <translation>Chiffrement :</translation>
+        <translation>Šifrování:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="116"/>
         <source>Password:</source>
-        <translation>Mot de passe :</translation>
+        <translation>Heslo:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="155"/>
         <source>SSH Key:</source>
-        <translation>Clé SSH :</translation>
+        <translation>SSH klíč:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="169"/>
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Choisir automatiquement une clef SSH (par défaut)</translation>
+        <translation>Zvolit SSH klíč automaticky (výchozí)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="223"/>
         <source>Add</source>
-        <translation>Ajouter</translation>
+        <translation>Přidat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="230"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="33"/>
         <source>General</source>
-        <translation>Général</translation>
+        <translation>Obecné</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="134"/>
         <source>Advanced</source>
-        <translation>Avancé</translation>
+        <translation>Pokročilé</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="194"/>
         <source>Extra Borg Arguments:</source>
-        <translation>Arguments Supplémentaires Pour Borg :</translation>
+        <translation>Další argumenty pro borg:</translation>
     </message>
 </context>
 <context>
@@ -163,102 +163,102 @@
     <message>
         <location filename="../../views/archive_tab.py" line="94"/>
         <source>Archives for %s</source>
-        <translation>Archives de %s</translation>
+        <translation>Archivy pro %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="125"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archivy</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="134"/>
         <source>Preview: %s</source>
-        <translation>Aperçu : %s</translation>
+        <translation>Náhled: %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="138"/>
         <source>Error in archive name template.</source>
-        <translation>Erreur du gabarit de nom d&apos;archive. </translation>
+        <translation>Chyba v šabloně názvu archivu.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="180"/>
         <source>Pruning finished.</source>
-        <translation>Élagage terminé.</translation>
+        <translation>Vyčistění dokončeno.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="197"/>
         <source>Refreshed archives.</source>
-        <translation>Archives mises à jour. </translation>
+        <translation>Znovunačtené archivy.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="240"/>
         <source>Choose Mount Point</source>
-        <translation>Choisir le point de montage</translation>
+        <translation>Zvolte přípojný bod</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="246"/>
         <source>Mounted successfully.</source>
-        <translation>Montage réussi.</translation>
+        <translation>Úspěšně připojeno (mount).</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="275"/>
         <source>Mount point not active.</source>
-        <translation>Point de montage inactif.</translation>
+        <translation>Přípojný bod není aktivní.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="281"/>
         <source>Un-mounted successfully.</source>
-        <translation>Démonté avec succès. </translation>
+        <translation>Odpojení (unmount) úspěšné.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="319"/>
         <source>Select an archive to restore first.</source>
-        <translation>Sélectionner une archive à restaurer en premier.</translation>
+        <translation>Nejprve je třeba vybrat archiv, ze kterého obnovit.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="346"/>
         <source>Choose Extraction Point</source>
-        <translation>Choisissez le point d&apos;extraction</translation>
+        <translation>Zvolte bod, do kterého rozbalit</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="409"/>
         <source>Archive deleted.</source>
-        <translation>Archive supprimée.</translation>
+        <translation>Archiv smazán.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="394"/>
         <source>Confirm deletion</source>
-        <translation>Confirmer la suppression</translation>
+        <translation>Potvrďte smazání</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="405"/>
         <source>No archive selected</source>
-        <translation>Aucune archive sélectionnée</translation>
+        <translation>Není vybrán žádný archiv</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="394"/>
         <source>Are you sure you want to delete the archive?</source>
-        <translation>Êtes-vous certain de vouloir supprimer l&apos;archive?</translation>
+        <translation>Opravdu chcete tento archiv smazat?</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="382"/>
         <source>Yes</source>
-        <translation>Oui</translation>
+        <translation>Ano</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="383"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="211"/>
         <source>Unmount</source>
-        <translation>Démonter</translation>
+        <translation>Odpojit (unmount)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="211"/>
         <source>Mount</source>
-        <translation>Monter</translation>
+        <translation>Připojit (mount)</translation>
     </message>
 </context>
 <context>
@@ -266,7 +266,7 @@
     <message>
         <location filename="../../borg/check.py" line="11"/>
         <source>Starting consistency check...</source>
-        <translation>Début du contrôle d&apos;intégrité…</translation>
+        <translation>Spouštění kontroly neporušenosti…</translation>
     </message>
 </context>
 <context>
@@ -274,12 +274,12 @@
     <message>
         <location filename="../../borg/create.py" line="35"/>
         <source>Backup finished.</source>
-        <translation>Sauvegarde terminée.</translation>
+        <translation>Záloha dokončena.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="42"/>
         <source>Backup started.</source>
-        <translation>Sauvegarde débutée. </translation>
+        <translation>Záloha spuštěna.</translation>
     </message>
 </context>
 <context>
@@ -287,12 +287,12 @@
     <message>
         <location filename="../../borg/delete.py" line="11"/>
         <source>Deleting archive...</source>
-        <translation>Suppression de l&apos;archive…</translation>
+        <translation>Mazání archivu…</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="16"/>
         <source>Archive deleted.</source>
-        <translation>Archive supprimée.</translation>
+        <translation>Archiv smazán.</translation>
     </message>
 </context>
 <context>
@@ -300,12 +300,12 @@
     <message>
         <location filename="../../borg/extract.py" line="11"/>
         <source>Downloading files from archive...</source>
-        <translation>Téléchargement des fichiers depuis l&apos;archive…</translation>
+        <translation>Stahování souborů z archivu…</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="16"/>
         <source>Restored files from archive.</source>
-        <translation>Fichiers restaurés depuis l&apos;archive.</translation>
+        <translation>Soubory obnoveny z archivu.</translation>
     </message>
 </context>
 <context>
@@ -313,7 +313,7 @@
     <message>
         <location filename="../../borg/info.py" line="13"/>
         <source>Validating existing repo...</source>
-        <translation>Confirmer un dépôt existant...</translation>
+        <translation>Ověřování správnosti stávajícího repozitáře…</translation>
     </message>
 </context>
 <context>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../../borg/init.py" line="10"/>
         <source>Setting up new repo...</source>
-        <translation>Configurer un nouveau dépôt...</translation>
+        <translation>Nastavování nového repozitáře…</translation>
     </message>
 </context>
 <context>
@@ -329,12 +329,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="11"/>
         <source>Getting archive content...</source>
-        <translation>Obtention du contenu de l&apos;archive…</translation>
+        <translation>Získávání obsahu archivu…</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="15"/>
         <source>Done getting archive content.</source>
-        <translation>Contenu de l&apos;archive obtenu. </translation>
+        <translation>Obsah archivu získán.</translation>
     </message>
 </context>
 <context>
@@ -342,12 +342,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="13"/>
         <source>Refreshing archives...</source>
-        <translation>Rafraîchissement des archives…</translation>
+        <translation>Znovunačítání archivů…</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="18"/>
         <source>Refreshing archives done.</source>
-        <translation>Rafraichissement des archives terminé.</translation>
+        <translation>Archivy znovunačteny.</translation>
     </message>
 </context>
 <context>
@@ -355,7 +355,7 @@
     <message>
         <location filename="../../borg/mount.py" line="7"/>
         <source>Mounting archive into folder...</source>
-        <translation>Montage de l&apos;archive dans un répertoire...</translation>
+        <translation>Připojování (mount) archivu do složky…</translation>
     </message>
 </context>
 <context>
@@ -363,12 +363,12 @@
     <message>
         <location filename="../../borg/prune.py" line="12"/>
         <source>Pruning old archives...</source>
-        <translation>Élagage des vieilles archives...</translation>
+        <translation>Čištění od starých archivů…</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="17"/>
         <source>Pruning done.</source>
-        <translation>Élagage terminé. </translation>
+        <translation>Čištění dokončeno.</translation>
     </message>
 </context>
 <context>
@@ -376,7 +376,7 @@
     <message>
         <location filename="../../borg/borg_thread.py" line="227"/>
         <source>Task started</source>
-        <translation>Tâche débutée</translation>
+        <translation>Úloha spuštěna</translation>
     </message>
 </context>
 <context>
@@ -384,7 +384,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation>Démontage de l&apos;archive</translation>
+        <translation>Odpojování (unmount) archivu…</translation>
     </message>
 </context>
 <context>
@@ -392,87 +392,87 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Dialogue</translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="25"/>
         <source>Archive:</source>
-        <translation>Archive :</translation>
+        <translation>Archiv:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
+        <translation>nyx2.local-2018-11-16T09:49:58 z 16. listopadu 2018</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
-        <translation>Note : Si vous sélectionner un dossier sans sélectionner les sous-dossiers, ceux-ci seront quand même restaurés. </translation>
+        <translation>Pozn.: Pokud vyberete složku na vrcholu stromu, pak i když zrušíte výběr jejích podsložek, budou tyto i tak obnoveny.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="88"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="95"/>
         <source>Extract</source>
-        <translation>Extraire</translation>
+        <translation>Rozbalit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="35"/>
         <source>Add Backup Profile</source>
-        <translation>Ajouter un profil de sauvegarde</translation>
+        <translation>Přidat profil zálohování</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Les profils de sauvegarde permettent des sauvegardes granulaires depuis différentes sources vers des destinations différentes. Vous pouvez, par exemple, sauvegarder des documents essentiels vers un dépôt distant via Wifi et réaliser une sauvegarde complète sur un appareil de stockage local. &lt;/p&gt;&lt;p&gt;Les dépôts et clés SSH sont partagées entre les profils. Les dossiers sources, dépôts de destination actifs, réseaux autorisé, paramètres d&apos;élagage et de validation ainsi que les horaires de sauvegarde sont spécifiques au profil. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Profily zálohování umožňují jemně členit zálohy z různých zdrojů na různá cílová umsítění. Například je možné zálohovat nejdůležitější dokumenty do vzdáleného repozitáře přes Wifi, zatímco úplné zálohy na zařízení v rámci stroje.&lt;/p&gt;&lt;p&gt;Repozitáře a SSH klíče jsou sdílené napříč profily. Zdrojové složky, aktivní cílové repozitáře, sítě, ze kterých je umožněno, čištění, ověřování a plánování jsou pro každý z profilů zvlášť.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="84"/>
         <source>Profile Name</source>
-        <translation>Nom du profil</translation>
+        <translation>Název profilu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="43"/>
         <source>Generate SSH Key</source>
-        <translation>Générer une clé SSH</translation>
+        <translation>Vytvořit SSH klíč</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="55"/>
         <source>Key Format:</source>
-        <translation>Format de clé :</translation>
+        <translation>Formát klíče:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="72"/>
         <source>Key Length:</source>
-        <translation>Longueur de la clé :</translation>
+        <translation>Délka klíče:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="94"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 ou 4096 pour RSA, 384 ou 521 pour ECDSA. Pré-déterminé pour ED25519.&lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;plus d&apos;information&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 nebo 4096 pro RSA, 384 nebo 521 pro ECDSA. Pevné pro Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Více viz&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="107"/>
         <source>Output File:</source>
-        <translation>Fichier se sortie :</translation>
+        <translation>Výstupní soubor:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="119"/>
         <source>Don&apos;t change this if you want SSH to automatically find the key.</source>
-        <translation>Ne changez pas ceci si vous voulez que SSH trouve automatiquement la clef.</translation>
+        <translation>Pokud chcete, aby SSH klíč našlo automaticky, pak toto neměňte.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="128"/>
         <source>Close</source>
-        <translation>Fermer</translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
-        <translation>Générer et copier dans le presse-papier</translation>
+        <translation>Vytvořit a zkopírovat do schránky</translation>
     </message>
 </context>
 <context>
@@ -480,7 +480,7 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="124"/>
         <source>Connect to existing Repository</source>
-        <translation>Connexion à un dépôt existant</translation>
+        <translation>Připojit se k existujícímu repozitáři</translation>
     </message>
 </context>
 <context>
@@ -488,157 +488,157 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="14"/>
         <source>Form</source>
-        <translation>Formulaire</translation>
+        <translation>Formulář</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="53"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archivy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="81"/>
         <source>Date</source>
-        <translation>Date</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="86"/>
         <source>Size</source>
-        <translation>Taille</translation>
+        <translation>Velikost</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="91"/>
         <source>Duration</source>
-        <translation>Durée</translation>
+        <translation>Délka trvání</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="96"/>
         <source>Mount Point</source>
-        <translation>Point de montage</translation>
+        <translation>Přípojný bod</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="101"/>
         <source>Name</source>
-        <translation>Nom</translation>
+        <translation>Název</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="114"/>
         <source>Extract</source>
-        <translation>Extraire</translation>
+        <translation>Rozbalit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="131"/>
         <source>Mount</source>
-        <translation>Monter</translation>
+        <translation>Připojit (mount)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="142"/>
         <source>Check</source>
-        <translation>Vérifier</translation>
+        <translation>Zkontrolovat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="153"/>
         <source>Delete</source>
-        <translation>Supprimer</translation>
+        <translation>Smazat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="177"/>
         <source>Prune</source>
-        <translation>Élaguer</translation>
+        <translation>Vyčistit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="197"/>
         <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <translation>Načíst znovu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="218"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pour monter les archives, installez d&apos;abord &amp;quot;FUSE for macOS&amp;quot; disponible &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;ici&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pro připojování archivů, nejprve nainstalujte „FUSE pro macOS“ &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;odsud&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="241"/>
         <source>Prune Options and Archive Naming</source>
-        <translation>Configuration de l&apos;élagage et des noms d&apos;archives</translation>
+        <translation>Předvolby čištění a pro názvy archivů</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="247"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L&apos;élagage supprime les vieilles archives. Vous pouvez choisir le nombre d&apos;archives horaires, quotidiennes, etc. à préserver. On converse habituellement un plus grand nombre d&apos;archives récentes et moins d&apos;archives anciennes. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Pour en savoir plus&lt;/span&gt;&lt;/a&gt;. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Čistění odebere staré archivy. Je možné zvolit počet archivů za jednotlivé hodiny, dny, atd, které zachovat. Obvykle se ponechává více novějších a méně starých archivů. Přečtěte si &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="268"/>
         <source>Keep</source>
-        <translation>Conserver</translation>
+        <translation>Ponechat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="292"/>
         <source>Use -1 for unlimited.</source>
-        <translation>Utilisez « -1 » pour illimité.</translation>
+        <translation>Pro neomezeně použijte -1 (mínus jedna)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="285"/>
         <source> hourly, </source>
-        <translation>à l&apos;heure,</translation>
+        <translation>každou hodinu.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="302"/>
         <source> daily, </source>
-        <translation>au jour,</translation>
+        <translation>každý den.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="316"/>
         <source> weekly, </source>
-        <translation>à la semaine,</translation>
+        <translation>každý týden.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="330"/>
         <source> monthly and</source>
-        <translation>au mois et</translation>
+        <translation>každý měsíc a</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="344"/>
         <source> annual archives</source>
-        <translation>archives annuelles</translation>
+        <translation>archivy z každého roku</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="371"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Toujours conserver les archives des derniers/ières :</translation>
+        <translation>Lhostejno jaké, ponechat veškeré archivy za uplynulých:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="381"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
-        <translation>24H, 1j, 52sem, 12m, 1a</translation>
+        <translation>24h, 1d, 52t, 12m, 1r</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="421"/>
         <source>Archive Name:</source>
-        <translation>Nom de l&apos;archive :</translation>
+        <translation>Název archivu:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="462"/>
         <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
-        <translation>Variables disponibles : hostname, profile_id, profile_slug, now, utc_now, user</translation>
+        <translation>Proměnné k dispozici: hostname, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="431"/>
         <source>{hostname}-{profile_slug}-</source>
-        <translation>{hostname}-{profile_slug}-</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="465"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</source>
-        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="472"/>
         <source>Prune Prefix:</source>
-        <translation>Préfixe d&apos;élagage :</translation>
+        <translation>Předpona čistění:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="55"/>
         <source>Version:</source>
-        <translation>Version :</translation>
+        <translation>Verze:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="62"/>
@@ -648,27 +648,27 @@
     <message>
         <location filename="../../assets/UI/misctab.ui" line="72"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Signaler&lt;/span&gt;&lt;/a&gt; un problème)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Nahlásit&lt;/span&gt;&lt;/a&gt; chybu)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="58"/>
         <source>Repository:</source>
-        <translation>Dépôt :</translation>
+        <translation>Repozitář:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="99"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dépôt de sauvegarde distant ou local. Pour une solution d&apos;hébergement simple et sécurisée, essayez &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Repozitář pro zálohy na tomto nebo vzdáleném stroji. Pro jednoduché a zabezpečené hostování zálohy vyzkoušejte &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="131"/>
         <source>Select Backup Destination</source>
-        <translation>Choisir la destination de la sauvegarde :</translation>
+        <translation>Vyberte umístění zálohy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="139"/>
         <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
-        <translation>Délier d&apos;un dépôt (Ceci ne supprime aucune donnée. Vous pouvez toujours ajouter un dépôt de nouveau ultérieurement.)</translation>
+        <translation>Odpojit repozitář (toto nesmaže žádná data. Vždy můžete repozitář zase přidat nazpět.)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="142"/>
@@ -678,207 +678,207 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="167"/>
         <source>SSH Key:</source>
-        <translation>Clé SSH :</translation>
+        <translation>SSH klíč:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="188"/>
         <source>Copy public SSH key to clipboard.</source>
-        <translation>Copier la clé SSH vers le presse-papier.</translation>
+        <translation>Zkopírovat veřejnou část SSH klíče do schránky.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="194"/>
         <source>Copy</source>
-        <translation>Copier</translation>
+        <translation>Zkopírovat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="232"/>
         <source>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</source>
-        <translation>Pour accéder à des dépôts distants de manière sécurisée. Utilisez la configuration par défaut pour utiliser toutes vos clés existantes. Créez une nouvelle clé sinon. </translation>
+        <translation>Pro zabezpečený přístup do vzdálených repozitářů. Pro využití všech vašich už existujících klíčů ponechte výchozí. Nebo vytvořte nový klíč.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="259"/>
         <source>Compression:</source>
-        <translation>Compression :</translation>
+        <translation>Komprese:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="301"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression utilisée pour les nouvelles données. Ce réglage peut être changé ultérieurement et n&apos;affecte pas la déduplication. Pour plus &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;d&apos;information&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprese uplatňovaná na nová data. Je možné změnit a neovlivňuje slučování duplicit. Přečtěte si &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="360"/>
         <source>Encryption:</source>
-        <translation>Chiffrement :</translation>
+        <translation>Šifrování:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="400"/>
         <source>Original Size:</source>
-        <translation>Taille d&apos;origine :</translation>
+        <translation>Původní velikost:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="414"/>
         <source>Deduplicated Size:</source>
-        <translation>Taille dé-dupliquée :</translation>
+        <translation>Velikost po sloučení duplicit:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="421"/>
         <source>Compressed Size:</source>
-        <translation>Taille compressée :</translation>
+        <translation>Velikost po komprimaci:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="56"/>
         <source>Schedule</source>
-        <translation>Programme</translation>
+        <translation>Naplánovat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="82"/>
         <source>Backup manually</source>
-        <translation>Sauvegarder manuellement</translation>
+        <translation>Zálohovat ručně</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="99"/>
         <source>Backup every </source>
-        <translation>Sauvegarder à chaque</translation>
+        <translation>Zálohovat každých</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="122"/>
         <source>hours at</source>
-        <translation>heures à</translation>
+        <translation>hodin v</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="145"/>
         <source>minutes past the hour</source>
-        <translation>minutes passées l&apos;heure</translation>
+        <translation>minut v danou hodinu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="169"/>
         <source>Backup daily at</source>
-        <translation>Sauvegarder tous les jours, à</translation>
+        <translation>Zálohovat každý den v</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="199"/>
         <source>Validate repository data every</source>
-        <translation>Valider les données du dépôt à toutes les </translation>
+        <translation>Ověřit použitelnost dat v repozitáři každých</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="225"/>
         <source>weeks</source>
-        <translation>semaines</translation>
+        <translation>týdnů</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Prune old Archives after each backup</source>
-        <translation>Élaguer les vieilles archives après chaque sauvegarde</translation>
+        <translation>Po každé záloze vyčistit od starých archivů</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="292"/>
         <source>Apply</source>
-        <translation>Appliquer</translation>
+        <translation>Použít</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="321"/>
         <source>Next Backup:</source>
-        <translation>Prochaine sauvegarde :</translation>
+        <translation>Příští záloha:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="328"/>
         <source>Off</source>
-        <translation>Éteint</translation>
+        <translation>Vypnuto</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="376"/>
         <source>Networks</source>
-        <translation>Réseaux :</translation>
+        <translation>Sítě</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="388"/>
         <source>Allowed Networks:</source>
-        <translation>Réseaux autorisés :</translation>
+        <translation>Sítě, ze kterých umožněno:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="408"/>
         <source>Log</source>
-        <translation>Historique</translation>
+        <translation>Záznam událostí</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="432"/>
         <source>Time</source>
-        <translation>Temps</translation>
+        <translation>Čas</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="437"/>
         <source>Category</source>
-        <translation>Catégorie</translation>
+        <translation>Kategorie</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="442"/>
         <source>Subcommand</source>
-        <translation>Sous-commande</translation>
+        <translation>Dílčí příkaz</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="447"/>
         <source>Repository</source>
-        <translation>Dépôt</translation>
+        <translation>Repozitář</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="452"/>
         <source>Returncode</source>
-        <translation>Code de retour</translation>
+        <translation>Návratový kód</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="473"/>
         <source>Shell Commands</source>
-        <translation>Commandes de terminal</translation>
+        <translation>Příkazy shellu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="482"/>
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).</source>
-        <translation>Exécuter une commande de terminal avant et après chaque sauvegarde. La commande de sauvegarde et post-sauvegarde seront exécutées uniquement si la commande pré-sauvegarde se termine sans erreur (code de retour 0)</translation>
+        <translation>Spouštět příkazy shellu před a po provedení každé zálohy. Záloha jako taková a příkazy, prováděné po záloze budou spuštěné pouze tehdy, pokud příkaz pro provedení před zálohou skončí bez chyb (návratový kód 0).</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="501"/>
         <source>Pre-backup command to run BEFORE backups</source>
-        <translation>Commande pré-sauvegarde à exécuter AVANT les sauvegardes</translation>
+        <translation>Příkazy které spouštět PŘED provedením zálohy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="511"/>
         <source>Post-backup command to run AFTER backups</source>
-        <translation>Commande post-sauvegarde à exécuter APRÈS les sauvegardes</translation>
+        <translation>Příkazy, které spouštět PO provedení zálohy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="523"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Variables d&apos;environnement disponibles : &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Proměnné prostředí k dispozici: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="20"/>
         <source>Source Folders and Files to Back Up:</source>
-        <translation>Dossiers sources et fichier à sauvegarder :</translation>
+        <translation>Zdrojové složky a soubory, které zálohovat:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="47"/>
         <source>Add Folder</source>
-        <translation>Ajouter un dossier</translation>
+        <translation>Přidat složku</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="54"/>
         <source>Add File</source>
-        <translation>Ajouter un fichier</translation>
+        <translation>Přidat soubor</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="61"/>
         <source>Remove</source>
-        <translation>Effacer</translation>
+        <translation>Odebrat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="77"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gabarit d&apos;exclusion (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;pour information&lt;/span&gt;&lt;/a&gt;) :&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vzory pro vynechání (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="87"/>
         <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Exclure si présent (exclure les dossiers avec ces fichiers) :</translation>
+        <translation>Pokud jsou přítomny, vynechat (vynechat složky, které obsahují tyto soubory):</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="103"/>
@@ -896,87 +896,88 @@
     <message>
         <location filename="../../views/main_window.py" line="74"/>
         <source>Backup in progress.</source>
-        <translation>Sauvegarde en cours.</translation>
+        <translation>Záloha probíhá.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="142"/>
         <source>Task cancelled</source>
-        <translation>Tâche annulée</translation>
+        <translation>Úloha zrušena</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="20"/>
         <source>MainWindow</source>
-        <translation>MainWindow</translation>
+        <translation>Hlavní okno</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="51"/>
         <source>Current Profile:</source>
-        <translation>Profil actuel :</translation>
+        <translation>Stávající profil:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="85"/>
         <source>Rename Profile</source>
-        <translation>Renommer le profil</translation>
+        <translation>Přejmenovat profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="102"/>
         <source>Delete Profile</source>
-        <translation>Supprimer le profil</translation>
+        <translation>Smazat profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="105"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation>…
+</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="147"/>
         <source>Repository</source>
-        <translation>Dépôt</translation>
+        <translation>Repozitář</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="152"/>
         <source>Sources</source>
-        <translation>Sources</translation>
+        <translation>Zdroje</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="157"/>
         <source>Schedule</source>
-        <translation>Horaire</translation>
+        <translation>Plán</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="162"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archivy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="167"/>
         <source>Misc</source>
-        <translation>Divers</translation>
+        <translation>Různé</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="218"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="281"/>
         <source>Start Backup</source>
-        <translation>Commencer la sauvegarde</translation>
+        <translation>Spustit zálohu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="295"/>
         <source>Latest</source>
-        <translation>Dernier</translation>
+        <translation>Nejnovější</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="300"/>
         <source>Reset App</source>
-        <translation>Réinitialiser l&apos;app</translation>
+        <translation>Restartovat aplikaci</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="68"/>
         <source>Add Profile</source>
-        <translation>Ajouter un profil</translation>
+        <translation>Přidat profil</translation>
     </message>
 </context>
 <context>
@@ -984,82 +985,82 @@
     <message>
         <location filename="../../views/repo_tab.py" line="25"/>
         <source>+ Initialize New Repository</source>
-        <translation>+ Initialiser un nouveau dépôt</translation>
+        <translation>+ inicializovat nový repozitář</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="26"/>
         <source>+ Add Existing Repository</source>
-        <translation>+ Ajouter un dépôt existant</translation>
+        <translation>+ Přidat existující repozitář</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="48"/>
         <source>No Compression</source>
-        <translation>Pas de compression</translation>
+        <translation>Nekomprimovat</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="86"/>
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Choisir automatiquement une clef SSH (par défaut)</translation>
+        <translation>Zvolit SSH klíč automaticky (výchozí)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="87"/>
         <source>Create New Key</source>
-        <translation>Créer une nouvelle clé</translation>
+        <translation>Vytvořit nový klíč</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="119"/>
         <source>Public Key Copied to Clipboard</source>
-        <translation>Clé publique copiée dans le presse-papier</translation>
+        <translation>Veřejná část klíče zkopírována do schránky</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="120"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>La clé SSH sélectionnée a été copiée dans le presse-papier. Utilisez la pour configurer les permissions du dépôt distant. </translation>
+        <translation>Označená veřejná část SSH klíče byla zkopírována do schránky. Použijte ji pro nastavení oprávnění v repozitáři na protějšku.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="125"/>
         <source>Couldn&apos;t find public key.</source>
-        <translation>Clé publique introuvable.</translation>
+        <translation>Veřejnou část klíče se nedaří najít.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="127"/>
         <source>Select a public key from the dropdown first.</source>
-        <translation>Sélectionnez d&apos;abord une clé dans le menu déroulant. </translation>
+        <translation>Vyberte veřejnou část klíče z rozbalovací nabídky.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="184"/>
         <source>Repository was Unlinked</source>
-        <translation>Le dépôt est délié</translation>
+        <translation>Popojení repozitáře bylo zrušeno</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="185"/>
         <source>You can always connect it again later.</source>
-        <translation>Vous pouvez toujours le reconnecter ultérieurement. </translation>
+        <translation>Vždy ho ale můžete znovu připojit nazpět.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="39"/>
         <source>LZ4 (modern, default)</source>
-        <translation>LZ4 (moderne, par défaut)</translation>
+        <translation>LZ4 (moderní, výchozí)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="40"/>
         <source>Zstandard Level 3 (modern)</source>
-        <translation>Zstandard Niveau 3 (moderne)</translation>
+        <translation>Zstandard Level 3 (moderní)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="41"/>
         <source>Zstandard Level 8 (modern)</source>
-        <translation>Zstandard Niveau 8 (moderne)</translation>
+        <translation>Zstandard Level 8 (moderní)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="46"/>
         <source>ZLIB Level 6 (auto, legacy)</source>
-        <translation>ZLIB Niveau 6 (auto, ancien)</translation>
+        <translation>ZLIB Level 6 (auto, zastaralé)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="47"/>
         <source>LZMA Level 6 (auto, legacy)</source>
-        <translation>LZMA Niveau 6 (auto, ancien)</translation>
+        <translation>LZMA Level 6 (auto, zastaralé)</translation>
     </message>
 </context>
 <context>
@@ -1067,12 +1068,12 @@
     <message>
         <location filename="../../views/ssh_dialog.py" line="34"/>
         <source>ED25519 (Recommended)</source>
-        <translation>ED25519 (Recommandé)</translation>
+        <translation>ED25519 (doporučeno)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="35"/>
         <source>RSA (Legacy)</source>
-        <translation>RSA (Classique)</translation>
+        <translation>RSA (zastaralé)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="36"/>
@@ -1082,27 +1083,27 @@
     <message>
         <location filename="../../views/ssh_dialog.py" line="45"/>
         <source>High (Recommended)</source>
-        <translation>Haut (Recommandé)</translation>
+        <translation>Vysoké (doporučeno)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="46"/>
         <source>Medium</source>
-        <translation>Moyen</translation>
+        <translation>Střední</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="59"/>
         <source>Key file already exists. Not overwriting.</source>
-        <translation>Le fichier clé existe déjà. Il ne sera pas écrasé. </translation>
+        <translation>Soubor s klíčem už existuje. Nebude přepsán.</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="71"/>
         <source>New key was copied to clipboard and written to %s.</source>
-        <translation>La nouvelle clé a été copiée dans le presse-papier et écrite sous %s.</translation>
+        <translation>Nový klíč byl zkopírován do schránky a zapsán do %s.</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="73"/>
         <source>Error during key generation.</source>
-        <translation>Erreur durant la génération de la clé.</translation>
+        <translation>Chyba při vytváření klíče.</translation>
     </message>
 </context>
 <context>
@@ -1110,12 +1111,12 @@
     <message>
         <location filename="../../views/source_tab.py" line="46"/>
         <source>Choose directory to back up</source>
-        <translation>Choisissez le répertoire à sauvegarder</translation>
+        <translation>Zvolte složku, kterou zálohovat</translation>
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="46"/>
         <source>Choose file to back up</source>
-        <translation>Choisissez le fichier à sauvegarder</translation>
+        <translation>Zvolte soubor který zálohovat</translation>
     </message>
 </context>
 <context>
@@ -1123,32 +1124,32 @@
     <message>
         <location filename="../../tray_menu.py" line="38"/>
         <source>Vorta for Borg Backup</source>
-        <translation>Vorta pour BorgBackup</translation>
+        <translation>Vorta pro Borg Backup</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="47"/>
         <source>Backup in Progress</source>
-        <translation>Sauvegarde en cours</translation>
+        <translation>Záloha probíhá</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="48"/>
         <source>Cancel Backup</source>
-        <translation>Annuler la sauvegarde</translation>
+        <translation>Přerušit zálohu</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="51"/>
         <source>Next Task: %s</source>
-        <translation>Prochaine tâche : %s</translation>
+        <translation>Příští úloha: %s</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="60"/>
         <source>Backup Now</source>
-        <translation>Sauvegarder maintenant</translation>
+        <translation>Zazálohovat nyní</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="65"/>
         <source>Quit</source>
-        <translation>Fermer</translation>
+        <translation>Ukončit</translation>
     </message>
 </context>
 <context>
@@ -1156,17 +1157,17 @@
     <message>
         <location filename="../../scheduler.py" line="55"/>
         <source>Vorta Scheduler</source>
-        <translation>Vorta Scheduler</translation>
+        <translation>Vorta plánovač</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="55"/>
         <source>Background scheduler was changed.</source>
-        <translation>La planification d&apos;arrière-plan a été changée. </translation>
+        <translation>Plánovač na pozadí byl změněn.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="89"/>
         <source>None scheduled</source>
-        <translation>Aucun prévu</translation>
+        <translation>Žádné naplánovano</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="120"/>
@@ -1176,17 +1177,17 @@
     <message>
         <location filename="../../scheduler.py" line="98"/>
         <source>Starting background backup for %s.</source>
-        <translation>Début de la sauvegarde en arrière-plan pour %s.</translation>
+        <translation>Spouštění zálohy na pozadí pro %s.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="109"/>
         <source>Backup successful for %s.</source>
-        <translation>Sauvegarde réussie pour %s.</translation>
+        <translation>Záloha %s úspěšná.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="115"/>
         <source>Error during backup creation.</source>
-        <translation>Erreur durant la création de la sauvegarde. </translation>
+        <translation>Chyba při vytváření zálohy.</translation>
     </message>
 </context>
 <context>
@@ -1194,52 +1195,52 @@
     <message>
         <location filename="../../borg/borg_thread.py" line="96"/>
         <source>Backup is already in progress.</source>
-        <translation>La sauvegarde est déjà en cours.</translation>
+        <translation>Záloha už probíhá.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_thread.py" line="100"/>
         <source>Borg binary was not found.</source>
-        <translation>Le binaire Borg est introuvable.</translation>
+        <translation>Spustitelný soubor s nástrojem Borg nenalezen.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_thread.py" line="104"/>
         <source>Add a backup repository first.</source>
-        <translation>D&apos;abord, ajoutez un dépôt de sauvegarde.</translation>
+        <translation>Nejprve přidejte repozitář pro zálohy.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_thread.py" line="111"/>
         <source>Please make sure you grant Vorta permission to use the Keychain.</source>
-        <translation>Assurez-vous que Vorta ait les permissions nécessaires pour accéder à Keychain.</translation>
+        <translation>Zkontrolujte, že jste Vorta udělili oprávnění používat vaší klíčenku.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="78"/>
         <source>Add some folders to back up first.</source>
-        <translation>Ajouter des dossiers à sauvegarder d&apos;abord. </translation>
+        <translation>Nejprve do zálohy přidejte nějaké složky.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="93"/>
         <source>Current Wifi is not allowed.</source>
-        <translation>Ce réseau WI-FI n&apos;est pas autorisé.</translation>
+        <translation>Fungování na stávající WiFi síti není v nastavení umožněno.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="97"/>
         <source>Repo folder not mounted or moved.</source>
-        <translation>Le dossier des dépôts n&apos;est pas monté ou a été déplacé. </translation>
+        <translation>Složka s repozitářem není připojená (mount) nebo byla přesunuta.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="133"/>
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>La commande pré-sauvegarde a retourné un code de retour non nul. </translation>
+        <translation>Příkaz pro provedení před zálohováním vrátil nenulový ukončovací kód (něco se nezdařilo).</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="136"/>
         <source>Starting backup...</source>
-        <translation>Début de la sauvegarde...</translation>
+        <translation>Spouštění zálohy…</translation>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="27"/>
         <source>No active Borg mounts found.</source>
-        <translation>Aucun point de montage Borg actif n&apos;a été trouvé. </translation>
+        <translation>Nebyly nalezeny žádné aktivní Borg připojení (mount).</translation>
     </message>
 </context>
 <context>
@@ -1247,37 +1248,37 @@
     <message>
         <location filename="../../models.py" line="208"/>
         <source>Display notifications when background tasks fail</source>
-        <translation>Afficher les notifications lorsqu&apos;une tâche en arrière-plan échoue</translation>
+        <translation>Při nezdaru v úloze na pozadí zobrazit upozornění</translation>
     </message>
     <message>
         <location filename="../../models.py" line="213"/>
         <source>Also notify about successful background tasks</source>
-        <translation>Informer également du succès de l&apos;exécution des tâches en arrière-plan</translation>
+        <translation>Upozorňovat také na úspěšně provedené úlohy na pozadí</translation>
     </message>
     <message>
         <location filename="../../models.py" line="218"/>
         <source>Automatically start Vorta at login</source>
-        <translation>Lancer Vorta automatique lors de l&apos;ouverture de la session</translation>
+        <translation>Spouštět Vorta automaticky při přihlášení se do systému</translation>
     </message>
     <message>
         <location filename="../../models.py" line="226"/>
         <source>Check for updates on startup</source>
-        <translation>Vérifier les mises à jour au démarrage</translation>
+        <translation>Při spouště zjistit dostupnost případných aktualizací</translation>
     </message>
     <message>
         <location filename="../../models.py" line="231"/>
         <source>Include pre-release versions when checking for updates</source>
-        <translation>Rechercher également les versions bêta lors de la vérification des mises à jour</translation>
+        <translation>Při zjišťování dostupnosti případných aktualizací brát v potaz také ještě nevydané vývojové verze</translation>
     </message>
     <message>
         <location filename="../../models.py" line="196"/>
         <source>Use light system tray icon (applies after restart)</source>
-        <translation>Utiliser une icône claire dans la zone de notification (nécessite un redémarrage)</translation>
+        <translation>Použít světlou ikonu v systémové oznamovací oblasti (projeví se po restartu aplikace)</translation>
     </message>
     <message>
         <location filename="../../models.py" line="203"/>
         <source>Use dark theme (applies after restart)</source>
-        <translation>Utiliser le thème sombre (nécessite un redémarrage)</translation>
+        <translation>Použít tmavý motiv vzhledu (projeví se po restartu aplikace)</translation>
     </message>
 </context>
 </TS>
