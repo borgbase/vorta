@@ -35,6 +35,7 @@ env:
   - SETUP_XVFB=true
   - PYTHON36=3.6.9
   - PYTHON37=3.7.5
+  - PYTHON38=3.8.2
 
 matrix:
   include:
@@ -52,6 +53,7 @@ install:
     export DISPLAY=:99.0
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
+    cd $(pyenv root) && git pull origin master
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
   fi
@@ -71,24 +73,6 @@ before_script:
 
 script:
 - tox
-
-#after_script:
-#- |
-#  if [ $RUN_PYINSTALLER = "true" ]; then
-#    # Cleanup
-#    pip uninstall -y $PIP_DEPENDENCIES
-#
-#    # https://github.com/wkentaro/labelme/issues/183
-#    if [ $TRAVIS_OS_NAME = "osx" ]; then
-#      pip uninstall -y Pillow
-#      conda install -y Pillow
-#    fi
-#
-#    # Build the standalone executable
-#    pip install pyinstaller
-#    pyinstaller labelme.spec
-#    dist/labelme --version
-#  fi
 
 branches:
   only:
