@@ -33,8 +33,8 @@ cache:
 env:
   global:
   - SETUP_XVFB=true
-  - PYTHON36=3.6.3
-  - PYTHON37=3.7.1
+  - PYTHON36=3.6.9
+  - PYTHON37=3.7.5
 
 matrix:
   include:
@@ -60,7 +60,7 @@ install:
   eval "$(pyenv init -)"
   pyenv shell $PYTHON36 $PYTHON37
 
-- pip install -U setuptools pip==18.1
+- pip install -U setuptools pip
 - pip install .
 - pip install borgbackup
 - pip install -r requirements.d/dev.txt
