@@ -1,3 +1,5 @@
+Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
