@@ -53,7 +53,7 @@ install:
     export DISPLAY=:99.0
     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
     sleep 3
-    cd $(pyenv root) && git pull origin master
+    cd $(pyenv root) && git pull origin master && cd $TRAVIS_BUILD_DIR
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
   fi
