@@ -57,10 +57,11 @@ install:
   elif [ $TRAVIS_OS_NAME = "osx" ]; then
     brew upgrade pyenv
   fi
-  pyenv install -s $PYTHON37
   pyenv install -s $PYTHON36
+  pyenv install -s $PYTHON37
+  pyenv install -s $PYTHON38
   eval "$(pyenv init -)"
-  pyenv shell $PYTHON36 $PYTHON37
+  pyenv shell $PYTHON36 $PYTHON37 $PYTHON38
 
 - pip install -U setuptools pip
 - pip install .
