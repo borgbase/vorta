@@ -13,8 +13,9 @@ icon-resources:  ## Compile SVG icons to importable resource files.
 	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
 
 dist/Vorta.app: translations-to-qm clean
-	pyinstaller --clean --noconfirm vorta.spec
+	pyinstaller --clean --noconfirm package/pyinstaller.spec
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+	cp -R bin/darwin/borg-dir dist/Vorta.app/Contents/Resources/
 	rm -rf build
 	rm -rf dist/vorta
 
@@ -39,15 +40,6 @@ bump-version:  ## Add new version tag and push to upstream repo.
 	xmlstarlet ed -L -u 'component/releases/release/@date' -v $$(date +%F) src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 	git commit -a -m 'Bump version'
 	git push upstream
-
-travis-debug:  ## Prepare connecting to Travis instance via SSH.
-	  curl -s -X POST \
-       -H "Content-Type: application/json" \
-       -H "Accept: application/json" \
-       -H "Travis-API-Version: 3" \
-       -H "Authorization: token ${TRAVIS_TOKEN}" \
-       -d '{ "quiet": true }' \
-       https://api.travis-ci.org/job/${TRAVIS_JOB_ID}/debug
 
 translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
 	pylupdate5 -verbose -translate-function trans_late \

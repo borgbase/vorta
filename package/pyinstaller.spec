@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pathlib import Path
 
 CREATE_VORTA_DIR = False  # create dist/vorta-dir/ output?
 BLOCK_CIPHER = None
@@ -9,18 +10,15 @@ APP_NAME = 'Vorta'
 APP_VERSION = '0.6.23'
 
 # it is assumed that the cwd is the git repo dir:
-REPO_DIR = os.path.abspath('.')
-SRC_DIR = os.path.join(REPO_DIR, 'src')
+SRC_DIR = os.path.join(os.getcwd(), 'src', 'vorta')
 
-a = Analysis(['src/vorta/__main__.py'],
+a = Analysis([os.path.join(SRC_DIR, '__main__.py')],
              pathex=[SRC_DIR],
-             binaries=[
-                (f"bin/{sys.platform}/borg", 'bin'),  # (<borg fat binary for this platform>, <dest. folder>)
-             ],
+             binaries=[],
              datas=[
-                ('src/vorta/assets/UI/*', 'assets/UI'),
-                ('src/vorta/assets/icons/*', 'assets/icons'),
-                ('src/vorta/i18n/qm/*', 'vorta/i18n/qm'),
+                (os.path.join(SRC_DIR, 'assets/UI/*'), 'assets/UI'),
+                (os.path.join(SRC_DIR, 'assets/icons/*'), 'assets/icons'),
+                (os.path.join(SRC_DIR, 'i18n/qm/*'), 'vorta/i18n/qm'),
              ],
              hiddenimports=[
                  'vorta.views.dark.collection_rc',
@@ -57,7 +55,7 @@ coll = COLLECT(exe,
 
 app = BUNDLE(coll,
              name='Vorta.app',
-             icon='src/vorta/assets/icons/app-icon.icns',
+             icon=os.path.join(SRC_DIR, 'assets/icons/app-icon.icns'),
              bundle_identifier=None,
              info_plist={
                  'CFBundleName': APP_NAME,
