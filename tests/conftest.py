@@ -7,13 +7,16 @@ import vorta
 from vorta.application import VortaApp
 from vorta.models import RepoModel, SourceFileModel, ArchiveModel, BackupProfileModel
 
+this = sys.modules[__name__]
+this.qapplication = None
+
 
 def pytest_configure(config):
     sys._called_from_test = True
 
 
 @pytest.fixture
-def app(tmpdir, qtbot, mocker):
+def qapp(tmpdir, mocker):
     tmp_db = tmpdir.join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
@@ -32,11 +35,13 @@ def app(tmpdir, qtbot, mocker):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
-    app = VortaApp([])
-    app.open_main_window_action()
-    qtbot.addWidget(app.main_window)
-    app.main_window.tests_running = True
-    return app
+    if (this.qapplication is None):
+        this.qapplication = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
+
+    this.qapplication.open_main_window_action()
+    this.qapplication.main_window.tests_running = True
+
+    yield this.qapplication
 
 
 @pytest.fixture

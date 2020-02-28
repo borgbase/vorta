@@ -10,9 +10,9 @@ from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
-def test_repo_add_failures(app, qtbot, mocker, borg_json_output):
+def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
-    main = app.main_window
+    main = qapp.main_window
     add_repo_window = AddRepoWindow(main)
     qtbot.addWidget(add_repo_window)
 
@@ -25,10 +25,23 @@ def test_repo_add_failures(app, qtbot, mocker, borg_json_output):
     assert add_repo_window.errorText.text() == 'Please use a longer passphrase.'
 
 
-def test_repo_add_success(app, qtbot, mocker, borg_json_output):
+def test_repo_unlink(qapp, qtbot, monkeypatch):
+    monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
+    main = qapp.main_window
+    tab = main.repoTab
+    main.tabWidget.setCurrentIndex(0)
+    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, timeout=5000)
+    assert RepoModel.select().count() == 0
+
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    assert main.createProgressText.text() == 'Add a backup repository first.'
+
+
+def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     LONG_PASSWORD = 'long-password-long'
     # Add new repo window
-    main = app.main_window
+    main = qapp.main_window
     add_repo_window = AddRepoWindow(main)
     qtbot.addWidget(add_repo_window)
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
@@ -55,20 +68,6 @@ def test_repo_add_success(app, qtbot, mocker, borg_json_output):
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
 
 
-def test_repo_unlink(app, qtbot, monkeypatch):
-    monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
-    main = app.main_window
-    tab = main.repoTab
-    main.tabWidget.setCurrentIndex(0)
-    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
-
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, timeout=5000)
-    assert RepoModel.select().count() == 0
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    assert main.createProgressText.text() == 'Add a backup repository first.'
-
-
 def test_ssh_dialog(qtbot, tmpdir):
     ssh_dialog = SSHAddWindow()
     ssh_dir = tmpdir
@@ -79,6 +78,7 @@ def test_ssh_dialog(qtbot, tmpdir):
     qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: key_tmpfile.check(file=1))
+    qtbot.waitUntil(lambda: pub_tmpfile.check(file=1))
 
     key_tmpfile_content = key_tmpfile.read()
     pub_tmpfile_content = pub_tmpfile.read()
@@ -90,8 +90,8 @@ def test_ssh_dialog(qtbot, tmpdir):
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))
 
 
-def test_create(app, borg_json_output, mocker, qtbot):
-    main = app.main_window
+def test_create(qapp, borg_json_output, mocker, qtbot):
+    main = qapp.main_window
     stdout, stderr = borg_json_output('create')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)

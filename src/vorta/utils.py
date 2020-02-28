@@ -79,7 +79,7 @@ def get_private_keys():
                         'fingerprint': parsed_key.get_fingerprint().hex()
                     }
                     available_private_keys.append(key_details)
-                except (SSHException, UnicodeDecodeError, IsADirectoryError):
+                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError):
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:

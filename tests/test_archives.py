@@ -15,9 +15,9 @@ class MockFileDialog:
         return ['/tmp']
 
 
-def test_prune_intervals(app, qtbot):
+def test_prune_intervals(qapp, qtbot):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
-    main = app.main_window
+    main = qapp.main_window
     tab = main.archiveTab
     profile = BackupProfileModel.get(id=1)
 
@@ -28,16 +28,19 @@ def test_prune_intervals(app, qtbot):
         assert getattr(profile, f'prune_{i}') == 9
 
 
-def test_repo_list(app, qtbot, mocker, borg_json_output):
-    main = app.main_window
+def test_repo_list(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
     tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-    tab.list_action()
-    assert not tab.checkButton.isEnabled()
 
     stdout, stderr = borg_json_output('list')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+
+    main.tabWidget.setCurrentIndex(3)
+    tab.list_action()
+    qtbot.waitUntil(lambda: not tab.checkButton.isEnabled(), timeout=3000)
+
+    assert not tab.checkButton.isEnabled()
 
     qtbot.waitUntil(lambda: main.createProgressText.text() == 'Refreshing archives done.', timeout=3000)
     assert ArchiveModel.select().count() == 6
@@ -45,8 +48,8 @@ def test_repo_list(app, qtbot, mocker, borg_json_output):
     assert tab.checkButton.isEnabled()
 
 
-def test_repo_prune(app, qtbot, mocker, borg_json_output):
-    main = app.main_window
+def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
@@ -59,8 +62,8 @@ def test_repo_prune(app, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Refreshing archives done.'), timeout=5000)
 
 
-def test_check(app, mocker, borg_json_output, qtbot):
-    main = app.main_window
+def test_check(qapp, mocker, borg_json_output, qtbot):
+    main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
@@ -74,7 +77,7 @@ def test_check(app, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: main.createProgressText.text().startswith(success_text), timeout=3000)
 
 
-def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
+def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', '/tmp')]
@@ -83,7 +86,7 @@ def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose
         psutil, "disk_partitions", psutil_disk_partitions
     )
 
-    main = app.main_window
+    main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
@@ -106,8 +109,8 @@ def test_archive_mount(app, qtbot, mocker, borg_json_output, monkeypatch, choose
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=5000)
 
 
-def test_archive_extract(app, qtbot, mocker, borg_json_output, monkeypatch):
-    main = app.main_window
+def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
+    main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
