@@ -5,6 +5,8 @@ import sys
 
 CREATE_VORTA_DIR = False  # create dist/vorta-dir/ output?
 BLOCK_CIPHER = None
+APP_NAME = 'Vorta'
+APP_VERSION = '0.6.23'
 
 # it is assumed that the cwd is the git repo dir:
 REPO_DIR = os.path.abspath('.')
@@ -36,38 +38,40 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=BLOCK_CIPHER)
 
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
-          [],
+          exclude_binaries=True,
           name=f"vorta-{sys.platform}",
-          debug=False,
           bootloader_ignore_signals=True,
+          console=False,
+          debug=False,
           strip=False,
-          upx=True,
-          runtime_tmpdir=None,
-          console=True)
+          upx=False)
 
-app = BUNDLE(exe,
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               debug=False,
+               strip=False,
+               upx=False,
+               name='vorta')
+
+app = BUNDLE(coll,
              name='Vorta.app',
              icon='src/vorta/assets/icons/app-icon.icns',
-             bundle_identifier='com.borgbase.client.macos',
+             bundle_identifier=None,
              info_plist={
+                 'CFBundleName': APP_NAME,
+                 'CFBundleDisplayName': APP_NAME,
+                 'CFBundleIdentifier': 'com.borgbase.client.macos',
                  'NSHighResolutionCapable': 'True',
                  'LSUIElement': '1',
-                 'CFBundleShortVersionString': '0.6.23',
-                 'CFBundleVersion': '0.6.23',
-                 'NSAppleEventsUsageDescription': 'Please allow',
+                 'LSMinimumSystemVersion': '10.14',
+                 'CFBundleShortVersionString': APP_VERSION,
+                 'CFBundleVersion': APP_VERSION,
                  'SUFeedURL': 'https://borgbase.github.io/vorta/appcast.xml',
                  'LSEnvironment': {
-                             'LC_CTYPE': 'en_US.UTF-8'
+                             'LC_CTYPE': 'en_US.UTF-8',
+                             'PATH': '/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin'
                          }
              })
 
-if CREATE_VORTA_DIR:
-    coll = COLLECT(exe,
-                   a.binaries,
-                   a.zipfiles,
-                   a.datas,
-                   strip=False,
-                   name='vorta-dir')

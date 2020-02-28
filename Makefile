@@ -5,29 +5,24 @@ export QT_SELECT=5
 .DEFAULT_GOAL := help
 DATE = "$(shell date +%F)"
 
+clean:
+	rm -rf dist/*
+
 icon-resources:  ## Compile SVG icons to importable resource files.
 	pyrcc5 -o src/vorta/views/dark/collection_rc.py src/vorta/assets/icons/dark/collection.qrc
 	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
 
-Vorta.app: translations-to-qm
+dist/Vorta.app: translations-to-qm clean
 	pyinstaller --clean --noconfirm vorta.spec
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
+	rm -rf build
+	rm -rf dist/vorta
 
-Vorta.dmg-Vagrant:
-	vagrant up darwin64
-	rm -rf dist/*
-	vagrant scp darwin64:/vagrant/dist/Vorta.app dist/
-	vagrant halt darwin64
-	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-	cd dist; codesign --deep --sign 'Developer ID Application: Manuel Riel (CNMSCAXT48)' Vorta.app
-	sleep 2; appdmg appdmg.json dist/vorta-0.6.23.dmg
+dist/Vorta.dmg: dist/Vorta.app
+	sh package/macos-package-app.sh
 
-Vorta.dmg: Vorta.app
-	rm -rf dist/vorta-0.6.23.dmg
-	sleep 2; appdmg appdmg.json dist/vorta-0.6.23.dmg
-
-github-release: Vorta.dmg
+github-release: dist/Vorta.dmg
+	cp dist/Vorta.dmg dist/dist/vorta-0.6.23.dmg
 	hub release create --attach=dist/vorta-0.6.23.dmg v0.6.23
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty

@@ -145,6 +145,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         """Find packaged borg binary. Prefer globally installed."""
 
         # Look in current PATH.
+        os.environ["PATH"] += os.pathsep + os.path.expanduser('~/.pyenv/shims')
+        logger.info('Env: '+ os.environ['PATH'])
+
         borg_in_path = shutil.which('borg')
         if borg_in_path:
             return borg_in_path
