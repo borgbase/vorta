@@ -35,7 +35,8 @@ jobs:
         pip install .
         pip install borgbackup
         pip install -r requirements.d/dev.txt
-    - name: Test with tox
+    - name: Test with tox (Linux)
+      if: runner.os == 'Linux'
       run: |
         export DISPLAY=:99.0
         /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile \
@@ -44,4 +45,8 @@ jobs:
         export $(dbus-launch)
         (herbstluftwm) &
         sleep 3
+        tox
+    - name: Test with tox (macOS)
+      if: runner.os == 'macOS'
+      run: |
         tox
