@@ -23,9 +23,6 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt install -y xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential libxkbcommon-x11-0
-        export DISPLAY=:99.0
-        /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile \
-              --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
 
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
@@ -38,6 +35,10 @@ jobs:
         pip install -r requirements.d/dev.txt
     - name: Test with tox
       run: |
+        export DISPLAY=:99.0
+        /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile \
+              --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+        sleep 3
         (herbstluftwm) &
         sleep 3
         tox
