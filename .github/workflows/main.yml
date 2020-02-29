@@ -11,15 +11,7 @@ jobs:
 
       matrix:
         python-version: [3.6, 3.7, 3.8]
-        qt-lib: [pyqt5, pyside2]
         os: [ubuntu-latest, macos-latest]
-        include:
-          - python-version: "3.6"
-            tox-env: "py36"
-          - python-version: "3.7"
-            tox-env: "py37"
-          - python-version: "3.8"
-            tox-env: "py38"
 
     steps:
     - uses: actions/checkout@v2
