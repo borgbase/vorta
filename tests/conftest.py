@@ -36,7 +36,6 @@ def init_db(qapp):
     source_dir.save()
 
     qapp.open_main_window_action()
-    qapp.main_window.tests_running = True
 
 
 @pytest.fixture(scope='session')
