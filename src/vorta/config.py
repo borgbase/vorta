@@ -1,5 +1,5 @@
-import appdirs
 import os
+import appdirs
 
 APP_NAME = 'Vorta'
 APP_AUTHOR = 'BorgBase'

@@ -346,9 +346,7 @@ def init_db(con=None):
                                 'extra_borg_arguments', pw.CharField(default='')))
 
     if current_schema.version < 13:
-        """
-        Migrate ArchiveModel data to new table to remove unique constraint from snapshot_id column.
-        """
+        # Migrate ArchiveModel data to new table to remove unique constraint from snapshot_id column.
         tables = db.get_tables()
         if ArchiveModel.select().count() == 0 and 'snapshotmodel' in tables:
             cursor = db.execute_sql('select * from snapshotmodel;')
