@@ -23,6 +23,7 @@ a = Analysis([os.path.join(SRC_DIR, '__main__.py')],
              hiddenimports=[
                  'vorta.views.dark.collection_rc',
                  'vorta.views.light.collection_rc',
+                 'pkg_resources.py2_warn',
              ],
              hookspath=[],
              runtime_hooks=[],

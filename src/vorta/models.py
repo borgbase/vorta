@@ -241,10 +241,11 @@ def get_misc_settings():
     return settings
 
 
-def init_db(con):
-    os.umask(0o0077)
-    db.initialize(con)
-    db.connect()
+def init_db(con=None):
+    if con is not None:
+        os.umask(0o0077)
+        db.initialize(con)
+        db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 

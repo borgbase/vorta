@@ -29,6 +29,7 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
     main = qapp.main_window
     tab = main.repoTab
+
     main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, timeout=5000)
@@ -40,10 +41,11 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     LONG_PASSWORD = 'long-password-long'
+
     # Add new repo window
     main = qapp.main_window
+    main.repoTab.repo_added.disconnect()
     add_repo_window = AddRepoWindow(main)
-    qtbot.addWidget(add_repo_window)
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
@@ -60,8 +62,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     main.repoTab.process_new_repo(blocker.args[0])
 
-    qtbot.waitUntil(lambda: EventLogModel.select().count() == 2)
-    assert EventLogModel.select().count() == 2
+    assert EventLogModel.select().count() == 1
     assert RepoModel.get(id=2).url == test_repo_url
 
     from vorta.utils import keyring

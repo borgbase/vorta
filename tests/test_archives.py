@@ -117,9 +117,6 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     tab.populate_from_profile()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 1)
 
-    qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Select an archive'))
-
     monkeypatch.setattr(
         vorta.views.extract_dialog.ExtractDialog, "exec_", lambda *args: True
     )

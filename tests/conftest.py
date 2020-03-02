@@ -2,25 +2,25 @@ import pytest
 import peewee
 import sys
 from datetime import datetime as dt
+from unittest.mock import MagicMock
 
 import vorta
-from vorta.application import VortaApp
-from vorta.models import RepoModel, SourceFileModel, ArchiveModel, BackupProfileModel
+from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
+                          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
 
-this = sys.modules[__name__]
-this.qapplication = None
+
+models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
+          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
 
 
 def pytest_configure(config):
     sys._called_from_test = True
 
 
-@pytest.fixture
-def qapp(tmpdir, mocker):
-    tmp_db = tmpdir.join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db))
-    vorta.models.init_db(mock_db)
-    mocker.patch.object(vorta.application.VortaApp, 'set_borg_details_action', return_value=None)
+@pytest.fixture(scope='function', autouse=True)
+def init_db(qapp):
+    vorta.models.db.drop_tables(models)
+    vorta.models.init_db()
 
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
     new_repo.save()
@@ -35,13 +35,23 @@ def qapp(tmpdir, mocker):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
-    if (this.qapplication is None):
-        this.qapplication = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
+    qapp.open_main_window_action()
+    qapp.main_window.tests_running = True
 
-    this.qapplication.open_main_window_action()
-    this.qapplication.main_window.tests_running = True
 
-    yield this.qapplication
+@pytest.fixture(scope='session')
+def qapp(tmpdir_factory):
+    tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
+    mock_db = peewee.SqliteDatabase(str(tmp_db))
+    vorta.models.init_db(mock_db)
+
+    from vorta.application import VortaApp
+    VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
+    VortaApp.scheduler = MagicMock()
+
+    qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
+
+    yield qapp
 
 
 @pytest.fixture

@@ -7,3 +7,4 @@ pyinstaller
 tox
 bump2version
 flake8
+pylint
