@@ -1,5 +1,5 @@
 export VORTA_SRC := src/vorta
-export QT_SELECT=5
+export CERTIFICATE_NAME := "Developer ID Application: Manuel Riel (CNMSCAXT48)"
 
 .PHONY : help
 .DEFAULT_GOAL := help
@@ -13,11 +13,17 @@ icon-resources:  ## Compile SVG icons to importable resource files.
 	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
 
 dist/Vorta.app: translations-to-qm clean
-	pyinstaller --clean --noconfirm package/pyinstaller.spec
+	pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-	cp -R bin/darwin/borg-dir dist/Vorta.app/Contents/Resources/
+	cp -R ../borg/dist/borg-dir dist/Vorta.app/Contents/Resources/
 	rm -rf build
 	rm -rf dist/vorta
+
+borg:
+	cd ../borg && pyinstaller --clean --noconfirm ../vorta/package/borg.spec .
+	find ../borg/dist/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
+		-exec codesign --verbose --force --sign $(CERTIFICATE_NAME) \
+		--entitlements package/entitlements.plist --timestamp --deep --options runtime {} \;
 
 dist/Vorta.dmg: dist/Vorta.app
 	sh package/macos-package-app.sh

@@ -15,11 +15,6 @@ cd dist
 codesign --verbose --force --sign "$CERTIFICATE_NAME" --timestamp --deep --options runtime \
     $APP_BUNDLE.app/Contents/Frameworks/Sparkle.framework/Resources/Autoupdate.app
 
-# Codesign Borg
-find $APP_BUNDLE.app/Contents/Resources/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
-  -exec codesign --verbose --force --sign "$CERTIFICATE_NAME" \
-  --entitlements ../package/entitlements.plist --timestamp --deep --options runtime {} \;
-
 codesign --verify --force --verbose --deep \
         --options runtime --timestamp \
         --entitlements ../package/entitlements.plist \

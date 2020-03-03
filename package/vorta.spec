@@ -4,10 +4,15 @@ import os
 import sys
 from pathlib import Path
 
-CREATE_VORTA_DIR = False  # create dist/vorta-dir/ output?
+from vorta.config import (
+    APP_NAME,
+    APP_ID_DARWIN
+)
+from vorta._version import __version__ as APP_VERSION
+
 BLOCK_CIPHER = None
-APP_NAME = 'Vorta'
-APP_VERSION = '0.6.23'
+APP_APPCAST_URL = 'https://borgbase.github.io/vorta/appcast.xml'
+
 
 # it is assumed that the cwd is the git repo dir:
 SRC_DIR = os.path.join(os.getcwd(), 'src', 'vorta')
@@ -43,7 +48,7 @@ exe = EXE(pyz,
           console=False,
           debug=False,
           strip=False,
-          upx=False)
+          upx=True)
 
 coll = COLLECT(exe,
                a.binaries,
@@ -61,13 +66,13 @@ app = BUNDLE(coll,
              info_plist={
                  'CFBundleName': APP_NAME,
                  'CFBundleDisplayName': APP_NAME,
-                 'CFBundleIdentifier': 'com.borgbase.client.macos',
+                 'CFBundleIdentifier': APP_ID_DARWIN,
                  'NSHighResolutionCapable': 'True',
                  'LSUIElement': '1',
                  'LSMinimumSystemVersion': '10.14',
                  'CFBundleShortVersionString': APP_VERSION,
                  'CFBundleVersion': APP_VERSION,
-                 'SUFeedURL': 'https://borgbase.github.io/vorta/appcast.xml',
+                 'SUFeedURL': APP_APPCAST_URL,
                  'LSEnvironment': {
                              'LC_CTYPE': 'en_US.UTF-8',
                              'PATH': '/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin'
