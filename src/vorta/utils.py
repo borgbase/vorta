@@ -79,7 +79,7 @@ def get_private_keys():
                         'fingerprint': parsed_key.get_fingerprint().hex()
                     }
                     available_private_keys.append(key_details)
-                except (SSHException, UnicodeDecodeError, IsADirectoryError):
+                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError):
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:
@@ -254,7 +254,7 @@ def get_mount_points(repo_url):
                             mount_point = proc.cmdline()[idx + 1]
                             mount_points[archive_name] = mount_point
                         break
-        except (psutil.ZombieProcess, psutil.AccessDenied):
+        except (psutil.ZombieProcess, psutil.AccessDenied, psutil.NoSuchProcess):
             # Getting process details may fail (e.g. zombie process on macOS)
             # or because the process is owned by another user.
             # Also see https://github.com/giampaolo/psutil/issues/783

@@ -8,7 +8,7 @@ import vorta.notifications
 
 
 @pytest.mark.skipif(sys.platform != 'linux', reason="DBus notifications only on Linux")
-def test_linux_background_notifications(app, mocker):
+def test_linux_background_notifications(qapp, mocker):
     """We can't see notifications, but we watch for exceptions and errors."""
 
     notifier = vorta.notifications.VortaNotifications.pick()

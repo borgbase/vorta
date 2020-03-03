@@ -2,8 +2,8 @@ from datetime import datetime as dt, date, time
 from PyQt5 import QtCore
 
 
-def test_schedule_tab(app, qtbot):
-    main = app.main_window
+def test_schedule_tab(qapp, qtbot):
+    main = qapp.main_window
     tab = main.scheduleTab
     qtbot.mouseClick(tab.scheduleApplyButton, QtCore.Qt.LeftButton)
     assert tab.nextBackupDateTimeLabel.text() == 'None scheduled'

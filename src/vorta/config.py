@@ -1,8 +1,9 @@
-import appdirs
 import os
+import appdirs
 
 APP_NAME = 'Vorta'
 APP_AUTHOR = 'BorgBase'
+APP_ID_DARWIN = 'com.borgbase.client.macos'
 dirs = appdirs.AppDirs(APP_NAME, APP_AUTHOR)
 SETTINGS_DIR = dirs.user_data_dir
 LOG_DIR = dirs.user_log_dir

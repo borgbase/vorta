@@ -144,18 +144,19 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def prepare_bin(cls):
         """Find packaged borg binary. Prefer globally installed."""
 
-        # Look in current PATH.
         borg_in_path = shutil.which('borg')
+
         if borg_in_path:
             return borg_in_path
-        else:
-            # Look in pyinstaller package
-            cwd = getattr(sys, '_MEIPASS', os.getcwd())
-            meipass_borg = os.path.join(cwd, 'bin', 'borg')
-            if os.path.isfile(meipass_borg):
-                return meipass_borg
-            else:
-                return None
+        elif sys.platform == 'darwin':
+            # macOS: Look in pyinstaller bundle
+            from Foundation import NSBundle
+            mainBundle = NSBundle.mainBundle()
+
+            bundled_borg = os.path.join(mainBundle.bundlePath(), 'Contents', 'Resources', 'borg-dir', 'borg.exe')
+            if os.path.isfile(bundled_borg):
+                return bundled_borg
+        return None
 
     def run(self):
         self.started_event()

@@ -1,0 +1,69 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt install -y \
+          xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential \
+          libxkbcommon-x11-0 dbus-x11
+    - name: Install system dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew upgrade openssl readline xz  # pyenv pyenv-virtualenv
+    - name: Install Vorta
+      run: |
+        pip install .
+        pip install borgbackup
+        pip install -r requirements.d/dev.txt
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v1
+    - name: Test with pytest (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        export DISPLAY=:99.0
+        /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile \
+              --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+        sleep 3
+        export $(dbus-launch)
+        (herbstluftwm) &
+        sleep 3
+        pytest
+    - name: Test with pytest (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        pytest
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install Vorta
+      run: |
+        pip install .
+        pip install -r requirements.d/dev.txt
+    - name: Run Flake8
+      run: flake8
+    - name: Run PyLint (info only)
+      run: pylint --rcfile=setup.cfg src --exit-zero

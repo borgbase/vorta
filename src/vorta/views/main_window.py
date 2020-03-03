@@ -31,8 +31,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
-        self.tests_running = False
-
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
@@ -149,7 +147,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_status(self.tr('Task cancelled'))
 
     def closeEvent(self, event):
-        if not is_system_tray_available() and not self.tests_running:
+        if not is_system_tray_available():
             run_in_background = QMessageBox.question(self,
                                                      trans_late("MainWindow QMessagebox",
                                                                 "Quit"),
