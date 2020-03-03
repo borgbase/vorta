@@ -29,8 +29,8 @@ dist/Vorta.dmg: dist/Vorta.app
 	sh package/macos-package-app.sh
 
 github-release: dist/Vorta.dmg
-	cp dist/Vorta.dmg dist/dist/vorta-0.6.23.dmg
-	hub release create --attach=dist/vorta-0.6.23.dmg v0.6.23
+	cp dist/Vorta.dmg dist/dist/vorta-0.6.24.dmg
+	hub release create --attach=dist/vorta-0.6.24.dmg v0.6.24
 	git checkout gh-pages
 	git commit -m 'rebuild pages' --allow-empty
 	git push upstream gh-pages
@@ -38,7 +38,7 @@ github-release: dist/Vorta.dmg
 
 pypi-release: translations-to-qm
 	python setup.py sdist
-	twine upload dist/vorta-0.6.23.tar.gz
+	twine upload dist/vorta-0.6.24.tar.gz
 
 bump-version:  ## Add new version tag and push to upstream repo.
 	bumpversion patch
