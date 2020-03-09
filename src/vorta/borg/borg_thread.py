@@ -234,7 +234,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def cancel(self):
         if self.isRunning():
             mutex.unlock()
-            os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
+            self.process.send_signal(signal.SIGINT)
             self.terminate()
 
     def process_result(self, result):
