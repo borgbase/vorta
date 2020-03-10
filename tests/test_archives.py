@@ -115,7 +115,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     main.tabWidget.setCurrentIndex(3)
 
     tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 1)
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     monkeypatch.setattr(
         vorta.views.extract_dialog.ExtractDialog, "exec_", lambda *args: True
@@ -131,6 +131,6 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
-
+    print(tab._window.archiveNameLabel.text())
     assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
     tab._window.accept()

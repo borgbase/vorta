@@ -32,6 +32,9 @@ def init_db(qapp):
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive.save()
 
+    test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
+    test_archive1.save()
+
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
     source_dir.save()
 
