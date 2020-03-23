@@ -1,8 +1,8 @@
 import sys
 
 from PyQt5 import QtCore, uic
+from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMessageBox, QShortcut
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
@@ -114,12 +114,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             # Remove pending background jobs
             to_delete_id = str(to_delete.id)
-            if self.app.scheduler.get_job(to_delete_id):
-                self.app.scheduler.remove_job(to_delete_id)
+            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            reply = QMessageBox.question(self, self.tr("Confirm deletion"),
+                                         msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-            to_delete.delete_instance(recursive=True)
-            self.profileSelector.removeItem(self.profileSelector.currentIndex())
-            self.profile_select_action(0)
+            if reply == QMessageBox.Yes:
+                if self.app.scheduler.get_job(to_delete_id):
+                    self.app.scheduler.remove_job(to_delete_id)
+
+                to_delete.delete_instance(recursive=True)
+                self.profileSelector.removeItem(self.profileSelector.currentIndex())
+                self.profile_select_action(0)
 
     def profile_add_action(self):
         window = AddProfileWindow()
