@@ -3,12 +3,11 @@ from PyQt5.QtWidgets import QHeaderView, QTableView, QTableWidgetItem
 
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/diffdialog.ui')
+uifile = get_asset("UI/diffdialog.ui")
 DiffDialogUI, DiffDialogBase = uic.loadUiType(uifile)
 
 
 class DiffDialog(DiffDialogBase, DiffDialogUI):
-
     def __init__(self, archiveTable):
         super().__init__()
         self.setupUi(self)
@@ -38,7 +37,7 @@ class DiffDialog(DiffDialogBase, DiffDialogUI):
                     text = archiveTable.item(row, column).text()
                     self.archiveTable.setItem(row, column, QTableWidgetItem(text))
                 except AttributeError:
-                    self.archiveTable.setItem(row, column, QTableWidgetItem(''))
+                    self.archiveTable.setItem(row, column, QTableWidgetItem(""))
 
         self.diffButton.setEnabled(False)
 

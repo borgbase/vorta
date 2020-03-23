@@ -101,8 +101,8 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'), timeout=3000)
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)
     assert EventLogModel.select().count() == 1
-    assert ArchiveModel.select().count() == 2
+    assert ArchiveModel.select().count() == 3
     assert RepoModel.get(id=1).unique_size == 15520474
     assert main.createStartBtn.isEnabled()
-    assert main.archiveTab.archiveTable.rowCount() == 2
+    assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
