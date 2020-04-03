@@ -110,7 +110,6 @@ def pretty_bytes(size):
         return "NaN"
 
 
-
 def get_asset(path):
     if getattr(sys, 'frozen', False):
         # we are running in a bundle
