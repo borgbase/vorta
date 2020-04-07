@@ -5,3 +5,4 @@ Exec=vorta
 Type=Application
 Icon=com.borgbase.Vorta
 Categories=Utility
+StartupWMClass=vorta
