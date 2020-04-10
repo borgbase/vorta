@@ -133,7 +133,11 @@ def get_sorted_wifis(profile):
         if wifis is not None:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
-                ssid = wifi['SSIDString']
+                ssid = wifi.get('SSIDString', None)
+
+                if ssid is None:
+                    continue
+
                 db_wifi, created = WifiSettingModel.get_or_create(
                     ssid=ssid,
                     profile=profile.id,
