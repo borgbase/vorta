@@ -128,7 +128,7 @@ def get_sorted_wifis(profile):
             wifis = plistlib.load(plist_file).get('KnownNetworks')
         except xml.parsers.expat.ExpatError:
             logger.error('Unable to parse list of Wifi networks.')
-            return
+            return []
 
         if wifis is not None:
             for wifi in wifis.values():
