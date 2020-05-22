@@ -33,8 +33,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # Temporary fix for QT Darkstyle dropdown issue.
         # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
-        self.setStyleSheet(
-        """
+        self.setStyleSheet("""
         QComboBox::item:checked {
         height: 12px;
         border: 1px solid #32414B;
@@ -43,8 +42,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         padding: 4px;
         padding-left: 0px;
         }
-        """
-        )
+        """)
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)

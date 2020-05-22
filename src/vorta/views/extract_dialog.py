@@ -36,9 +36,9 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
             return size, modified, name, dir
 
-        for l in fs_data.split("\n"):
+        for line in fs_data.split("\n"):
             try:
-                files_with_attributes.append(parse_line(l))
+                files_with_attributes.append(parse_line(line))
             except ValueError:
                 pass
 

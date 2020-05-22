@@ -68,8 +68,8 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
             return size, change_type, name, dir
 
-        for l in fs_data.split('\n'):
-            files_with_attributes.append(parse_line(l))
+        for line in fs_data.split('\n'):
+            files_with_attributes.append(parse_line(line))
 
         model = DiffTree(files_with_attributes, nested_file_list)
 
