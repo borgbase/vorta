@@ -31,6 +31,21 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
+        # Temporary fix for QT Darkstyle dropdown issue.
+        # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
+        self.setStyleSheet(
+        """
+        QComboBox::item:checked {
+        height: 12px;
+        border: 1px solid #32414B;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 4px;
+        padding-left: 0px;
+        }
+        """
+        )
+
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
