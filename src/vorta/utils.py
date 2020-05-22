@@ -27,6 +27,9 @@ from vorta.borg._compatibility import BorgCompatibility
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 
+QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
+QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
+
 keyring = VortaKeyring.get_keyring()
 logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
 
