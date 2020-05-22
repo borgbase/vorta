@@ -76,6 +76,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.populate_from_profile()
 
+        self.selected_archives = None
+
     def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
@@ -429,9 +431,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         window.show()
 
         if window.exec_():
-            selected_archives = window.selected_archives
-            archive_cell_newer = self.archiveTable.item(selected_archives[0], 4)
-            archive_cell_older = self.archiveTable.item(selected_archives[1], 4)
+            if window.selected_archives:
+                self.selected_archives = window.selected_archives
+            archive_cell_newer = self.archiveTable.item(self.selected_archives[0], 4)
+            archive_cell_older = self.archiveTable.item(self.selected_archives[1], 4)
             if archive_cell_older and archive_cell_newer:
                 archive_name_newer = archive_cell_newer.text()
                 archive_name_older = archive_cell_older.text()
@@ -457,5 +460,5 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             window = DiffResult(result['data'], archive_newer, archive_older)
             self._toggle_all_buttons(True)
             window.setParent(self, QtCore.Qt.Sheet)
-            self._window = window  # for testing
+            self._resultwindow = window  # for testing
             window.show()

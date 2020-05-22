@@ -27,6 +27,9 @@ from vorta.borg._compatibility import BorgCompatibility
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 
+QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
+QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
+
 keyring = VortaKeyring.get_keyring()
 logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
 
@@ -102,7 +105,12 @@ def pretty_bytes(size):
     while size >= power:
         size /= power
         n += 1
-    return f'{round(size, 1)} {Dic_powerN[n]}B'
+    try:
+        unit = Dic_powerN[n]
+        return f'{round(size, 1)} {unit}B'
+    except KeyError as e:
+        logger.error(e)
+        return "NaN"
 
 
 def get_asset(path):
@@ -128,12 +136,16 @@ def get_sorted_wifis(profile):
             wifis = plistlib.load(plist_file).get('KnownNetworks')
         except xml.parsers.expat.ExpatError:
             logger.error('Unable to parse list of Wifi networks.')
-            return
+            return []
 
         if wifis is not None:
             for wifi in wifis.values():
                 timestamp = wifi.get('LastConnected', None)
-                ssid = wifi['SSIDString']
+                ssid = wifi.get('SSIDString', None)
+
+                if ssid is None:
+                    continue
+
                 db_wifi, created = WifiSettingModel.get_or_create(
                     ssid=ssid,
                     profile=profile.id,

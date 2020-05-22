@@ -1,8 +1,8 @@
 import sys
 
 from PyQt5 import QtCore, uic
+from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMessageBox, QShortcut
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
@@ -30,6 +30,21 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app = parent
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
+
+        # Temporary fix for QT Darkstyle dropdown issue.
+        # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
+        self.setStyleSheet(
+        """
+        QComboBox::item:checked {
+        height: 12px;
+        border: 1px solid #32414B;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 4px;
+        padding-left: 0px;
+        }
+        """
+        )
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -114,12 +129,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             # Remove pending background jobs
             to_delete_id = str(to_delete.id)
-            if self.app.scheduler.get_job(to_delete_id):
-                self.app.scheduler.remove_job(to_delete_id)
+            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            reply = QMessageBox.question(self, self.tr("Confirm deletion"),
+                                         msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-            to_delete.delete_instance(recursive=True)
-            self.profileSelector.removeItem(self.profileSelector.currentIndex())
-            self.profile_select_action(0)
+            if reply == QMessageBox.Yes:
+                if self.app.scheduler.get_job(to_delete_id):
+                    self.app.scheduler.remove_job(to_delete_id)
+
+                to_delete.delete_instance(recursive=True)
+                self.profileSelector.removeItem(self.profileSelector.currentIndex())
+                self.profile_select_action(0)
 
     def profile_add_action(self):
         window = AddProfileWindow()
