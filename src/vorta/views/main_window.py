@@ -6,7 +6,7 @@ from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
-from vorta.models import BackupProfileModel
+from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available
 from vorta.views.utils import get_theme_class
 
@@ -33,16 +33,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # Temporary fix for QT Darkstyle dropdown issue.
         # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
-        self.setStyleSheet("""
-        QComboBox::item:checked {
-        height: 12px;
-        border: 1px solid #32414B;
-        margin-top: 0px;
-        margin-bottom: 0px;
-        padding: 4px;
-        padding-left: 0px;
-        }
-        """)
+        if SettingsModel.get(key='use_dark_theme').value:
+            self.setStyleSheet("""
+            QComboBox::item:checked {
+            height: 12px;
+            border: 1px solid #32414B;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding: 4px;
+            padding-left: 0px;
+            }
+            """)
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
