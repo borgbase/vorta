@@ -6,7 +6,7 @@ from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
-from vorta.models import BackupProfileModel, SettingsModel
+from vorta.models import BackupProfileModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available
 from vorta.views.utils import get_colored_icon
 

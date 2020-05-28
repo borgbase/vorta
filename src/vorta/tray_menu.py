@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
 from vorta.borg.borg_thread import BorgThread
-from vorta.models import BackupProfileModel, SettingsModel
+from vorta.models import BackupProfileModel
 from vorta.utils import get_asset, uses_dark_mode
 
 
@@ -65,7 +65,6 @@ class TrayMenu(QSystemTrayIcon):
 
         exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)
-
 
     def set_tray_icon(self, active=False):
         # use_light_style = SettingsModel.get(key='use_light_icon').value

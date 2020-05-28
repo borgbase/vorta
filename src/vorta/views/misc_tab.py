@@ -18,7 +18,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
-        self.logLink.setText(f'<a href="file://{LOG_DIR}"><span style="text-decoration: underline; color:#0984e3;">Log</span></a>')
+        self.logLink.setText(f'<a href="file://{LOG_DIR}"><span style="text-decoration:'
+                             'underline; color:#0984e3;">Log</span></a>')
 
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())

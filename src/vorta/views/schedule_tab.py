@@ -35,7 +35,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.toolBox.setItemIcon(2, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
 
-
     def populate_from_profile(self):
         profile = self.profile()
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)

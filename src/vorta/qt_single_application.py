@@ -2,7 +2,6 @@ from PyQt5.QtCore import QTextStream
 from PyQt5.QtNetwork import QLocalSocket, QLocalServer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal
-import sys
 
 
 class QtSingleApplication(QApplication):

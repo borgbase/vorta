@@ -1,12 +1,9 @@
 import os
 import sys
-
-from PyQt5 import QtCore, QtGui
-
 import sip
+from PyQt5 import QtCore
 from vorta.borg.version import BorgVersionThread
 from vorta.config import STATE_DIR
-
 from .borg.create import BorgCreateThread
 from .i18n import init_translations, translate
 from .models import BackupProfileModel, SettingsModel
