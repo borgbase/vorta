@@ -198,13 +198,6 @@ def get_misc_settings():
                                 'Use light system tray icon (applies after restart)')
         },
         {
-            'key': 'use_dark_theme',
-            'value': False,
-            'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Use dark theme (applies after restart)')
-        },
-        {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Display notifications when background tasks fail')

@@ -18,9 +18,6 @@ class QtSingleApplication(QApplication):
         super().__init__(*argv)
         self._id = id
 
-        if sys.platform.startswith('linux'):
-            self.setStyle('Fusion')
-
         # Is there another instance running?
         self._outSocket = QLocalSocket()
         self._outSocket.connectToServer(self._id)

@@ -1,7 +1,6 @@
 import os
 import sys
 
-import qdarkstyle
 from PyQt5 import QtCore
 
 import sip
@@ -48,10 +47,6 @@ class VortaApp(QtSingleApplication):
 
         # Prepare system tray icon
         self.tray = TrayMenu(self)
-
-        # Apply dark stylesheet
-        if SettingsModel.get(key='use_dark_theme').value:
-            self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
         args = parse_args()
         if getattr(args, 'daemonize', False):
