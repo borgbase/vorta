@@ -249,9 +249,6 @@ def init_db(con=None):
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        if created and setting['key'] == "use_dark_theme":
-            # Check if macOS with enabled dark mode
-            s.value = bool(uses_dark_mode())
         if created and setting['key'] == "use_light_icon":
             # Check if macOS with enabled dark mode or Linux with GNOME DE
             s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')

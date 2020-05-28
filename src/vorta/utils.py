@@ -20,7 +20,6 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -208,14 +207,6 @@ def slugify(value):
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
     value = re.sub(r'[^\w\s-]', '', value).strip().lower()
     return re.sub(r'[-\s]+', '-', value)
-
-
-def set_tray_icon(tray, active=False):
-    from vorta.models import SettingsModel
-    use_light_style = SettingsModel.get(key='use_light_icon').value
-    icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
-    icon = QIcon(get_asset(icon_name))
-    tray.setIcon(icon)
 
 
 def uses_dark_mode():

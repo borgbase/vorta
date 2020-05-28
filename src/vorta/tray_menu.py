@@ -1,16 +1,17 @@
 import os
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
+from PyQt5.QtGui import QIcon
 
-from .borg.borg_thread import BorgThread
-from .models import BackupProfileModel
-from .utils import set_tray_icon
+from vorta.borg.borg_thread import BorgThread
+from vorta.models import BackupProfileModel, SettingsModel
+from vorta.utils import get_asset, uses_dark_mode
 
 
 class TrayMenu(QSystemTrayIcon):
     def __init__(self, parent=None):
         QSystemTrayIcon.__init__(self, parent)
         self.app = parent
-        set_tray_icon(self)
+        self.set_tray_icon()
         menu = QMenu()
 
         # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
@@ -64,3 +65,11 @@ class TrayMenu(QSystemTrayIcon):
 
         exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)
+
+
+    def set_tray_icon(self, active=False):
+        # use_light_style = SettingsModel.get(key='use_light_icon').value
+        use_light_style = uses_dark_mode()
+        icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
+        icon = QIcon(get_asset(icon_name))
+        self.setIcon(icon)

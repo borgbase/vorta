@@ -8,10 +8,6 @@ DATE = "$(shell date +%F)"
 clean:
 	rm -rf dist/*
 
-icon-resources:  ## Compile SVG icons to importable resource files.
-	pyrcc5 -o src/vorta/views/dark/collection_rc.py src/vorta/assets/icons/dark/collection.qrc
-	pyrcc5 -o src/vorta/views/light/collection_rc.py src/vorta/assets/icons/light/collection.qrc
-
 dist/Vorta.app: translations-to-qm clean
 	pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/

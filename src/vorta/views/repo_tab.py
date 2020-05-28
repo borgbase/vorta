@@ -6,10 +6,10 @@ from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
 from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
 from .ssh_dialog import SSHAddWindow
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
-from .utils import get_theme_class
+from .utils import get_colored_icon
 
 uifile = get_asset('UI/repotab.ui')
-RepoUI, RepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
+RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
 class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
@@ -58,6 +58,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         self.init_repo_stats()
         self.populate_from_profile()
+        self.set_icons()
+
+    def set_icons(self):
+        self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
+        self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
 
     def populate_from_profile(self):
         profile = self.profile()
