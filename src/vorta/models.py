@@ -250,8 +250,8 @@ def init_db(con=None):
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         if created and setting['key'] == "use_light_icon":
-            # Check if macOS with enabled dark mode or Linux with GNOME DE
-            s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
+            # TODO: Remove?
+            s.value = 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
         if created and setting['key'] == "enable_notifications_success":
             s.value = not bool(is_system_tray_available())
         s.label = setting['label']
