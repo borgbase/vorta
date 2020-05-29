@@ -60,7 +60,6 @@ class VortaApp(QtSingleApplication):
 
     def eventFilter(self, source, event):
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and type(source) == MainWindow:
-            print('Window theme change')
             self.main_window.set_icons()
             self.main_window.repoTab.set_icons()
             self.main_window.archiveTab.set_icons()
