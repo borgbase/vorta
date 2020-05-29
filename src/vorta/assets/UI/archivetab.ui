@@ -28,11 +28,6 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QToolBox::tab {
-font-weight: bold;
-}</string>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -208,8 +203,8 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>572</width>
-        <height>282</height>
+        <width>775</width>
+        <height>441</height>
        </rect>
       </property>
       <attribute name="label">

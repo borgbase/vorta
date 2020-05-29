@@ -212,14 +212,9 @@ def slugify(value):
 def uses_dark_mode():
     """
     This function detects if we are running in dark mode (e.g. macOS dark mode).
-
-    Returns None if the interface style cannot be determined, otherwise a boolean.
     """
-    if sys.platform == 'darwin':
-        from Foundation import NSUserDefaults
-        stdud = NSUserDefaults.standardUserDefaults()
-        return stdud.stringForKey_("AppleInterfaceStyle") == "Dark"
-    return None
+    palette = QApplication.instance().palette()
+    return palette.windowText().color().lightness() > palette.window().color().lightness()
 
 
 def format_archive_name(profile, archive_name_tpl):

@@ -25,11 +25,6 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QToolBox::tab {
-font-weight: bold;
-}</string>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -527,5 +522,6 @@ font-weight: bold;
    </item>
   </layout>
  </widget>
+ <resources/>
  <connections/>
 </ui>

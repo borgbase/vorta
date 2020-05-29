@@ -68,7 +68,6 @@ class TrayMenu(QSystemTrayIcon):
 
     def set_tray_icon(self, active=False):
         # use_light_style = SettingsModel.get(key='use_light_icon').value
-        use_light_style = uses_dark_mode()
-        icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
+        icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if uses_dark_mode() else 'dark'}.png"
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
