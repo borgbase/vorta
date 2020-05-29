@@ -113,7 +113,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
             return False
 
-        if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) != None:
+        if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:
             self._set_status(self.tr('This repo has already been added.'))
             return False
 
