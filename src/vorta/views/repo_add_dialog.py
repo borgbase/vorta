@@ -5,6 +5,7 @@ from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_co
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.views.utils import get_theme_class
+from vorta.models import RepoModel
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
@@ -110,6 +111,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         """Pre-flight check for valid input and borg binary."""
         if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
             self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
+            return False
+
+        if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) != None:
+            self._set_status(self.tr('This repo has already been added.'))
             return False
 
         if self.__class__ == AddRepoWindow:
