@@ -28,8 +28,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setWindowTitle('Vorta for Borg Backup')
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
         self.app = parent
-        self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
+
+        # Select previously used profile, if available
+        prev_profile_id = SettingsModel.get(key='previous_profile_id')
+        self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
+        if self.current_profile is None:
+            self.current_profile = BackupProfileModel.select().order_by('name').first()
 
         # Temporary fix for QT Darkstyle dropdown issue.
         # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
@@ -70,9 +75,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Init profile list
-        for profile in BackupProfileModel.select():
+        for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
             self.profileSelector.addItem(profile.name, profile.id)
-        self.profileSelector.setCurrentIndex(0)
+        current_profile_index = self.profileSelector.findData(self.current_profile.id)
+        self.profileSelector.setCurrentIndex(current_profile_index)
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
@@ -114,6 +120,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
+        SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
+            .where(SettingsModel.key == 'previous_profile_id')\
+            .execute()
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
