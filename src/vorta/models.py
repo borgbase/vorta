@@ -165,8 +165,8 @@ class SchemaVersion(pw.Model):
 class SettingsModel(pw.Model):
     """App settings unrelated to a single profile or repo"""
     key = pw.CharField(unique=True)
-    value = pw.BooleanField()
-    str_value = pw.CharField(null=True)
+    value = pw.BooleanField(default=False)
+    str_value = pw.CharField(default='')
     label = pw.CharField()
     type = pw.CharField()
 
