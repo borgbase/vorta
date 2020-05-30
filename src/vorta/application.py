@@ -1,5 +1,4 @@
 import os
-import logging
 import sys
 
 import qdarkstyle
@@ -19,7 +18,6 @@ from .utils import borg_compat, parse_args, set_tray_icon
 from .views.main_window import MainWindow
 
 APP_ID = os.path.join(STATE_DIR, "socket")
-logger = logging.getLogger(__name__)
 
 
 class VortaApp(QtSingleApplication):
@@ -115,10 +113,7 @@ class VortaApp(QtSingleApplication):
         thread.start()
 
     def set_borg_details_result(self, result):
-        if result['returncode'] == 0:
-            borg_compat.set_version(result['data']['version'], result['data']['path'])
-            if self._main_window_exists():
-                self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
-                self.main_window.repoTab.toggle_available_compression()
-        else:
-            logger.warning('No usable Borg version found.')
+        borg_compat.set_version(result['data']['version'], result['data']['path'])
+        if self._main_window_exists():
+            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+            self.main_window.repoTab.toggle_available_compression()
