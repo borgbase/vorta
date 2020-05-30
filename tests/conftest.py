@@ -1,6 +1,7 @@
 import pytest
 import peewee
 import sys
+import os
 from datetime import datetime as dt
 from unittest.mock import MagicMock
 
@@ -41,8 +42,17 @@ def init_db(qapp):
     qapp.open_main_window_action()
 
 
+@pytest.fixture(scope='session', autouse=True)
+def local_en():
+    """
+    Some tests use English strings. So override whatever language the current user
+    has and run the tests with the English UI.
+    """
+    os.environ['LANG'] = 'en_US'
+
+
 @pytest.fixture(scope='session')
-def qapp(tmpdir_factory):
+def qapp(tmpdir_factory, local_en):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
