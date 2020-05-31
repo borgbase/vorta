@@ -1,16 +1,13 @@
-from vorta.models import SettingsModel
+from PyQt5.QtGui import QIcon, QImage, QPixmap
+from vorta.utils import uses_dark_mode, get_asset
 
 
-def get_theme_class():
+def get_colored_icon(icon_name):
     """
-    Choose a package to import collection_rc from.
-
-    light = white icons, dark = black icons.
-
-    Defaults to dark icons (light theme) if DB isn't initialized yet.
+    Return SVG icon in the correct color.
     """
-    if SettingsModel._meta.database.obj is None:
-        return 'vorta.views.dark'
-    else:
-        use_light_icon = SettingsModel.get(key='use_dark_theme').value
-        return 'vorta.views.light' if use_light_icon else 'vorta.views.dark'
+    svg_str = open(get_asset(f"icons/{icon_name}.svg"), 'rb').read()
+    if uses_dark_mode():
+        svg_str = svg_str.replace(b'#00000', b'#ffffff')
+    svg_img = QImage.fromData(svg_str)
+    return QIcon(QPixmap(svg_img))

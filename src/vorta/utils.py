@@ -20,7 +20,6 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -210,25 +209,12 @@ def slugify(value):
     return re.sub(r'[-\s]+', '-', value)
 
 
-def set_tray_icon(tray, active=False):
-    from vorta.models import SettingsModel
-    use_light_style = SettingsModel.get(key='use_light_icon').value
-    icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_light_style else 'dark'}.png"
-    icon = QIcon(get_asset(icon_name))
-    tray.setIcon(icon)
-
-
 def uses_dark_mode():
     """
     This function detects if we are running in dark mode (e.g. macOS dark mode).
-
-    Returns None if the interface style cannot be determined, otherwise a boolean.
     """
-    if sys.platform == 'darwin':
-        from Foundation import NSUserDefaults
-        stdud = NSUserDefaults.standardUserDefaults()
-        return stdud.stringForKey_("AppleInterfaceStyle") == "Dark"
-    return None
+    palette = QApplication.instance().palette()
+    return palette.windowText().color().lightness() > palette.window().color().lightness()
 
 
 def format_archive_name(profile, archive_name_tpl):

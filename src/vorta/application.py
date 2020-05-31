@@ -1,20 +1,16 @@
 import os
 import sys
-
-import qdarkstyle
-from PyQt5 import QtCore
-
 import sip
+from PyQt5 import QtCore
 from vorta.borg.version import BorgVersionThread
 from vorta.config import STATE_DIR
-
 from .borg.create import BorgCreateThread
 from .i18n import init_translations, translate
 from .models import BackupProfileModel, SettingsModel
 from .qt_single_application import QtSingleApplication
 from .scheduler import VortaScheduler
 from .tray_menu import TrayMenu
-from .utils import borg_compat, parse_args, set_tray_icon
+from .utils import borg_compat, parse_args
 from .views.main_window import MainWindow
 
 APP_ID = os.path.join(STATE_DIR, "socket")
@@ -49,10 +45,6 @@ class VortaApp(QtSingleApplication):
         # Prepare system tray icon
         self.tray = TrayMenu(self)
 
-        # Apply dark stylesheet
-        if SettingsModel.get(key='use_dark_theme').value:
-            self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-
         args = parse_args()
         if getattr(args, 'daemonize', False):
             pass
@@ -64,6 +56,17 @@ class VortaApp(QtSingleApplication):
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
         self.set_borg_details_action()
+        self.installEventFilter(self)
+
+    def eventFilter(self, source, event):
+        if event.type() == QtCore.QEvent.ApplicationPaletteChange and type(source) == MainWindow:
+            self.main_window.set_icons()
+            self.main_window.repoTab.set_icons()
+            self.main_window.archiveTab.set_icons()
+            self.main_window.scheduleTab.set_icons()
+        if event.type() == QtCore.QEvent.ApplicationPaletteChange and source == self.tray.contextMenu():
+            self.tray.set_tray_icon()
+        return False
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
@@ -92,13 +95,13 @@ class VortaApp(QtSingleApplication):
             self.open_main_window_action()
 
     def backup_started_event_response(self):
-        set_tray_icon(self.tray, active=True)
+        self.tray.set_tray_icon(active=True)
 
     def backup_finished_event_response(self):
-        set_tray_icon(self.tray)
+        self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
-        set_tray_icon(self.tray)
+        self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):
         if message == "open main window":

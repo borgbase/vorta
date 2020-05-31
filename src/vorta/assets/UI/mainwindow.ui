@@ -67,10 +67,6 @@
         <property name="toolTip">
          <string>Add Profile</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/plus.svg</normaloff>:/icons/plus.svg</iconset>
-        </property>
         <property name="iconSize">
          <size>
           <width>16</width>
@@ -83,10 +79,6 @@
        <widget class="QToolButton" name="profileRenameButton">
         <property name="toolTip">
          <string>Rename Profile</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -102,11 +94,7 @@
          <string>Delete Profile</string>
         </property>
         <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
+         <string/>
         </property>
        </widget>
       </item>
@@ -301,8 +289,5 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../icons/collection.qrc"/>
- </resources>
  <connections/>
 </ui>

@@ -28,11 +28,6 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QToolBox::tab {
-font-weight: bold;
-}</string>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -41,14 +36,10 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>787</width>
-        <height>443</height>
+        <width>775</width>
+        <height>441</height>
        </rect>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/dark/collection.qrc">
-        <normaloff>:/icons/tasks.svg</normaloff>:/icons/tasks.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Archives</string>
       </attribute>
@@ -113,10 +104,6 @@ font-weight: bold;
            <property name="text">
             <string>Extract</string>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/cloud-download.svg</normaloff>:/icons/cloud-download.svg</iconset>
-           </property>
           </widget>
          </item>
          <item>
@@ -130,10 +117,6 @@ font-weight: bold;
            <property name="text">
             <string>Mount</string>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
-           </property>
           </widget>
          </item>
          <item>
@@ -141,20 +124,12 @@ font-weight: bold;
            <property name="text">
             <string>Check</string>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/check-circle.svg</normaloff>:/icons/check-circle.svg</iconset>
-           </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="deleteButton">
            <property name="text">
             <string>Delete</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
            </property>
           </widget>
          </item>
@@ -176,20 +151,12 @@ font-weight: bold;
            <property name="text">
             <string>Diff</string>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/stream-solid.svg</normaloff>:/icons/stream-solid.svg</iconset>
-           </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pruneButton">
            <property name="text">
             <string>Prune</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
            </property>
           </widget>
          </item>
@@ -207,10 +174,6 @@ font-weight: bold;
            <property name="text">
             <string>Refresh</string>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
-             <normaloff>:/icons/refresh.svg</normaloff>:/icons/refresh.svg</iconset>
-           </property>
           </widget>
          </item>
         </layout>
@@ -226,7 +189,7 @@ font-weight: bold;
           </font>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
@@ -240,14 +203,10 @@ font-weight: bold;
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>787</width>
-        <height>443</height>
+        <width>775</width>
+        <height>441</height>
        </rect>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/dark/collection.qrc">
-        <normaloff>:/icons/cut.svg</normaloff>:/icons/cut.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Prune Options and Archive Naming</string>
       </attribute>
@@ -255,7 +214,7 @@ font-weight: bold;
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -520,8 +479,6 @@ font-weight: bold;
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../icons/dark/collection.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -2,7 +2,6 @@ from PyQt5.QtCore import QTextStream
 from PyQt5.QtNetwork import QLocalSocket, QLocalServer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal
-import sys
 
 
 class QtSingleApplication(QApplication):
@@ -17,9 +16,6 @@ class QtSingleApplication(QApplication):
 
         super().__init__(*argv)
         self._id = id
-
-        if sys.platform.startswith('linux'):
-            self.setStyle('Fusion')
 
         # Is there another instance running?
         self._outSocket = QLocalSocket()

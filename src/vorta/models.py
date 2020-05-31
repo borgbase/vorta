@@ -13,7 +13,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import is_system_tray_available, slugify, uses_dark_mode
+from vorta.utils import is_system_tray_available, slugify
 
 SCHEMA_VERSION = 13
 
@@ -191,20 +191,6 @@ def get_misc_settings():
     # Default settings for all platforms.
     settings = [
         {
-            'key': 'use_light_icon',
-            'value': False,
-            'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Use light system tray icon (applies after restart)')
-        },
-        {
-            'key': 'use_dark_theme',
-            'value': False,
-            'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Use dark theme (applies after restart)')
-        },
-        {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Display notifications when background tasks fail')
@@ -256,12 +242,6 @@ def init_db(con=None):
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        if created and setting['key'] == "use_dark_theme":
-            # Check if macOS with enabled dark mode
-            s.value = bool(uses_dark_mode())
-        if created and setting['key'] == "use_light_icon":
-            # Check if macOS with enabled dark mode or Linux with GNOME DE
-            s.value = bool(uses_dark_mode()) or 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '')
         if created and setting['key'] == "enable_notifications_success":
             s.value = not bool(is_system_tray_available())
         s.label = setting['label']

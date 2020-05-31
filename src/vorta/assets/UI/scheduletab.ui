@@ -25,13 +25,8 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QToolBox::tab {
-font-weight: bold;
-}</string>
-     </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -48,10 +43,6 @@ font-weight: bold;
         <bold>false</bold>
        </font>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/light/collection.qrc">
-        <normaloff>:/icons/clock-o.svg</normaloff>:/icons/clock-o.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Schedule</string>
       </attribute>
@@ -368,10 +359,6 @@ font-weight: bold;
         <height>354</height>
        </rect>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/light/collection.qrc">
-        <normaloff>:/icons/wifi.svg</normaloff>:/icons/wifi.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Networks</string>
       </attribute>
@@ -400,10 +387,6 @@ font-weight: bold;
         <height>354</height>
        </rect>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/light/collection.qrc">
-        <normaloff>:/icons/tasks.svg</normaloff>:/icons/tasks.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Log</string>
       </attribute>
@@ -465,10 +448,6 @@ font-weight: bold;
         <height>354</height>
        </rect>
       </property>
-      <attribute name="icon">
-       <iconset resource="../icons/light/collection.qrc">
-        <normaloff>:/icons/terminal.svg</normaloff>:/icons/terminal.svg</iconset>
-      </attribute>
       <attribute name="label">
        <string>Shell Commands</string>
       </attribute>
@@ -543,8 +522,6 @@ font-weight: bold;
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../icons/light/collection.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

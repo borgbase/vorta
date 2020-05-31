@@ -6,9 +6,9 @@ from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
-from vorta.models import BackupProfileModel, SettingsModel
+from vorta.models import BackupProfileModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available
-from vorta.views.utils import get_theme_class
+from vorta.views.utils import get_colored_icon
 
 from .archive_tab import ArchiveTab
 from .misc_tab import MiscTab
@@ -18,7 +18,7 @@ from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
 uifile = get_asset('UI/mainwindow.ui')
-MainWindowUI, MainWindowBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
+MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
@@ -30,20 +30,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app = parent
         self.current_profile = BackupProfileModel.select().order_by('id').first()
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
-
-        # Temporary fix for QT Darkstyle dropdown issue.
-        # See https://github.com/ColinDuquesnoy/QDarkStyleSheet/issues/200
-        if SettingsModel.get(key='use_dark_theme').value:
-            self.setStyleSheet("""
-            QComboBox::item:checked {
-            height: 12px;
-            border: 1px solid #32414B;
-            margin-top: 0px;
-            margin-bottom: 0px;
-            padding: 4px;
-            padding-left: 0px;
-            }
-            """)
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -92,8 +78,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
             self.set_status(self.tr('Backup in progress.'), progress_max=0)
 
+        self.set_icons()
+
     def on_close_window(self):
         self.close()
+
+    def set_icons(self):
+        self.profileAddButton.setIcon(get_colored_icon('plus'))
+        self.profileRenameButton.setIcon(get_colored_icon('edit'))
+        self.profileDeleteButton.setIcon(get_colored_icon('trash'))
 
     def set_status(self, text=None, progress_max=None):
         if text:

@@ -6,11 +6,10 @@ from vorta.utils import get_asset
 from vorta.autostart import open_app_at_startup
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
-from vorta.views.utils import get_theme_class
 from vorta.config import LOG_DIR
 
 uifile = get_asset('UI/misctab.ui')
-MiscTabUI, MiscTabBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
+MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 
 
 class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
@@ -19,7 +18,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
-        self.logLink.setText(f"<a href='file://{LOG_DIR}'>Log</a>")
+        self.logLink.setText(f'<a href="file://{LOG_DIR}"><span style="text-decoration:'
+                             'underline; color:#0984e3;">Log</span></a>')
 
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
