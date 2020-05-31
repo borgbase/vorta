@@ -59,6 +59,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def set_repos(self):
         count = self.repoSelector.count()
+        # The repositories are listed after the 4th entry in the repoSelector
         for x in range(4, count):
             self.repoSelector.removeItem(4)
         for repo in RepoModel.select():
