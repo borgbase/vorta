@@ -2,10 +2,10 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
 from vorta.utils import get_asset, get_sorted_wifis
 from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin
-from vorta.views.utils import get_theme_class
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
-ScheduleUI, ScheduleBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
+ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
 
 class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
@@ -27,6 +27,13 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.init_logs()
         self.populate_from_profile()
+        self.set_icons()
+
+    def set_icons(self):
+        self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
+        self.toolBox.setItemIcon(1, get_colored_icon('wifi'))
+        self.toolBox.setItemIcon(2, get_colored_icon('tasks'))
+        self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
 
     def populate_from_profile(self):
         profile = self.profile()

@@ -23,10 +23,10 @@ from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
-from vorta.views.utils import get_theme_class
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archivetab.ui')
-ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile, from_imports=True, import_from=get_theme_class())
+ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
@@ -75,8 +75,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
 
         self.populate_from_profile()
+        self.set_icons()
 
         self.selected_archives = None
+
+    def set_icons(self):
+        self.extractButton.setIcon(get_colored_icon('cloud-download'))
+        self.mountButton.setIcon(get_colored_icon('folder-open'))
+        self.checkButton.setIcon(get_colored_icon('check-circle'))
+        self.deleteButton.setIcon(get_colored_icon('trash'))
+        self.diffButton.setIcon(get_colored_icon('stream-solid'))
+        self.pruneButton.setIcon(get_colored_icon('cut'))
+        self.listButton.setIcon(get_colored_icon('refresh'))
+        self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
+        self.toolBox.setItemIcon(1, get_colored_icon('cut'))
 
     def _set_status(self, text):
         self.mountErrors.setText(text)

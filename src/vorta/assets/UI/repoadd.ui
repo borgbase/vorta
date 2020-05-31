@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabWidgetPage1">
       <attribute name="title">
@@ -271,8 +271,5 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../icons/dark/collection.qrc"/>
- </resources>
  <connections/>
 </ui>
