@@ -346,8 +346,6 @@ def init_db(con=None):
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
-        if created and setting['key'] == "enable_notifications_success":
-            s.value = not bool(is_system_tray_available())
         s.label = setting['label']
         s.save()
 
