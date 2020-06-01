@@ -1,7 +1,7 @@
 {
     "app-id": "com.borgbase.Vorta",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.13",
+    "runtime-version": "5.14",
     "sdk": "org.kde.Sdk",
     "command": "vorta",
     "branch": "devel",
@@ -12,14 +12,11 @@
         "--device=dri",
         "--share=network",
         "--filesystem=host",
-        "--talk-name=org.kde.StatusNotifierWatcher",
-        "--own-name=org.kde.StatusNotifierItem-2-1",
-        "--own-name=org.kde.StatusNotifierItem-4-1",
+        "--own-name=org.kde.*",
         "--talk-name=org.freedesktop.DBus.*",
         "--talk-name=org.freedesktop.Flatpak.*",
         "--talk-name=org.freedesktop.secrets",
         "--socket=ssh-auth",
-        "--own-name=org.KDE.*",
         "--talk-name=org.freedesktop.Notifications"
     ],
     "build-options": {
