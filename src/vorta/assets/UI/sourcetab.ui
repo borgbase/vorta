@@ -100,7 +100,7 @@
         <string/>
        </property>
        <property name="placeholderText">
-        <string>E.g. **/.DS_Store</string>
+        <string>E.g. **/.cache</string>
        </property>
       </widget>
      </item>
@@ -113,7 +113,7 @@
         </sizepolicy>
        </property>
        <property name="placeholderText">
-        <string>E.g. CACHE or .nobackup</string>
+        <string>E.g. .nobackup</string>
        </property>
       </widget>
      </item>
