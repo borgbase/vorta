@@ -9,8 +9,8 @@ from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.i18n import translate
 
-from .models import BackupProfileModel, EventLogModel
-from .notifications import VortaNotifications
+from vorta.models import BackupProfileModel, EventLogModel
+from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
 

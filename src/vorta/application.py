@@ -14,6 +14,7 @@ from vorta.scheduler import VortaScheduler
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
+from vorta.notifications import VortaNotifications
 
 APP_ID = os.path.join(STATE_DIR, "socket")
 
@@ -80,6 +81,8 @@ class VortaApp(QtSingleApplication):
             thread = BorgCreateThread(msg['cmd'], msg, parent=self)
             thread.start()
         else:
+            notifier = VortaNotifications.pick()
+            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
             self.backup_log_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
