@@ -2,16 +2,18 @@ import os
 import sys
 import sip
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QMessageBox
+
+from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
 from vorta.config import STATE_DIR
-from .borg.create import BorgCreateThread
-from .i18n import init_translations, translate
-from .models import BackupProfileModel, SettingsModel
-from .qt_single_application import QtSingleApplication
-from .scheduler import VortaScheduler
-from .tray_menu import TrayMenu
-from .utils import borg_compat, parse_args
-from .views.main_window import MainWindow
+from vorta.i18n import init_translations, translate
+from vorta.models import BackupProfileModel, SettingsModel
+from vorta.qt_single_application import QtSingleApplication
+from vorta.scheduler import VortaScheduler
+from vorta.tray_menu import TrayMenu
+from vorta.utils import borg_compat, parse_args
+from vorta.views.main_window import MainWindow
 
 APP_ID = os.path.join(STATE_DIR, "socket")
 
@@ -110,13 +112,29 @@ class VortaApp(QtSingleApplication):
     def set_borg_details_action(self):
         params = BorgVersionThread.prepare()
         if not params['ok']:
+            self._alert_missing_borg()
             return
         thread = BorgVersionThread(params['cmd'], params, parent=self)
         thread.result.connect(self.set_borg_details_result)
         thread.start()
 
     def set_borg_details_result(self, result):
-        borg_compat.set_version(result['data']['version'], result['data']['path'])
-        if self._main_window_exists():
-            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
-            self.main_window.repoTab.toggle_available_compression()
+        """
+        Receive result from BorgVersionThread. If MainWindow is open, set the version in misc tab.
+        If no valid version was found, display an error.
+        """
+        if 'version' in result['data']:
+            borg_compat.set_version(result['data']['version'], result['data']['path'])
+            if self._main_window_exists():
+                self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+                self.main_window.repoTab.toggle_available_compression()
+        else:
+            self._alert_missing_borg()
+
+    def _alert_missing_borg(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(self.tr("No Borg Binary Found"))
+        msg.setInformativeText(self.tr("Vorta was unable to locate a usable Borg Backup binary."))
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
