@@ -13,7 +13,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import is_system_tray_available, slugify
+from vorta.utils import slugify
 
 SCHEMA_VERSION = 14
 
