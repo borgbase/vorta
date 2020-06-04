@@ -4,5 +4,6 @@ GenericName=Backup Software
 Exec=vorta
 Type=Application
 Icon=com.borgbase.Vorta
-Categories=Utility
+Categories=Utility;Archiving;Qt;
+Keywords=borg;
 StartupWMClass=vorta
