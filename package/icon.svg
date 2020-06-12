@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="Layer_1" inkscape:version="0.92.4 5da689c313, 2019-01-14" sodipodi:docname="com.borgbase.Vorta.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576"
+	 style="enable-background:new 0 0 576 576;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#888888;}
+	.st1{fill:#E65100;}
+	.st2{fill:#FF9800;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview15" inkscape:current-layer="Layer_1" inkscape:cx="291.25424" inkscape:cy="192" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="836" inkscape:window-maximized="1" inkscape:window-width="1600" inkscape:window-x="0" inkscape:window-y="27" inkscape:zoom="0.61458333" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<title  id="title6">vorta</title>
+<path id="path8" inkscape:connector-curvature="0" class="st0" d="M576,342v96c0,26.5-21.5,48-48,48H48c-26.5,0-48-21.5-48-48v-96
+	c0-26.5,21.5-48,48-48h480C554.5,294,576,315.5,576,342z M528,262c10.6,0,21,2.1,30.8,6.2l-96.5-144.8
+	c-8.9-13.4-23.9-21.4-39.9-21.4H153.7c-16,0-31,8-39.9,21.4L17.2,268.2C27,264.1,37.4,262,48,262H528z M480,358
+	c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S497.7,358,480,358z M384,358c-17.7,0-32,14.3-32,32s14.3,32,32,32
+	s32-14.3,32-32S401.7,358,384,358z"/>
+<circle id="circle10" class="st1" cx="384.5" cy="390" r="32"/>
+<circle id="circle12" class="st2" cx="480" cy="390" r="32"/>
+</svg>

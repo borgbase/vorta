@@ -61,7 +61,7 @@ translations-to-qm:  ## Compile .ts text files to binary .qm files.
 flatpak-install: translations-to-qm
 	pip3 install --prefix=/app --no-deps .
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml /app/share/metainfo/com.borgbase.Vorta.appdata.xml
-	install -D src/vorta/assets/icons/scalable/com.borgbase.Vorta.svg /app/share/icons/hicolor/scalable/apps/com.borgbase.Vorta.svg
+	install -D package/icon.svg /app/share/icons/hicolor/scalable/apps/com.borgbase.Vorta.svg
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop /app/share/applications/com.borgbase.Vorta.desktop
 
 help:

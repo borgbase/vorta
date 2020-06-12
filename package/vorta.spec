@@ -61,7 +61,7 @@ coll = COLLECT(exe,
 
 app = BUNDLE(coll,
              name='Vorta.app',
-             icon=os.path.join(SRC_DIR, 'assets/icons/app-icon.icns'),
+             icon='icon.icns',
              bundle_identifier=None,
              info_plist={
                  'CFBundleName': APP_NAME,
