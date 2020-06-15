@@ -153,6 +153,5 @@ class ExistingRepoWindow(AddRepoWindow):
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
-                os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = 'no' # Kind of a hack
             else:
                 self._set_status(params['message'])
