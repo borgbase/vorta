@@ -146,7 +146,7 @@ class ExistingRepoWindow(AddRepoWindow):
         if self.validate():
             params = BorgInfoThread.prepare(self.values)
             if params['ok']:
-                os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = ('no' if self.encryptedCheckbox.isChecked() else 'yes') # noqa
+                os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = 'no' if self.encryptedCheckbox.isChecked() else 'yes' # noqa
                 self.saveButton.setEnabled(False)
                 thread = BorgInfoThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self._set_status)
