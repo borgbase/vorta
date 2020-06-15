@@ -1,4 +1,5 @@
 import re
+import os
 from PyQt5 import uic
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
@@ -23,6 +24,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
         self.tabWidget.setCurrentIndex(0)
+
+        self.encryptedCheckbox.hide()
 
         self.init_encryption()
         self.init_ssh_key()
@@ -136,17 +139,20 @@ class ExistingRepoWindow(AddRepoWindow):
         super().__init__()
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
+        self.encryptedCheckbox.show()
         self.title.setText(self.tr('Connect to existing Repository'))
 
     def run(self):
         if self.validate():
             params = BorgInfoThread.prepare(self.values)
             if params['ok']:
+                os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = ('no' if self.encryptedCheckbox.isChecked() else 'yes')
                 self.saveButton.setEnabled(False)
                 thread = BorgInfoThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
                 self.thread.start()
+                os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = 'no' # Kind of a hack
             else:
                 self._set_status(params['message'])

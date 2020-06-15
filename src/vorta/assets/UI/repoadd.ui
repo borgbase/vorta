@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,8 +103,18 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="encryptedCheckbox">
+           <property name="text">
+            <string>Encrypted</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -271,5 +281,6 @@
    </item>
   </layout>
  </widget>
+ <resources/>
  <connections/>
 </ui>
