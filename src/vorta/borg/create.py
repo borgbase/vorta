@@ -130,6 +130,11 @@ class BorgCreateThread(BorgThread):
                 if f.strip():
                     cmd.extend(['--exclude-if-present', f.strip()])
 
+        # Add patterns
+        if profile.patterns is not None:
+            for p in profile.patterns.split('\n'):
+                cmd.extend(['--pattern=' + p.strip()])
+
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
         cmd.append(f"{profile.repo.url}::{new_archive_name}")

@@ -16,23 +16,28 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceRemove.clicked.connect(self.source_remove)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.patternsField.textChanged.connect(self.save_patterns)
         self.populate_from_profile()
 
     def populate_from_profile(self):
         profile = self.profile()
         self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
+        self.patternsField.textChanged.disconnect()
         self.sourceFilesWidget.clear()
         self.excludePatternsField.clear()
         self.excludeIfPresentField.clear()
+        self.patternsField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.sourceFilesWidget.addItem(source.dir)
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
+        self.patternsField.appendPlainText(profile.patterns)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.patternsField.textChanged.connect(self.save_patterns)
 
     def source_add(self, want_folder):
         def receive():
@@ -61,4 +66,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def save_exclude_if_present(self):
         profile = self.profile()
         profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
+        profile.save()
+
+    def save_patterns(self):
+        profile = self.profile()
+        profile.patterns = self.patternsField.toPlainText()
         profile.save()
