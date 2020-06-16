@@ -26,8 +26,8 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
             self.existing_id = rename_existing_id
             self.modalTitle.setText(self.tr('Rename Profile'))
 
-        # Disable button at start as name always invalid
-        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
+        # Call validate to set inital messages
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
 
     def _set_status(self, text):
         self.errorText.setText(text)
