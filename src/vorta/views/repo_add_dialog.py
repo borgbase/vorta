@@ -59,6 +59,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
         dialog.open(receive)
+        self.encryptedCheckbox.hide()
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -155,3 +156,8 @@ class ExistingRepoWindow(AddRepoWindow):
                 self.thread.start()
             else:
                 self._set_status(params['message'])
+
+    def use_remote_repo_action(self):
+        super().use_remote_repo_action()
+        self.encryptedCheckbox.show()
+        
