@@ -19,58 +19,7 @@ class DiffResult(DiffResultBase, DiffResultUI):
         super().__init__()
         self.setupUi(self)
 
-        files_with_attributes = []
-        nested_file_list = nested_dict()
-
-        def parse_line(line):
-            if line:
-                line_split = line.split()
-            else:
-                return 0, "", "", ""
-
-            if line_split[0] == 'added' or line_split[0] == 'removed':
-                change_type = line_split[0]
-                if line_split[1] in ['directory', 'link']:
-                    size = 0
-                    full_path = re.search(r'^\w+ \w+ +(.*)', line).group(1)
-                else:
-                    significand = line_split[1]
-                    unit = line_split[2]
-                    size = calc_size(significand, unit)
-                    full_path = re.search(r'^\w+ +\S+ \w?B (.*)', line).group(1)
-            else:
-                size_change = re.search(r' *[\+-]?(\d+\.*\d*) (\w?B) +[\+-]?.+\w?B ', line)
-                if size_change:
-                    significand = size_change.group(1)
-                    unit = size_change.group(2)
-                    size = calc_size(significand, unit)
-                    full_path_index = size_change.end(0)
-                else:
-                    size = 0
-
-                permission_change = re.search(r' *(\[.{24}\]) ', line)
-                if permission_change:
-                    change_type = permission_change.group(1)
-                    full_path_index = permission_change.end(0)
-                else:
-                    change_type = "modified"
-
-                if size_change and permission_change:
-                    full_path_index = max(size_change.end(0), permission_change.end(0))
-                full_path = line[full_path_index:]
-
-            dir, name = os.path.split(full_path)
-
-            # add to nested dict of folders to find nested dirs.
-            d = get_dict_from_list(nested_file_list, dir.split('/'))
-            if name not in d:
-                d[name] = {}
-
-            return size, change_type, name, dir
-
-        for line in fs_data.split('\n'):
-            files_with_attributes.append(parse_line(line))
-
+        files_with_attributes, nested_file_list = parse_diff_lines(fs_data.split('\n'))
         model = DiffTree(files_with_attributes, nested_file_list)
 
         view = self.treeView
@@ -86,6 +35,62 @@ class DiffResult(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
         self.okButton.clicked.connect(self.accept)
+
+
+def parse_diff_lines(diff_lines):
+    files_with_attributes = []
+    nested_file_list = nested_dict()
+
+    def parse_line(line):
+        if line:
+            line_split = line.split()
+        else:
+            return 0, "", "", ""
+
+        if line_split[0] in {'added', 'removed', 'changed'}:
+            change_type = line_split[0]
+            if line_split[1] in ['directory', 'link']:
+                size = 0
+                full_path = re.search(r'^\w+ \w+ +(.*)', line).group(1)
+            else:
+                significand = line_split[1]
+                unit = line_split[2]
+                size = calc_size(significand, unit)
+                full_path = re.search(r'^\w+ +\S+ \w?B (.*)', line).group(1)
+        else:
+            size_change = re.search(r' *[\+-]?(\d+\.*\d*) (\w?B) +[\+-]?.+\w?B ', line)
+            if size_change:
+                significand = size_change.group(1)
+                unit = size_change.group(2)
+                size = calc_size(significand, unit)
+                full_path_index = size_change.end(0)
+            else:
+                size = 0
+
+            permission_change = re.search(r' *(\[.{24}\]) ', line)
+            if permission_change:
+                change_type = permission_change.group(1)
+                full_path_index = permission_change.end(0)
+            else:
+                change_type = "modified"
+
+            if size_change and permission_change:
+                full_path_index = max(size_change.end(0), permission_change.end(0))
+            full_path = line[full_path_index:]
+
+        dir, name = os.path.split(full_path)
+
+        # add to nested dict of folders to find nested dirs.
+        d = get_dict_from_list(nested_file_list, dir.split('/'))
+        if name not in d:
+            d[name] = {}
+
+        return size, change_type, name, dir
+
+    for line in diff_lines:
+        files_with_attributes.append(parse_line(line))
+
+    return (files_with_attributes, nested_file_list)
 
 
 def calc_size(significand, unit):
