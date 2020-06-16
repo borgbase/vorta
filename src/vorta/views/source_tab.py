@@ -68,18 +68,18 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def paste_text(self):
         sources = QApplication.clipboard().text().splitlines()
-        invalidSources = "";
+        invalidSources = ""
         valid = True
         for source in sources:
-            if len(source) > 0: # ignore empty newlines
+            if len(source) > 0:  # ignore empty newlines
                 if not os.path.exists(source):
                     valid = False
                     invalidSources = invalidSources + "\n" + source
                 else:
                     new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
                     if created:
-                            self.sourceFilesWidget.addItem(source)
-                            new_source.save()
+                        self.sourceFilesWidget.addItem(source)
+                        new_source.save()
 
         if not valid:
             msg = QMessageBox()
