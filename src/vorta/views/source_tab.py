@@ -77,9 +77,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     invalidSources = invalidSources + "\n" + source
                 else:
                     new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
-                    print(created)
                     if created:
-                            self.sourceFilesWidget.addItem(sources)
+                            self.sourceFilesWidget.addItem(source)
                             new_source.save()
 
         if not valid:
