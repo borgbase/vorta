@@ -3,6 +3,7 @@ from ..models import SourceFileModel, BackupProfileMixin
 from ..utils import get_asset, choose_file_dialog
 from PyQt5.QtWidgets import QApplication, QMessageBox
 import os
+
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
@@ -85,5 +86,3 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             msg = QMessageBox()
             msg.setText("Some of your sources are invalid:" + invalidSources)
             msg.exec()
-
-
