@@ -160,4 +160,3 @@ class ExistingRepoWindow(AddRepoWindow):
     def use_remote_repo_action(self):
         super().use_remote_repo_action()
         self.encryptedCheckbox.show()
-        
