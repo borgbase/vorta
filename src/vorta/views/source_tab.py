@@ -79,7 +79,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                         self.sourceFilesWidget.addItem(source)
                         new_source.save()
 
-        if not len(invalidSources) is 0:  # Check if any invalid paths
+        if len(invalidSources) != 0:  # Check if any invalid paths
             msg = QMessageBox()
             msg.setText("Some of your sources are invalid:" + invalidSources)
             msg.exec()
