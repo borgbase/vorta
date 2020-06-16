@@ -1,5 +1,6 @@
 import psutil
 from collections import namedtuple
+import pytest
 from PyQt5 import QtCore
 from vorta.models import BackupProfileModel, ArchiveModel
 import vorta.borg
@@ -165,3 +166,14 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, monkeypatch):
 
     assert tab._resultwindow.archiveNameLabel_1.text() == 'test-archive'
     tab._resultwindow.accept()
+
+
+@pytest.mark.parametrize('line, expected', [
+    ('changed link        some/changed/link',
+     (0, 'changed', 'link', 'some/changed')),
+    (' +77.8 kB  -77.8 kB some/changed/file',
+     (77800, 'modified', 'file', 'some/changed')),
+])
+def test_archive_diff_parser(line, expected):
+    files_with_attributes, nested_file_list = vorta.views.diff_result.parse_diff_lines([line])
+    assert files_with_attributes == [expected]
