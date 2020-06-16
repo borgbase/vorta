@@ -55,6 +55,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="paste">
+         <property name="text">
+          <string>Paste</string>
+         </property>
+        </widget>
+       </item>
        <item alignment="Qt::AlignTop">
         <widget class="QPushButton" name="sourceRemove">
          <property name="text">
