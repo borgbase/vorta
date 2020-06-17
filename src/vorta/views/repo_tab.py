@@ -211,6 +211,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.init_repo_stats()
 
     def copy_URL_action(self):
-          if self.repoSelector.currentIndex() > 2:
-              URL = self.repoSelector.currentText()
-              QApplication.clipboard().setText(URL)
+        if self.repoSelector.currentIndex() > 2:
+            URL = self.repoSelector.currentText()
+            QApplication.clipboard().setText(URL)
