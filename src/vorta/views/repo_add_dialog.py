@@ -1,7 +1,7 @@
 import re
 from PyQt5 import uic
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.views.utils import get_colored_icon
@@ -30,6 +30,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_ssh_key()
         self.set_icons()
 
+        self.password_transparency()
+
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
         self.useRemoteRepoButton.setIcon(get_colored_icon('globe'))
@@ -45,6 +47,17 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    def password_transparency(self):
+        print(VortaKeyring.get_keyring().__class__.__name__)
+        plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
+        print(plaintextPass)
+        keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
+        if not plaintextPass:
+            keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]
+            print(keyringName)
+        message = 'The password will be stored in ' + keyringName
+        self.errorText.setText(message)
 
     def choose_local_backup_folder(self):
         def receive():
@@ -133,9 +146,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return True
 
     def validate_passwords(self):
-        firstPass = self.passwordLineEdit.text()
-        secondPass = self.confirmLineEdit.text()
-        passEqual = firstPass == secondPass
+        passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
         self.saveButton.setEnabled(passEqual)
         self.errorText.setText("" if passEqual else "Passwords must identical")
 
