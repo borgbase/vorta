@@ -12,6 +12,7 @@ from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     LONG_PASSWORD = 'long-password-long'
+    SHORT_PASSWORD = 'short'
 
     # Add new repo window
     main = qapp.main_window
@@ -23,11 +24,19 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.errorText.text().startswith('Please enter a valid')
+    assert add_repo_window.errorTepasswordLabelxt.text().startswith('Please enter a valid')
+
+    qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
 
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.errorText.text() == 'Please use a longer passphrase.'
+    assert add_repo_window.passwordLabel.text() == 'Passwords must greater than 8 characters long'
+
+    qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD + "1")
+    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical and greater than 8 characters long'
+
+    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
+    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical'
 
 
 def test_repo_unlink(qapp, qtbot, monkeypatch):
