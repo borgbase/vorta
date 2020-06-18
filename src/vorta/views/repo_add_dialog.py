@@ -22,15 +22,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
-        self.passwordLineEdit.textChanged.connect(self.validate_passwords)
-        self.confirmLineEdit.textChanged.connect(self.validate_passwords)
-        self.encryptionComboBox.activated.connect(self.validate_passwords)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-        self.validate_passwords()
         self.password_transparency()
 
     def set_icons(self):
@@ -79,7 +75,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.is_remote_repo = True
 
     def run(self):
-        if self.validate():
+        if self.validate() and self.validate_passwords():
             params = BorgInitThread.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -155,7 +151,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                     msg += "greater than 8 characters long"
 
                 self.passwordLabel.setText("" if passEqual and passLong else msg)
-                self.saveButton.setEnabled(passEqual and passLong)
+                return (passEqual and passLong)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -164,9 +160,6 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
-        self.passwordLineEdit.textChanged.disconnect()
-        self.confirmLineEdit.textChanged.disconnect()
-        self.encryptionComboBox.activated.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
         self.passwordLabel.hide()
