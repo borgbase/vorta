@@ -22,6 +22,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.encryptionComboBox.activated.connect(self.password_transparency)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
@@ -47,11 +48,14 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def password_transparency(self):
         if self.__class__ == AddRepoWindow:
-            plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-            keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
-            if not plaintextPass:
-                keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
-            self.passwordLabel.setText('The password will be stored in ' + keyringName)
+            if self.values['encryption'] != 'none':
+                plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
+                keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
+                if not plaintextPass:
+                    keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
+                self.passwordLabel.setText('The password will be stored in ' + keyringName)
+            else:
+                self.passwordLabel.setText("")
 
     def choose_local_backup_folder(self):
         def receive():
@@ -136,8 +140,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def validate_passwords(self):
         if self.__class__ == AddRepoWindow:
             if self.values['encryption'] == 'none':
-                 self.passwordLabel.setText("")
-                 self.saveButton.setEnabled(True)
+                self.passwordLabel.setText("")
+                return True
             else:
                 msg = "Passwords must be "
                 passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
@@ -160,6 +164,7 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.encryptionComboBox.activated.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
         self.passwordLabel.hide()
