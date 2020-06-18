@@ -31,7 +31,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must greater than 8 characters long'
+    assert add_repo_window.passwordLabel.text() == 'Passwords must be greater than 8 characters long'
 
     qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD + "1")
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
