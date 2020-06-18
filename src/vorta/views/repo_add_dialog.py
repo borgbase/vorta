@@ -145,7 +145,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             else:
                 msg = "Passwords must be "
                 passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
-                passLong = len(self.values['password']) >= 8
+                passLong = len(self.values['password']) > 8
 
                 if not passEqual:
                     msg += "identical"
