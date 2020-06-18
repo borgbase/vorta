@@ -11,10 +11,15 @@ from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
+    LONG_PASSWORD = 'long-password-long'
+
     # Add new repo window
     main = qapp.main_window
     add_repo_window = AddRepoWindow(main)
     qtbot.addWidget(add_repo_window)
+
+    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
 
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
@@ -50,6 +55,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
