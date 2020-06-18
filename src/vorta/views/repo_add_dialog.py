@@ -22,6 +22,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.passwordLineEdit.textChanged.connect(self.validate_passwords)
+        self.confirmLineEdit.textChanged.connect(self.validate_passwords)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
@@ -130,6 +132,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         return True
 
+    def validate_passwords(self):
+        firstPass = self.passwordLineEdit.text()
+        secondPass = self.confirmLineEdit.text()
+        passEqual = firstPass == secondPass
+        self.saveButton.setEnabled(passEqual)
+        self.errorText.setText("" if passEqual else "Passwords must identical")
+
 
 class ExistingRepoWindow(AddRepoWindow):
     def __init__(self):
@@ -137,6 +146,10 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.passwordLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.hide()
+        self.confirmLabel.hide()
 
     def run(self):
         if self.validate():
