@@ -52,7 +52,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
         if not plaintextPass:
             keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
-        self.errorText.setText('The password will be stored in ' + keyringName)  # Misusing errorText
+        self.passwordLabel.setText('The password will be stored in ' + keyringName)
 
     def choose_local_backup_folder(self):
         def receive():
@@ -132,18 +132,22 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('This repo has already been added.'))
             return False
 
-        if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none':
-                if len(self.values['password']) < 8:
-                    self._set_status(self.tr('Please use a longer passphrase.'))
-                    return False
-
         return True
 
     def validate_passwords(self):
+        msg = "Passwords must be "
         passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
-        self.saveButton.setEnabled(passEqual)
-        self.errorText.setText("" if passEqual else "Passwords must identical")
+        passLong = len(self.values['password']) >= 8
+
+        if not passEqual:
+            msg += "identical"
+        if not (passEqual or passLong):
+            msg += " and "
+        if not passLong:
+            msg += "greater than 8 characters long"
+
+        self.passwordLabel.setText("" if passEqual and passLong else msg)
+        self.saveButton.setEnabled(passEqual and passLong)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -156,6 +160,7 @@ class ExistingRepoWindow(AddRepoWindow):
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
+        self.passwordLabel.hide()
 
     def password_transparency(self):
         pass
