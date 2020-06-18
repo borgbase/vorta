@@ -29,7 +29,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-
         self.password_transparency()
 
     def set_icons(self):
@@ -158,6 +157,9 @@ class ExistingRepoWindow(AddRepoWindow):
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
+
+    def password_transparency(self):
+        pass
 
     def run(self):
         if self.validate():
