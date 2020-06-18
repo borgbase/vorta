@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>464</width>
-    <height>204</height>
+    <height>243</height>
    </rect>
   </property>
   <property name="modal">
@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,7 +103,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
            </property>
           </widget>
@@ -139,11 +139,15 @@
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="confirmLabel">
-         <property name="inputMethodHints">
-          <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhSensitiveData</set>
-         </property>
          <property name="text">
           <string>Confirm passphrase:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QLabel" name="passwordLabel">
+         <property name="text">
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>
