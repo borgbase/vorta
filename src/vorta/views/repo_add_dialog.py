@@ -49,13 +49,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-        print(VortaKeyring.get_keyring().__class__.__name__)
         plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-        print(plaintextPass)
         keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
         if not plaintextPass:
-            keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]
-            print(keyringName)
+            keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
         message = 'The password will be stored in ' + keyringName
         self.errorText.setText(message)
 
