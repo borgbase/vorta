@@ -24,6 +24,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
         self.passwordLineEdit.textChanged.connect(self.validate_passwords)
         self.confirmLineEdit.textChanged.connect(self.validate_passwords)
+        self.encryptionComboBox.currentIndexChanged.connect(self.validate_passwords)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
@@ -135,19 +136,23 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return True
 
     def validate_passwords(self):
-        msg = "Passwords must be "
-        passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
-        passLong = len(self.values['password']) >= 8
+        if self.values['encryption'] == 'none':
+             self.passwordLabel.setText("")
+             self.saveButton.setEnabled(True)
+        else:
+            msg = "Passwords must be "
+            passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
+            passLong = len(self.values['password']) >= 8
 
-        if not passEqual:
-            msg += "identical"
-        if not (passEqual or passLong):
-            msg += " and "
-        if not passLong:
-            msg += "greater than 8 characters long"
+            if not passEqual:
+                msg += "identical"
+            if not (passEqual or passLong):
+                msg += " and "
+            if not passLong:
+                msg += "greater than 8 characters long"
 
-        self.passwordLabel.setText("" if passEqual and passLong else msg)
-        self.saveButton.setEnabled(passEqual and passLong)
+            self.passwordLabel.setText("" if passEqual and passLong else msg)
+            self.saveButton.setEnabled(passEqual and passLong)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -158,11 +163,15 @@ class ExistingRepoWindow(AddRepoWindow):
         self.title.setText(self.tr('Connect to existing Repository'))
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
+        self.encryptionComboBox.currentIndexChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
         self.passwordLabel.hide()
 
     def password_transparency(self):
+        pass
+
+    def validate_passwords(self):
         pass
 
     def run(self):
