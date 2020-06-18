@@ -140,8 +140,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def validate_passwords(self):
         if self.__class__ == AddRepoWindow:
             if self.values['encryption'] == 'none':
-                 self.passwordLabel.setText("")
-                 self.saveButton.setEnabled(True)
+                self.passwordLabel.setText("")
+                self.saveButton.setEnabled(True)
             else:
                 msg = "Passwords must be "
                 passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
