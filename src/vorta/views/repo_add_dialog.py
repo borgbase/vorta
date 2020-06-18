@@ -24,12 +24,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
         self.passwordLineEdit.textChanged.connect(self.validate_passwords)
         self.confirmLineEdit.textChanged.connect(self.validate_passwords)
-        self.encryptionComboBox.currentIndexChanged.connect(self.validate_passwords)
+        self.encryptionComboBox.activated.connect(self.validate_passwords)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
+        self.validate_passwords()
         self.password_transparency()
 
     def set_icons(self):
@@ -49,11 +50,12 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-        plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-        keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
-        if not plaintextPass:
-            keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
-        self.passwordLabel.setText('The password will be stored in ' + keyringName)
+        if self.__class__ == AddRepoWindow:
+            plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
+            keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
+            if not plaintextPass:
+                keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
+            self.passwordLabel.setText('The password will be stored in ' + keyringName)
 
     def choose_local_backup_folder(self):
         def receive():
@@ -136,23 +138,24 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return True
 
     def validate_passwords(self):
-        if self.values['encryption'] == 'none':
-             self.passwordLabel.setText("")
-             self.saveButton.setEnabled(True)
-        else:
-            msg = "Passwords must be "
-            passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
-            passLong = len(self.values['password']) >= 8
+        if self.__class__ == AddRepoWindow:
+            if self.values['encryption'] == 'none':
+                 self.passwordLabel.setText("")
+                 self.saveButton.setEnabled(True)
+            else:
+                msg = "Passwords must be "
+                passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
+                passLong = len(self.values['password']) >= 8
 
-            if not passEqual:
-                msg += "identical"
-            if not (passEqual or passLong):
-                msg += " and "
-            if not passLong:
-                msg += "greater than 8 characters long"
+                if not passEqual:
+                    msg += "identical"
+                if not (passEqual or passLong):
+                    msg += " and "
+                if not passLong:
+                    msg += "greater than 8 characters long"
 
-            self.passwordLabel.setText("" if passEqual and passLong else msg)
-            self.saveButton.setEnabled(passEqual and passLong)
+                self.passwordLabel.setText("" if passEqual and passLong else msg)
+                self.saveButton.setEnabled(passEqual and passLong)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -163,16 +166,10 @@ class ExistingRepoWindow(AddRepoWindow):
         self.title.setText(self.tr('Connect to existing Repository'))
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
-        self.encryptionComboBox.currentIndexChanged.disconnect()
+        self.encryptionComboBox.activated.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
         self.passwordLabel.hide()
-
-    def password_transparency(self):
-        pass
-
-    def validate_passwords(self):
-        pass
 
     def run(self):
         if self.validate():
