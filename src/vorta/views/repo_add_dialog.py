@@ -52,8 +52,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         keyringName = 'plaintext on disk. Anyone with access to the database can read the password'
         if not plaintextPass:
             keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
-        message = 'The password will be stored in ' + keyringName
-        self.errorText.setText(message)
+        self.errorText.setText('The password will be stored in ' + keyringName)  # Misusing errorText
 
     def choose_local_backup_folder(self):
         def receive():
