@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>464</width>
-    <height>243</height>
+    <height>204</height>
    </rect>
   </property>
   <property name="modal">
@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,7 +103,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
            </property>
           </widget>
