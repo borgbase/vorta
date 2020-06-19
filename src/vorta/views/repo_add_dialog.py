@@ -22,6 +22,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.passwordLineEdit.textChanged.connect(self.validate_passwords)
+        self.confirmLineEdit.textChanged.connect(self.validate_passwords)
         self.encryptionComboBox.activated.connect(self.password_transparency)
         self.tabWidget.setCurrentIndex(0)
 
@@ -165,6 +167,8 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
         self.encryptionComboBox.activated.disconnect()
+        self.passwordLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
         self.passwordLabel.hide()
