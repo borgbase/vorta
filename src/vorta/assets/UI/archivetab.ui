@@ -183,9 +183,6 @@
          <property name="text">
           <string>Override mount permissions</string>
          </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
        <item>
