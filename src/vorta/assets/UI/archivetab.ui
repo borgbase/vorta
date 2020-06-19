@@ -183,6 +183,9 @@
          <property name="text">
           <string>Override mount permissions</string>
          </property>
+         <property name="toolTip">
+          <string>Tick this box if there are permission errors on the mounted archive</string>
+         </property>
         </widget>
        </item>
        <item>
