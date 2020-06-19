@@ -179,6 +179,16 @@
         </layout>
        </item>
        <item>
+        <widget class="QCheckBox" name="overrideMountOpts">
+         <property name="text">
+          <string>Override mount permissions</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="mountErrors">
          <property name="enabled">
           <bool>true</bool>
