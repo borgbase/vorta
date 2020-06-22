@@ -28,6 +28,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.set_repos()
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
+        self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
         # note: it is hard to describe these algorithms with attributes like low/medium/high
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
@@ -61,6 +62,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def set_icons(self):
         self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
+        self.copyURLbutton.setIcon(get_colored_icon('copy'))
 
     def set_repos(self):
         count = self.repoSelector.count()
@@ -207,3 +209,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
             self.repo_changed.emit()
             self.init_repo_stats()
+
+    def copy_URL_action(self):
+        if self.repoSelector.currentIndex() > 2:
+            URL = self.repoSelector.currentText()
+            QApplication.clipboard().setText(URL)

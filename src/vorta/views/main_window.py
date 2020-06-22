@@ -127,7 +127,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
         if window.exec_():
-            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.edited_profile.name)
+            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.profileNameField.text())
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
@@ -151,7 +151,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window = AddProfileWindow()
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
-        if window.exec_() and window.edited_profile:
+        if window.exec_():
             self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
             self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
         else:

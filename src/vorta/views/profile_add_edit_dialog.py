@@ -15,6 +15,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.save)
+        self.profileNameField.textChanged.connect(self.button_validation)
 
         self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
         self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
@@ -25,16 +26,21 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
             self.existing_id = rename_existing_id
             self.modalTitle.setText(self.tr('Rename Profile'))
 
+        # Call validate to set inital messages
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
+
     def _set_status(self, text):
         self.errorText.setText(text)
         self.errorText.repaint()
 
     def save(self):
-        if self.validate():
-            new_profile = BackupProfileModel(name=self.profileNameField.text())
-            new_profile.save()
-            self.edited_profile = new_profile
-            self.accept()
+        new_profile = BackupProfileModel(name=self.profileNameField.text())
+        new_profile.save()
+        self.edited_profile = new_profile
+        self.accept()
+
+    def button_validation(self):
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
 
     def validate(self):
         name = self.profileNameField.text()
@@ -49,14 +55,14 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
             self._set_status(self.tr('A profile with this name already exists.'))
             return False
 
+        self._set_status(self.tr(''))
         return True
 
 
 class EditProfileWindow(AddProfileWindow):
     def save(self):
-        if self.validate():
-            renamed_profile = BackupProfileModel.get(id=self.existing_id)
-            renamed_profile.name = self.profileNameField.text()
-            renamed_profile.save()
-            self.edited_profile = renamed_profile
-            self.accept()
+        renamed_profile = BackupProfileModel.get(id=self.existing_id)
+        renamed_profile.name = self.profileNameField.text()
+        renamed_profile.save()
+        self.edited_profile = renamed_profile
+        self.accept()
