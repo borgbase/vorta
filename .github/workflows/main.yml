@@ -21,7 +21,7 @@ jobs:
     - name: Install system dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
-        sudo apt install -y \
+        sudo apt update && sudo apt install -y \
           xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential \
           libxkbcommon-x11-0 dbus-x11
     - name: Install system dependencies (macOS)

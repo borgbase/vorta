@@ -30,6 +30,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app = parent
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
+        # Use previous window state
+        previous_window_width = SettingsModel.get(key='previous_window_width')
+        previous_window_height = SettingsModel.get(key='previous_window_height')
+        self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
+
         # Select previously used profile, if available
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
         self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
@@ -122,7 +127,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
         if window.exec_():
-            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.edited_profile.name)
+            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.profileNameField.text())
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
@@ -146,7 +151,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window = AddProfileWindow()
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
-        if window.exec_() and window.edited_profile:
+        if window.exec_():
             self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
             self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
         else:
@@ -168,6 +173,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_status(self.tr('Task cancelled'))
 
     def closeEvent(self, event):
+        # Save window state in SettingsModel
+        SettingsModel.update({SettingsModel.str_value: str(self.frameGeometry().width())})\
+            .where(SettingsModel.key == 'previous_window_width')\
+            .execute()
+        SettingsModel.update({SettingsModel.str_value: str(self.frameGeometry().height())})\
+            .where(SettingsModel.key == 'previous_window_height')\
+            .execute()
+
         if not is_system_tray_available():
             run_in_background = QMessageBox.question(self,
                                                      trans_late("MainWindow QMessagebox",
