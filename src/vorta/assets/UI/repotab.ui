@@ -143,6 +143,16 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="3">
+        <widget class="QToolButton" name="copyURLbutton">
+         <property name="toolTip">
+          <string>Copy repo URL to clipboard</string>
+         </property>
+         <property name="autoRaise">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>      
       </layout>
      </item>
      <item row="1" column="0">
