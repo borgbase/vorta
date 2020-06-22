@@ -7,7 +7,8 @@ APP_ID_DARWIN = 'com.borgbase.client.macos'
 dirs = appdirs.AppDirs(APP_NAME, APP_AUTHOR)
 SETTINGS_DIR = dirs.user_data_dir
 LOG_DIR = dirs.user_log_dir
-STATE_DIR = dirs.user_state_dir
+CACHE_DIR = dirs.user_cache_dir
+TEMP_DIR = os.path.join(CACHE_DIR, "tmp")
 
 if not os.path.exists(SETTINGS_DIR):
     os.makedirs(SETTINGS_DIR)
@@ -15,5 +16,8 @@ if not os.path.exists(SETTINGS_DIR):
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
-if not os.path.exists(STATE_DIR):
-    os.makedirs(STATE_DIR)
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+if not os.path.exists(TEMP_DIR):
+    os.makedirs(TEMP_DIR)

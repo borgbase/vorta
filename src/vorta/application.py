@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
-from vorta.config import STATE_DIR
+from vorta.config import TEMP_DIR
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.qt_single_application import QtSingleApplication
@@ -16,7 +16,7 @@ from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
 from vorta.notifications import VortaNotifications
 
-APP_ID = os.path.join(STATE_DIR, "socket")
+APP_ID = os.path.join(TEMP_DIR, "socket")
 
 
 class VortaApp(QtSingleApplication):
