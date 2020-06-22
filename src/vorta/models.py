@@ -215,6 +215,14 @@ def get_misc_settings():
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
             'label': 'Previously selected profile'
         },
+        {
+            'key': 'previous_window_width', 'str_value': '800', 'type': 'internal',
+            'label': 'Previous window width'
+        },
+        {
+            'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
+            'label': 'Previous window height'
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
