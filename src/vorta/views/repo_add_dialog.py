@@ -52,7 +52,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             if self.values['encryption'] != 'none':
                 plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-                keyringName = 'plaintext on disk. We support the more secure Secret Service (Linux) or macOS keyrings'
+                keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'
                 if not plaintextPass:
                     keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
                 self.passwordLabel.setText('The password will be stored in ' + keyringName)
