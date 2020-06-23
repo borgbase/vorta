@@ -1,6 +1,8 @@
 from PyQt5 import uic
 from ..models import SourceFileModel, BackupProfileMixin
 from ..utils import get_asset, choose_file_dialog
+from PyQt5.QtWidgets import QApplication, QMessageBox
+import os
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -14,6 +16,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
         self.sourceRemove.clicked.connect(self.source_remove)
+        self.paste.clicked.connect(self.paste_text)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         self.populate_from_profile()
@@ -62,3 +65,21 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         profile = self.profile()
         profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
         profile.save()
+
+    def paste_text(self):
+        sources = QApplication.clipboard().text().splitlines()
+        invalidSources = ""
+        for source in sources:
+            if len(source) > 0:  # Ignore empty newlines
+                if not os.path.exists(source):
+                    invalidSources = invalidSources + "\n" + source
+                else:
+                    new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
+                    if created:
+                        self.sourceFilesWidget.addItem(source)
+                        new_source.save()
+
+        if len(invalidSources) != 0:  # Check if any invalid paths
+            msg = QMessageBox()
+            msg.setText("Some of your sources are invalid:" + invalidSources)
+            msg.exec()
