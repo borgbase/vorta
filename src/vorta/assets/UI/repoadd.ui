@@ -114,7 +114,7 @@
             <string>Encrypted</string>
            </property>
            <property name="toolTip">
-            <string>Turning this off can lead to data leaks.</string>
+            <string>Turning this off allows anyone with access to the server to read your data. This can lead to data leaks.</string>
            </property>           
            <property name="checked">
             <bool>true</bool>
