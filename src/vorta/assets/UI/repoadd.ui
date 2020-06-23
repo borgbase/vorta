@@ -113,6 +113,9 @@
            <property name="text">
             <string>Encrypted</string>
            </property>
+           <property name="toolTip">
+            <string>Turning this off can lead to data leaks.</string>
+           </property>           
            <property name="checked">
             <bool>true</bool>
            </property>
