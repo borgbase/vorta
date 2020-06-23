@@ -54,7 +54,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
                 keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'
                 if not plaintextPass:
-                    keyringName = VortaKeyring.get_keyring().__class__.__name__[5:-7]  # Trims "Vorta" and "Keyring"
+                    keyringName = VortaKeyring.get_keyring().__class__.__name__
+                    if keyringName is 'VortaSecretStorageKeyring':
+                        keyringName = 'the program that is connected to the Secret Service API'
+                    elif keyringName is 'VortaDarwinKeyring':
+                        keyringName = 'Keychain Access'
+                    else:
+                        keyringName = 'somewhere that was not anticipated. Please file a bug report on Github'  # Just in case some other keyring support is added
                 self.passwordLabel.setText('The password will be stored in ' + keyringName)
             else:
                 self.passwordLabel.setText("")
