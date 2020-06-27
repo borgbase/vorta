@@ -141,7 +141,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:
             self._set_status(self.tr('This repo has already been added.'))
             return False
-                      
+
         return True
 
     def password_listener(self):
