@@ -55,7 +55,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             if not plaintextPass:
                 keyringName = VortaKeyring.get_keyring().__class__.__name__
                 if keyringName == 'VortaSecretStorageKeyring':
-                    keyringName = 'using the Secret Service API'
+                    keyringName = 'the Secret Service API'
                 elif keyringName == 'VortaDarwinKeyring':
                     keyringName = 'Keychain Access'
                 else:
