@@ -22,8 +22,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
-        self.passwordLineEdit.textChanged.connect(self.validate_passwords)
-        self.confirmLineEdit.textChanged.connect(self.validate_passwords)
+        self.passwordLineEdit.textChanged.connect(self.password_listener)
+        self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.password_transparency)
         self.tabWidget.setCurrentIndex(0)
 
@@ -86,7 +86,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.is_remote_repo = True
 
     def run(self):
-        if self.validate() and self.validate_passwords():
+        if self.validate() and self.password_listener():
             params = BorgInitThread.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -142,27 +142,37 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('This repo has already been added.'))
             return False
 
+
+
         return True
 
-    def validate_passwords(self):
-        if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] == 'none':
-                self.passwordLabel.setText("")
-                return True
-            else:
-                msg = "Passwords must be "
-                passEqual = self.passwordLineEdit.text() == self.confirmLineEdit.text()
-                passLong = len(self.values['password']) > 8
+    def password_listener(self):
+        if self.values['encryption'] == 'none':
+            self.passwordLabel.setText("")
+            return True
+        else:
+            firstPass = self.passwordLineEdit.text()
+            secondPass = self.confirmLineEdit.text()
+            msg = self.validate_passwords(firstPass, secondPass)
+            self.passwordLabel.setText(msg)
+            return len(msg) == 0
 
-                if not passEqual:
-                    msg += "identical"
-                if not (passEqual or passLong):
-                    msg += " and "
-                if not passLong:
-                    msg += "greater than 8 characters long"
+    @staticmethod
+    def validate_passwords(firstPass, secondPass):
+        msg = "Passwords must be "
+        passEqual = firstPass == secondPass
+        passLong = len(firstPass) > 8
+        valid = passEqual and passLong
 
-                self.passwordLabel.setText("" if passEqual and passLong else msg)
-                return (passEqual and passLong)
+        if not passEqual:
+            msg += "identical"
+        if not (passEqual or passLong):
+            msg += " and "
+        if not passLong:
+            msg += "greater than 8 characters long"
+
+
+        return ("" if valid else msg)
 
 
 class ExistingRepoWindow(AddRepoWindow):
