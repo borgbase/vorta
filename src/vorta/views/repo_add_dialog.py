@@ -49,14 +49,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-        if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none':
+            if self.__class__ == AddRepoWindow and self.values['encryption'] != 'none' or self.__class__ == ExistingRepoWindow:
                 plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
                 keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'  # noqa
                 if not plaintextPass:
                     keyringName = VortaKeyring.get_keyring().__class__.__name__
                     if keyringName == 'VortaSecretStorageKeyring':
-                        keyringName = 'the program that is connected to the Secret Service API'
+                        keyringName = 'using the Secret Service API'
                     elif keyringName == 'VortaDarwinKeyring':
                         keyringName = 'Keychain Access'
                     else:
@@ -172,12 +171,10 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
-        self.encryptionComboBox.activated.disconnect()
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
-        self.passwordLabel.hide()
 
     def run(self):
         if self.validate():
