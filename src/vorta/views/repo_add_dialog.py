@@ -49,20 +49,20 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-            if self.__class__ == AddRepoWindow and self.values['encryption'] != 'none' or self.__class__ == ExistingRepoWindow:
-                plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-                keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'  # noqa
-                if not plaintextPass:
-                    keyringName = VortaKeyring.get_keyring().__class__.__name__
-                    if keyringName == 'VortaSecretStorageKeyring':
-                        keyringName = 'using the Secret Service API'
-                    elif keyringName == 'VortaDarwinKeyring':
-                        keyringName = 'Keychain Access'
-                    else:
-                        keyringName = 'somewhere that was not anticipated. Please file a bug report on Github'  # noqa Just in case some other keyring support is added
+        if self.values.get('encryption') != 'none':
+            plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
+            keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'  # noqa
+            if not plaintextPass:
+                keyringName = VortaKeyring.get_keyring().__class__.__name__
+                if keyringName == 'VortaSecretStorageKeyring':
+                    keyringName = 'using the Secret Service API'
+                elif keyringName == 'VortaDarwinKeyring':
+                    keyringName = 'Keychain Access'
+                else:
+                    keyringName = 'somewhere that was not anticipated. Please file a bug report on Github'  # noqa Just in case some other keyring support is added
                 self.passwordLabel.setText('The password will be stored in ' + keyringName)
-            else:
-                self.passwordLabel.setText("")
+        else:
+            self.passwordLabel.setText("")
 
     def choose_local_backup_folder(self):
         def receive():
