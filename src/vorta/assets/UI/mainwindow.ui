@@ -116,7 +116,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>5</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -153,6 +153,11 @@
       <widget class="QWidget" name="miscTabSlot">
        <attribute name="title">
         <string>Misc</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="createTabSlot">
+       <attribute name="title">
+        <string>Create</string>
        </attribute>
       </widget>
      </widget>
@@ -289,5 +294,6 @@
    </property>
   </action>
  </widget>
+ <resources/>
  <connections/>
 </ui>

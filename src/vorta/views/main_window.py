@@ -16,6 +16,7 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
+from .create_tab import CreateTab
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
@@ -47,6 +48,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab = ArchiveTab(self.archiveTabSlot)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.miscTabSlot)
+        self.createTab = CreateTab(self.createTabSlot)
         self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.tabWidget.setCurrentIndex(0)
 
