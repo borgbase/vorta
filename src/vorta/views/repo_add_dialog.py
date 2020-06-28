@@ -51,7 +51,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def password_transparency(self):
         if self.values.get('encryption') != 'none':
             plaintextPass = VortaKeyring.get_keyring().__class__.__name__ == 'VortaDBKeyring'
-            keyringName = 'plaintext on disk. Vorta supports the secure Secret Service (Linux) and Keychain Access (macOS)'  # noqa
+            keyringName = 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'  # noqa
             if not plaintextPass:
                 keyringName = VortaKeyring.get_keyring().__class__.__name__
                 if keyringName == 'VortaSecretStorageKeyring':
@@ -60,7 +60,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                     keyringName = 'Keychain Access'
                 else:
                     keyringName = 'somewhere that was not anticipated. Please file a bug report on Github'  # noqa Just in case some other keyring support is added
-                self.passwordLabel.setText('The password will be stored in ' + keyringName)
+            self.passwordLabel.setText('The password will be stored in ' + keyringName)
         else:
             self.passwordLabel.setText("")
 
