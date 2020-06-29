@@ -130,6 +130,12 @@ class BorgCreateThread(BorgThread):
                 if f.strip():
                     cmd.extend(['--exclude-if-present', f.strip()])
 
+        if profile.one_filesystem:
+            cmd.append('--one-file-system')
+
+        if profile.exclude_caches:
+            cmd.append('--exclude-caches')
+
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
         cmd.append(f"{profile.repo.url}::{new_archive_name}")
