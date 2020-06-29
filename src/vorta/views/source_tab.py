@@ -19,12 +19,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.paste.clicked.connect(self.paste_text)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.oneFilesystem.stateChanged.connect(self.save_one_filesystem)
+        self.excludeCache.stateChanged.connect(self.save_exclude_caches)
         self.populate_from_profile()
 
     def populate_from_profile(self):
         profile = self.profile()
         self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
+        self.oneFilesystem.stateChanged.disconnect()
+        self.excludeCache.stateChanged.disconnect()
         self.sourceFilesWidget.clear()
         self.excludePatternsField.clear()
         self.excludeIfPresentField.clear()
@@ -34,8 +38,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
+        self.oneFilesystem.setChecked(profile.one_filesystem)
+        self.excludeCache.setChecked(profile.exclude_caches)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.oneFilesystem.stateChanged.connect(self.save_one_filesystem)
+        self.excludeCache.stateChanged.connect(self.save_exclude_caches)
 
     def source_add(self, want_folder):
         def receive():
@@ -64,6 +72,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def save_exclude_if_present(self):
         profile = self.profile()
         profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
+        profile.save()
+
+    def save_exclude_caches(self):
+        profile = self.profile()
+        profile.exclude_caches = self.excludeCache.isChecked()
+        profile.save()
+
+    def save_one_filesystem(self):
+        profile = self.profile()
+        profile.one_filesystem = self.oneFilesystem.isChecked()
         profile.save()
 
     def paste_text(self):

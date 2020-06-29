@@ -15,7 +15,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 14
+SCHEMA_VERSION = 15
 
 db = pw.Proxy()
 
@@ -69,6 +69,7 @@ class BackupProfileModel(pw.Model):
     repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
+    exclude_caches = pw.BooleanField(default=False)
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
@@ -86,6 +87,7 @@ class BackupProfileModel(pw.Model):
     prune_year = pw.IntegerField(default=2)
     prune_keep_within = pw.CharField(default='10H', null=True)
     new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
+    one_filesystem = pw.BooleanField(default=False)
     prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
     pre_backup_cmd = pw.CharField(default='')
     post_backup_cmd = pw.CharField(default='')
@@ -350,6 +352,13 @@ def init_db(con=None):
             current_schema, 14,
             migrator.add_column(SettingsModel._meta.table_name,
                                 'str_value', pw.CharField(default='')))
+    if current_schema.version < 15:
+        _apply_schema_update(
+            current_schema, 15,
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'exclude_caches', pw.BooleanField(default=False)),
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'one_filesystem', pw.BooleanField(default=False)))
 
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
