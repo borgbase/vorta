@@ -48,7 +48,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.borgPath.setText(path)
 
     def load_from_config(self):
-        if self.profile().repo.is_remote_repo():
+        profile = self.profile()
+        if profile.repo is not None and profile.repo.is_remote_repo():
             self.overrideFreeSpace.setEnabled(False)
         else:
             self.overrideFreeSpace.setEnabled(True)
