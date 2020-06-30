@@ -7,6 +7,7 @@ from vorta.autostart import open_app_at_startup
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
 from vorta.config import LOG_DIR
+from vorta.borg.config import BorgConfigThread
 
 uifile = get_asset('UI/misctab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
@@ -31,6 +32,9 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
             b.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
             self.checkboxLayout.addWidget(b)
 
+        self.load_from_config()
+        self.overrideFreeSpace.clicked.connect(self.save_to_config)
+
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)
         setting.value = bool(new_value)
@@ -42,3 +46,40 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
         self.borgPath.setText(path)
+
+    def load_from_config(self):
+        if self.profile().repo.is_remote_repo():
+            self.overrideFreeSpace.setEnabled(False)
+        else:
+            self.overrideFreeSpace.setEnabled(True)
+            self.run_config(['additional_free_space'])  # To load checkbox
+
+        self.errorText.setText('')
+        self.errorText.repaint()
+
+    def set_checkbox_state(self, result):
+        if 'additional_free_space' in result:
+            spaceOverride = result['data'] != 0
+            self.overrideFreeSpace.setChecked(spaceOverride)
+
+    def save_to_config(self):
+        if self.overrideFreeSpace.isChecked():
+            self.run_config(['additional_free_space', '999T'])
+        else:
+            self.run_config(['additional_free_space', '0'])
+
+    def run_config(self, values):
+        params = BorgConfigThread.prepare(self.profile(), values)
+        if params['ok']:
+            thread = BorgConfigThread(params['cmd'], params, parent=self)
+            if len(values) % 2 == 1:  # To check if its getting the value
+                thread.result.connect(self.set_checkbox_state)
+            self.thread = thread  # Needs to be connected to self for tests to work.
+            self.thread.start()
+            return params
+        else:
+            self._set_status(params['message'])
+
+    def _set_status(self, text):
+        self.errorText.setText(text)
+        self.errorText.repaint()

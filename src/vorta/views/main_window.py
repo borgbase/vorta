@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
+from vorta.borg.config import BorgConfigThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available
@@ -51,6 +52,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.miscTab.load_from_config)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
@@ -83,8 +85,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
 
-        # Connect to existing thread.
-        if BorgThread.is_running():
+        # Connect to existing thread other than autostarting config thread.
+        if BorgThread.is_running() and not BorgConfigThread.is_running():
             self.createStartBtn.setEnabled(False)
             self.cancelButton.setEnabled(True)
             self.set_status(self.tr('Backup in progress.'), progress_max=0)
@@ -118,6 +120,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
+        self.miscTab.load_from_config()
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
             .where(SettingsModel.key == 'previous_profile_id')\
             .execute()

@@ -22,6 +22,16 @@
      <property name="topMargin">
       <number>10</number>
      </property>
+     <item>
+      <widget class="QCheckBox" name="overrideFreeSpace">
+       <property name="toolTip">
+        <string>Does not work on remote repositories for security reasons</string>
+       </property>
+       <property name="text">
+        <string>Disable free space calculations during backup</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -36,6 +46,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="errorText">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
