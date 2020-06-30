@@ -72,7 +72,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         params = BorgConfigThread.prepare(self.profile(), values)
         if params['ok']:
             thread = BorgConfigThread(params['cmd'], params, parent=self)
-            if len(values) % 2 == 1:  # To check if its getting the value
+            if len(values) == 1:  # To check if its getting the value
                 thread.result.connect(self.set_checkbox_state)
             self.thread = thread  # Needs to be connected to self for tests to work.
             self.thread.start()
