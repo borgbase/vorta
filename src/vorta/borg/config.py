@@ -1,5 +1,4 @@
 from .borg_thread import BorgThread
-from vorta.models import BackupProfileMixin, BackupProfileModel
 
 
 class BorgConfigThread(BorgThread):
