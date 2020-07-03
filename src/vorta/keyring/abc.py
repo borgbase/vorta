@@ -12,15 +12,23 @@ class VortaKeyring:
         if sys.platform == 'darwin':  # Use Keychain on macOS
             from .darwin import VortaDarwinKeyring
             return VortaDarwinKeyring()
-        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-            import secretstorage
-            from .secretstorage import VortaSecretStorageKeyring
-            try:
-                return VortaSecretStorageKeyring()
-            # Save passwords in DB, if all else fails.
-            except secretstorage.SecretServiceNotAvailableException:
-                from .db import VortaDBKeyring
-                return VortaDBKeyring()
+        else:
+            from .kwallet import VortaKWallet5Keyring
+            if VortaKWallet5Keyring().valid:
+                return VortaKWallet5Keyring()
+            else:
+                from .kwallet import VortaKWallet4Keyring
+                if VortaKWallet4Keyring().valid:
+                    return VortaKWallet4Keyring()
+                else:
+                    import secretstorage
+                    from .secretstorage import VortaSecretStorageKeyring
+                    try:
+                        return VortaSecretStorageKeyring()
+                    # Save passwords in DB, if all else fails.
+                    except secretstorage.SecretServiceNotAvailableException:
+                        from .db import VortaDBKeyring
+                        return VortaDBKeyring()
 
     def set_password(self, service, repo_url, password):
         raise NotImplementedError
