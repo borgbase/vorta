@@ -76,25 +76,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="profileRenameButton">
+       <widget class="QToolButton" name="profileMenuButton">
         <property name="toolTip">
-         <string>Rename Profile</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>16</width>
-          <height>16</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="profileDeleteButton">
-        <property name="toolTip">
-         <string>Delete Profile</string>
+         <string>More actions</string>
         </property>
         <property name="text">
-         <string/>
+         <string>...</string>
+        </property>
+        <property name="popupMode">
+         <enum>QToolButton::InstantPopup</enum>
         </property>
        </widget>
       </item>
@@ -116,7 +106,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -159,6 +149,19 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="createStartBtn">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Start Backup</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1" alignment="Qt::AlignTop">
        <widget class="QLabel" name="createProgressText">
         <property name="sizePolicy">
@@ -260,19 +263,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="createStartBtn">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>Start Backup</string>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -289,5 +279,6 @@
    </property>
   </action>
  </widget>
+ <resources/>
  <connections/>
 </ui>

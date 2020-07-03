@@ -258,6 +258,7 @@ def init_db(con=None):
 
     # Migrations
     # See http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#schema-migrations
+    # Update backup_window.py as well if doing something other than adding columns
     current_schema, created = SchemaVersion.get_or_create(id=1, defaults={'version': SCHEMA_VERSION})
     current_schema.save()
     if created or current_schema.version == SCHEMA_VERSION:

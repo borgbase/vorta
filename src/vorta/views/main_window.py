@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QShortcut, QMessageBox
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QMenu
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
@@ -16,6 +16,7 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
+from .backup_window import BackupWindow, RestoreWindow
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
@@ -71,9 +72,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
         current_profile_index = self.profileSelector.findData(self.current_profile.id)
         self.profileSelector.setCurrentIndex(current_profile_index)
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
-        self.profileRenameButton.clicked.connect(self.profile_rename_action)
-        self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+
+        menu = QMenu(parent=self)
+        self.profileMenuButton.setMenu(menu)
+
         self.profileAddButton.clicked.connect(self.profile_add_action)
+        self.renameAction = menu.addAction("Rename profile", self.profile_rename_action)
+        self.deleteAction = menu.addAction("Delete profile", self.profile_delete_action)
+        self.backupAction = menu.addAction("Backup profile", self.profile_backup_action)
+        self.restoreAction = menu.addAction("Restore profile backup", self.profile_restore_action)
+
+        self.backupAction.setEnabled(self.current_profile.repo is not None)
 
         # OS-specific startup options:
         if sys.platform != 'darwin':
@@ -96,8 +105,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))
-        self.profileRenameButton.setIcon(get_colored_icon('edit'))
-        self.profileDeleteButton.setIcon(get_colored_icon('trash'))
+        self.renameAction.setIcon(get_colored_icon('edit'))
+        self.deleteAction.setIcon(get_colored_icon('trash'))
 
     def set_status(self, text=None, progress_max=None):
         if text:
@@ -121,6 +130,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
             .where(SettingsModel.key == 'previous_profile_id')\
             .execute()
+        self.backupAction.setEnabled(self.current_profile.repo is not None)
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
@@ -153,6 +163,29 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.show()
         if window.exec_():
             self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
+            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+        else:
+            self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
+
+    def profile_backup_action(self):
+        window = BackupWindow(BackupProfileModel.get(id=self.profileSelector.currentData()))
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
+
+    def profile_restore_action(self):
+        window = RestoreWindow(BackupProfileModel.get(id=self.profileSelector.currentData()))
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
+        if window.exec_():
+            if window.returns.get('repo', False):
+                self.repoTab.set_repos()
+            if window.returns.get('logs', False):
+                self.scheduleTab.init_logs()
+            if window.returns.get('wifi', False):
+                self.scheduleTab.init_wifi()
+            if window.returns.get('misc', False):
+                self.miscTab.update_checkboxes()
+            self.profileSelector.addItem(window.new_profile.name, window.new_profile.id)
             self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
         else:
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
