@@ -1,30 +1,30 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.0">
 <context>
     <name>AddProfileWindow</name>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Rename Profile</source>
-        <translation>Renommer le profil</translation>
+        <translation>Profielnaam wijzigen</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="43"/>
         <source>Please enter a profile name.</source>
-        <translation>Veuillez entrer un nom de profil.</translation>
+        <translation>Voer een profielnaam in.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="49"/>
         <source>A profile with this name already exists.</source>
-        <translation>Un profil avec ce nom existe déjà.</translation>
+        <translation>Er is al een profiel met die naam.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="19"/>
         <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <translation>Opslaan</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="20"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annuleren</translation>
     </message>
 </context>
 <context>
@@ -32,37 +32,37 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="54"/>
         <source>Repository Path:</source>
-        <translation>Chemin d&apos;accès du dépôt :</translation>
+        <translation>Repo-pad:</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="57"/>
         <source>Choose Location of Borg Repository</source>
-        <translation>Choisissez l&apos;emplacement du dépôt Borg</translation>
+        <translation>Geef de locatie op van de Borg-repo</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="65"/>
         <source>Repository URL:</source>
-        <translation>URL du dépôt :</translation>
+        <translation>Repo-url:</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="91"/>
         <source>Unable to add your repository.</source>
-        <translation>Impossible d&apos;ajouter le dépôt.</translation>
+        <translation>De repo kan niet worden toegevoegd.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="118"/>
         <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Saisissez un chemin d&apos;accès URL valide ou sélectionnez un répertoire local</translation>
+        <translation>Voer een geldige repo-url in of kies een lokaal pad.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="122"/>
         <source>This repo has already been added.</source>
-        <translation>Ce dépôt a déjà été ajouté.</translation>
+        <translation>Deze repo is al toegevoegd.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="128"/>
         <source>Please use a longer passphrase.</source>
-        <translation>Merci d&apos;utiliser une phrase de passe plus longue.</translation>
+        <translation>Gebruik een langere toegangszin.</translation>
     </message>
 </context>
 <context>
@@ -70,12 +70,12 @@
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
-        <translation>Initialiser un nouveau dépôt de sauvegarde</translation>
+        <translation>Nieuwe back-uprepo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="67"/>
         <source>Repository URL:</source>
-        <translation>URL du dépôt :</translation>
+        <translation>Repo-url:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="82"/>
@@ -85,7 +85,7 @@
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="89"/>
         <source>Choose a local path as repository.</source>
-        <translation>Choisir un emplacement local comme dépôt.</translation>
+        <translation>Kies een lokaal pad.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="103"/>
@@ -95,47 +95,47 @@
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="177"/>
         <source>Encryption:</source>
-        <translation>Chiffrement :</translation>
+        <translation>Versleuteling:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="155"/>
         <source>SSH Key:</source>
-        <translation>Clé SSH :</translation>
+        <translation>SSH-sleutel:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="169"/>
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Choisir automatiquement une clef SSH (par défaut)</translation>
+        <translation>SSH-sleutel automatisch genereren (standaard)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="223"/>
         <source>Add</source>
-        <translation>Ajouter</translation>
+        <translation>Toevoegen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="230"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="33"/>
         <source>General</source>
-        <translation>Général</translation>
+        <translation>Algemeen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="134"/>
         <source>Advanced</source>
-        <translation>Avancé</translation>
+        <translation>Geavanceerd</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="194"/>
         <source>Extra Borg Arguments:</source>
-        <translation>Arguments Supplémentaires Pour Borg :</translation>
+        <translation>Opdrachtregelopties:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repoadd.ui" line="116"/>
         <source>Borg passphrase:</source>
-        <translation>Phrase de passe pour Borg:</translation>
+        <translation>Borg-toegangszin:</translation>
     </message>
 </context>
 <context>
@@ -143,102 +143,102 @@
     <message>
         <location filename="../../views/archive_tab.py" line="109"/>
         <source>Archives for %s</source>
-        <translation>Archives de %s</translation>
+        <translation>Archieven van %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="139"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archieven</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="156"/>
         <source>Preview: %s</source>
-        <translation>Aperçu : %s</translation>
+        <translation>Voorvertoning: %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="160"/>
         <source>Error in archive name template.</source>
-        <translation>Erreur du gabarit de nom d&apos;archive. </translation>
+        <translation>Fout in archiefnaamsjabloon.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="202"/>
         <source>Pruning finished.</source>
-        <translation>Élagage terminé.</translation>
+        <translation>Opruimen voltooid.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="219"/>
         <source>Refreshed archives.</source>
-        <translation>Archives mises à jour. </translation>
+        <translation>De archieven zijn ververst.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="262"/>
         <source>Choose Mount Point</source>
-        <translation>Choisir le point de montage</translation>
+        <translation>Aankoppelpunt kiezen</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="268"/>
         <source>Mounted successfully.</source>
-        <translation>Montage réussi.</translation>
+        <translation>Aankoppelen voltooid.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="297"/>
         <source>Mount point not active.</source>
-        <translation>Point de montage inactif.</translation>
+        <translation>Het aankoppelpunt is niet in gebruik.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="303"/>
         <source>Un-mounted successfully.</source>
-        <translation>Démonté avec succès. </translation>
+        <translation>Afkoppelen voltooid.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="341"/>
         <source>Select an archive to restore first.</source>
-        <translation>Sélectionner une archive à restaurer en premier.</translation>
+        <translation>Kies een te herstellen archief.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="368"/>
         <source>Choose Extraction Point</source>
-        <translation>Choisissez le point d&apos;extraction</translation>
+        <translation>Kies een uitpaklocatie</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="431"/>
         <source>Archive deleted.</source>
-        <translation>Archive supprimée.</translation>
+        <translation>Het archief is verwijderd.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="416"/>
         <source>Confirm deletion</source>
-        <translation>Confirmer la suppression</translation>
+        <translation>Verwijderen bevestigen</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="427"/>
         <source>No archive selected</source>
-        <translation>Aucune archive sélectionnée</translation>
+        <translation>Geen archief gekozen</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="416"/>
         <source>Are you sure you want to delete the archive?</source>
-        <translation>Êtes-vous certain de vouloir supprimer l&apos;archive?</translation>
+        <translation>Weet je zeker dat je het archief wilt verwijderen?</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="404"/>
         <source>Yes</source>
-        <translation>Oui</translation>
+        <translation>Ja</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="405"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="233"/>
         <source>Unmount</source>
-        <translation>Démonter</translation>
+        <translation>Afkoppelen</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="233"/>
         <source>Mount</source>
-        <translation>Monter</translation>
+        <translation>Aankoppelen</translation>
     </message>
 </context>
 <context>
@@ -246,7 +246,7 @@
     <message>
         <location filename="../../borg/check.py" line="11"/>
         <source>Starting consistency check...</source>
-        <translation>Début du contrôle d&apos;intégrité…</translation>
+        <translation>Bezig met starten van integriteitscontrole...</translation>
     </message>
 </context>
 <context>
@@ -254,12 +254,12 @@
     <message>
         <location filename="../../borg/create.py" line="35"/>
         <source>Backup finished.</source>
-        <translation>Sauvegarde terminée.</translation>
+        <translation>Back-up voltooid.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="42"/>
         <source>Backup started.</source>
-        <translation>Sauvegarde débutée. </translation>
+        <translation>Back-up gestart.</translation>
     </message>
 </context>
 <context>
@@ -267,12 +267,12 @@
     <message>
         <location filename="../../borg/delete.py" line="11"/>
         <source>Deleting archive...</source>
-        <translation>Suppression de l&apos;archive…</translation>
+        <translation>Bezig met verwijderen...</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="16"/>
         <source>Archive deleted.</source>
-        <translation>Archive supprimée.</translation>
+        <translation>Het archief is verwijderd.</translation>
     </message>
 </context>
 <context>
@@ -280,12 +280,12 @@
     <message>
         <location filename="../../borg/diff.py" line="11"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Bezig met opvragen van verschillen tussen archieven...</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="15"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>De verschillen zijn verkregen.</translation>
     </message>
 </context>
 <context>
@@ -293,12 +293,12 @@
     <message>
         <location filename="../../borg/extract.py" line="11"/>
         <source>Downloading files from archive...</source>
-        <translation>Téléchargement des fichiers depuis l&apos;archive…</translation>
+        <translation>Bezig met downloaden van bestanden uit archief...</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="16"/>
         <source>Restored files from archive.</source>
-        <translation>Fichiers restaurés depuis l&apos;archive.</translation>
+        <translation>De bestanden zijn hersteld uit het archief.</translation>
     </message>
 </context>
 <context>
@@ -306,7 +306,7 @@
     <message>
         <location filename="../../borg/info.py" line="13"/>
         <source>Validating existing repo...</source>
-        <translation>Confirmer un dépôt existant...</translation>
+        <translation>Bezig met valideren van bestaande repo...</translation>
     </message>
 </context>
 <context>
@@ -314,7 +314,7 @@
     <message>
         <location filename="../../borg/init.py" line="10"/>
         <source>Setting up new repo...</source>
-        <translation>Configurer un nouveau dépôt...</translation>
+        <translation>Bezig met instellen van nieuwe repo...</translation>
     </message>
 </context>
 <context>
@@ -322,12 +322,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="11"/>
         <source>Getting archive content...</source>
-        <translation>Obtention du contenu de l&apos;archive…</translation>
+        <translation>Bezig met ophalen van archiefinhoud...</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="15"/>
         <source>Done getting archive content.</source>
-        <translation>Contenu de l&apos;archive obtenu. </translation>
+        <translation>De archiefinhoud is opgehaald.</translation>
     </message>
 </context>
 <context>
@@ -335,12 +335,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="13"/>
         <source>Refreshing archives...</source>
-        <translation>Rafraîchissement des archives…</translation>
+        <translation>Bezig met herladen van archieven...</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="18"/>
         <source>Refreshing archives done.</source>
-        <translation>Rafraichissement des archives terminé.</translation>
+        <translation>De archieven zijn herladen.</translation>
     </message>
 </context>
 <context>
@@ -348,7 +348,7 @@
     <message>
         <location filename="../../borg/mount.py" line="8"/>
         <source>Mounting archive into folder...</source>
-        <translation>Montage de l&apos;archive dans un répertoire...</translation>
+        <translation>Bezig met aankoppelen van archief in map...</translation>
     </message>
 </context>
 <context>
@@ -356,12 +356,12 @@
     <message>
         <location filename="../../borg/prune.py" line="12"/>
         <source>Pruning old archives...</source>
-        <translation>Élagage des vieilles archives...</translation>
+        <translation>Bezig met vernietigen van oude archieven...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="17"/>
         <source>Pruning done.</source>
-        <translation>Élagage terminé. </translation>
+        <translation>De archieven zijn vernietigd.</translation>
     </message>
 </context>
 <context>
@@ -369,7 +369,7 @@
     <message>
         <location filename="../../borg/borg_thread.py" line="247"/>
         <source>Task started</source>
-        <translation>Tâche débutée</translation>
+        <translation>Taak gestart</translation>
     </message>
 </context>
 <context>
@@ -377,7 +377,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation>Démontage de l&apos;archive</translation>
+        <translation>Bezig met ontkoppelen...</translation>
     </message>
 </context>
 <context>
@@ -385,127 +385,127 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Dialogue</translation>
+        <translation>Dialoogvenster</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="25"/>
         <source>Archive:</source>
-        <translation>Archive :</translation>
+        <translation>Archief:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
+        <translation>nyx2.local-2018-11-16T09:49:58 van 16 november 2018</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
-        <translation>Note : Si vous sélectionner un dossier sans sélectionner les sous-dossiers, ceux-ci seront quand même restaurés. </translation>
+        <translation>Let op: als je een hoofdmap selecteert, maar de onderliggende mappen deselecteert, worden ze alsnog hersteld.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="88"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="95"/>
         <source>Extract</source>
-        <translation>Extraire</translation>
+        <translation>Uitpakken</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="35"/>
         <source>Add Backup Profile</source>
-        <translation>Ajouter un profil de sauvegarde</translation>
+        <translation>Back-upprofiel toevoegen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Les profils de sauvegarde permettent des sauvegardes granulaires depuis différentes sources vers des destinations différentes. Vous pouvez, par exemple, sauvegarder des documents essentiels vers un dépôt distant via Wifi et réaliser une sauvegarde complète sur un appareil de stockage local. &lt;/p&gt;&lt;p&gt;Les dépôts et clés SSH sont partagées entre les profils. Les dossiers sources, dépôts de destination actifs, réseaux autorisé, paramètres d&apos;élagage et de validation ainsi que les horaires de sauvegarde sont spécifiques au profil. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Met back-upprofielen kun je back-ups van verschillende bronnen maken naar verschillende bestemmingen, zoals bijv. belangrijke documenten naar een externe repo via Wi-Fi en tegelijkertijd een volledige back-up op een lokaal opslagapparaat.&lt;/p&gt;&lt;p&gt;Repo&apos;s en SSH-sleutels worden gedeeld tussen profielen. Bronmappen, actieve bestemmingsrepo, toegestane netwerken, vernietigen, validatie en tijdschema&apos;s werken per profiel.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="84"/>
         <source>Profile Name</source>
-        <translation>Nom du profil</translation>
+        <translation>Profielnaam</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="43"/>
         <source>Generate SSH Key</source>
-        <translation>Générer une clé SSH</translation>
+        <translation>SSH-sleutel genereren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="55"/>
         <source>Key Format:</source>
-        <translation>Format de clé :</translation>
+        <translation>Sleutelformaat:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="72"/>
         <source>Key Length:</source>
-        <translation>Longueur de la clé :</translation>
+        <translation>Sleutellengte:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="94"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 ou 4096 pour RSA, 384 ou 521 pour ECDSA. Pré-déterminé pour ED25519.&lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;plus d&apos;information&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 of 4096 voor RSA, 384 of 521 voor ECDSA. Vaste waarde voor Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Meer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="107"/>
         <source>Output File:</source>
-        <translation>Fichier se sortie :</translation>
+        <translation>Uitvoerbestand:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="119"/>
         <source>Don&apos;t change this if you want SSH to automatically find the key.</source>
-        <translation>Ne changez pas ceci si vous voulez que SSH trouve automatiquement la clef.</translation>
+        <translation>Pas dit niet aan als je wilt dat SSH de sleutel automatisch detecteert.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="128"/>
         <source>Close</source>
-        <translation>Fermer</translation>
+        <translation>Sluiten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
-        <translation>Générer et copier dans le presse-papier</translation>
+        <translation>Genereren, en kopiëren naar klembord</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="25"/>
         <source>Select two archives</source>
-        <translation>Sélectionnez deux archives</translation>
+        <translation>Selecteer twee archieven</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="60"/>
         <source>Date</source>
-        <translation>Date</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="65"/>
         <source>Size</source>
-        <translation>Taille</translation>
+        <translation>Grootte</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="70"/>
         <source>Duration</source>
-        <translation>Durée</translation>
+        <translation>Duur</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="75"/>
         <source>Mount Point</source>
-        <translation>Point de montage</translation>
+        <translation>Aankoppelpunt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="80"/>
         <source>Name</source>
-        <translation>Nom</translation>
+        <translation>Naam</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="113"/>
         <source>Diff</source>
-        <translation>Différence</translation>
+        <translation>Verschil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="25"/>
         <source>Difference between</source>
-        <translation type="unfinished"/>
+        <translation>Verschil tussen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="38"/>
@@ -515,7 +515,7 @@
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="45"/>
         <source>and</source>
-        <translation>et</translation>
+        <translation>en</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="58"/>
@@ -525,7 +525,7 @@
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="101"/>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation>Oké</translation>
     </message>
 </context>
 <context>
@@ -533,7 +533,7 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="139"/>
         <source>Connect to existing Repository</source>
-        <translation>Connexion à un dépôt existant</translation>
+        <translation>Verbinden met externe repo</translation>
     </message>
 </context>
 <context>
@@ -541,127 +541,127 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="14"/>
         <source>Form</source>
-        <translation>Formulaire</translation>
+        <translation>Formulier</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="44"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archieven</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="72"/>
         <source>Date</source>
-        <translation>Date</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="77"/>
         <source>Size</source>
-        <translation>Taille</translation>
+        <translation>Grootte</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="82"/>
         <source>Duration</source>
-        <translation>Durée</translation>
+        <translation>Duur</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="87"/>
         <source>Mount Point</source>
-        <translation>Point de montage</translation>
+        <translation>Aankoppelpunt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="92"/>
         <source>Name</source>
-        <translation>Nom</translation>
+        <translation>Naam</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="105"/>
         <source>Extract</source>
-        <translation>Extraire</translation>
+        <translation>Uitpakken</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="118"/>
         <source>Mount</source>
-        <translation>Monter</translation>
+        <translation>Aankoppelen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="125"/>
         <source>Check</source>
-        <translation>Vérifier</translation>
+        <translation>Controleren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="132"/>
         <source>Delete</source>
-        <translation>Supprimer</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="159"/>
         <source>Prune</source>
-        <translation>Élaguer</translation>
+        <translation>Vernietigen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="175"/>
         <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <translation>Herladen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="211"/>
         <source>Prune Options and Archive Naming</source>
-        <translation>Configuration de l&apos;élagage et des noms d&apos;archives</translation>
+        <translation>Opties omtrent vernietigen en archiefnamen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="238"/>
         <source>Keep</source>
-        <translation>Conserver</translation>
+        <translation>Behouden</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="262"/>
         <source>Use -1 for unlimited.</source>
-        <translation>Utilisez « -1 » pour illimité.</translation>
+        <translation>Gebruik -1 voor oneindig.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="255"/>
         <source> hourly, </source>
-        <translation>à l&apos;heure,</translation>
+        <translation> per uur, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="272"/>
         <source> daily, </source>
-        <translation>au jour,</translation>
+        <translation> per dag, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="286"/>
         <source> weekly, </source>
-        <translation>à la semaine,</translation>
+        <translation> per week, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="300"/>
         <source> monthly and</source>
-        <translation>au mois et</translation>
+        <translation> per maand en</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="314"/>
         <source> annual archives</source>
-        <translation>archives annuelles</translation>
+        <translation> jaarlijkse archieven</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="341"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Toujours conserver les archives des derniers/ières :</translation>
+        <translation>Behoud alle archieven van de afgelopen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="351"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
-        <translation>24H, 1j, 52sem, 12m, 1a</translation>
+        <translation>24u, 1d, 52w, 12m, 1j</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="391"/>
         <source>Archive Name:</source>
-        <translation>Nom de l&apos;archive :</translation>
+        <translation>Archiefnaam:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="432"/>
         <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
-        <translation>Variables disponibles : hostname, profile_id, profile_slug, now, utc_now, user</translation>
+        <translation>Beschikbare variabelen: hostname, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="401"/>
@@ -671,12 +671,12 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="435"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</source>
-        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</translation>
+        <translation>{hostname}-{profile_slug}-{nu:%Y-%m-%dT%H:%M:%S}</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="442"/>
         <source>Prune Prefix:</source>
-        <translation>Préfixe d&apos;élagage :</translation>
+        <translation>Vernietigprefix:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="71"/>
@@ -686,242 +686,242 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="58"/>
         <source>Repository:</source>
-        <translation>Dépôt :</translation>
+        <translation>Repo:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="131"/>
         <source>Select Backup Destination</source>
-        <translation>Choisir la destination de la sauvegarde :</translation>
+        <translation>Kies een back-upbestemming</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="139"/>
         <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
-        <translation>Délier d&apos;un dépôt (Ceci ne supprime aucune donnée. Vous pouvez toujours ajouter un dépôt de nouveau ultérieurement.)</translation>
+        <translation>Repo ontkoppelen (hiermee verwijder je geen gegevens, en je kunt hem later altijd opnieuw koppelen)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="160"/>
         <source>SSH Key:</source>
-        <translation>Clé SSH :</translation>
+        <translation>SSH-sleutel:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="181"/>
         <source>Copy public SSH key to clipboard.</source>
-        <translation>Copier la clé SSH vers le presse-papier.</translation>
+        <translation>Kopieer de SSH-sleutel naar het klembord.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="218"/>
         <source>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</source>
-        <translation>Pour accéder à des dépôts distants de manière sécurisée. Utilisez la configuration par défaut pour utiliser toutes vos clés existantes. Créez une nouvelle clé sinon. </translation>
+        <translation>Beveilig je repo&apos;s met een sleutel. Gebruik één van de bestaande of maak nieuwe aan.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="245"/>
         <source>Compression:</source>
-        <translation>Compression :</translation>
+        <translation>Compressie:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="346"/>
         <source>Encryption:</source>
-        <translation>Chiffrement :</translation>
+        <translation>Versleuteling:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="386"/>
         <source>Original Size:</source>
-        <translation>Taille d&apos;origine :</translation>
+        <translation>Oorspronkelijke grootte:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="400"/>
         <source>Deduplicated Size:</source>
-        <translation>Taille dé-dupliquée :</translation>
+        <translation>Grootte na uitpakken:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="407"/>
         <source>Compressed Size:</source>
-        <translation>Taille compressée :</translation>
+        <translation>Grootte na inpakken:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="47"/>
         <source>Schedule</source>
-        <translation>Programme</translation>
+        <translation>Tijdschema</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="73"/>
         <source>Backup manually</source>
-        <translation>Sauvegarder manuellement</translation>
+        <translation>Handmatig back-uppen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="90"/>
         <source>Backup every </source>
-        <translation>Sauvegarder à chaque</translation>
+        <translation>Maak een back-up, elke</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="113"/>
         <source>hours at</source>
-        <translation>heures à</translation>
+        <translation>uur om</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="136"/>
         <source>minutes past the hour</source>
-        <translation>minutes passées l&apos;heure</translation>
+        <translation>minuten na het hele uur</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="160"/>
         <source>Backup daily at</source>
-        <translation>Sauvegarder tous les jours, à</translation>
+        <translation>Maak een back-up, dagelijks om</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="190"/>
         <source>Validate repository data every</source>
-        <translation>Valider les données du dépôt à toutes les </translation>
+        <translation>Valideer repo-gegevens elke</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="216"/>
         <source>weeks</source>
-        <translation>semaines</translation>
+        <translation>weken</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="243"/>
         <source>Prune old Archives after each backup</source>
-        <translation>Élaguer les vieilles archives après chaque sauvegarde</translation>
+        <translation>Oude archieven vernietigen na elke back-up</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="283"/>
         <source>Apply</source>
-        <translation>Appliquer</translation>
+        <translation>Toepassen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="312"/>
         <source>Next Backup:</source>
-        <translation>Prochaine sauvegarde :</translation>
+        <translation>Volgende back-up:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="319"/>
         <source>Off</source>
-        <translation>Éteint</translation>
+        <translation>Uit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="363"/>
         <source>Networks</source>
-        <translation>Réseaux :</translation>
+        <translation>Netwerken</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="375"/>
         <source>Allowed Networks:</source>
-        <translation>Réseaux autorisés :</translation>
+        <translation>Toegestane netwerken:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="391"/>
         <source>Log</source>
-        <translation>Historique</translation>
+        <translation>Logboek</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="415"/>
         <source>Time</source>
-        <translation>Temps</translation>
+        <translation>Tijd</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="420"/>
         <source>Category</source>
-        <translation>Catégorie</translation>
+        <translation>Categorie</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="425"/>
         <source>Subcommand</source>
-        <translation>Sous-commande</translation>
+        <translation>Subopdracht</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="430"/>
         <source>Repository</source>
-        <translation>Dépôt</translation>
+        <translation>Repo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="435"/>
         <source>Returncode</source>
-        <translation>Code de retour</translation>
+        <translation>Terugkoppelingscode</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="452"/>
         <source>Shell Commands</source>
-        <translation>Commandes de terminal</translation>
+        <translation>Shell-opdrachten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="461"/>
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).</source>
-        <translation>Exécuter une commande de terminal avant et après chaque sauvegarde. La commande de sauvegarde et post-sauvegarde seront exécutées uniquement si la commande pré-sauvegarde se termine sans erreur (code de retour 0)</translation>
+        <translation>Voer aangepaste shellopdrachten uit vóór en ná elke back-up. De back-up- en na-back-upopdrachten worden alleen uitgevoerd als de voor-back-upopdracht geen fouten aangeeft (terugkoppelcode 0).</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="480"/>
         <source>Pre-backup command to run BEFORE backups</source>
-        <translation>Commande pré-sauvegarde à exécuter AVANT les sauvegardes</translation>
+        <translation>Voor-back-upopdracht, uit te voeren VÓÓR back-ups</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="490"/>
         <source>Post-backup command to run AFTER backups</source>
-        <translation>Commande post-sauvegarde à exécuter APRÈS les sauvegardes</translation>
+        <translation>Na-back-upopdracht, uit te voeren NÁ back-ups</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="502"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Variables d&apos;environnement disponibles : &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Beschikbare env-variabelen: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="20"/>
         <source>Source Folders and Files to Back Up:</source>
-        <translation>Dossiers sources et fichier à sauvegarder :</translation>
+        <translation>Te back-uppen bronmappen en -bestanden:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="47"/>
         <source>Add Folder</source>
-        <translation>Ajouter un dossier</translation>
+        <translation>Map toevoegen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="54"/>
         <source>Add File</source>
-        <translation>Ajouter un fichier</translation>
+        <translation>Bestand toevoegen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="61"/>
         <source>Remove</source>
-        <translation>Effacer</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="87"/>
         <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Exclure si présent (exclure les dossiers avec ces fichiers) :</translation>
+        <translation>Uitsluiten, indien aanwezig (bestanden met de volgende bestanden uitsluiten):</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="152"/>
         <source>Diff</source>
-        <translation>Différence</translation>
+        <translation>Verschil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="192"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pour monter les archives, installez d&apos;abord &amp;quot;FUSE pour macOS&amp;quot; depuis&lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;ici&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Archieven kunnen alleen worden aangekoppeld met &amp;quot;FUSE voor macOS&amp;quot; - &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Downloaden&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Met vernietigen verwijder je oude archieven. Je kunt het aantal uurlijkse, dagelijkse, etc. te behouden archieven bepalen. Meestal willen gebruikers meer nieuwere en minder oudere archieven behouden.&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;Meer informatie&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="64"/>
         <source>Vorta Version:</source>
-        <translation>Version de Vorta</translation>
+        <translation>Vorta-versie:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="81"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;|&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Rapporter un bug&lt;/span&gt;&lt;/a&gt; |</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Bug melden&lt;/span&gt;&lt;/a&gt; |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="91"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Journal&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Logboek&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="127"/>
         <source>Borg Version:</source>
-        <translation>Version de Borg:</translation>
+        <translation>Borg-versie:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="134"/>
@@ -936,28 +936,27 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="99"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dépôt de sauvegarde local ou distant. Pour un hébergement de sauvegardes simple et sécurisé, essayez &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;
-BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Externe of lokale back-uprepo. Wil je eenvoudige, veilige back-uphosting? Probeer dan eens &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="287"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;La compression est utilisée pour les nouvelles données. Cela peut-être changé et n&apos;affecte pas la déduplication. En savoir&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;plus&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;De toe te passen compressie op nieuwe gegevens. Kan worden gewijzigd en is niet van toepassing op uitpakken. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Meer informatie&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="77"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclure les paternes (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;plus&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Uitsluitpatronen (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;meer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="103"/>
         <source>E.g. **/.cache</source>
-        <translation>Ex. **/.cache</translation>
+        <translation>Bijv. **/.cache</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="116"/>
         <source>E.g. .nobackup</source>
-        <translation>Ex. .nobackup</translation>
+        <translation>Bijv. geenbackup</translation>
     </message>
 </context>
 <context>
@@ -965,92 +964,92 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/main_window.py" line="85"/>
         <source>Backup in progress.</source>
-        <translation>Sauvegarde en cours.</translation>
+        <translation>Er wordt een back-up gemaakt.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="168"/>
         <source>Task cancelled</source>
-        <translation>Tâche annulée</translation>
+        <translation>Taak afgebroken</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="20"/>
         <source>MainWindow</source>
-        <translation>MainWindow</translation>
+        <translation>Hoofdvenster</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="51"/>
         <source>Current Profile:</source>
-        <translation>Profil actuel :</translation>
+        <translation>Huidig profiel:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="81"/>
         <source>Rename Profile</source>
-        <translation>Renommer le profil</translation>
+        <translation>Profielnaam wijzigen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="94"/>
         <source>Delete Profile</source>
-        <translation>Supprimer le profil</translation>
+        <translation>Profiel verwijderen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="135"/>
         <source>Repository</source>
-        <translation>Dépôt</translation>
+        <translation>Repo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="140"/>
         <source>Sources</source>
-        <translation>Sources</translation>
+        <translation>Bronnen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="145"/>
         <source>Schedule</source>
-        <translation>Horaire</translation>
+        <translation>Tijdschema</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="150"/>
         <source>Archives</source>
-        <translation>Archives</translation>
+        <translation>Archieven</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="155"/>
         <source>Misc</source>
-        <translation>Divers</translation>
+        <translation>Overig</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="206"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="269"/>
         <source>Start Backup</source>
-        <translation>Commencer la sauvegarde</translation>
+        <translation>Back-up starten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="283"/>
         <source>Latest</source>
-        <translation>Dernier</translation>
+        <translation>Recentste</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="288"/>
         <source>Reset App</source>
-        <translation>Réinitialiser l&apos;app</translation>
+        <translation>Standaardwaarden</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="68"/>
         <source>Add Profile</source>
-        <translation>Ajouter un profil</translation>
+        <translation>Profiel toevoegen</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="133"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
-        <translation>Êtes vous sûr·e de vouloir supprimer le profil &apos;{}&apos;?</translation>
+        <translation>Weet je zeker dat je &apos;{}&apos; wilt verwijderen?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="134"/>
         <source>Confirm deletion</source>
-        <translation>Confirmer la suppression</translation>
+        <translation>Verwijderen bevestigen</translation>
     </message>
 </context>
 <context>
@@ -1058,12 +1057,12 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/main_window.py" line="172"/>
         <source>Quit</source>
-        <translation>Quitter</translation>
+        <translation>Afsluiten</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="172"/>
         <source>Should Vorta continue to run in the background?</source>
-        <translation>Vorta doit-il continuer à fonctionner en arrière-plan ?</translation>
+        <translation>Wil je dat Vorta blijft draaien op de achtergrond?</translation>
     </message>
 </context>
 <context>
@@ -1071,82 +1070,82 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/repo_tab.py" line="25"/>
         <source>+ Initialize New Repository</source>
-        <translation>+ Initialiser un nouveau dépôt</translation>
+        <translation>+ Nieuwe repo aanmaken</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="26"/>
         <source>+ Add Existing Repository</source>
-        <translation>+ Ajouter un dépôt existant</translation>
+        <translation>+ Bestaande repo toevoegen</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="47"/>
         <source>No Compression</source>
-        <translation>Pas de compression</translation>
+        <translation>Geen compressie</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="100"/>
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Choisir automatiquement une clef SSH (par défaut)</translation>
+        <translation>SSH-sleutel automatisch genereren (standaard)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="101"/>
         <source>Create New Key</source>
-        <translation>Créer une nouvelle clé</translation>
+        <translation>Nieuwe sleutel genereren</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="139"/>
         <source>Public Key Copied to Clipboard</source>
-        <translation>Clé publique copiée dans le presse-papier</translation>
+        <translation>De sleutel is gekopieerd naar het klembord</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="140"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>La clé SSH sélectionnée a été copiée dans le presse-papier. Utilisez la pour configurer les permissions du dépôt distant. </translation>
+        <translation>De geselecteerde SSH-sleutel is gekopieerd naar het klembord. Gebruik deze om externe repomachtigingen in te stellen.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="145"/>
         <source>Couldn&apos;t find public key.</source>
-        <translation>Clé publique introuvable.</translation>
+        <translation>Geen openbare sleutel aangetroffen.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="147"/>
         <source>Select a public key from the dropdown first.</source>
-        <translation>Sélectionnez d&apos;abord une clé dans le menu déroulant. </translation>
+        <translation>Kies een openbare sleutel in het uitklapmenu.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="204"/>
         <source>Repository was Unlinked</source>
-        <translation>Le dépôt est délié</translation>
+        <translation>De repo is ontkoppeld</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="205"/>
         <source>You can always connect it again later.</source>
-        <translation>Vous pouvez toujours le reconnecter ultérieurement. </translation>
+        <translation>Je kunt deze later opnieuw koppelen.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="37"/>
         <source>LZ4 (modern, default)</source>
-        <translation>LZ4 (moderne, par défaut)</translation>
+        <translation>LZ4 (modern, standaard)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="38"/>
         <source>Zstandard Level 3 (modern)</source>
-        <translation>Zstandard Niveau 3 (moderne)</translation>
+        <translation>Zstandard, niveau 3 (modern)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="39"/>
         <source>Zstandard Level 8 (modern)</source>
-        <translation>Zstandard Niveau 8 (moderne)</translation>
+        <translation>Zstandard, niveau 8 (modern)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="45"/>
         <source>ZLIB Level 6 (auto, legacy)</source>
-        <translation>ZLIB Niveau 6 (auto, ancien)</translation>
+        <translation>ZLIB, niveau 6 (automatisch, verouderd)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="46"/>
         <source>LZMA Level 6 (auto, legacy)</source>
-        <translation>LZMA Niveau 6 (auto, ancien)</translation>
+        <translation>LZMA, niveau 6 (automatisch, verouderd)</translation>
     </message>
 </context>
 <context>
@@ -1154,12 +1153,12 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/ssh_dialog.py" line="34"/>
         <source>ED25519 (Recommended)</source>
-        <translation>ED25519 (Recommandé)</translation>
+        <translation>ED25519 (aanbevolen)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="35"/>
         <source>RSA (Legacy)</source>
-        <translation>RSA (Classique)</translation>
+        <translation>RSA (verouderd)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="36"/>
@@ -1169,27 +1168,27 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/ssh_dialog.py" line="45"/>
         <source>High (Recommended)</source>
-        <translation>Haut (Recommandé)</translation>
+        <translation>Hoog (aanbevolen)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="46"/>
         <source>Medium</source>
-        <translation>Moyen</translation>
+        <translation>Normaal</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="59"/>
         <source>Key file already exists. Not overwriting.</source>
-        <translation>Le fichier clé existe déjà. Il ne sera pas écrasé. </translation>
+        <translation>Het sleutelbestand bestaal al en wordt niet overschreven.</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="71"/>
         <source>New key was copied to clipboard and written to %s.</source>
-        <translation>La nouvelle clé a été copiée dans le presse-papier et écrite sous %s.</translation>
+        <translation>De nieuwe sleutel is gekopieerd naar het klembord en weggeschreven naar %s.</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="73"/>
         <source>Error during key generation.</source>
-        <translation>Erreur durant la génération de la clé.</translation>
+        <translation>Fout tijdens sleutelgenerate.</translation>
     </message>
 </context>
 <context>
@@ -1197,12 +1196,12 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/source_tab.py" line="46"/>
         <source>Choose directory to back up</source>
-        <translation>Choisissez le répertoire à sauvegarder</translation>
+        <translation>Kies de te back-uppen map</translation>
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="46"/>
         <source>Choose file to back up</source>
-        <translation>Choisissez le fichier à sauvegarder</translation>
+        <translation>Kies het te back-uppen bestand</translation>
     </message>
 </context>
 <context>
@@ -1210,32 +1209,32 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../tray_menu.py" line="39"/>
         <source>Vorta for Borg Backup</source>
-        <translation>Vorta pour BorgBackup</translation>
+        <translation>Vorta voor Borg Backup</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="48"/>
         <source>Backup in Progress</source>
-        <translation>Sauvegarde en cours</translation>
+        <translation>Er wordt een back-up gemaakt</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="49"/>
         <source>Cancel Backup</source>
-        <translation>Annuler la sauvegarde</translation>
+        <translation>Back-uppen afbreken</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Next Task: %s</source>
-        <translation>Prochaine tâche : %s</translation>
+        <translation>Volgende taak: %s</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="61"/>
         <source>Backup Now</source>
-        <translation>Sauvegarder maintenant</translation>
+        <translation>Nu back-uppen</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="66"/>
         <source>Quit</source>
-        <translation>Fermer</translation>
+        <translation>Afsluiten</translation>
     </message>
 </context>
 <context>
@@ -1243,17 +1242,17 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../application.py" line="85"/>
         <source>Vorta Backup</source>
-        <translation>Sauvegarde Vorta</translation>
+        <translation>Vorta-back-up</translation>
     </message>
     <message>
         <location filename="../../application.py" line="140"/>
         <source>No Borg Binary Found</source>
-        <translation>Aucun binaire de Borg n&apos;a été trouvé</translation>
+        <translation>Borg is niet aangetroffen</translation>
     </message>
     <message>
         <location filename="../../application.py" line="141"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
-        <translation>Vorta n&apos;a pas pu localiser un binaire de Borg Backup utilisable.</translation>
+        <translation>Vorta heeft Borg niet aangetroffen op je systeem.</translation>
     </message>
 </context>
 <context>
@@ -1261,37 +1260,37 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../scheduler.py" line="55"/>
         <source>Vorta Scheduler</source>
-        <translation>Vorta Scheduler</translation>
+        <translation>Vorta-tijdschema</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="55"/>
         <source>Background scheduler was changed.</source>
-        <translation>La planification d&apos;arrière-plan a été changée. </translation>
+        <translation>Het achtergrondschema is aangepast.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="89"/>
         <source>None scheduled</source>
-        <translation>Aucun prévu</translation>
+        <translation>Niks ingepland</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="120"/>
         <source>Vorta Backup</source>
-        <translation>Vorta Backup</translation>
+        <translation>Vorta-back-up</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="98"/>
         <source>Starting background backup for %s.</source>
-        <translation>Début de la sauvegarde en arrière-plan pour %s.</translation>
+        <translation>Er wordt een achtergrondback-up gestart voor %s.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="109"/>
         <source>Backup successful for %s.</source>
-        <translation>Sauvegarde réussie pour %s.</translation>
+        <translation>%s is gebackupt.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="115"/>
         <source>Error during backup creation.</source>
-        <translation>Erreur durant la création de la sauvegarde. </translation>
+        <translation>Fout tijdens aanmaken van back-up.</translation>
     </message>
 </context>
 <context>
@@ -1299,57 +1298,57 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../borg/borg_thread.py" line="104"/>
         <source>Backup is already in progress.</source>
-        <translation>La sauvegarde est déjà en cours.</translation>
+        <translation>Er wordt al een back-up gemaakt.</translation>
     </message>
     <message>
         <location filename="../../borg/version.py" line="20"/>
         <source>Borg binary was not found.</source>
-        <translation>Le binaire Borg est introuvable.</translation>
+        <translation>Borg is niet aangetroffen.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_thread.py" line="112"/>
         <source>Add a backup repository first.</source>
-        <translation>D&apos;abord, ajoutez un dépôt de sauvegarde.</translation>
+        <translation>Voeg eerst een back-uprepo toe.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="78"/>
         <source>Add some folders to back up first.</source>
-        <translation>Ajouter des dossiers à sauvegarder d&apos;abord. </translation>
+        <translation>Voeg eerst te back-uppen mappen toe.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="93"/>
         <source>Current Wifi is not allowed.</source>
-        <translation>Ce réseau WI-FI n&apos;est pas autorisé.</translation>
+        <translation>Niet toegestaan op het huidige Wi-Fi-netwerk.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="104"/>
         <source>Repo folder not mounted or moved.</source>
-        <translation>Le dossier des dépôts n&apos;est pas monté ou a été déplacé. </translation>
+        <translation>De repomap is niet aangekoppeld of verplaatst.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="100"/>
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>La commande pré-sauvegarde a retourné un code de retour non nul. </translation>
+        <translation>De voor-back-upopdracht koppelde afsluitcode nul terug.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="140"/>
         <source>Starting backup...</source>
-        <translation>Début de la sauvegarde...</translation>
+        <translation>Bezig met starten van back-up...</translation>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="27"/>
         <source>No active Borg mounts found.</source>
-        <translation>Aucun point de montage Borg actif n&apos;a été trouvé. </translation>
+        <translation>Geen actieve Borg-aankoppelpunten aangetroffen.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_thread.py" line="116"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
-        <translation>Votre version de Borg est trop ancienne. Une version &gt;=1.1.0 est requise.</translation>
+        <translation>Je Borg-versie is verouderd. &gt;=1.1.0 is vereist.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="108"/>
         <source>Your current Borg version does not support ZStd compression.</source>
-        <translation>La version actuelle de Borg ne supporte pas la compression ZStd.</translation>
+        <translation>Je huidige Borg-versie heeft geen ondersteuning voor ZStd-compressie.</translation>
     </message>
 </context>
 <context>
@@ -1357,32 +1356,32 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../models.py" line="196"/>
         <source>Display notifications when background tasks fail</source>
-        <translation>Afficher les notifications lorsqu&apos;une tâche en arrière-plan échoue</translation>
+        <translation>Meldingen tonen als achtergrondtaken mislukken</translation>
     </message>
     <message>
         <location filename="../../models.py" line="201"/>
         <source>Also notify about successful background tasks</source>
-        <translation>Informer également du succès de l&apos;exécution des tâches en arrière-plan</translation>
+        <translation>Meldingen tonen als achtergrondtaken zijn afgerond</translation>
     </message>
     <message>
         <location filename="../../models.py" line="206"/>
         <source>Automatically start Vorta at login</source>
-        <translation>Lancer Vorta automatique lors de l&apos;ouverture de la session</translation>
+        <translation>Vorta automatisch opstarten</translation>
     </message>
     <message>
         <location filename="../../models.py" line="223"/>
         <source>Check for updates on startup</source>
-        <translation>Vérifier les mises à jour au démarrage</translation>
+        <translation>Automatisch controleren op updates</translation>
     </message>
     <message>
         <location filename="../../models.py" line="228"/>
         <source>Include pre-release versions when checking for updates</source>
-        <translation>Rechercher également les versions bêta lors de la vérification des mises à jour</translation>
+        <translation>Controleren op vooraf vrijgeven versies</translation>
     </message>
     <message>
         <location filename="../../models.py" line="211"/>
         <source>Open main window on startup</source>
-        <translation>Ouvrir la fenêtre principale au démarrage</translation>
+        <translation>Hoofdvenster tonen na opstarten</translation>
     </message>
 </context>
 </TS>
