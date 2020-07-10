@@ -1,7 +1,6 @@
 from PyQt5 import QtDBus
 from PyQt5.QtCore import QVariant
 from vorta.keyring.abc import VortaKeyring
-import os
 
 
 class VortaKWallet5Keyring(VortaKeyring):
