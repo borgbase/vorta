@@ -1,4 +1,5 @@
 from PyQt5 import QtDBus
+from PyQt5.QtCore import QVariant
 from vorta.keyring.abc import VortaKeyring
 import os
 
@@ -44,11 +45,10 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     def get_handle(self):
         walletName = self.get_result("networkWallet", [])
-        output = os.popen(f"qdbus {self.serviceName} {self.objectPath} open {walletName} 0 vorta-repo").read()
-        try:
-            self.handle = int(output)
-        except ValueError:
-            self.handle = -1  # Same value as not unlocked
+        wId = QVariant(0)
+        wId.convert(4)
+        output = self.get_result("open", [walletName, wId, 'vorta-repo'])
+        self.handle = int(output)
 
     @property
     def valid(self):
