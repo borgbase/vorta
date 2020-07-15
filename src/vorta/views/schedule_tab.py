@@ -55,8 +55,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
 
-        self.dontRunOnMeteredNetworksCheckBox.setCheckState(
-            QtCore.Qt.CheckState.Checked if profile.dont_run_on_metered_networks else QtCore.Qt.CheckState.Unchecked)
+        self.dontRunOnMeteredNetworksCheckBox.setChecked(profile.dont_run_on_metered_networks)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
@@ -140,5 +139,5 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
     def on_dont_run_on_metered_networks_changed(self, state):
         profile = self.profile()
-        profile.dont_run_on_metered_networks = state == QtCore.Qt.Checked
+        profile.dont_run_on_metered_networks = state
         profile.save()
