@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def is_current_network_metered():
     nm = get_network_manager()
-    return nm and nm.is_current_network_metered
+    return nm and nm.is_current_network_metered()
 
 
 def is_network_metered_status_supported():
