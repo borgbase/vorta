@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>195</height>
+    <width>464</width>
+    <height>204</height>
    </rect>
   </property>
   <property name="modal">
@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,7 +103,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../icons/dark/collection.qrc">
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
            </property>
           </widget>
@@ -113,7 +113,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Repository passphrase:</string>
+          <string>Borg passphrase:</string>
          </property>
         </widget>
        </item>
@@ -271,6 +271,5 @@
    </item>
   </layout>
  </widget>
- <resources/>
  <connections/>
 </ui>
