@@ -63,20 +63,28 @@ def parse_diff_lines(diff_lines):
                 significand = size_change.group(1)
                 unit = size_change.group(2)
                 size = calc_size(significand, unit)
-                full_path_index = size_change.end(0)
+                rest_of_line = line[size_change.end(0):]
             else:
                 size = 0
+                rest_of_line = line
 
-            permission_change = re.search(r' *(\[.{24}\]) ', line)
+            change_type_parts = []
+            owner_change = re.search(r' *(\[[^:]+:[^:]+ -> [^:]+:[^:]+\]) ', rest_of_line)
+            if owner_change:
+                change_type_parts.append(owner_change.group(1))
+                rest_of_line = rest_of_line[owner_change.end(0):]
+
+            permission_change = re.search(r' *(\[.{24}\]) ', rest_of_line)
             if permission_change:
-                change_type = permission_change.group(1)
-                full_path_index = permission_change.end(0)
+                change_type_parts.append(permission_change.group(1))
+                rest_of_line = rest_of_line[permission_change.end(0):]
+
+            if change_type_parts:
+                change_type = ' '.join(change_type_parts)
             else:
                 change_type = "modified"
 
-            if size_change and permission_change:
-                full_path_index = max(size_change.end(0), permission_change.end(0))
-            full_path = line[full_path_index:]
+            full_path = rest_of_line.lstrip(' ')
 
         dir, name = os.path.split(full_path)
 
