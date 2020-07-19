@@ -1,7 +1,7 @@
 import re
 from PyQt5 import uic
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring, validate_passwords
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.views.utils import get_colored_icon
@@ -22,11 +22,15 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.passwordLineEdit.textChanged.connect(self.password_listener)
+        self.confirmLineEdit.textChanged.connect(self.password_listener)
+        self.encryptionComboBox.activated.connect(self.password_transparency)
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
+        self.password_transparency()
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
@@ -43,6 +47,22 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    def password_transparency(self):
+        if self.values.get('encryption') != 'none':
+            keyringClass = VortaKeyring.get_keyring().__class__.__name__
+            messages = {
+                'VortaDBKeyring': 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)',  # noqa
+                'VortaSecretStorageKeyring': 'the Secret Service API',
+                'VortaDarwinKeyring': 'the Secret Service API',
+                'VortaKWallet5Keyring': 'KWallet5',
+                'VortaKWallet4Keyring': 'KWallet4'}
+            # Just in case some other keyring support is added
+            keyringName = messages.get(keyringClass,
+                                       'somewhere that was not anticipated. Please file a bug report on Github')
+            self.passwordLabel.setText('The password will be stored in ' + keyringName)
+        else:
+            self.passwordLabel.setText("")
 
     def choose_local_backup_folder(self):
         def receive():
@@ -66,7 +86,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.is_remote_repo = True
 
     def run(self):
-        if self.validate():
+        if self.validate() and self.password_listener():
             params = BorgInitThread.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -122,13 +142,18 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('This repo has already been added.'))
             return False
 
-        if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none':
-                if len(self.values['password']) < 8:
-                    self._set_status(self.tr('Please use a longer passphrase.'))
-                    return False
-
         return True
+
+    def password_listener(self):
+        if self.values['encryption'] == 'none':
+            self.passwordLabel.setText("")
+            return True
+        else:
+            firstPass = self.passwordLineEdit.text()
+            secondPass = self.confirmLineEdit.text()
+            msg = validate_passwords(firstPass, secondPass)
+            self.passwordLabel.setText(msg)
+            return len(msg) == 0
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -137,6 +162,10 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.passwordLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.hide()
+        self.confirmLabel.hide()
 
     def run(self):
         if self.validate():

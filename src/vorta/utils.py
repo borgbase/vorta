@@ -96,7 +96,7 @@ def get_private_keys():
 def pretty_bytes(size):
     """from https://stackoverflow.com/questions/12523586/
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
-    if type(size) != int:
+    if not isinstance(size, int):
         return ''
     power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
@@ -273,3 +273,19 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
+
+
+def validate_passwords(firstPass, secondPass):
+    msg = "Passwords must be "
+    passEqual = firstPass == secondPass
+    passLong = len(firstPass) > 8
+    valid = passEqual and passLong
+
+    if not passEqual:
+        msg += "identical"
+    if not (passEqual or passLong):
+        msg += " and "
+    if not passLong:
+        msg += "greater than 8 characters long"
+
+    return "" if valid else msg
