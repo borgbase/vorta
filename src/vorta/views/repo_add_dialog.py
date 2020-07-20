@@ -4,6 +4,7 @@ from PyQt5 import uic
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring, validate_passwords
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
+from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
 
@@ -153,7 +154,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             firstPass = self.passwordLineEdit.text()
             secondPass = self.confirmLineEdit.text()
             msg = validate_passwords(firstPass, secondPass)
-            self.passwordLabel.setText(msg)
+            self.passwordLabel.setText(translate('utils', msg))
             return len(msg) == 0
 
 
