@@ -96,7 +96,7 @@ def get_private_keys():
 def pretty_bytes(size):
     """from https://stackoverflow.com/questions/12523586/
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
-    if type(size) != int:
+    if not isinstance(size, int):
         return ''
     power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
@@ -192,6 +192,13 @@ def parse_args():
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
                         help="Fork to background and don't open window on startup.")
+    parser.add_argument('--create',
+                        action='store_true',
+                        help='Create a backup  using the given profile or profiles')
+    parser.add_argument('--profile', '-p',
+                        dest='profiles',
+                        action='append',
+                        help='One or more profile names')
 
     return parser.parse_known_args()[0]
 

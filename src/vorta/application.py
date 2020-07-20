@@ -4,6 +4,7 @@ import sip
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
+from vorta.borg.borg_thread import BorgThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
 from vorta.config import TEMP_DIR
@@ -48,11 +49,28 @@ class VortaApp(QtSingleApplication):
         # Prepare system tray icon
         self.tray = TrayMenu(self)
 
-        args = parse_args()
-        if getattr(args, 'daemonize', False):
+        self.args = parse_args()
+        if getattr(self.args, 'daemonize', False) or getattr(self.args, 'create', False):
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
+
+        if getattr(self.args, 'create', False):
+            self.completedProfiles = []
+            print(self.args.profiles)
+            if self.args.profiles:
+                for profile_name in self.args.profiles:
+                    print(profile_name)
+                    profile = BackupProfileModel.get_or_none(name=profile_name)
+                    if profile is not None:
+                        # Wait a bit in case something is running
+                        while BorgThread.is_running():
+                            time.sleep(0.1)
+                        self.create_backup_action(profile_id=profile.id, from_cmdline=True)
+                    else:
+                        print(f"Invalid profile name {profile_name}")
+            else:
+                print("Test")
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
@@ -60,6 +78,13 @@ class VortaApp(QtSingleApplication):
         self.message_received_event.connect(self.message_received_event_response)
         self.set_borg_details_action()
         self.installEventFilter(self)
+
+    def exit_checker(self, result):
+        """Exit when all profiles have been run"""
+        self.completedProfiles.append(result['params']['profile_name'])
+        if self.args.profiles == self.completedProfiles:
+            os._exit(0)
+
 
     def eventFilter(self, source, event):
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and type(source) == MainWindow:
@@ -71,7 +96,7 @@ class VortaApp(QtSingleApplication):
             self.tray.set_tray_icon()
         return False
 
-    def create_backup_action(self, profile_id=None):
+    def create_backup_action(self, profile_id=None, from_cmdline=False):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
@@ -79,6 +104,8 @@ class VortaApp(QtSingleApplication):
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg, parent=self)
+            if from_cmdline:
+                thread.result.connect(self.exit_checker)
             thread.start()
         else:
             notifier = VortaNotifications.pick()
