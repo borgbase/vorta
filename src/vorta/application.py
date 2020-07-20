@@ -57,12 +57,14 @@ class VortaApp(QtSingleApplication):
 
         if getattr(self.args, 'create', False):
             self.completedProfiles = []
+            self.validProfiles = []
             print(self.args.profiles)
             if self.args.profiles:
                 for profile_name in self.args.profiles:
                     print(profile_name)
                     profile = BackupProfileModel.get_or_none(name=profile_name)
                     if profile is not None:
+                        self.validProfiles.append(profile_name)
                         # Wait a bit in case something is running
                         while BorgThread.is_running():
                             time.sleep(0.1)
@@ -82,7 +84,7 @@ class VortaApp(QtSingleApplication):
     def exit_checker(self, result):
         """Exit when all profiles have been run"""
         self.completedProfiles.append(result['params']['profile_name'])
-        if self.args.profiles == self.completedProfiles:
+        if self.validProfiles == self.completedProfiles:
             os._exit(0)
 
 
