@@ -52,15 +52,16 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.values.get('encryption') != 'none':
             keyringClass = VortaKeyring.get_keyring().__class__.__name__
             messages = {
-                'VortaDBKeyring': 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)',  # noqa
-                'VortaSecretStorageKeyring': 'the Secret Service API',
-                'VortaDarwinKeyring': 'the Secret Service API',
-                'VortaKWallet5Keyring': 'KWallet5',
-                'VortaKWallet4Keyring': 'KWallet4'}
+                'VortaDBKeyring': self.tr('plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'),  # noqa
+                'VortaSecretStorageKeyring': self.tr('the Secret Service API'),
+                'VortaDarwinKeyring': self.tr('Keychain Access'),
+                'VortaKWallet5Keyring': self.tr('KWallet 5'),
+                'VortaKWallet4Keyring': self.tr('KWallet 4')
+            }
             # Just in case some other keyring support is added
-            keyringName = messages.get(keyringClass,
-                                       'somewhere that was not anticipated. Please file a bug report on Github')
-            self.passwordLabel.setText('The password will be stored in ' + keyringName)
+            keyringName = messages.get(keyringClass, self.tr(
+                'somewhere that was not anticipated. Please file a bug report on Github'))
+            self.passwordLabel.setText(self.tr('The password will be stored in %s') % keyringName)
         else:
             self.passwordLabel.setText("")
 

@@ -23,6 +23,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
+from vorta.i18n import trans_late
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 
@@ -276,16 +277,15 @@ def is_system_tray_available():
 
 
 def validate_passwords(firstPass, secondPass):
-    msg = "Passwords must be "
+    msg = ""
     passEqual = firstPass == secondPass
     passLong = len(firstPass) > 8
-    valid = passEqual and passLong
 
     if not passEqual:
-        msg += "identical"
-    if not (passEqual or passLong):
-        msg += " and "
+        msg = trans_late('utils', "Passwords must be identical")
     if not passLong:
-        msg += "greater than 8 characters long"
+        msg = trans_late('utils', "Passwords must be greater than 8 characters long")
+    if not (passLong or passEqual):
+        msg = trans_late('utils', "Passwords must be identical and greater than 8 characters long")
 
-    return "" if valid else msg
+    return msg
