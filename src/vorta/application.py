@@ -50,29 +50,25 @@ class VortaApp(QtSingleApplication):
         self.tray = TrayMenu(self)
 
         self.args = parse_args()
-        if getattr(self.args, 'daemonize', False) or getattr(self.args, 'create', False):
+        if getattr(self.args, 'daemonize', False) or self.args.profiles:
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        if getattr(self.args, 'create', False):
+        if self.args.profiles:
             self.completedProfiles = []
             self.validProfiles = []
-            print(self.args.profiles)
-            if self.args.profiles:
-                for profile_name in self.args.profiles:
-                    print(profile_name)
-                    profile = BackupProfileModel.get_or_none(name=profile_name)
-                    if profile is not None:
-                        self.validProfiles.append(profile_name)
-                        # Wait a bit in case something is running
-                        while BorgThread.is_running():
-                            time.sleep(0.1)
-                        self.create_backup_action(profile_id=profile.id, from_cmdline=True)
-                    else:
-                        print(f"Invalid profile name {profile_name}")
-            else:
-                print("Test")
+            for profile_name in self.args.profiles:
+                print(profile_name)
+                profile = BackupProfileModel.get_or_none(name=profile_name)
+                if profile is not None:
+                    self.validProfiles.append(profile_name)
+                    # Wait a bit in case something is running
+                    while BorgThread.is_running():
+                        time.sleep(0.1)
+                    self.create_backup_action(profile_id=profile.id, from_cmdline=True)
+                else:
+                    print(f"Invalid profile name {profile_name}")
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)

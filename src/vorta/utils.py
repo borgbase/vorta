@@ -193,14 +193,17 @@ def parse_args():
                         action='store_true',
                         help="Fork to background and don't open window on startup.")
     parser.add_argument('--create',
-                        action='store_true',
-                        help='Create a backup  using the given profile or profiles')
-    parser.add_argument('--profile', '-p',
+                        nargs='?',
                         dest='profiles',
                         action='append',
-                        help='One or more profile names')
+                        help='Create a backup  using the given profile or profiles')
 
-    return parser.parse_known_args()[0]
+    args = parser.parse_known_args()[0]
+
+    if args.profiles == [None]:
+        parser.error("Include one or more profile names")
+    else:
+        return args
 
 
 def slugify(value):
