@@ -17,7 +17,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         super().__init__()
         self.setupUi(self)
         self.profile = profile
-        self.setWindowTitle("Backup Profile")
+        self.setWindowTitle(self.tr("Backup Profile"))
         self.fileButton.setIcon(get_colored_icon('folder-open'))
         self.fileButton.clicked.connect(self.get_file)
         self.buttonBox.accepted.connect(self.run)
@@ -32,9 +32,9 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
     def get_file(self):
         self.fileName = QFileDialog.getSaveFileName(
             self,
-            "Save profile",
+            self.tr("Save profile"),
             self.url,
-            "Vorta backup profile (*.vortabackup)")
+            self.tr("Vorta backup profile (*.vortabackup)"))
         if self.fileName[0] != '':
             self.locationLabel.setText(self.fileName[0])
         self.set_buttons(self.fileName[0] != '')
@@ -175,7 +175,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 class RestoreWindow(BackupWindow):
     def __init__(self, profile):
         super().__init__(profile)
-        self.setWindowTitle("Restore Profile")
+        self.setWindowTitle(self.tr("Restore Profile"))
         self.overrideButtons.show()
         self.storePassword.hide()
         self.buttonBox.button(QDialogButtonBox.Save).hide()
@@ -192,16 +192,16 @@ class RestoreWindow(BackupWindow):
                 self.errors.setText("")
                 self.accept()
             except json.decoder.JSONDecodeError:
-                self.errors.setText("Invalid backup file")
+                self.errors.setText(self.tr("Invalid backup file"))
             except VersionException as e:
                 self.errors.setText(str(e))
 
     def get_file(self):
         self.fileName = QFileDialog.getOpenFileName(
             self,
-            "Load profile",
+            self.tr("Load profile"),
             self.url,
-            "Vorta backup profile (*.vortabackup)")
+            self.tr("Vorta backup profile (*.vortabackup)"))
         if self.fileName[0] != '':
             self.locationLabel.setText(self.fileName[0])
         self.set_buttons(self.fileName[0] != '')
