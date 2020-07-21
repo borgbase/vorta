@@ -179,11 +179,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if window.exec_():
             if window.returns.get('repo', False):
                 self.repoTab.set_repos()
-            if window.returns.get('logs', False):
+            if window.returns.get('overrideExisting', False):
                 self.scheduleTab.init_logs()
-            if window.returns.get('wifi', False):
                 self.scheduleTab.init_wifi()
-            if window.returns.get('misc', False):
                 self.miscTab.update_checkboxes()
             self.profileSelector.addItem(window.new_profile.name, window.new_profile.id)
             self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)

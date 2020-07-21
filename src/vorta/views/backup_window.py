@@ -126,18 +126,14 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
-        if self.overrideMisc.isChecked():
-            self.returns['misc'] = True
+        if self.overrideExisting.isChecked():
+            self.returns['overwrite'] = True
             db.drop_tables([SettingsModel])
             db.create_tables([SettingsModel])
             [dict_to_model(SettingsModel, setting).save(force_insert=True) for setting in profile_dict['SettingsModel']]
-        if self.overrideEvent.isChecked():
-            self.returns['logs'] = True
             db.drop_tables([EventLogModel])
             db.create_tables([EventLogModel])
             [dict_to_model(EventLogModel, event).save(force_insert=True) for event in profile_dict['EventLogModel']]
-        if self.overrideWifi.isChecked():
-            self.returns['wifi'] = True
             db.drop_tables([WifiSettingModel])
             db.create_tables([WifiSettingModel])
             [dict_to_model(WifiSettingModel, wifi).save(force_insert=True) for wifi in profile_dict['WifiSettingModel']]
