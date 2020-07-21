@@ -192,10 +192,11 @@ def parse_args():
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
                         help="Fork to background and don't open window on startup.")
-    parser.add_argument('--create',
-                        nargs='+',
-                        dest='profile',
-                        help='Create a backup in the background using the given profile(s). Will automatically close once complete')
+    parser.add_argument(
+        '--create',
+        nargs='+',
+        dest='profile',
+        help='Create a backup in the background using the given profile(s). Will automatically close once complete')
 
     args = parser.parse_known_args()[0]
 

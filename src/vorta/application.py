@@ -87,9 +87,8 @@ class VortaApp(QtSingleApplication):
         if self.validProfiles == self.completedProfiles:
             os._exit(0)
 
-
     def eventFilter(self, source, event):
-        if event.type() == QtCore.QEvent.ApplicationPaletteChange and type(source) == MainWindow:
+        if event.type() == QtCore.QEvent.ApplicationPaletteChange and isinstance(source, MainWindow):
             self.main_window.set_icons()
             self.main_window.repoTab.set_icons()
             self.main_window.archiveTab.set_icons()
