@@ -1,6 +1,9 @@
+import logging
 import os
 import sys
 import sip
+import time
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
@@ -16,6 +19,8 @@ from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
 from vorta.notifications import VortaNotifications
+
+logger = logging.getLogger(__name__)
 
 APP_ID = os.path.join(TEMP_DIR, "socket")
 
@@ -50,16 +55,15 @@ class VortaApp(QtSingleApplication):
         self.tray = TrayMenu(self)
 
         self.args = parse_args()
-        if getattr(self.args, 'daemonize', False) or self.args.profiles:
+        if getattr(self.args, 'daemonize', False) or self.args.profile:
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        if self.args.profiles:
+        if self.args.profile:
             self.completedProfiles = []
             self.validProfiles = []
-            for profile_name in self.args.profiles:
-                print(profile_name)
+            for profile_name in self.args.profile:
                 profile = BackupProfileModel.get_or_none(name=profile_name)
                 if profile is not None:
                     self.validProfiles.append(profile_name)
@@ -68,7 +72,7 @@ class VortaApp(QtSingleApplication):
                         time.sleep(0.1)
                     self.create_backup_action(profile_id=profile.id, from_cmdline=True)
                 else:
-                    print(f"Invalid profile name {profile_name}")
+                    logger.warning(f"Invalid profile name {profile_name}")
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
