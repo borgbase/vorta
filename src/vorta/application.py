@@ -83,7 +83,9 @@ class VortaApp(QtSingleApplication):
 
     def exit_checker(self, result):
         """Exit when all profiles have been run"""
-        self.completedProfiles.append(result['params']['profile_name'])
+        profile_name = result['params']['profile_name']
+        logger.info(f"Backup complete for {profile_name}")
+        self.completedProfiles.append(profile_name)
         if self.validProfiles == self.completedProfiles:
             os._exit(0)
 
