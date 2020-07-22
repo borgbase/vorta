@@ -302,8 +302,9 @@ def password_transparency(encryption):
             'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
         }
         # Just in case some other keyring support is added
-        keyringName = messages.get(keyringClass, trans_late('utils',
-            'somewhere that was not anticipated. Please file a bug report on Github'))
+        keyringName = messages.get(keyringClass,
+                                   trans_late('utils',
+                                              'somewhere that was not anticipated. Please file a bug report on Github'))
         return trans_late('utils', 'The password will be stored in %s') % keyringName
     else:
         return ""

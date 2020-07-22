@@ -1,7 +1,8 @@
 import re
 from PyQt5 import uic
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring, validate_passwords, password_transparency
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
+    borg_compat, validate_passwords, password_transparency
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.i18n import translate
