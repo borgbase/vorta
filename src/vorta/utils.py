@@ -289,3 +289,21 @@ def validate_passwords(firstPass, secondPass):
         msg = trans_late('utils', "Passwords must be identical and greater than 8 characters long")
 
     return msg
+
+
+def password_transparency(encryption):
+    if encryption != 'none':
+        keyringClass = VortaKeyring.get_keyring().__class__.__name__
+        messages = {
+            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'),  # noqa
+            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
+            'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
+            'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
+            'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
+        }
+        # Just in case some other keyring support is added
+        keyringName = messages.get(keyringClass, trans_late('utils',
+            'somewhere that was not anticipated. Please file a bug report on Github'))
+        return trans_late('utils', 'The password will be stored in %s') % keyringName
+    else:
+        return ""

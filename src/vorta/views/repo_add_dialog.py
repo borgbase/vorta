@@ -1,7 +1,7 @@
 import re
 from PyQt5 import uic
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring, validate_passwords
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat, VortaKeyring, validate_passwords, password_transparency
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.i18n import translate
@@ -50,21 +50,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-        if self.values.get('encryption') != 'none':
-            keyringClass = VortaKeyring.get_keyring().__class__.__name__
-            messages = {
-                'VortaDBKeyring': self.tr('plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'),  # noqa
-                'VortaSecretStorageKeyring': self.tr('the Secret Service API'),
-                'VortaDarwinKeyring': self.tr('Keychain Access'),
-                'VortaKWallet5Keyring': self.tr('KWallet 5'),
-                'VortaKWallet4Keyring': self.tr('KWallet 4')
-            }
-            # Just in case some other keyring support is added
-            keyringName = messages.get(keyringClass, self.tr(
-                'somewhere that was not anticipated. Please file a bug report on Github'))
-            self.passwordLabel.setText(self.tr('The password will be stored in %s') % keyringName)
-        else:
-            self.passwordLabel.setText("")
+        self.passwordLabel.setText(password_transparency(self.values.get('encryption')))
 
     def choose_local_backup_folder(self):
         def receive():
