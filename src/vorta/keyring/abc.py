@@ -20,7 +20,6 @@ class VortaKeyring:
             # Save passwords in DB, if all else fails.
             except secretstorage.SecretServiceNotAvailableException:
                 import vorta.models  # To prevent circular import
-                print(vorta.models.SettingsModel.get(key='ram_passwords').value)
                 if vorta.models.SettingsModel.get(key='ram_passwords').value:
                     from .ram import VortaMemoryKeyring
                     return VortaMemoryKeyring()
