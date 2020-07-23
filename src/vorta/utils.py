@@ -49,6 +49,7 @@ def keyring():
     def is_primary(self):
         return VortaKeyring.is_primary
 
+
 def nested_dict():
     """
     Combination of two idioms to quickly build dicts from lists of keys:
