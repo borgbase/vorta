@@ -30,10 +30,14 @@ from vorta.log import logger
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
-keyring = VortaKeyring.get_keyring()
-logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
-
 borg_compat = BorgCompatibility()
+
+
+@property
+def keyring():
+    keyring = VortaKeyring.get_keyring()
+    logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
+    return keyring
 
 
 def nested_dict():
@@ -299,6 +303,7 @@ def password_transparency(encryption):
             'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
             'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
             'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
+            'VortaMemoryKeyring': trans_late('utils', 'memory, and will be lost when Vorta closes'),
             'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
         }
         # Just in case some other keyring support is added

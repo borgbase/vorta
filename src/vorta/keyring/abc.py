@@ -19,8 +19,14 @@ class VortaKeyring:
                 return VortaSecretStorageKeyring()
             # Save passwords in DB, if all else fails.
             except secretstorage.SecretServiceNotAvailableException:
-                from .db import VortaDBKeyring
-                return VortaDBKeyring()
+                from vorta.models import SettingsModel
+                print(SettingsModel.get(key='ram_passwords').value)
+                if SettingsModel.get(key='ram_passwords').value:
+                    from .ram import VortaMemoryKeyring
+                    return VortaMemoryKeyring()
+                else:
+                    from .db import VortaDBKeyring
+                    return VortaDBKeyring()
 
     def set_password(self, service, repo_url, password):
         raise NotImplementedError
