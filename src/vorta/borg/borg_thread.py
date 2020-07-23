@@ -13,7 +13,8 @@ from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
-from vorta.utils import keyring, borg_compat
+from vorta.views.utils import keyring
+from vorta.utils import borg_compat
 from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()

@@ -1,7 +1,7 @@
 from collections import namedtuple
 from .borg_thread import BorgThread
 from vorta.models import RepoModel
-from vorta.utils import keyring
+from vorta.views.utils import keyring
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])

@@ -24,30 +24,12 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
-from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
 borg_compat = BorgCompatibility()
-
-
-@property
-def keyring():
-    keyring = VortaKeyring.get_keyring()
-    logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
-    return keyring
-
-    def set_password(self, service, repo_url, password):
-        return VortaKeyring.set_password(service, repo_url, password)
-
-    def get_password(self, service, repo_url):
-        return VortaKeyring.get_password(service, repo_url)
-
-    @property
-    def is_primary(self):
-        return VortaKeyring.is_primary
 
 
 def nested_dict():
@@ -289,37 +271,3 @@ def is_system_tray_available():
 
     return is_available
 
-
-def validate_passwords(firstPass, secondPass):
-    msg = ""
-    passEqual = firstPass == secondPass
-    passLong = len(firstPass) > 8
-
-    if not passEqual:
-        msg = trans_late('utils', "Passwords must be identical")
-    if not passLong:
-        msg = trans_late('utils', "Passwords must be greater than 8 characters long")
-    if not (passLong or passEqual):
-        msg = trans_late('utils', "Passwords must be identical and greater than 8 characters long")
-
-    return msg
-
-
-def password_transparency(encryption):
-    if encryption != 'none':
-        keyringClass = VortaKeyring.get_keyring().__class__.__name__
-        messages = {
-            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'),  # noqa
-            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
-            'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
-            'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
-            'VortaMemoryKeyring': trans_late('utils', 'memory, and will be lost when Vorta closes'),
-            'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
-        }
-        # Just in case some other keyring support is added
-        keyringName = messages.get(keyringClass,
-                                   trans_late('utils',
-                                              'somewhere that was not anticipated. Please file a bug report on Github'))
-        return trans_late('utils', 'The password will be stored in %s') % keyringName
-    else:
-        return ""
