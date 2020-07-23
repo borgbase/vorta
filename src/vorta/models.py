@@ -207,11 +207,6 @@ def get_misc_settings():
                                 'Automatically start Vorta at login')
         },
         {
-            'key': 'ram_passwords', 'value': False, 'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Store passwords in memory instead of on disk')
-        },
-        {
             'key': 'foreground', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Open main window on startup')

@@ -1,5 +1,5 @@
 import uuid
-from vorta.views.utils import keyring
+from vorta.utils import keyring
 
 
 def test_keyring(qapp):

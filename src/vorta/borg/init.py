@@ -1,7 +1,7 @@
 from .borg_thread import BorgThread
 from .info import FakeProfile, FakeRepo
 from vorta.models import RepoModel
-from vorta.views.utils import keyring
+from vorta.utils import keyring
 
 
 class BorgInitThread(BorgThread):
