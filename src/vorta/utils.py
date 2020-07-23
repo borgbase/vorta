@@ -39,6 +39,15 @@ def keyring():
     logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
     return keyring
 
+    def set_password(self, service, repo_url, password):
+        return VortaKeyring.set_password(service, repo_url, password)
+
+    def get_password(self, service, repo_url):
+        return VortaKeyring.get_password(service, repo_url)
+
+    @property
+    def is_primary(self):
+        return VortaKeyring.is_primary
 
 def nested_dict():
     """
