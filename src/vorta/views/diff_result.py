@@ -68,19 +68,14 @@ def parse_diff_lines(diff_lines):
                 size = 0
                 rest_of_line = line
 
-            change_type_parts = []
-            owner_change = re.search(r' *(\[[^:]+:[^:]+ -> [^:]+:[^:]+\]) ', rest_of_line)
+            owner_change = re.search(r' *(\[[^:]+:[^\]]+ -> [^:]+:[^\]]+\]) ', rest_of_line)
             if owner_change:
-                change_type_parts.append(owner_change.group(1))
                 rest_of_line = rest_of_line[owner_change.end(0):]
 
             permission_change = re.search(r' *(\[.{24}\]) ', rest_of_line)
             if permission_change:
-                change_type_parts.append(permission_change.group(1))
+                change_type = permission_change.group(1)
                 rest_of_line = rest_of_line[permission_change.end(0):]
-
-            if change_type_parts:
-                change_type = ' '.join(change_type_parts)
             else:
                 change_type = "modified"
 

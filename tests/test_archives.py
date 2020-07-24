@@ -185,15 +185,15 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, monkeypatch):
 
     # Example from https://github.com/borgbase/vorta/issues/521
     ('[user:user -> nfsnobody:nfsnobody] home/user/arrays/test.txt',
-     (0, '[user:user -> nfsnobody:nfsnobody]', 'test.txt', 'home/user/arrays')),
+     (0, 'modified', 'test.txt', 'home/user/arrays')),
 
     # Very short owner change, to check stripping whitespace from file path
     ('[a:a -> b:b]       home/user/arrays/test.txt',
-     (0, '[a:a -> b:b]', 'test.txt', 'home/user/arrays')),
+     (0, 'modified', 'test.txt', 'home/user/arrays')),
 
     # All file-related changes in one test
     (' +77.8 kB  -77.8 kB [user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--] home/user/arrays/test.txt',
-     (77800, '[user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--]', 'test.txt', 'home/user/arrays')),
+     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'test.txt', 'home/user/arrays')),
 ])
 def test_archive_diff_parser(line, expected):
     files_with_attributes, nested_file_list = vorta.views.diff_result.parse_diff_lines([line])
