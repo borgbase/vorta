@@ -103,6 +103,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         while BackupProfileModel.get_or_none(BackupProfileModel.id == profile_dict['id']) is not None:
             profile_dict['id'] += 1
 
+        # Add suffix incase names are the same
         if BackupProfileModel.get_or_none(BackupProfileModel.name == profile_dict['name']) is not None:
             suffix = 1
             while BackupProfileModel.get_or_none(
@@ -110,6 +111,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
                 suffix += 1
             profile_dict['name'] = f"{profile_dict['name']}-{suffix}"
 
+        # Load existing repo or restore it
         repo = RepoModel.get_or_none(RepoModel.url == profile_dict['repo']['url'])
         if repo is None:
             # Load repo from backup
@@ -122,7 +124,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             # Use pre-exisitng repo
             profile_dict['repo'] = model_to_dict(repo)
 
-        if profile_dict.get('password', False):
+        if profile_dict.get('password'):
             keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
@@ -147,6 +149,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
         for archive in profile_dict['ArchiveModel']:
             archive['repo'] = profile_dict['repo']['id']
+            # Guarantee uniqueness of ids
             while ArchiveModel.get_or_none(ArchiveModel.id == archive['id']) is not None:
                 archive['id'] += 1
             if ArchiveModel.get_or_none(ArchiveModel.snapshot_id == archive['snapshot_id']) is None:
