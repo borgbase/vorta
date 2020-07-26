@@ -66,6 +66,9 @@ class VortaApp(QtSingleApplication):
             for profile_name in args.profile:
                 profile = BackupProfileModel.get_or_none(name=profile_name)
                 if profile is not None:
+                    if profile.repo is None:
+                        logger.warning(f"Add a repository to {profile_name}")
+                        continue
                     self.validProfiles.append(profile_name)
                     # Wait a bit in case something is running
                     while BorgThread.is_running():
