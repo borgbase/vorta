@@ -54,16 +54,16 @@ class VortaApp(QtSingleApplication):
         # Prepare system tray icon
         self.tray = TrayMenu(self)
 
-        self.args = parse_args()
-        if getattr(self.args, 'daemonize', False) or self.args.profile:
+        args = parse_args()
+        if getattr(args, 'daemonize', False) or args.profile:
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        if self.args.profile:
+        if args.profile:
             self.completedProfiles = []
             self.validProfiles = []
-            for profile_name in self.args.profile:
+            for profile_name in args.profile:
                 profile = BackupProfileModel.get_or_none(name=profile_name)
                 if profile is not None:
                     self.validProfiles.append(profile_name)
