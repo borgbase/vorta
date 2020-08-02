@@ -178,9 +178,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
         if window.exec_():
-            if window.returns.get('repo', False):
+            if window.returns.get('repo'):
                 self.repoTab.set_repos()
-            if window.returns.get('overrideExisting', False):
+            if window.returns.get('overrideExisting'):
                 self.scheduleTab.init_logs()
                 self.scheduleTab.init_wifi()
                 self.miscTab.update_checkboxes()

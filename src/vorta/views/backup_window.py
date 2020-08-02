@@ -23,7 +23,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.fileButton.clicked.connect(self.get_file)
         self.buttonBox.accepted.connect(self.run)
         self.set_buttons(False)
-        self.overrideButtons.hide()
+        self.overrideExisting.hide()
         self.buttonBox.button(QDialogButtonBox.Open).hide()
         self.url = str(Path.home()) if self.profile.repo is None else self.profile.repo.url
 
@@ -176,7 +176,7 @@ class RestoreWindow(BackupWindow):
     def __init__(self, profile):
         super().__init__(profile)
         self.setWindowTitle(self.tr("Restore Profile"))
-        self.overrideButtons.show()
+        self.overrideExisting.show()
         self.storePassword.hide()
         self.buttonBox.button(QDialogButtonBox.Save).hide()
         self.buttonBox.button(QDialogButtonBox.Open).show()
