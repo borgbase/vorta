@@ -277,25 +277,31 @@ def is_system_tray_available():
 
 
 def validate_passwords(firstPass, secondPass):
-    msg = ""
     passEqual = firstPass == secondPass
     passLong = len(firstPass) > 8
 
-    if not passEqual:
-        msg = trans_late('utils', "Passwords must be identical")
-    if not passLong:
-        msg = trans_late('utils', "Passwords must be greater than 8 characters long")
     if not (passLong or passEqual):
-        msg = trans_late('utils', "Passwords must be identical and greater than 8 characters long")
+        return trans_late('utils', "Passwords must be identical and greater than 8 characters long")
+    if not passEqual:
+        return trans_late('utils', "Passwords must be identical")
+    if not passLong:
+        return trans_late('utils', "Passwords must be greater than 8 characters long")
 
-    return msg
+    return ""
 
 
 def password_transparency(encryption):
+    def secure_storage():
+        platform = {
+            'linux': trans_late('utils', 'the Secret Service API'),
+            'darwin': trans_late('utils', 'Keychain Access')
+        }
+        return platform.get(sys.platform)
+
     if encryption != 'none':
         keyringClass = VortaKeyring.get_keyring().__class__.__name__
         messages = {
-            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports the secure Secret Service API (Linux) and Keychain Access (macOS)'),  # noqa
+            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=secure_storage())),  # noqa
             'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
             'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
             'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
