@@ -291,17 +291,15 @@ def validate_passwords(firstPass, secondPass):
 
 
 def password_transparency(encryption):
-    def secure_storage():
-        platform = {
-            'linux': trans_late('utils', 'the Secret Service API'),
-            'darwin': trans_late('utils', 'Keychain Access')
-        }
-        return platform.get(sys.platform)
+    platform = {
+        'linux': trans_late('utils', 'the Secret Service API'),
+        'darwin': trans_late('utils', 'Keychain Access')
+    }
 
     if encryption != 'none':
         keyringClass = VortaKeyring.get_keyring().__class__.__name__
         messages = {
-            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=secure_storage())),  # noqa
+            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=platform.get(sys.platform))),  # noqa
             'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
             'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
             'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
