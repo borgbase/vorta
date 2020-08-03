@@ -21,10 +21,10 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.setWindowTitle(self.tr("Backup Profile"))
         self.fileButton.setIcon(get_colored_icon('folder-open'))
         self.fileButton.clicked.connect(self.get_file)
-        self.buttonBox.accepted.connect(self.run)
-        self.set_buttons(False)
+        self.saveButton.clicked.connect(self.run)
+        self.cancelButton.clicked.connect(self.reject)
+        self.saveButton.setEnabled(False)
         self.overrideExisting.hide()
-        self.buttonBox.button(QDialogButtonBox.Open).hide()
         self.url = str(Path.home()) if self.profile.repo is None else self.profile.repo.url
 
         if self.profile.repo is not None and self.profile.repo.encryption == 'none':
@@ -35,22 +35,21 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self,
             self.tr("Save profile"),
             self.url,
-            self.tr("Vorta backup profile (*.vortabackup)"))
+            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))
         if self.fileName[0] != '':
             self.locationLabel.setText(self.fileName[0])
-        self.set_buttons(self.fileName[0] != '')
-
-    def set_buttons(self, enabled):
-        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(enabled)
-        self.buttonBox.button(QDialogButtonBox.Open).setEnabled(enabled)
+        self.saveButton.setEnabled(self.fileName[0] != '')
 
     def run(self):
         json = self.profile_to_json(self.profile)
         if self.fileName[0] != '':
-            file = open(self.fileName[0], 'w')
-            file.write(json)
-            file.close()
-            self.accept()
+            try:
+                file = open(self.locationLabel.text(), 'w')
+                file.write(json)
+                file.close()
+                self.accept()
+            except PermissionError:
+                self.errors.setText(self.tr("Cannot write backup file"))
 
     def profile_to_json(self, profile):
         # Profile to dict
@@ -176,35 +175,35 @@ class RestoreWindow(BackupWindow):
     def __init__(self, profile):
         super().__init__(profile)
         self.setWindowTitle(self.tr("Restore Profile"))
+        self.saveButton.setText(self.tr("Open"))
         self.overrideExisting.show()
         self.storePassword.hide()
-        self.buttonBox.button(QDialogButtonBox.Save).hide()
-        self.buttonBox.button(QDialogButtonBox.Open).show()
 
     def run(self):
-        if self.fileName[0] is not None:
-            file = open(self.fileName[0], 'r')
-            jsonStr = file.read()
-            file.close()
-            try:
-                self.returns = {}
-                self.json_to_profile(jsonStr)
-                self.errors.setText("")
-                self.accept()
-            except json.decoder.JSONDecodeError:
-                self.errors.setText(self.tr("Invalid backup file"))
-            except VersionException as e:
-                self.errors.setText(str(e))
+        file = open(self.locationLabel.text(), 'r')
+        jsonStr = file.read()
+        file.close()
+        try:
+            self.returns = {}
+            self.json_to_profile(jsonStr)
+            self.errors.setText("")
+            self.accept()
+        except json.decoder.JSONDecodeError:
+            self.errors.setText(self.tr("Invalid backup file"))
+        except VersionException as e:
+            self.errors.setText(str(e))
+        except PermissionError:
+            self.errors.setText(self.tr("Cannot read backup file"))
 
     def get_file(self):
         self.fileName = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
             self.url,
-            self.tr("Vorta backup profile (*.vortabackup)"))
+            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))
         if self.fileName[0] != '':
             self.locationLabel.setText(self.fileName[0])
-        self.set_buttons(self.fileName[0] != '')
+        self.saveButton.setEnabled(self.fileName[0] != '')
 
 
 class VersionException(Exception):
