@@ -51,7 +51,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.tabWidget.setCurrentIndex(0)
 
-        self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.repo_change_action)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
@@ -121,6 +121,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createStartBtn.repaint()
         self.cancelButton.setEnabled(not create_enabled)
         self.cancelButton.repaint()
+
+    def repo_change_action(self):
+        self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
+        self.archiveTab.populate_from_profile()
+        self.backupAction.setEnabled(self.current_profile.repo is not None)
 
     def profile_select_action(self, index):
         self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
