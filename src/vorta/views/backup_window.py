@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
+from PyQt5.QtWidgets import QFileDialog
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
