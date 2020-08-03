@@ -88,3 +88,8 @@ def borg_json_output():
         stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
         return stdout, stderr
     return _read_json
+
+
+@pytest.fixture
+def rootdir():
+    return os.path.dirname(os.path.abspath(__file__))

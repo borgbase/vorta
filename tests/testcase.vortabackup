@@ -1,0 +1,250 @@
+{
+    "id": 1,
+    "name": "Test Profile",
+    "added_at": "2020-07-29 22:50:34.049713",
+    "repo": {
+        "id": 1,
+        "url": "/mnt/test",
+        "added_at": "2020-07-30 05:20:48.009007",
+        "encryption": "repokey",
+        "unique_size": 3357,
+        "unique_csize": 3196,
+        "total_size": 4072,
+        "total_unique_chunks": 8,
+        "extra_borg_arguments": ""
+    },
+    "ssh_key": null,
+    "compression": "lz4",
+    "exclude_patterns": null,
+    "exclude_if_present": null,
+    "schedule_mode": "off",
+    "schedule_interval_hours": 3,
+    "schedule_interval_minutes": 42,
+    "schedule_fixed_hour": 3,
+    "schedule_fixed_minute": 42,
+    "validation_on": true,
+    "validation_weeks": 3,
+    "prune_on": false,
+    "prune_hour": 2,
+    "prune_day": 7,
+    "prune_week": 4,
+    "prune_month": 6,
+    "prune_year": 2,
+    "prune_keep_within": "10H",
+    "new_archive_name": "{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}",
+    "prune_prefix": "{hostname}-{profile_slug}-",
+    "pre_backup_cmd": "",
+    "post_backup_cmd": "",
+    "password": "password1",
+    "SourceFileModel": [],
+    "ArchiveModel": [
+        {
+            "id": 1,
+            "snapshot_id": "9e147aae2ceedf081392447ddda698393cbbe7ec45bf7abc02fb0b440eff19d9",
+            "name": "PC-PC-default-2020-07-22T00:24:06",
+            "repo": 1,
+            "time": "2020-07-22 00:24:06",
+            "duration": null,
+            "size": null
+        },
+        {
+            "id": 2,
+            "snapshot_id": "6ad3de5ccfbf8d55a7a1d153b6aa18acaa7e6b0373d7c7a801c98461368d5719",
+            "name": "PC-PC-default-2020-07-22T00:24:48",
+            "repo": 1,
+            "time": "2020-07-22 00:24:48",
+            "duration": null,
+            "size": null
+        },
+        {
+            "id": 3,
+            "snapshot_id": "c598dc56b7986d31e3869a1666a316c22dc5194a0491fa82d8177ce98cbf679d",
+            "name": "PC-PC-default-2020-07-25T22:29:14",
+            "repo": 1,
+            "time": "2020-07-25 22:29:14",
+            "duration": null,
+            "size": null
+        },
+        {
+            "id": 4,
+            "snapshot_id": "55cdc251ca0499b1da13083dea9d5a01ae5ceccae0f2965ef37d4e5896b7bfa1",
+            "name": "PC-PC-default-2020-07-25T22:29:23",
+            "repo": 1,
+            "time": "2020-07-25 22:29:24",
+            "duration": null,
+            "size": null
+        },
+        {
+            "id": 5,
+            "snapshot_id": "8900aa45d9d0b21320926dd27d8b06d417e6acaa6bda343fc64ebb4211931d9b",
+            "name": "PC-PC-default-2020-07-25T22:36:33",
+            "repo": 1,
+            "time": "2020-07-25 22:36:34",
+            "duration": null,
+            "size": null
+        }
+    ],
+    "WifiSettingModel": [],
+    "EventLogModel": [
+        {
+            "id": 11,
+            "start_time": "2020-07-30 00:21:50.172611",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 10,
+            "start_time": "2020-07-30 00:21:32.765050",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 9,
+            "start_time": "2020-07-30 00:21:14.618393",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 8,
+            "start_time": "2020-07-30 00:20:56.284891",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 7,
+            "start_time": "2020-07-30 00:20:48.110274",
+            "category": "borg-run",
+            "subcommand": "list",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": "Default",
+            "repo_url": "/mnt/test"
+        },
+        {
+            "id": 6,
+            "start_time": "2020-07-30 00:20:47.355521",
+            "category": "borg-run",
+            "subcommand": "info",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": "New Repo",
+            "repo_url": "/mnt/test"
+        },
+        {
+            "id": 5,
+            "start_time": "2020-07-30 00:20:36.355657",
+            "category": "borg-run",
+            "subcommand": "info",
+            "message": null,
+            "returncode": 2,
+            "params": null,
+            "profile": "New Repo",
+            "repo_url": "/mnt/data/borg-test"
+        },
+        {
+            "id": 4,
+            "start_time": "2020-07-30 00:20:32.870307",
+            "category": "borg-run",
+            "subcommand": "info",
+            "message": null,
+            "returncode": 2,
+            "params": null,
+            "profile": "New Repo",
+            "repo_url": "/mnt/data/borg-test"
+        },
+        {
+            "id": 3,
+            "start_time": "2020-07-30 00:20:17.921109",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 2,
+            "start_time": "2020-07-30 00:18:56.871908",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 1,
+            "start_time": "2020-07-29 22:50:34.674524",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        }
+    ],
+    "SchemaVersion": {
+        "id": 1,
+        "version": 14,
+        "changed_at": "2020-07-29 22:50:34.054017"
+    },
+    "SettingsModel": [
+        {
+            "id": 1,
+            "key": "enable_notifications",
+            "value": true,
+            "str_value": "",
+            "label": "Display notifications when background tasks fail",
+            "type": "checkbox"
+        },
+        {
+            "id": 2,
+            "key": "enable_notifications_success",
+            "value": false,
+            "str_value": "",
+            "label": "Also notify about successful background tasks",
+            "type": "checkbox"
+        },
+        {
+            "id": 3,
+            "key": "autostart",
+            "value": false,
+            "str_value": "",
+            "label": "Automatically start Vorta at login",
+            "type": "checkbox"
+        },
+        {
+            "id": 4,
+            "key": "foreground",
+            "value": true,
+            "str_value": "",
+            "label": "Open main window on startup",
+            "type": "checkbox"
+        }
+    ]
+}
