@@ -13,8 +13,8 @@ if sys.platform == 'linux':
     if os.geteuid() == 0:
         XDG_DATA_DIR = '/usr/local/share'
     else:
-        import appdirs
-        XDG_DATA_DIR = appdirs.AppDirs("", "").user_data_dir
+        XDG_DATA_DIR = os.environ['XDG_DATA_HOME'] if os.environ.get(
+            'XDG_DATA_HOME') else os.path.join(os.environ['HOME'], '.local/share')
     APPLICATION_DIR = os.path.join(XDG_DATA_DIR, "applications")
     ICON_DIR = os.path.join(XDG_DATA_DIR, "icons", "hicolor", "scalable", "apps")
 
