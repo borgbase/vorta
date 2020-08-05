@@ -11,24 +11,24 @@ if sys.platform == 'linux':
         raise RuntimeError("This setup.py does not support wheels")
 
     if os.geteuid() == 0:
-        XDG_DATA_DIR = '/usr/local/share'
+        xdg_data_dir = '/usr/local/share'
     else:
-        XDG_DATA_DIR = os.environ['XDG_DATA_HOME'] if os.environ.get(
+        xdg_data_dir = os.environ['XDG_DATA_HOME'] if os.environ.get(
             'XDG_DATA_HOME') else os.path.join(os.environ['HOME'], '.local/share')
-    APPLICATION_DIR = os.path.join(XDG_DATA_DIR, "applications")
-    ICON_DIR = os.path.join(XDG_DATA_DIR, "icons", "hicolor", "scalable", "apps")
+    application_dir = os.path.join(xdg_data_dir, "applications")
+    icon_dir = os.path.join(xdg_data_dir, "icons", "hicolor", "scalable", "apps")
 
-    if not os.path.exists(APPLICATION_DIR):
-        os.makedirs(APPLICATION_DIR)
-    if not os.path.exists(ICON_DIR):
-        os.makedirs(ICON_DIR)
+    if not os.path.exists(application_dir):
+        os.makedirs(application_dir)
+    if not os.path.exists(icon_dir):
+        os.makedirs(icon_dir)
 
     # Rename files to appropriate names
     os.rename(os.path.join(CURRENT_DIR, 'package/icon.svg'),
               os.path.join(CURRENT_DIR, 'package/com.borgbase.Vorta.svg'))
 
-    DATA_FILES = [(APPLICATION_DIR, ['src/vorta/assets/metadata/com.borgbase.Vorta.desktop']),
-                  (ICON_DIR, ['package/com.borgbase.Vorta.svg'])]
+    DATA_FILES = [(application_dir, ['src/vorta/assets/metadata/com.borgbase.Vorta.desktop']),
+                  (icon_dir, ['package/com.borgbase.Vorta.svg'])]
 
 setup(
     include_package_data=True,
