@@ -8,7 +8,7 @@ CURRENT_DIR = os.getcwd()
 # Install icons and desktop files, not sure if /usr/local/share is constant
 if sys.platform == 'linux':
     if 'bdist_wheel' in sys.argv:
-        raise RuntimeError("This setup.py does not support wheels")
+        sys.exit("Building wheels is disabled")
 
     if os.geteuid() == 0:
         xdg_data_dir = '/usr/local/share'
