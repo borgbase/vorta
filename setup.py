@@ -13,8 +13,7 @@ if sys.platform == 'linux':
     if os.geteuid() == 0:
         xdg_data_dir = '/usr/local/share'
     else:
-        xdg_data_dir = os.environ['XDG_DATA_HOME'] if os.environ.get(
-            'XDG_DATA_HOME') else os.path.join(os.environ['HOME'], '.local/share')
+        xdg_data_dir = os.environ.get('XDG_DATA_HOME', os.path.join(os.environ['HOME'], '.local/share'))
     application_dir = os.path.join(xdg_data_dir, "applications")
     icon_dir = os.path.join(xdg_data_dir, "icons", "hicolor", "scalable", "apps")
 
