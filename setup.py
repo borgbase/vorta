@@ -42,3 +42,4 @@ if sys.platform == 'linux':
     # Unrename files
     os.rename(os.path.join(CURRENT_DIR, 'package/com.borgbase.Vorta.svg'),
               os.path.join(CURRENT_DIR, 'package/icon.svg'))
+    os.system("gtk-update-icon-cache")
