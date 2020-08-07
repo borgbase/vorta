@@ -51,7 +51,7 @@ def open_app_at_startup(enabled=True):
         autostart_file_path = autostart_path / 'vorta.desktop'
 
         if enabled:
-            # Replace to start in background and for flatpak if appropriate
+            # Replace to for flatpak if appropriate and start in background
             desktop_file_text = desktop_file_text.replace(
                 "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
                 else "Exec=vorta --daemonize")
