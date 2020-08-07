@@ -52,7 +52,8 @@ jobs:
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        pytest
+        export QT_DEBUG_PLUGINS=1        
+        pytest -s --no-qt-log
 
   lint:
     runs-on: ubuntu-latest
