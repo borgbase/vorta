@@ -42,7 +42,8 @@ def open_app_at_startup(enabled=True):
         if is_flatpak:
             autostart_path = Path.home() / '.config' / 'autostart'
         else:
-            autostart_path = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config/autostart'))
+            autostart_path = Path(os.environ.get(
+                "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
 
         if not autostart_path.exists():
             autostart_path.mkdir()
