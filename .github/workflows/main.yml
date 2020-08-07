@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo apt update && sudo apt install -y \
           xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential \
-          libxkbcommon-x11-0 dbus-x11 libxcb-xinerama0
+          libxkbcommon-x11-0 dbus-x11
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -45,7 +45,8 @@ jobs:
         export $(dbus-launch)
         (herbstluftwm) &
         sleep 3
-        pytest
+        export QT_DEBUG_PLUGINS=1
+        pytest -s
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
