@@ -46,14 +46,11 @@ jobs:
         export $(dbus-launch)
         (herbstluftwm) &
         sleep 3
-        export QT_DEBUG_PLUGINS=1
-        sleep 3        
-        pytest -s --no-qt-log
+        pytest
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        export QT_DEBUG_PLUGINS=1        
-        pytest -s --no-qt-log
+        pytest
 
   lint:
     runs-on: ubuntu-latest
