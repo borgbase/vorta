@@ -48,7 +48,7 @@ jobs:
         sleep 3
         export QT_DEBUG_PLUGINS=1
         sleep 3        
-        pytest -s
+        pytest -s --no-qt-log
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
