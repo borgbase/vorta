@@ -6,8 +6,8 @@ DATA_FILES = []
 CURRENT_DIR = os.getcwd()
 
 # Install icons and desktop files, not sure if /usr/local/share is constant
-if sys.platform == 'linux':
-    if 'bdist_wheel' in sys.argv and os.environ.get("DISABLE_ICONS_DESKTOP", 0) == 0:
+if sys.platform == 'linux' and os.environ.get("DISABLE_ICONS_DESKTOP", 0) == 0:
+    if 'bdist_wheel' in sys.argv:
         sys.exit("Building wheels is disabled. This is not a bug")
 
     if os.geteuid() == 0:
