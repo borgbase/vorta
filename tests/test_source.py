@@ -1,3 +1,4 @@
+from PyQt5 import QtCore
 import vorta.models
 import vorta.views
 import sys
