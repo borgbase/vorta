@@ -36,17 +36,15 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.tr("Save profile"),
             self.url,
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
-        if self.fileName != '':
+        if self.fileName:
             self.locationLabel.setText(self.fileName)
-        self.saveButton.setEnabled(self.fileName != '')
+        self.saveButton.setEnabled(bool(self.fileName))
 
     def run(self):
         json = self.profile_to_json(self.profile)
-        if self.fileName != '':
+        with open(self.locationLabel.text(), 'w') as file:
             try:
-                file = open(self.locationLabel.text(), 'w')
                 file.write(json)
-                file.close()
                 self.accept()
             except PermissionError:
                 self.errors.setText(self.tr("Cannot write backup file"))
@@ -180,9 +178,8 @@ class RestoreWindow(BackupWindow):
         self.storePassword.hide()
 
     def run(self):
-        file = open(self.locationLabel.text(), 'r')
-        jsonStr = file.read()
-        file.close()
+        with open(self.locationLabel.text(), 'r') as file:
+            jsonStr = file.read()
         try:
             self.returns = {}
             self.json_to_profile(jsonStr)
@@ -201,9 +198,9 @@ class RestoreWindow(BackupWindow):
             self.tr("Load profile"),
             self.url,
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
-        if self.fileName != '':
+        if self.fileName:
             self.locationLabel.setText(self.fileName)
-        self.saveButton.setEnabled(self.fileName != '')
+        self.saveButton.setEnabled(bool(self.fileName))
 
 
 class VersionException(Exception):
