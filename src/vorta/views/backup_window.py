@@ -35,14 +35,14 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self,
             self.tr("Save profile"),
             self.url,
-            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))
-        if self.fileName[0] != '':
-            self.locationLabel.setText(self.fileName[0])
-        self.saveButton.setEnabled(self.fileName[0] != '')
+            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
+        if self.fileName != '':
+            self.locationLabel.setText(self.fileName)
+        self.saveButton.setEnabled(self.fileName != '')
 
     def run(self):
         json = self.profile_to_json(self.profile)
-        if self.fileName[0] != '':
+        if self.fileName != '':
             try:
                 file = open(self.locationLabel.text(), 'w')
                 file.write(json)
@@ -188,7 +188,7 @@ class RestoreWindow(BackupWindow):
             self.json_to_profile(jsonStr)
             self.errors.setText("")
             self.accept()
-        except json.decoder.JSONDecodeError or KeyError:
+        except (json.decoder.JSONDecodeError, KeyError):
             self.errors.setText(self.tr("Invalid backup file"))
         except VersionException:
             self.errors.setText(self.tr("Cannot use newer backup on older version"))
@@ -200,10 +200,10 @@ class RestoreWindow(BackupWindow):
             self,
             self.tr("Load profile"),
             self.url,
-            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))
-        if self.fileName[0] != '':
-            self.locationLabel.setText(self.fileName[0])
-        self.saveButton.setEnabled(self.fileName[0] != '')
+            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
+        if self.fileName != '':
+            self.locationLabel.setText(self.fileName)
+        self.saveButton.setEnabled(self.fileName != '')
 
 
 class VersionException(Exception):
