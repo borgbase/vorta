@@ -35,13 +35,32 @@
     "prune_prefix": "{hostname}-{profile_slug}-",
     "pre_backup_cmd": "",
     "post_backup_cmd": "",
-    "password": "password1",
-    "SourceFileModel": [],
+    "password": "Tr0ub4dor&3",
+    "SourceFileModel": [
+        {
+            "id": 1,
+            "dir": "/this/is/a/test/file",
+            "profile": 1,
+            "added_at": "2020-07-03 03:39:35.226932"
+        },
+        {
+            "id": 2,
+            "dir": "/this/is/another/test/file",
+            "profile": 1,
+            "added_at": "2020-07-03 04:37:02.367233"
+        },
+        {
+            "id": 3,
+            "dir": "/why/are/you/reading/this",
+            "profile": 1,
+            "added_at": "2020-07-03 04:37:05.106150"
+        }
+    ],
     "ArchiveModel": [
         {
             "id": 1,
             "snapshot_id": "9e147aae2ceedf081392447ddda698393cbbe7ec45bf7abc02fb0b440eff19d9",
-            "name": "PC-PC-default-2020-07-22T00:24:06",
+            "name": "github-default-2020-07-22T00:24:06",
             "repo": 1,
             "time": "2020-07-22 00:24:06",
             "duration": null,
@@ -50,7 +69,7 @@
         {
             "id": 2,
             "snapshot_id": "6ad3de5ccfbf8d55a7a1d153b6aa18acaa7e6b0373d7c7a801c98461368d5719",
-            "name": "PC-PC-default-2020-07-22T00:24:48",
+            "name": "github-default-2020-07-22T00:24:48",
             "repo": 1,
             "time": "2020-07-22 00:24:48",
             "duration": null,
@@ -59,7 +78,7 @@
         {
             "id": 3,
             "snapshot_id": "c598dc56b7986d31e3869a1666a316c22dc5194a0491fa82d8177ce98cbf679d",
-            "name": "PC-PC-default-2020-07-25T22:29:14",
+            "name": "github-default-2020-07-25T22:29:14",
             "repo": 1,
             "time": "2020-07-25 22:29:14",
             "duration": null,
@@ -68,7 +87,7 @@
         {
             "id": 4,
             "snapshot_id": "55cdc251ca0499b1da13083dea9d5a01ae5ceccae0f2965ef37d4e5896b7bfa1",
-            "name": "PC-PC-default-2020-07-25T22:29:23",
+            "name": "github-default-2020-07-25T22:29:23",
             "repo": 1,
             "time": "2020-07-25 22:29:24",
             "duration": null,
@@ -77,7 +96,7 @@
         {
             "id": 5,
             "snapshot_id": "8900aa45d9d0b21320926dd27d8b06d417e6acaa6bda343fc64ebb4211931d9b",
-            "name": "PC-PC-default-2020-07-25T22:36:33",
+            "name": "github-default-2020-07-25T22:36:33",
             "repo": 1,
             "time": "2020-07-25 22:36:34",
             "duration": null,
@@ -161,7 +180,7 @@
             "returncode": 2,
             "params": null,
             "profile": "New Repo",
-            "repo_url": "/mnt/data/borg-test"
+            "repo_url": "/mnt/test"
         },
         {
             "id": 4,
@@ -172,7 +191,7 @@
             "returncode": 2,
             "params": null,
             "profile": "New Repo",
-            "repo_url": "/mnt/data/borg-test"
+            "repo_url": "/mnt/test"
         },
         {
             "id": 3,
