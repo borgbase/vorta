@@ -190,7 +190,7 @@ class RestoreWindow(BackupWindow):
             self.accept()
         except json.decoder.JSONDecodeError or KeyError:
             self.errors.setText(self.tr("Invalid backup file"))
-        except VersionException as e:
+        except VersionException:
             self.errors.setText(self.tr("Cannot use newer backup on older version"))
         except PermissionError:
             self.errors.setText(self.tr("Cannot read backup file"))
