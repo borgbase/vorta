@@ -93,7 +93,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         profile_dict = json.loads(jsonData)
 
         if SCHEMA_VERSION < profile_dict['SchemaVersion']['version']:
-            raise VersionException("Cannot use newer backup on older version")
+            raise VersionException()
         elif SCHEMA_VERSION > profile_dict['SchemaVersion']['version']:
             # Add model upgrading code here, only needed if not adding columns
             pass
@@ -191,7 +191,7 @@ class RestoreWindow(BackupWindow):
         except json.decoder.JSONDecodeError or KeyError:
             self.errors.setText(self.tr("Invalid backup file"))
         except VersionException as e:
-            self.errors.setText(str(e))
+            self.errors.setText(self.tr("Cannot use newer backup on older version"))
         except PermissionError:
             self.errors.setText(self.tr("Cannot read backup file"))
 
