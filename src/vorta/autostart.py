@@ -35,30 +35,31 @@ def open_app_at_startup(enabled=True):
     elif sys.platform.startswith('linux'):
         is_flatpak = Path('/.flatpak-info').exists()
 
-        desktop_file_text = open(os.path.join(os.path.dirname(
-            __file__), "assets/metadata/com.borgbase.Vorta.desktop")).read()
+        with open(os.path.join(os.path.dirname(__file__),
+                               "assets/metadata/com.borgbase.Vorta.desktop")) as desktop_file:
+            desktop_file_text = desktop_file.read()
 
-        # Find XDG_CONFIG_HOME unless when running in flatpak
-        if is_flatpak:
-            autostart_path = Path.home() / '.config' / 'autostart'
-        else:
-            autostart_path = Path(os.environ.get(
-                "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
+            # Find XDG_CONFIG_HOME unless when running in flatpak
+            if is_flatpak:
+                autostart_path = Path.home() / '.config' / 'autostart'
+            else:
+                autostart_path = Path(os.environ.get(
+                    "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
 
-        if not autostart_path.exists():
-            autostart_path.mkdir()
+            if not autostart_path.exists():
+                autostart_path.mkdir()
 
-        autostart_file_path = autostart_path / 'vorta.desktop'
+            autostart_file_path = autostart_path / 'vorta.desktop'
 
-        if enabled:
-            # Replace to for flatpak if appropriate and start in background
-            desktop_file_text = desktop_file_text.replace(
-                "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
-                else "Exec=vorta --daemonize")
-            # Add autostart delay
-            desktop_file_text += (AUTOSTART_DELAY)
+            if enabled:
+                # Replace to for flatpak if appropriate and start in background
+                desktop_file_text = desktop_file_text.replace(
+                    "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
+                    else "Exec=vorta --daemonize")
+                # Add autostart delay
+                desktop_file_text += (AUTOSTART_DELAY)
 
-            autostart_file_path.write_text(desktop_file_text)
-        else:
-            if autostart_file_path.exists():
-                autostart_file_path.unlink()
+                autostart_file_path.write_text(desktop_file_text)
+            else:
+                if autostart_file_path.exists():
+                    autostart_file_path.unlink()
