@@ -2,6 +2,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QCheckBox
 from pathlib import Path
 import pytest
+import os
 import sys
 
 
@@ -20,7 +21,8 @@ def test_autostart(qapp, qtbot):
             qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton)
             break
 
-    autostart_path = Path.home() / ".config" / "autostart" / "vorta.desktop"
+    autostart_path = Path(os.environ.get(
+        "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
     assert(autostart_path.exists())
 
     with open(autostart_path) as desktop_file:
