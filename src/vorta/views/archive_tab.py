@@ -287,7 +287,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if not params['ok']:
                 self._set_status(params['message'])
                 return
-            return
 
             params['current_archive'] = archive_name
 
