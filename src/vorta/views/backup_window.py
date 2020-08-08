@@ -188,7 +188,7 @@ class RestoreWindow(BackupWindow):
             self.json_to_profile(jsonStr)
             self.errors.setText("")
             self.accept()
-        except json.decoder.JSONDecodeError:
+        except json.decoder.JSONDecodeError or KeyError:
             self.errors.setText(self.tr("Invalid backup file"))
         except VersionException as e:
             self.errors.setText(str(e))
