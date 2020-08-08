@@ -7,7 +7,7 @@ import sys
 
 
 @pytest.mark.skipif(sys.platform != 'linux', reason="Autostart files only generated in Linux")
-def test_autostart(qapp, qtbot):
+def test_linux_autostart(qapp, qtbot):
     main = qapp.main_window
     main.tabWidget.setCurrentIndex(4)
     tab = main.miscTab
