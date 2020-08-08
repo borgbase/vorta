@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>781</width>
+        <height>447</height>
        </rect>
       </property>
       <attribute name="label">
@@ -134,6 +134,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="renameButton">
+           <property name="text">
+            <string>Rename</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -203,8 +210,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>781</width>
+        <height>447</height>
        </rect>
       </property>
       <attribute name="label">

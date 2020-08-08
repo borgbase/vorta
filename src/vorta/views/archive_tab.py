@@ -5,7 +5,7 @@ from datetime import timedelta
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
-                             QTableWidgetItem)
+                             QTableWidgetItem, QInputDialog)
 
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.delete import BorgDeleteThread
@@ -16,6 +16,7 @@ from vorta.borg.list_repo import BorgListRepoThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.umount import BorgUmountThread
+from vorta.borg.rename import BorgRenameThread
 from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
@@ -68,6 +69,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.extractButton.clicked.connect(self.list_archive_action)
         self.diffButton.clicked.connect(self.diff_action)
         self.deleteButton.clicked.connect(self.delete_action)
+        self.renameButton.clicked.connect(self.rename_action)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -84,6 +86,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountButton.setIcon(get_colored_icon('folder-open'))
         self.checkButton.setIcon(get_colored_icon('check-circle'))
         self.deleteButton.setIcon(get_colored_icon('trash'))
+        self.renameButton.setIcon(get_colored_icon('edit'))
         self.diffButton.setIcon(get_colored_icon('stream-solid'))
         self.pruneButton.setIcon(get_colored_icon('cut'))
         self.listButton.setIcon(get_colored_icon('refresh'))
@@ -284,6 +287,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if not params['ok']:
                 self._set_status(params['message'])
                 return
+            return
 
             params['current_archive'] = archive_name
 
@@ -474,3 +478,32 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             window.setParent(self, QtCore.Qt.Sheet)
             self._resultwindow = window  # for testing
             window.show()
+
+    def rename_action(self):
+        params = BorgRenameThread.prepare(self.profile())
+        if not params['ok']:
+            self._set_status(params['message'])
+            return
+
+        archive_name = self.selected_archive_name()
+        if archive_name is not None:
+            new_name, input_entered = QInputDialog.getText(
+                self, self.tr("Change name"), self.tr("New archive name:"))
+
+            if not input_entered:
+                return
+
+            if not new_name:
+                self._set_status(self.tr('Archive name cannot be blank.'))
+                return
+
+            params['cmd'][-1] += f'::{archive_name}'
+            params['cmd'].append(new_name)
+
+            thread = BorgRenameThread(params['cmd'], params, parent=self)
+            thread.updated.connect(self._set_status)
+            thread.result.connect(self.delete_result)
+            self._toggle_all_buttons(False)
+            thread.start()
+        else:
+            self._set_status(self.tr("No archive selected"))
