@@ -16,14 +16,14 @@ def test_autostart(qapp, qtbot):
         checkbox = tab.checkboxLayout.itemAt(x).widget()
         checkbox.__class__ = QCheckBox
         if checkbox.text().startswith("Automatically"):
-            if checkbox.isChecked():
-                qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton)
-            qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton)
+            # Have to use pos to click checkbox correctly
+            # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
+            qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton, pos=QtCore.QPoint(2, checkbox.height() / 2))
             break
 
     autostart_path = Path(os.environ.get(
         "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
-    assert(autostart_path.exists())
+    qtbot.waitUntil(lambda: autostart_path.exists(), timeout=5000)
 
     with open(autostart_path) as desktop_file:
         desktop_file_text = desktop_file.read()
