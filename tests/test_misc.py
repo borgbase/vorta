@@ -13,9 +13,7 @@ def test_autostart(qapp, qtbot):
 
     for x in range(0, tab.checkboxLayout.count()):
         checkbox = tab.checkboxLayout.itemAt(x).widget()
-        print(checkbox)
         checkbox.__class__ = QCheckBox
-        print(checkbox)
         if checkbox.text().startswith("Automatically"):
             qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton)
             break
