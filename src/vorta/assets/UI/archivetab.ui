@@ -135,6 +135,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="renameButton">
+           <property name="toolTip">
+            <string>Renaming might affect if the archive gets pruned</string>
+           </property>
            <property name="text">
             <string>Rename</string>
            </property>
