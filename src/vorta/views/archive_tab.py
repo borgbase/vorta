@@ -487,7 +487,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         archive_name = self.selected_archive_name()
         if archive_name is not None:
             new_name, finished = QInputDialog.getText(
-                self, self.tr("Change name"), self.tr("New archive name:"))
+                self,
+                self.tr("Change name"),
+                self.tr("New archive name:"),
+                text=archive_name)
 
             if not finished:
                 return
