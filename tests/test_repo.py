@@ -9,11 +9,11 @@ from vorta.views.repo_add_dialog import AddRepoWindow
 from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
+LONG_PASSWORD = 'long-password-long'
+SHORT_PASSWORD = 'hunter2'
+
 
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
-    LONG_PASSWORD = 'long-password-long'
-    SHORT_PASSWORD = 'short'
-
     # Add new repo window
     main = qapp.main_window
     add_repo_window = AddRepoWindow(main)
@@ -63,8 +63,6 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
-    LONG_PASSWORD = 'long-password-long'
-
     # Add new repo window
     main = qapp.main_window
     main.repoTab.repo_added.disconnect()
