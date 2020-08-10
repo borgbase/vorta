@@ -24,7 +24,8 @@ jobs:
       run: |
         sudo apt update && sudo apt install -y \
           xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential \
-          libxkbcommon-x11-0 dbus-x11
+          libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
