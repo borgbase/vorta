@@ -106,6 +106,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))
         self.profileMenuButton.setIcon(get_colored_icon('ellipsis-v'))
+        self.backupAction.setIcon(get_colored_icon('arrow-alt-circle-left'))
+        self.restoreAction.setIcon(get_colored_icon('arrow-alt-circle-right'))
         self.renameAction.setIcon(get_colored_icon('edit'))
         self.deleteAction.setIcon(get_colored_icon('trash'))
 
