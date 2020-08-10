@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QFileDialog
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
-from vorta.utils import get_asset, keyring, slugify
+from vorta.utils import get_asset, keyring
 from .utils import get_colored_icon
 from pathlib import Path
 import json
@@ -37,7 +37,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.url,
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if self.fileName:
-            self.locationLabel.setText(slugify(self.fileName))
+            self.locationLabel.setText(self.fileName)
         self.saveButton.setEnabled(bool(self.fileName))
 
     def run(self):
