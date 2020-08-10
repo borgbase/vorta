@@ -1,19 +1,10 @@
 import sys
+import os
 from pathlib import Path
 
-LINUX_STARTUP_FILE = """\
-[Desktop Entry]
-Name=Vorta
-GenericName=Backup Software
-Exec={} --daemonize
-Terminal=false
-Icon=com.borgbase.Vorta
-Categories=Utility
-Type=Application
-StartupNotify=false
+AUTOSTART_DELAY = """StartupNotify=false
 X-GNOME-Autostart-enabled=true
-X-GNOME-Autostart-Delay=20
-"""
+X-GNOME-Autostart-Delay=20"""
 
 
 def open_app_at_startup(enabled=True):
@@ -42,20 +33,33 @@ def open_app_at_startup(enabled=True):
             LSSharedFileListItemRemove(login_items, new_item)
 
     elif sys.platform.startswith('linux'):
-        autostart_path = Path.home() / '.config' / 'autostart'
+        is_flatpak = Path('/.flatpak-info').exists()
 
-        if not autostart_path.exists():
-            autostart_path.mkdir()
+        with open(os.path.join(os.path.dirname(__file__),
+                               "assets/metadata/com.borgbase.Vorta.desktop")) as desktop_file:
+            desktop_file_text = desktop_file.read()
 
-        autostart_file_path = autostart_path / 'vorta.desktop'
-
-        if enabled:
-            if Path('/.flatpak-info').exists():
-                # Vorta runs as flatpak
-                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('flatpak run com.borgbase.Vorta'))
+            # Find XDG_CONFIG_HOME unless when running in flatpak
+            if is_flatpak:
+                autostart_path = Path.home() / '.config' / 'autostart'
             else:
-                autostart_file_path.write_text(LINUX_STARTUP_FILE.format('vorta'))
+                autostart_path = Path(os.environ.get(
+                    "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
 
-        else:
-            if autostart_file_path.exists():
-                autostart_file_path.unlink()
+            if not autostart_path.exists():
+                autostart_path.mkdir()
+
+            autostart_file_path = autostart_path / 'vorta.desktop'
+
+            if enabled:
+                # Replace to for flatpak if appropriate and start in background
+                desktop_file_text = desktop_file_text.replace(
+                    "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
+                    else "Exec=vorta --daemonize")
+                # Add autostart delay
+                desktop_file_text += (AUTOSTART_DELAY)
+
+                autostart_file_path.write_text(desktop_file_text)
+            else:
+                if autostart_file_path.exists():
+                    autostart_file_path.unlink()
