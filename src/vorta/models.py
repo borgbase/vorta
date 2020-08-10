@@ -4,6 +4,7 @@ This module provides the app's data store using Peewee with SQLite.
 At the bottom there is a simple schema migration system.
 """
 
+import logging
 import json
 import os
 import sys
@@ -18,6 +19,7 @@ from vorta.utils import slugify
 SCHEMA_VERSION = 14
 
 db = pw.Proxy()
+logger = logging.getLogger(__name__)
 
 
 class JSONField(pw.TextField):
@@ -26,6 +28,7 @@ class JSONField(pw.TextField):
 
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
+
     def db_value(self, value):
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
@@ -176,6 +179,7 @@ class SettingsModel(pw.Model):
 
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
+
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
 
@@ -263,6 +267,8 @@ def init_db(con=None):
     current_schema.save()
     if created or current_schema.version == SCHEMA_VERSION:
         pass
+    elif current_schema.version > SCHEMA_VERSION:
+        logger.warning("Database schema version greater than program schema version. This might cause bugs.")
     else:
         migrator = SqliteMigrator(con)
 
