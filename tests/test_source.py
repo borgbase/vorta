@@ -1,7 +1,5 @@
-from PyQt5 import QtCore
 import vorta.models
 import vorta.views
-import sys
 
 
 def test_add_folder(qapp, qtbot, tmpdir, monkeypatch, choose_file_dialog):
