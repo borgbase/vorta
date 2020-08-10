@@ -158,7 +158,7 @@ def get_sorted_wifis(profile):
 
             # remove Wifis that were deleted in the system.
             deleted_wifis = WifiSettingModel.select() \
-                .where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values()]))
+                .where(WifiSettingModel.ssid.not_in([w['SSIDString'] for w in wifis.values() if 'SSIDString' in w]))
             for wifi in deleted_wifis:
                 wifi.delete_instance()
 
