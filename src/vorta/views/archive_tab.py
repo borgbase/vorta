@@ -3,9 +3,9 @@ import sys
 from datetime import timedelta
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QCursor
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
-                             QTableWidgetItem, QInputDialog)
+                             QTableWidgetItem, QInputDialog, QMenu)
 
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.delete import BorgDeleteThread
@@ -61,15 +61,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
         self.archiveTable.setSortingEnabled(True)
+        self.archiveTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.archiveTable.customContextMenuRequested.connect(self.show_menu)
 
-        self.mountButton.clicked.connect(self.mount_action)
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
-        self.extractButton.clicked.connect(self.list_archive_action)
         self.diffButton.clicked.connect(self.diff_action)
-        self.deleteButton.clicked.connect(self.delete_action)
-        self.renameButton.clicked.connect(self.rename_action)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -81,12 +79,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.selected_archives = None
 
+    def show_menu(self, point):
+        cursorPos = QCursor.pos()
+        self._menu.exec(cursorPos)
+
     def set_icons(self):
-        self.extractButton.setIcon(get_colored_icon('cloud-download'))
-        self.mountButton.setIcon(get_colored_icon('folder-open'))
         self.checkButton.setIcon(get_colored_icon('check-circle'))
-        self.deleteButton.setIcon(get_colored_icon('trash'))
-        self.renameButton.setIcon(get_colored_icon('edit'))
         self.diffButton.setIcon(get_colored_icon('stream-solid'))
         self.pruneButton.setIcon(get_colored_icon('cut'))
         self.listButton.setIcon(get_colored_icon('refresh'))
@@ -98,11 +96,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
-        for button in [self.checkButton, self.listButton, self.pruneButton,
-                       self.mountButton, self.extractButton, self.deleteButton,
-                       self.diffButton]:
+        for button in [self.checkButton, self.listButton, self.pruneButton, self.diffButton]:
             button.setEnabled(enabled)
             button.repaint()
+
+    @property
+    def _menu(self):
+        menu = QMenu(parent=self)
+        self.extractAction = menu.addAction("Extract", self.list_archive_action)
+        self.mountAction = menu.addAction("Mount", self.mount_action)
+        self.deleteAction = menu.addAction("Delete", self.delete_action)
+        self.renameAction = menu.addAction("Rename", self.rename_action)
+        self.extractAction.setIcon(get_colored_icon('cloud-download'))
+        self.mountAction.setIcon(get_colored_icon('folder-open'))
+        self.deleteAction.setIcon(get_colored_icon('trash'))
+        self.renameAction.setIcon(get_colored_icon('edit'))
+        self.update_mount_button_text()
+        return menu
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
@@ -231,10 +241,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         return None
 
     def set_mount_button_mode(self, mode):
-        self.mountButton.clicked.disconnect()
+        self.mountAction.triggered.disconnect()
         mount = (mode == 'Mount')
-        self.mountButton.setText(self.tr('Mount') if mount else self.tr('Unmount'))
-        self.mountButton.clicked.connect(self.mount_action if mount else self.umount_action)
+        self.mountAction.setText(self.tr('Mount') if mount else self.tr('Unmount'))
+        self.mountAction.triggered.connect(self.mount_action if mount else self.umount_action)
 
     def mount_action(self):
         profile = self.profile()

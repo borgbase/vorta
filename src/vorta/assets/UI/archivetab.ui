@@ -97,49 +97,9 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QPushButton" name="extractButton">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Extract</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mountButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Mount</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="checkButton">
            <property name="text">
             <string>Check</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="deleteButton">
-           <property name="text">
-            <string>Delete</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="renameButton">
-           <property name="toolTip">
-            <string>Renaming might affect if the archive gets pruned</string>
-           </property>
-           <property name="text">
-            <string>Rename</string>
            </property>
           </widget>
          </item>
