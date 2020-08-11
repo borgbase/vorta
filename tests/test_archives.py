@@ -101,10 +101,10 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
         vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
     )
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.mount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), timeout=10000)
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.umount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=10000)
 
 
@@ -124,7 +124,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-    qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
+    tab.list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
 

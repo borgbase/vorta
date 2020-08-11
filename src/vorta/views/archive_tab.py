@@ -59,7 +59,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
-        self.archiveTable.itemSelectionChanged.connect(self.update_mount_button_text)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.show_menu)
@@ -103,15 +102,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     @property
     def _menu(self):
         menu = QMenu(parent=self)
-        self.extractAction = menu.addAction("Extract", self.list_archive_action)
-        self.mountAction = menu.addAction("Mount", self.mount_action)
-        self.deleteAction = menu.addAction("Delete", self.delete_action)
-        self.renameAction = menu.addAction("Rename", self.rename_action)
-        self.extractAction.setIcon(get_colored_icon('cloud-download'))
-        self.mountAction.setIcon(get_colored_icon('folder-open'))
-        self.deleteAction.setIcon(get_colored_icon('trash'))
-        self.renameAction.setIcon(get_colored_icon('edit'))
-        self.update_mount_button_text()
+        extractAction = menu.addAction("Extract", self.list_archive_action)
+        mountAction = menu.addAction("Mount", self.mount_action)
+        deleteAction = menu.addAction("Delete", self.delete_action)
+        renameAction = menu.addAction("Rename", self.rename_action)
+        extractAction.setIcon(get_colored_icon('cloud-download'))
+        mountAction.setIcon(get_colored_icon('folder-open'))
+        deleteAction.setIcon(get_colored_icon('trash'))
+        renameAction.setIcon(get_colored_icon('edit'))
+        self.update_mount_button_text(mountAction)
         return menu
 
     def populate_from_profile(self):
@@ -240,11 +239,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 return archive_cell.text()
         return None
 
-    def set_mount_button_mode(self, mode):
-        self.mountAction.triggered.disconnect()
+    def set_mount_button_mode(self, mode, mountAction):
+        mountAction.triggered.disconnect()
         mount = (mode == 'Mount')
-        self.mountAction.setText(self.tr('Mount') if mount else self.tr('Unmount'))
-        self.mountAction.triggered.connect(self.mount_action if mount else self.umount_action)
+        mountAction.setText(self.tr('Mount') if mount else self.tr('Unmount'))
+        mountAction.triggered.connect(self.mount_action if mount else self.umount_action)
 
     def mount_action(self):
         profile = self.profile()
@@ -279,7 +278,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Mounted successfully.'))
-            self.update_mount_button_text()
             if result['params'].get('current_archive'):
                 archive_name = result['params']['current_archive']
                 row = self.row_of_archive(archive_name)
@@ -316,7 +314,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Un-mounted successfully.'))
             archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
-            self.update_mount_button_text()
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
@@ -384,13 +381,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
 
-    def update_mount_button_text(self):
+    def update_mount_button_text(self, mountAction):
         archive_name = self.selected_archive_name()
         if not archive_name:
             return
 
         mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
-        self.set_mount_button_mode(mode)
+        self.set_mount_button_mode(mode, mountAction)
 
     def cell_double_clicked(self, row, column):
         if column == 3:
