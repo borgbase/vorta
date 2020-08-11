@@ -78,7 +78,7 @@ class DBusNotifications(VortaNotifications):
         v = QtCore.QVariant(12321)  # random int to identify all notifications
         if v.convert(QtCore.QVariant.UInt):
             id_replace = v
-        icon = ""
+        icon = "com.borgbase.Vorta-symbolic"
         title = header
         text = msg
         actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
