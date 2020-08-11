@@ -179,18 +179,18 @@ class RestoreWindow(BackupWindow):
 
     def run(self):
         with open(self.locationLabel.text(), 'r') as file:
-            jsonStr = file.read()
-        try:
-            self.returns = {}
-            self.json_to_profile(jsonStr)
-            self.errors.setText("")
-            self.accept()
-        except (json.decoder.JSONDecodeError, KeyError):
-            self.errors.setText(self.tr("Invalid backup file"))
-        except VersionException:
-            self.errors.setText(self.tr("Cannot use newer backup on older version"))
-        except PermissionError:
-            self.errors.setText(self.tr("Cannot read backup file"))
+            try:
+                jsonStr = file.read()
+                self.returns = {}
+                self.json_to_profile(jsonStr)
+                self.errors.setText("")
+                self.accept()
+            except (json.decoder.JSONDecodeError, KeyError):
+                self.errors.setText(self.tr("Invalid backup file"))
+            except VersionException:
+                self.errors.setText(self.tr("Cannot use newer backup on older version"))
+            except PermissionError:
+                self.errors.setText(self.tr("Cannot read backup file"))
 
     def get_file(self):
         self.fileName = QFileDialog.getOpenFileName(
