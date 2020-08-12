@@ -1,5 +1,3 @@
-import sys
-
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
@@ -7,7 +5,7 @@ from PyQt5.QtGui import QKeySequence
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
-from vorta.utils import borg_compat, get_asset, is_system_tray_available
+from vorta.utils import borg_compat, get_asset, is_system_tray_available, network_status_monitor
 from vorta.views.utils import get_colored_icon
 
 from .archive_tab import ArchiveTab
@@ -16,7 +14,6 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
-from ..network_status import is_network_metered_status_supported
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
@@ -77,17 +74,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
         # OS-specific startup options:
-        wifi_list_supported = sys.platform == 'darwin'
-        if not wifi_list_supported:
+        if not network_status_monitor.is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
             self.scheduleTab.wifiListLabel.hide()
             self.scheduleTab.wifiListWidget.hide()
-
-        metered_networks_supported = is_network_metered_status_supported()
-        if not metered_networks_supported:
-            self.scheduleTab.dontRunOnMeteredNetworksCheckBox.hide()
-
-        if not wifi_list_supported and not metered_networks_supported:
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
 

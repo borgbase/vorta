@@ -1,36 +1,37 @@
 import logging
 from enum import Enum
+from typing import Optional, List
 
 from PyQt5 import QtDBus
 from PyQt5.QtCore import QObject, QVersionNumber
 
+from vorta.network_status.abc import NetworkStatusMonitor
+
 logger = logging.getLogger(__name__)
 
 
-def is_current_network_metered():
-    nm = get_network_manager()
-    return nm and nm.is_current_network_metered()
+class NetworkManagerMonitor(NetworkStatusMonitor):
+    def __init__(self):
+        bus = QtDBus.QDBusConnection.systemBus()
+        if not bus.isConnected():
+            raise UnsupportedException("Can't connect to system bus")
+        nm_adapter = NetworkManagerNetworkStatusAdapter(parent=None, bus=bus)
+        if not nm_adapter.isValid():
+            raise UnsupportedException("Can't connect to NetworkManager")
+        self._nm = nm_adapter
+
+    def is_network_metered(self) -> bool:
+        return self._nm.get_global_metered_status() in (NMMetered.YES, NMMetered.GUESS_YES)
+
+    def get_current_wifi(self) -> Optional[str]:
+        return None  # TODO: get current WiFi SSID
+
+    def get_known_wifis(self) -> List[str]:
+        return None  # TODO: list known WiFi SSIDs
 
 
-def is_network_metered_status_supported():
-    nm = get_network_manager()
-    return bool(nm)
-
-
-def get_network_manager():
-    global _network_manager
-    if _network_manager:
-        return _network_manager
-
-    bus = QtDBus.QDBusConnection.systemBus()
-    if bus.isConnected():
-        nm = NetworkManagerNetworkStatusAdapter(parent=None, bus=bus)
-        if nm.isValid():
-            _network_manager = nm
-            return _network_manager
-
-
-_network_manager = None
+class UnsupportedException(Exception):
+    """NetworkManager is not available"""
 
 
 class NetworkManagerNetworkStatusAdapter(QObject):
@@ -49,9 +50,8 @@ class NetworkManagerNetworkStatusAdapter(QObject):
             return False
         return True
 
-    def is_current_network_metered(self):
-        nm_metered = NMMetered(read_dbus_property(self._nm, 'Metered'))
-        return nm_metered in (NMMetered.YES, NMMetered.GUESS_YES)
+    def get_global_metered_status(self):
+        return NMMetered(read_dbus_property(self._nm, 'Metered'))
 
     def _get_nm_version(self):
         version, _suffindex = QVersionNumber.fromString(read_dbus_property(self._nm, 'Version'))

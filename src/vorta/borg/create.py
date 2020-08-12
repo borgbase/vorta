@@ -4,10 +4,9 @@ from dateutil import parser
 import subprocess
 
 from vorta.i18n import trans_late
-from vorta.utils import get_current_wifi, format_archive_name, borg_compat
+from vorta.utils import format_archive_name, borg_compat, network_status_monitor
 from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
-from ..network_status import is_current_network_metered
 
 
 class BorgCreateThread(BorgThread):
@@ -79,7 +78,7 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
 
-        current_wifi = get_current_wifi()
+        current_wifi = network_status_monitor.get_current_wifi()
         if current_wifi is not None:
             wifi_is_disallowed = WifiSettingModel.select().where(
                 (
@@ -94,7 +93,7 @@ class BorgCreateThread(BorgThread):
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
 
-        if profile.dont_run_on_metered_networks and is_current_network_metered():
+        if profile.dont_run_on_metered_networks and network_status_monitor.is_network_metered():
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
             return ret
 
