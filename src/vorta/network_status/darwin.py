@@ -1,7 +1,8 @@
 import plistlib
+import shlex
 import subprocess
 import xml
-from typing import Optional
+from typing import Optional, Iterator
 
 from peewee import format_date_time
 
@@ -11,7 +12,7 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
     def is_network_metered(self) -> bool:
-        return False  # TODO: implement guessing if current network is metered for OSX
+        return any(is_network_metered(d) for d in get_network_devices())
 
     def get_current_wifi(self) -> Optional[str]:
         """
@@ -53,3 +54,29 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
                 result.append(SystemWifiInfo(ssid=ssid, last_connected=last_connected))
 
         return result
+
+
+def get_network_devices() -> Iterator[str]:
+    for line in call_networksetup_listallhardwareports().splitlines():
+        if line.startswith(b'Device: '):
+            yield line.split()[1].strip()
+
+
+def is_network_metered(bsd_device) -> bool:
+    return b'ANDROID_METERED' in call_ipconfig_getpacket(bsd_device)
+
+
+def call_ipconfig_getpacket(bsd_device):
+    cmd = ['ipconfig', 'getpacket', bsd_device]
+    try:
+        return subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        logger.warn("Command %s failed", shlex.join(cmd))
+
+
+def call_networksetup_listallhardwareports():
+    cmd = ['networksetup', '-listallhardwareports']
+    try:
+        return subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        logger.warn("Command %s failed", shlex.join(cmd))
