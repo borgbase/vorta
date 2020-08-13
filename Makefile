@@ -12,7 +12,7 @@ dist/Vorta.app: translations-to-qm clean
 	pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	cp -R ../borg/dist/borg-dir dist/Vorta.app/Contents/Resources/
-	rm -rf build
+	rm -rf build/vorta
 	rm -rf dist/vorta
 
 borg:
