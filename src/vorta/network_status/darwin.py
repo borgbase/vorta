@@ -59,7 +59,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 def get_network_devices() -> Iterator[str]:
     for line in call_networksetup_listallhardwareports().splitlines():
         if line.startswith(b'Device: '):
-            yield line.split()[1].strip()
+            yield line.split()[1].strip().decode('ascii')
 
 
 def is_network_metered(bsd_device) -> bool:
@@ -72,6 +72,7 @@ def call_ipconfig_getpacket(bsd_device):
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
         logger.warn("Command %s failed", shlex.join(cmd))
+        return b''
 
 
 def call_networksetup_listallhardwareports():
