@@ -1,3 +1,4 @@
+import sys
 import pytest
 
 from vorta.network_status import darwin
