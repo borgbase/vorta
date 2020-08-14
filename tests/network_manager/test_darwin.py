@@ -7,6 +7,7 @@ from vorta.network_status import darwin
     ('normal_router', False),
     ('phone', True),
 ])
+@pytest.mark.skipif(sys.platform == 'darwin', reason="macOS specific networking")
 def test_is_network_metered(getpacket_output_name, expected, monkeypatch):
     def mock_getpacket(device):
         assert device == 'en0'
@@ -18,11 +19,12 @@ def test_is_network_metered(getpacket_output_name, expected, monkeypatch):
     assert result == expected
 
 
+@pytest.mark.skipif(sys.platform == 'darwin', reason="macOS specific networking")
 def test_get_network_devices(monkeypatch):
     monkeypatch.setattr(darwin, 'call_networksetup_listallhardwareports', lambda: NETWORKSETUP_OUTPUT)
 
     result = list(darwin.get_network_devices())
-    assert result == [b'Bluetooth-Modem', b'en0', b'en1', b'en2', b'bridge0']
+    assert result == ['Bluetooth-Modem', 'en0', 'en1', 'en2', 'bridge0']
 
 
 GETPACKET_OUTPUTS = {
