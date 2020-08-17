@@ -54,7 +54,13 @@ def init_translations(app):
     application = app
     translator = QTranslator() if trans_scale == 100 else VortaTranslator()
 
-    locale = QLocale(os.environ.get('LANG', None))
+    # Use LANG var if set, else let Qt detect it.
+    env_lang = os.environ.get('LANG', False)
+    if env_lang:
+        locale = QLocale(env_lang)
+    else:
+        locale = QLocale()
+
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
     ui_langs = locale.uiLanguages()
     succeeded = translator.load(locale, 'vorta', prefix='.', directory=qm_path)  # e.g. vorta/i18n/qm/vorta.de_DE.qm
