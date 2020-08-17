@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>781</width>
+        <height>447</height>
        </rect>
       </property>
       <attribute name="label">
@@ -101,6 +101,16 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="menuButton">
+           <property name="statusTip">
+            <string>Right clicking an archive also shows this menu</string>
+           </property>
+           <property name="text">
+            <string>Menu</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="checkButton">
            <property name="text">
@@ -180,8 +190,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>781</width>
+        <height>447</height>
        </rect>
       </property>
       <attribute name="label">
