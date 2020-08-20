@@ -14,7 +14,8 @@ from subprocess import Popen, PIPE
 import vorta.utils
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
-from vorta.keyring.db import VortaDBKeyring, VortaKeyring
+from vorta.keyring.abc import VortaKeyring
+from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
