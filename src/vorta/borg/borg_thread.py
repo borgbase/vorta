@@ -11,10 +11,10 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
+import vorta.utils
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
-from vorta.utils import keyring, borg_compat
-from vorta.keyring.db import VortaDBKeyring
+from vorta.keyring.db import VortaDBKeyring, VortaKeyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
@@ -112,11 +112,12 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 
-        if not borg_compat.check('JSON_LOG'):
+        if not vorta.utils.borg_compat.check('JSON_LOG'):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
 
-        # Try to get password from chosen keyring backend.
+        # Redetect and try to get password from chosen keyring backend.
+        vorta.utils.keyring = keyring = VortaKeyring.get_keyring()
         logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
         ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
