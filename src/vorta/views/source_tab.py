@@ -51,8 +51,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         dialog.open(receive)
 
     def source_remove(self):
-        item = self.sourceFilesWidget.takeItem(self.sourceFilesWidget.currentRow())
-        if item:
+        indexes = self.sourceFilesWidget.selectionModel().selectedIndexes()
+        #sort indexes, starting with lowest
+        indexes.sort();
+        #remove each selected entry, starting with highest index (otherways, higher indexes become invalid)
+        for index in reversed(indexes):
+            item = self.sourceFilesWidget.takeItem(index.row())
             db_item = SourceFileModel.get(dir=item.text())
             db_item.delete_instance()
 
