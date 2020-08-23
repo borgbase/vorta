@@ -53,7 +53,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def source_remove(self):
         indexes = self.sourceFilesWidget.selectionModel().selectedIndexes()
         # sort indexes, starting with lowest
-        indexes.sort();
+        indexes.sort()
         # remove each selected entry, starting with highest index (otherways, higher indexes become invalid)
         for index in reversed(indexes):
             item = self.sourceFilesWidget.takeItem(index.row())
