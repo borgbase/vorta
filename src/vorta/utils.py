@@ -280,7 +280,7 @@ def validate_passwords(firstPass, secondPass):
     passEqual = firstPass == secondPass
     passLong = len(firstPass) > 8
 
-    if not (passLong or passEqual):
+    if not passLong and not passEqual:
         return trans_late('utils', "Passwords must be identical and greater than 8 characters long")
     if not passEqual:
         return trans_late('utils', "Passwords must be identical")
