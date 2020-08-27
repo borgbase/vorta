@@ -116,7 +116,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
 
-        # Redetect and try to get password from chosen keyring backend.
+        # Redetect keyring and try to get password from chosen keyring backend.
         keyring = VortaKeyring.get_keyring()
         logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
         ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
