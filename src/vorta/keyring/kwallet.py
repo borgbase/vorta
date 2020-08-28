@@ -22,36 +22,37 @@ class VortaKWallet5Keyring(VortaKeyring):
             QtDBus.QDBusConnection.sessionBus())
 
     def set_password(self, service, repo_url, password):
-        self.iface.call("writePassword", [self.handle, self.folderName, repo_url, password, service]).arguments()[0]
+        self.iface.call("writePassword", [self.handle, self.folderName, repo_url, password, service])
 
     def get_password(self, service, repo_url):
         if not self.open():
             return None
-        if not self.iface.callWithArgumentList(
-            QtDBus.QDBus.AutoDetect, "hasEntry", [
-                self.handle, self.folderName, repo_url, service]).arguments()[0]:
+        if not self.get_result("hasEntry", [self.handle, self.folderName, repo_url, service]):
             return None
-        return self.iface.callWithArgumentList(
-            QtDBus.QDBus.AutoDetect, "readPassword", [
-                self.handle, self.folderName, repo_url, service]).arguments()[0]
+        return self.get_result("readPassword", [self.handle, self.folderName, repo_url, service])
+
+    def get_result(self, method, args):
+        if len(args) > 0:
+            result = self.iface.callWithArgumentList(QtDBus.QDBus.AutoDetect, method, args)
+        else:
+            result = self.iface.call(QtDBus.QDBus.AutoDetect, method)
+        return result.arguments()[0]
 
     def open(self):
         self.get_handle()
         return self.handle > 0
 
     def get_handle(self):
-        walletName = self.iface.call(QtDBus.QDBus.AutoDetect, "networkWallet").arguments()[0]
+        walletName = self.get_result("networkWallet", [])
         wId = QVariant(0)
         wId.convert(4)
-        output = self.iface.callWithArgumentList(
-            QtDBus.QDBus.AutoDetect, "open", [
-                walletName, wId, 'vorta-repo']).arguments()[0]
+        output = self.get_result("open", [walletName, wId, 'vorta-repo'])
         self.handle = int(output)
 
     @property
     def valid(self):
         if self.iface.isValid():
-            return bool(self.iface.call(QtDBus.QDBus.AutoDetect, "isEnabled").arguments()[0])
+            return bool(self.get_result("isEnabled", []))
         else:
             return False
 
