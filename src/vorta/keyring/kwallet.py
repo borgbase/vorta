@@ -22,16 +22,14 @@ class VortaKWallet5Keyring(VortaKeyring):
             QtDBus.QDBusConnection.sessionBus())
 
     def set_password(self, service, repo_url, password):
-        self.iface.call("writePassword", [self.handle, self.folderName, repo_url, password, service])
+        self.iface.call("writePassword", args=[self.handle, self.folderName, repo_url, password, service])
 
     def get_password(self, service, repo_url):
-        if not self.open():
+        if not (self.open() and self.get_result("hasEntry", args=[self.handle, self.folderName, repo_url, service])):
             return None
-        if not self.get_result("hasEntry", [self.handle, self.folderName, repo_url, service]):
-            return None
-        return self.get_result("readPassword", [self.handle, self.folderName, repo_url, service])
+        return self.get_result("readPassword", args=[self.handle, self.folderName, repo_url, service])
 
-    def get_result(self, method, args):
+    def get_result(self, method, args=[]):
         if len(args) > 0:
             result = self.iface.callWithArgumentList(QtDBus.QDBus.AutoDetect, method, args)
         else:
@@ -43,18 +41,15 @@ class VortaKWallet5Keyring(VortaKeyring):
         return self.handle > 0
 
     def get_handle(self):
-        walletName = self.get_result("networkWallet", [])
+        walletName = self.get_result("networkWallet")
         wId = QVariant(0)
         wId.convert(4)
-        output = self.get_result("open", [walletName, wId, 'vorta-repo'])
+        output = self.get_result("open", args=[walletName, wId, 'vorta-repo'])
         self.handle = int(output)
 
     @property
     def valid(self):
-        if self.iface.isValid():
-            return bool(self.get_result("isEnabled", []))
-        else:
-            return False
+        return self.iface.isValid() and bool(self.get_result("isEnabled"))
 
 
 class VortaKWallet4Keyring(VortaKWallet5Keyring):
