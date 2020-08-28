@@ -54,7 +54,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status('')  # Set platform-specific hints.
 
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
-        self.archiveTable.setSelectionMode(QTableView.SingleSelection)
+        self.archiveTable.setSelectionMode(QTableView.MultiSelection)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
         self.archiveTable.setWordWrap(False)
         self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
@@ -194,6 +194,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         # Conditions are met (borg binary available, etc)
         row_selected = self.archiveTable.selectionModel().selectedRows()
+
         if row_selected:
             archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if archive_cell:
@@ -241,13 +242,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
-    def selected_archive_name(self):
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
+    def selected_archive_names(self):
+        rows_selected = self.archiveTable.selectionModel().selectedRows()
+        if rows_selected:
+            archive_cell = [self.archiveTable.item(row.row(), 4).text() for row in rows_selected]
             if archive_cell:
-                return archive_cell.text()
-        return None
+                return archive_cell
+        return []
 
     def set_mount_button_mode(self, mode, mountAction):
         mountAction.triggered.disconnect()
@@ -263,26 +264,27 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return
 
         # Conditions are met (borg binary available, etc)
-        archive_name = self.selected_archive_name()
-        if archive_name:
-            params['cmd'][-1] += f'::{archive_name}'
-            params['current_archive'] = archive_name
+        archive_names = self.selected_archive_names()
+        for archive_name in archive_names:
+            if archive_name:
+                params['cmd'][-1] += f'::{archive_name}'
+                params['current_archive'] = archive_name
 
-        def receive():
-            mount_point = dialog.selectedFiles()
-            if mount_point:
-                params['cmd'].append(mount_point[0])
-                if params.get('current_archive', False):
-                    self.mount_points[params['current_archive']] = mount_point[0]
-                if params['ok']:
-                    self._toggle_all_buttons(False)
-                    thread = BorgMountThread(params['cmd'], params, parent=self)
-                    thread.updated.connect(self.mountErrors.setText)
-                    thread.result.connect(self.mount_result)
-                    thread.start()
+            def receive():
+                mount_point = dialog.selectedFiles()
+                if mount_point:
+                    params['cmd'].append(mount_point[0])
+                    if params.get('current_archive', False):
+                        self.mount_points[params['current_archive']] = mount_point[0]
+                    if params['ok']:
+                        self._toggle_all_buttons(False)
+                        thread = BorgMountThread(params['cmd'], params, parent=self)
+                        thread.updated.connect(self.mountErrors.setText)
+                        thread.result.connect(self.mount_result)
+                        thread.start()
 
-        dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.open(receive)
+            dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
+            dialog.open(receive)
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)
@@ -295,28 +297,29 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.archiveTable.setItem(row, 3, item)
 
     def umount_action(self):
-        archive_name = self.selected_archive_name()
+        archive_names = self.selected_archive_names()
 
-        mount_point = self.mount_points.get(archive_name)
+        for archive_name in archive_names:
+            mount_point = self.mount_points.get(archive_name)
 
-        if mount_point is not None:
-            profile = self.profile()
-            params = BorgUmountThread.prepare(profile)
-            if not params['ok']:
-                self._set_status(params['message'])
-                return
+            if mount_point is not None:
+                profile = self.profile()
+                params = BorgUmountThread.prepare(profile)
+                if not params['ok']:
+                    self._set_status(params['message'])
+                    return
 
-            params['current_archive'] = archive_name
+                params['current_archive'] = archive_name
 
-            if os.path.normpath(mount_point) in params['active_mount_points']:
-                params['cmd'].append(mount_point)
-                thread = BorgUmountThread(params['cmd'], params, parent=self)
-                thread.updated.connect(self.mountErrors.setText)
-                thread.result.connect(self.umount_result)
-                thread.start()
-            else:
-                self._set_status(self.tr('Mount point not active.'))
-                return
+                if os.path.normpath(mount_point) in params['active_mount_points']:
+                    params['cmd'].append(mount_point)
+                    thread = BorgUmountThread(params['cmd'], params, parent=self)
+                    thread.updated.connect(self.mountErrors.setText)
+                    thread.result.connect(self.umount_result)
+                    thread.start()
+                else:
+                    self._set_status(self.tr('Mount point not active.'))
+                    return
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
@@ -392,23 +395,25 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
 
     def update_mount_button_text(self, mountAction):
-        archive_name = self.selected_archive_name()
-        if not archive_name:
-            return
-
-        mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
-        self.set_mount_button_mode(mode, mountAction)
-
-    def cell_double_clicked(self, row, column):
-        if column == 3:
-            archive_name = self.selected_archive_name()
+        archive_names = self.selected_archive_names()
+        for archive_name in archive_names:
             if not archive_name:
                 return
 
-            mount_point = self.mount_points.get(archive_name)
+            mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
+            self.set_mount_button_mode(mode, mountAction)
 
-            if mount_point is not None:
-                QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
+    def cell_double_clicked(self, row, column):
+        if column == 3:
+            archive_names = self.selected_archive_names()
+            for archive_name in archive_names:
+                if not archive_name:
+                    return
+
+                mount_point = self.mount_points.get(archive_name)
+
+                if mount_point is not None:
+                    QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
@@ -431,20 +436,21 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
-                                       trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
-                return
-            params['cmd'][-1] += f'::{archive_name}'
+        archive_names = self.selected_archive_names()
+        for archive_name in archive_names:
+            if archive_name is not None:
+                if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
+                                           trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
+                    return
+                params['cmd'][-1] += f'::{archive_name}'
 
-            thread = BorgDeleteThread(params['cmd'], params, parent=self)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.delete_result)
-            self._toggle_all_buttons(False)
-            thread.start()
-        else:
-            self._set_status(self.tr("No archive selected"))
+                thread = BorgDeleteThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.delete_result)
+                self._toggle_all_buttons(False)
+                thread.start()
+            else:
+                self._set_status(self.tr("No archive selected"))
 
     def delete_result(self, result):
         if result['returncode'] == 0:
@@ -501,28 +507,29 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            new_name, finished = QInputDialog.getText(
-                self,
-                self.tr("Change name"),
-                self.tr("New archive name:"),
-                text=archive_name)
+        archive_names = self.selected_archive_names()
+        for archive_name in archive_names:
+            if archive_name is not None:
+                new_name, finished = QInputDialog.getText(
+                    self,
+                    self.tr("Change name"),
+                    self.tr("New archive name:"),
+                    text=archive_name)
 
-            if not finished:
-                return
+                if not finished:
+                    return
 
-            if not new_name:
-                self._set_status(self.tr('Archive name cannot be blank.'))
-                return
+                if not new_name:
+                    self._set_status(self.tr('Archive name cannot be blank.'))
+                    return
 
-            params['cmd'][-1] += f'::{archive_name}'
-            params['cmd'].append(new_name)
+                params['cmd'][-1] += f'::{archive_name}'
+                params['cmd'].append(new_name)
 
-            thread = BorgRenameThread(params['cmd'], params, parent=self)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.delete_result)
-            self._toggle_all_buttons(False)
-            thread.start()
-        else:
-            self._set_status(self.tr("No archive selected"))
+                thread = BorgRenameThread(params['cmd'], params, parent=self)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.delete_result)
+                self._toggle_all_buttons(False)
+                thread.start()
+            else:
+                self._set_status(self.tr("No archive selected"))
