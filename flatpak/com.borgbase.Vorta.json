@@ -16,6 +16,8 @@
         "--talk-name=org.freedesktop.DBus.*",
         "--talk-name=org.freedesktop.Flatpak.*",
         "--talk-name=org.freedesktop.secrets",
+        "--talk-name=org.kde.kwalletd5",
+        "--talk-name=org.kde.kwalletd",
         "--socket=ssh-auth",
         "--talk-name=org.freedesktop.Notifications"
     ],
