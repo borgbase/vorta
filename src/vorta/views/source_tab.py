@@ -46,7 +46,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.sourceFilesWidget.addItem(dir)
                     new_source.save()
 
-        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file to back up")
+        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
         dialog = choose_file_dialog(self, msg, want_folder=want_folder)
         dialog.open(receive)
 
