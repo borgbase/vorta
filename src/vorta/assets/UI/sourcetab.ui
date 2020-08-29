@@ -54,7 +54,7 @@
        <item>
         <widget class="QPushButton" name="sourceAddFile">
          <property name="text">
-          <string>Add File</string>
+          <string>Add File(s)</string>
          </property>
         </widget>
        </item>
@@ -64,7 +64,7 @@
           <string>One folder or file per line</string>
          </property>
          <property name="text">
-          <string>Paste</string>
+          <string>Paste Folders/Files</string>
          </property>
         </widget>
        </item>
