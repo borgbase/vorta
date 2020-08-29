@@ -30,7 +30,7 @@ class VortaKWallet5Keyring(VortaKeyring):
         return self.get_result("readPassword", args=[self.handle, self.folderName, repo_url, service])
 
     def get_result(self, method, args=[]):
-        if len(args) > 0:
+        if args:
             result = self.iface.callWithArgumentList(QtDBus.QDBus.AutoDetect, method, args)
         else:
             result = self.iface.call(QtDBus.QDBus.AutoDetect, method)
