@@ -1,5 +1,3 @@
-import sys
-
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QShortcut, QMessageBox, QMenu
 from PyQt5.QtGui import QKeySequence
@@ -7,7 +5,7 @@ from PyQt5.QtGui import QKeySequence
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
-from vorta.utils import borg_compat, get_asset, is_system_tray_available
+from vorta.utils import borg_compat, get_asset, is_system_tray_available, network_status_monitor
 from vorta.views.utils import get_colored_icon
 
 from .archive_tab import ArchiveTab
@@ -85,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.backupAction.setEnabled(self.current_profile.repo is not None)
 
         # OS-specific startup options:
-        if sys.platform != 'darwin':
+        if not network_status_monitor.is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
             self.scheduleTab.wifiListLabel.hide()
             self.scheduleTab.wifiListWidget.hide()
