@@ -39,20 +39,24 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def source_add(self, want_folder):
         def receive():
-            dir = dialog.selectedFiles()
-            if dir:
-                new_source, created = SourceFileModel.get_or_create(dir=dir[0], profile=self.profile())
+            dirs = dialog.selectedFiles()
+            for dir in dirs:
+                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
                 if created:
-                    self.sourceFilesWidget.addItem(dir[0])
+                    self.sourceFilesWidget.addItem(dir)
                     new_source.save()
 
-        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file to back up")
+        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
         dialog = choose_file_dialog(self, msg, want_folder=want_folder)
         dialog.open(receive)
 
     def source_remove(self):
-        item = self.sourceFilesWidget.takeItem(self.sourceFilesWidget.currentRow())
-        if item:
+        indexes = self.sourceFilesWidget.selectionModel().selectedIndexes()
+        # sort indexes, starting with lowest
+        indexes.sort()
+        # remove each selected entry, starting with highest index (otherways, higher indexes become invalid)
+        for index in reversed(indexes):
+            item = self.sourceFilesWidget.takeItem(index.row())
             db_item = SourceFileModel.get(dir=item.text())
             db_item.delete_instance()
 
