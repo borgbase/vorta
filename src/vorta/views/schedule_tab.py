@@ -25,6 +25,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
         self.app.backup_finished_event.connect(self.init_logs)
 
+        self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
+            self.on_dont_run_on_metered_networks_changed)
+
         self.init_logs()
         self.populate_from_profile()
         self.set_icons()
@@ -51,6 +54,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.pruneCheckBox.setCheckState(profile.prune_on)
         self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
+
+        self.dontRunOnMeteredNetworksCheckBox.setChecked(profile.dont_run_on_metered_networks)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
@@ -131,3 +136,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.save()
                 self.app.scheduler.reload()
                 self._draw_next_scheduled_backup()
+
+    def on_dont_run_on_metered_networks_changed(self, state):
+        profile = self.profile()
+        profile.dont_run_on_metered_networks = state
+        profile.save()
