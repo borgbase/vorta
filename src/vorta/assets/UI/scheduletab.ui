@@ -26,15 +26,15 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <property name="font">
@@ -355,8 +355,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="label">
@@ -367,14 +367,47 @@
         <number>0</number>
        </property>
        <item row="1" column="0">
-        <widget class="QListWidget" name="wifiListWidget"/>
-       </item>
-       <item row="0" column="0">
         <widget class="QLabel" name="wifiListLabel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Allowed Networks:</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="dontRunOnMeteredNetworksCheckBox">
+         <property name="text">
+          <string>Don't run backup over metered networks</string>
+         </property>
+         <property name="tristate">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QListWidget" name="wifiListWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -383,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="label">
@@ -444,8 +477,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>669</width>
+        <height>361</height>
        </rect>
       </property>
       <attribute name="label">

@@ -28,6 +28,7 @@ def init_db(qapp):
 
     profile = BackupProfileModel.get(id=1)
     profile.repo = new_repo.id
+    profile.dont_run_on_metered_networks = False
     profile.save()
 
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
