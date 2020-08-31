@@ -67,37 +67,38 @@ def open_app_at_startup(enabled=True):
 
 
 def desktop_application(enabled=True):
-    # Find XDG_DATA_HOME unless when running in flatpak
-    if IS_FLATPAK:
-        data_path = Path.home() / ".local" / "share"
-    else:
-        data_path = Path(os.environ.get(
-            "XDG_DATA_HOME", os.path.expanduser("~"))) / ".local" / "share"
+    if sys.platform == 'linux':
+        # Find XDG_DATA_HOME unless when running in flatpak
+        if IS_FLATPAK:
+            data_path = Path.home() / ".local" / "share"
+        else:
+            data_path = Path(os.environ.get(
+                "XDG_DATA_HOME", os.path.expanduser("~"))) / ".local" / "share"
 
-    desktop_path = data_path / "applications"
-    icon_path = data_path / "icons" / "hicolor" / "scalable" / "apps"
+        desktop_path = data_path / "applications"
+        icon_path = data_path / "icons" / "hicolor" / "scalable" / "apps"
 
-    if not icon_path.exists():
-        icon_path.mkdir(parents=True)
-    if not desktop_path.exists():
-        desktop_path.mkdir(parents=True)
+        if not icon_path.exists():
+            icon_path.mkdir(parents=True)
+        if not desktop_path.exists():
+            desktop_path.mkdir(parents=True)
 
-    if enabled:
-        # Copy icons
-        main_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta.svg"
-        symbolic_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta-symbolic.svg"
-        desktop_file_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta.desktop"
-        copy2(main_icon_path, icon_path)
-        copy2(symbolic_icon_path, icon_path)
-        copy2(desktop_file_path, desktop_path)
-    else:
-        main_icon_path = icon_path / "com.borgbase.Vorta.svg"
-        symbolic_icon_path = icon_path / "com.borgbase.Vorta-symbolic.svg"
-        desktop_file_path = desktop_path / "com.borgbase.Vorta.desktop"
+        if enabled:
+            # Copy icons
+            main_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta.svg"
+            symbolic_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta-symbolic.svg"
+            desktop_file_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta.desktop"
+            copy2(main_icon_path, icon_path)
+            copy2(symbolic_icon_path, icon_path)
+            copy2(desktop_file_path, desktop_path)
+        else:
+            main_icon_path = icon_path / "com.borgbase.Vorta.svg"
+            symbolic_icon_path = icon_path / "com.borgbase.Vorta-symbolic.svg"
+            desktop_file_path = desktop_path / "com.borgbase.Vorta.desktop"
 
-        if desktop_file_path.exists():
-            desktop_file_path.unlink()
-        if symbolic_icon_path.exists():
-            symbolic_icon_path.unlink()
-        if main_icon_path.exists():
-            main_icon_path.unlink()
+            if desktop_file_path.exists():
+                desktop_file_path.unlink()
+            if symbolic_icon_path.exists():
+                symbolic_icon_path.unlink()
+            if main_icon_path.exists():
+                main_icon_path.unlink()
