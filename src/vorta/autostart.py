@@ -1,4 +1,5 @@
 import sys
+from shutil import copy2
 import os
 from pathlib import Path
 
@@ -39,17 +40,26 @@ def open_app_at_startup(enabled=True):
                                "assets/metadata/com.borgbase.Vorta.desktop")) as desktop_file:
             desktop_file_text = desktop_file.read()
 
-            # Find XDG_CONFIG_HOME unless when running in flatpak
+            # Find XDG_CONFIG_HOME and XDG_DATA_HOME unless when running in flatpak
             if is_flatpak:
-                autostart_path = Path.home() / '.config' / 'autostart'
+                config_path = Path.home() / '.config'
+                data_path = Path.home() / ".local" / "share"
             else:
-                autostart_path = Path(os.environ.get(
-                    "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
+                config_path = Path(os.environ.get(
+                    "XDG_CONFIG_HOME", os.path.expanduser("~"))) / '.config'
+                data_path = Path(os.environ.get(
+                    "XDG_DATA_HOME", os.path.expanduser("~"))) / ".local" / "share"
+
+            autostart_path = config_path / "autostart"
+
+            autostart_file_path = autostart_path / 'vorta.desktop'
+            icon_path = data_path / "icons" / "hicolor" / "scalable" / "apps"
 
             if not autostart_path.exists():
                 autostart_path.mkdir()
 
-            autostart_file_path = autostart_path / 'vorta.desktop'
+            if not icon_path.exists():
+                icon_path.mkdir()
 
             if enabled:
                 # Replace to for flatpak if appropriate and start in background
@@ -59,7 +69,21 @@ def open_app_at_startup(enabled=True):
                 # Add autostart delay
                 desktop_file_text += (AUTOSTART_DELAY)
 
+                # Copy icons
+                main_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta.svg"
+                symbolic_icon_path = Path(__file__).parent / "assets" / "metadata" / "com.borgbase.Vorta-symbolic.svg"
+                copy2(main_icon_path, icon_path)
+                copy2(symbolic_icon_path, icon_path)
+
+                # Write desktop file
                 autostart_file_path.write_text(desktop_file_text)
             else:
+                main_icon_path = icon_path / "com.borgbase.Vorta.svg"
+                symbolic_icon_path = icon_path / "com.borgbase.Vorta-symbolic.svg"
+
                 if autostart_file_path.exists():
                     autostart_file_path.unlink()
+                if symbolic_icon_path.exists():
+                    symbolic_icon_path.unlink()
+                if main_icon_path.exists():
+                    main_icon_path.unlink()
