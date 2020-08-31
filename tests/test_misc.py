@@ -29,3 +29,26 @@ def test_linux_autostart(qapp, qtbot):
         desktop_file_text = desktop_file.read()
 
         assert(desktop_file_text.startswith("[Desktop Entry]"))
+
+
+@pytest.mark.skipif(sys.platform != 'linux', reason="Desktop files only generated in Linux")
+def test_linux_desktop(qapp, qtbot):
+    main = qapp.main_window
+    main.tabWidget.setCurrentIndex(4)
+    tab = main.miscTab
+
+    for x in range(0, tab.checkboxLayout.count()):
+        checkbox = tab.checkboxLayout.itemAt(x).widget()
+        checkbox.__class__ = QCheckBox
+        if checkbox.text().startswith("Add"):
+            checkbox.setChecked(True)
+            break
+
+    desktop_file_path = Path(os.environ.get(
+        "XDG_DATA_HOME", os.path.expanduser("~") + '/.local') + "/share/applications") / "com.borgbase.Vorta.desktop"
+    qtbot.waitUntil(lambda: desktop_file_path.exists(), timeout=5000)
+
+    with open(desktop_file_path) as desktop_file:
+        desktop_file_text = desktop_file.read()
+
+        assert(desktop_file_text.startswith("[Desktop Entry]"))
