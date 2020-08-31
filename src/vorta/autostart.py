@@ -6,6 +6,7 @@ from pathlib import Path
 AUTOSTART_DELAY = """StartupNotify=false
 X-GNOME-Autostart-enabled=true
 X-GNOME-Autostart-Delay=20"""
+IS_FLATPAK = Path('/.flatpak-info').exists()
 
 
 def open_app_at_startup(enabled=True):
@@ -34,21 +35,18 @@ def open_app_at_startup(enabled=True):
             LSSharedFileListItemRemove(login_items, new_item)
 
     elif sys.platform.startswith('linux'):
-        is_flatpak = Path('/.flatpak-info').exists()
-
         with open(os.path.join(os.path.dirname(__file__),
                                "assets/metadata/com.borgbase.Vorta.desktop")) as desktop_file:
             desktop_file_text = desktop_file.read()
 
             # Find XDG_CONFIG_HOME unless when running in flatpak
-            if is_flatpak:
+            if IS_FLATPAK:
                 config_path = Path.home() / '.config'
             else:
                 config_path = Path(os.environ.get(
                     "XDG_CONFIG_HOME", os.path.expanduser("~"))) / '.config'
 
             autostart_path = config_path / "autostart"
-
             autostart_file_path = autostart_path / 'vorta.desktop'
 
             if not autostart_path.exists():
@@ -57,11 +55,10 @@ def open_app_at_startup(enabled=True):
             if enabled:
                 # Replace to for flatpak if appropriate and start in background
                 desktop_file_text = desktop_file_text.replace(
-                    "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
+                    "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if IS_FLATPAK
                     else "Exec=vorta --daemonize")
                 # Add autostart delay
                 desktop_file_text += (AUTOSTART_DELAY)
-
                 # Write desktop file
                 autostart_file_path.write_text(desktop_file_text)
             else:
@@ -70,10 +67,8 @@ def open_app_at_startup(enabled=True):
 
 
 def desktop_application(enabled=True):
-    is_flatpak = Path('/.flatpak-info').exists()
-
     # Find XDG_DATA_HOME unless when running in flatpak
-    if is_flatpak:
+    if IS_FLATPAK:
         data_path = Path.home() / ".local" / "share"
     else:
         data_path = Path(os.environ.get(
