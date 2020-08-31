@@ -26,6 +26,7 @@ class JSONField(pw.TextField):
 
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
+
     def db_value(self, value):
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
@@ -177,6 +178,7 @@ class SettingsModel(pw.Model):
 
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
+
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
 
@@ -236,6 +238,14 @@ def get_misc_settings():
                 'key': 'updates_include_beta', 'value': False, 'type': 'checkbox',
                 'label': trans_late('settings',
                                     'Include pre-release versions when checking for updates')
+            },
+        ]
+    if sys.platform == 'linux':
+        settings += [
+            {
+                'key': 'application_desktop', 'value': True, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Add a desktop entry for Vorta')
             },
         ]
     return settings
