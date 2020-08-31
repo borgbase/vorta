@@ -56,10 +56,10 @@ def open_app_at_startup(enabled=True):
             icon_path = data_path / "icons" / "hicolor" / "scalable" / "apps"
 
             if not autostart_path.exists():
-                autostart_path.mkdir()
+                autostart_path.mkdir(parents=True)
 
             if not icon_path.exists():
-                icon_path.mkdir()
+                icon_path.mkdir(parents=True)
 
             if enabled:
                 # Replace to for flatpak if appropriate and start in background
