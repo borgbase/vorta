@@ -19,7 +19,8 @@
         "--talk-name=org.kde.kwalletd5",
         "--talk-name=org.kde.kwalletd",
         "--socket=ssh-auth",
-        "--talk-name=org.freedesktop.Notifications"
+        "--talk-name=org.freedesktop.Notifications",
+        "--system-talk-name=org.freedesktop.NetworkManager"
     ],
     "build-options": {
         "env": {
