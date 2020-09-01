@@ -5,7 +5,7 @@ from datetime import timedelta
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices, QCursor
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
-                             QTableWidgetItem, QInputDialog, QMenu, QToolButton)
+                             QTableWidgetItem, QInputDialog, QMenu)
 
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.delete import BorgDeleteThread
@@ -47,8 +47,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.Interactive)
         header.setSectionResizeMode(4, QHeaderView.Stretch)
-        header.setSectionResizeMode(5, QHeaderView.Interactive)
-        # header.setStretchLastSection(True)
+        header.setStretchLastSection(True)
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
@@ -144,12 +143,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.archiveTable.setItem(row, 3, item)
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
-
-                btn = QToolButton(self.archiveTable)
-                btn.setText('Edit')
-                btn.setMenu(self._menu)
-                btn.setPopupMode(2)
-                self.archiveTable.setCellWidget(row, 5, btn)
 
             self.archiveTable.setRowCount(len(archives))
             item = self.archiveTable.item(0, 0)

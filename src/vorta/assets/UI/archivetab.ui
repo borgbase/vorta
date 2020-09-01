@@ -92,11 +92,6 @@
            <string>Name</string>
           </property>
          </column>
-         <column>
-          <property name="text">
-           <string>Action</string>
-          </property>
-         </column>
         </widget>
        </item>
        <item>
@@ -171,8 +166,6 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -400,8 +393,6 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
@@ -437,8 +428,6 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
