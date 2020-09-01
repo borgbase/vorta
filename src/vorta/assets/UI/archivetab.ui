@@ -107,7 +107,7 @@
             <string>Right clicking an archive also shows this menu</string>
            </property>
            <property name="text">
-            <string>Menu</string>
+            <string>Archive Actions</string>
            </property>
           </widget>
          </item>
@@ -190,8 +190,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>781</width>
-        <height>447</height>
+        <width>571</width>
+        <height>297</height>
        </rect>
       </property>
       <attribute name="label">
