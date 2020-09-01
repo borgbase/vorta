@@ -22,7 +22,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             QtDBus.QDBusConnection.sessionBus())
 
     def set_password(self, service, repo_url, password):
-        self.iface.call("writePassword", args=[self.handle, self.folderName, repo_url, password, service])
+        self.get_result("writePassword", args=[self.handle, self.folderName, repo_url, password, service])
 
     def get_password(self, service, repo_url):
         if not (self.open() and self.get_result("hasEntry", args=[self.handle, self.folderName, repo_url, service])):
