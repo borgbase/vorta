@@ -29,7 +29,7 @@ class VortaDarwinKeyring(VortaKeyring):
             ('SecKeychainAddGenericPassword', b'i^{OpaqueSecKeychainRef=}I*I*I*o^^{OpaqueSecKeychainItemRef}'),
             ('SecKeychainOpen', b'i*o^^{OpaqueSecKeychainRef}'),
             ('SecKeychainFindGenericPassword', b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}'),
-            ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}^{OpaqueSecKeychainStatus]'),
+            ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef}i*o^^{OpaqueSecKeychainItemRef}'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
@@ -37,6 +37,7 @@ class VortaDarwinKeyring(VortaKeyring):
         SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
         SecKeychainItemRef = objc.registerCFSignature(
             'SecKeychainItemRef', b'^{OpaqueSecKeychainItemRef=}', SecKeychainItemGetTypeID())
+
         PassBuffRef = objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
 
         # Get the login keychain
