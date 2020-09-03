@@ -39,6 +39,5 @@ class VortaSecretStorageKeyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        """ Attempt to unlock and return lock state """
         collection = secretstorage.get_default_collection(self.connection)
         return not collection.is_locked()
