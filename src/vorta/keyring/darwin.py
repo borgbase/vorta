@@ -29,7 +29,7 @@ class VortaDarwinKeyring(VortaKeyring):
             ('SecKeychainAddGenericPassword', b'i^{OpaqueSecKeychainRef=}I*I*I*o^^{OpaqueSecKeychainItemRef}'),
             ('SecKeychainOpen', b'i*o^^{OpaqueSecKeychainRef}'),
             ('SecKeychainFindGenericPassword', b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}'),
-            ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}*'),
+            ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}^{OpaqueSecKeychainStatus]'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
@@ -71,7 +71,7 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        keychain_status = SecKeychainGetStatus(self.login_keychain, None)
+        result, keychain_status = SecKeychainGetStatus(self.login_keychain, None)
 
         return keychain_status & kSecUnlockStateStatus
 
