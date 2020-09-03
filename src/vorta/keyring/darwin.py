@@ -71,7 +71,7 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        result, keychain_status = SecKeychainGetStatus(self.login_keychain, None)
+        keychain_status = SecKeychainGetStatus(self.login_keychain, None)
 
         return keychain_status & kSecUnlockStateStatus
 
