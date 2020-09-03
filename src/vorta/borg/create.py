@@ -116,7 +116,18 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Your current Borg version does not support ZStd compression.')
             return ret
 
-        cmd = ['borg', 'create', '--list', '--progress', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
+        cmd = [
+            'borg',
+            'create',
+            '--list',
+            '--progress',
+            '--info',
+            '--log-json',
+            '--json',
+            '--filter=AM',
+            '-C',
+            profile.compression,
+        ]
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
