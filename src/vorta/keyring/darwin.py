@@ -32,7 +32,12 @@ class VortaDarwinKeyring(VortaKeyring):
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
         ]
 
+        S_variables = [
+            ('kSecUnlockStateStatus', b'i'),
+        ]
+
         objc.loadBundleFunctions(Security, globals(), S_functions)
+        objc.loadBundleFunctions(Security, globals(), S_variables)
 
         SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
         SecKeychainItemRef = objc.registerCFSignature(
