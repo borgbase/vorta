@@ -61,6 +61,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_started_event.connect(self.backup_started_event)
         self.app.backup_finished_event.connect(self.backup_finished_event)
         self.app.backup_log_event.connect(self.set_status)
+        self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Init profile list
@@ -97,12 +98,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
 
-    def set_status(self, text=None, progress_max=None):
-        if text:
-            self.createProgressText.setText(text)
-        if progress_max is not None:
-            self.createProgress.setRange(0, progress_max)
+    def set_status(self, text):
+        self.createProgressText.setText(text)
         self.createProgressText.repaint()
+
+    def set_progress(self, value=0, fmt=''):
+        self.createProgress.setFormat(self.tr(fmt))
+        self.createProgress.setValue(value)
+        self.createProgress.repaint()
+
 
     def _toggle_buttons(self, create_enabled=True):
         self.createStartBtn.setEnabled(create_enabled)
@@ -156,19 +160,19 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
 
     def backup_started_event(self):
-        self.set_status(progress_max=0)
+        self.set_progress()
         self._toggle_buttons(create_enabled=False)
 
     def backup_finished_event(self):
-        self.set_status(progress_max=100)
+        self.set_progress()
         self._toggle_buttons(create_enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
-        self.set_status(progress_max=100)
         self.set_status(self.tr('Task cancelled'))
+        self.set_progress()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel

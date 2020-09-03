@@ -37,6 +37,9 @@ class BorgCreateThread(BorgThread):
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
+    def progress_event(self, value, fmt):
+        self.app.backup_progress_event.emit(value, fmt)
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_log_event.emit(self.tr('Backup started.'))
@@ -113,7 +116,7 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Your current Borg version does not support ZStd compression.')
             return ret
 
-        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
+        cmd = ['borg', 'create', '--list', '--progress', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py

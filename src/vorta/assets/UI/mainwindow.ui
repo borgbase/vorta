@@ -258,6 +258,9 @@
         <property name="textVisible">
          <bool>true</bool>
         </property>
+        <property name="format">
+         <string/>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -289,5 +292,6 @@
    </property>
   </action>
  </widget>
+ <resources/>
  <connections/>
 </ui>
