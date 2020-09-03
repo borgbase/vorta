@@ -29,7 +29,7 @@ class VortaDarwinKeyring(VortaKeyring):
             ('SecKeychainAddGenericPassword', b'i^{OpaqueSecKeychainRef=}I*I*I*o^^{OpaqueSecKeychainItemRef}'),
             ('SecKeychainOpen', b'i*o^^{OpaqueSecKeychainRef}'),
             ('SecKeychainFindGenericPassword', b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}'),
-            ('SecKeychainGetStatus', b'i{OpaqueSecKeychainRef}o^I'),
+            ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef}o^I'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
