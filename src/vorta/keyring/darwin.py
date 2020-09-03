@@ -34,7 +34,8 @@ class VortaDarwinKeyring(VortaKeyring):
         objc.loadBundleFunctions(Security, globals(), S_functions)
 
         SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
-        SecKeychainItemRef = objc.registerCFSignature('SecKeychainItemRef', b'^{OpaqueSecKeychainItemRef=}', SecKeychainItemGetTypeID())
+        SecKeychainItemRef = objc.registerCFSignature(
+            'SecKeychainItemRef', b'^{OpaqueSecKeychainItemRef=}', SecKeychainItemGetTypeID())
         PassBuffRef = objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
 
         # Get the login keychain
@@ -42,7 +43,8 @@ class VortaDarwinKeyring(VortaKeyring):
         self.login_keychain = login_keychain
 
     def set_password(self, service, repo_url, password):
-        if not self.login_keychain: self._set_keychain()
+        if not self.login_keychain:
+            self._set_keychain()
 
         SecKeychainAddGenericPassword(
             self.login_keychain,
@@ -52,7 +54,8 @@ class VortaDarwinKeyring(VortaKeyring):
             None)
 
     def get_password(self, service, repo_url):
-        if not self.login_keychain: self._set_keychain()
+        if not self.login_keychain:
+            self._set_keychain()
 
         result, password_length, password_buffer, keychain_item = SecKeychainFindGenericPassword(
             self.login_keychain, len(service), service.encode(), len(repo_url), repo_url.encode(), None, None, None)
@@ -61,6 +64,15 @@ class VortaDarwinKeyring(VortaKeyring):
             # We apparently were able to find a password
             password = _resolve_password(password_length, password_buffer)
         return password
+
+    @property
+    def is_unlocked(self):
+        if not self.login_keychain:
+            self._set_keychain()
+
+        result, keychain_status = SecKeyChainGetStatus(self.login_keychain, None)
+
+        return keychain_status & kSecUnlockStateStatus
 
 
 def _resolve_password(password_length, password_buffer):

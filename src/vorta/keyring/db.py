@@ -17,6 +17,7 @@ class VortaDBKeyring(VortaKeyring):
         )
         keyring_entry.password = password
         keyring_entry.save()
+        return bool(self.get_password(service, repo_url))
 
     def get_password(self, service, repo_url):
         from vorta.models import RepoPassword
@@ -29,3 +30,7 @@ class VortaDBKeyring(VortaKeyring):
     @property
     def is_primary(self):
         return False
+
+    @property
+    def is_unlocked(self):
+        return True
