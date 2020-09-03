@@ -107,7 +107,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createProgress.setValue(value)
         self.createProgress.repaint()
 
-
     def _toggle_buttons(self, create_enabled=True):
         self.createStartBtn.setEnabled(create_enabled)
         self.createStartBtn.repaint()
