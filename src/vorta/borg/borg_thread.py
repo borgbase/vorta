@@ -13,7 +13,7 @@ from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
-from vorta.utils import keyring, borg_compat
+from vorta.utils import keyring, borg_compat, pretty_bytes
 from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
@@ -200,6 +200,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             logger.log(level_int, parsed["message"])
                         elif parsed['type'] == 'file_status':
                             self.log_event(f'{parsed["path"]} ({parsed["status"]})')
+                        elif parsed['type'] == 'archive_progress':
+                            msg = (
+                                f'Original: {pretty_bytes(parsed["original_size"])}, '
+                                f'Compressed: {pretty_bytes(parsed["compressed_size"])}, '
+                                f'Deduplicated: {pretty_bytes(parsed["deduplicated_size"])}, '
+                                f'Files: {parsed["nfiles"]}'
+                            )
+                            self.progress_event(0, msg)
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
@@ -242,6 +250,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def log_event(self, msg):
         self.updated.emit(msg)
+
+    def progress_event(self, value, fmt):
+        pass
 
     def started_event(self):
         self.updated.emit(self.tr('Task started'))
