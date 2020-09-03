@@ -1,5 +1,6 @@
 from .borg_thread import BorgThread
 from .info import FakeProfile, FakeRepo
+from vorta.i18n import trans_late
 from vorta.models import RepoModel
 from vorta.utils import keyring
 
@@ -22,6 +23,10 @@ class BorgInitThread(BorgThread):
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
+
+        if params['encryption'] != 'none' and not keyring.is_unlocked:
+            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+            return ret
 
         cmd = ["borg", "init", "--info", "--log-json"]
         cmd.append(f"--encryption={params['encryption']}")

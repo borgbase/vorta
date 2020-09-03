@@ -1,5 +1,6 @@
 from collections import namedtuple
 from .borg_thread import BorgThread
+from vorta.i18n import trans_late
 from vorta.models import RepoModel
 from vorta.utils import keyring
 
@@ -38,6 +39,10 @@ class BorgInfoThread(BorgThread):
             ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
         else:
             ret['password'] = params['password']
+            if not keyring.is_unlocked:
+                ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+                return ret
+
         ret['ok'] = True
         ret['cmd'] = cmd
 
