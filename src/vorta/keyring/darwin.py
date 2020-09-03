@@ -37,7 +37,7 @@ class VortaDarwinKeyring(VortaKeyring):
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
-        objc.loadBundleFunctions(Security, globals(), S_variables)
+        objc.loadBundleVariables(Security, globals(), S_variables)
 
         SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
         SecKeychainItemRef = objc.registerCFSignature(
