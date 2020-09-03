@@ -4,7 +4,6 @@ For Linux not every system has SecretService available, so it will
 fall back to a simple database keystore if needed.
 """
 import sys
-import jeepney
 
 
 class VortaKeyring:
@@ -15,6 +14,8 @@ class VortaKeyring:
             return VortaDarwinKeyring()
         else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
             import secretstorage
+            import jeepney
+
             from .secretstorage import VortaSecretStorageKeyring
             try:
                 return VortaSecretStorageKeyring()
