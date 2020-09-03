@@ -368,5 +368,5 @@ def init_db(con=None):
         s.save()
 
     # Delete old log entries after 3 months.
-    three_months_ago = datetime.now() - timedelta(months=3)
+    three_months_ago = datetime.now() - timedelta(days=90)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
