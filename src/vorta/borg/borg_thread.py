@@ -128,8 +128,15 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
             # Give warning and continue if password is found there.
             if ret['password'] is not None:
-                logger.warning('Found password in database, but secure storage was available. '
+                logger.warning('Found password in database, but secure storage was available.'
                                'Consider re-adding the repo to use it.')
+
+        # Password is required for encryption, cannot continue
+        if ret['password'] is None and profile.repo and profile.repo.encryption != 'none':
+            ret['message'] = trans_late(
+                'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
+                "Try unlinking and re-adding your repo.")
+            return ret
 
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
