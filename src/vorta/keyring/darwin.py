@@ -23,6 +23,7 @@ class VortaDarwinKeyring(VortaKeyring):
         from Foundation import NSBundle
         Security = NSBundle.bundleWithIdentifier_('com.apple.security')
 
+        # https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
         S_functions = [
             ('SecKeychainGetTypeID', b'I'),
             ('SecKeychainItemGetTypeID', b'I'),
