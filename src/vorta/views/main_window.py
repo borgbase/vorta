@@ -86,7 +86,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if BorgThread.is_running():
             self.createStartBtn.setEnabled(False)
             self.cancelButton.setEnabled(True)
-            self.set_status(self.tr('Backup in progress.'), progress_max=0)
+            self.set_status(self.tr('Backup in progress.'))
 
         self.set_icons()
 
