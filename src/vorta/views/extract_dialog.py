@@ -12,7 +12,6 @@ from vorta.views.tree_view import TreeModel
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
-ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
