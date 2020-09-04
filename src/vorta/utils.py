@@ -267,7 +267,7 @@ def password_transparency(encryption):
     }
 
     if encryption != 'none':
-        keyringClass = VortaKeyring.get_keyring().__class__.__name__
+        keyringClass = keyring.__class__.__name__
         messages = {
             'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=platform.get(sys.platform))),  # noqa
             'VortaSecretStorageKeyring': 'the Secret Service API',
