@@ -84,7 +84,7 @@ class VortaApp(QtSingleApplication):
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-            self.backup_log_event.emit(translate('messages', msg['message']))
+            self.backup_progress_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
         self.main_window = MainWindow(self)
