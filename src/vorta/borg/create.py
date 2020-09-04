@@ -37,8 +37,8 @@ class BorgCreateThread(BorgThread):
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
-    def progress_event(self, value, fmt):
-        self.app.backup_progress_event.emit(value, fmt)
+    def progress_event(self, msg):
+        self.app.backup_progress_event.emit(msg)
 
     def started_event(self):
         self.app.backup_started_event.emit()

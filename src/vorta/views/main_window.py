@@ -102,9 +102,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createProgressText.setText(text)
         self.createProgressText.repaint()
 
-    def set_progress(self, value=0, fmt=''):
-        self.createProgress.setFormat(self.tr(fmt))
-        self.createProgress.setValue(value)
+    def set_progress(self, text=''):
+        self.createProgress.setText(self.tr(text))
         self.createProgress.repaint()
 
     def _toggle_buttons(self, create_enabled=True):

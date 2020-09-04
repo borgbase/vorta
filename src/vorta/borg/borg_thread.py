@@ -207,7 +207,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                                 f'Deduplicated: {pretty_bytes(parsed["deduplicated_size"])}, '
                                 f'Files: {parsed["nfiles"]}'
                             )
-                            self.progress_event(0, msg)
+                            self.progress_event(msg)
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
@@ -251,7 +251,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def log_event(self, msg):
         self.updated.emit(msg)
 
-    def progress_event(self, value, fmt):
+    def progress_event(self, msg):
         pass
 
     def started_event(self):
