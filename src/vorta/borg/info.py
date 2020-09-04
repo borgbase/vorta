@@ -2,6 +2,7 @@ from collections import namedtuple
 from .borg_thread import BorgThread
 from vorta.models import RepoModel
 from vorta.utils import keyring
+import os
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
@@ -33,6 +34,8 @@ class BorgInfoThread(BorgThread):
 
         cmd = ["borg", "info", "--info", "--json", "--log-json"]
         cmd.append(profile.repo.url)
+
+        os.environ['BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK'] = "yes"
 
         if params['password'] == '':
             ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
