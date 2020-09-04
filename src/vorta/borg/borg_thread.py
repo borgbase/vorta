@@ -195,23 +195,23 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                     try:
                         parsed = json.loads(line)
                         if parsed['type'] == 'log_message':
-                            self.log_event(f'{parsed["levelname"]}: {parsed["message"]}')
+                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}')
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
                         elif parsed['type'] == 'file_status':
-                            self.log_event(f'{parsed["path"]} ({parsed["status"]})')
+                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f'Original: {pretty_bytes(parsed["original_size"])}, '
-                                f'Compressed: {pretty_bytes(parsed["compressed_size"])}, '
-                                f'Deduplicated: {pretty_bytes(parsed["deduplicated_size"])}, '
-                                f'Files: {parsed["nfiles"]}'
+                                f"Files: {parsed['nfiles']}, "
+                                f"Original: {pretty_bytes(parsed['original_size'])}, "
+                                f"Deduplicated: {pretty_bytes(parsed['deduplicated_size'])}, "
+                                f"Compressed: {pretty_bytes(parsed['compressed_size'])}, "
                             )
-                            self.progress_event(0, msg)
+                            self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.log_event(msg)
+                            self.app.backup_log_event.emit(msg)
                             logger.warning(msg)
 
             if p.poll() is not None:
@@ -246,12 +246,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             self.terminate()
 
     def process_result(self, result):
-        pass
-
-    def log_event(self, msg):
-        self.updated.emit(msg)
-
-    def progress_event(self, value, fmt):
         pass
 
     def started_event(self):

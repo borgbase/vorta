@@ -7,6 +7,7 @@ from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, network_status_monitor
 from vorta.views.utils import get_colored_icon
+from vorta.views.partials.loading_button import LoadingButton
 
 from .archive_tab import ArchiveTab
 from .misc_tab import MiscTab
@@ -27,6 +28,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
         self.app = parent
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
+        self.createStartBtn = LoadingButton(self.tr("Start Backup"))
+        self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
+        self.createStartBtn.setGif(get_asset("icons/loading"))
 
         # Use previous window state
         previous_window_width = SettingsModel.get(key='previous_window_width')
@@ -85,8 +89,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # Connect to existing thread.
         if BorgThread.is_running():
             self.createStartBtn.setEnabled(False)
+            self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
-            self.set_status(self.tr('Backup in progress.'), progress_max=0)
+            self.set_status(self.tr('Backup in progress.'))
 
         self.set_icons()
 
@@ -102,12 +107,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createProgressText.setText(text)
         self.createProgressText.repaint()
 
-    def set_progress(self, value=0, fmt=''):
-        self.createProgress.setFormat(self.tr(fmt))
-        self.createProgress.setValue(value)
+    def set_progress(self, fmt=''):
+        self.createProgress.setText(fmt)
         self.createProgress.repaint()
 
     def _toggle_buttons(self, create_enabled=True):
+        if create_enabled:
+            self.createStartBtn.stop()
+        else:
+            self.createStartBtn.start()
         self.createStartBtn.setEnabled(create_enabled)
         self.createStartBtn.repaint()
         self.cancelButton.setEnabled(not create_enabled)
@@ -159,11 +167,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
 
     def backup_started_event(self):
-        self.set_progress()
         self._toggle_buttons(create_enabled=False)
+        self.set_status('')
 
     def backup_finished_event(self):
-        self.set_progress()
         self._toggle_buttons(create_enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
@@ -171,7 +178,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_status(self.tr('Task cancelled'))
-        self.set_progress()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
