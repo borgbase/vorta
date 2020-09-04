@@ -64,7 +64,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.app.backup_started_event.connect(self.backup_started_event)
         self.app.backup_finished_event.connect(self.backup_finished_event)
-        self.app.backup_log_event.connect(self.set_status)
+        self.app.backup_log_event.connect(self.set_log)
         self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
@@ -103,13 +103,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
 
-    def set_status(self, text):
-        self.createProgressText.setText(text)
-        self.createProgressText.repaint()
+    def set_progress(self, text=''):
+        self.progressText.setText(text)
+        self.progressText.repaint()
 
-    def set_progress(self, fmt=''):
-        self.createProgress.setText(fmt)
-        self.createProgress.repaint()
+    def set_log(self, text=''):
+        self.logText.setText(text)
+        self.logText.repaint()
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
@@ -168,7 +168,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
-        self.set_status('')
+        self.set_log('')
 
     def backup_finished_event(self):
         self._toggle_buttons(create_enabled=True)
@@ -177,7 +177,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
-        self.set_status(self.tr('Task cancelled'))
+        self.set_log(self.tr('Task cancelled'))
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
