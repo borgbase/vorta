@@ -8,11 +8,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QHeaderView
 
 from vorta.utils import get_asset, get_dict_from_list, nested_dict
-from vorta.views.tree_view import TreeModel
+from vorta.views.partials.tree_view import TreeModel
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
-ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
