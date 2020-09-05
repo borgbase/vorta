@@ -32,14 +32,14 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            self.app.backup_log_event.emit(self.tr('Backup finished.'))
+            self.app.backup_progress_event.emit(self.tr('Backup finished.'))
 
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
+    def progress_event(self, fmt):
+        self.app.backup_progress_event.emit(fmt)
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit(self.tr('Backup started.'))
+        self.app.backup_progress_event.emit(self.tr('Backup started.'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
@@ -114,7 +114,18 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Your current Borg version does not support ZStd compression.')
             return ret
 
-        cmd = ['borg', 'create', '--list', '--info', '--log-json', '--json', '--filter=AM', '-C', profile.compression]
+        cmd = [
+            'borg',
+            'create',
+            '--list',
+            '--progress',
+            '--info',
+            '--log-json',
+            '--json',
+            '--filter=AM',
+            '-C',
+            profile.compression,
+        ]
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py

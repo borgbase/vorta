@@ -37,6 +37,7 @@ class VortaApp(QtSingleApplication):
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str)
+    backup_progress_event = QtCore.pyqtSignal(str)
 
     def __init__(self, args_raw, single_app=False):
 
@@ -116,7 +117,7 @@ class VortaApp(QtSingleApplication):
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-            self.backup_log_event.emit(translate('messages', msg['message']))
+            self.backup_progress_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
         self.main_window = MainWindow(self)

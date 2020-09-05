@@ -5,17 +5,14 @@ from vorta.models import ArchiveModel, RepoModel
 
 class BorgListRepoThread(BorgThread):
 
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
-
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit(self.tr('Refreshing archives...'))
+        self.app.backup_progress_event.emit(self.tr('Refreshing archives...'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_log_event.emit(self.tr('Refreshing archives done.'))
+        self.app.backup_progress_event.emit(self.tr('Refreshing archives done.'))
 
     @classmethod
     def prepare(cls, profile):
