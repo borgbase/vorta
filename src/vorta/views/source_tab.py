@@ -1,6 +1,7 @@
 from PyQt5 import uic
 from ..models import SourceFileModel, BackupProfileMixin
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, FilePathInfoAsync
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
 import os
 
