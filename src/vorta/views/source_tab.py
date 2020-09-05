@@ -1,7 +1,7 @@
 from PyQt5 import uic
 from ..models import SourceFileModel, BackupProfileMixin
-from ..utils import get_asset, choose_file_dialog
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from ..utils import get_asset, choose_file_dialog, pretty_bytes, FilePathInfoAsync
+from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
 import os
 
 uifile = get_asset('UI/sourcetab.ui')
@@ -9,9 +9,26 @@ SourceUI, SourceBase = uic.loadUiType(uifile)
 
 
 class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
+    updateThreads = []
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
+        
+        headerTxt=["Path","Type","Size","Folder/\nFiles Count"]
+
+        self.sourceFilesWidget.setColumnCount(len(headerTxt))
+        header = self.sourceFilesWidget.horizontalHeader()
+
+        header.setVisible(True)
+        header.setSortIndicatorShown(1)
+        
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+
+        self.sourceFilesWidget.setHorizontalHeaderLabels(headerTxt)
 
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
@@ -20,17 +37,36 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         self.populate_from_profile()
+        
+    def set_path_info(self,path,datasize,filecount):
+        items = self.sourceFilesWidget.findItems(path,QtCore.Qt.MatchExactly)
+        for item in items:
+            self.sourceFilesWidget.item(item.row(),2).setText(pretty_bytes(datasize))
+            self.sourceFilesWidget.item(item.row(),3).setText(format(filecount))
+
+    def add_source_to_table(self,path):
+        indexRow = self.sourceFilesWidget.rowCount()
+        self.sourceFilesWidget.insertRow(indexRow)
+        itemPath = QTableWidgetItem(path)
+        self.sourceFilesWidget.setItem(indexRow,0,itemPath)
+        self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("DIR"))
+        self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("load..."))
+        self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("load..."))
+        getDir = FilePathInfoAsync(path)
+        getDir.signal.connect(self.set_path_info)
+        self.updateThreads.append(getDir)
+        getDir.start()
 
     def populate_from_profile(self):
         profile = self.profile()
         self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
-        self.sourceFilesWidget.clear()
+        self.sourceFilesWidget.clearContents()
         self.excludePatternsField.clear()
         self.excludeIfPresentField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
-            self.sourceFilesWidget.addItem(source.dir)
+            self.add_source_to_table(source.dir)
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
@@ -43,7 +79,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             for dir in dirs:
                 new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
                 if created:
-                    self.sourceFilesWidget.addItem(dir)
+                    self.add_source_to_table(dir)
                     new_source.save()
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
