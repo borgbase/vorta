@@ -43,9 +43,9 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
 
     assert not tab.checkButton.isEnabled()
 
-    qtbot.waitUntil(lambda: main.createProgressText.text() == 'Refreshing archives done.', timeout=3000)
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', timeout=3000)
     assert ArchiveModel.select().count() == 6
-    assert main.createProgressText.text() == 'Refreshing archives done.'
+    assert main.progressText.text() == 'Refreshing archives done.'
     assert tab.checkButton.isEnabled()
 
 
@@ -60,7 +60,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.pruneButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Refreshing archives done.'), timeout=5000)
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), timeout=5000)
 
 
 def test_check(qapp, mocker, borg_json_output, qtbot):
@@ -75,7 +75,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
 
     qtbot.mouseClick(tab.checkButton, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith(success_text), timeout=3000)
+    qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), timeout=3000)
 
 
 def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
