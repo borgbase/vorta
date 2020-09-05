@@ -4,6 +4,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
 from vorta.utils import get_asset, keyring
+from vorta.keyring.db import VortaDBKeyring
 from .utils import get_colored_icon
 from pathlib import Path
 import json
@@ -27,7 +28,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.overrideExisting.hide()
         self.url = str(Path.home()) if self.profile.repo is None else self.profile.repo.url
 
-        if self.profile.repo is not None and self.profile.repo.encryption == 'none':
+        if self.profile.repo is None or VortaDBKeyring().get_password('vorta-repo', self.profile.repo.url) is None:
             self.storePassword.hide()
 
     def get_file(self):
@@ -187,6 +188,10 @@ class RestoreWindow(BackupWindow):
                 self.accept()
             except (json.decoder.JSONDecodeError, KeyError):
                 self.errors.setText(self.tr("Invalid backup file"))
+            except AttributeError as e:
+                self.errors.setText(
+                    self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
+                            "with the following error: \n {}").format(str(e)))
             except VersionException:
                 self.errors.setText(self.tr("Cannot use newer backup on older version"))
             except PermissionError:
