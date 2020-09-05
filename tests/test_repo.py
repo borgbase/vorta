@@ -36,7 +36,7 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    assert main.createProgressText.text() == 'Add a backup repository first.'
+    assert main.progressText.text() == 'Add a backup repository first.'
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
@@ -98,7 +98,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.createProgressText.text().startswith('Backup finished.'), timeout=3000)
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Backup finished.'), timeout=3000)
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)
     assert EventLogModel.select().count() == 1
     assert ArchiveModel.select().count() == 3
