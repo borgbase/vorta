@@ -3,17 +3,14 @@ from .borg_thread import BorgThread
 
 class BorgDeleteThread(BorgThread):
 
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
-
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit(self.tr('Deleting archive...'))
+        self.app.backup_progress_event.emit(self.tr('Deleting archive...'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_log_event.emit(self.tr('Archive deleted.'))
+        self.app.backup_progress_event.emit(self.tr('Archive deleted.'))
 
     @classmethod
     def prepare(cls, profile):
