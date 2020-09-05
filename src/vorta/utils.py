@@ -17,6 +17,7 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
+from PyQt5.QtCore import QFileInfo, QDir, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -34,6 +35,53 @@ logger.info('Using %s NetworkStatusMonitor implementation.', network_status_moni
 
 borg_compat = BorgCompatibility()
 
+class FilePathInfoAsync(QThread):
+    signal = pyqtSignal(str,int,int)
+    def __init__(self,path):
+        self.path = path
+        QThread.__init__(self)
+        self.exiting = False
+
+    def run(self):
+        logger.info("running thread to get path=%s...",self.path)
+        self.filecount = 0
+        self.size, self.filecount=get_path_datasize(self.path)
+        self.sleep(5)
+        self.signal.emit(self.path,self.size,self.filecount)        
+
+
+def get_directory_size(dirPath):
+    dataSize = 0
+    qDir=QDir(dirPath)
+    qDir.setFilter(QDir.AllEntries | QDir.Hidden | QDir.System | QDir.NoDotAndDotDot)
+    filescount=qDir.count()
+    logger.info("file in dir=%u",filescount)
+
+
+    for fileInfo in qDir.entryInfoList():
+        if fileInfo.isDir():
+            logger.info("foldername %s",fileInfo.absoluteFilePath())
+            dataSize, ftmp = get_directory_size(fileInfo.absoluteFilePath())
+            filescount += ftmp
+        else:
+            logger.info("filename %s size=%u",fileInfo.absoluteFilePath(),fileInfo.size())
+            dataSize += fileInfo.size()
+        
+    return dataSize, filescount
+
+def get_path_datasize(path):
+    fileInfo = QFileInfo(path)
+    folderSize=0
+
+    if fileInfo.isDir():
+        folderSize, filescount = get_directory_size(fileInfo.absoluteFilePath())
+        logger.info("path (folder) %s %u elements size now=%u (%s)",fileInfo.absoluteFilePath(),filescount,folderSize,pretty_bytes(folderSize))
+    else:
+        logger.info("path (file) %s size=%u",fileInfo.path(),fileInfo.size())
+        folderSize = fileInfo.size()
+        filescount = 1
+
+    return folderSize, filescount
 
 def nested_dict():
     """
