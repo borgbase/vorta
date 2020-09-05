@@ -4,17 +4,14 @@ from vorta.utils import format_archive_name
 
 class BorgPruneThread(BorgThread):
 
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
-
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_log_event.emit(self.tr('Pruning old archives...'))
+        self.app.backup_progress_event.emit(self.tr('Pruning old archives...'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_log_event.emit(self.tr('Pruning done.'))
+        self.app.backup_progress_event.emit(self.tr('Pruning done.'))
 
     @classmethod
     def prepare(cls, profile):
