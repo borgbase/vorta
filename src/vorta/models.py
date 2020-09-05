@@ -8,6 +8,7 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta as rd
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
@@ -26,6 +27,7 @@ class JSONField(pw.TextField):
 
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
+
     def db_value(self, value):
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
@@ -38,7 +40,7 @@ class JSONField(pw.TextField):
 class RepoModel(pw.Model):
     """A single remote repo with unique URL."""
     url = pw.CharField(unique=True)
-    added_at = pw.DateTimeField(default=datetime.utcnow)
+    added_at = pw.DateTimeField(default=datetime.now)
     encryption = pw.CharField(null=True)
     unique_size = pw.IntegerField(null=True)
     unique_csize = pw.IntegerField(null=True)
@@ -177,6 +179,7 @@ class SettingsModel(pw.Model):
 
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
+
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
 
@@ -366,5 +369,5 @@ def init_db(con=None):
         s.save()
 
     # Delete old log entries after 3 months.
-    three_months_ago = datetime.now() - timedelta(days=180)
+    three_months_ago = datetime.now() - rd(months=3)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
