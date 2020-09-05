@@ -205,7 +205,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                                 f"Files: {parsed['nfiles']}, "
                                 f"Original: {pretty_bytes(parsed['original_size'])}, "
                                 f"Deduplicated: {pretty_bytes(parsed['deduplicated_size'])}, "
-                                f"Compressed: {pretty_bytes(parsed['compressed_size'])}, "
+                                f"Compressed: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
