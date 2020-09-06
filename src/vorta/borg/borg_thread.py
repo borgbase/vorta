@@ -1,5 +1,3 @@
-from vorta.keyring.db import VortaDBKeyring
-from vorta.utils import keyring, borg_compat, pretty_bytes
 import json
 import os
 import sys
@@ -15,6 +13,8 @@ from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
+from vorta.utils import keyring, borg_compat, pretty_bytes
+from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
@@ -127,7 +127,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
             # Give warning and continue if password is found there.
             if ret['password'] is not None:
-                logger.warning('Found password in database, but secure storage was available.'
+                logger.warning('Found password in database, but secure storage was available. '
                                'Consider re-adding the repo to use it.')
 
         # Password is required for encryption, cannot continue
