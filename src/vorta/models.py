@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 15
+SCHEMA_VERSION = 16
 
 db = pw.Proxy()
 
@@ -106,9 +106,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
-    dirSize = pw.IntegerField()
-    dirFilesCount = pw.IntegerField()
-    dirType = pw.BooleanField()
+    dir_size = pw.IntegerField()
+    dir_files_count = pw.IntegerField()
+    dir_type_isdir = pw.BooleanField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
@@ -363,6 +363,17 @@ def init_db(con=None):
             current_schema, 15,
             migrator.add_column(BackupProfileModel._meta.table_name,
                                 'dont_run_on_metered_networks', pw.BooleanField(default=True))
+        )
+
+    if current_schema.version < 16:
+        _apply_schema_update(
+            current_schema, 16,
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'dir_size', pw.IntegerField(default = 0)),
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'dir_files_count', pw.IntegerField(default = 0)),
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'dir_type_isdir', pw.BooleanField(default = False))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.
