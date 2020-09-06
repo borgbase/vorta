@@ -51,7 +51,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def password_transparency(self):
-        self.passwordLabel.setText(password_transparency(self.values.get('encryption')))
+        self.passwordLabel.setText(translate('utils', password_transparency(self.values.get('encryption'))))
 
     def choose_local_backup_folder(self):
         def receive():
