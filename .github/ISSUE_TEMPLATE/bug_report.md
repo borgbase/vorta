@@ -18,7 +18,11 @@ Steps to reproduce the behavior:
 4. See error
 
 **Desktop (please complete the following information):**
- - OS: [e.g. Ubuntu]
+| OS            | Vorta Version     | Borg Version        |
+| ---           | ---               | ---                 |
+| [e.g. Ubuntu] |  |   |
+
+Vorta and Borg versions can be found in Main Window > Misc Tab
 
 **Additional context**
 If appropriate include logs. Can be found in Main Window > Misc Tab > Log.
