@@ -87,9 +87,6 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         # dict to json string
         return json.dumps(profile_dict, default=self.converter, indent=4)
 
-    def get_schema_version(self, jsonData):
-        return json.loads(jsonData)['SchemaVersion']['version']
-
     def json_to_profile(self, jsonData):
         # Json string to dict
         profile_dict = json.loads(jsonData)
@@ -182,6 +179,9 @@ class RestoreWindow(BackupWindow):
         self.storePassword.hide()
 
     def run(self):
+        def get_schema_version(jsonData):
+            return json.loads(jsonData)['SchemaVersion']['version']
+
         with open(self.locationLabel.text(), 'r') as file:
             try:
                 jsonStr = file.read()
@@ -194,7 +194,7 @@ class RestoreWindow(BackupWindow):
             except AttributeError as e:
                 # Runs when model upgrading code in json_to_profile incomplete
                 schema_message = self.tr("Current schema: {0}\n Backup schema: {1}".format(
-                    SCHEMA_VERSION, self.get_schema_version(jsonStr)))
+                    SCHEMA_VERSION, get_schema_version(jsonStr)))
                 self.errors.setText(
                     self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
                             "with the following error: \n {0} \n {1}").format(str(e), schema_message))
