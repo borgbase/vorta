@@ -271,7 +271,7 @@ def password_transparency(encryption):
         messages = {
             'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=db_message.get(sys.platform))),  # noqa
             'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
-            'VortaDarwinKeyring': platform['darwin'],
+            'VortaDarwinKeyring': db_message['darwin'],
             'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
             'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
         }
