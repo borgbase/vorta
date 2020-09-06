@@ -25,7 +25,8 @@ class VortaKWallet5Keyring(VortaKeyring):
         self.get_result("writePassword", args=[self.handle, self.folderName, repo_url, password, service])
 
     def get_password(self, service, repo_url):
-        if not (self.open() and self.get_result("hasEntry", args=[self.handle, self.folderName, repo_url, service])):
+        if not (self.is_unlocked and self.get_result("hasEntry",
+                                                     args=[self.handle, self.folderName, repo_url, service])):
             return None
         return self.get_result("readPassword", args=[self.handle, self.folderName, repo_url, service])
 
@@ -36,7 +37,8 @@ class VortaKWallet5Keyring(VortaKeyring):
             result = self.iface.call(QtDBus.QDBus.AutoDetect, method)
         return result.arguments()[0]
 
-    def open(self):
+    @property
+    def is_unlocked(self):
         self.get_handle()
         return self.handle > 0
 
