@@ -20,7 +20,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
-from vorta.i18n import trans_late
+from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
@@ -162,7 +162,7 @@ def parse_args():
                         help="Show version and exit.")
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
-                        help="Fork to background and don't open window on startup.")
+                        help="Fork to backgtrans_lateround and don't open window on startup.")
 
     return parser.parse_known_args()[0]
 
@@ -251,34 +251,34 @@ def validate_passwords(firstPass, secondPass):
     passLong = len(firstPass) > 8
 
     if not passLong and not passEqual:
-        return trans_late('utils', "Passwords must be identical and greater than 8 characters long")
+        return translate('utils', "Passwords must be identical and greater than 8 characters long")
     if not passEqual:
-        return trans_late('utils', "Passwords must be identical")
+        return translate('utils', "Passwords must be identical")
     if not passLong:
-        return trans_late('utils', "Passwords must be greater than 8 characters long")
+        return translate('utils', "Passwords must be greater than 8 characters long")
 
     return ""
 
 
 def password_transparency(encryption):
     db_message = {
-        'linux': trans_late('utils', 'programs with the Secret Service API, such as KeepassXC'),
-        'darwin': trans_late('utils', 'Keychain Access')
+        'linux': translate('utils', 'programs with the Secret Service API, such as KeepassXC'),
+        'darwin': translate('utils', 'Keychain Access')
     }
 
     if encryption != 'none':
         keyringClass = keyring.__class__.__name__
         messages = {
-            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=db_message.get(sys.platform))),  # noqa
-            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
-            'VortaDarwinKeyring': platform['darwin'],
-            'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
-            'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
+            'VortaDBKeyring': translate('utils', 'plaintext on disk.\nVorta supports {storage} for password storage'.format(storage=db_message.get(sys.platform))),  # noqa
+            'VortaSecretStorageKeyring': translate('utils', 'the Secret Service API'),
+            'VortaDarwinKeyring': db_message['darwin'],
+            'VortaKWallet5Keyring': translate('utils', 'KWallet 5'),
+            'VortaKWallet4Keyring': translate('utils', 'KWallet 4')
         }
         # Just in case some other keyring support is added
         keyringName = messages.get(keyringClass,
-                                   trans_late('utils',
-                                              'somewhere that was not anticipated. Please file a bug report on Github'))
-        return trans_late('utils', 'The password will be stored in %s') % keyringName
+                                   translate('utils',
+                                             'somewhere that was not anticipated. Please file a bug report on Github'))
+        return translate('utils', 'The password will be stored in %s') % keyringName
     else:
         return ""
