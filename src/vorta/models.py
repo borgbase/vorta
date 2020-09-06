@@ -106,6 +106,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
+    dirSize = pw.IntegerField()
+    dirFilesCount = pw.IntegerField()
+    dirType = pw.BooleanField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
