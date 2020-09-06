@@ -193,8 +193,8 @@ class RestoreWindow(BackupWindow):
                 self.errors.setText(self.tr("Invalid backup file"))
             except AttributeError as e:
                 # Runs when model upgrading code in json_to_profile incomplete
-                schema_message = self.tr("Current schema: {0}\n Backup schema: {1}".format(
-                    SCHEMA_VERSION, get_schema_version(jsonStr)))
+                schema_message = "Current schema: {0}\n Backup schema: {1}".format(
+                    SCHEMA_VERSION, get_schema_version(jsonStr))
                 self.errors.setText(
                     self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
                             "with the following error: \n {0} \n {1}").format(str(e), schema_message))
