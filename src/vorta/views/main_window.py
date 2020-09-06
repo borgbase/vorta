@@ -87,7 +87,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
-        if BorgThread.is_running():
+        if BorgThread.is_running() and self.isVisible():
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
