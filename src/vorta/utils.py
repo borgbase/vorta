@@ -162,7 +162,7 @@ def parse_args():
                         help="Show version and exit.")
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
-                        help="Fork to backgtrans_lateround and don't open window on startup.")
+                        help="Fork to background and don't open window on startup.")
 
     return parser.parse_known_args()[0]
 
