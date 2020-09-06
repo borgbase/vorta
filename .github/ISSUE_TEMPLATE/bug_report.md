@@ -18,9 +18,9 @@ Steps to reproduce the behavior:
 4. See error
 
 **Desktop (please complete the following information):**
-| OS            | Vorta Version     | Borg Version        |
-| ---           | ---               | ---                 |
-| [e.g. Ubuntu] |  |   |
+- OS:
+- Vorta version:
+- Borg version:
 
 Vorta and Borg versions can be found in Main Window > Misc Tab
 
