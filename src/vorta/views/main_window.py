@@ -87,11 +87,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
-        if BorgThread.is_running() and self.isVisible():
+        if BorgThread.is_running():
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
-            self.set_status(self.tr('Backup in progress.'))
+            if self.isVisible():
+                self.set_status(self.tr('Backup in progress.'))
 
         self.set_icons()
 
