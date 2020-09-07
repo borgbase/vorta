@@ -15,10 +15,10 @@ BackupWindowUI, BackupWindowBase = uic.loadUiType(uifile)
 
 
 class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
-    def __init__(self, profile):
+    def __init__(self, parent):
         super().__init__()
         self.setupUi(self)
-        self.profile = profile
+        self.parent = parent
         self.setWindowTitle(self.tr("Backup Profile"))
         self.fileButton.setIcon(get_colored_icon('folder-open'))
         self.fileButton.clicked.connect(self.get_file)
@@ -26,23 +26,29 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.cancelButton.clicked.connect(self.reject)
         self.saveButton.setEnabled(False)
         self.overrideExisting.hide()
-        self.url = str(Path.home()) if self.profile.repo is None else self.profile.repo.url
 
-        if self.profile.repo is None or VortaDBKeyring().get_password('vorta-repo', self.profile.repo.url) is None:
+        profile = self.profile()
+        self.url = str(Path.home()) if profile.repo is None else profile.repo.url
+
+        if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.hide()
 
+    def profile(self):
+        return self.parent.current_profile
+
     def get_file(self):
-        self.fileName = QFileDialog.getSaveFileName(
+        fileName = QFileDialog.getSaveFileName(
             self,
             self.tr("Save profile"),
             self.url,
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
-        if self.fileName:
-            self.locationLabel.setText(self.fileName)
-        self.saveButton.setEnabled(bool(self.fileName))
+        if fileName:
+            self.locationLabel.setText(fileName)
+        self.saveButton.setEnabled(bool(fileName))
 
     def run(self):
-        json = self.profile_to_json(self.profile)
+        profile = self.profile()
+        json = self.profile_to_json(profile)
         with open(self.locationLabel.text(), 'w') as file:
             try:
                 file.write(json)
@@ -171,8 +177,8 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
 
 class RestoreWindow(BackupWindow):
-    def __init__(self, profile):
-        super().__init__(profile)
+    def __init__(self, parent):
+        super().__init__(parent)
         self.setWindowTitle(self.tr("Restore Profile"))
         self.saveButton.setText(self.tr("Open"))
         self.overrideExisting.show()
@@ -204,14 +210,14 @@ class RestoreWindow(BackupWindow):
                 self.errors.setText(self.tr("Cannot read backup file"))
 
     def get_file(self):
-        self.fileName = QFileDialog.getOpenFileName(
+        fileName = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
             self.url,
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
-        if self.fileName:
-            self.locationLabel.setText(self.fileName)
-        self.saveButton.setEnabled(bool(self.fileName))
+        if fileName:
+            self.locationLabel.setText(fileName)
+        self.saveButton.setEnabled(bool(fileName))
 
 
 class VersionException(Exception):

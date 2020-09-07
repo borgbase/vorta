@@ -185,12 +185,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
 
     def profile_backup_action(self):
-        window = BackupWindow(BackupProfileModel.get(id=self.profileSelector.currentData()))
+        window = BackupWindow(parent=self)
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
 
     def profile_restore_action(self):
-        window = RestoreWindow(BackupProfileModel.get(id=self.profileSelector.currentData()))
+        window = RestoreWindow(parent=self)
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
         if window.exec_():
