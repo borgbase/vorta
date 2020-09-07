@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel
-from vorta.utils import get_asset, uses_dark_mode
+from vorta.utils import get_asset
 
 
 class TrayMenu(QSystemTrayIcon):
@@ -70,7 +70,6 @@ class TrayMenu(QSystemTrayIcon):
         """
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
-        use_white_icon = 'GNOME' in os.environ.get('XDG_CURRENT_DESKTOP', '') or uses_dark_mode()
-        icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_white_icon else 'dark'}.png"
+        icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
