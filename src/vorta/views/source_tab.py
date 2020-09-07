@@ -2,6 +2,7 @@ from PyQt5 import uic
 from ..models import SourceFileModel, BackupProfileMixin
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, FilePathInfoAsync
 from PyQt5 import QtCore
+from PyQt5.QtCore import QFileInfo
 from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
 import os
 
@@ -16,7 +17,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         
-        headerTxt=["Path","Type","Size","Folder/\nFiles Count"]
+        headerTxt=["Path","Type","Size","Elements Count"]
 
         self.sourceFilesWidget.setColumnCount(len(headerTxt))
         header = self.sourceFilesWidget.horizontalHeader()
@@ -39,24 +40,40 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         self.populate_from_profile()
         
-    def set_path_info(self,path,datasize,filecount):
+    def set_path_info(self,path,data_size,files_count):
         items = self.sourceFilesWidget.findItems(path,QtCore.Qt.MatchExactly)
         for item in items:
-            self.sourceFilesWidget.item(item.row(),2).setText(pretty_bytes(datasize))
-            self.sourceFilesWidget.item(item.row(),3).setText(format(filecount))
+            self.sourceFilesWidget.item(item.row(),2).setText(pretty_bytes(data_size))
+            self.sourceFilesWidget.item(item.row(),3).setText(format(files_count))
+            db_item = SourceFileModel.get(dir=path)
+            db_item.dir_size = data_size
+            db_item.dir_files_count = files_count
+            db_item.save()
+            
 
-    def add_source_to_table(self,path):
+    def add_source_to_table(self,source,update_data):
         indexRow = self.sourceFilesWidget.rowCount()
         self.sourceFilesWidget.insertRow(indexRow)
-        itemPath = QTableWidgetItem(path)
+        itemPath = QTableWidgetItem(source.dir)
         self.sourceFilesWidget.setItem(indexRow,0,itemPath)
-        self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("DIR"))
-        self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("load..."))
-        self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("load..."))
-        getDir = FilePathInfoAsync(path)
-        getDir.signal.connect(self.set_path_info)
-        self.updateThreads.append(getDir)
-        getDir.start()
+        if source.path_isdir == True:
+            self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("<DIR>"))
+        else:
+            self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("<File>"))
+        if update_data == True:
+            self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("load..."))
+            self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("load..."))
+            getDir = FilePathInfoAsync(source.dir)
+            getDir.signal.connect(self.set_path_info)
+            self.updateThreads.append(getDir) # this is ugly, is there a better way to keep the thread object?
+            getDir.start()
+        else: # Use cached data from DB
+            if source.dir_size < 0:
+                self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("N/A"))
+                self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("N/A"))
+            else:
+                self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem(pretty_bytes(source.dir_size)))
+                self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem(format(source.dir_files_count)))
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -67,7 +84,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
-            self.add_source_to_table(source.dir)
+            self.add_source_to_table(source,False)
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
@@ -78,9 +95,13 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         def receive():
             dirs = dialog.selectedFiles()
             for dir in dirs:
-                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
+                new_source, created = SourceFileModel.get_or_create(dir=dir, 
+                                                                    dir_size=-1, 
+                                                                    dir_files_count=-1, 
+                                                                    path_isdir=QFileInfo(dir).isDir(), 
+                                                                    profile=self.profile())
                 if created:
-                    self.add_source_to_table(dir)
+                    self.add_source_to_table(new_source,True)
                     new_source.save()
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
@@ -88,14 +109,14 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         dialog.open(receive)
 
     def source_remove(self):
-        indexes = self.sourceFilesWidget.selectionModel().selectedIndexes()
+        indexes = self.sourceFilesWidget.selectionModel().selectedRows()
         # sort indexes, starting with lowest
         indexes.sort()
-        # remove each selected entry, starting with highest index (otherways, higher indexes become invalid)
+        # remove each selected row, starting with highest index (otherways, higher indexes become invalid)
         for index in reversed(indexes):
-            item = self.sourceFilesWidget.takeItem(index.row())
-            db_item = SourceFileModel.get(dir=item.text())
+            db_item = SourceFileModel.get(dir=self.sourceFilesWidget.item(index.row(),0).text())
             db_item.delete_instance()
+            self.sourceFilesWidget.removeRow(index.row())
 
     def save_exclude_patterns(self):
         profile = self.profile()
