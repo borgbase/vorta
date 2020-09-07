@@ -106,9 +106,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
-    dir_size = pw.IntegerField()
-    dir_files_count = pw.IntegerField()
-    dir_type_isdir = pw.BooleanField()
+    dir_size = pw.BigIntegerField()
+    dir_files_count = pw.BigIntegerField()
+    path_isdir = pw.BooleanField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
@@ -369,11 +369,11 @@ def init_db(con=None):
         _apply_schema_update(
             current_schema, 16,
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'dir_size', pw.IntegerField(default = 0)),
+                                'dir_size', pw.BigIntegerField(default = -1)),
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'dir_files_count', pw.IntegerField(default = 0)),
+                                'dir_files_count', pw.BigIntegerField(default = -1)),
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'dir_type_isdir', pw.BooleanField(default = False))
+                                'path_isdir', pw.BooleanField(default = False))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.
