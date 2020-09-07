@@ -71,7 +71,7 @@ class TrayMenu(QSystemTrayIcon):
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
         use_white_icon = 'GNOME' in os.environ.get(
-            'XDG_CURRENT_DESKTOP', '') or uses_dark_mode() or SettingsModel.get_or_none(key='use_light_icon')
+            'XDG_CURRENT_DESKTOP', '') or uses_dark_mode() or SettingsModel.get_or_none(key='use_light_icon').value
         icon_name = f"icons/hdd-o{'-active' if active else ''}-{'light' if use_white_icon else 'dark'}.png"
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
