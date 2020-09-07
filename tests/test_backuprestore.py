@@ -3,7 +3,6 @@ import PyQt5.QtWidgets
 import os
 
 from vorta.views.backup_window import RestoreWindow
-from vorta.models import BackupProfileModel
 
 
 def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
@@ -17,7 +16,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     )
 
     main = qapp.main_window
-    restore_dialog = RestoreWindow(BackupProfileModel.get(id=main.profileSelector.currentData()))
+    restore_dialog = RestoreWindow(parent=main)
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
@@ -36,7 +35,7 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
         PyQt5.QtWidgets.QFileDialog, "getOpenFileName", getOpenFileName
     )
     main = qapp.main_window
-    restore_dialog = RestoreWindow(BackupProfileModel.get(id=main.profileSelector.currentData()))
+    restore_dialog = RestoreWindow(parent=main)
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == BAD_FILE, timeout=5000)
