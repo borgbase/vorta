@@ -7,6 +7,7 @@ import platform
 import re
 import sys
 import unicodedata
+import subprocess
 from collections import defaultdict
 from datetime import datetime as dt
 from functools import reduce
@@ -44,44 +45,41 @@ class FilePathInfoAsync(QThread):
 
     def run(self):
         logger.info("running thread to get path=%s...",self.path)
-        self.filecount = 0
-        self.size, self.filecount=get_path_datasize(self.path)
+        self.files_count = 0
+        self.size, self.files_count = get_path_datasize(self.path)
         self.sleep(5)
-        self.signal.emit(self.path,self.size,self.filecount)        
-
+        self.signal.emit(self.path,self.size,self.files_count)        
 
 def get_directory_size(dirPath):
-    dataSize = 0
-    qDir=QDir(dirPath)
-    qDir.setFilter(QDir.AllEntries | QDir.Hidden | QDir.System | QDir.NoDotAndDotDot)
-    filescount=qDir.count()
-    logger.info("file in dir=%u",filescount)
+    res = subprocess.run('find . | wc -l', cwd=dirPath, shell=True, check=False,
+                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
+    files_count = int(res.stdout.split(b'\t')[0])
 
-    for fileInfo in qDir.entryInfoList():
-        if fileInfo.isDir():
-            logger.info("foldername %s",fileInfo.absoluteFilePath())
-            dataSize, ftmp = get_directory_size(fileInfo.absoluteFilePath())
-            filescount += ftmp
-        else:
-            logger.info("filename %s size=%u",fileInfo.absoluteFilePath(),fileInfo.size())
-            dataSize += fileInfo.size()
-        
-    return dataSize, filescount
+    if files_count > 1: # files count on empty directory is still 1 because of '.', ignore it
+        res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
+                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        data_size = int(res.stdout.split(b'\t')[0])
+    else:
+        data_size = 0
+        files_count = 0
+
+    return data_size, files_count
+
 
 def get_path_datasize(path):
-    fileInfo = QFileInfo(path)
-    folderSize=0
+    file_info = QFileInfo(path)
+    data_size = 0    
 
-    if fileInfo.isDir():
-        folderSize, filescount = get_directory_size(fileInfo.absoluteFilePath())
-        logger.info("path (folder) %s %u elements size now=%u (%s)",fileInfo.absoluteFilePath(),filescount,folderSize,pretty_bytes(folderSize))
+    if file_info.isDir():
+        data_size, files_count = get_directory_size(file_info.absoluteFilePath())
+        logger.info("path (folder) %s %u elements size now=%u (%s)",file_info.absoluteFilePath(),files_count,data_size,pretty_bytes(data_size))
     else:
-        logger.info("path (file) %s size=%u",fileInfo.path(),fileInfo.size())
-        folderSize = fileInfo.size()
-        filescount = 1
+        logger.info("path (file) %s size=%u",file_info.path(),file_info.size())
+        data_size = file_info.size()
+        files_count = 1
 
-    return folderSize, filescount
+    return data_size, files_count
 
 def nested_dict():
     """
