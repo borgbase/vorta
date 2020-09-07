@@ -196,11 +196,6 @@ def get_misc_settings():
     # Default settings for all platforms.
     settings = [
         {
-            'key': 'use_light_icon', 'value': False, 'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Always use the light system tray icon (applies after restart)')
-        },
-        {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Display notifications when background tasks fail')
