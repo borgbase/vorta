@@ -19,29 +19,40 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         try:
             return self._nm.get_global_metered_status() in (NMMetered.YES, NMMetered.GUESS_YES)
         except DBusException:
-            return
+            logger.exception("Failed to check if network is metered, assuming it isn't")
+            return False
 
     def get_current_wifi(self) -> Optional[str]:
         # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
         # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
-        try:  # TODO gracefully fail on DBus permission errors.
+        try:
             active_connection_path = self._nm.get_primary_connection_path()
+            if not active_connection_path:
+                return
+            active_connection = self._nm.get_active_connection_info(active_connection_path)
+            if active_connection.type == '802-11-wireless':
+                settings = self._nm.get_settings(active_connection.connection)
+                ssid = self._get_ssid_from_settings(settings)
+                if ssid:
+                    return ssid
         except DBusException:
-            return
-        if not active_connection_path:
-            return
-        active_connection = self._nm.get_active_connection_info(active_connection_path)
-        if active_connection.type == '802-11-wireless':
-            settings = self._nm.get_settings(active_connection.connection)
-            ssid = self._get_ssid_from_settings(settings)
-            if ssid:
-                return ssid
+            logger.exception("Failed to get currently connected WiFi network, assuming none")
+            return None
 
     def get_known_wifis(self) -> Optional[List[SystemWifiInfo]]:
+        try:
+            connections_paths = self._nm.get_connections_paths()
+        except DBusException:
+            logger.exception("Failed to list connections")
+            return None
+
         wifis = []
-        try:  # TODO gracefully fail on DBus permission errors.
-            for connection_path in self._nm.get_connections_paths():
+        for connection_path in connections_paths:
+            try:
                 settings = self._nm.get_settings(connection_path)
+            except DBusException:
+                logger.warning("Couldn't load settings for %s", connection_path, exc_info=True)
+            else:
                 ssid = self._get_ssid_from_settings(settings)
                 if ssid:
                     timestamp = settings['connection'].get('timestamp')
@@ -49,8 +60,6 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
                         ssid=ssid,
                         last_connected=timestamp and datetime.utcfromtimestamp(timestamp),
                     ))
-        except DBusException:
-            return None
         return wifis
 
     def _get_ssid_from_settings(self, settings):
