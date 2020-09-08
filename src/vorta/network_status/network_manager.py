@@ -16,12 +16,18 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         self._nm = nm_adapter or NetworkManagerDBusAdapter.get_system_nm_adapter()
 
     def is_network_metered(self) -> bool:
-        return self._nm.get_global_metered_status() in (NMMetered.YES, NMMetered.GUESS_YES)
+        try:
+            return self._nm.get_global_metered_status() in (NMMetered.YES, NMMetered.GUESS_YES)
+        except DBusException:
+            return
 
     def get_current_wifi(self) -> Optional[str]:
         # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
         # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
-        active_connection_path = self._nm.get_primary_connection_path()
+        try:  # TODO gracefully fail on DBus permission errors.
+            active_connection_path = self._nm.get_primary_connection_path()
+        except DBusException:
+            return
         if not active_connection_path:
             return
         active_connection = self._nm.get_active_connection_info(active_connection_path)
@@ -33,15 +39,18 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
 
     def get_known_wifis(self) -> Optional[List[SystemWifiInfo]]:
         wifis = []
-        for connection_path in self._nm.get_connections_paths():
-            settings = self._nm.get_settings(connection_path)
-            ssid = self._get_ssid_from_settings(settings)
-            if ssid:
-                timestamp = settings['connection'].get('timestamp')
-                wifis.append(SystemWifiInfo(
-                    ssid=ssid,
-                    last_connected=timestamp and datetime.utcfromtimestamp(timestamp),
-                ))
+        try:  # TODO gracefully fail on DBus permission errors.
+            for connection_path in self._nm.get_connections_paths():
+                settings = self._nm.get_settings(connection_path)
+                ssid = self._get_ssid_from_settings(settings)
+                if ssid:
+                    timestamp = settings['connection'].get('timestamp')
+                    wifis.append(SystemWifiInfo(
+                        ssid=ssid,
+                        last_connected=timestamp and datetime.utcfromtimestamp(timestamp),
+                    ))
+        except DBusException:
+            return None
         return wifis
 
     def _get_ssid_from_settings(self, settings):
