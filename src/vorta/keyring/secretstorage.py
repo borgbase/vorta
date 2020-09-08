@@ -1,5 +1,8 @@
-import secretstorage
 import asyncio
+import sys
+
+import secretstorage
+
 from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 
@@ -26,7 +29,9 @@ class VortaSecretStorageKeyring(VortaKeyring):
                 'xdg:schema': 'org.freedesktop.Secret.Generic'}
             collection.create_item(repo_url, attributes, password, replace=True)
         except secretstorage.exceptions.ItemNotFoundException:
-            logger.log("SecretStorage writing failed", level='error')
+            logger.error("SecretStorage writing failed", exc_info=sys.exc_info())
+        finally:
+            return
 
     def get_password(self, service, repo_url):
         try:
@@ -41,14 +46,14 @@ class VortaSecretStorageKeyring(VortaKeyring):
                 return items[0].get_secret().decode("utf-8")
         except secretstorage.exceptions.SecretStorageException:
             # General catch-all
-            logger.log("SecretStorage reading failed", level='error')
-        return None
+            logger.error("SecretStorage reading failed", exc_info=sys.exc_info())
+            return None
 
     @property
     def is_unlocked(self):
         try:
             collection = secretstorage.get_default_collection(self.connection)
             return not collection.is_locked()
-        except secretstorage.exceptions.SecretServiceNotAvailableException:
-            logger.debug('Password manager is closed.')
+        except secretstorage.exceptions.SecretStorageException:
+            logger.debug('SecretStorage is closed.')
             return False
