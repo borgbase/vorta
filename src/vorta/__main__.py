@@ -11,17 +11,28 @@ from vorta.updater import get_updater
 from vorta.utils import parse_args
 
 
-def exception_handler(type, value, tb):
-    # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
-    # This double prints the exception, want to only print the log entry
-    logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
-                    exc_info=(type, value, tb))
-    sys.__excepthook__(type, value, tb)
-    sys.exit(1)
-
-
 def main():
+    def exception_handler(type, value, tb):
+        # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
+        # This double prints the exception, want to only print the log entry
+        from traceback import format_exception
+        from PyQt5.QtWidgets import QMessageBox
+        logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
+                        exc_info=(type, value, tb))
+        sys.__excepthook__(type, value, tb)
+        if app and app.main_window:
+            full_exception = ''.join(format_exception(type, value, tb))
+            try:
+                QMessageBox.information(app.main_window,
+                                        app.main_window.tr("Fatal Error"),
+                                        app.main_window.tr(
+                                            "Uncaught exception, file a report at "
+                                            "https://github.com/borgbase/vorta/issues/new \n") + full_exception)
+            except RuntimeError:
+                pass
+        sys.exit(1)
     sys.excepthook = exception_handler
+    app = None
 
     args = parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
