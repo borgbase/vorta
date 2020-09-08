@@ -43,13 +43,13 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         result = []
         if wifis is not None:
             for wifi in wifis.values():
-                raw_last_connected = wifi.get('LastConnected', None)
-                last_connected = None if not raw_last_connected \
-                    else format_date_time(raw_last_connected, WifiSettingModel.last_connected.formats)
                 ssid = wifi.get('SSIDString', None)
-
                 if ssid is None:
                     continue
+
+                last_connected = wifi.get('LastConnected', None) or wifi.get('LastAutoJoinAt', None)
+                if isinstance(last_connected, str):  # TODO: Maybe not needed any more?
+                    last_connected = format_date_time(last_connected, WifiSettingModel.last_connected.formats)
 
                 result.append(SystemWifiInfo(ssid=ssid, last_connected=last_connected))
 
@@ -71,7 +71,7 @@ def call_ipconfig_getpacket(bsd_device):
     try:
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
-        logger.warn("Command %s failed", shlex.join(cmd))
+        logger.debug("Command %s failed", shlex.join(cmd))
         return b''
 
 
@@ -80,4 +80,4 @@ def call_networksetup_listallhardwareports():
     try:
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
-        logger.warn("Command %s failed", shlex.join(cmd))
+        logger.debug("Command %s failed", shlex.join(cmd))
