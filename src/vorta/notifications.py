@@ -29,9 +29,6 @@ class VortaNotifications:
 
     def notifications_suppressed(self, level):
         """Decide if notification is sent or not based on settings and level."""
-        if level == 'exception':
-            logger.debug('exception notification not suppressed')
-            return False
         if not SettingsModel.get(key='enable_notifications').value:
             logger.debug('notifications suppressed')
             return True
@@ -68,7 +65,7 @@ class DBusNotifications(VortaNotifications):
     Adapted from http://codito.in/notifications-in-qt-over-dbus/
     """
 
-    URGENCY = {'info': 1, 'error': 2, 'exception': 3}
+    URGENCY = {'info': 1, 'error': 2}
 
     def __init__(self):
         pass
