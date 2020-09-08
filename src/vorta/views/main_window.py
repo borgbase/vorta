@@ -91,8 +91,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
-            if self.isVisible():
-                self.set_status(self.tr('Backup in progress.'))
 
         self.set_icons()
 
