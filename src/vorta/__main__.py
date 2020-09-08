@@ -13,12 +13,16 @@ from vorta.utils import parse_args
 
 def exception_handler(type, value, tb):
     # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
+    # This double prints the exception, want to only print the log entry
     logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
                     exc_info=(type, value, tb))
     sys.__excepthook__(type, value, tb)
+    sys.exit(1)
 
 
 def main():
+    sys.excepthook = exception_handler
+
     args = parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
 
@@ -48,5 +52,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.excepthook = exception_handler
     main()
