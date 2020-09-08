@@ -12,7 +12,9 @@ from vorta.utils import parse_args
 
 
 def exception_handler(type, value, tb):
-    logger.critical("Uncaught exception, file a report on GitHub:", exc_info=(type, value, tb))
+    # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
+    logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
+                    exc_info=(type, value, tb))
     sys.__excepthook__(type, value, tb)
 
 
