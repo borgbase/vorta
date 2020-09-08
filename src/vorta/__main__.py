@@ -15,7 +15,7 @@ def exception_handler(type, value, tb):
     # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
     logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
                     exc_info=(type, value, tb))
-    sys.__excepthook__(type, value, tb)
+    # sys.__excepthook__(type, value, tb)
 
 
 def main():
@@ -47,7 +47,6 @@ def main():
     sys.exit(app.exec_())
 
 
-sys.excepthook = exception_handler
-
 if __name__ == '__main__':
+    sys.excepthook = exception_handler
     main()
