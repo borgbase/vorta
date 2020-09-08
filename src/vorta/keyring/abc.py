@@ -14,11 +14,11 @@ class VortaKeyring:
             return VortaDarwinKeyring()
         else:
             from .kwallet import VortaKWallet5Keyring
-            if VortaKWallet5Keyring().valid:
+            if VortaKWallet5Keyring().is_valid:
                 return VortaKWallet5Keyring()
             else:
                 from .kwallet import VortaKWallet4Keyring
-                if VortaKWallet4Keyring().valid:
+                if VortaKWallet4Keyring().is_valid:
                     return VortaKWallet4Keyring()
                 else:
                     import secretstorage

@@ -6,29 +6,29 @@ from vorta.keyring.abc import VortaKeyring
 class VortaKWallet5Keyring(VortaKeyring):
     """A wrapper for the dbus package to support the custom keyring backend"""
 
-    folderName = 'Vorta'
-    serviceName = "org.kde.kwalletd5"
-    objectPath = "/modules/kwalletd5"
-    interfaceName = 'org.kde.KWallet'
+    folder_name = 'Vorta'
+    service_name = "org.kde.kwalletd5"
+    object_path = "/modules/kwalletd5"
+    interface_name = 'org.kde.KWallet'
 
     def __init__(self):
         """
         Test whether DBus and KDEWallet are available.
         """
         self.iface = QtDBus.QDBusInterface(
-            self.serviceName,
-            self.objectPath,
-            self.interfaceName,
+            self.service_name,
+            self.object_path,
+            self.interface_name,
             QtDBus.QDBusConnection.sessionBus())
 
     def set_password(self, service, repo_url, password):
-        self.get_result("writePassword", args=[self.handle, self.folderName, repo_url, password, service])
+        self.get_result("writePassword", args=[self.handle, self.folder_name, repo_url, password, service])
 
     def get_password(self, service, repo_url):
         if not (self.is_unlocked and self.get_result("hasEntry",
-                                                     args=[self.handle, self.folderName, repo_url, service])):
+                                                     args=[self.handle, self.folder_name, repo_url, service])):
             return None
-        return self.get_result("readPassword", args=[self.handle, self.folderName, repo_url, service])
+        return self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
 
     def get_result(self, method, args=[]):
         if args:
@@ -43,17 +43,17 @@ class VortaKWallet5Keyring(VortaKeyring):
         return self.handle > 0
 
     def get_handle(self):
-        walletName = self.get_result("networkWallet")
+        wallet_name = self.get_result("networkWallet")
         wId = QVariant(0)
         wId.convert(4)
-        output = self.get_result("open", args=[walletName, wId, 'vorta-repo'])
+        output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
         self.handle = int(output)
 
     @property
-    def valid(self):
+    def is_valid(self):
         return self.iface.isValid() and self.get_result("isEnabled")
 
 
 class VortaKWallet4Keyring(VortaKWallet5Keyring):
-    serviceName = "org.kde.kwalletd"
-    objectPath = "/modules/kwalletd"
+    service_name = "org.kde.kwalletd"
+    object_path = "/modules/kwalletd"
