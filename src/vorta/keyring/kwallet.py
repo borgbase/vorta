@@ -51,7 +51,7 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     @property
     def valid(self):
-        return self.iface.isValid() and bool(self.get_result("isEnabled"))
+        return self.iface.isValid() and self.get_result("isEnabled")
 
 
 class VortaKWallet4Keyring(VortaKWallet5Keyring):
