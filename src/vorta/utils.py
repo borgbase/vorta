@@ -20,15 +20,12 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
-from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
-keyring = VortaKeyring.get_keyring()
-logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
 network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
 logger.info('Using %s NetworkStatusMonitor implementation.', network_status_monitor.__class__.__name__)
 

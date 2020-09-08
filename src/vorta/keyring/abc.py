@@ -7,21 +7,6 @@ import sys
 
 
 class VortaKeyring:
-    @classmethod
-    def get_keyring(cls):
-        if sys.platform == 'darwin':  # Use Keychain on macOS
-            from .darwin import VortaDarwinKeyring
-            return VortaDarwinKeyring()
-        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-            import secretstorage
-            from .secretstorage import VortaSecretStorageKeyring
-            try:
-                return VortaSecretStorageKeyring()
-            # Save passwords in DB, if all else fails.
-            except secretstorage.SecretServiceNotAvailableException:
-                from .db import VortaDBKeyring
-                return VortaDBKeyring()
-
     def set_password(self, service, repo_url, password):
         raise NotImplementedError
 
@@ -38,3 +23,19 @@ class VortaKeyring:
         rather than a fallback (like our own VortaDBKeyring).
         """
         return True
+
+
+def get_keyring():
+    """ Get keyring at runtime. Store this result at thread runtime. """
+    if sys.platform == 'darwin':  # Use Keychain on macOS
+        from .darwin import VortaDarwinKeyring
+        return VortaDarwinKeyring()
+    else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
+        import secretstorage
+        from .secretstorage import VortaSecretStorageKeyring
+        try:
+            return VortaSecretStorageKeyring()
+        # Save passwords in DB, if all else fails.
+        except secretstorage.SecretServiceNotAvailableException:
+            from .db import VortaDBKeyring
+            return VortaDBKeyring()
