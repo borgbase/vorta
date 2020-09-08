@@ -24,7 +24,7 @@ def main():
             notifier = VortaNotifications.pick()
             notifier.deliver(translate('messages', 'Application Error'),
                              translate('messages', "Uncaught exception, see log in {} for details".format(LOG_DIR)),
-                             level='error')
+                             level='exception')
 
     sys.excepthook = exception_handler
     app = None
