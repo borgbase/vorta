@@ -23,11 +23,11 @@ def main():
         if app and app.main_window:
             full_exception = ''.join(format_exception(type, value, tb))
             try:
-                QMessageBox.information(app.main_window,
-                                        app.main_window.tr("Fatal Error"),
-                                        app.main_window.tr(
-                                            "Uncaught exception, file a report at"
-                                            " https://github.com/borgbase/vorta/issues/new \n") + full_exception)
+                QMessageBox.critical(app.main_window,
+                                     app.main_window.tr("Fatal Error"),
+                                     app.main_window.tr(
+                                         "Uncaught exception, file a report at"
+                                         " https://github.com/borgbase/vorta/issues/new \n") + full_exception)
             except RuntimeError:
                 # Window is closed, only log is available
                 pass
