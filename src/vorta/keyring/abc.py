@@ -28,7 +28,10 @@ class VortaKeyring:
 
 
 def get_keyring():
-    """ Get keyring at runtime if using DB """
+    """
+    Attempts to get secure keyring at runtime if current keyring is insecure.
+    Once it finds a secure keyring, it wil always use that keyring
+    """
     global _keyring
     if _keyring is None or not _keyring.is_primary:
         if sys.platform == 'darwin':  # Use Keychain on macOS
