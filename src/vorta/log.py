@@ -38,10 +38,4 @@ def init_logger(background=False):
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         ch.setFormatter(formatter)
-        ch.addFilter(ExceptionFilter())
         logger.addHandler(ch)
-
-
-class ExceptionFilter(logging.Filter):
-    def filter(self, rec):
-        return rec.exc_info is None
