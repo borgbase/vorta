@@ -1,7 +1,7 @@
 graft src/vorta/assets
 
-# Include all compiled .qm language files, but exclude the source language (en_US).
+# Include all compiled .qm language files, but exclude the source language (en).
 recursive-include src/vorta/i18n/qm *.qm
-exclude src/vorta/i18n/qm/vorta.en_US.qm
+exclude src/vorta/i18n/qm/vorta.en.qm
 
 recursive-exclude tests *
