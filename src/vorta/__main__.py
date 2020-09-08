@@ -16,14 +16,15 @@ def main():
     def exception_handler(type, value, tb):
         # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
         # This double prints the exception, want to only print the log entry
-        logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
+        logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))
         sys.__excepthook__(type, value, tb)
         if app:
             from vorta.notifications import VortaNotifications
             notifier = VortaNotifications.pick()
             notifier.deliver(translate('messages', 'Application Error'),
-                             translate('messages', "Uncaught exception, see log in {} for details".format(LOG_DIR)),
+                             translate('messages', "Error, see log in {} for details \n"
+                                       "File a report at https://github.com/borgbase/vorta/issues/new".format(LOG_DIR)),
                              level='exception')
 
     sys.excepthook = exception_handler
