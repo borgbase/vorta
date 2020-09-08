@@ -13,7 +13,6 @@ from vorta.utils import parse_args
 
 def exception_handler(type, value, tb):
     logger.exception("Uncaught exception, file a report on GitHub:", exc_info=(type, value, tb))
-    sys.exit(1)
 
 
 def main():
