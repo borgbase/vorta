@@ -34,7 +34,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
             return
 
     def get_password(self, service, repo_url):
-        try:
+        if self.is_unlocked:
             asyncio.set_event_loop(asyncio.new_event_loop())
             collection = secretstorage.get_default_collection(self.connection)
             if collection.is_locked():
@@ -44,9 +44,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
             logger.debug('Found %i passwords matching repo URL.', len(items))
             if len(items) > 0:
                 return items[0].get_secret().decode("utf-8")
-        except secretstorage.exceptions.SecretStorageException:
-            # General catch-all
-            logger.error("SecretStorage reading failed", exc_info=sys.exc_info())
+        else:
             return None
 
     @property
