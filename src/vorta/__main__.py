@@ -4,24 +4,30 @@ import sys
 
 import peewee
 from vorta._version import __version__
-from vorta.config import SETTINGS_DIR
+from vorta.config import SETTINGS_DIR, LOG_DIR
+from vorta.i18n import translate
 from vorta.log import init_logger, logger
 from vorta.models import init_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
 
 
-def exception_handler(type, value, tb):
-    # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
-    # This double prints the exception, want to only print the log entry
-    logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
-                    exc_info=(type, value, tb))
-    sys.__excepthook__(type, value, tb)
-    sys.exit(1)
-
-
 def main():
+    def exception_handler(type, value, tb):
+        # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
+        # This double prints the exception, want to only print the log entry
+        logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new:",
+                        exc_info=(type, value, tb))
+        sys.__excepthook__(type, value, tb)
+        if app:
+            from vorta.notifications import VortaNotifications
+            notifier = VortaNotifications.pick()
+            notifier.deliver(translate('messages', 'Application Error'),
+                             translate('messages', "Uncaught exception, see log in {} for details".format(LOG_DIR)),
+                             level='error')
+
     sys.excepthook = exception_handler
+    app = None
 
     args = parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
