@@ -4,7 +4,7 @@ host = https://www.transifex.com
 [vorta.vorta]
 file_filter = src/vorta/i18n/ts/vorta.<lang>.ts
 minimum_perc = 80
-source_file = src/vorta/i18n/ts/vorta.en_US.ts
-source_lang = en_US
+source_file = src/vorta/i18n/ts/vorta.en.ts
+source_lang = en
 type = QT
 

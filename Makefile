@@ -47,7 +47,7 @@ translations-from-source:  ## Extract strings from source code / UI files, merge
 	pylupdate5 -verbose -translate-function trans_late \
 			   $$VORTA_SRC/*.py $$VORTA_SRC/views/*.py $$VORTA_SRC/borg/*.py \
 			   $$VORTA_SRC/assets/UI/*.ui \
-			   -ts $$VORTA_SRC/i18n/ts/vorta.en_US.ts
+			   -ts $$VORTA_SRC/i18n/ts/vorta.en.ts
 
 translations-push: translations-from-source  ## Upload .ts to Transifex.
 	tx push -s

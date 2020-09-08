@@ -16,7 +16,7 @@ vorta.egg-info
 *.log
 htmlcov
 *.qm
-src/vorta/i18n/ts/vorta.en_US.ts
+src/vorta/i18n/ts/vorta.en.ts
 flatpak/app/
 flatpak/.flatpak-builder/
 
