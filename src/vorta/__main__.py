@@ -17,6 +17,8 @@ def main():
         # This double prints the exception, want to only print the log entry
         from traceback import format_exception
         from PyQt5.QtWidgets import QMessageBox
+        URL = '<a href="https://github.com/borgbase/vorta/issues/new">' \
+            '<span style="text-decoration:''underline; color:#0984e3;">here</span></a>'
         logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))
         sys.__excepthook__(type, value, tb)
@@ -26,8 +28,8 @@ def main():
                 QMessageBox.critical(app.main_window,
                                      app.main_window.tr("Fatal Error"),
                                      app.main_window.tr(
-                                         "Uncaught exception, please file a report with this text at\n"
-                                         "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
+                                         "Uncaught exception, please file a report {0} with the following text:\n{1}"
+                                         .format(URL, full_exception)))
             except RuntimeError:
                 # Window is closed, only log is available
                 pass
