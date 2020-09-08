@@ -13,13 +13,10 @@ from vorta.utils import parse_args
 
 def main():
     def exception_handler(type, value, tb):
-        # https://stackoverflow.com/questions/49065371/why-does-sys-excepthook-behave-differently-when-wrapped
-        # This double prints the exception, want to only print the log entry
         from traceback import format_exception
         from PyQt5.QtWidgets import QMessageBox
         logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))
-        sys.__excepthook__(type, value, tb)
         if app and app.main_window:
             full_exception = ''.join(format_exception(type, value, tb))
             try:
