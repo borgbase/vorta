@@ -26,9 +26,10 @@ def main():
                 QMessageBox.information(app.main_window,
                                         app.main_window.tr("Fatal Error"),
                                         app.main_window.tr(
-                                            "Uncaught exception, file a report at "
-                                            "https://github.com/borgbase/vorta/issues/new \n") + full_exception)
+                                            "Uncaught exception, file a report at"
+                                            " https://github.com/borgbase/vorta/issues/new \n") + full_exception)
             except RuntimeError:
+                # Window is closed, only log is available
                 pass
         sys.exit(1)
     sys.excepthook = exception_handler
