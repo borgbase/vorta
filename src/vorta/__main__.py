@@ -5,10 +5,15 @@ import sys
 import peewee
 from vorta._version import __version__
 from vorta.config import SETTINGS_DIR
-from vorta.log import init_logger
+from vorta.log import init_logger, logger
 from vorta.models import init_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
+
+
+def exception_handler(type, value, tb):
+    logger.exception("Uncaught exception, file a report on GitHub:", exc_info=(type, value, tb))
+    sys.exit(1)
 
 
 def main():
@@ -39,6 +44,8 @@ def main():
 
     sys.exit(app.exec_())
 
+
+sys.excepthook = exception_handler
 
 if __name__ == '__main__':
     main()
