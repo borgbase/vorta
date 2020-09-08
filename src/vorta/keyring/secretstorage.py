@@ -16,25 +16,32 @@ class VortaSecretStorageKeyring(VortaKeyring):
         secretstorage.get_default_collection(self.connection)
 
     def set_password(self, service, repo_url, password):
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        collection = secretstorage.get_default_collection(self.connection)
-        attributes = {
-            'application': 'Vorta',
-            'service': service,
-            'repo_url': repo_url,
-            'xdg:schema': 'org.freedesktop.Secret.Generic'}
-        collection.create_item(repo_url, attributes, password, replace=True)
+        try:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            collection = secretstorage.get_default_collection(self.connection)
+            attributes = {
+                'application': 'Vorta',
+                'service': service,
+                'repo_url': repo_url,
+                'xdg:schema': 'org.freedesktop.Secret.Generic'}
+            collection.create_item(repo_url, attributes, password, replace=True)
+        except secretstorage.exceptions.ItemNotFoundException:
+            logger.log("SecretStorage writing failed", level='error')
 
     def get_password(self, service, repo_url):
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        collection = secretstorage.get_default_collection(self.connection)
-        if collection.is_locked():
-            collection.unlock()
-        attributes = {'application': 'Vorta', 'service': service, 'repo_url': repo_url}
-        items = list(collection.search_items(attributes))
-        logger.debug('Found %i passwords matching repo URL.', len(items))
-        if len(items) > 0:
-            return items[0].get_secret().decode("utf-8")
+        try:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            collection = secretstorage.get_default_collection(self.connection)
+            if collection.is_locked():
+                collection.unlock()
+            attributes = {'application': 'Vorta', 'service': service, 'repo_url': repo_url}
+            items = list(collection.search_items(attributes))
+            logger.debug('Found %i passwords matching repo URL.', len(items))
+            if len(items) > 0:
+                return items[0].get_secret().decode("utf-8")
+        except secretstorage.exceptions.SecretStorageException:
+            # General catch-all
+            logger.log("SecretStorage reading failed", level='error')
         return None
 
     @property

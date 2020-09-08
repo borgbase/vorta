@@ -13,14 +13,14 @@ class VortaKeyring:
             from .darwin import VortaDarwinKeyring
             return VortaDarwinKeyring()
         else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-            import secretstorage
+            from secretstorage.exceptions import ItemNotFoundException, SecretServiceNotAvailableException
             import jeepney
 
             from .secretstorage import VortaSecretStorageKeyring
             try:
                 return VortaSecretStorageKeyring()
             # Save passwords in DB, if all else fails.
-            except (secretstorage.SecretServiceNotAvailableException, jeepney.wrappers.DBusErrorResponse):
+            except (ItemNotFoundException, SecretServiceNotAvailableException, jeepney.wrappers.DBusErrorResponse):
                 from .db import VortaDBKeyring
                 return VortaDBKeyring()
 
