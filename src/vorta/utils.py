@@ -26,10 +26,18 @@ from vorta.network_status.abc import NetworkStatusMonitor
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
-network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
-logger.info('Using %s NetworkStatusMonitor implementation.', network_status_monitor.__class__.__name__)
-
 borg_compat = BorgCompatibility()
+
+
+_network_status_monitor = None
+
+
+def get_network_status_monitor():
+    global _network_status_monitor
+    if _network_status_monitor is None:
+        _network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
+        logger.info('Using %s NetworkStatusMonitor implementation.', _network_status_monitor.__class__.__name__)
+    return _network_status_monitor
 
 
 def nested_dict():
@@ -124,7 +132,7 @@ def get_sorted_wifis(profile):
 
     from vorta.models import WifiSettingModel
 
-    system_wifis = network_status_monitor.get_known_wifis()
+    system_wifis = get_network_status_monitor().get_known_wifis()
     if system_wifis is None:
         # Don't show any networks if we can't get the current list
         return []
