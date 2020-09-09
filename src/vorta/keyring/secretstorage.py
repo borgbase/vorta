@@ -45,6 +45,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
     @property
     def is_unlocked(self):
         try:
+            asyncio.set_event_loop(asyncio.new_event_loop())
             collection = secretstorage.get_default_collection(self.connection)
             return not collection.is_locked()
         except secretstorage.exceptions.SecretServiceNotAvailableException:
