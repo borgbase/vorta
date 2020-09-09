@@ -5,7 +5,7 @@ import pytest
 
 from vorta.network_status.abc import SystemWifiInfo
 from vorta.network_status.network_manager import NetworkManagerMonitor, NMMetered, NetworkManagerDBusAdapter, \
-    ActiveConnectionInfo, decode_ssid
+    ActiveConnectionInfo, decode_ssid, DBusException
 
 
 @pytest.fixture
@@ -86,6 +86,27 @@ def test_get_known_wifis_with_never_used_connection(nm_monitor):
         'connection': {},
         '802-11-wireless': {'ssid': [84, 69, 83, 84]},
     }
+
+    result = nm_monitor.get_known_wifis()
+
+    assert result == [SystemWifiInfo(
+        ssid='TEST',
+        last_connected=None,
+    )]
+
+
+def test_get_known_wifis_partial_failure(nm_monitor):
+    nm_monitor._nm.get_connections_paths.return_value = [
+        '/org/freedesktop/NetworkManager/Settings/12',
+        '/org/freedesktop/NetworkManager/Settings/42',
+    ]
+    nm_monitor._nm.get_settings.side_effect = [
+        DBusException("Test"),
+        {
+            'connection': {},
+            '802-11-wireless': {'ssid': [84, 69, 83, 84]},
+        },
+    ]
 
     result = nm_monitor.get_known_wifis()
 
