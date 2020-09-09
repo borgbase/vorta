@@ -30,28 +30,23 @@ class VortaSecretStorageKeyring(VortaKeyring):
             collection.create_item(repo_url, attributes, password, replace=True)
         except secretstorage.exceptions.ItemNotFoundException:
             logger.error("SecretStorage writing failed", exc_info=sys.exc_info())
-        finally:
-            return
 
     def get_password(self, service, repo_url):
         if self.is_unlocked:
             asyncio.set_event_loop(asyncio.new_event_loop())
             collection = secretstorage.get_default_collection(self.connection)
-            if collection.is_locked():
-                collection.unlock()
             attributes = {'application': 'Vorta', 'service': service, 'repo_url': repo_url}
             items = list(collection.search_items(attributes))
             logger.debug('Found %i passwords matching repo URL.', len(items))
             if len(items) > 0:
                 return items[0].get_secret().decode("utf-8")
-        else:
-            return None
+        return None
 
     @property
     def is_unlocked(self):
         try:
             collection = secretstorage.get_default_collection(self.connection)
             return not collection.is_locked()
-        except secretstorage.exceptions.SecretStorageException:
+        except secretstorage.exceptions.SecretServiceNotAvailableException:
             logger.debug('SecretStorage is closed.')
             return False
