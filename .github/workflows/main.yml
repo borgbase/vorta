@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    timeout-minutes: 10
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -12,6 +12,12 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
         os: [ubuntu-latest, macos-latest]
+        exclude:
+          # Only test Python 3.7 on macOS
+          - os: macos-latest
+            python-version: 3.6
+          - os: macos-latest
+            python-version: 3.8
 
     steps:
     - uses: actions/checkout@v2
