@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from ..models import SourceFileModel, BackupProfileMixin
+from ..models import SourceFileModel, BackupProfileMixin, SettingsModel
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, FilePathInfoAsync
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo
@@ -101,7 +101,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                                                                     path_isdir=QFileInfo(dir).isDir(), 
                                                                     profile=self.profile())
                 if created:
-                    self.add_source_to_table(new_source,True)
+                    self.add_source_to_table(new_source,SettingsModel.get(key="get_srcpath_datasize").value)
                     new_source.save()
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
