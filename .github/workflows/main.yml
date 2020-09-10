@@ -73,5 +73,5 @@ jobs:
         pip install -r requirements.d/dev.txt
     - name: Run Flake8
       run: flake8
-    - name: Run PyLint (info only)
-      run: pylint --rcfile=setup.cfg src --exit-zero
+    # - name: Run PyLint (info only)
+    #   run: pylint --rcfile=setup.cfg src --exit-zero
