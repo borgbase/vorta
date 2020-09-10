@@ -62,10 +62,10 @@
         <bool>false</bool>
        </attribute>
        <attribute name="verticalHeaderHighlightSections">
-        <bool>true</bool>
+        <bool>false</bool>
        </attribute>
        <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-        <bool>true</bool>
+        <bool>false</bool>
        </attribute>
       </widget>
      </item>
