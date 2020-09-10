@@ -4,7 +4,6 @@ VERSION := $(shell python -c "from src.vorta._version import __version__; print(
 
 .PHONY : help
 .DEFAULT_GOAL := help
-DATE = "$(shell date +%F)"
 
 clean:
 	rm -rf dist/*
@@ -16,13 +15,15 @@ dist/Vorta.app: translations-to-qm clean
 	rm -rf build/vorta
 	rm -rf dist/vorta
 
-borg:
+borg:  ## Build Borg single-dir release for bundling in macOS
+	rm -rf ${BORG_SRC}/dist/*
+	cd ${BORG_SRC} && python setup.py clean && pip install -U -e .
 	cd ${BORG_SRC} && pyinstaller --clean --noconfirm ../vorta/package/borg.spec .
 	find ${BORG_SRC}/dist/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
-		-exec codesign --verbose --force --sign ${CERTIFICATE_NAME} \
+		-exec codesign --verbose --force --sign "${CERTIFICATE_NAME}" \
 		--entitlements package/entitlements.plist --timestamp --deep --options runtime {} \;
 
-dist/Vorta.dmg: dist/Vorta.app
+dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
 	sh package/macos-package-app.sh
 
 github-release: dist/Vorta.dmg  ## Add new Github release and attach macOS DMG
@@ -38,7 +39,7 @@ pypi-release: translations-to-qm  ## Upload new release to PyPi
 	twine upload dist/vorta-${VERSION}.tar.gz
 
 bump-version:  ## Tag new version. First set new version number in src/vorta/_version.py
-	xmlstarlet ed -L -u 'component/releases/release/@date' -v $$(date +%F) ${FLATPAK_XML}
+	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${FLATPAK_XML}
 	xmlstarlet ed -L -u 'component/releases/release/@version' -v v${VERSION} ${FLATPAK_XML}
 	git tag -a v${VERSION} -m "Bump to version ${VERSION}"
 
