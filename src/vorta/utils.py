@@ -47,14 +47,14 @@ class FilePathInfoAsync(QThread):
         self.sleep(5)
         self.signal.emit(self.path,self.size,self.files_count)        
 
-def get_directory_size(dirPath):
-    res = subprocess.run('find . | wc -l', cwd=dirPath, shell=True, check=False,
+def get_directory_size(path):
+    res = subprocess.run('find . | wc -l', cwd=path, shell=True, check=False,
                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     files_count = int(res.stdout.split(b'\t')[0])
 
     if files_count > 1: # files count on empty directory is still 1 because of '.', ignore it
-        res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
+        res = subprocess.run('du -sb .', cwd=path, shell=True, check=False,
                              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         data_size = int(res.stdout.split(b'\t')[0])
     else:
