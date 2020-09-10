@@ -26,9 +26,9 @@ def main():
                                          "Uncaught exception, please file a report with this text at\n"
                                          "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
             except RuntimeError:
-                # Window is closed, only log is available
-                pass
-        sys.exit(1)
+                # Window is closed, only log is available, exit to prevent freezing
+                sys.exit(1)
+
     sys.excepthook = exception_handler
     app = None
 
