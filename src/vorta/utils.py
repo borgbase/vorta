@@ -261,26 +261,19 @@ def validate_passwords(firstPass, secondPass):
 
 
 def password_transparency(encryption):
-    db_message = {
-        'linux': trans_late('utils', 'programs with the Secret Service API, such as KeepassXC'),
-        'darwin': trans_late('utils', 'Keychain Access')
-    }
-
     if encryption != 'none':
         keyringClass = keyring.__class__.__name__
         messages = {
-            'VortaDBKeyring': trans_late('utils', 'plaintext on disk.\n'
-                                         'Vorta supports {storage} for password storage'
-                                         .format(storage=db_message.get(sys.platform))),
-            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service API'),
-            'VortaDarwinKeyring': db_message['darwin'],
+            'VortaDBKeyring':
+            trans_late('utils', 'plaintext on disk.\n'
+                       'Vorta supports programs with the Secret Service API, such as KeepassXC for password storage'),
+            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service keyring'),
+            'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
             'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
             'VortaKWallet4Keyring': trans_late('utils', 'KWallet 4')
         }
-        # Just in case some other keyring support is added
-        keyringName = messages.get(keyringClass,
-                                   trans_late('utils',
-                                              'somewhere that was not anticipated. Please file a bug report on Github'))
+        # Will display keyring name with 'Vorta' and 'Keyring' cut off for unknown keyring
+        keyringName = messages.get(keyringClass, keyringClass[5:-7])
         return trans_late('utils', 'The password will be stored in %s') % keyringName
     else:
         return ""
