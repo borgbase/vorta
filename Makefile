@@ -41,7 +41,8 @@ pypi-release: translations-to-qm  ## Upload new release to PyPi
 bump-version:  ## Tag new version. First set new version number in src/vorta/_version.py
 	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${FLATPAK_XML}
 	xmlstarlet ed -L -u 'component/releases/release/@version' -v v${VERSION} ${FLATPAK_XML}
-	git tag -a v${VERSION} -m "Bump to version ${VERSION}"
+	git commit -a -m "Bump version to v${VERSION}"
+	git tag -a v${VERSION}
 
 translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
 	pylupdate5 -verbose -translate-function trans_late \
