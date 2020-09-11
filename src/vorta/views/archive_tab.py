@@ -196,6 +196,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             thread.result.connect(self.prune_result)
             self._toggle_all_buttons(False)
             thread.start()
+        else:
+            self._set_status(params['message'])
 
     def prune_result(self, result):
         if result['returncode'] == 0:
@@ -212,6 +214,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             thread.result.connect(self.list_result)
             self._toggle_all_buttons(False)
             thread.start()
+        else:
+            self._set_status(params['message'])
 
     def list_result(self, result):
         self._toggle_all_buttons(True)
