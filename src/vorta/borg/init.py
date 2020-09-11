@@ -1,6 +1,5 @@
 from .borg_thread import BorgThread
 from .info import FakeProfile, FakeRepo
-from vorta.i18n import trans_late
 from vorta.models import RepoModel
 from vorta.utils import keyring
 
@@ -15,7 +14,8 @@ class BorgInitThread(BorgThread):
 
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'), 'Init Repo', params['ssh_key']
+            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'],
+                     params['encryption']), 'Init Repo', params['ssh_key']
         )
 
         ret = super().prepare(profile)
@@ -23,10 +23,6 @@ class BorgInitThread(BorgThread):
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
-
-        if params['encryption'] != 'none' and not keyring.is_unlocked:
-            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
-            return ret
 
         cmd = ["borg", "init", "--info", "--log-json"]
         cmd.append(f"--encryption={params['encryption']}")
