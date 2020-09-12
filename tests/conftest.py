@@ -50,7 +50,7 @@ def local_en():
     Some tests use English strings. So override whatever language the current user
     has and run the tests with the English UI.
     """
-    os.environ['LANG'] = 'en_US'
+    os.environ['LANG'] = 'en'
 
 
 @pytest.fixture(scope='session')
