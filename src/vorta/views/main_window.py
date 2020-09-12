@@ -5,7 +5,7 @@ from PyQt5.QtGui import QKeySequence
 from vorta.borg.borg_thread import BorgThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
-from vorta.utils import borg_compat, get_asset, is_system_tray_available, network_status_monitor
+from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.utils import get_colored_icon
 from vorta.views.partials.loading_button import LoadingButton
 
@@ -79,7 +79,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
         # OS-specific startup options:
-        if not network_status_monitor.is_network_status_available():
+        if not get_network_status_monitor().is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
             self.scheduleTab.wifiListLabel.hide()
             self.scheduleTab.wifiListWidget.hide()
@@ -91,8 +91,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
-            if self.isVisible():
-                self.set_status(self.tr('Backup in progress.'))
 
         self.set_icons()
 
