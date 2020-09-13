@@ -55,12 +55,12 @@ def local_en():
 @pytest.fixture(scope='function', autouse=True)
 def cleanup(request, qapp, qtbot):
     """
-    Ensure BorgThread is cancelled when new test starts.
+    Ensure BorgThread is stopped when new test starts.
     """
-    def kill_borg_thread():
+    def ensure_borg_thread_stopped():
         qapp.backup_cancelled_event.emit()
         qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
-    request.addfinalizer(kill_borg_thread)
+    request.addfinalizer(ensure_borg_thread_stopped)
 
 
 @pytest.fixture(scope='session')
