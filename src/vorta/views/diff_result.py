@@ -128,9 +128,9 @@ class DiffTree(TreeModel):
 
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.red))
+                return QVariant(QColor(Qt.darkRed))
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.green))
+                return QVariant(QColor(Qt.darkGreen))
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
                 return QVariant(QColor(Qt.darkYellow))
 
