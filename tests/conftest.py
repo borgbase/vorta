@@ -52,6 +52,11 @@ def local_en():
     os.environ['LANG'] = 'en'
 
 
+@pytest.fixture(scope="function", autouse=True)
+def cleanup(qapp, qtbot):
+    qtbot.waitSignal(qapp.backup_cancelled_event.emit())
+
+
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory, local_en):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')

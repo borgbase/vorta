@@ -107,8 +107,6 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=10000)
 
-    qtbot.waitSignal(qapp.backup_cancelled_event.emit())
-
 
 def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     main = qapp.main_window
