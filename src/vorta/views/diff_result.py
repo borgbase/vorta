@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, QVariant
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QHeaderView
 
-from vorta.utils import (get_asset, get_dict_from_list, nested_dict)
+from vorta.utils import (get_asset, get_dict_from_list, nested_dict, uses_dark_mode)
 
 from vorta.views.partials.tree_view import TreeModel
 
@@ -128,9 +128,9 @@ class DiffTree(TreeModel):
 
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.darkRed))
+                return QVariant(QColor(Qt.red)) if uses_dark_mode() else QVariant(QColor(Qt.darkRed))
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.darkGreen))
+                return QVariant(QColor(Qt.green)) if uses_dark_mode() else QVariant(QColor(Qt.darkGreen))
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
                 return QVariant(QColor(Qt.darkYellow))
 
