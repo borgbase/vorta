@@ -20,7 +20,7 @@ Steps to reproduce the behavior:
 **Desktop (please complete the following information):**
 - OS:
 - Vorta version:
-- Borg version:
+- Installed from:
 
 Vorta and Borg versions can be found in Main Window > Misc Tab
 
