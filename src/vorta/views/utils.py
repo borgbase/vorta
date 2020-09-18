@@ -11,7 +11,7 @@ def get_colored_icon(icon_name):
         svg_str = svg_str.replace(b'#00000', b'#ffffff')
     svg_img = QImage.fromData(svg_str)
 
-    # Reduce image size to 128x128
-    svg_img = svg_img.scaled(128, 128)
+    # Reduce image size to 1/14th
+    svg_img = svg_img.scaled(svg_img.size() / 14)
 
     return QIcon(QPixmap(svg_img))
