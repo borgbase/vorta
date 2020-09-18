@@ -4,6 +4,10 @@ daysUntilStale: 60
 daysUntilClose: 7
 # Issues with these labels will never be considered stale
 exemptLabels:
+  - "status:idea"
+  - "status:planning"
+  - "status:on hold"
+  - "status:ready"
   - "type:bug"
   - "type:docs"
   - "type:enhancement"
