@@ -9,9 +9,7 @@ def get_colored_icon(icon_name):
     svg_str = open(get_asset(f"icons/{icon_name}.svg"), 'rb').read()
     if uses_dark_mode():
         svg_str = svg_str.replace(b'#00000', b'#ffffff')
-    svg_img = QImage.fromData(svg_str)
-
     # Reduce image size to 128 height
-    svg_img = svg_img.scaledToHeight(128)
+    svg_img = QImage.fromData(svg_str).scaledToHeight(128)
 
     return QIcon(QPixmap(svg_img))
