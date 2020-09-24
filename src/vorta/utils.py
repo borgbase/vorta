@@ -282,6 +282,6 @@ def password_transparency(encryption):
         }
         # Will display keyring name with 'Vorta' and 'Keyring' cut off for unknown keyring
         keyringName = messages.get(keyringClass, keyringClass[5:-7])
-        return trans_late('utils', 'The password will be stored in %s') % keyringName
+        return trans_late('utils', f'The password will be stored in {keyringName}')
     else:
         return ""
