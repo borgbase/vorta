@@ -308,8 +308,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
         else:
-            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(
-                self.mount_points.get(archive_name)))
+            self._set_status(
+                self.tr(f'Unmounting failed. Make sure no programs are using {self.mount_points.get(archive_name)}'))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
