@@ -95,10 +95,17 @@
          </property>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QPushButton" name="sourceRemove">
          <property name="text">
           <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sourcesUpdate">
+         <property name="text">
+          <string>Update Sources</string>
          </property>
         </widget>
        </item>
