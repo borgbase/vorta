@@ -10,10 +10,10 @@ class NetworkStatusMonitor:
             from .darwin import DarwinNetworkStatus
             return DarwinNetworkStatus()
         else:
-            from .network_manager import NetworkManagerMonitor, UnsupportedException, DBusException
+            from .network_manager import NetworkManagerMonitor, UnsupportedException
             try:
                 return NetworkManagerMonitor()
-            except (UnsupportedException, DBusException):
+            except UnsupportedException:
                 return NullNetworkStatusMonitor()
 
     def is_network_status_available(self):
