@@ -4,6 +4,7 @@ For Linux not every system has SecretService available, so it will
 fall back to a simple database keystore if needed.
 """
 import sys
+from pkg_resources import parse_version
 
 
 class VortaKeyring:
@@ -16,7 +17,7 @@ class VortaKeyring:
             import secretstorage
 
             # secretstorage has two different libraries based on version
-            if secretstorage.__version__ >= "3.0.0":
+            if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
                 from jeepney.wrappers import DBusErrorResponse as DBusException
             else:
                 from dbus.exceptions import DBusException
