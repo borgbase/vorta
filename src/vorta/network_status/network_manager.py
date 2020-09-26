@@ -114,10 +114,7 @@ class NetworkManagerDBusAdapter(QObject):
     def isValid(self):
         if not self._nm.isValid():
             return False
-        try:
-            nm_version = self._get_nm_version()
-        except DBusException:
-            return False
+        nm_version = self._get_nm_version()
         if nm_version < QVersionNumber(1, 2):
             logger.warning('NetworkManager version 1.2 or later required, found %s', nm_version.toString())
             return False
