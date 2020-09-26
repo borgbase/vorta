@@ -35,6 +35,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
         self.sourceRemove.clicked.connect(self.source_remove)
+        self.sourcesUpdate.clicked.connect(self.sources_update)
         self.paste.clicked.connect(self.paste_text)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
@@ -49,31 +50,39 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             db_item.dir_size = data_size
             db_item.dir_files_count = files_count
             db_item.save()
-            
+        # Remove thread from list when it's done
+        for thrd in self.updateThreads:
+            if thrd.objectName() == path:
+                self.updateThreads.remove(thrd)
+
+    def update_path_info(self,index_row):
+        path = self.sourceFilesWidget.item(index_row,0).text()
+        self.sourceFilesWidget.setItem(index_row,2,QTableWidgetItem("load..."))
+        self.sourceFilesWidget.setItem(index_row,3,QTableWidgetItem("load..."))
+        getDir = FilePathInfoAsync(path)
+        getDir.signal.connect(self.set_path_info)
+        getDir.setObjectName(path)
+        self.updateThreads.append(getDir) # this is ugly, is there a better way to keep the thread object?
+        getDir.start()
 
     def add_source_to_table(self,source,update_data):
-        indexRow = self.sourceFilesWidget.rowCount()
-        self.sourceFilesWidget.insertRow(indexRow)
-        itemPath = QTableWidgetItem(source.dir)
-        self.sourceFilesWidget.setItem(indexRow,0,itemPath)
+        index_row = self.sourceFilesWidget.rowCount()
+        self.sourceFilesWidget.insertRow(index_row)
+        item_path = QTableWidgetItem(source.dir)
+        self.sourceFilesWidget.setItem(index_row,0,item_path)
         if source.path_isdir == True:
-            self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("<DIR>"))
+            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("<DIR>"))
         else:
-            self.sourceFilesWidget.setItem(indexRow,1,QTableWidgetItem("<File>"))
+            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("<File>"))
         if update_data == True:
-            self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("load..."))
-            self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("load..."))
-            getDir = FilePathInfoAsync(source.dir)
-            getDir.signal.connect(self.set_path_info)
-            self.updateThreads.append(getDir) # this is ugly, is there a better way to keep the thread object?
-            getDir.start()
+            self.update_path_info(index_row)
         else: # Use cached data from DB
             if source.dir_size < 0:
-                self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem("N/A"))
-                self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem("N/A"))
+                self.sourceFilesWidget.setItem(index_row,2,QTableWidgetItem("N/A"))
+                self.sourceFilesWidget.setItem(index_row,3,QTableWidgetItem("N/A"))
             else:
-                self.sourceFilesWidget.setItem(indexRow,2,QTableWidgetItem(pretty_bytes(source.dir_size)))
-                self.sourceFilesWidget.setItem(indexRow,3,QTableWidgetItem(format(source.dir_files_count)))
+                self.sourceFilesWidget.setItem(index_row,2,QTableWidgetItem(pretty_bytes(source.dir_size)))
+                self.sourceFilesWidget.setItem(index_row,3,QTableWidgetItem(format(source.dir_files_count)))
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -90,6 +99,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+
+    def sources_update(self):
+        for row in range(0, self.sourceFilesWidget.rowCount()):
+            self.update_path_info(row) # Update data for each entry
 
     def source_add(self, want_folder):
         def receive():
