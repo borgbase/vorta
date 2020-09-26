@@ -41,10 +41,8 @@ class FilePathInfoAsync(QThread):
         self.exiting = False
 
     def run(self):
-        logger.info("running thread to get path=%s...",self.path)
         self.files_count = 0
         self.size, self.files_count = get_path_datasize(self.path)
-        self.sleep(5)
         self.signal.emit(self.path,self.size,self.files_count)        
 
 def get_directory_size(path):
@@ -70,9 +68,9 @@ def get_path_datasize(path):
 
     if file_info.isDir():
         data_size, files_count = get_directory_size(file_info.absoluteFilePath())
-        logger.info("path (folder) %s %u elements size now=%u (%s)",file_info.absoluteFilePath(),files_count,data_size,pretty_bytes(data_size))
+        # logger.info("path (folder) %s %u elements size now=%u (%s)",file_info.absoluteFilePath(),files_count,data_size,pretty_bytes(data_size))
     else:
-        logger.info("path (file) %s size=%u",file_info.path(),file_info.size())
+        # logger.info("path (file) %s size=%u",file_info.path(),file_info.size())
         data_size = file_info.size()
         files_count = 1
 
