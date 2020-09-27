@@ -125,12 +125,12 @@ class DiffTree(TreeModel):
             return None
 
         item = index.internalPointer()
-
+        dark_mode = uses_dark_mode()
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.red)) if uses_dark_mode() else QVariant(QColor(Qt.darkRed))
+                return QVariant(QColor(Qt.red)) if dark_mode else QVariant(QColor(Qt.darkRed))
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.green)) if uses_dark_mode() else QVariant(QColor(Qt.darkGreen))
+                return QVariant(QColor(Qt.green)) if dark_mode else QVariant(QColor(Qt.darkGreen))
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
                 return QVariant(QColor(Qt.darkYellow))
 
