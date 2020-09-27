@@ -4,7 +4,7 @@ from dateutil import parser
 import subprocess
 
 from vorta.i18n import trans_late
-from vorta.utils import format_archive_name, borg_compat, network_status_monitor
+from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
 from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
 from .borg_thread import BorgThread
 
@@ -79,6 +79,7 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
 
+        network_status_monitor = get_network_status_monitor()
         current_wifi = network_status_monitor.get_current_wifi()
         if current_wifi is not None:
             wifi_is_disallowed = WifiSettingModel.select().where(
