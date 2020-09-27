@@ -21,15 +21,13 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
-from vorta.keyring.abc import VortaKeyring
+from vorta.keyring.abc import get_keyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
-keyring = VortaKeyring.get_keyring()
-logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
 borg_compat = BorgCompatibility()
 
 
@@ -270,7 +268,7 @@ def validate_passwords(firstPass, secondPass):
 
 def password_transparency(encryption):
     if encryption != 'none':
-        keyringClass = keyring.__class__.__name__
+        keyringClass = get_keyring().__class__.__name__
         messages = {
             'VortaDBKeyring':
             trans_late('utils', 'plaintext on disk.\n'

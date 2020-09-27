@@ -87,7 +87,8 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert EventLogModel.select().count() == 1
     assert RepoModel.get(id=2).url == test_repo_url
 
-    from vorta.utils import keyring
+    from vorta.keyring.abc import get_keyring
+    keyring = get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
 
 

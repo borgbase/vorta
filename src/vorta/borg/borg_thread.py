@@ -13,7 +13,8 @@ from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
-from vorta.utils import keyring, borg_compat, pretty_bytes
+from vorta.utils import borg_compat, pretty_bytes
+from vorta.keyring.abc import get_keyring
 from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
@@ -117,6 +118,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         # Try to get password from chosen keyring backend.
+        keyring = get_keyring()
         logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
         ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
