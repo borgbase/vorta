@@ -301,15 +301,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         archive_name = result['params']['current_archive']
         if result['returncode'] == 0:
-            self._set_status(self.tr('Unmounted successfully.'))
+            self._set_status(self.tr('Un-mounted successfully.'))
             del self.mount_points[archive_name]
             self.update_mount_button_text()
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
         else:
-            self._set_status(
-                self.tr(f'Unmounting failed. Make sure no programs are using {self.mount_points.get(archive_name)}'))
+            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(
+                self.mount_points.get(archive_name)))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
