@@ -180,10 +180,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
-        SettingsModel.update({SettingsModel.str_value: str(self.frameGeometry().width())})\
+        SettingsModel.update({SettingsModel.str_value: str(self.width())})\
             .where(SettingsModel.key == 'previous_window_width')\
             .execute()
-        SettingsModel.update({SettingsModel.str_value: str(self.frameGeometry().height())})\
+        SettingsModel.update({SettingsModel.str_value: str(self.height())})\
             .where(SettingsModel.key == 'previous_window_height')\
             .execute()
 
