@@ -31,28 +31,36 @@ QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi i
 
 keyring = VortaKeyring.get_keyring()
 logger.info('Using %s Keyring implementation.', keyring.__class__.__name__)
+network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
+logger.info('Using %s NetworkStatusMonitor implementation.', network_status_monitor.__class__.__name__)
+
 borg_compat = BorgCompatibility()
 
+
 class FilePathInfoAsync(QThread):
-    signal = pyqtSignal(str,int,int)
-    def __init__(self,path):
+    signal = pyqtSignal(str, int, int)
+
+    def __init__(self, path):
         self.path = path
         QThread.__init__(self)
         self.exiting = False
 
     def run(self):
+        logger.info("running thread to get path=%s...", self.path)
         self.files_count = 0
         self.size, self.files_count = get_path_datasize(self.path)
-        self.signal.emit(self.path,self.size,self.files_count)        
+        self.sleep(5)
+        self.signal.emit(self.path, self.size, self.files_count)
 
-def get_directory_size(path):
-    res = subprocess.run('find . | wc -l', cwd=path, shell=True, check=False,
+
+def get_directory_size(dirPath):
+    res = subprocess.run('find . | wc -l', cwd=dirPath, shell=True, check=False,
                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     files_count = int(res.stdout.split(b'\t')[0])
 
-    if files_count > 1: # files count on empty directory is still 1 because of '.', ignore it
-        res = subprocess.run('du -sb .', cwd=path, shell=True, check=False,
+    if files_count > 1:  # files count on empty directory is still 1 because of '.', ignore it
+        res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
                              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         data_size = int(res.stdout.split(b'\t')[0])
     else:
@@ -64,27 +72,18 @@ def get_directory_size(path):
 
 def get_path_datasize(path):
     file_info = QFileInfo(path)
-    data_size = 0    
+    data_size = 0
 
     if file_info.isDir():
         data_size, files_count = get_directory_size(file_info.absoluteFilePath())
-        # logger.info("path (folder) %s %u elements size now=%u (%s)",file_info.absoluteFilePath(),files_count,data_size,pretty_bytes(data_size))
+        logger.info("path (folder) %s %u elements size now=%u (%s)",
+                    file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
     else:
-        # logger.info("path (file) %s size=%u",file_info.path(),file_info.size())
+        logger.info("path (file) %s size=%u", file_info.path(), file_info.size())
         data_size = file_info.size()
         files_count = 1
 
     return data_size, files_count
-
-_network_status_monitor = None
-
-
-def get_network_status_monitor():
-    global _network_status_monitor
-    if _network_status_monitor is None:
-        _network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
-        logger.info('Using %s NetworkStatusMonitor implementation.', _network_status_monitor.__class__.__name__)
-    return _network_status_monitor
 
 
 def nested_dict():
@@ -148,7 +147,7 @@ def get_private_keys():
 def pretty_bytes(size):
     """from https://stackoverflow.com/questions/12523586/
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
-    if type(size) != int:
+    if not isinstance(size, int):
         return ''
     power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
@@ -179,7 +178,7 @@ def get_sorted_wifis(profile):
 
     from vorta.models import WifiSettingModel
 
-    system_wifis = get_network_status_monitor().get_known_wifis()
+    system_wifis = network_status_monitor.get_known_wifis()
     if system_wifis is None:
         # Don't show any networks if we can't get the current list
         return []
@@ -295,3 +294,4 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
+

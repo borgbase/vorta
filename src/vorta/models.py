@@ -219,11 +219,6 @@ def get_misc_settings():
                                 'Open main window on startup')
         },
         {
-            'key': 'get_srcpath_datasize', 'value': True, 'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Get Size of Source path when added')
-        },
-        {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
             'label': 'Previously selected profile'
         },
@@ -374,11 +369,11 @@ def init_db(con=None):
         _apply_schema_update(
             current_schema, 16,
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'dir_size', pw.BigIntegerField(default = -1)),
+                                'dir_size', pw.BigIntegerField(default=-1)),
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'dir_files_count', pw.BigIntegerField(default = -1)),
+                                'dir_files_count', pw.BigIntegerField(default=-1)),
             migrator.add_column(SourceFileModel._meta.table_name,
-                                'path_isdir', pw.BooleanField(default = False))
+                                'path_isdir', pw.BooleanField(default=False))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.
