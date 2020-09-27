@@ -73,7 +73,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         if source.path_isdir == True:
             self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("Folder"))
         else:
-            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("<File>"))
+            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("File"))
         if update_data == True:
             self.update_path_info(index_row)
         else: # Use cached data from DB
