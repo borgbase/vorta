@@ -71,7 +71,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         item_path = QTableWidgetItem(source.dir)
         self.sourceFilesWidget.setItem(index_row,0,item_path)
         if source.path_isdir == True:
-            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("<DIR>"))
+            self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("Folder"))
         else:
             self.sourceFilesWidget.setItem(index_row,1,QTableWidgetItem("<File>"))
         if update_data == True:
