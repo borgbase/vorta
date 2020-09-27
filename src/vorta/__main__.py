@@ -17,17 +17,16 @@ def main():
         from PyQt5.QtWidgets import QMessageBox
         logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))
-        if app and app.main_window:
-            full_exception = ''.join(format_exception(type, value, tb))
-            try:
-                QMessageBox.critical(app.main_window,
-                                     app.main_window.tr("Fatal Error"),
-                                     app.main_window.tr(
-                                         "Uncaught exception, please file a report with this text at\n"
-                                         "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
-            except RuntimeError:
-                # Window is closed, only log is available, exit to prevent freezing
-                sys.exit(1)
+        full_exception = ''.join(format_exception(type, value, tb))
+        if app:
+            QMessageBox.critical(None,
+                                 app.tr("Fatal Error"),
+                                 app.tr(
+                                     "Uncaught exception, please file a report with this text at\n"
+                                     "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
+        else:
+            # Crashed before app startup, cannot translate
+            sys.exit(1)
 
     sys.excepthook = exception_handler
     app = None
