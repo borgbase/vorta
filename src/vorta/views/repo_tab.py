@@ -214,3 +214,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         if self.repoSelector.currentIndex() > 2:
             URL = self.repoSelector.currentText()
             QApplication.clipboard().setText(URL)
+        else:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setParent(self, QtCore.Qt.Sheet)
+            msg.setText(self.tr("Select a repository from the dropdown first."))
+            msg.exec_()
