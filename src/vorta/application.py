@@ -45,6 +45,7 @@ class VortaApp(QtSingleApplication):
 
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
+        self.setApplicationName("Vorta")
 
         # Prepare system tray icon
         self.tray = TrayMenu(self)

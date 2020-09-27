@@ -6,30 +6,10 @@ fall back to a simple database keystore if needed.
 import sys
 from pkg_resources import parse_version
 
+_keyring = None
+
 
 class VortaKeyring:
-    @classmethod
-    def get_keyring(cls):
-        if sys.platform == 'darwin':  # Use Keychain on macOS
-            from .darwin import VortaDarwinKeyring
-            return VortaDarwinKeyring()
-        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-            import secretstorage
-
-            # secretstorage has two different libraries based on version
-            if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
-                from jeepney.wrappers import DBusErrorResponse as DBusException
-            else:
-                from dbus.exceptions import DBusException
-
-            from .secretstorage import VortaSecretStorageKeyring
-            try:
-                return VortaSecretStorageKeyring()
-            # Save passwords in DB, if all else fails.
-            except (secretstorage.exceptions.SecretStorageException, DBusException):
-                from .db import VortaDBKeyring
-                return VortaDBKeyring()
-
     def set_password(self, service, repo_url, password):
         """
         Writes a password to the underlying store.
@@ -56,3 +36,31 @@ class VortaKeyring:
         Returns True if the keyring is open. Return False if it is closed or locked
         """
         raise NotImplementedError
+
+
+def get_keyring():
+    """
+    Attempts to get secure keyring at runtime if current keyring is insecure.
+    Once it finds a secure keyring, it wil always use that keyring
+    """
+    global _keyring
+    if _keyring is None or not _keyring.is_primary:
+        if sys.platform == 'darwin':  # Use Keychain on macOS
+            from .darwin import VortaDarwinKeyring
+            _keyring = VortaDarwinKeyring()
+        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
+            import secretstorage
+            from .secretstorage import VortaSecretStorageKeyring
+            # secretstorage has two different libraries based on version
+            if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
+                from jeepney.wrappers import DBusErrorResponse as DBusException
+            else:
+                from dbus.exceptions import DBusException
+
+            try:
+                _keyring = VortaSecretStorageKeyring()
+            # Save passwords in DB, if all else fails.
+            except (secretstorage.exceptions.SecretStorageException, DBusException):
+                from .db import VortaDBKeyring
+                _keyring = VortaDBKeyring()
+    return _keyring
