@@ -198,11 +198,12 @@ class RestoreWindow(BackupWindow):
             except (json.decoder.JSONDecodeError, KeyError):
                 self.errors.setText(self.tr("Invalid backup file"))
             except AttributeError as e:
-                # Runs when model upgrading code in json_to_profile incomplete, schema_message intentionall untranslated
-                schema_message = f"Current schema: {SCHEMA_VERSION}\n Backup schema: {get_schema_version(jsonStr)}"
+                # Runs when model upgrading code in json_to_profile incomplete
+                schema_message = "Current schema: {0}\n Backup schema: {1}".format(
+                    SCHEMA_VERSION, get_schema_version(jsonStr))
                 self.errors.setText(
                     self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
-                            f"with the following error: \n {str(e)} \n {schema_message}"))
+                            "with the following error: \n {0} \n {1}").format(str(e), schema_message))
             except VersionException:
                 self.errors.setText(self.tr("Cannot use newer backup on older version"))
             except PermissionError:
