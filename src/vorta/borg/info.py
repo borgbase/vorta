@@ -1,7 +1,7 @@
 from collections import namedtuple
 from .borg_thread import BorgThread
 from vorta.models import RepoModel
-from vorta.utils import keyring
+from vorta.keyring.abc import get_keyring
 import os
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
@@ -60,7 +60,7 @@ class BorgInfoThread(BorgThread):
             if 'encryption' in result['data']:
                 new_repo.encryption = result['data']['encryption']['mode']
             if new_repo.encryption != 'none':
-                keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
+                get_keyring().set_password("vorta-repo", new_repo.url, result['params']['password'])
 
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']
 
