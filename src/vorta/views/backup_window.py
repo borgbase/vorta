@@ -3,8 +3,9 @@ from PyQt5.QtWidgets import QFileDialog
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
-from vorta.utils import get_asset, keyring
+from vorta.utils import get_asset
 from vorta.keyring.db import VortaDBKeyring
+from vorta.keyring.abc import get_keyring
 from .utils import get_colored_icon
 from pathlib import Path
 import json
@@ -28,6 +29,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.overrideExisting.hide()
 
         profile = self.profile()
+        self.keyring = get_keyring()
         self.url = str(Path.home()) if profile.repo is None else profile.repo.url
 
         if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
@@ -61,7 +63,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         profile_dict = model_to_dict(profile)
 
         if self.storePassword.isChecked():
-            profile_dict['password'] = keyring.get_password('vorta-repo', profile.repo.url)
+            profile_dict['password'] = self.keyring.get_password('vorta-repo', profile.repo.url)
 
         # Add SourceFileModel
         profile_dict['SourceFileModel'] = [
@@ -129,7 +131,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             profile_dict['repo'] = model_to_dict(repo)
 
         if profile_dict.get('password'):
-            keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
+            self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
         if self.overrideExisting.isChecked():
