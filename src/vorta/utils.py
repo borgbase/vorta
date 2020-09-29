@@ -68,6 +68,13 @@ def get_directory_size(dirPath):
 
     return data_size, files_count
 
+def get_network_status_monitor():
+    global _network_status_monitor
+    if _network_status_monitor is None:
+        _network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
+        logger.info('Using %s NetworkStatusMonitor implementation.', _network_status_monitor.__class__.__name__)
+    return _network_status_monitor
+
 
 def get_path_datasize(path):
     file_info = QFileInfo(path)
