@@ -219,6 +219,11 @@ def get_misc_settings():
                                 'Open main window on startup')
         },
         {
+            'key': 'get_srcpath_datasize', 'value': True, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Get Size of Source path when added')
+        },
+        {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
             'label': 'Previously selected profile'
         },
