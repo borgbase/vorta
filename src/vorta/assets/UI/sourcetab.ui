@@ -64,9 +64,26 @@
        <attribute name="verticalHeaderHighlightSections">
         <bool>false</bool>
        </attribute>
-       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-        <bool>false</bool>
-       </attribute>
+       <column>
+        <property name="text">
+         <string>Path</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Size</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>File/Folder Count</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
@@ -86,19 +103,19 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="sourceRemove">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="paste">
          <property name="toolTip">
           <string>One folder or file per line</string>
          </property>
          <property name="text">
           <string>Paste Folders/Files</string>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignTop">
-        <widget class="QPushButton" name="sourceRemove">
-         <property name="text">
-          <string>Remove</string>
          </property>
         </widget>
        </item>
