@@ -27,6 +27,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setWindowTitle('Vorta for Borg Backup')
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
         self.app = parent
+        self.setWindowIcon(get_colored_icon("icon"))
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
