@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 15
+SCHEMA_VERSION = 16
 
 db = pw.Proxy()
 
@@ -89,6 +89,7 @@ class BackupProfileModel(pw.Model):
     prune_keep_within = pw.CharField(default='10H', null=True)
     new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
     prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
+    create_backup_cmd = pw.CharField(default='')
     pre_backup_cmd = pw.CharField(default='')
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
@@ -360,6 +361,13 @@ def init_db(con=None):
             current_schema, 15,
             migrator.add_column(BackupProfileModel._meta.table_name,
                                 'dont_run_on_metered_networks', pw.BooleanField(default=True))
+        )
+
+    if current_schema.version < 16:
+        _apply_schema_update(
+            current_schema, 16,
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'create_backup_cmd', pw.CharField(default=''))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.

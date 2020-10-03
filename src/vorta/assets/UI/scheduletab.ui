@@ -26,15 +26,15 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>457</width>
+        <height>215</height>
        </rect>
       </property>
       <property name="font">
@@ -355,8 +355,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -416,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>99</width>
+        <height>93</height>
        </rect>
       </property>
       <attribute name="label">
@@ -477,8 +477,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -521,6 +521,16 @@
          </property>
          <property name="placeholderText">
           <string>Post-backup command to run AFTER backups</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="createCmdLineEdit">
+         <property name="styleSheet">
+          <string notr="true">font-family:'Courier';</string>
+         </property>
+         <property name="placeholderText">
+          <string>Create command to run WITH backups</string>
          </property>
         </widget>
        </item>
