@@ -539,7 +539,7 @@
        <item>
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Run custom optional arguments. Does not have access to env variables. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;the documentation&lt;/a&gt; for more information.</string>
+          <string>Run custom optional arguments. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;the documentation&lt;/a&gt; for more information. Does not have access to env variables. </string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
