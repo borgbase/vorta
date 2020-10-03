@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>457</width>
-        <height>215</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <property name="font">
@@ -355,8 +355,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
-        <height>151</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -416,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>99</width>
-        <height>93</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -525,16 +525,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="createCmdLineEdit">
-         <property name="styleSheet">
-          <string notr="true">font-family:'Courier';</string>
-         </property>
-         <property name="placeholderText">
-          <string>Create command to run WITH backups (does not have env variables)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="label_6">
          <property name="font">
           <font>
@@ -543,6 +533,26 @@
          </property>
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:'Courier';&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Run custom optional arguments. Does not have access to env variables. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;the documentation&lt;/a&gt; for more information.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="createCmdLineEdit">
+         <property name="styleSheet">
+          <string notr="true">font-family:'Courier';</string>
+         </property>
+         <property name="placeholderText">
+          <string>Create command to run WITH backups</string>
          </property>
         </widget>
        </item>
