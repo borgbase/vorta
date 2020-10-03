@@ -18,7 +18,7 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
-from PyQt5.QtCore import QFileInfo, QDir, QThread, pyqtSignal
+from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -33,6 +33,7 @@ logger.info('Using %s NetworkStatusMonitor implementation.', network_status_moni
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
+
 
 class FilePathInfoAsync(QThread):
     signal = pyqtSignal(str, str, str)
@@ -64,6 +65,7 @@ def get_directory_size(dirPath):
         files_count = 0
 
     return data_size, files_count
+
 
 def get_network_status_monitor():
     global _network_status_monitor
@@ -297,4 +299,3 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
-

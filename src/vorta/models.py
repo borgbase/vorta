@@ -221,7 +221,7 @@ def get_misc_settings():
         {
             'key': 'get_srcpath_datasize', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Get Size of Source path when added')
+                                'Get size of file/folder when added')
         },
         {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
