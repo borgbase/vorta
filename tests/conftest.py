@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 import vorta
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
                           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
-
+from vorta.views.main_window import MainWindow
 
 models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
@@ -40,7 +40,7 @@ def init_db(qapp):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
-    qapp.open_main_window_action()
+    qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
 
 @pytest.fixture(scope='session', autouse=True)
