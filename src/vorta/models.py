@@ -14,7 +14,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import slugify
+from vorta.utils import slugify, is_system_tray_available
 
 SCHEMA_VERSION = 15
 
@@ -241,6 +241,12 @@ def get_misc_settings():
                                     'Include pre-release versions when checking for updates')
             },
         ]
+    if not is_system_tray_available():
+        settings += [{
+            'key': 'disable_background_question', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Disable background exit dialog')
+        }]
     return settings
 
 
