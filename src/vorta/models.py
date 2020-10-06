@@ -270,7 +270,7 @@ def init_db(con=None):
     if created or current_schema.version == SCHEMA_VERSION:
         pass
     elif current_schema.version > SCHEMA_VERSION:
-        logger.warning("Database schema version greater than program schema version. This might cause bugs.")
+        logger.warning("Database schema version greater than program schema version. This will cause bugs.")
     else:
         migrator = SqliteMigrator(con)
 
