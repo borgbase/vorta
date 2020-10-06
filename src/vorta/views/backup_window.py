@@ -170,8 +170,10 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         del profile_dict['SchemaVersion']
 
         # dict to profile
-        self.new_profile = dict_to_model(BackupProfileModel, profile_dict)
-        self.new_profile.save(force_insert=True)
+        new_profile = dict_to_model(BackupProfileModel, profile_dict)
+        new_profile.save(force_insert=True)
+
+        return new_profile
 
     def converter(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -194,9 +196,13 @@ class RestoreWindow(BackupWindow):
             try:
                 jsonStr = file.read()
                 self.returns = {}
-                self.json_to_profile(jsonStr)
-                self.errors.setText("")
-                self.accept()
+                new_profile = self.json_to_profile(jsonStr)
+                repo_url = new_profile.repo.url
+                if self.keyring.get_password('vorta-repo', repo_url):
+                    self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
+                else:
+                    self.errors.setText(
+                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
             except (json.decoder.JSONDecodeError, KeyError):
                 self.errors.setText(self.tr("Invalid backup file"))
             except AttributeError as e:
