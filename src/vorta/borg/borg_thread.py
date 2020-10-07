@@ -11,7 +11,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from vorta.i18n import trans_late
+from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import get_keyring
@@ -43,6 +43,12 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         super().__init__(parent)
         self.app = QApplication.instance()
         self.app.backup_cancelled_event.connect(self.cancel)
+
+        # Declare labels here for translation
+        self.category_label = {"files": translate("borg_thread", "Files"),
+                               "original": translate("borg_thread", "Original"),
+                               "deduplicated": translate("borg_thread", "Deduplicated"),
+                               "compressed": translate("borg_thread", "Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
@@ -204,10 +210,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"Files: {parsed['nfiles']}, "
-                                f"Original: {pretty_bytes(parsed['original_size'])}, "
-                                f"Deduplicated: {pretty_bytes(parsed['deduplicated_size'])}, "
-                                f"Compressed: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{self.category_label['files']}: {parsed['nfiles']}, "
+                                f"{self.category_label['original']}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{self.category_label['deduplicated']}: {pretty_bytes(parsed['deduplicated_size'])}, "
+                                f"{self.category_label['compressed']}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
