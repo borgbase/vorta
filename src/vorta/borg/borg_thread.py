@@ -11,7 +11,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import get_keyring
@@ -45,10 +45,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
-        self.category_label = {"files": translate("borg_thread", "Files"),
-                               "original": translate("borg_thread", "Original"),
-                               "deduplicated": translate("borg_thread", "Deduplicated"),
-                               "compressed": translate("borg_thread", "Compressed"), }
+        self.category_label = {"files": self.tr("Files"),
+                               "original": self.tr("Original"),
+                               "deduplicated": self.tr("Deduplicated"),
+                               "compressed": self.tr("Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
