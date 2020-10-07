@@ -191,7 +191,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if not is_system_tray_available():
             if not SettingsModel.get(key="disable_background_question").value:
                 msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.Ok | QMessageBox.No)
+                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 msg.setParent(self, QtCore.Qt.Sheet)
                 msg.setText(translate("MainWindow QMessagebox", "Should Vorta continue to run in the background?"))
                 msg.button(QMessageBox.No).clicked.connect(self.app.quit)
