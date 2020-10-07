@@ -26,6 +26,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.sortIndicatorChanged.connect(self.sort_entries_by_column)
 
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
@@ -35,6 +36,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         self.populate_from_profile()
+
+    def sort_entries_by_column(self, column_index, order):
+        self.sourceFilesWidget.model().sort(column_index, order)
 
     def set_path_info(self, path, data_size, files_count):
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
@@ -108,6 +112,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
 
+        # Initially, sort entries by path name in ascending order
+        self.sourceFilesWidget.model().sort(0,QtCore.Qt.AscendingOrder)
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
