@@ -42,16 +42,12 @@ def get_keyring():
             if VortaKWallet5Keyring().is_valid:
                 _keyring = VortaKWallet5Keyring()
             else:
-                from .kwallet import VortaKWallet4Keyring
-                if VortaKWallet4Keyring().is_valid:
-                    _keyring = VortaKWallet4Keyring()
-                else:
-                    import secretstorage
-                    from .secretstorage import VortaSecretStorageKeyring
-                    try:
-                        _keyring = VortaSecretStorageKeyring()
-                    # Save passwords in DB, if all else fails.
-                    except secretstorage.SecretServiceNotAvailableException:
-                        from .db import VortaDBKeyring
-                        _keyring = VortaDBKeyring()
+                import secretstorage
+                from .secretstorage import VortaSecretStorageKeyring
+                try:
+                    _keyring = VortaSecretStorageKeyring()
+                # Save passwords in DB, if all else fails.
+                except secretstorage.SecretServiceNotAvailableException:
+                    from .db import VortaDBKeyring
+                    _keyring = VortaDBKeyring()
     return _keyring

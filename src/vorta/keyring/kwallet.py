@@ -52,8 +52,3 @@ class VortaKWallet5Keyring(VortaKeyring):
     @property
     def is_valid(self):
         return self.iface.isValid() and self.get_result("isEnabled")
-
-
-class VortaKWallet4Keyring(VortaKWallet5Keyring):
-    service_name = "org.kde.kwalletd"
-    object_path = "/modules/kwalletd"
