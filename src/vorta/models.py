@@ -243,9 +243,13 @@ def get_misc_settings():
         ]
     if not is_system_tray_available():
         settings += [{
-            'key': 'disable_background_question', 'value': False, 'type': 'checkbox',
+            'key': 'disable_background_question', 'value': False, 'type': 'button',
             'label': trans_late('settings',
-                                'Disable background exit dialog')
+                                'Show background exit dialog')
+        },
+            {
+            'key': 'disable_background_state', 'value': False, 'type': 'internal',
+            'label': 'Previous background exit button'
         }]
     return settings
 
@@ -351,7 +355,7 @@ def init_db(con=None):
             with db.atomic():
                 size = 1000
                 for i in range(0, len(data), size):
-                    ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
+                    ArchiveModel.insert_many(data[i: i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
 

@@ -194,7 +194,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 msg.setParent(self, QtCore.Qt.Sheet)
                 msg.setText(translate("MainWindow QMessagebox", "Should Vorta continue to run in the background?"))
-                msg.button(QMessageBox.No).clicked.connect(self.app.quit)
+                msg.button(QMessageBox.Yes).clicked.connect(
+                    lambda: self.miscTab.save_setting("disable_background_state", True))
+                msg.button(QMessageBox.No).clicked.connect(lambda: (self.miscTab.save_setting(
+                    "disable_background_state", False), self.app.quit()))
                 msg.setWindowTitle(translate("MainWindow QMessagebox", "Quit"))
                 dont_show_box = QCheckBox(translate("MainWindow QMessagebox", "Don't show this again"))
                 dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("disable_background_question", x))
@@ -202,5 +205,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 msg.setCheckBox(dont_show_box)
                 msg.exec_()
             else:
-                self.app.quit()
+                if not SettingsModel.get(key="disable_background_state").value:
+                    self.app.quit()
         event.accept()

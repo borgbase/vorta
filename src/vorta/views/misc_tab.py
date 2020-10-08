@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from PyQt5.QtWidgets import QCheckBox
+from PyQt5.QtWidgets import QCheckBox, QToolButton
 
 from vorta.i18n import translate
 from vorta.utils import get_asset
@@ -30,6 +30,17 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
             b.setTristate(False)
             b.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
             self.checkboxLayout.addWidget(b)
+
+        if SettingsModel.get(key="disable_background_question").value:
+            self.background_button = QToolButton()
+            self.background_button.setText(SettingsModel.get(key="disable_background_question").label)
+            self.background_button.clicked.connect(self.disable_background_question)
+            self.buttonLayout.addWidget(self.background_button)
+
+    def disable_background_question(self, x):
+        self.save_setting("disable_background_question", x)
+        self.background_button.setParent(None)
+        del(self.background_button)
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)
