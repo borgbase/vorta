@@ -110,27 +110,23 @@ def calc_size(significand, unit):
 
 
 class DiffTree(TreeModel):
-    def __init__(
-        self,
-        files_with_attributes,
-        nested_file_list,
-        parent=None,
-    ):
+    def __init__(self, files_with_attributes, nested_file_list, parent=None,):
         super().__init__(
             files_with_attributes, nested_file_list, parent=parent
         )
+        self.dark_mode = uses_dark_mode()
 
     def data(self, index, role):
         if not index.isValid():
             return None
 
         item = index.internalPointer()
-        dark_mode = uses_dark_mode()
+
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.red)) if dark_mode else QVariant(QColor(Qt.darkRed))
+                return QVariant(QColor(Qt.red)) if self.dark_mode else QVariant(QColor(Qt.darkRed))
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.green)) if dark_mode else QVariant(QColor(Qt.darkGreen))
+                return QVariant(QColor(Qt.green)) if self.dark_mode else QVariant(QColor(Qt.darkGreen))
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
                 return QVariant(QColor(Qt.darkYellow))
 
