@@ -33,7 +33,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
 
         if SettingsModel.get(key="disable_background_question").value:
             self.background_button = QToolButton()
-            self.background_button.setText(SettingsModel.get(key="disable_background_question").label)
+            self.background_button.setText(
+                translate('settings', SettingsModel.get(key="disable_background_question").label))
             self.background_button.clicked.connect(self.disable_background_question)
             self.buttonLayout.addWidget(self.background_button)
 
