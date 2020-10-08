@@ -114,7 +114,10 @@ class DiffTree(TreeModel):
         super().__init__(
             files_with_attributes, nested_file_list, parent=parent
         )
-        self.dark_mode = uses_dark_mode()
+        dark_mode = uses_dark_mode()
+        self.red = QVariant(QColor(Qt.red)) if dark_mode else QVariant(QColor(Qt.darkRed))
+        self.green = QVariant(QColor(Qt.green)) if dark_mode else QVariant(QColor(Qt.darkGreen))
+        self.yellow = QVariant(QColor(Qt.yellow)) if dark_mode else QVariant(QColor(Qt.darkYellow))
 
     def data(self, index, role):
         if not index.isValid():
@@ -124,11 +127,11 @@ class DiffTree(TreeModel):
 
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.red)) if self.dark_mode else QVariant(QColor(Qt.darkRed))
+                return self.red
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.green)) if self.dark_mode else QVariant(QColor(Qt.darkGreen))
+                return self.green
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
-                return QVariant(QColor(Qt.darkYellow))
+                return self.yellow
 
         if role == Qt.DisplayRole:
             return item.data(index.column())
