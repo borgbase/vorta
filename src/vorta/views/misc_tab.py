@@ -2,7 +2,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox, QToolButton
 
 from vorta.i18n import translate
-from vorta.utils import get_asset
+from vorta.utils import get_asset, is_system_tray_available
 from vorta.autostart import open_app_at_startup
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
@@ -31,7 +31,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
             b.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
             self.checkboxLayout.addWidget(b)
 
-        if SettingsModel.get(key="disable_background_question").value:
+        if not is_system_tray_available() and SettingsModel.get(key="disable_background_question").value:
             self.background_button = QToolButton()
             self.background_button.setText(
                 translate('settings', SettingsModel.get(key="disable_background_question").label))
