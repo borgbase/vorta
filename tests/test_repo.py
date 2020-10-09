@@ -7,6 +7,7 @@ import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add_dialog import AddRepoWindow
 from vorta.views.ssh_dialog import SSHAddWindow
+from vorta.keyring.abc import get_keyring
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 LONG_PASSWORD = 'long-password-long'
@@ -60,6 +61,21 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.progressText.text() == 'Add a backup repository first.'
+
+
+def test_password_autofill(qapp, qtbot):
+    main = qapp.main_window
+    main.repoTab.repo_added.disconnect()
+    add_repo_window = AddRepoWindow(main)
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+
+    keyring = get_keyring()
+    password = str(uuid.uuid4())
+    keyring.set_password('vorta-repo', test_repo_url, password)
+
+    qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
+
+    assert(add_repo_window.passwordLineEdit.text() == password)
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):

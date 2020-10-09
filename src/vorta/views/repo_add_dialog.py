@@ -3,6 +3,7 @@ from PyQt5 import uic
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords, password_transparency
+from vorta.keyring.abc import get_keyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.i18n import translate
@@ -24,6 +25,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.repoURL.textChanged.connect(lambda x: self.set_password(x))
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.password_transparency)
@@ -65,6 +67,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
         dialog.open(receive)
+
+    def set_password(self, URL):
+        ''' Autofill password from keyring '''
+        password = get_keyring().get_password('vorta-repo', URL)
+        if password and self.passwordLineEdit.text() == "":
+            self.passwordLineEdit.setText(password)
+            self.confirmLineEdit.setText(password)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
