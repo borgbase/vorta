@@ -1,5 +1,6 @@
 import re
 from PyQt5 import uic
+from PyQt5.QtWidgets import QLineEdit
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords, password_transparency
@@ -29,6 +30,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.password_transparency)
+        self.showPasswordBox.clicked.connect(lambda clicked: self.set_visibility(clicked))
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
@@ -74,6 +76,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if password and self.passwordLineEdit.text() == "":
             self.passwordLineEdit.setText(password)
             self.confirmLineEdit.setText(password)
+
+    def set_visibility(self, visible):
+        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        self.passwordLineEdit.setEchoMode(visibility)
+        self.confirmLineEdit.setEchoMode(visibility)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -160,6 +167,7 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.showPasswordBox.setText(self.tr("Show my password"))
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
