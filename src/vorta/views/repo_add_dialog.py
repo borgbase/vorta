@@ -33,7 +33,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         self.showHideAction = QAction(self.tr("Show my passwords"), self)
         self.showHideAction.setCheckable(True)
-        self.showHideAction.toggled.connect(lambda clicked: self.set_visibility(clicked))
+        self.showHideAction.toggled.connect(self.set_visibility)
 
         self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
 
@@ -81,14 +81,16 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         ''' Autofill password from keyring '''
         password = get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordLineEdit.text() == "":
-            self.passwordLineEdit.setText(password)
-            self.confirmLineEdit.setText(password)
             self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
+            self.passwordLineEdit.setText(password)
+            if self.__class__ == AddRepoWindow:
+                self.confirmLineEdit.setText(password)
 
     def set_visibility(self, visible):
         visibility = QLineEdit.Normal if visible else QLineEdit.Password
         self.passwordLineEdit.setEchoMode(visibility)
-        self.confirmLineEdit.setEchoMode(visibility)
+        if self.__class__ == AddRepoWindow:
+            self.confirmLineEdit.setEchoMode(visibility)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -166,7 +168,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             secondPass = self.confirmLineEdit.text()
             msg = validate_passwords(firstPass, secondPass)
             self.passwordLabel.setText(translate('utils', msg))
-            return len(msg) == 0
+            return not bool(msg)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -180,6 +182,8 @@ class ExistingRepoWindow(AddRepoWindow):
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
         self.confirmLabel.hide()
+        del self.confirmLineEdit
+        del self.confirmLabel
 
     def run(self):
         if self.validate():

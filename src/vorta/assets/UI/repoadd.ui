@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,7 +103,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
            </property>
           </widget>
