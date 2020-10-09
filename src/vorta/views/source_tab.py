@@ -19,7 +19,7 @@ class SourceColumn:
 
 class SizeItem(QTableWidgetItem):
     def __lt__(self, other):
-        return sort_sizes([self.text(), other.text()]) != [self.text(), other.text()]
+        return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
 
 
 class SourceTab(SourceBase, SourceUI, BackupProfileMixin):

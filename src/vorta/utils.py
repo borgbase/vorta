@@ -158,6 +158,9 @@ def sort_sizes(size_list):
                     for size in size_list if size.endswith(suffix) and size[:-len(suffix)][-1].isnumeric()]
         sub_list.sort()
         final_list += [(str(size) + suffix) for size in sub_list]
+        # Skip additional loops
+        if len(final_list) == len(size_list):
+            break
     return final_list
 
 
