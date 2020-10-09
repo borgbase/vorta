@@ -204,7 +204,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 dont_show_box.setTristate(False)
                 msg.setCheckBox(dont_show_box)
                 msg.exec_()
-            else:
-                if not SettingsModel.get(key="disable_background_state").value:
-                    self.app.quit()
+            elif not SettingsModel.get(key="disable_background_state").value:
+                self.app.quit()
         event.accept()
