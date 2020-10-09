@@ -257,11 +257,11 @@ def validate_passwords(firstPass, secondPass):
     passLong = len(firstPass) > 8
 
     if not passLong and not passEqual:
-        return trans_late('utils', "Passwords must be identical and greater than 8 characters long")
+        return trans_late('utils', "Passwords must be identical and greater than 8 characters long.")
     if not passEqual:
-        return trans_late('utils', "Passwords must be identical")
+        return trans_late('utils', "Passwords must be identical.")
     if not passLong:
-        return trans_late('utils', "Passwords must be greater than 8 characters long")
+        return trans_late('utils', "Passwords must be greater than 8 characters long.")
 
     return ""
 
@@ -280,6 +280,6 @@ def password_transparency(encryption):
         }
         # Will display keyring name with 'Vorta' and 'Keyring' cut off for unknown keyring
         keyringName = messages.get(keyringClass, keyringClass[5:-7])
-        return trans_late('utils', 'The password will be stored in %s') % keyringName
+        return trans_late('utils', 'The password will be stored in %s.') % keyringName
     else:
         return ""

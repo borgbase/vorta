@@ -76,7 +76,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if password and self.passwordLineEdit.text() == "":
             self.passwordLineEdit.setText(password)
             self.confirmLineEdit.setText(password)
-            self.passwordLabel.setText(self.tr("Autofilled password from password manager"))
+            self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
 
     def set_visibility(self, visible):
         visibility = QLineEdit.Normal if visible else QLineEdit.Password
