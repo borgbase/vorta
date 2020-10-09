@@ -1,6 +1,6 @@
 import re
 from PyQt5 import uic
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords, password_transparency
@@ -30,7 +30,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.password_transparency)
-        self.showPasswordBox.clicked.connect(lambda clicked: self.set_visibility(clicked))
+
+        self.showHideAction = QAction(self.tr("Show my passwords"), self)
+        self.showHideAction.setCheckable(True)
+        self.showHideAction.toggled.connect(lambda clicked: self.set_visibility(clicked))
+
+        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
+
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
@@ -41,6 +47,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
         self.useRemoteRepoButton.setIcon(get_colored_icon('globe'))
+        self.showHideAction.setIcon(get_colored_icon("eye"))
 
     @property
     def values(self):
@@ -168,7 +175,7 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
-        self.showPasswordBox.setText(self.tr("Show my password"))
+        self.showHideAction.setText(self.tr("Show my password"))
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
