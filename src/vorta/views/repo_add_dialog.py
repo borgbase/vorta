@@ -26,7 +26,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
-        self.repoURL.textChanged.connect(lambda x: self.set_password(x))
+        self.repoURL.textChanged.connect(self.set_password)
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.password_transparency)
