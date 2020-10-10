@@ -58,7 +58,7 @@ def get_directory_size(dirPath):
     files_count = int(res.stdout.split(b'\t')[0])
 
     if files_count > 1:  # files count on empty directory is still 1 because of '.', ignore it
-        res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
+        res = subprocess.run('du -s -b .', cwd=dirPath, shell=True, check=False,
                              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         data_size = int(res.stdout.split(b'\t')[0])
     else:
