@@ -22,6 +22,20 @@ class SizeItem(QTableWidgetItem):
         return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
 
 
+class FilesCount(QTableWidgetItem):
+    def __lt__(self, other):
+        # Verify that conversion is only performed on valid integers
+        # If one of the 2 elements is no number, put these elements at the end
+        # This is important if the text i "Calculating..." or ""
+        if self.text().isdigit() and other.text().isdigit():
+                return int(self.text()) < int(other.text()) # Compare & return result
+        else:
+            if not self.text().isdigit():
+                return 1 # Move one down if current item has no valid count
+            if not other.text().isdigit():
+                return 0
+
+
 class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     updateThreads = []
 
@@ -58,11 +72,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for item in items:
             db_item = SourceFileModel.get(dir=path)
             if QFileInfo(path).isDir():
-                self.sourceFilesWidget.setItem(item.row(), SourceColumn.Type, QTableWidgetItem("Folder"))
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText("Folder")
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
             else:
-                self.sourceFilesWidget.setItem(item.row(), SourceColumn.Type, QTableWidgetItem("File"))
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText("File")
                 # No files count, if entry itself is a file
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText("")
                 db_item.path_isdir = False
@@ -78,9 +92,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def update_path_info(self, index_row):
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem("Calculating..."))
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, QTableWidgetItem("Calculating..."))
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, QTableWidgetItem("Calculating..."))
+        self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("Calculating...")
+        self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText("Calculating...")
+        self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText("Calculating...")
         getDir = FilePathInfoAsync(path)
         getDir.signal.connect(self.set_path_info)
         getDir.setObjectName(path)
@@ -90,27 +104,23 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def add_source_to_table(self, source, update_data):
         index_row = self.sourceFilesWidget.rowCount()
         self.sourceFilesWidget.insertRow(index_row)
-        item_path = QTableWidgetItem(source.dir)
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, item_path)
+        # Insert all items on current row
+        self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, QTableWidgetItem(source.dir))
+        self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem(""))
+        self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
+        self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
+
         if update_data:
             self.update_path_info(index_row)
         else:  # Use cached data from DB
-            if source.dir_size < 0:
-                # Size/count wasn't calculated yet
-                self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem(""))
-                self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, QTableWidgetItem(""))
-                self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, QTableWidgetItem(""))
-            else:
-                if source.path_isdir:
-                    self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem("Folder"))
-                    self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount,
-                                                   QTableWidgetItem(format(source.dir_files_count)))
-                else:
-                    self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem("File"))
-                    self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, QTableWidgetItem(""))
+            if source.dir_size > -1:
+                self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
 
-                self.sourceFilesWidget.setItem(index_row, SourceColumn.Size,
-                                               SizeItem(pretty_bytes(source.dir_size)))
+                if source.path_isdir:
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("Folder")
+                    self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(format(source.dir_files_count))
+                else:
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("File")
 
     def populate_from_profile(self):
         profile = self.profile()
