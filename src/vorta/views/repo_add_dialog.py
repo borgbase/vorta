@@ -89,8 +89,14 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def set_visibility(self, visible):
         visibility = QLineEdit.Normal if visible else QLineEdit.Password
         self.passwordLineEdit.setEchoMode(visibility)
-        if self.__class__ == AddRepoWindow:
-            self.confirmLineEdit.setEchoMode(visibility)
+        self.confirmLineEdit.setEchoMode(visibility)
+
+        if visible:
+            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+            self.showHideAction.setText(self.tr("Hide my passwords"))
+        else:
+            self.showHideAction.setIcon(get_colored_icon("eye"))
+            self.showHideAction.setText(self.tr("Show my passwords"))
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -184,6 +190,17 @@ class ExistingRepoWindow(AddRepoWindow):
         self.confirmLabel.hide()
         del self.confirmLineEdit
         del self.confirmLabel
+
+    def set_visibility(self, visible):
+        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        self.passwordLineEdit.setEchoMode(visibility)
+
+        if visible:
+            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+            self.showHideAction.setText(self.tr("Hide my password"))
+        else:
+            self.showHideAction.setIcon(get_colored_icon("eye"))
+            self.showHideAction.setText(self.tr("Show my password"))
 
     def run(self):
         if self.validate():
