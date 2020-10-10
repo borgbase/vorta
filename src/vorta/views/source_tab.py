@@ -1,6 +1,6 @@
 from PyQt5 import uic
 from ..models import SourceFileModel, BackupProfileMixin, SettingsModel
-from ..utils import get_asset, choose_file_dialog, pretty_bytes, FilePathInfoAsync
+from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo
 from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
@@ -9,15 +9,21 @@ import os
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
+
 class SourceColumn:
     Path = 0
     Type = 1
     Size = 2
     FilesCount = 3
 
+
+class SizeItem(QTableWidgetItem):
+    def __lt__(self, other):
+        return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
+
+
 class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     updateThreads = []
-
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -32,8 +38,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSectionResizeMode(SourceColumn.Type, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
-        header.sortIndicatorChanged.connect(self.sort_entries_by_column)
 
+        self.sourceFilesWidget.setSortingEnabled(True)
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
         self.sourceRemove.clicked.connect(self.source_remove)
@@ -42,13 +48,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         self.populate_from_profile()
-
-    def sort_entries_by_column(self, column_index, order):
-        if column_index == SourceColumn.Size:
-            # todo change this
-            self.sourceFilesWidget.model().sort(column_index, order)
-        else:
-            self.sourceFilesWidget.model().sort(column_index, order)
 
     def set_path_info(self, path, data_size, files_count):
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
@@ -104,12 +103,14 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             else:
                 if source.path_isdir:
                     self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem("Folder"))
-                    self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, QTableWidgetItem(format(source.dir_files_count)))
+                    self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount,
+                                                   QTableWidgetItem(format(source.dir_files_count)))
                 else:
                     self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem("File"))
                     self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, QTableWidgetItem(""))
 
-                self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, QTableWidgetItem(pretty_bytes(source.dir_size)))
+                self.sourceFilesWidget.setItem(index_row, SourceColumn.Size,
+                                               SizeItem(pretty_bytes(source.dir_size)))
 
     def populate_from_profile(self):
         profile = self.profile()

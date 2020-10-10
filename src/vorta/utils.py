@@ -20,6 +20,7 @@ from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+from decimal import Decimal
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.log import logger
@@ -147,6 +148,20 @@ def get_private_keys():
                         raise
 
     return available_private_keys
+
+
+def sort_sizes(size_list):
+    """ Sorts sizes with extensions. Assumes that size is already in largest unit possible """
+    final_list = []
+    for suffix in [" B", " KB", " MB", " GB", " TB"]:
+        sub_list = [Decimal(size[:-len(suffix)])
+                    for size in size_list if size.endswith(suffix) and size[:-len(suffix)][-1].isnumeric()]
+        sub_list.sort()
+        final_list += [(str(size) + suffix) for size in sub_list]
+        # Skip additional loops
+        if len(final_list) == len(size_list):
+            break
+    return final_list
 
 
 def pretty_bytes(size):
