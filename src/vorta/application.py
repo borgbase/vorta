@@ -90,6 +90,7 @@ class VortaApp(QtSingleApplication):
     def open_main_window_action(self):
         self.main_window.show()
         self.main_window.raise_()
+        self.main_window.activateWindow()
 
     def toggle_main_window_visibility(self):
         if self.main_window.isVisible():
