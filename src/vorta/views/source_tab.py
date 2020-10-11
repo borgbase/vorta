@@ -28,10 +28,10 @@ class FilesCount(QTableWidgetItem):
         # If one of the 2 elements is no number, put these elements at the end
         # This is important if the text i "Calculating..." or ""
         if self.text().isdigit() and other.text().isdigit():
-                return int(self.text()) < int(other.text()) # Compare & return result
+            return int(self.text()) < int(other.text())  # Compare & return result
         else:
             if not self.text().isdigit():
-                return 1 # Move one down if current item has no valid count
+                return 1  # Move one down if current item has no valid count
             if not other.text().isdigit():
                 return 0
 
@@ -118,7 +118,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
                 if source.path_isdir:
                     self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("Folder")
-                    self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(format(source.dir_files_count))
+                    self.sourceFilesWidget.item(index_row, 
+                                                SourceColumn.FilesCount).setText(format(source.dir_files_count))
                 else:
                     self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("File")
 
