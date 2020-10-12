@@ -26,7 +26,7 @@ class FilesCount(QTableWidgetItem):
     def __lt__(self, other):
         # Verify that conversion is only performed on valid integers
         # If one of the 2 elements is no number, put these elements at the end
-        # This is important if the text i "Calculating..." or ""
+        # This is important if the text is "Calculating..." or ""
         if self.text().isdigit() and other.text().isdigit():
             return int(self.text()) < int(other.text())  # Compare & return result
         else:
