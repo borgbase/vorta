@@ -61,11 +61,11 @@ def get_directory_size(dirPath):
         if sys.platform == 'darwin':
             res = subprocess.run('du -s -B 1 -A .', cwd=dirPath, shell=True, check=False,
                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            data_size = int(res.stdout.split())
         else:
             res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-
-        data_size = int(res.stdout.split(b'\t')[0])
+            data_size = int(res.stdout.split(b'\t')[0])
     else:
         data_size = 0
         files_count = 0
