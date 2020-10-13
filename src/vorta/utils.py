@@ -65,7 +65,7 @@ def get_directory_size(dir_path):
             data_size = 0
             files_count = 0
     else:  # Other platform than linux, use fallback to determine files count and data sizes
-        ''' Get number of files only and total size in bytes from a path. 
+        ''' Get number of files only and total size in bytes from a path.
             Based off https://stackoverflow.com/a/17936789 '''
         data_size = 0
         seen = set()
