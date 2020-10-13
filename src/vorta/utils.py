@@ -51,24 +51,41 @@ class FilePathInfoAsync(QThread):
         self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
-def get_directory_size(dirPath):
-    res = subprocess.run('find . | wc -l', cwd=dirPath, shell=True, check=False,
-                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+def get_directory_size(dir_path):
+    if sys.platform.startswith('linux'):
+        res = subprocess.run('find . | wc -l', cwd=dir_path, shell=True, check=False,
+                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        files_count = int(res.stdout.split(b'\t')[0])
 
-    files_count = int(res.stdout.split(b'\t')[0])
-
-    if files_count > 1:  # files count on empty directory is still 1 because of '.', ignore it
-        if sys.platform == 'darwin':
-            res = subprocess.run('du -s -B 1 -A .', cwd=dirPath, shell=True, check=False,
-                                 stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-            data_size = int(res.stdout.split()[0])
-        else:
-            res = subprocess.run('du -sb .', cwd=dirPath, shell=True, check=False,
+        if files_count > 1:  # files count on empty directory is still 1 because of '.', ignore it
+            res = subprocess.run('du -sb .', cwd=dir_path, shell=True, check=False,
                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
             data_size = int(res.stdout.split(b'\t')[0])
-    else:
+        else:
+            data_size = 0
+            files_count = 0
+    else:  # Other platform than linux, use fallback to determine files count and data sizes
+        ''' Get number of files only and total size in bytes from a path. 
+            Based off https://stackoverflow.com/a/17936789 '''
         data_size = 0
-        files_count = 0
+        seen = set()
+
+        for curr_path, _, file_names in os.walk(dir_path):
+            for file_name in file_names:
+                file_path = os.path.join(curr_path, file_name)
+
+                # Ignore symbolic links, since borg doesn't follow them
+                if os.path.islink(file_path):
+                    continue
+
+                stat = os.stat(file_path)
+
+                # Visit each file once
+                if stat.st_ino not in seen:
+                    seen.add(stat.st_ino)
+                    data_size += stat.st_size
+
+        files_count = len(seen)
 
     return data_size, files_count
 
