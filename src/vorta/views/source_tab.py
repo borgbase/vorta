@@ -72,7 +72,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for item in items:
             db_item = SourceFileModel.get(dir=path)
             if QFileInfo(path).isDir():
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText("Folder")
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText(self.tr("Folder"))
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
             else:
