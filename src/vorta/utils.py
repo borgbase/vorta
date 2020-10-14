@@ -52,40 +52,27 @@ class FilePathInfoAsync(QThread):
 
 
 def get_directory_size(dir_path):
-    if sys.platform.startswith('linux'):
-        res = subprocess.run('find . | wc -l', cwd=dir_path, shell=True, check=False,
-                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        files_count = int(res.stdout.split(b'\t')[0])
+    ''' Get number of files only and total size in bytes from a path.
+        Based off https://stackoverflow.com/a/17936789 '''
+    data_size = 0
+    seen = set()
 
-        if files_count > 1:  # files count on empty directory is still 1 because of '.', ignore it
-            res = subprocess.run('du -sb .', cwd=dir_path, shell=True, check=False,
-                                 stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-            data_size = int(res.stdout.split(b'\t')[0])
-        else:
-            data_size = 0
-            files_count = 0
-    else:  # Other platform than linux, use fallback to determine files count and data sizes
-        ''' Get number of files only and total size in bytes from a path.
-            Based off https://stackoverflow.com/a/17936789 '''
-        data_size = 0
-        seen = set()
+    for curr_path, _, file_names in os.walk(dir_path):
+        for file_name in file_names:
+            file_path = os.path.join(curr_path, file_name)
 
-        for curr_path, _, file_names in os.walk(dir_path):
-            for file_name in file_names:
-                file_path = os.path.join(curr_path, file_name)
+            # Ignore symbolic links, since borg doesn't follow them
+            if os.path.islink(file_path):
+                continue
 
-                # Ignore symbolic links, since borg doesn't follow them
-                if os.path.islink(file_path):
-                    continue
+            stat = os.stat(file_path)
 
-                stat = os.stat(file_path)
+            # Visit each file once
+            if stat.st_ino not in seen:
+                seen.add(stat.st_ino)
+                data_size += stat.st_size
 
-                # Visit each file once
-                if stat.st_ino not in seen:
-                    seen.add(stat.st_ino)
-                    data_size += stat.st_size
-
-        files_count = len(seen)
+    files_count = len(seen)
 
     return data_size, files_count
 
