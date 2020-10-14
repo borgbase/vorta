@@ -7,7 +7,6 @@ import platform
 import re
 import sys
 import unicodedata
-import subprocess
 from collections import defaultdict
 from datetime import datetime as dt
 from functools import reduce
