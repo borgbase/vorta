@@ -117,7 +117,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
 
                 if source.path_isdir:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("Folder")
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("Folder"))
                     self.sourceFilesWidget.item(index_row,
                                                 SourceColumn.FilesCount).setText(format(source.dir_files_count))
                 else:
