@@ -81,7 +81,7 @@
        </column>
        <column>
         <property name="text">
-         <string>File/Folder Count</string>
+         <string>File Count</string>
         </property>
        </column>
       </widget>
