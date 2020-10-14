@@ -121,7 +121,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.sourceFilesWidget.item(index_row,
                                                 SourceColumn.FilesCount).setText(format(source.dir_files_count))
                 else:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText("File")
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("File"))
 
     def populate_from_profile(self):
         profile = self.profile()
