@@ -76,7 +76,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
             else:
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText("File")
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText(self.tr("File"))
                 # No files count, if entry itself is a file
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText("")
                 db_item.path_isdir = False
