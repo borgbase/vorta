@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
@@ -46,6 +47,12 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     main.repoTab.repo_added.disconnect()
     add_repo_window = AddRepoWindow(main)
+
+    ArchiveModel(
+        name="Test Record",
+        snapshot_id=uuid.uuid4(),
+        repo_id=main.current_profile.repo.id,
+        time=datetime.now()).save()  # Test persistence across deletion
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
@@ -68,6 +75,8 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     from vorta.keyring.abc import get_keyring
     keyring = get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
+
+    assert ArchiveModel.get_or_none(name="Test Record")
 
 
 def test_ssh_dialog(qtbot, tmpdir):
