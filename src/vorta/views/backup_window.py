@@ -199,8 +199,8 @@ class RestoreWindow(BackupWindow):
                 repo_url = new_profile.repo.url
                 if self.keyring.get_password('vorta-repo', repo_url):
                     self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
-                    self.parent.profileSelector.setItemText(
-                        self.parent.profileSelector.currentIndex(), new_profile.name)
+                    self.parent.profileSelector.addItem(new_profile.name, self.parent.profileSelector.currentIndex())
+                    self.parent.profileSelector.setCurrentIndex(self.parent.profileSelector.count() - 1)
                 else:
                     self.errors.setText(
                         self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa

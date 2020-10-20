@@ -152,8 +152,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
-        if window.exec_():
-            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.profileNameField.text())
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
