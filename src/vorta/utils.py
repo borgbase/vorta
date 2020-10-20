@@ -205,7 +205,7 @@ def get_sorted_wifis(profile):
 
     from vorta.models import WifiSettingModel
 
-    system_wifis = network_status_monitor.get_known_wifis()
+    system_wifis = get_network_status_monitor().get_known_wifis()
     if system_wifis is None:
         # Don't show any networks if we can't get the current list
         return []
