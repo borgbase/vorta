@@ -138,13 +138,13 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.returns['overwrite'] = True
             db.drop_tables([SettingsModel])
             db.create_tables([SettingsModel])
-            [dict_to_model(SettingsModel, setting).save(force_insert=True) for setting in profile_dict['SettingsModel']]
             db.drop_tables([EventLogModel])
             db.create_tables([EventLogModel])
-            [dict_to_model(EventLogModel, event).save(force_insert=True) for event in profile_dict['EventLogModel']]
             db.drop_tables([WifiSettingModel])
             db.create_tables([WifiSettingModel])
-            [dict_to_model(WifiSettingModel, wifi).save(force_insert=True) for wifi in profile_dict['WifiSettingModel']]
+            SettingsModel.insert_many(profile_dict['SettingsModel']).execute()
+            EventLogModel.insert_many(profile_dict['EventLogModel']).execute()
+            WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
 
         for source in profile_dict['SourceFileModel']:
             source['profile'] = profile_dict['id']
@@ -158,8 +158,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             # Guarantee uniqueness of ids
             while ArchiveModel.get_or_none(ArchiveModel.id == archive['id']) is not None:
                 archive['id'] += 1
-            if ArchiveModel.get_or_none(ArchiveModel.snapshot_id == archive['snapshot_id']) is None:
-                dict_to_model(ArchiveModel, archive).save(force_insert=True)
+            dict_to_model(ArchiveModel, archive).save(force_insert=True)
 
         # Delete added dictionaries to make it match BackupProfileModel
         del profile_dict['SettingsModel']
@@ -200,6 +199,8 @@ class RestoreWindow(BackupWindow):
                 repo_url = new_profile.repo.url
                 if self.keyring.get_password('vorta-repo', repo_url):
                     self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
+                    self.parent.profileSelector.setItemText(
+                        self.parent.profileSelector.currentIndex(), new_profile.name)
                 else:
                     self.errors.setText(
                         self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
