@@ -262,7 +262,7 @@ def restore_deleted_archives(repo_url):
         archive['repo'] = new_id
         while ArchiveModel.get_or_none(id=archive['id']):
             archive['id'] += 1
-    ArchiveModel.insert_many(archives).execute()
+        ArchiveModel.insert(archive).execute()
 
 
 def init_db(con=None):
