@@ -38,7 +38,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
     def profile_to_json(self, profile):
         # Profile to dict
-        profile_dict = model_to_dict(profile)
+        profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
         if self.storePassword.isChecked():
             profile_dict['password'] = self.keyring.get_password('vorta-repo', profile.repo.url)
@@ -47,13 +47,13 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         profile_dict['SourceFileModel'] = [
             model_to_dict(
                 source,
-                recurse=False) for source in SourceFileModel.select().where(
+                recurse=False, exclude=[SourceFileModel.id]) for source in SourceFileModel.select().where(
                 SourceFileModel.profile == profile)]
         # Add ArchiveModel
         profile_dict['ArchiveModel'] = [
             model_to_dict(
                 archive,
-                recurse=False) for archive in ArchiveModel.select().where(
+                recurse=False, exclude=[ArchiveModel.id]) for archive in ArchiveModel.select().where(
                 ArchiveModel.repo == profile.repo.id)]
         # Add WifiSettingModel
         profile_dict['WifiSettingModel'] = [
@@ -136,8 +136,6 @@ class RestoreWindow(BackupWindow):
         repo = RepoModel.get_or_none(RepoModel.url == profile_dict['repo']['url'])
         if repo is None:
             # Load repo from backup
-            while RepoModel.get_or_none(RepoModel.id == profile_dict['repo']['id']):
-                profile_dict['repo']['id'] += 1
             repo = dict_to_model(RepoModel, profile_dict['repo'])
             repo.save(force_insert=True)
             self.returns['repo'] = True
@@ -163,17 +161,12 @@ class RestoreWindow(BackupWindow):
 
         for source in profile_dict['SourceFileModel']:
             source['profile'] = profile_dict['id']
-            # Guarantee uniqueness of ids
-            while SourceFileModel.get_or_none(SourceFileModel.id == source['id']) is not None:
-                source['id'] += 1
+
             dict_to_model(SourceFileModel, source).save(force_insert=True)
 
-        for archive in profile_dict['ArchiveModel']:
-            archive['repo'] = profile_dict['repo']['id']
-            # Guarantee uniqueness of ids
-            while ArchiveModel.get_or_none(ArchiveModel.id == archive['id']) is not None:
-                archive['id'] += 1
-            if not ArchiveModel.get_or_none(ArchiveModel.snapshot_id == archive['snapshot_id']):
+        if self.returns.get('repo'):
+            for archive in profile_dict['ArchiveModel']:
+                archive['repo'] = repo.id
                 dict_to_model(ArchiveModel, archive).save(force_insert=True)
 
         # Delete added dictionaries to make it match BackupProfileModel
