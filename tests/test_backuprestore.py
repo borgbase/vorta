@@ -22,7 +22,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
 
     qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: restore_dialog.errors.text() == "", timeout=5000)
+    qtbot.waitUntil(lambda: "sucessfully" in restore_dialog.errors.text(), timeout=5000)
 
 
 def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
