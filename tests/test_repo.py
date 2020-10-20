@@ -8,7 +8,7 @@ import vorta.borg.borg_thread
 import vorta.models
 from vorta.views.repo_add_dialog import AddRepoWindow
 from vorta.views.ssh_dialog import SSHAddWindow
-from vorta.models import EventLogModel, RepoModel, ArchiveModel
+from vorta.models import EventLogModel, RepoModel, ArchiveModel, DeletedArchiveModel
 
 
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
@@ -38,6 +38,7 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     assert main.progressText.text() == 'Add a backup repository first.'
+    assert len(DeletedArchiveModel) == 2  # Test moving to different table
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
@@ -48,12 +49,14 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main.repoTab.repo_added.disconnect()
     add_repo_window = AddRepoWindow(main)
 
-    ArchiveModel(
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+
+    DeletedArchiveModel(
         name="Test Record",
         snapshot_id=uuid.uuid4(),
-        repo_id=main.current_profile.repo.id,
-        time=datetime.now()).save()  # Test persistence across deletion
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+        repo_id=-9999,
+        time=datetime.now(),
+        original_url=test_repo_url).save()  # Test persistence across deletion
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
