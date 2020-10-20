@@ -1,30 +1,29 @@
 {
     "id": 1,
     "name": "Test Profile",
-    "added_at": "2020-07-29 22:50:34.049713",
+    "added_at": "2020-09-10 01:09:03.402268",
     "repo": {
-        "id": 1,
-        "url": "/mnt/test",
-        "added_at": "2020-07-30 05:20:48.009007",
-        "encryption": "repokey",
-        "unique_size": 3357,
-        "unique_csize": 3196,
-        "total_size": 4072,
-        "total_unique_chunks": 8,
+        "url": "/tmp/asdf",
+        "added_at": "2020-09-10 21:48:21.427080",
+        "encryption": "repokey-blake2",
+        "unique_size": null,
+        "unique_csize": null,
+        "total_size": null,
+        "total_unique_chunks": null,
         "extra_borg_arguments": ""
     },
     "ssh_key": null,
-    "compression": "lz4",
+    "compression": "zstd,8",
     "exclude_patterns": null,
-    "exclude_if_present": null,
+    "exclude_if_present": ".nobackup",
     "schedule_mode": "off",
-    "schedule_interval_hours": 3,
-    "schedule_interval_minutes": 42,
-    "schedule_fixed_hour": 3,
-    "schedule_fixed_minute": 42,
+    "schedule_interval_hours": 1,
+    "schedule_interval_minutes": 26,
+    "schedule_fixed_hour": 16,
+    "schedule_fixed_minute": 0,
     "validation_on": true,
     "validation_weeks": 3,
-    "prune_on": false,
+    "prune_on": true,
     "prune_hour": 2,
     "prune_day": 7,
     "prune_week": 4,
@@ -34,80 +33,32 @@
     "new_archive_name": "{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}",
     "prune_prefix": "{hostname}-{profile_slug}-",
     "pre_backup_cmd": "",
-    "post_backup_cmd": "",
     "password": "Tr0ub4dor&3",
+    "post_backup_cmd": "",
+    "dont_run_on_metered_networks": true,
     "SourceFileModel": [
         {
-            "id": 1,
             "dir": "/this/is/a/test/file",
             "profile": 1,
             "added_at": "2020-07-03 03:39:35.226932"
         },
         {
-            "id": 2,
             "dir": "/this/is/another/test/file",
             "profile": 1,
             "added_at": "2020-07-03 04:37:02.367233"
         },
         {
-            "id": 3,
             "dir": "/why/are/you/reading/this",
             "profile": 1,
             "added_at": "2020-07-03 04:37:05.106150"
         }
     ],
-    "ArchiveModel": [
-        {
-            "id": 1,
-            "snapshot_id": "9e147aae2ceedf081392447ddda698393cbbe7ec45bf7abc02fb0b440eff19d9",
-            "name": "github-default-2020-07-22T00:24:06",
-            "repo": 1,
-            "time": "2020-07-22 00:24:06",
-            "duration": null,
-            "size": null
-        },
-        {
-            "id": 2,
-            "snapshot_id": "6ad3de5ccfbf8d55a7a1d153b6aa18acaa7e6b0373d7c7a801c98461368d5719",
-            "name": "github-default-2020-07-22T00:24:48",
-            "repo": 1,
-            "time": "2020-07-22 00:24:48",
-            "duration": null,
-            "size": null
-        },
-        {
-            "id": 3,
-            "snapshot_id": "c598dc56b7986d31e3869a1666a316c22dc5194a0491fa82d8177ce98cbf679d",
-            "name": "github-default-2020-07-25T22:29:14",
-            "repo": 1,
-            "time": "2020-07-25 22:29:14",
-            "duration": null,
-            "size": null
-        },
-        {
-            "id": 4,
-            "snapshot_id": "55cdc251ca0499b1da13083dea9d5a01ae5ceccae0f2965ef37d4e5896b7bfa1",
-            "name": "github-default-2020-07-25T22:29:23",
-            "repo": 1,
-            "time": "2020-07-25 22:29:24",
-            "duration": null,
-            "size": null
-        },
-        {
-            "id": 5,
-            "snapshot_id": "8900aa45d9d0b21320926dd27d8b06d417e6acaa6bda343fc64ebb4211931d9b",
-            "name": "github-default-2020-07-25T22:36:33",
-            "repo": 1,
-            "time": "2020-07-25 22:36:34",
-            "duration": null,
-            "size": null
-        }
-    ],
+    "ArchiveModel": [],
     "WifiSettingModel": [],
     "EventLogModel": [
         {
-            "id": 11,
-            "start_time": "2020-07-30 00:21:50.172611",
+            "id": 20,
+            "start_time": "2020-09-10 21:47:45.882513",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -117,8 +68,107 @@
             "repo_url": null
         },
         {
+            "id": 19,
+            "start_time": "2020-09-10 21:47:18.649705",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 18,
+            "start_time": "2020-09-10 21:46:17.805760",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 17,
+            "start_time": "2020-09-10 21:07:51.201491",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 16,
+            "start_time": "2020-09-10 21:07:39.605904",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 15,
+            "start_time": "2020-09-10 17:01:02.869225",
+            "category": "borg-run",
+            "subcommand": "check",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": "Test Profile",
+            "repo_url": "/tmp/asdf"
+        },
+        {
+            "id": 14,
+            "start_time": "2020-09-10 17:00:00.042385",
+            "category": "borg-run",
+            "subcommand": "create",
+            "message": null,
+            "returncode": 1,
+            "params": null,
+            "profile": "Test Profile",
+            "repo_url": "/tmp/asdf"
+        },
+        {
+            "id": 13,
+            "start_time": "2020-09-10 14:39:44.207662",
+            "category": "borg-run",
+            "subcommand": "create",
+            "message": null,
+            "returncode": 1,
+            "params": null,
+            "profile": "Test Profile",
+            "repo_url": "/tmp/asdf"
+        },
+        {
+            "id": 12,
+            "start_time": "2020-09-10 14:39:42.227646",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 11,
+            "start_time": "2020-09-10 14:39:27.960603",
+            "category": "borg-run",
+            "subcommand": "create",
+            "message": null,
+            "returncode": 2,
+            "params": null,
+            "profile": "Test Profile",
+            "repo_url": "/tmp/asdf"
+        },
+        {
             "id": 10,
-            "start_time": "2020-07-30 00:21:32.765050",
+            "start_time": "2020-09-10 01:29:34.257565",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -129,7 +179,7 @@
         },
         {
             "id": 9,
-            "start_time": "2020-07-30 00:21:14.618393",
+            "start_time": "2020-09-10 01:21:03.401751",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -140,7 +190,7 @@
         },
         {
             "id": 8,
-            "start_time": "2020-07-30 00:20:56.284891",
+            "start_time": "2020-09-10 01:17:57.422174",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -151,51 +201,51 @@
         },
         {
             "id": 7,
-            "start_time": "2020-07-30 00:20:48.110274",
+            "start_time": "2020-09-10 01:17:46.624724",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 6,
+            "start_time": "2020-09-10 01:16:05.428776",
+            "category": "borg-run",
+            "subcommand": "--version",
+            "message": null,
+            "returncode": 0,
+            "params": null,
+            "profile": null,
+            "repo_url": null
+        },
+        {
+            "id": 5,
+            "start_time": "2020-09-10 01:10:04.425668",
             "category": "borg-run",
             "subcommand": "list",
             "message": null,
             "returncode": 0,
             "params": null,
             "profile": "Default",
-            "repo_url": "/mnt/test"
+            "repo_url": "/tmp/asdf"
         },
         {
-            "id": 6,
-            "start_time": "2020-07-30 00:20:47.355521",
+            "id": 4,
+            "start_time": "2020-09-10 01:10:03.313018",
             "category": "borg-run",
             "subcommand": "info",
             "message": null,
             "returncode": 0,
             "params": null,
             "profile": "New Repo",
-            "repo_url": "/mnt/test"
-        },
-        {
-            "id": 5,
-            "start_time": "2020-07-30 00:20:36.355657",
-            "category": "borg-run",
-            "subcommand": "info",
-            "message": null,
-            "returncode": 2,
-            "params": null,
-            "profile": "New Repo",
-            "repo_url": "/mnt/test"
-        },
-        {
-            "id": 4,
-            "start_time": "2020-07-30 00:20:32.870307",
-            "category": "borg-run",
-            "subcommand": "info",
-            "message": null,
-            "returncode": 2,
-            "params": null,
-            "profile": "New Repo",
-            "repo_url": "/mnt/test"
+            "repo_url": "/tmp/asdf"
         },
         {
             "id": 3,
-            "start_time": "2020-07-30 00:20:17.921109",
+            "start_time": "2020-09-10 01:09:41.246724",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -206,7 +256,7 @@
         },
         {
             "id": 2,
-            "start_time": "2020-07-30 00:18:56.871908",
+            "start_time": "2020-09-10 01:09:17.363603",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -217,7 +267,7 @@
         },
         {
             "id": 1,
-            "start_time": "2020-07-29 22:50:34.674524",
+            "start_time": "2020-09-10 01:09:04.118227",
             "category": "borg-run",
             "subcommand": "--version",
             "message": null,
@@ -229,8 +279,8 @@
     ],
     "SchemaVersion": {
         "id": 1,
-        "version": 14,
-        "changed_at": "2020-07-29 22:50:34.054017"
+        "version": 15,
+        "changed_at": "2020-10-19 19:07:35.305493"
     },
     "SettingsModel": [
         {
