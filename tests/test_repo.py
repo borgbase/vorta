@@ -81,7 +81,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     # Test deleted archive restoration and cleanup
     assert ArchiveModel.get_or_none(name="Test Record")
-    assert len(DeletedArchiveModel) == 0
+    assert not DeletedArchiveModel.get_or_none(name="Test Record")
 
 
 def test_ssh_dialog(qtbot, tmpdir):
