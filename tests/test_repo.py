@@ -56,7 +56,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
         snapshot_id=uuid.uuid4(),
         repo_id=-9999,
         time=datetime.now(),
-        original_url=test_repo_url).save()  # Test persistence across deletion
+        original_url=test_repo_url).save()  # Test deleted archive restoration
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
