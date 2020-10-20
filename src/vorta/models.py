@@ -7,11 +7,12 @@ At the bottom there is a simple schema migration system.
 import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
+from playhouse.shortcuts import model_to_dict
 
 from vorta.i18n import trans_late
 from vorta.utils import slugify
@@ -130,6 +131,12 @@ class ArchiveModel(pw.Model):
         database = db
 
 
+class DeletedArchiveModel(ArchiveModel):
+    """A deleted archive in a remote repository."""
+    time_deleted = pw.DateTimeField(default=datetime.now())
+    original_url = pw.CharField(default="")
+
+
 class WifiSettingModel(pw.Model):
     """Save Wifi Settings"""
     ssid = pw.CharField()
@@ -244,21 +251,31 @@ def get_misc_settings():
     return settings
 
 
+def restore_deleted_archives(repo_url):
+    archives = [model_to_dict(archive, recurse=False) for archive in DeletedArchiveModel.select().where(
+        DeletedArchiveModel.original_url == repo_url).execute()]
+    DeletedArchiveModel.delete().where(DeletedArchiveModel.original_url == repo_url).execute()
+    new_id = RepoModel.get(url=repo_url).id
+    for archive in archives:
+        del archive['original_url']
+        del archive['time_deleted']
+        archive['repo'] = new_id
+        while ArchiveModel.get_or_none(id=archive['id']):
+            archive['id'] += 1
+    ArchiveModel.insert_many(archives).execute()
+
+
 def init_db(con=None):
     if con is not None:
         os.umask(0o0077)
         db.initialize(con)
         db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
-                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
+                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion, DeletedArchiveModel])
 
     if BackupProfileModel.select().count() == 0:
         default_profile = BackupProfileModel(name='Default')
         default_profile.save()
-
-    # Delete old log entries after 3 months.
-    three_months_ago = datetime.now() - timedelta(days=180)
-    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
 
     # Migrations
     # See http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#schema-migrations
@@ -368,6 +385,7 @@ def init_db(con=None):
         s.label = setting['label']
         s.save()
 
-    # Delete old log entries after 3 months.
+    # Delete old log and archive entries after 3 months.
     three_months_ago = datetime.now() - rd(months=3)
-    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
+    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago).execute()
+    DeletedArchiveModel.delete().where(DeletedArchiveModel.time_deleted < three_months_ago).execute()

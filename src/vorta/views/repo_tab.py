@@ -1,8 +1,9 @@
 import os
+from playhouse.shortcuts import model_to_dict
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
+from vorta.models import RepoModel, DeletedArchiveModel, ArchiveModel, BackupProfileMixin, restore_deleted_archives
 from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
 from .ssh_dialog import SSHAddWindow
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
@@ -178,6 +179,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def process_new_repo(self, result):
         if result['returncode'] == 0:
             new_repo = RepoModel.get(url=result['params']['repo_url'])
+            restore_deleted_archives(new_repo.url)
             profile = self.profile()
             profile.repo = new_repo.id
             profile.save()
@@ -197,10 +199,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_index = self.repoSelector.currentIndex()
         if selected_repo_index > 2:
             repo = RepoModel.get(id=selected_repo_id)
-            ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
+            archives = [model_to_dict(archive, recurse=False) for archive in ArchiveModel.select().where(
+                ArchiveModel.repo_id == repo.id).execute()]  # Save archives for now
             profile.repo = None
             profile.save()
             repo.delete_instance(recursive=True)  # This also deletes archives.
+            DeletedArchiveModel.insert_many(archives).execute()
+            DeletedArchiveModel.update(original_url=repo.url).where(
+                DeletedArchiveModel.repo_id == repo.id).execute()  # Copy archives to new table
             self.repoSelector.setCurrentIndex(0)
             self.repoSelector.removeItem(selected_repo_index)
             msg.setText(self.tr('Repository was Unlinked'))
