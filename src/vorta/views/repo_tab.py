@@ -179,7 +179,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def process_new_repo(self, result):
         if result['returncode'] == 0:
             new_repo = RepoModel.get(url=result['params']['repo_url'])
-            restore_deleted_archives(new_repo.url)
+            restore_deleted_archives(new_repo.url, new_repo.id)
             profile = self.profile()
             profile.repo = new_repo.id
             profile.save()

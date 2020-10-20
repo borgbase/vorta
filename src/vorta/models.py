@@ -251,15 +251,14 @@ def get_misc_settings():
     return settings
 
 
-def restore_deleted_archives(repo_url):
+def restore_deleted_archives(repo_url, repo_id):
     archives = [model_to_dict(archive, recurse=False) for archive in DeletedArchiveModel.select().where(
         DeletedArchiveModel.original_url == repo_url).execute()]
     DeletedArchiveModel.delete().where(DeletedArchiveModel.original_url == repo_url).execute()
-    new_id = RepoModel.get(url=repo_url).id
     for archive in archives:
         del archive['original_url']
         del archive['time_deleted']
-        archive['repo'] = new_id
+        archive['repo'] = repo_url
         while ArchiveModel.get_or_none(id=archive['id']):
             archive['id'] += 1
         ArchiveModel.insert(archive).execute()
