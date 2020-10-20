@@ -176,10 +176,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
         if window.exec_():
-            self.profileSelector.addItem(window.edited_profile.name, window.edited_profile.id)
-            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+            self.add_profile_entry(window.edited_profile.name, window.edited_profile.id)
         else:
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
+
+    def add_profile_entry(self, profile_name, profile_id):
+        self.profileSelector.addItem(profile_name, profile_id)
+        self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
 
     def profile_backup_action(self):
         window = BackupWindow(parent=self)
@@ -187,20 +190,18 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.show()
 
     def profile_restore_action(self):
-        window = RestoreWindow(parent=self)
-        window.setParent(self, QtCore.Qt.Sheet)
-        window.show()
-        if window.exec_():
+        def profile_restored_event():
             if window.returns.get('repo'):
                 self.repoTab.set_repos()
             if window.returns.get('overrideExisting'):
                 self.scheduleTab.init_logs()
                 self.scheduleTab.init_wifi()
                 self.miscTab.update_checkboxes()
-            self.profileSelector.addItem(window.new_profile.name, window.new_profile.id)
-            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
-        else:
-            self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
+            self.add_profile_entry(window.new_profile.name, window.new_profile.id)
+        window = RestoreWindow(parent=self)
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.profile_restored.connect(profile_restored_event)
+        window.show()
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)

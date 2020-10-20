@@ -1,4 +1,5 @@
 from PyQt5 import uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
@@ -16,6 +17,9 @@ BackupWindowUI, BackupWindowBase = uic.loadUiType(uifile)
 
 
 class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
+    profile_backed_up = QtCore.pyqtSignal()
+    profile_restored = QtCore.pyqtSignal()
+
     def __init__(self, parent):
         super().__init__()
         self.setupUi(self)
@@ -158,7 +162,8 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             # Guarantee uniqueness of ids
             while ArchiveModel.get_or_none(ArchiveModel.id == archive['id']) is not None:
                 archive['id'] += 1
-            dict_to_model(ArchiveModel, archive).save(force_insert=True)
+            if not ArchiveModel.get_or_none(ArchiveModel.snapshot_id == archive['snapshot_id']):
+                dict_to_model(ArchiveModel, archive).save(force_insert=True)
 
         # Delete added dictionaries to make it match BackupProfileModel
         del profile_dict['SettingsModel']
@@ -195,12 +200,11 @@ class RestoreWindow(BackupWindow):
             try:
                 jsonStr = file.read()
                 self.returns = {}
-                new_profile = self.json_to_profile(jsonStr)
-                repo_url = new_profile.repo.url
+                self.new_profile = self.json_to_profile(jsonStr)
+                repo_url = self.new_profile.repo.url
                 if self.keyring.get_password('vorta-repo', repo_url):
-                    self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
-                    self.parent.profileSelector.addItem(new_profile.name, self.parent.profileSelector.currentIndex())
-                    self.parent.profileSelector.setCurrentIndex(self.parent.profileSelector.count() - 1)
+                    self.errors.setText(self.tr(f"Profile {self.new_profile.name} restored sucessfully"))
+                    self.profile_restored.emit()
                 else:
                     self.errors.setText(
                         self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
