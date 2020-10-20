@@ -121,7 +121,8 @@ class VortaApp(QtSingleApplication):
             self.backup_progress_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
-        self.main_window = MainWindow(self)
+        if not self._main_window_exists():
+            self.main_window = MainWindow(self)
         self.main_window.show()
         self.main_window.raise_()
 
