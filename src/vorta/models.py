@@ -259,7 +259,7 @@ def restore_deleted_archives(repo_url, repo_id):
         del archive['original_url']
         del archive['time_deleted']
         del archive['id']
-        archive['repo'] = repo_url
+        archive['repo'] = repo_id
     ArchiveModel.insert_many(archives).execute()
 
 
