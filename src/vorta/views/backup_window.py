@@ -12,14 +12,11 @@ from pathlib import Path
 import json
 import datetime
 
-uifile = get_asset('UI/backup.ui')
+uifile = get_asset('UI/backupwindow.ui')
 BackupWindowUI, BackupWindowBase = uic.loadUiType(uifile)
 
 
 class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
-    profile_backed_up = QtCore.pyqtSignal()
-    profile_restored = QtCore.pyqtSignal()
-
     def __init__(self, parent):
         super().__init__()
         self.setupUi(self)
@@ -41,26 +38,6 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
     def profile(self):
         return self.parent.current_profile
-
-    def get_file(self):
-        fileName = QFileDialog.getSaveFileName(
-            self,
-            self.tr("Save profile"),
-            self.url,
-            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
-        if fileName:
-            self.locationLabel.setText(fileName)
-        self.saveButton.setEnabled(bool(fileName))
-
-    def run(self):
-        profile = self.profile()
-        json = self.profile_to_json(profile)
-        with open(self.locationLabel.text(), 'w') as file:
-            try:
-                file.write(json)
-                self.accept()
-            except PermissionError:
-                self.errors.setText(self.tr("Cannot write backup file"))
 
     def profile_to_json(self, profile):
         # Profile to dict
@@ -98,6 +75,43 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
                 SettingsModel.type == 'checkbox')]
         # dict to json string
         return json.dumps(profile_dict, default=self.converter, indent=4)
+
+    def get_file(self):
+        fileName = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Save profile"),
+            self.url,
+            self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
+        if fileName:
+            self.locationLabel.setText(fileName)
+        self.saveButton.setEnabled(bool(fileName))
+
+    def run(self):
+        profile = self.profile()
+        json = self.profile_to_json(profile)
+        with open(self.locationLabel.text(), 'w') as file:
+            try:
+                file.write(json)
+                self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
+                self.locationLabel.setText("")
+                self.saveButton.setEnabled(False)
+            except PermissionError:
+                self.errors.setText(self.tr("Cannot write backup file"))
+
+    def converter(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.__str__()
+
+
+class RestoreWindow(BackupWindow):
+    profile_restored = QtCore.pyqtSignal()
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle(self.tr("Restore Profile"))
+        self.saveButton.setText(self.tr("Open"))
+        self.overrideExisting.show()
+        self.storePassword.hide()
 
     def json_to_profile(self, jsonData):
         # Json string to dict
@@ -178,19 +192,6 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         new_profile.save(force_insert=True)
 
         return new_profile
-
-    def converter(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return obj.__str__()
-
-
-class RestoreWindow(BackupWindow):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.setWindowTitle(self.tr("Restore Profile"))
-        self.saveButton.setText(self.tr("Open"))
-        self.overrideExisting.show()
-        self.storePassword.hide()
 
     def run(self):
         def get_schema_version(jsonData):
