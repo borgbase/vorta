@@ -57,7 +57,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
         snapshot_id=uuid.uuid4(),
         repo_id=-9999,
         time=datetime.now(),
-        original_url=test_repo_url).save()  # Test deleted archive restoration
+        original_url=test_repo_url).save()
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
@@ -79,7 +79,9 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     keyring = get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
 
+    # Test deleted archive restoration and cleanup
     assert ArchiveModel.get_or_none(name="Test Record")
+    assert len(DeletedArchiveModel) == 0
 
 
 def test_ssh_dialog(qtbot, tmpdir):
