@@ -29,15 +29,12 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.saveButton.setEnabled(False)
         self.overrideExisting.hide()
 
-        profile = self.profile()
+        profile = self.parent.current_profile
         self.keyring = get_keyring()
         self.url = str(Path.home()) if profile.repo is None else profile.repo.url
 
         if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.hide()
-
-    def profile(self):
-        return self.parent.current_profile
 
     def profile_to_json(self, profile):
         # Profile to dict
@@ -87,7 +84,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.saveButton.setEnabled(bool(fileName))
 
     def run(self):
-        profile = self.profile()
+        profile = self.parent.current_profile
         json = self.profile_to_json(profile)
         with open(self.locationLabel.text(), 'w') as file:
             try:
