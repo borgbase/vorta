@@ -1,4 +1,5 @@
 from PyQt5 import QtCore
+from vorta.models import BackupProfileModel, SourceFileModel
 import PyQt5.QtWidgets
 import os
 
@@ -6,6 +7,7 @@ from vorta.views.backup_window import RestoreWindow
 
 
 def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
+    # Do not change this file, as it also tests restoring from older schema versions
     GOOD_FILE = os.path.join(rootdir, "testcase.vortabackup")
 
     def getOpenFileName(*args, **kwargs):
@@ -23,6 +25,14 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
 
     qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "sucessfully" in restore_dialog.errors.text(), timeout=5000)
+
+    restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
+    assert restored_profile is not None
+
+    restored_repo = restored_profile.repo
+    assert restored_repo is not None
+
+    assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
 
 
 def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
