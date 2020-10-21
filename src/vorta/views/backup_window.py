@@ -90,7 +90,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             with open(self.locationLabel.text(), 'w') as file:
                 file.write(json)
         except PermissionError:
-            self.errors.setText(self.tr("Cannot write backup file"))
+            self.errors.setText(self.tr("Backup file unwritable."))
         else:
             self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
             self.locationLabel.setText("")
@@ -203,16 +203,18 @@ class RestoreWindow(BackupWindow):
                     self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
                             "with the following error: \n {0} \n {1}").format(str(e), schema_message))
             except VersionException:
-                self.errors.setText(self.tr("Cannot use newer backup on older version"))
+                self.errors.setText(self.tr("Newer backup files cannot be used on older versions."))
             except PermissionError:
-                self.errors.setText(self.tr("Cannot read backup file"))
+                self.errors.setText(self.tr("Backup file unreadable due to lack of permissions."))
+            except FileNotFoundError:
+                self.errors.setText(self.tr("Backup file not found."))
             else:
                 repo_url = new_profile.repo.url
                 if self.keyring.get_password('vorta-repo', repo_url):
                     self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
                 else:
                     self.errors.setText(
-                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
+                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository."))  # noqa
                 self.profile_restored.emit(new_profile, returns)
 
     def get_file(self):
