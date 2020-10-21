@@ -140,10 +140,10 @@ class RestoreWindow(BackupWindow):
             # Load repo from backup
             repo = dict_to_model(RepoModel, profile_dict['repo'])
             repo.save(force_insert=True)
+            returns['repo'] = True
         else:
             # Use pre-exisitng repo
             profile_dict['repo'] = model_to_dict(repo)
-        returns['repo'] = bool(repo)
 
         if profile_dict.get('password'):
             self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
@@ -156,7 +156,7 @@ class RestoreWindow(BackupWindow):
             SettingsModel.insert_many(profile_dict['SettingsModel']).execute()
             EventLogModel.insert_many(profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
-        returns['overrideExisting'] = self.overrideExisting.isChecked()
+            returns['overrideExisting'] = True
 
         # Set the profile ids to be match new profile
         for source in profile_dict['SourceFileModel']:
