@@ -149,16 +149,12 @@ class RestoreWindow(BackupWindow):
 
         # Delete and recreate the tables to clear them
         if self.overrideExisting.isChecked():
-            db.drop_tables([SettingsModel])
-            db.create_tables([SettingsModel])
-            db.drop_tables([EventLogModel])
-            db.create_tables([EventLogModel])
-            db.drop_tables([WifiSettingModel])
-            db.create_tables([WifiSettingModel])
+            db.drop_tables([SettingsModel, EventLogModel, WifiSettingModel])
+            db.create_tables([SettingsModel, EventLogModel, WifiSettingModel])
             SettingsModel.insert_many(profile_dict['SettingsModel']).execute()
             EventLogModel.insert_many(profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
-        self.returns['overwrite'] = self.overrideExisting.isChecked()
+        self.returns['overrideExisting'] = self.overrideExisting.isChecked()
 
         # Set the profile ids to be match new profile
         for source in profile_dict['SourceFileModel']:
