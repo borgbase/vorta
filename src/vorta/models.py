@@ -133,7 +133,7 @@ class ArchiveModel(pw.Model):
 
 class DeletedArchiveModel(ArchiveModel):
     """A deleted archive in a remote repository."""
-    time_deleted = pw.DateTimeField(default=datetime.now())
+    time_deleted = pw.DateTimeField(default=datetime.utcnow)
     original_url = pw.CharField(default="")
 
 
