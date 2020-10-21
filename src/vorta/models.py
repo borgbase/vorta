@@ -108,7 +108,7 @@ class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
-    added_at = pw.DateTimeField(default=datetime.utcnow)
+    added_at = pw.DateTimeField(default=datetime.now)
 
     class Meta:
         database = db
@@ -133,7 +133,7 @@ class ArchiveModel(pw.Model):
 
 class DeletedArchiveModel(ArchiveModel):
     """A deleted archive in a remote repository."""
-    time_deleted = pw.DateTimeField(default=datetime.utcnow)
+    time_deleted = pw.DateTimeField(default=datetime.now)
     original_url = pw.CharField(default="")
 
 
