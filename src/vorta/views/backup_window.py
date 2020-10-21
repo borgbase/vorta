@@ -147,6 +147,7 @@ class RestoreWindow(BackupWindow):
             self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
+        # Delete and recreate the tables to clear them
         if self.overrideExisting.isChecked():
             db.drop_tables([SettingsModel])
             db.create_tables([SettingsModel])
@@ -159,12 +160,14 @@ class RestoreWindow(BackupWindow):
             WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
         self.returns['overwrite'] = self.overrideExisting.isChecked()
 
+        # Set the profile ids to be match new profile
         for source in profile_dict['SourceFileModel']:
             source['profile'] = profile_dict['id']
-
         SourceFileModel.insert_many(profile_dict['SourceFileModel']).execute()
 
+        # Restore only if repo added to prevent overwriting
         if self.returns.get('repo'):
+            # Set the profile ids to be match new profile
             for archive in profile_dict['ArchiveModel']:
                 archive['repo'] = repo.id
             profile_dict['repo'] = repo.id
@@ -196,10 +199,10 @@ class RestoreWindow(BackupWindow):
                 repo_url = self.new_profile.repo.url
                 if self.keyring.get_password('vorta-repo', repo_url):
                     self.errors.setText(self.tr(f"Profile {self.new_profile.name} restored sucessfully"))
-                    self.profile_restored.emit()
                 else:
                     self.errors.setText(
                         self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
+                self.profile_restored.emit()
             except (json.decoder.JSONDecodeError, KeyError):
                 self.errors.setText(self.tr("Invalid backup file"))
             except AttributeError as e:
