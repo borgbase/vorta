@@ -167,6 +167,7 @@ class RestoreWindow(BackupWindow):
         if self.returns.get('repo'):
             for archive in profile_dict['ArchiveModel']:
                 archive['repo'] = repo.id
+            profile_dict['repo'] = repo.id
             ArchiveModel.insert_many(profile_dict['ArchiveModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
