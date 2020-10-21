@@ -3,7 +3,7 @@ from vorta.models import BackupProfileModel, SourceFileModel
 import PyQt5.QtWidgets
 import os
 
-from vorta.views.backup_window import RestoreWindow
+from vorta.views.backup_window import RestoreWindow, BackupWindow
 
 
 def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
@@ -53,3 +53,47 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.errors.text() == "Invalid backup file", timeout=5000)
     qtbot.mouseClick(restore_dialog.cancelButton, QtCore.Qt.LeftButton)
+
+
+def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
+    FILE_PATH = os.path.join(os.path.expanduser("~"), "testresult.vortabackup")
+
+    def getSaveFileName(*args, **kwargs):
+        return [FILE_PATH]
+
+    monkeypatch.setattr(
+        PyQt5.QtWidgets.QFileDialog, "getSaveFileName", getSaveFileName
+    )
+
+    main = qapp.main_window
+    restore_dialog = BackupWindow(parent=main)
+
+    qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
+
+    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: "written to" in restore_dialog.errors.text(), timeout=5000)
+
+    assert os.path.isfile(FILE_PATH)
+
+
+def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
+    FILE_PATH = os.path.join(os.path.abspath(os.sep), "testresult.vortabackup")
+
+    def getSaveFileName(*args, **kwargs):
+        return [FILE_PATH]
+
+    monkeypatch.setattr(
+        PyQt5.QtWidgets.QFileDialog, "getSaveFileName", getSaveFileName
+    )
+
+    main = qapp.main_window
+    restore_dialog = BackupWindow(parent=main)
+
+    qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
+
+    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.waitUntil(lambda: restore_dialog.errors.text().startswith("Cannot write"), timeout=5000)
+
+    assert not os.path.isfile(FILE_PATH)
