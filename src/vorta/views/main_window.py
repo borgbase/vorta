@@ -190,14 +190,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.show()
 
     def profile_restore_action(self):
-        def profile_restored_event():
-            if window.returns.get('repo'):
+        def profile_restored_event(new_profile, returns):
+            if returns.get('repo'):
                 self.repoTab.set_repos()
-            if window.returns.get('overrideExisting'):
+            if returns.get('overrideExisting'):
                 self.scheduleTab.init_logs()
                 self.scheduleTab.init_wifi()
                 self.miscTab.update_checkboxes()
-            self.add_profile_entry(window.new_profile.name, window.new_profile.id)
+            self.add_profile_entry(new_profile.name, new_profile.id)
         window = RestoreWindow(parent=self)
         window.setParent(self, QtCore.Qt.Sheet)
         window.profile_restored.connect(profile_restored_event)

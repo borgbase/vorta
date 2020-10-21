@@ -86,14 +86,15 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
     def run(self):
         profile = self.parent.current_profile
         json = self.profile_to_json(profile)
-        with open(self.locationLabel.text(), 'w') as file:
-            try:
+        try:
+            with open(self.locationLabel.text(), 'w') as file:
                 file.write(json)
-                self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
-                self.locationLabel.setText("")
-                self.saveButton.setEnabled(False)
-            except PermissionError:
-                self.errors.setText(self.tr("Cannot write backup file"))
+        except PermissionError:
+            self.errors.setText(self.tr("Cannot write backup file"))
+        else:
+            self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
+            self.locationLabel.setText("")
+            self.saveButton.setEnabled(False)
 
     def converter(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -101,7 +102,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
 
 class RestoreWindow(BackupWindow):
-    profile_restored = QtCore.pyqtSignal()
+    profile_restored = QtCore.pyqtSignal(BackupProfileModel, dict)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -113,6 +114,7 @@ class RestoreWindow(BackupWindow):
     def json_to_profile(self, jsonData):
         # Json string to dict
         profile_dict = json.loads(jsonData)
+        returns = {}
 
         if SCHEMA_VERSION < profile_dict['SchemaVersion']['version']:
             raise VersionException()
@@ -141,7 +143,7 @@ class RestoreWindow(BackupWindow):
         else:
             # Use pre-exisitng repo
             profile_dict['repo'] = model_to_dict(repo)
-        self.returns['repo'] = bool(repo)
+        returns['repo'] = bool(repo)
 
         if profile_dict.get('password'):
             self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
@@ -154,7 +156,7 @@ class RestoreWindow(BackupWindow):
             SettingsModel.insert_many(profile_dict['SettingsModel']).execute()
             EventLogModel.insert_many(profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
-        self.returns['overrideExisting'] = self.overrideExisting.isChecked()
+        returns['overrideExisting'] = self.overrideExisting.isChecked()
 
         # Set the profile ids to be match new profile
         for source in profile_dict['SourceFileModel']:
@@ -162,7 +164,7 @@ class RestoreWindow(BackupWindow):
         SourceFileModel.insert_many(profile_dict['SourceFileModel']).execute()
 
         # Restore only if repo added to prevent overwriting
-        if self.returns.get('repo'):
+        if returns.get('repo'):
             # Set the profile ids to be match new profile
             for archive in profile_dict['ArchiveModel']:
                 archive['repo'] = repo.id
@@ -181,7 +183,7 @@ class RestoreWindow(BackupWindow):
         new_profile = dict_to_model(BackupProfileModel, profile_dict)
         new_profile.save(force_insert=True)
 
-        return new_profile
+        return new_profile, returns
 
     def run(self):
         def get_schema_version(jsonData):
@@ -190,15 +192,7 @@ class RestoreWindow(BackupWindow):
         with open(self.locationLabel.text(), 'r') as file:
             try:
                 jsonStr = file.read()
-                self.returns = {}
-                self.new_profile = self.json_to_profile(jsonStr)
-                repo_url = self.new_profile.repo.url
-                if self.keyring.get_password('vorta-repo', repo_url):
-                    self.errors.setText(self.tr(f"Profile {self.new_profile.name} restored sucessfully"))
-                else:
-                    self.errors.setText(
-                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
-                self.profile_restored.emit()
+                new_profile, returns = self.json_to_profile(jsonStr)
             except (json.decoder.JSONDecodeError, KeyError):
                 self.errors.setText(self.tr("Invalid backup file"))
             except AttributeError as e:
@@ -212,6 +206,14 @@ class RestoreWindow(BackupWindow):
                 self.errors.setText(self.tr("Cannot use newer backup on older version"))
             except PermissionError:
                 self.errors.setText(self.tr("Cannot read backup file"))
+            else:
+                repo_url = new_profile.repo.url
+                if self.keyring.get_password('vorta-repo', repo_url):
+                    self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
+                else:
+                    self.errors.setText(
+                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository"))  # noqa
+                self.profile_restored.emit(new_profile, returns)
 
     def get_file(self):
         fileName = QFileDialog.getOpenFileName(
