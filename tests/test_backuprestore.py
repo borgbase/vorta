@@ -94,6 +94,6 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
 
     qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: restore_dialog.errors.text().startswith("Cannot write"), timeout=5000)
+    qtbot.waitUntil(lambda: "unwritable" in restore_dialog.errors.text(), timeout=5000)
 
     assert not os.path.isfile(FILE_PATH)
