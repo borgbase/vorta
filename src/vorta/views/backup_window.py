@@ -138,17 +138,16 @@ class RestoreWindow(BackupWindow):
             # Load repo from backup
             repo = dict_to_model(RepoModel, profile_dict['repo'])
             repo.save(force_insert=True)
-            self.returns['repo'] = True
         else:
             # Use pre-exisitng repo
             profile_dict['repo'] = model_to_dict(repo)
+        self.returns['repo'] = bool(repo)
 
         if profile_dict.get('password'):
             self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
         if self.overrideExisting.isChecked():
-            self.returns['overwrite'] = True
             db.drop_tables([SettingsModel])
             db.create_tables([SettingsModel])
             db.drop_tables([EventLogModel])
@@ -158,16 +157,17 @@ class RestoreWindow(BackupWindow):
             SettingsModel.insert_many(profile_dict['SettingsModel']).execute()
             EventLogModel.insert_many(profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(profile_dict['WifiSettingModel']).execute()
+        self.returns['overwrite'] = self.overrideExisting.isChecked()
 
         for source in profile_dict['SourceFileModel']:
             source['profile'] = profile_dict['id']
 
-            dict_to_model(SourceFileModel, source).save(force_insert=True)
+        SourceFileModel.insert_many(profile_dict['SourceFileModel']).execute()
 
         if self.returns.get('repo'):
             for archive in profile_dict['ArchiveModel']:
                 archive['repo'] = repo.id
-                dict_to_model(ArchiveModel, archive).save(force_insert=True)
+            ArchiveModel.insert_many(profile_dict['ArchiveModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
         del profile_dict['SettingsModel']
