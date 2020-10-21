@@ -28,8 +28,6 @@ from vorta.network_status.abc import NetworkStatusMonitor
 QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
-logger.info('Using %s NetworkStatusMonitor implementation.', network_status_monitor.__class__.__name__)
-
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
 
