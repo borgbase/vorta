@@ -89,7 +89,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         try:
             with open(self.locationLabel.text(), 'w') as file:
                 file.write(json)
-        except PermissionError:
+        except (PermissionError, OSError):
             self.errors.setText(self.tr("Backup file unwritable."))
         else:
             self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
