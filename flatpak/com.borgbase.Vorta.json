@@ -25,7 +25,7 @@
             "BASH_COMPLETIONSDIR": "/app/share/bash-completion/completions",
             "MOUNT_FUSE_PATH": "../tmp/",
             "V": "1"
-        }
+        } 
     },
     "modules": [
         "dependencies/pyqt5.json",
