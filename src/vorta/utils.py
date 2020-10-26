@@ -19,7 +19,6 @@ from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
-from decimal import Decimal
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.log import logger
