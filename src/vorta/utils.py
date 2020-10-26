@@ -158,7 +158,7 @@ def sort_sizes(size_list):
     """ Sorts sizes with extensions. Assumes that size is already in largest unit possible """
     final_list = []
     for suffix in [" B", " KB", " MB", " GB", " TB"]:
-        sub_list = [Decimal(size[:-len(suffix)])
+        sub_list = [float(size[:-len(suffix)])
                     for size in size_list if size.endswith(suffix) and size[:-len(suffix)][-1].isnumeric()]
         sub_list.sort()
         final_list += [(str(size) + suffix) for size in sub_list]
