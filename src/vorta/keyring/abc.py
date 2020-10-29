@@ -37,17 +37,16 @@ def get_keyring():
         if sys.platform == 'darwin':  # Use Keychain on macOS
             from .darwin import VortaDarwinKeyring
             _keyring = VortaDarwinKeyring()
-        else:
-            from .kwallet import VortaKWallet5Keyring
-            if VortaKWallet5Keyring().is_valid:
-                _keyring = VortaKWallet5Keyring()
-            else:
-                import secretstorage
-                from .secretstorage import VortaSecretStorageKeyring
-                try:
-                    _keyring = VortaSecretStorageKeyring()
-                # Save passwords in DB, if all else fails.
-                except secretstorage.SecretServiceNotAvailableException:
+        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
+            import secretstorage
+            from .secretstorage import VortaSecretStorageKeyring
+            try:
+                _keyring = VortaSecretStorageKeyring()
+            except secretstorage.SecretServiceNotAvailableException:  # Try to use KWallet (KDE only)
+                from .kwallet import VortaKWallet5Keyring
+                if VortaKWallet5Keyring().is_valid:
+                    _keyring = VortaKWallet5Keyring()
+                else:  # Save passwords in DB, if all else fails.
                     from .db import VortaDBKeyring
                     _keyring = VortaDBKeyring()
     return _keyring
