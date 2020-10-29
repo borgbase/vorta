@@ -1,6 +1,6 @@
 from PyQt5 import uic
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogModel, SchemaVersion, \
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
@@ -23,10 +23,10 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.parent = parent
         self.setWindowTitle(self.tr("Backup Profile"))
         self.fileButton.setIcon(get_colored_icon('folder-open'))
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.fileButton.clicked.connect(self.get_file)
-        self.saveButton.clicked.connect(self.run)
-        self.cancelButton.clicked.connect(self.reject)
-        self.saveButton.setEnabled(False)
+        self.buttonBox.accepted.connect(self.run)
+        self.buttonBox.rejected.connect(self.reject)
         self.overrideExisting.hide()
 
         profile = self.parent.current_profile
@@ -81,7 +81,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
-        self.saveButton.setEnabled(bool(fileName))
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(bool(fileName))
 
     def run(self):
         profile = self.parent.current_profile
@@ -94,7 +94,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         else:
             self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
             self.locationLabel.setText("")
-            self.saveButton.setEnabled(False)
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
     def converter(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -107,7 +107,6 @@ class RestoreWindow(BackupWindow):
     def __init__(self, parent):
         super().__init__(parent)
         self.setWindowTitle(self.tr("Restore Profile"))
-        self.saveButton.setText(self.tr("Open"))
         self.overrideExisting.show()
         self.storePassword.hide()
 
@@ -225,7 +224,7 @@ class RestoreWindow(BackupWindow):
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
-        self.saveButton.setEnabled(bool(fileName))
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(bool(fileName))
 
 
 class VersionException(Exception):

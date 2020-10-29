@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
 from vorta.models import BackupProfileModel, SourceFileModel
-import PyQt5.QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
 import os
 
 from vorta.views.backup_window import RestoreWindow, BackupWindow
@@ -14,7 +14,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
         return [GOOD_FILE]
 
     monkeypatch.setattr(
-        PyQt5.QtWidgets.QFileDialog, "getOpenFileName", getOpenFileName
+        QFileDialog, "getOpenFileName", getOpenFileName
     )
 
     main = qapp.main_window
@@ -23,7 +23,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "sucessfully" in restore_dialog.errors.text(), timeout=5000)
 
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
@@ -42,7 +42,7 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
         return [BAD_FILE]
 
     monkeypatch.setattr(
-        PyQt5.QtWidgets.QFileDialog, "getOpenFileName", getOpenFileName
+        QFileDialog, "getOpenFileName", getOpenFileName
     )
     main = qapp.main_window
     restore_dialog = RestoreWindow(parent=main)
@@ -50,9 +50,9 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == BAD_FILE, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.errors.text() == "Invalid backup file", timeout=5000)
-    qtbot.mouseClick(restore_dialog.cancelButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Cancel), QtCore.Qt.LeftButton)
 
 
 def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
@@ -62,7 +62,7 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
         return [FILE_PATH]
 
     monkeypatch.setattr(
-        PyQt5.QtWidgets.QFileDialog, "getSaveFileName", getSaveFileName
+        QFileDialog, "getSaveFileName", getSaveFileName
     )
 
     main = qapp.main_window
@@ -71,7 +71,7 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "written to" in restore_dialog.errors.text(), timeout=5000)
 
     assert os.path.isfile(FILE_PATH)
@@ -84,7 +84,7 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
         return [FILE_PATH]
 
     monkeypatch.setattr(
-        PyQt5.QtWidgets.QFileDialog, "getSaveFileName", getSaveFileName
+        QFileDialog, "getSaveFileName", getSaveFileName
     )
 
     main = qapp.main_window
@@ -93,7 +93,7 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "unwritable" in restore_dialog.errors.text(), timeout=5000)
 
     assert not os.path.isfile(FILE_PATH)
