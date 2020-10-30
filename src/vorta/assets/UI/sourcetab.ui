@@ -24,7 +24,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
      <item>
-      <widget class="QListWidget" name="sourceFilesWidget">
+      <widget class="QTableWidget" name="sourceFilesWidget">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -37,12 +40,50 @@
          <height>0</height>
         </size>
        </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Path</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Size</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>File Count</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
@@ -62,6 +103,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="sourceRemove">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="paste">
          <property name="toolTip">
           <string>One folder or file per line</string>
@@ -71,12 +119,25 @@
          </property>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
-        <widget class="QPushButton" name="sourceRemove">
+       <item>
+        <widget class="QPushButton" name="sourcesUpdate">
          <property name="text">
-          <string>Remove</string>
+          <string>Recalculate sizes</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>

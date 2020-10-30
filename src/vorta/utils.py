@@ -17,6 +17,7 @@ from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
+from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -27,9 +28,48 @@ QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable hig
 QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
 borg_compat = BorgCompatibility()
-
-
 _network_status_monitor = None
+
+
+class FilePathInfoAsync(QThread):
+    signal = pyqtSignal(str, str, str)
+
+    def __init__(self, path):
+        self.path = path
+        QThread.__init__(self)
+        self.exiting = False
+
+    def run(self):
+        # logger.info("running thread to get path=%s...", self.path)
+        self.files_count = 0
+        self.size, self.files_count = get_path_datasize(self.path)
+        self.signal.emit(self.path, str(self.size), str(self.files_count))
+
+
+def get_directory_size(dir_path):
+    ''' Get number of files only and total size in bytes from a path.
+        Based off https://stackoverflow.com/a/17936789 '''
+    data_size = 0
+    seen = set()
+
+    for curr_path, _, file_names in os.walk(dir_path):
+        for file_name in file_names:
+            file_path = os.path.join(curr_path, file_name)
+
+            # Ignore symbolic links, since borg doesn't follow them
+            if os.path.islink(file_path):
+                continue
+
+            stat = os.stat(file_path)
+
+            # Visit each file once
+            if stat.st_ino not in seen:
+                seen.add(stat.st_ino)
+                data_size += stat.st_size
+
+    files_count = len(seen)
+
+    return data_size, files_count
 
 
 def get_network_status_monitor():
@@ -38,6 +78,22 @@ def get_network_status_monitor():
         _network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
         logger.info('Using %s NetworkStatusMonitor implementation.', _network_status_monitor.__class__.__name__)
     return _network_status_monitor
+
+
+def get_path_datasize(path):
+    file_info = QFileInfo(path)
+    data_size = 0
+
+    if file_info.isDir():
+        data_size, files_count = get_directory_size(file_info.absoluteFilePath())
+        # logger.info("path (folder) %s %u elements size now=%u (%s)",
+        #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
+    else:
+        # logger.info("path (file) %s size=%u", file_info.path(), file_info.size())
+        data_size = file_info.size()
+        files_count = 1
+
+    return data_size, files_count
 
 
 def nested_dict():
@@ -98,10 +154,24 @@ def get_private_keys():
     return available_private_keys
 
 
+def sort_sizes(size_list):
+    """ Sorts sizes with extensions. Assumes that size is already in largest unit possible """
+    final_list = []
+    for suffix in [" B", " KB", " MB", " GB", " TB"]:
+        sub_list = [float(size[:-len(suffix)])
+                    for size in size_list if size.endswith(suffix) and size[:-len(suffix)][-1].isnumeric()]
+        sub_list.sort()
+        final_list += [(str(size) + suffix) for size in sub_list]
+        # Skip additional loops
+        if len(final_list) == len(size_list):
+            break
+    return final_list
+
+
 def pretty_bytes(size):
     """from https://stackoverflow.com/questions/12523586/
             python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
-    if type(size) != int:
+    if not isinstance(size, int):
         return ''
     power = 1000  # GiB is base 2**10, GB is base 10**3.
     n = 0
