@@ -107,6 +107,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
+    dir_size = pw.BigIntegerField()
+    dir_files_count = pw.BigIntegerField()
+    path_isdir = pw.BooleanField()
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
@@ -215,6 +218,11 @@ def get_misc_settings():
             'key': 'foreground', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Open main window on startup')
+        },
+        {
+            'key': 'get_srcpath_datasize', 'value': True, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Get statistics of file/folder when added')
         },
         {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
@@ -366,6 +374,17 @@ def init_db(con=None):
     if current_schema.version < 16:
         _apply_schema_update(
             current_schema, 16,
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'dir_size', pw.BigIntegerField(default=-1)),
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'dir_files_count', pw.BigIntegerField(default=-1)),
+            migrator.add_column(SourceFileModel._meta.table_name,
+                                'path_isdir', pw.BooleanField(default=False))
+        )
+
+    if current_schema.version < 17:
+        _apply_schema_update(
+            current_schema, 17,
             migrator.add_column(BackupProfileModel._meta.table_name,
                                 'create_backup_cmd', pw.CharField(default=''))
         )
