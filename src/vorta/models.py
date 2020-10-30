@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 db = pw.Proxy()
 
