@@ -23,7 +23,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Open), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "sucessfully" in restore_dialog.errors.text(), timeout=5000)
 
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
@@ -50,7 +50,7 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == BAD_FILE, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Open), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.errors.text() == "Invalid backup file", timeout=5000)
     qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Cancel), QtCore.Qt.LeftButton)
 
@@ -71,7 +71,7 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "written to" in restore_dialog.errors.text(), timeout=5000)
 
     assert os.path.isfile(FILE_PATH)
@@ -93,7 +93,7 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
 
-    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: "unwritable" in restore_dialog.errors.text(), timeout=5000)
 
     assert not os.path.isfile(FILE_PATH)

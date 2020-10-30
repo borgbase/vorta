@@ -23,10 +23,11 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.parent = parent
         self.setWindowTitle(self.tr("Backup Profile"))
         self.fileButton.setIcon(get_colored_icon('folder-open'))
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.fileButton.clicked.connect(self.get_file)
         self.buttonBox.accepted.connect(self.run)
         self.buttonBox.rejected.connect(self.reject)
+        self.set_button_box()
+
         self.overrideExisting.hide()
 
         profile = self.parent.current_profile
@@ -35,6 +36,10 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
         if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.hide()
+
+    def set_button_box(self):
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
+        self.buttonBox.button(QDialogButtonBox.Open).hide()
 
     def profile_to_json(self, profile):
         # Profile to dict
@@ -81,7 +86,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(bool(fileName))
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(bool(fileName))
 
     def run(self):
         profile = self.parent.current_profile
@@ -94,7 +99,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         else:
             self.errors.setText(self.tr("Backup written to {}").format(self.locationLabel.text()))
             self.locationLabel.setText("")
-            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+            self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
 
     def converter(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -109,6 +114,10 @@ class RestoreWindow(BackupWindow):
         self.setWindowTitle(self.tr("Restore Profile"))
         self.overrideExisting.show()
         self.storePassword.hide()
+
+    def set_button_box(self):
+        self.buttonBox.button(QDialogButtonBox.Open).setEnabled(False)
+        self.buttonBox.button(QDialogButtonBox.Save).hide()
 
     def json_to_profile(self, jsonData):
         # Json string to dict
@@ -224,7 +233,7 @@ class RestoreWindow(BackupWindow):
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(bool(fileName))
+        self.buttonBox.button(QDialogButtonBox.Open).setEnabled(bool(fileName))
 
 
 class VersionException(Exception):
