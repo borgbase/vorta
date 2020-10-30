@@ -25,7 +25,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Vorta for Borg Backup')
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
@@ -47,7 +46,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
-        self.archiveTab = ArchiveTab(self.archiveTabSlot)
+        self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.miscTabSlot)
         self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
