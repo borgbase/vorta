@@ -44,6 +44,12 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app = QApplication.instance()
         self.app.backup_cancelled_event.connect(self.cancel)
 
+        # Declare labels here for translation
+        self.category_label = {"files": self.tr("Files"),
+                               "original": self.tr("Original"),
+                               "deduplicated": self.tr("Deduplicated"),
+                               "compressed": self.tr("Compressed"), }
+
         cmd[0] = self.prepare_bin()
 
         # Add extra Borg args to command. Never pass None.
@@ -209,10 +215,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"Files: {parsed['nfiles']}, "
-                                f"Original: {pretty_bytes(parsed['original_size'])}, "
-                                f"Deduplicated: {pretty_bytes(parsed['deduplicated_size'])}, "
-                                f"Compressed: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{self.category_label['files']}: {parsed['nfiles']}, "
+                                f"{self.category_label['original']}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{self.category_label['deduplicated']}: {pretty_bytes(parsed['deduplicated_size'])}, "
+                                f"{self.category_label['compressed']}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

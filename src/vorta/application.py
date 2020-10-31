@@ -1,6 +1,5 @@
 import os
 import sys
-import sip
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
@@ -47,8 +46,9 @@ class VortaApp(QtSingleApplication):
         self.scheduler = VortaScheduler(self)
         self.setApplicationName("Vorta")
 
-        # Prepare system tray icon
+        # Prepare tray and main window
         self.tray = TrayMenu(self)
+        self.main_window = MainWindow(self)
 
         args = parse_args()
         if getattr(args, 'daemonize', False):
@@ -88,15 +88,12 @@ class VortaApp(QtSingleApplication):
             self.backup_progress_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
-        self.main_window = MainWindow(self)
         self.main_window.show()
         self.main_window.raise_()
-
-    def _main_window_exists(self):
-        return hasattr(self, 'main_window') and not sip.isdeleted(self.main_window)
+        self.main_window.activateWindow()
 
     def toggle_main_window_visibility(self):
-        if self._main_window_exists():
+        if self.main_window.isVisible():
             self.main_window.close()
         else:
             self.open_main_window_action()
@@ -125,14 +122,13 @@ class VortaApp(QtSingleApplication):
 
     def set_borg_details_result(self, result):
         """
-        Receive result from BorgVersionThread. If MainWindow is open, set the version in misc tab.
+        Receive result from BorgVersionThread.
         If no valid version was found, display an error.
         """
         if 'version' in result['data']:
             borg_compat.set_version(result['data']['version'], result['data']['path'])
-            if self._main_window_exists():
-                self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
-                self.main_window.repoTab.toggle_available_compression()
+            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+            self.main_window.repoTab.toggle_available_compression()
         else:
             self._alert_missing_borg()
 
