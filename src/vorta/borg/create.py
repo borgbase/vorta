@@ -94,7 +94,7 @@ class BorgCreateThread(BorgThread):
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
 
-        if profile.dont_run_on_metered_networks and network_status_monitor.is_network_metered():
+        if profile.repo.is_remote_repo() and profile.dont_run_on_metered_networks and network_status_monitor.is_network_metered():
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
             return ret
 
