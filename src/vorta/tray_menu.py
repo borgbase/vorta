@@ -71,6 +71,7 @@ class TrayMenu(QSystemTrayIcon):
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
         icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
-        self.setToolTip(self.tr("Vorta\nStatus: Running") if active else self.tr("Vorta\nStatus: Idle\nNext Backup: %s") % self.app.scheduler.next_job)
+        self.setToolTip(self.tr("Vorta\nStatus: Running") if active else
+                        self.tr("Vorta\nStatus: Idle\nNext Backup: %s") % self.app.scheduler.next_job)
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
