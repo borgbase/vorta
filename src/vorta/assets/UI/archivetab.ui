@@ -99,7 +99,7 @@
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Right clicking an archive shows more actions.</string>
+            <string>Right click on an archive to show more actions.</string>
            </property>
           </widget>
          </item>
