@@ -72,11 +72,10 @@ class TrayMenu(QSystemTrayIcon):
         """
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
-
-        last_backup = EventLogModel.select().where(EventLogModel.subcommand == 'create')\
-            .where(EventLogModel.returncode == '1').where(EventLogModel.repo_url != '(NULL)')\
-            .select(pw.fn.MAX(EventLogModel.start_time)).scalar()
-        last_backup_formatted = last_backup.strftime('%d %B %H:%M')
+        last_backup = EventLogModel.select().where(
+            EventLogModel.subcommand == 'create' & EventLogModel.returncode == '1' &
+            EventLogModel.repo_url != '(NULL)').select(pw.fn.MAX(EventLogModel.start_time)).scalar()
+        last_backup_formatted = last_backup.strftime('%d %B %H:%M') if last_backup else self.tr("Never")
         icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
         self.setToolTip(self.tr("Vorta\nStatus: Running") if active else
                         self.tr("Vorta\nStatus: Idle\nLast Backup: %s")
