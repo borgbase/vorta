@@ -5,6 +5,8 @@ from PyQt5.QtGui import QIcon
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel
 from vorta.utils import get_asset
+import peewee as pw
+from vorta.models import EventLogModel
 
 
 class TrayMenu(QSystemTrayIcon):
@@ -70,8 +72,14 @@ class TrayMenu(QSystemTrayIcon):
         """
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
+
+        last_backup = EventLogModel.select().where(EventLogModel.subcommand == 'create')\
+            .where(EventLogModel.returncode == '1').where(EventLogModel.repo_url != '(NULL)')\
+            .select(pw.fn.MAX(EventLogModel.start_time)).scalar()
+        last_backup_formatted = last_backup.strftime('%d %B %H:%M')
         icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
         self.setToolTip(self.tr("Vorta\nStatus: Running") if active else
-                        self.tr("Vorta\nStatus: Idle\nNext Backup: %s") % self.app.scheduler.next_job)
+                        self.tr("Vorta\nStatus: Idle\nLast Backup: %s")
+                        % last_backup_formatted + self.tr("\nNext Backup: %s" % self.app.scheduler.next_job))
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
