@@ -196,7 +196,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             if returns.get('overrideExisting'):
                 self.scheduleTab.init_logs()
                 self.scheduleTab.init_wifi()
-                self.miscTab.update_checkboxes()
+                self.miscTab.populate_from_profile()
             self.add_profile_entry(new_profile.name, new_profile.id)
         window = RestoreWindow(parent=self)
         window.setParent(self, QtCore.Qt.Sheet)

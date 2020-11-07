@@ -36,7 +36,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
             self.checkboxLayout.addWidget(b)
             self.checkboxList.append(b)
 
-    def update_checkboxes(self):
+    def populate_from_profile(self):
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
             if not list(x):  # Skip settings that aren't specified in vorta.models.
