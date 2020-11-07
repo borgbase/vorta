@@ -92,7 +92,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/folder-open.svg</normaloff>:/icons/folder-open.svg</iconset>
            </property>
           </widget>
@@ -103,7 +103,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../icons/dark/collection.qrc">
+            <iconset>
              <normaloff>:/icons/globe.svg</normaloff>:/icons/globe.svg</iconset>
            </property>
           </widget>
@@ -198,6 +198,26 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="extraBorgArgumentsLineEdit"/>
        </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label">
+         <property name="toolTip">
+          <string>Only available if repository was unlinked less than 3 months ago</string>
+         </property>
+         <property name="text">
+          <string>Restore Archive Records:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="restoreArchivesBox">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -271,5 +291,6 @@
    </item>
   </layout>
  </widget>
+ <resources/>
  <connections/>
 </ui>

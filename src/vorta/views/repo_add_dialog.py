@@ -86,6 +86,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.setEnabled(True)
         if result['returncode'] == 0:
             self.result = result
+            self.result['restore_archives'] = self.restoreArchivesBox.isChecked()
             self.accept()
         else:
             self._set_status(self.tr('Unable to add your repository.'))
