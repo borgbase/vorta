@@ -2,11 +2,9 @@ import os
 import signal
 import sys
 
-import peewee
 from vorta._version import __version__
-from vorta.config import SETTINGS_DIR
 from vorta.log import init_logger
-from vorta.models import init_db
+from vorta.models import connect_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
 
@@ -28,9 +26,7 @@ def main():
 
     init_logger(background=want_background)
 
-    # Init database
-    sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
-    init_db(sqlite_db)
+    connect_db()
 
     # Init app after database is available
     from vorta.application import VortaApp

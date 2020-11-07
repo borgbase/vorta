@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta as rd
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
+from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
@@ -250,6 +251,12 @@ def get_misc_settings():
             },
         ]
     return settings
+
+
+def connect_db():
+    # Init database
+    sqlite_db = pw.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
+    init_db(sqlite_db)
 
 
 def init_db(con=None):

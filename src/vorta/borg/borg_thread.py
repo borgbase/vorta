@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late
-from vorta.models import EventLogModel, BackupProfileMixin
+from vorta.models import EventLogModel, BackupProfileMixin, connect_db
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import get_keyring
 from vorta.keyring.db import VortaDBKeyring
@@ -238,6 +238,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             result['data'] = json.loads(stdout)
         except ValueError:
             result['data'] = stdout
+
+        connect_db()
 
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
