@@ -239,7 +239,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         except ValueError:
             result['data'] = stdout
 
-        connect_db()
+        if result['cmd'][1] == "extract":
+            connect_db()
 
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
