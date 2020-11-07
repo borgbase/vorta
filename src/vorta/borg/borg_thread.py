@@ -239,6 +239,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         except ValueError:
             result['data'] = stdout
 
+        # Reload database if extracting, since it can be overwritten
         if result['cmd'][1] == "extract":
             connect_db()
 
