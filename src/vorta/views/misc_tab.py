@@ -20,6 +20,10 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.versionLabel.setText(__version__)
         self.logLink.setText(f'<a href="file://{LOG_DIR}"><span style="text-decoration:'
                              'underline; color:#0984e3;">Log</span></a>')
+        self.init_checkboxes()
+
+    def init_checkboxes(self):
+        self.checkboxList = []
 
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
@@ -30,6 +34,16 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
             b.setTristate(False)
             b.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
             self.checkboxLayout.addWidget(b)
+            self.checkboxList.append(b)
+
+    def populate_from_profile(self):
+        for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
+            x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
+            if not list(x):  # Skip settings that aren't specified in vorta.models.
+                continue
+            for checkbox in self.checkboxList:
+                if checkbox.text() == setting.label:
+                    checkbox.setChecked(setting.value)
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)
