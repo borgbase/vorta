@@ -71,6 +71,7 @@ class VortaApp(QtSingleApplication):
             self.main_window.scheduleTab.set_icons()
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and source == self.tray.contextMenu():
             self.tray.set_tray_icon()
+            self.tray.tooltip_tray_txt()
         return False
 
     def create_backup_action(self, profile_id=None):
@@ -100,12 +101,15 @@ class VortaApp(QtSingleApplication):
 
     def backup_started_event_response(self):
         self.tray.set_tray_icon(active=True)
+        self.tray.tooltip_tray_txt(active=True)
 
     def backup_finished_event_response(self):
         self.tray.set_tray_icon()
+        self.tray.tooltip_tray_txt()
 
     def backup_cancelled_event_response(self):
         self.tray.set_tray_icon()
+        self.tray.tooltip_tray_txt()
 
     def message_received_event_response(self, message):
         if message == "open main window":

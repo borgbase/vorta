@@ -14,6 +14,7 @@ class TrayMenu(QSystemTrayIcon):
         QSystemTrayIcon.__init__(self, parent)
         self.app = parent
         self.set_tray_icon()
+        self.tooltip_tray_txt()
         menu = QMenu()
 
         # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
@@ -72,14 +73,20 @@ class TrayMenu(QSystemTrayIcon):
         """
         Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
         """
+
+        icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
+        icon = QIcon(get_asset(icon_name))
+        self.setIcon(icon)
+
+    def tooltip_tray_txt(self, active=False):
+
         last_backup = EventLogModel.select().where(
             EventLogModel.subcommand == 'create' & EventLogModel.returncode == '1'
             & EventLogModel.repo_url != '(NULL)').select(pw.fn.MAX(EventLogModel.start_time)).scalar()
+
         last_backup_formatted = last_backup.strftime('%d %B %H:%M') if last_backup else self.tr("Never")
-        icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
+
         self.setToolTip(
             self.tr("Vorta\nStatus: Running") if active else self.tr(
                 "Vorta\nStatus: Idle\nLast Backup: %s\nNext Backup: %s" %
                 (last_backup_formatted, self.app.scheduler.next_job)))
-        icon = QIcon(get_asset(icon_name))
-        self.setIcon(icon)
