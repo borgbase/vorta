@@ -77,8 +77,9 @@ class TrayMenu(QSystemTrayIcon):
             & EventLogModel.repo_url != '(NULL)').select(pw.fn.MAX(EventLogModel.start_time)).scalar()
         last_backup_formatted = last_backup.strftime('%d %B %H:%M') if last_backup else self.tr("Never")
         icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
-        self.setToolTip(self.tr("Vorta\nStatus: Running") if active else
-                        self.tr("Vorta\nStatus: Idle\nLast Backup: %s")
-                        % last_backup_formatted + self.tr("\nNext Backup: %s" % self.app.scheduler.next_job))
+        self.setToolTip(
+            self.tr("Vorta\nStatus: Running") if active else self.tr(
+                "Vorta\nStatus: Idle\nLast Backup: %s\nNext Backup: %s" %
+                (last_backup_formatted, self.app.scheduler.next_job)))
         icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
