@@ -14,6 +14,7 @@ from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
 from vorta.notifications import VortaNotifications
+from vorta.borg.borg_thread import BorgThread
 
 APP_ID = os.path.join(TEMP_DIR, "socket")
 
@@ -102,6 +103,12 @@ class VortaApp(QtSingleApplication):
     def backup_started_event_response(self):
         self.tray.set_tray_icon(active=True)
         self.tray.tooltip_tray_txt(active=True)
+
+    def set_tray_tooltip(self):
+        if BorgThread.is_running():
+            self.tray.tooltip_tray_txt(active=True)
+        else:
+            self.tray.tooltip_tray_txt(active=False)
 
     def backup_finished_event_response(self):
         self.tray.set_tray_icon()

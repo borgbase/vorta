@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderVi
 from vorta.utils import get_asset, get_sorted_wifis
 from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin
 from vorta.views.utils import get_colored_icon
-
 uifile = get_asset('UI/scheduletab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
@@ -136,6 +135,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.save()
                 self.app.scheduler.reload()
                 self._draw_next_scheduled_backup()
+                self.app.set_tray_tooltip()
 
     def on_dont_run_on_metered_networks_changed(self, state):
         profile = self.profile()
