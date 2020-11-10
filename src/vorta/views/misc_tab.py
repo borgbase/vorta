@@ -43,7 +43,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 continue
             for checkbox in self.checkboxList:
                 if checkbox.text() == setting.label:
-                    checkbox.setChecked(setting.value)
+                    if setting.value != checkbox.isChecked():
+                        checkbox.click()
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)
