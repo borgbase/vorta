@@ -165,6 +165,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         else:
             self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
 
+    def db_reload_action(self):
+        tabs = [self.repoTab, self.sourceTab, self.archiveTab, self.scheduleTab, self.miscTab]
+        for tab in tabs:
+            tab.populate_from_profile()
+
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
         self.set_log('')

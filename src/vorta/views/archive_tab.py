@@ -372,6 +372,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
+            # Reload tabs since db might have reloaded
+            self.app.main_window.db_reload_action()
             self.list_action()
 
     def update_mount_button_text(self):
