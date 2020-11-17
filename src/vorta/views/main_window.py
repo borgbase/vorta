@@ -129,8 +129,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self._set_status(params['message'])
             return
         thread = BorgBreakThread(params['cmd'], params, parent=self.app)
-        # thread.updated.connect(self.set_log)
-        # thread.result.connect(print)
         thread.start()
 
     def _toggle_buttons(self, create_enabled=True):
