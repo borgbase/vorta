@@ -70,7 +70,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if env.get('BORG_PASSCOMMAND', False):
             env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
 
-        env['BORG_RSH'] = 'ssh -oStrictHostKeyChecking=no'
         ssh_key = params.get('ssh_key')
         if ssh_key is not None:
             ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key}')
