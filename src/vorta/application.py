@@ -29,7 +29,7 @@ class VortaApp(QtSingleApplication):
     backup_started_event = QtCore.pyqtSignal()
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
-    backup_log_event = QtCore.pyqtSignal(str)
+    backup_log_event = QtCore.pyqtSignal(str, str)
     backup_progress_event = QtCore.pyqtSignal(str)
 
     def __init__(self, args_raw, single_app=False):

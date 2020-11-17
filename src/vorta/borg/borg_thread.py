@@ -203,11 +203,13 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                     try:
                         parsed = json.loads(line)
                         if parsed['type'] == 'log_message':
-                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                            self.app.backup_log_event.emit(
+                                f'{parsed["levelname"]}: {parsed["message"]}', parsed.get('msgid'))
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
                         elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
+                            self.app.backup_log_event.emit(
+                                f'{parsed["path"]} ({parsed["status"]})', parsed.get('msgid'))
                         elif parsed['type'] == 'archive_progress':
                             msg = (
                                 f"{self.category_label['files']}: {parsed['nfiles']}, "
@@ -219,7 +221,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(msg)
+                            self.app.backup_log_event.emit(msg, '')
                             logger.warning(msg)
 
             if p.poll() is not None:
