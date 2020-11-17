@@ -113,6 +113,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.logText.repaint()
 
         msgid = ret.get('msgid')
+        repo_url = ret.get('repo_url')
+        # Prevent getting 'None' profile on None case
+        profile = BackupProfileModel.get(name=ret['profile_name']) if ret.get('profile_name') is not None else None
         if msgid == 'LockTimeout':
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
@@ -120,7 +123,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             msg.setText(
                 translate(
                     "MainWindow QMessagebox",
-                    "The repository might be in use by another computer. Continue?"))
+                    f"The repository at {repo_url} might be in use by another computer. Continue?"))
+            msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
             msg.exec_()
         elif msgid == 'LockFailed':
@@ -130,12 +134,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 translate(
                     "MainWindow QMessagebox",
                     "You do not have permission to access the repository. Run `sudo chown {} -R {}` from the command line to fix this.")  # noqa
-                .format(os.getuid(), ret['repo_url']))
+                .format(os.getuid(), repo_url))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
             msg.exec_()
 
-    def break_lock(self):
-        params = BorgBreakThread.prepare(self.current_profile)
+    def break_lock(self, profile):
+        params = BorgBreakThread.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return
