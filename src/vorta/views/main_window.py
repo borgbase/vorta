@@ -111,7 +111,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.logText.setText(text)
         self.logText.repaint()
 
-        if msgid == 'LockTimeout':
+        if msgid == 'LockTimeout' or msgid == 'LockError' or msgid == 'LockErrorT' or msgid == 'LockFailed':
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setParent(self, QtCore.Qt.Sheet)
