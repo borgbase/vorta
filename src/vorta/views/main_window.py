@@ -1,3 +1,4 @@
+import os
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
@@ -107,11 +108,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.progressText.setText(text)
         self.progressText.repaint()
 
-    def set_log(self, text='', msgid=''):
+    def set_log(self, text='', ret={}):
         self.logText.setText(text)
         self.logText.repaint()
 
-        if msgid == 'LockTimeout' or msgid == 'LockError' or msgid == 'LockErrorT' or msgid == 'LockFailed':
+        msgid = ret.get('msgid')
+        if msgid == 'LockTimeout':
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setParent(self, QtCore.Qt.Sheet)
@@ -119,8 +121,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 translate(
                     "MainWindow QMessagebox",
                     "The repository might be in use by another computer. Continue?"))
-            msg.button(QMessageBox.Yes).clicked.connect(self.break_lock)
             msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
+            msg.exec_()
+        elif msgid == 'LockFailed':
+            msg = QMessageBox()
+            msg.setParent(self, QtCore.Qt.Sheet)
+            msg.setText(
+                translate(
+                    "MainWindow QMessagebox",
+                    "You do not have permission to access the repository. Run `sudo chown {} -R {}` from the command line to fix this.")  # noqa
+                .format(os.getuid(), ret['repo_url']))
+            msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
             msg.exec_()
 
     def break_lock(self):
