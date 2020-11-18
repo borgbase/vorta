@@ -7,7 +7,7 @@ from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
 from vorta.config import TEMP_DIR
 from vorta.i18n import init_translations, translate
-from vorta.models import BackupProfileModel, SettingsModel
+from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.tray_menu import TrayMenu
@@ -60,6 +60,7 @@ class VortaApp(QtSingleApplication):
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
+        self.aboutToQuit.connect(cleanup_db)
         self.set_borg_details_action()
         self.installEventFilter(self)
 

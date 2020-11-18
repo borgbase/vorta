@@ -252,6 +252,11 @@ def get_misc_settings():
     return settings
 
 
+def cleanup_db():
+    # Clean up database
+    db.execute_sql("VACUUM")
+
+
 def init_db(con=None):
     if con is not None:
         os.umask(0o0077)
@@ -390,6 +395,3 @@ def init_db(con=None):
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - rd(months=3)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
-
-    # Clean up database
-    db.execute_sql("VACUUM")
