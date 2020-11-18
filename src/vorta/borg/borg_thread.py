@@ -205,7 +205,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                         ret = {
                             'msgid': parsed.get('msgid'),
                             'repo_url': self.params['repo_url'],
-                            'profile_name': self.params.get('profile_name')
+                            'profile_name': self.params.get('profile_name'),
+                            'cmd': self.params['cmd'][1]
                         }
                         if parsed['type'] == 'log_message':
                             self.app.backup_log_event.emit(
