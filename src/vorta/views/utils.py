@@ -26,8 +26,7 @@ def process_log(self, context):
         msgid = context.get('msgid')
         repo_url = context.get('repo_url')
         if msgid == 'LockTimeout':
-            profile = BackupProfileModel.get(name=context['profile_name']) if context.get(
-                'profile_name') is not None else None  # For case where profile is called 'None'
+            profile = BackupProfileModel.get(name=context['profile_name'])
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setParent(self, QtCore.Qt.Sheet)
