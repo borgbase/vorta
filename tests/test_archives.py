@@ -123,7 +123,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow())
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
@@ -145,7 +145,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow())
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
@@ -166,13 +166,13 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=5000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow())
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
     qtbot.mouseClick(tab._window.diffButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), timeout=5000)
-    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow())
+    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), timeout=5000)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()

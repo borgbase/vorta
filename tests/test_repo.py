@@ -1,7 +1,6 @@
 import os
 import uuid
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
 
 import vorta.borg.borg_thread
 import vorta.models
@@ -25,8 +24,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     assert add_repo_window.errorText.text() == 'Please use a longer passphrase.'
 
 
-def test_repo_unlink(qapp, qtbot, monkeypatch):
-    monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
+def test_repo_unlink(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
 
