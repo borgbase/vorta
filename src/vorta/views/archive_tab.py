@@ -352,7 +352,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             self.profile(), archive.name, window.selected, extraction_folder[0])
                         if params['ok']:
                             self._toggle_all_buttons(False)
-                            thread = BorgExtractThread(params['cmd'], params, parent=self)
+                            thread = BorgExtractThread(params['cmd'], params, parent=self.app)
                             thread.updated.connect(self.mountErrors.setText)
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
