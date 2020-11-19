@@ -39,6 +39,7 @@ jobs:
     - name: Install Vorta
       run: |
         pip install .
+        pip install coverage
         pip install borgbackup
         pip install -r requirements.d/dev.txt
     # - name: Setup tmate session
@@ -53,12 +54,15 @@ jobs:
         export $(dbus-launch)
         (herbstluftwm) &
         sleep 3
-        pytest
+        coverage run -m pytest
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        pytest
-
+        coverage run -m pytest
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
   lint:
     runs-on: ubuntu-latest
     steps:
