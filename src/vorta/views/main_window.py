@@ -188,6 +188,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_backup_action(self):
         window = BackupWindow(parent=self)
+        self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
 
@@ -201,6 +202,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.miscTab.populate_from_profile()
             self.add_profile_entry(new_profile.name, new_profile.id)
         window = RestoreWindow(parent=self)
+        self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.profile_restored.connect(profile_restored_event)
         window.show()

@@ -105,3 +105,14 @@ def borg_json_output():
 @pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+def delete_current_profile(qapp):
+    ''' Delete current profile for cleanup '''
+    main = qapp.main_window
+    target = BackupProfileModel.get(id=main.profileSelector.currentData())
+    if qapp.scheduler.get_job(target.id):
+        qapp.scheduler.remove_job(target.id)
+    target.delete_instance(recursive=True)
+    main.profileSelector.removeItem(main.profileSelector.currentIndex())
+    main.profile_select_action(0)
