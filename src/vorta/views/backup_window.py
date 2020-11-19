@@ -122,13 +122,18 @@ class RestoreWindow(BackupWindow):
     def json_to_profile(self, jsonData):
         # Json string to dict
         profile_dict = json.loads(jsonData)
+        profile_schema = profile_dict['SchemaVersion']['version']
         returns = {}
 
-        if SCHEMA_VERSION < profile_dict['SchemaVersion']['version']:
+        if SCHEMA_VERSION < profile_schema:
             raise VersionException()
-        elif SCHEMA_VERSION > profile_dict['SchemaVersion']['version']:
+        elif SCHEMA_VERSION > profile_schema:
             # Add model upgrading code here, only needed if not adding columns
-            pass
+            if profile_schema < 16:
+                for sourcedir in profile_dict['SourceFileModel']:
+                    sourcedir['dir_files_count'] = -1
+                    sourcedir['dir_size'] = -1
+                    sourcedir['path_isdir'] = False
 
         # Guarantee uniqueness of ids
         while BackupProfileModel.get_or_none(BackupProfileModel.id == profile_dict['id']) is not None:
