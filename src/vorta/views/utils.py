@@ -1,5 +1,10 @@
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon, QImage, QPixmap
+
+from vorta.i18n import translate
 from vorta.utils import uses_dark_mode, get_asset
+from vorta.models import BackupProfileModel
 
 
 def get_colored_icon(icon_name):
@@ -13,3 +18,32 @@ def get_colored_icon(icon_name):
     svg_img = QImage.fromData(svg_str).scaledToHeight(128)
 
     return QIcon(QPixmap(svg_img))
+
+
+def process_log(self, context):
+    cmd = context.get('cmd')
+    if cmd is not None and cmd != 'init':
+        msgid = context.get('msgid')
+        repo_url = context.get('repo_url')
+        if msgid == 'LockTimeout':
+            profile = BackupProfileModel.get(name=context['profile_name']) if context.get(
+                'profile_name') is not None else None  # For case where profile is called 'None'
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setParent(self, QtCore.Qt.Sheet)
+            msg.setText(
+                translate(
+                    "MainWindow QMessagebox",
+                    f"The repository at {repo_url} might be in use by another computer. Continue?"))
+            msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
+            msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
+            msg.exec_()
+        elif msgid == 'LockFailed':
+            msg = QMessageBox()
+            msg.setParent(self, QtCore.Qt.Sheet)
+            msg.setText(
+                translate(
+                    "MainWindow QMessagebox",
+                    f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))
+            msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
+            msg.exec_()

@@ -1,14 +1,13 @@
-import os
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QShortcut, QMessageBox
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.borg.break_lock import BorgBreakThread
-from vorta.i18n import trans_late, translate
+from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import get_colored_icon, process_log
 from vorta.views.partials.loading_button import LoadingButton
 
 from .archive_tab import ArchiveTab
@@ -108,37 +107,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.progressText.setText(text)
         self.progressText.repaint()
 
-    def set_log(self, text='', ret={}):
+    def set_log(self, text='', context={}):
         self.logText.setText(text)
         self.logText.repaint()
-
-        msgid = ret.get('msgid')
-        repo_url = ret.get('repo_url')
-        cmd = ret.get('cmd')
-        if cmd is not None and cmd != 'init':
-            # Prevent getting 'None' profile on None case
-            profile = BackupProfileModel.get(name=ret['profile_name']) if ret.get('profile_name') is not None else None
-            if msgid == 'LockTimeout':
-                msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                msg.setParent(self, QtCore.Qt.Sheet)
-                msg.setText(
-                    translate(
-                        "MainWindow QMessagebox",
-                        f"The repository at {repo_url} might be in use by another computer. Continue?"))
-                msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
-                msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
-                msg.exec_()
-            elif msgid == 'LockFailed':
-                msg = QMessageBox()
-                msg.setParent(self, QtCore.Qt.Sheet)
-                msg.setText(
-                    translate(
-                        "MainWindow QMessagebox",
-                        "You do not have permission to access the repository. Run `sudo chown {} -R {}` from the command line to fix this.")  # noqa
-                    .format(os.getuid(), repo_url))
-                msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
-                msg.exec_()
+        process_log(self, context)
 
     def break_lock(self, profile):
         params = BorgBreakThread.prepare(profile)
