@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QMessageBox
 import vorta.borg.borg_thread
 import vorta.models
 from vorta.keyring.abc import get_keyring
-from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 
@@ -69,8 +68,11 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert main.repoTab.repoSelector.currentText() == test_repo_url
 
 
-def test_ssh_dialog(qtbot, tmpdir):
-    ssh_dialog = SSHAddWindow()
+def test_ssh_dialog(qapp, qtbot, tmpdir):
+    main = qapp.main_window
+    main.repoTab.sshComboBox.setCurrentIndex(1)
+    ssh_dialog = main.repoTab._window
+
     ssh_dir = tmpdir
     key_tmpfile = ssh_dir.join("id_rsa-test")
     pub_tmpfile = ssh_dir.join("id_rsa-test.pub")

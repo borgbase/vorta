@@ -113,12 +113,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def ssh_select_action(self, index):
         if index == 1:
             ssh_add_window = SSHAddWindow()
+            self._window = ssh_add_window  # For tests
             ssh_add_window.setParent(self, QtCore.Qt.Sheet)
             ssh_add_window.show()
-            if ssh_add_window.exec_():
-                self.init_ssh()
-            else:
-                self.sshComboBox.setCurrentIndex(0)
+            ssh_add_window.accepted.connect(self.init_ssh)
+            ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
         else:
             profile = self.profile()
             profile.ssh_key = self.sshComboBox.itemData(index)
