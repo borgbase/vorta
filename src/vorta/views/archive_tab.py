@@ -344,14 +344,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_archive_result(self, result):
         self._set_status('')
         if result['returncode'] == 0:
-            archive = ArchiveModel.get(name=result['params']['archive_name'])
-            window = ExtractDialog(result['data'], archive)
-            self._toggle_all_buttons(True)
-            window.setParent(self, QtCore.Qt.Sheet)
-            self._window = window  # for testing
-            window.show()
-
-            if window.exec_():
+            def process_result():
                 def receive():
                     extraction_folder = dialog.selectedFiles()
                     if extraction_folder:
@@ -359,7 +352,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             self.profile(), archive.name, window.selected, extraction_folder[0])
                         if params['ok']:
                             self._toggle_all_buttons(False)
-                            thread = BorgExtractThread(params['cmd'], params, parent=self.app)
+                            thread = BorgExtractThread(params['cmd'], params, parent=self)
                             thread.updated.connect(self.mountErrors.setText)
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
@@ -368,6 +361,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
                 dialog.open(receive)
+
+            archive = ArchiveModel.get(name=result['params']['archive_name'])
+            window = ExtractDialog(result['data'], archive)
+            self._toggle_all_buttons(True)
+            window.setParent(self, QtCore.Qt.Sheet)
+            self._window = window  # for testing
+            window.show()
+            window.accepted.connect(process_result)
 
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
@@ -435,15 +436,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(True)
 
     def diff_action(self):
-        profile = self.profile()
-
-        window = DiffDialog(self.archiveTable)
-        self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.Sheet)
-        self._window = window  # for testing
-        window.show()
-
-        if window.exec_():
+        def process_result():
             if window.selected_archives:
                 self.selected_archives = window.selected_archives
             archive_cell_newer = self.archiveTable.item(self.selected_archives[0], 4)
@@ -464,6 +457,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.start()
                 else:
                     self._set_status(params['message'])
+
+        profile = self.profile()
+
+        window = DiffDialog(self.archiveTable)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.Sheet)
+        self._window = window  # for testing
+        window.show()
+        window.accepted.connect(process_result)
 
     def list_diff_result(self, result):
         self._set_status('')
