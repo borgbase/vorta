@@ -139,17 +139,13 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     tab.archiveTable.selectRow(0)
-    stdout, stderr = borg_json_output('list_archive')
+    stdout, stderr = borg_json_output('delete')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-    qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
+    mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
+    qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
-
-    assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
-    tab._window.treeView.model().rootItem.childItems[0].load_children()
-    assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.')
 
 
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
