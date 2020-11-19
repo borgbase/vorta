@@ -19,6 +19,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     main = qapp.main_window
     main.restoreAction.trigger()
     restore_dialog = main.window
+    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
@@ -49,6 +50,7 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     main = qapp.main_window
     main.restoreAction.trigger()
     restore_dialog = main.window
+    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == BAD_FILE, timeout=5000)
@@ -71,6 +73,7 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
     main = qapp.main_window
     main.backupAction.trigger()
     restore_dialog = main.window
+    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
@@ -95,6 +98,7 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
     main = qapp.main_window
     main.backupAction.trigger()
     restore_dialog = main.window
+    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
