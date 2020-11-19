@@ -413,12 +413,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
+        self.archive_name = self.selected_archive_name()
+        if self.archive_name is not None:
             if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
                                        trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
                 return
-            params['cmd'][-1] += f'::{archive_name}'
+            params['cmd'][-1] += f'::{self.archive_name}'
 
             thread = BorgDeleteThread(params['cmd'], params, parent=self.app)
             thread.updated.connect(self._set_status)
@@ -431,7 +431,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Archive deleted.'))
-            self.list_action()
+            deleted_row = self.archiveTable.findItems(self.archive_name, QtCore.Qt.MatchExactly)[0].row()
+            self.archiveTable.removeRow(deleted_row)
+            ArchiveModel.get(name=self.archive_name).delete_instance()
+            del self.archive_name
         else:
             self._toggle_all_buttons(True)
 

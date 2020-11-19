@@ -145,7 +145,9 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.')
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', timeout=3000)
+    assert ArchiveModel.select().count() == 1
+    assert tab.archiveTable.rowCount() == 1
 
 
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
