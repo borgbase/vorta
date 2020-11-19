@@ -66,7 +66,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def set_repos(self):
         count = self.repoSelector.count()
-        for x in range(4, count):  # Repositories are listed after 4th entry in repoSelector
+        for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
             self.repoSelector.removeItem(4)
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
@@ -138,8 +138,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 clipboard = QApplication.clipboard()
                 clipboard.setText(pub_key)
 
-                msg.setText(self.tr("Public Key Copied to Clipboard"))
-                msg.setInformativeText(self.tr(
+                msg.setWindowTitle(self.tr("Public Key Copied to Clipboard"))
+                msg.setText(self.tr(
                     "The selected public SSH key was copied to the clipboard. "
                     "Use it to set up remote repo permissions."))
 
@@ -147,7 +147,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 msg.setText(self.tr("Couldn't find public key."))
         else:
             msg.setText(self.tr("Select a public key from the dropdown first."))
-        msg.exec_()
+        msg.show()
 
     def compression_select_action(self, index):
         profile = self.profile()
@@ -163,12 +163,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 window = AddRepoWindow()
             else:
                 window = ExistingRepoWindow()
+            self._window = window  # For tests
             window.setParent(self, QtCore.Qt.Sheet)
             window.show()
-            if window.exec_():
-                self.process_new_repo(window.result)
-            else:
-                self.repoSelector.setCurrentIndex(0)
+            window.added_repo.connect(self.process_new_repo)
+            window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         else:
             profile = self.profile()
             profile.repo = self.repoSelector.currentData()
@@ -203,9 +202,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             repo.delete_instance(recursive=True)  # This also deletes archives.
             self.repoSelector.setCurrentIndex(0)
             self.repoSelector.removeItem(selected_repo_index)
-            msg.setText(self.tr('Repository was Unlinked'))
-            msg.setInformativeText(self.tr('You can always connect it again later.'))
-            msg.exec_()
+            msg.setWindowTitle(self.tr('Repository was Unlinked'))
+            msg.setText(self.tr('You can always connect it again later.'))
+            msg.show()
 
             self.repo_changed.emit()
             self.init_repo_stats()
@@ -219,4 +218,4 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setParent(self, QtCore.Qt.Sheet)
             msg.setText(self.tr("Select a repository from the dropdown first."))
-            msg.exec_()
+            msg.show()
