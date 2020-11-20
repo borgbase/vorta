@@ -1,12 +1,9 @@
 import os
 import uuid
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
 
 import vorta.borg.borg_thread
 import vorta.models
-from vorta.views.repo_add_dialog import AddRepoWindow
-from vorta.views.ssh_dialog import SSHAddWindow
 from vorta.keyring.abc import get_keyring
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
@@ -17,7 +14,8 @@ SHORT_PASSWORD = 'hunter2'
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
-    add_repo_window = AddRepoWindow(main)
+    main.repoTab.repoSelector.setCurrentIndex(1)
+    add_repo_window = main.repoTab._window
     qtbot.addWidget(add_repo_window)
 
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
@@ -49,8 +47,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     assert add_repo_window.passwordLabel.text() == 'Passwords must be identical.'
 
 
-def test_repo_unlink(qapp, qtbot, monkeypatch):
-    monkeypatch.setattr(QMessageBox, "exec_", lambda *args: QMessageBox.Yes)
+def test_repo_unlink(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
 
@@ -65,8 +62,8 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
-    main.repoTab.repo_added.disconnect()
-    add_repo_window = AddRepoWindow(main)
+    main.repoTab.repoSelector.setCurrentIndex(1)
+    add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     keyring = get_keyring()
@@ -81,8 +78,8 @@ def test_password_autofill(qapp, qtbot):
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
-    main.repoTab.repo_added.disconnect()
-    add_repo_window = AddRepoWindow(main)
+    main.repoTab.repoSelector.setCurrentIndex(1)
+    add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
@@ -95,21 +92,22 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
 
-    with qtbot.waitSignal(add_repo_window.thread.result, timeout=3000) as blocker:
+    with qtbot.waitSignal(add_repo_window.thread.result, timeout=3000) as _:
         pass
 
-    main.repoTab.process_new_repo(blocker.args[0])
-
-    assert EventLogModel.select().count() == 1
+    assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=2).url == test_repo_url
 
-    from vorta.keyring.abc import get_keyring
     keyring = get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
+    assert main.repoTab.repoSelector.currentText() == test_repo_url
 
 
-def test_ssh_dialog(qtbot, tmpdir):
-    ssh_dialog = SSHAddWindow()
+def test_ssh_dialog(qapp, qtbot, tmpdir):
+    main = qapp.main_window
+    main.repoTab.sshComboBox.setCurrentIndex(1)
+    ssh_dialog = main.repoTab._window
+
     ssh_dir = tmpdir
     key_tmpfile = ssh_dir.join("id_rsa-test")
     pub_tmpfile = ssh_dir.join("id_rsa-test.pub")

@@ -1,5 +1,5 @@
 import re
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
@@ -16,6 +16,8 @@ AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
 class AddRepoWindow(AddRepoBase, AddRepoUI):
+    added_repo = QtCore.pyqtSignal(dict)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -126,7 +128,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def run_result(self, result):
         self.saveButton.setEnabled(True)
         if result['returncode'] == 0:
-            self.result = result
+            self.added_repo.emit(result)
             self.accept()
         else:
             self._set_status(self.tr('Unable to add your repository.'))
