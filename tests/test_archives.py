@@ -108,17 +108,13 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=10000)
 
 
-def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
+def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
     tab.populate_from_profile()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
-
-    monkeypatch.setattr(
-        vorta.views.extract_dialog.ExtractDialog, "exec_", lambda *args: True
-    )
 
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('list_archive')
@@ -127,13 +123,14 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
     assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
 
 
-def test_archive_diff(qapp, qtbot, mocker, borg_json_output, monkeypatch):
+def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
@@ -141,13 +138,25 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, monkeypatch):
     tab.populate_from_profile()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
-    monkeypatch.setattr(
-        vorta.views.diff_dialog.DiffDialog, "exec_", lambda *args: True
-    )
+    tab.archiveTable.selectRow(0)
+    stdout, stderr = borg_json_output('delete')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
+    qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
 
-    monkeypatch.setattr(
-        tab, "selected_archives", (0, 1)
-    )
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', timeout=3000)
+    assert ArchiveModel.select().count() == 1
+    assert tab.archiveTable.rowCount() == 1
+
+
+def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     stdout, stderr = borg_json_output('diff_archives')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -155,11 +164,13 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, monkeypatch):
 
     qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=5000)
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
-    monkeypatch.setattr(
-        vorta.views.diff_result.DiffResult, "exec_", lambda *args: True
-    )
+    tab._window.archiveTable.selectRow(0)
+    tab._window.archiveTable.selectRow(1)
+    qtbot.mouseClick(tab._window.diffButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), timeout=5000)
+    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), timeout=5000)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
