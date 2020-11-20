@@ -138,4 +138,4 @@ class VortaApp(QtSingleApplication):
         msg.setText(self.tr("No Borg Binary Found"))
         msg.setInformativeText(self.tr("Vorta was unable to locate a usable Borg Backup binary."))
         msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
+        msg.exec()

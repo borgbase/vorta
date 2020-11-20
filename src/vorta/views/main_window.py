@@ -134,6 +134,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
         self.window = window  # For tests
         window.setParent(self, QtCore.Qt.Sheet)
+        window.open()
         window.profile_changed.connect(self.add_profile_entry)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
