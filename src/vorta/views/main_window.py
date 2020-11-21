@@ -7,7 +7,7 @@ from vorta.borg.break_lock import BorgBreakThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
-from vorta.views.utils import get_colored_icon, process_log
+from vorta.views.utils import get_colored_icon, process_errors
 from vorta.views.partials.loading_button import LoadingButton
 
 from .archive_tab import ArchiveTab
@@ -110,12 +110,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def set_log(self, text='', context={}):
         self.logText.setText(text)
         self.logText.repaint()
-        process_log(self, context)
+        process_errors(self, context)
 
     def break_lock(self, profile):
         params = BorgBreakThread.prepare(profile)
         if not params['ok']:
-            self._set_status(params['message'])
+            self.set_progress(params['message'])
             return
         thread = BorgBreakThread(params['cmd'], params, parent=self.app)
         thread.start()

@@ -20,7 +20,7 @@ def get_colored_icon(icon_name):
     return QIcon(QPixmap(svg_img))
 
 
-def process_log(self, context):
+def process_errors(self, context):
     cmd = context.get('cmd')
     if cmd is not None and cmd != 'init':
         msgid = context.get('msgid')
@@ -28,6 +28,7 @@ def process_log(self, context):
         if msgid == 'LockTimeout':
             profile = BackupProfileModel.get(name=context['profile_name'])
             msg = QMessageBox()
+            self.msg = msg  # for tests
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setParent(self, QtCore.Qt.Sheet)
             msg.setText(
@@ -36,13 +37,14 @@ def process_log(self, context):
                     f"The repository at {repo_url} might be in use by another computer. Continue?"))
             msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
-            msg.exec_()
+            msg.show()
         elif msgid == 'LockFailed':
             msg = QMessageBox()
+            self.msg = msg  # for tests
             msg.setParent(self, QtCore.Qt.Sheet)
             msg.setText(
                 translate(
                     "MainWindow QMessagebox",
                     f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
-            msg.exec_()
+            msg.show()
