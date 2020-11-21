@@ -33,7 +33,7 @@ def process_log(self, context):
             msg.setText(
                 translate(
                     "MainWindow QMessagebox",
-                    f"The repository at {repo_url} might be in use by another computer. Continue?"))
+                    f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
             msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
             msg.exec_()
