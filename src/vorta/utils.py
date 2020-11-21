@@ -241,7 +241,7 @@ def parse_args():
         '--create',
         nargs='+',
         dest='profile',
-        help='Create a backup in the background using the given profile(s). Will automatically close once complete.')
+        help='Create a backup in the background using the given profile(s).')
 
     return parser.parse_known_args()[0]
 

@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import time
+import ast
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -41,10 +42,16 @@ class VortaApp(QtSingleApplication):
     def __init__(self, args_raw, single_app=False):
 
         super().__init__(APP_ID, args_raw)
-        if self.isRunning() and single_app:
-            self.sendMessage("open main window")
-            print('An instance of Vorta is already running. Opening main window.')
-            sys.exit()
+        args = parse_args()
+        if self.isRunning():
+            if single_app:
+                self.sendMessage("open main window")
+                print('An instance of Vorta is already running. Opening main window.')
+                sys.exit()
+            elif args.profile:
+                self.sendMessage(f"create {args.profile}")
+                print('Creating backups using existing Vorta instance.')
+                sys.exit()
 
         init_translations(self)
 
@@ -56,28 +63,13 @@ class VortaApp(QtSingleApplication):
         self.tray = TrayMenu(self)
         self.main_window = MainWindow(self)
 
-        args = parse_args()
-        if getattr(args, 'daemonize', False) or args.profile:
+        if getattr(args, 'daemonize', False):
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        if args.profile:
-            self.completedProfiles = []
-            self.validProfiles = []
-            for profile_name in args.profile:
-                profile = BackupProfileModel.get_or_none(name=profile_name)
-                if profile is not None:
-                    if profile.repo is None:
-                        logger.warning(f"Add a repository to {profile_name}")
-                        continue
-                    self.validProfiles.append(profile_name)
-                    # Wait a bit in case something is running
-                    while BorgThread.is_running():
-                        time.sleep(0.1)
-                    self.create_backup_action(profile_id=profile.id, from_cmdline=True)
-                else:
-                    logger.warning(f"Invalid profile name {profile_name}")
+        if args.profile is not None:
+            self.create_backups_cmdline(args.profile)
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
@@ -86,13 +78,22 @@ class VortaApp(QtSingleApplication):
         self.set_borg_details_action()
         self.installEventFilter(self)
 
-    def exit_checker(self, result):
-        """Exit when all profiles have been run"""
-        profile_name = result['params']['profile_name']
-        logger.info(f"Backup complete for {profile_name}")
-        self.completedProfiles.append(profile_name)
-        if self.validProfiles == self.completedProfiles:
-            os._exit(0)
+    def create_backups_cmdline(self, profiles):
+        self.completedProfiles = []
+        self.validProfiles = []
+        for profile_name in profiles:
+            profile = BackupProfileModel.get_or_none(name=profile_name)
+            if profile is not None:
+                if profile.repo is None:
+                    logger.warning(f"Add a repository to {profile_name}")
+                    continue
+                self.validProfiles.append(profile_name)
+                # Wait a bit in case something is running
+                while BorgThread.is_running():
+                    time.sleep(0.1)
+                self.create_backup_action(profile_id=profile.id)
+            else:
+                logger.warning(f"Invalid profile name {profile_name}")
 
     def eventFilter(self, source, event):
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and isinstance(source, MainWindow):
@@ -104,7 +105,7 @@ class VortaApp(QtSingleApplication):
             self.tray.set_tray_icon()
         return False
 
-    def create_backup_action(self, profile_id=None, from_cmdline=False):
+    def create_backup_action(self, profile_id=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
@@ -112,8 +113,6 @@ class VortaApp(QtSingleApplication):
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg, parent=self)
-            if from_cmdline:
-                thread.result.connect(self.exit_checker)
             thread.start()
         else:
             notifier = VortaNotifications.pick()
@@ -143,6 +142,13 @@ class VortaApp(QtSingleApplication):
     def message_received_event_response(self, message):
         if message == "open main window":
             self.open_main_window_action()
+        elif message.startswith("create"):
+            message = message[7:]  # Remove create
+            profiles = ast.literal_eval(message)  # Safely parse string array
+            if BorgThread.is_running():
+                logger.warning("Cannot run while backups are already running")
+            else:
+                self.create_backups_cmdline(profiles)
 
     def set_borg_details_action(self):
         params = BorgVersionThread.prepare()
