@@ -1,7 +1,6 @@
 import os
 import uuid
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
 
 import vorta.borg.borg_thread
 import vorta.models
@@ -107,42 +106,3 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
-
-
-def test_create_break_lock(qapp, borg_json_output, mocker, qtbot):
-    # Break lock
-    main = qapp.main_window
-    qtbot.addWidget(main)
-
-    stdout, stderr = borg_json_output('create_lock')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-
-    qtbot.waitUntil(lambda: type(qapp.activeWindow()) == QMessageBox, timeout=5000)
-    assert main.msg.windowTitle() == 'Repository In Use'
-
-    stdout, stderr = borg_json_output('create_break')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)  # Prevent thread collision
-    qtbot.mouseClick(main.msg.button(QMessageBox.Yes), QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.progressText.text()
-                    == 'Repository lock broken. Please redo your last action.', timeout=5000)
-
-
-def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
-    # Display error
-    main = qapp.main_window
-    qtbot.addWidget(main)
-
-    stdout, stderr = borg_json_output('create_perm')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-
-    qtbot.waitUntil(lambda: type(qapp.activeWindow()) == QMessageBox, timeout=5000)
-    assert "permission" in main.msg.text()

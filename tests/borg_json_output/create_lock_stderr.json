@@ -1,1 +1,0 @@
-{"type": "log_message", "time": 1605936838.3639696, "message": "Failed to create/acquire the lock /tmp/another/lock.exclusive (timeout).", "levelname": "ERROR", "name": "borg.archiver", "msgid": "LockTimeout"}
