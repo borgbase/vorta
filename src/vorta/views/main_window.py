@@ -150,10 +150,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
+        self.window = window  # For tests
         window.setParent(self, QtCore.Qt.Sheet)
-        window.show()
-        if window.exec_():
-            self.profileSelector.setItemText(self.profileSelector.currentIndex(), window.profileNameField.text())
+        window.open()
+        window.profile_changed.connect(self.add_profile_entry)
+        window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
@@ -168,19 +169,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
             if reply == QMessageBox.Yes:
                 if self.app.scheduler.get_job(to_delete_id):
                     self.app.scheduler.remove_job(to_delete_id)
-
                 to_delete.delete_instance(recursive=True)
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
                 self.profile_select_action(0)
 
     def profile_add_action(self):
         window = AddProfileWindow()
+        self.window = window  # For tests
         window.setParent(self, QtCore.Qt.Sheet)
-        window.show()
-        if window.exec_():
-            self.add_profile_entry(window.edited_profile.name, window.edited_profile.id)
-        else:
-            self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex())
+        window.open()
+        window.profile_changed.connect(self.add_profile_entry)
+        window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def add_profile_entry(self, profile_name, profile_id):
         self.profileSelector.addItem(profile_name, profile_id)
