@@ -123,7 +123,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 
-        if profile.repo.is_remote_repo() and profile.ssh_key is not None and \
+        if profile.ssh_key is not None and profile.repo.is_remote_repo() and \
                 not os.path.isfile(os.path.expanduser(f'~/.ssh/{profile.ssh_key}')):
             ret['message'] = trans_late(
                 'messages', 'Your SSH key {} is missing. Add or change your key and try again.'.format(profile.ssh_key))
