@@ -142,7 +142,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 logger.warning('Found password in database, but secure storage was available. '
                                'Consider re-adding the repo to use it.')
 
-        ret['ssh_key'] = profile.ssh_key
+        ret['ssh_key'] = profile.repo.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments

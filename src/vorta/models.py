@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 db = pw.Proxy()
 
@@ -46,6 +46,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
+    ssh_key = pw.CharField(default=None, null=True)
     extra_borg_arguments = pw.CharField(default='')
 
     def is_remote_repo(self):
@@ -69,7 +70,6 @@ class BackupProfileModel(pw.Model):
     name = pw.CharField()
     added_at = pw.DateTimeField(default=datetime.now)
     repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
-    ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
@@ -379,6 +379,15 @@ def init_db(con=None):
                                 'dir_files_count', pw.BigIntegerField(default=-1)),
             migrator.add_column(SourceFileModel._meta.table_name,
                                 'path_isdir', pw.BooleanField(default=False))
+        )
+
+    if current_schema.version < 17:
+        _apply_schema_update(
+            current_schema, 17,
+            migrator.drop_column(BackupProfileModel._meta.table_name,
+                                 'ssh_key'),
+            migrator.add_column(RepoModel._meta.table_name,
+                                'ssh_key', pw.CharField(default=None, null=True))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.

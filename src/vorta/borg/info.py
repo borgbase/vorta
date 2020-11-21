@@ -3,8 +3,8 @@ from .borg_thread import BorgThread
 from vorta.models import RepoModel
 from vorta.keyring.abc import get_keyring
 
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
-FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
+FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'ssh_key'])
+FakeProfile = namedtuple('FakeProfile', ['repo', 'name'])
 
 
 class BorgInfoThread(BorgThread):
@@ -20,9 +20,9 @@ class BorgInfoThread(BorgThread):
 
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments']),
+            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments', params['ssh_key']]),
             'New Repo',
-            params['ssh_key']
+
         )
 
         ret = super().prepare(profile)

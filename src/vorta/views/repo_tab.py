@@ -79,7 +79,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoSelector.setCurrentIndex(0)
 
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
-        self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
 
     def init_repo_stats(self):
@@ -98,11 +97,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def init_ssh(self):
         keys = get_private_keys()
+        profile = self.profile()
         self.sshComboBox.clear()
         self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
         self.sshComboBox.addItem(self.tr('Create New Key'), 'new')
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
+        if profile.repo is None:
+            self.sshComboBox.setEnabled(False)
 
     def toggle_available_compression(self):
         use_zstd = borg_compat.check('ZSTD')
@@ -120,8 +122,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
         else:
             profile = self.profile()
-            profile.ssh_key = self.sshComboBox.itemData(index)
-            profile.save()
+            profile.repo.ssh_key = self.sshComboBox.itemData(index)
+            profile.repo.save()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()
@@ -155,6 +157,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def repo_select_action(self, index):
         item_data = self.repoSelector.itemData(index)
+        profile = self.profile()
         if index == 0:
             return
         elif item_data in ['new', 'existing']:
@@ -167,11 +170,23 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             window.show()
             window.added_repo.connect(self.process_new_repo)
             window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
+            profile.repo = None  # Allow clearing of repo
         else:
-            profile = self.profile()
-            profile.repo = self.repoSelector.currentData()
-            profile.save()
-            self.init_repo_stats()
+            profile.repo = self.repoSelector.currentData()  # Set repo to new
+        self.update_ssh_box(profile.repo)
+        profile.save()
+        self.init_repo_stats()
+        self.sshComboBox.setEnabled(profile.repo is not None)
+
+    def update_ssh_box(self, repo):
+        self.sshComboBox.currentIndexChanged.disconnect()
+        if repo:
+            self.sshComboBox.setEnabled(True)
+            self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(repo.ssh_key))
+        else:
+            self.sshComboBox.setEnabled(False)
+            self.sshComboBox.setCurrentIndex(0)
+        self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
