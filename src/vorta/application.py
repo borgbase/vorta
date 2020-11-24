@@ -52,6 +52,8 @@ class VortaApp(QtSingleApplication):
                 self.sendMessage(f"create {args.profile}")
                 print('Creating backups using existing Vorta instance.')
                 sys.exit()
+        elif args.profile:
+            sys.exit('Vorta must already be running for --create to work')
 
         init_translations(self)
 
@@ -67,9 +69,6 @@ class VortaApp(QtSingleApplication):
             pass
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
-
-        if args.profile is not None:
-            self.create_backups_cmdline(args.profile)
 
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
