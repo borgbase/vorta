@@ -20,6 +20,7 @@ from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
+from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
@@ -115,7 +116,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(archive.size)))
+                self.archiveTable.setItem(row, 1, SizeItem(pretty_bytes(archive.size)))
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
