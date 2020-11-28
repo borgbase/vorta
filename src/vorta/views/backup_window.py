@@ -38,6 +38,8 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
             self.storePassword.hide()
 
     def set_button_box(self):
+        self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
         self.buttonBox.button(QDialogButtonBox.Open).hide()
 
@@ -116,6 +118,8 @@ class RestoreWindow(BackupWindow):
         self.storePassword.hide()
 
     def set_button_box(self):
+        self.buttonBox.button(QDialogButtonBox.Open).setText(self.tr("Open"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
         self.buttonBox.button(QDialogButtonBox.Open).setEnabled(False)
         self.buttonBox.button(QDialogButtonBox.Save).hide()
 

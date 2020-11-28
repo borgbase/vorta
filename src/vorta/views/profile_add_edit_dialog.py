@@ -67,5 +67,7 @@ class EditProfileWindow(AddProfileWindow):
         renamed_profile = BackupProfileModel.get(id=self.existing_id)
         renamed_profile.name = self.profileNameField.text()
         renamed_profile.save()
+        self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
         self.profile_changed.emit(renamed_profile.name, renamed_profile.id)
         self.accept()
