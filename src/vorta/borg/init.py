@@ -28,6 +28,10 @@ class BorgInitThread(BorgThread):
         cmd.append(f"--encryption={params['encryption']}")
         cmd.append(params['repo_url'])
 
+        ret['additional_env'] = {
+            'BORG_RSH': 'ssh -oStrictHostKeyChecking=no'
+        }
+
         ret['encryption'] = params['encryption']
         ret['password'] = params['password']
         ret['ok'] = True

@@ -1,0 +1,4 @@
+[run]
+omit = tests/*
+source=vorta
+relative_files=true
