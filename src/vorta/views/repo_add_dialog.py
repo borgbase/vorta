@@ -3,7 +3,7 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
-    borg_compat, validate_passwords, password_transparency
+    borg_compat, validate_passwords, display_password_backend
 from vorta.keyring.abc import get_keyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
@@ -31,7 +31,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.repoURL.textChanged.connect(self.set_password)
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
-        self.encryptionComboBox.activated.connect(self.password_transparency)
+        self.encryptionComboBox.activated.connect(self.display_password_backend)
 
         self.showHideAction = QAction(self.tr("Show my passwords"), self)
         self.showHideAction.setCheckable(True)
@@ -44,7 +44,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-        self.password_transparency()
+        self.display_password_backend()
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
@@ -63,8 +63,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
 
-    def password_transparency(self):
-        self.passwordLabel.setText(translate('utils', password_transparency(self.encryptionComboBox.currentData())))
+    def display_password_backend(self):
+        self.passwordLabel.setText(translate('utils', display_password_backend(self.encryptionComboBox.currentData())))
 
     def choose_local_backup_folder(self):
         def receive():
@@ -80,7 +80,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         dialog.open(receive)
 
     def set_password(self, URL):
-        ''' Autofill password from keyring '''
+        ''' Autofill password from keyring only if current entry is empty '''
         password = get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordLineEdit.text() == "":
             self.passwordLabel.setText(self.tr("Autofilled password from password manager."))

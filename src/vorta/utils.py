@@ -336,19 +336,19 @@ def validate_passwords(firstPass, secondPass):
     return ""
 
 
-def password_transparency(encryption):
+def display_password_backend(encryption):
+    # flake8: noqa E501
     if encryption != 'none':
         keyringClass = get_keyring().__class__.__name__
         messages = {
             'VortaDBKeyring':
-            trans_late('utils', 'plaintext on disk.\n'
-                       'Vorta supports programs with the Secret Service API, such as KeepassXC for password storage'),
-            'VortaSecretStorageKeyring': trans_late('utils', 'the Secret Service keyring'),
-            'VortaDarwinKeyring': trans_late('utils', 'Keychain Access'),
-            'VortaKWallet5Keyring': trans_late('utils', 'KWallet 5'),
+            trans_late(
+                'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC'),
+            'VortaSecretStorageKeyring': trans_late('utils', 'Storing the password in the Secret Service keyring.'),
+            'VortaDarwinKeyring': trans_late('utils', 'Storing the password in in Keychain Access.'),
+            'VortaKWallet5Keyring': trans_late('utils', 'Storing the password in in KWallet 5.'),
         }
-        # Will display keyring name with 'Vorta' and 'Keyring' cut off for unknown keyring
-        keyringName = messages.get(keyringClass, keyringClass[5:-7])
-        return trans_late('utils', 'The password will be stored in {}.').format(keyringName)
+        # Will throw exception for unknown keyring, acceptable due to low frequency of adding keyrings
+        return messages[keyringClass]
     else:
         return ""
