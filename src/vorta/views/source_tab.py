@@ -19,7 +19,12 @@ class SourceColumn:
 
 class SizeItem(QTableWidgetItem):
     def __lt__(self, other):
-        return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
+        if other.text() == '':
+            return False
+        elif self.text() == '':
+            return True
+        else:
+            return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
 
 
 class FilesCount(QTableWidgetItem):
