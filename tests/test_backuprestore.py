@@ -1,7 +1,6 @@
 import os
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
-from .conftest import delete_current_profile
 from vorta.models import BackupProfileModel, SourceFileModel
 
 
@@ -18,8 +17,8 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
 
     main = qapp.main_window
     main.restoreAction.trigger()
+    qtbot.waitUntil(lambda: hasattr(main, 'window'), timeout=10000)
     restore_dialog = main.window
-    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)
@@ -34,7 +33,6 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
     assert main.profileSelector.currentText() == "Test Profile Restoration"
 
-    delete_current_profile(qapp)
     qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Cancel), QtCore.Qt.LeftButton)
 
 
@@ -49,8 +47,8 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     )
     main = qapp.main_window
     main.restoreAction.trigger()
+    qtbot.waitUntil(lambda: hasattr(main, 'window'), timeout=10000)
     restore_dialog = main.window
-    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == BAD_FILE, timeout=5000)
@@ -72,8 +70,8 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
 
     main = qapp.main_window
     main.backupAction.trigger()
+    qtbot.waitUntil(lambda: hasattr(main, 'window'), timeout=10000)
     restore_dialog = main.window
-    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)
@@ -97,8 +95,8 @@ def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
 
     main = qapp.main_window
     main.backupAction.trigger()
+    qtbot.waitUntil(lambda: hasattr(main, 'window'), timeout=10000)
     restore_dialog = main.window
-    qtbot.waitUntil(lambda: restore_dialog == qapp.activeWindow())
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == FILE_PATH, timeout=5000)

@@ -164,7 +164,6 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=5000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
