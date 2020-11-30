@@ -4,7 +4,7 @@ from vorta.keyring.abc import VortaKeyring
 
 
 class VortaKWallet5Keyring(VortaKeyring):
-    """A wrapper for the dbus package to support the custom keyring backend"""
+    """A wrapper for the qtdbus package to support the custom keyring backend"""
 
     folder_name = 'Vorta'
     service_name = "org.kde.kwalletd5"
@@ -20,6 +20,8 @@ class VortaKWallet5Keyring(VortaKeyring):
             self.object_path,
             self.interface_name,
             QtDBus.QDBusConnection.sessionBus())
+        if not (self.iface.isValid() and self.get_result("isEnabled")):
+            raise KWalletNotAvailableException
 
     def set_password(self, service, repo_url, password):
         self.get_result("writePassword", args=[self.handle, self.folder_name, repo_url, password, service])
@@ -49,6 +51,6 @@ class VortaKWallet5Keyring(VortaKeyring):
         output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
         self.handle = int(output)
 
-    @property
-    def is_valid(self):
-        return self.iface.isValid() and self.get_result("isEnabled")
+
+class KWalletNotAvailableException(Exception):
+    pass
