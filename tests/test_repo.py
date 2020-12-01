@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 
 import vorta.borg.borg_thread
 import vorta.models
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
 
 LONG_PASSWORD = 'long-password-long'
@@ -66,7 +66,7 @@ def test_password_autofill(qapp, qtbot):
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
-    keyring = get_keyring()
+    keyring = VortaKeyring.get_keyring()
     password = str(uuid.uuid4())
     keyring.set_password('vorta-repo', test_repo_url, password)
 
@@ -98,7 +98,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=2).url == test_repo_url
 
-    keyring = get_keyring()
+    keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
     assert main.repoTab.repoSelector.currentText() == test_repo_url
 

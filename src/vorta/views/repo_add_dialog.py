@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords, display_password_backend
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
 from vorta.i18n import translate
@@ -81,7 +81,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def set_password(self, URL):
         ''' Autofill password from keyring only if current entry is empty '''
-        password = get_keyring().get_password('vorta-repo', URL)
+        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordLineEdit.text() == "":
             self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
             self.passwordLineEdit.setText(password)

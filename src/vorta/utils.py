@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
@@ -339,7 +339,7 @@ def validate_passwords(firstPass, secondPass):
 def display_password_backend(encryption):
     # flake8: noqa E501
     if encryption != 'none':
-        keyringClass = get_keyring().__class__.__name__
+        keyringClass = VortaKeyring.get_keyring().__class__.__name__
         messages = {
             'VortaDBKeyring':
             trans_late(

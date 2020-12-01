@@ -14,7 +14,7 @@ from subprocess import Popen, PIPE
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
@@ -29,6 +29,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
+    keyring = None  # Store keyring to minimize imports
 
     def __init__(self, cmd, params, parent=None):
         """
@@ -128,14 +129,15 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         # Try to get password from chosen keyring backend.
-        keyring = get_keyring()
-        logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
-        ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
+        cls.keyring = VortaKeyring.get_keyring()
+        logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
+        ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
 
         # Try to fall back to DB Keyring, if we use the system keychain.
-        if ret['password'] is None and keyring.is_primary:
+        if ret['password'] is None and cls.keyring.is_primary:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
             ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
+            cls.keyring = VortaDBKeyring()
 
             # Give warning and continue if password is found there.
             if ret['password'] is not None:

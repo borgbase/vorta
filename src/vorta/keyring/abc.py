@@ -9,6 +9,29 @@ _keyring = None
 
 
 class VortaKeyring:
+
+    @classmethod
+    def get_keyring(cls):
+        """
+        Attempts to get secure keyring at runtime if current keyring is insecure.
+        Once it finds a secure keyring, it wil always use that keyring
+        """
+        global _keyring
+        if _keyring is None or not _keyring.is_primary:
+            if sys.platform == 'darwin':  # Use Keychain on macOS
+                from .darwin import VortaDarwinKeyring
+                return VortaDarwinKeyring()
+            else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
+                import secretstorage
+                from .secretstorage import VortaSecretStorageKeyring
+                try:
+                    _keyring = VortaSecretStorageKeyring()
+                # Save passwords in DB, if all else fails.
+                except secretstorage.SecretServiceNotAvailableException:
+                    from .db import VortaDBKeyring
+                    _keyring = VortaDBKeyring()
+        return _keyring
+
     def set_password(self, service, repo_url, password):
         raise NotImplementedError
 
@@ -25,25 +48,3 @@ class VortaKeyring:
         rather than a fallback (like our own VortaDBKeyring).
         """
         return True
-
-
-def get_keyring():
-    """
-    Attempts to get secure keyring at runtime if current keyring is insecure.
-    Once it finds a secure keyring, it wil always use that keyring
-    """
-    global _keyring
-    if _keyring is None or not _keyring.is_primary:
-        if sys.platform == 'darwin':  # Use Keychain on macOS
-            from .darwin import VortaDarwinKeyring
-            return VortaDarwinKeyring()
-        else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-            import secretstorage
-            from .secretstorage import VortaSecretStorageKeyring
-            try:
-                _keyring = VortaSecretStorageKeyring()
-            # Save passwords in DB, if all else fails.
-            except secretstorage.SecretServiceNotAvailableException:
-                from .db import VortaDBKeyring
-                _keyring = VortaDBKeyring()
-    return _keyring
