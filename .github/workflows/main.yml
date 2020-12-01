@@ -63,9 +63,12 @@ jobs:
         coverage run -m pytest
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
+      env: 
+        OS: ${{ runner.os }}
+        python: ${{ matrix.python-version }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        env_vars: ${{ matrix.os }}, ${{ matrix.python-version }}
+        env_vars: OS, python
   lint:
     runs-on: ubuntu-latest
     steps:
