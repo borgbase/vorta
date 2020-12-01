@@ -65,6 +65,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        env_vars: ${{ matrix.os }}, ${{ matrix.python-version }}
   lint:
     runs-on: ubuntu-latest
     steps:
