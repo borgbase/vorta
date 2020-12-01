@@ -137,7 +137,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if ret['password'] is None and cls.keyring.is_primary:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
             ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
-            cls.keyring = VortaDBKeyring()
 
             # Give warning and continue if password is found there.
             if ret['password'] is not None:
