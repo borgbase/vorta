@@ -203,7 +203,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("disable_background_question", x))
                 dont_show_box.setTristate(False)
                 msg.setCheckBox(dont_show_box)
-                msg.exec_()
+                msg.exec()
             elif not SettingsModel.get(key="disable_background_state").value:
                 self.app.quit()
         event.accept()
