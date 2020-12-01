@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
-from vorta.i18n import translate
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.utils import get_colored_icon
@@ -193,13 +192,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 msg = QMessageBox()
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 msg.setParent(self, QtCore.Qt.Sheet)
-                msg.setText(translate("MainWindow QMessagebox", "Should Vorta continue to run in the background?"))
+                msg.setText(self.tr("Should Vorta continue to run in the background?"))
                 msg.button(QMessageBox.Yes).clicked.connect(
                     lambda: self.miscTab.save_setting("disable_background_state", True))
                 msg.button(QMessageBox.No).clicked.connect(lambda: (self.miscTab.save_setting(
                     "disable_background_state", False), self.app.quit()))
-                msg.setWindowTitle(translate("MainWindow QMessagebox", "Quit"))
-                dont_show_box = QCheckBox(translate("MainWindow QMessagebox", "Don't show this again"))
+                msg.setWindowTitle(self.tr("Quit"))
+                dont_show_box = QCheckBox(self.tr("Don't show this again"))
                 dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("disable_background_question", x))
                 dont_show_box.setTristate(False)
                 msg.setCheckBox(dont_show_box)
