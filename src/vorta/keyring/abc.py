@@ -5,10 +5,9 @@ fall back to a simple database keystore if needed.
 """
 import sys
 
-_keyring = None
-
 
 class VortaKeyring:
+    _keyring = None
 
     @classmethod
     def get_keyring(cls):
@@ -16,21 +15,20 @@ class VortaKeyring:
         Attempts to get secure keyring at runtime if current keyring is insecure.
         Once it finds a secure keyring, it wil always use that keyring
         """
-        global _keyring
-        if _keyring is None or not _keyring.is_primary:
+        if cls._keyring is None or not cls._keyring.is_primary:
             if sys.platform == 'darwin':  # Use Keychain on macOS
                 from .darwin import VortaDarwinKeyring
-                return VortaDarwinKeyring()
+                cls._keyring = VortaDarwinKeyring()
             else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
                 import secretstorage
                 from .secretstorage import VortaSecretStorageKeyring
                 try:
-                    _keyring = VortaSecretStorageKeyring()
+                    cls._keyring = VortaSecretStorageKeyring()
                 # Save passwords in DB, if all else fails.
                 except secretstorage.SecretServiceNotAvailableException:
                     from .db import VortaDBKeyring
-                    _keyring = VortaDBKeyring()
-        return _keyring
+                    cls._keyring = VortaDBKeyring()
+        return cls._keyring
 
     def set_password(self, service, repo_url, password):
         raise NotImplementedError
