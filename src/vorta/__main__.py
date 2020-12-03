@@ -29,7 +29,7 @@ def main():
     init_logger(background=want_background)
 
     # Init database
-    sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
+    sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
     init_db(sqlite_db)
 
     # Init app after database is available
