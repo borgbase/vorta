@@ -33,6 +33,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.display_password_backend)
 
+        # Add clickable icon to toggle password visibility to end of box
         self.showHideAction = QAction(self.tr("Show my passwords"), self)
         self.showHideAction.setCheckable(True)
         self.showHideAction.toggled.connect(self.set_visibility)
@@ -168,6 +169,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return True
 
     def password_listener(self):
+        ''' Validates passwords only if its going to be used '''
         if self.values['encryption'] == 'none':
             self.passwordLabel.setText("")
             return True

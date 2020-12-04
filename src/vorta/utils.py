@@ -323,6 +323,7 @@ def is_system_tray_available():
 
 
 def validate_passwords(firstPass, secondPass):
+    ''' Validates the password for borg '''
     passEqual = firstPass == secondPass
     passLong = len(firstPass) > 8
 
@@ -337,6 +338,7 @@ def validate_passwords(firstPass, secondPass):
 
 
 def display_password_backend(encryption):
+    ''' Display password backend message based off current keyring '''
     # flake8: noqa E501
     if encryption != 'none':
         keyringClass = VortaKeyring.get_keyring().__class__.__name__
