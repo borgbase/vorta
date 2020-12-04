@@ -24,10 +24,13 @@ class VortaKeyring:
                 from .secretstorage import VortaSecretStorageKeyring
                 try:
                     cls._keyring = VortaSecretStorageKeyring()
-                # Save passwords in DB, if all else fails.
-                except secretstorage.SecretServiceNotAvailableException:
-                    from .db import VortaDBKeyring
-                    cls._keyring = VortaDBKeyring()
+                except secretstorage.SecretServiceNotAvailableException:  # Try to use KWallet
+                    from .kwallet import VortaKWallet5Keyring, KWalletNotAvailableException
+                    try:
+                        cls._keyring = VortaKWallet5Keyring()
+                    except KWalletNotAvailableException:  # Save passwords in DB, if all else fails.
+                        from .db import VortaDBKeyring
+                        cls._keyring = VortaDBKeyring()
         return cls._keyring
 
     def set_password(self, service, repo_url, password):
