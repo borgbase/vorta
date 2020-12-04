@@ -44,12 +44,14 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.buttonBox.button(QDialogButtonBox.Open).hide()
 
     def profile_to_json(self, profile):
+        ''' Convert profile to json string '''
         # Profile to dict
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
         if self.storePassword.isChecked():
             profile_dict['password'] = self.keyring.get_password('vorta-repo', profile.repo.url)
 
+        # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
         profile_dict['SourceFileModel'] = [
             model_to_dict(
@@ -77,10 +79,12 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         profile_dict['SettingsModel'] = [
             model_to_dict(s) for s in SettingsModel.select().where(
                 SettingsModel.type == 'checkbox')]
-        # dict to json string
+
+        # Convert dict of profile to json string
         return json.dumps(profile_dict, default=self.converter, indent=4)
 
     def get_file(self):
+        ''' Get targetted save file with custom extension '''
         fileName = QFileDialog.getSaveFileName(
             self,
             self.tr("Save profile"),
@@ -91,6 +95,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(bool(fileName))
 
     def run(self):
+        ''' Attempt to write backup to file '''
         profile = self.parent.current_profile
         json = self.profile_to_json(profile)
         try:
@@ -124,6 +129,7 @@ class RestoreWindow(BackupWindow):
         self.buttonBox.button(QDialogButtonBox.Save).hide()
 
     def json_to_profile(self, jsonData):
+        ''' Convert json string to profile and save '''
         # Json string to dict
         profile_dict = json.loads(jsonData)
         profile_schema = profile_dict['SchemaVersion']['version']
@@ -203,6 +209,7 @@ class RestoreWindow(BackupWindow):
         return new_profile, returns
 
     def run(self):
+        ''' Attempt to read backup file and restore profile '''
         def get_schema_version(jsonData):
             return json.loads(jsonData)['SchemaVersion']['version']
 
@@ -235,6 +242,7 @@ class RestoreWindow(BackupWindow):
                 self.profile_restored.emit(new_profile, returns)
 
     def get_file(self):
+        ''' Attempt to read backup from file '''
         fileName = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
@@ -246,4 +254,5 @@ class RestoreWindow(BackupWindow):
 
 
 class VersionException(Exception):
+    ''' For when current_version < backup_version. Should only occur if downgrading '''
     pass
