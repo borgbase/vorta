@@ -348,7 +348,7 @@ def display_password_backend(encryption):
                 'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC'),
             'VortaSecretStorageKeyring': trans_late('utils', 'Storing the password in the Secret Service keyring.'),
             'VortaDarwinKeyring': trans_late('utils', 'Storing the password in in Keychain Access.'),
-            'VortaKWallet5Keyring': trans_late('utils', 'Storing the password in in KWallet 5.'),
+            'VortaKWallet5Keyring': trans_late('utils', 'Storing the password in in KWallet.'),
         }
         # Will throw exception for unknown keyring, acceptable due to low frequency of adding keyrings
         return messages[keyringClass]
