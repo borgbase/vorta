@@ -32,8 +32,6 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
 
         profile = self.parent.current_profile
         self.keyring = get_keyring()
-        self.url = str(Path.home()) if profile.repo is None else profile.repo.url
-
         if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.hide()
 
@@ -88,7 +86,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         fileName = QFileDialog.getSaveFileName(
             self,
             self.tr("Save profile"),
-            self.url,
+            str(Path.home()),
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
@@ -246,7 +244,7 @@ class RestoreWindow(BackupWindow):
         fileName = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
-            self.url,
+            str(Path.home()),
             self.tr("Vorta backup profile (*.vortabackup);;All files (*)"))[0]
         if fileName:
             self.locationLabel.setText(fileName)
