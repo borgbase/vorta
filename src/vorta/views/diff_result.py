@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, QVariant
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QHeaderView
 
-from vorta.utils import (get_asset, get_dict_from_list, nested_dict)
+from vorta.utils import (get_asset, get_dict_from_list, nested_dict, uses_dark_mode)
 
 from vorta.views.partials.tree_view import TreeModel
 
@@ -110,15 +110,14 @@ def calc_size(significand, unit):
 
 
 class DiffTree(TreeModel):
-    def __init__(
-        self,
-        files_with_attributes,
-        nested_file_list,
-        parent=None,
-    ):
+    def __init__(self, files_with_attributes, nested_file_list, parent=None,):
         super().__init__(
             files_with_attributes, nested_file_list, parent=parent
         )
+        dark_mode = uses_dark_mode()
+        self.red = QVariant(QColor(Qt.red)) if dark_mode else QVariant(QColor(Qt.darkRed))
+        self.green = QVariant(QColor(Qt.green)) if dark_mode else QVariant(QColor(Qt.darkGreen))
+        self.yellow = QVariant(QColor(Qt.yellow)) if dark_mode else QVariant(QColor(Qt.darkYellow))
 
     def data(self, index, role):
         if not index.isValid():
@@ -128,11 +127,11 @@ class DiffTree(TreeModel):
 
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
-                return QVariant(QColor(Qt.red))
+                return self.red
             elif item.itemData[1] == 'added':
-                return QVariant(QColor(Qt.green))
+                return self.green
             elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
-                return QVariant(QColor(Qt.darkYellow))
+                return self.yellow
 
         if role == Qt.DisplayRole:
             return item.data(index.column())
