@@ -201,6 +201,7 @@ def sort_dict(unordered_dict):
     ''' Recursively sort a dictionary of dictionaries by key, ignoring alpha case '''
     sorted_dict = OrderedDict()
     for key, value in sorted(unordered_dict.items(), key=lambda x: x[0].upper()):
+        # In the future we want to move all the dicts to the start of the dictionary, and all the strings to the bottom
         if isinstance(value, dict):
             sorted_dict[key] = sort_dict(value)
         else:
