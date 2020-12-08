@@ -7,7 +7,7 @@ import platform
 import re
 import sys
 import unicodedata
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 from datetime import datetime as dt
 from functools import reduce
 
@@ -195,18 +195,6 @@ def get_asset(path):
         # we are running in a normal Python environment
         bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
     return os.path.join(bundle_dir, path)
-
-
-def sort_dict(unordered_dict):
-    ''' Recursively sort a dictionary of dictionaries by key, ignoring alpha case '''
-    sorted_dict = OrderedDict()
-    for key, value in sorted(unordered_dict.items(), key=lambda x: x[0].upper()):
-        # In the future we want to move all the dicts to the start of the dictionary, and all the strings to the bottom
-        if isinstance(value, dict):
-            sorted_dict[key] = sort_dict(value)
-        else:
-            sorted_dict[key] = value
-    return sorted_dict
 
 
 def get_sorted_wifis(profile):

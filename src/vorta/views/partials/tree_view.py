@@ -3,7 +3,7 @@ from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
 import os
 import abc
 
-from vorta.utils import get_dict_from_list, pretty_bytes, sort_dict
+from vorta.utils import get_dict_from_list, pretty_bytes
 
 
 class FolderItem:
@@ -188,7 +188,7 @@ class TreeModel(QAbstractItemModel):
         parent=None,
     ):
         files_with_attributes.sort(key=lambda x: x[2].upper())  # Sorts tuples by name ignoring case
-        nested_file_list = sort_dict(nested_file_list)  # Recursively sorts folders
+        files_with_attributes.sort(key=lambda x: x[0] != 0)  # Pushes folders (size zero) to start of list
 
         super(TreeModel, self).__init__(parent)
 
