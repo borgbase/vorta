@@ -198,7 +198,7 @@ def get_asset(path):
 
 
 def sort_dict(unordered_dict):
-    ''' Recursively sort a dictionary of dictionaries, ignoring alpha case '''
+    ''' Recursively sort a dictionary of dictionaries by key, ignoring alpha case '''
     sorted_dict = OrderedDict()
     for key, value in sorted(unordered_dict.items(), key=lambda x: x[0].upper()):
         if isinstance(value, dict):
