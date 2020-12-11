@@ -46,6 +46,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
+    create_backup_cmd = pw.CharField(default='')
     extra_borg_arguments = pw.CharField(default='')
 
     def is_remote_repo(self):
@@ -89,7 +90,6 @@ class BackupProfileModel(pw.Model):
     prune_keep_within = pw.CharField(default='10H', null=True)
     new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
     prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
-    create_backup_cmd = pw.CharField(default='')
     pre_backup_cmd = pw.CharField(default='')
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
@@ -385,7 +385,7 @@ def init_db(con=None):
     if current_schema.version < 17:
         _apply_schema_update(
             current_schema, 17,
-            migrator.add_column(BackupProfileModel._meta.table_name,
+            migrator.add_column(RepoModel._meta.table_name,
                                 'create_backup_cmd', pw.CharField(default=''))
         )
 

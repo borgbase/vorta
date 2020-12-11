@@ -59,7 +59,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
-        self.createCmdLineEdit.setText(profile.create_backup_cmd)
+        if profile.repo:
+            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
+            self.createCmdLineEdit.setEnabled(True)
+        else:
+            self.createCmdLineEdit.setEnabled(False)
+
         self.postBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='post_backup_cmd': self.save_backup_cmd(attr, new_val))
         self.preBackupCmdLineEdit.textEdited.connect(
@@ -92,6 +97,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         profile = self.profile()
         setattr(profile, attr, new_value)
         profile.save()
+
+    def save_repo_cmd(self, attr, new_value):
+        repo = self.profile().repo
+        setattr(repo, attr, new_value)
+        repo.save()
 
     def init_logs(self):
         self.logTableWidget.setAlternatingRowColors(True)

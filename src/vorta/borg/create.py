@@ -125,7 +125,7 @@ class BorgCreateThread(BorgThread):
             '--filter=AM',
             '-C',
             profile.compression,
-            profile.create_backup_cmd
+            profile.repo.create_backup_cmd
         ]
 
         # Add excludes
