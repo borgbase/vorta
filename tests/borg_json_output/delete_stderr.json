@@ -1,0 +1,1 @@
+{"type": "log_message", "time": 1605817314.144782, "message": "Deleting archive: test-archive1                        Thu, 2020-11-19 14:20:48 [c361322b52718ac564129d24f34b203bd0e3fd573a0c66469d80e2428dffc9df] (1/1)", "levelname": "INFO", "name": "borg.archiver"}

@@ -20,6 +20,7 @@ from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
+from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
@@ -115,7 +116,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(archive.size)))
+                self.archiveTable.setItem(row, 1, SizeItem(pretty_bytes(archive.size)))
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
@@ -344,14 +345,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_archive_result(self, result):
         self._set_status('')
         if result['returncode'] == 0:
-            archive = ArchiveModel.get(name=result['params']['archive_name'])
-            window = ExtractDialog(result['data'], archive)
-            self._toggle_all_buttons(True)
-            window.setParent(self, QtCore.Qt.Sheet)
-            self._window = window  # for testing
-            window.show()
-
-            if window.exec_():
+            def process_result():
                 def receive():
                     extraction_folder = dialog.selectedFiles()
                     if extraction_folder:
@@ -368,6 +362,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
                 dialog.open(receive)
+
+            archive = ArchiveModel.get(name=result['params']['archive_name'])
+            window = ExtractDialog(result['data'], archive)
+            self._toggle_all_buttons(True)
+            window.setParent(self, QtCore.Qt.Sheet)
+            self._window = window  # for testing
+            window.show()
+            window.accepted.connect(process_result)
 
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
@@ -412,12 +414,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
+        self.archive_name = self.selected_archive_name()
+        if self.archive_name is not None:
             if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
                                        trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
                 return
-            params['cmd'][-1] += f'::{archive_name}'
+            params['cmd'][-1] += f'::{self.archive_name}'
 
             thread = BorgDeleteThread(params['cmd'], params, parent=self.app)
             thread.updated.connect(self._set_status)
@@ -430,20 +432,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Archive deleted.'))
-            self.list_action()
+            deleted_row = self.archiveTable.findItems(self.archive_name, QtCore.Qt.MatchExactly)[0].row()
+            self.archiveTable.removeRow(deleted_row)
+            ArchiveModel.get(name=self.archive_name).delete_instance()
+            del self.archive_name
         else:
             self._toggle_all_buttons(True)
 
     def diff_action(self):
-        profile = self.profile()
-
-        window = DiffDialog(self.archiveTable)
-        self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.Sheet)
-        self._window = window  # for testing
-        window.show()
-
-        if window.exec_():
+        def process_result():
             if window.selected_archives:
                 self.selected_archives = window.selected_archives
             archive_cell_newer = self.archiveTable.item(self.selected_archives[0], 4)
@@ -464,6 +461,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.start()
                 else:
                     self._set_status(params['message'])
+
+        profile = self.profile()
+
+        window = DiffDialog(self.archiveTable)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.Sheet)
+        self._window = window  # for testing
+        window.show()
+        window.accepted.connect(process_result)
 
     def list_diff_result(self, result):
         self._set_status('')
