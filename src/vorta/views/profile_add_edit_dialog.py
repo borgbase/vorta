@@ -1,4 +1,4 @@
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
 from ..utils import get_asset
 from ..models import BackupProfileModel
@@ -8,6 +8,9 @@ AddProfileUI, AddProfileBase = uic.loadUiType(uifile)
 
 
 class AddProfileWindow(AddProfileBase, AddProfileUI):
+
+    profile_changed = QtCore.pyqtSignal(str, int)
+
     def __init__(self, parent=None, rename_existing_id=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -36,7 +39,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
     def save(self):
         new_profile = BackupProfileModel(name=self.profileNameField.text())
         new_profile.save()
-        self.edited_profile = new_profile
+        self.profile_changed.emit(new_profile.name, new_profile.id)
         self.accept()
 
     def button_validation(self):
@@ -64,5 +67,5 @@ class EditProfileWindow(AddProfileWindow):
         renamed_profile = BackupProfileModel.get(id=self.existing_id)
         renamed_profile.name = self.profileNameField.text()
         renamed_profile.save()
-        self.edited_profile = renamed_profile
+        self.profile_changed.emit(renamed_profile.name, renamed_profile.id)
         self.accept()
