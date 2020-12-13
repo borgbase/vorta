@@ -56,7 +56,7 @@ def main():
     app = VortaApp(sys.argv, single_app=True)
     app.updater = get_updater()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == '__main__':
