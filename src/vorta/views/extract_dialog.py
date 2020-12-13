@@ -1,11 +1,8 @@
-import sys
 import os
-import datetime
-from collections import namedtuple
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QHeaderView
+from PyQt5.QtWidgets import QHeaderView
 
 from vorta.utils import get_asset, get_dict_from_list, nested_dict
 from vorta.views.partials.tree_view import TreeModel
@@ -88,19 +85,3 @@ class ExtractTree(TreeModel):
             return Qt.NoItemFlags
 
         return Qt.ItemIsEnabled | Qt.ItemIsUserCheckable
-
-
-if __name__ == "__main__":
-    """
-    For local testing:
-
-    borg list --progress --info --log-json --format="{size:8d}{TAB}{mtime}{TAB}{path}{NL}"
-    """
-    FakeArchive = namedtuple("Archive", ["name", "time"])
-    app = QApplication(sys.argv)
-    test_list = open("/Users/manu/Downloads/nyx2-list.txt").read()
-
-    archive = FakeArchive("test-archive", datetime.datetime.now())
-    view = ExtractDialog(test_list, archive)
-    view.show()
-    sys.exit(app.exec_())

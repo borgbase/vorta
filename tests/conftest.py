@@ -37,7 +37,7 @@ def init_db(qapp):
     test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive1.save()
 
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo)
+    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
@@ -100,3 +100,19 @@ def borg_json_output():
         stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
         return stdout, stderr
     return _read_json
+
+
+@pytest.fixture
+def rootdir():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def delete_current_profile(qapp):
+    ''' Delete current profile for cleanup '''
+    main = qapp.main_window
+    target = BackupProfileModel.get(id=main.profileSelector.currentData())
+    if qapp.scheduler.get_job(target.id):
+        qapp.scheduler.remove_job(target.id)
+    target.delete_instance(recursive=True)
+    main.profileSelector.removeItem(main.profileSelector.currentIndex())
+    main.profile_select_action(0)

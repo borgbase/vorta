@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         os: [ubuntu-latest, macos-latest]
         exclude:
           # Only test Python 3.7 on macOS
@@ -18,6 +18,8 @@ jobs:
             python-version: 3.6
           - os: macos-latest
             python-version: 3.8
+          - os: macos-latest
+            python-version: 3.9
 
     steps:
     - uses: actions/checkout@v2
@@ -39,6 +41,7 @@ jobs:
     - name: Install Vorta
       run: |
         pip install .
+        pip install coverage
         pip install borgbackup
         pip install -r requirements.d/dev.txt
     # - name: Setup tmate session
@@ -53,12 +56,19 @@ jobs:
         export $(dbus-launch)
         (herbstluftwm) &
         sleep 3
-        pytest
+        coverage run -m pytest
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        pytest
-
+        coverage run -m pytest
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      env: 
+        OS: ${{ runner.os }}
+        python: ${{ matrix.python-version }}
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        env_vars: OS, python
   lint:
     runs-on: ubuntu-latest
     steps:

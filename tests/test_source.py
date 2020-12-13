@@ -11,4 +11,4 @@ def test_add_folder(qapp, qtbot, tmpdir, monkeypatch, choose_file_dialog):
     tab = main.sourceTab
 
     tab.sourceAddFolder.click()
-    qtbot.waitUntil(lambda: tab.sourceFilesWidget.count() == 2, timeout=5000)
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, timeout=5000)
