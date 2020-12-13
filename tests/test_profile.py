@@ -1,29 +1,38 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
-
-from vorta.views.profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
+from .conftest import delete_current_profile
 from vorta.models import BackupProfileModel
 
 
 def test_profile_add(qapp, qtbot):
     main = qapp.main_window
-    add_profile_window = AddProfileWindow(main)
-    qtbot.addWidget(add_profile_window)
+    qtbot.mouseClick(main.profileAddButton, QtCore.Qt.LeftButton)
 
-    # Add a new profile
+    add_profile_window = main.window
+    qtbot.addWidget(add_profile_window)
+    qtbot.waitUntil(lambda: add_profile_window == qapp.activeWindow(), timeout=5000)
+
     qtbot.keyClicks(add_profile_window.profileNameField, 'Test Profile')
     qtbot.mouseClick(add_profile_window.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
+
     assert BackupProfileModel.get_or_none(name='Test Profile') is not None
+    assert main.profileSelector.currentText() == 'Test Profile'
+
+    delete_current_profile(qapp)
 
 
 def test_profile_edit(qapp, qtbot):
     main = qapp.main_window
-    edit_profile_window = EditProfileWindow(main, rename_existing_id=main.profileSelector.currentData())
-    qtbot.addWidget(edit_profile_window)
+    qtbot.mouseClick(main.profileRenameButton, QtCore.Qt.LeftButton)
 
-    # Edit profile name
+    edit_profile_window = main.window
+    qtbot.addWidget(edit_profile_window)
+    qtbot.waitUntil(lambda: edit_profile_window == qapp.activeWindow(), timeout=5000)
+
     edit_profile_window.profileNameField.setText("")
     qtbot.keyClicks(edit_profile_window.profileNameField, 'Test Profile')
     qtbot.mouseClick(edit_profile_window.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
+
     assert BackupProfileModel.get_or_none(name='Default') is None
     assert BackupProfileModel.get_or_none(name='Test Profile') is not None
+    assert main.profileSelector.currentText() == 'Test Profile'
