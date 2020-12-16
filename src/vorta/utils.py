@@ -239,6 +239,12 @@ def parse_args():
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
                         help="Fork to background and don't open window on startup.")
+    parser.add_argument(
+        '--create',
+        nargs='+',
+        dest='profile',
+        help='Create a backup in the background using the given profile(s). '
+        'Vorta must already be running for this to work.')
 
     return parser.parse_known_args()[0]
 

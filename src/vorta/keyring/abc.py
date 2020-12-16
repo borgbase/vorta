@@ -4,6 +4,7 @@ For Linux not every system has SecretService available, so it will
 fall back to a simple database keystore if needed.
 """
 import sys
+from pkg_resources import parse_version
 
 
 class VortaKeyring:
@@ -22,9 +23,16 @@ class VortaKeyring:
             else:  # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
                 import secretstorage
                 from .secretstorage import VortaSecretStorageKeyring
+
+                # secretstorage has two different libraries based on version
+                if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
+                    from jeepney.wrappers import DBusErrorResponse as DBusException
+                else:
+                    from dbus.exceptions import DBusException
+
                 try:
                     cls._keyring = VortaSecretStorageKeyring()
-                except secretstorage.SecretServiceNotAvailableException:  # Try to use KWallet
+                except (secretstorage.exceptions.SecretStorageException, DBusException):  # Try to use KWallet (KDE)
                     from .kwallet import VortaKWallet5Keyring, KWalletNotAvailableException
                     try:
                         cls._keyring = VortaKWallet5Keyring()
@@ -34,6 +42,9 @@ class VortaKeyring:
         return cls._keyring
 
     def set_password(self, service, repo_url, password):
+        """
+        Writes a password to the underlying store.
+        """
         raise NotImplementedError
 
     def get_password(self, service, repo_url):
@@ -49,3 +60,10 @@ class VortaKeyring:
         rather than a fallback (like our own VortaDBKeyring).
         """
         return True
+
+    @property
+    def is_unlocked(self):
+        """
+        Returns True if the keyring is open. Return False if it is closed or locked
+        """
+        raise NotImplementedError

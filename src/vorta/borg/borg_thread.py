@@ -7,6 +7,7 @@ import signal
 import select
 import time
 import logging
+from collections import namedtuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE
@@ -19,6 +20,9 @@ from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
+
+FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
+FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):
@@ -133,6 +137,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
         ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
 
+        # Check if keyring is locked
+        if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
+            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+            return ret
+
         # Try to fall back to DB Keyring, if we use the system keychain.
         if ret['password'] is None and cls.keyring.is_primary:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
@@ -144,7 +153,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                                'Consider re-adding the repo to use it.')
 
         # Password is required for encryption, cannot continue
-        if ret['password'] is None and profile.repo and profile.repo.encryption != 'none':
+        if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
             ret['message'] = trans_late(
                 'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
                 "Try unlinking and re-adding your repo.")

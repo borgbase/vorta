@@ -67,7 +67,7 @@ def cleanup(request, qapp, qtbot):
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory, local_en):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db))
+    mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
 
     from vorta.application import VortaApp
