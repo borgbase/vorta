@@ -34,7 +34,7 @@ def main():
 
     # Init app after database is available
     from vorta.application import VortaApp
-    app = VortaApp(sys.argv, single_app=True)
+    app = VortaApp(sys.argv, single_app=args.profile is None)
     app.updater = get_updater()
 
     sys.exit(app.exec())
