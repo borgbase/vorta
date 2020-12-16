@@ -253,7 +253,7 @@ def get_misc_settings():
         settings += [{
             'key': 'disable_background_question', 'value': False, 'type': 'button',
             'label': trans_late('settings',
-                                'Show background exit dialog')
+                                'Don\'t show background exit dialog')
         },
             {
             'key': 'disable_background_state', 'value': False, 'type': 'internal',
