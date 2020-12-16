@@ -132,6 +132,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
         ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
+        # Check if keyring is locked
+        if profile.repo.encryption != 'none' and not keyring.is_unlocked:
+            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+            return ret
+
         # Try to fall back to DB Keyring, if we use the system keychain.
         if ret['password'] is None and keyring.is_primary:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')

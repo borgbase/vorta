@@ -29,3 +29,7 @@ class VortaDBKeyring(VortaKeyring):
     @property
     def is_primary(self):
         return False
+
+    @property
+    def is_unlocked(self):
+        return True
