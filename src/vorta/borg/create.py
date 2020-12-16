@@ -43,6 +43,7 @@ class BorgCreateThread(BorgThread):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
+        self.result.emit(result)
         self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
 
     @classmethod
