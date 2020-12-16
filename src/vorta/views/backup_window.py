@@ -31,7 +31,6 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         self.overrideExisting.hide()
 
         profile = self.parent.current_profile
-        self.keyring = get_keyring()
         if profile.repo is None or VortaDBKeyring().get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.hide()
 
@@ -46,8 +45,9 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         # Profile to dict
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
+        keyring = get_keyring()
         if self.storePassword.isChecked():
-            profile_dict['password'] = self.keyring.get_password('vorta-repo', profile.repo.url)
+            profile_dict['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
         # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
@@ -133,6 +133,8 @@ class RestoreWindow(BackupWindow):
         profile_schema = profile_dict['SchemaVersion']['version']
         returns = {}
 
+        keyring = get_keyring()
+
         if SCHEMA_VERSION < profile_schema:
             raise VersionException()
         elif SCHEMA_VERSION > profile_schema:
@@ -167,7 +169,7 @@ class RestoreWindow(BackupWindow):
             profile_dict['repo'] = model_to_dict(repo)
 
         if profile_dict.get('password'):
-            self.keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
+            keyring.set_password('vorta-repo', profile_dict['repo']['url'], profile_dict['password'])
             del profile_dict['password']
 
         # Delete and recreate the tables to clear them
@@ -227,16 +229,17 @@ class RestoreWindow(BackupWindow):
             except VersionException:
                 self.errors.setText(self.tr("Newer backup files cannot be used on older versions."))
             except PermissionError:
-                self.errors.setText(self.tr("Backup file unreadable due to lack of permissions."))
+                self.errors.setText(self.tr("Cannot read backup file due to permission error."))
             except FileNotFoundError:
                 self.errors.setText(self.tr("Backup file not found."))
             else:
                 repo_url = new_profile.repo.url
-                if self.keyring.get_password('vorta-repo', repo_url):
-                    self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully"))
+                keyring = get_keyring()
+                if keyring.get_password('vorta-repo', repo_url):
+                    self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully."))
                 else:
                     self.errors.setText(
-                        self.tr(f"Password for {repo_url} cannot be found, consider unlinking and readding the repository."))  # noqa
+                        self.tr(f"Profile {new_profile.name} restored, but the password for {repo_url} cannot be found, consider unlinking and readding the repository."))  # noqa
                 self.profile_restored.emit(new_profile, returns)
 
     def get_file(self):
