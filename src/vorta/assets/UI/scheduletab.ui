@@ -539,7 +539,7 @@
        <item>
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Run custom optional arguments. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;the documentation&lt;/a&gt; for more information. Does not have access to env variables. </string>
+          <string>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;the documentation&lt;/a&gt; for more information.</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -552,7 +552,7 @@
           <string notr="true">font-family:'Courier';</string>
          </property>
          <property name="placeholderText">
-          <string>Create command to run WITH backups</string>
+          <string>Arguments to add. E.g. --remote-path borg1</string>
          </property>
         </widget>
        </item>
