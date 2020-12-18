@@ -251,13 +251,13 @@ def get_misc_settings():
         ]
     if not is_system_tray_available():
         settings += [{
-            'key': 'disable_background_question', 'value': False, 'type': 'button',
+            'key': 'enable_background_question', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Don\'t show background exit dialog')
+                                'Display background exit dialog')
         },
             {
             'key': 'disable_background_state', 'value': False, 'type': 'internal',
-            'label': 'Previous background exit button'
+            'label': 'Previous background exit button state'
         }]
     return settings
 

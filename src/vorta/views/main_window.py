@@ -189,7 +189,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             .execute()
 
         if not is_system_tray_available():
-            if not SettingsModel.get(key="disable_background_question").value:
+            if SettingsModel.get(key="enable_background_question").value:
                 msg = QMessageBox()
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 msg.setParent(self, QtCore.Qt.Sheet)
@@ -200,7 +200,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                     "disable_background_state", False), self.app.quit()))
                 msg.setWindowTitle(self.tr("Quit"))
                 dont_show_box = QCheckBox(self.tr("Don't show this again"))
-                dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("disable_background_question", x))
+                dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))
                 dont_show_box.setTristate(False)
                 msg.setCheckBox(dont_show_box)
                 msg.exec()
