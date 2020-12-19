@@ -145,7 +145,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
-    qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
+    tab.delete_action()
 
     qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', timeout=3000)
     assert ArchiveModel.select().count() == 1
