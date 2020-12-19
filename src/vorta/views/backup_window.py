@@ -75,8 +75,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
         # Add SettingsModel
         profile_dict['SettingsModel'] = [
-            model_to_dict(s) for s in SettingsModel.select().where(
-                SettingsModel.type == 'checkbox')]
+            model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
 
         # Convert dict of profile to json string
         return json.dumps(profile_dict, default=self.converter, indent=4)

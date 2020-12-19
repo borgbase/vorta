@@ -58,8 +58,8 @@ def test_restore_fail(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Cancel), QtCore.Qt.LeftButton)
 
 
-def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
-    FILE_PATH = os.path.join(os.path.expanduser("~"), "testresult.vortabackup")
+def test_backup_success(qapp, qtbot, tmpdir, monkeypatch):
+    FILE_PATH = os.path.join(tmpdir, "testresult.vortabackup")
 
     def getSaveFileName(*args, **kwargs):
         return [FILE_PATH]
@@ -83,7 +83,7 @@ def test_backup_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(restore_dialog.buttonBox.button(QDialogButtonBox.Cancel), QtCore.Qt.LeftButton)
 
 
-def test_backup_fail(qapp, qtbot, rootdir, monkeypatch):
+def test_backup_fail(qapp, qtbot, tmpdir, monkeypatch):
     FILE_PATH = os.path.join(os.path.abspath(os.sep), "testresult.vortabackup")
 
     def getSaveFileName(*args, **kwargs):
