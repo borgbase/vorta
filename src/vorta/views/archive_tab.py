@@ -316,13 +316,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
+        archive_name = result['params']['current_archive']
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
-            archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
+        else:
+            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(
+                self.mount_points.get(archive_name)))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()

@@ -1,9 +1,10 @@
 from collections import namedtuple
 from .borg_thread import BorgThread
+from vorta.i18n import trans_late
 from vorta.models import RepoModel
 from vorta.keyring.abc import get_keyring
 
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments'])
+FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
 
@@ -18,9 +19,9 @@ class BorgInfoThread(BorgThread):
         Used to validate existing repository when added.
         """
 
-        # Build fake profile because we don't have it in the DB yet.
+        # Build fake profile because we don't have it in the DB yet. Assume unencrypted.
         profile = FakeProfile(
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments']),
+            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'),
             'New Repo',
             params['ssh_key']
         )
@@ -43,6 +44,11 @@ class BorgInfoThread(BorgThread):
             ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
         else:
             ret['password'] = params['password']
+            # Cannot tell if repo has encryption, assuming based off of password
+            if not get_keyring().is_unlocked:
+                ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+                return ret
+
         ret['ok'] = True
         ret['cmd'] = cmd
 
