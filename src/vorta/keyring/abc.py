@@ -33,6 +33,7 @@ class VortaKeyring:
     @property
     def is_unlocked(self):
         """
+        Try to unlock the keyring.
         Returns True if the keyring is open. Return False if it is closed or locked
         """
         raise NotImplementedError
