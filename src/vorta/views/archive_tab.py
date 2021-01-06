@@ -20,6 +20,7 @@ from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
+from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
@@ -115,7 +116,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(row, 1, QTableWidgetItem(pretty_bytes(archive.size)))
+                self.archiveTable.setItem(row, 1, SizeItem(pretty_bytes(archive.size)))
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
@@ -300,14 +301,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
+        archive_name = result['params']['current_archive']
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
-            archive_name = result['params']['current_archive']
             del self.mount_points[archive_name]
             self.update_mount_button_text()
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
+        else:
+            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(
+                self.mount_points.get(archive_name)))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
