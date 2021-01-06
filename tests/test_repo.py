@@ -1,5 +1,7 @@
 import os
 import uuid
+import sys
+import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
@@ -108,6 +110,7 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     qtbot.mouseClick(main._msg.button(QMessageBox.Ok), QtCore.Qt.LeftButton)
 
 
+@pytest.mark.skipif(sys.platform != 'darwin', reason="Freezes test suite on CI")
 def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     # Break lock
     main = qapp.main_window
