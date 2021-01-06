@@ -36,8 +36,8 @@ def process_log(self, context):
                     f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
             msg.button(QMessageBox.Yes).clicked.connect(lambda: self.break_lock(profile))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "Repository In Use"))
-            msg.show()
             self._msg = msg
+            msg.show()
         elif msgid == 'LockFailed':
             msg = QMessageBox()
             msg.setParent(self, QtCore.Qt.Sheet)
@@ -46,5 +46,5 @@ def process_log(self, context):
                     "MainWindow QMessagebox",
                     f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))
             msg.setWindowTitle(translate("MainWindow QMessagebox", "No Repository Permissions"))
-            msg.show()
             self._msg = msg
+            msg.show()
