@@ -134,7 +134,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                     self.tr(
                         f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
                 msg.accepted.connect(lambda: self.break_lock(profile))
-                msg.setWindowTitle(self.tr("MainWindow QMessagebox", "Repository In Use"))
+                msg.setWindowTitle(self.tr("Repository In Use"))
                 self._msg = msg
                 msg.show()
             elif msgid == 'LockFailed':
@@ -143,7 +143,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 msg.setText(
                     self.tr(
                         f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))  # noqa: E501
-                msg.setWindowTitle(self.tr("MainWindow QMessagebox", "No Repository Permissions"))
+                msg.setWindowTitle(self.tr("No Repository Permissions"))
                 self._msg = msg
                 msg.show()
 
