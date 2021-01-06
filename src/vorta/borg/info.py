@@ -40,10 +40,8 @@ class BorgInfoThread(BorgThread):
             'BORG_RSH': 'ssh -oStrictHostKeyChecking=no'
         }
 
-        if params['password'] == '':
-            ret['password'] = '999999'  # Dummy password if the user didn't supply one. To avoid prompt.
-        else:
-            ret['password'] = params['password']
+        ret['password'] = params['password']
+        if params['password'] != '':
             # Cannot tell if repo has encryption, assuming based off of password
             if not get_keyring().is_unlocked:
                 ret['message'] = trans_late('messages', 'Please unlock your password manager.')
