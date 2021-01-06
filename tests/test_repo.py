@@ -107,7 +107,7 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(main, '_msg'), timeout=10000)
-    assert "permission" in main._msg.text()
+    assert main._msg.text().startswith("The repository at")
     qtbot.mouseClick(main._msg.button(QMessageBox.Ok), QtCore.Qt.LeftButton)
 
 
@@ -124,7 +124,7 @@ def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(main, '_msg'), timeout=10000)
-    assert main._msg.windowTitle() == 'Repository In Use'
+    assert "permission" in main._msg.text()
     qtbot.mouseClick(main._msg.button(QMessageBox.No), QtCore.Qt.LeftButton)
 
     stdout, stderr = borg_json_output('create_break')
