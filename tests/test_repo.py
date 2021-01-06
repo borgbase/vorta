@@ -1,5 +1,7 @@
 import os
 import uuid
+import sys
+import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
@@ -92,6 +94,7 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))
 
 
+@pytest.mark.skipif(sys.platform != 'darwin', reason="Freezes test suite on CI")
 def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     # Display error
     main = qapp.main_window
