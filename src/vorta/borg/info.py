@@ -40,7 +40,7 @@ class BorgInfoThread(BorgThread):
             'BORG_RSH': 'ssh -oStrictHostKeyChecking=no'
         }
 
-        ret['password'] = params['password']
+        ret['password'] = params['password']  # Empty password is '', which disables prompt
         if params['password'] != '':
             # Cannot tell if repo has encryption, assuming based off of password
             if not get_keyring().is_unlocked:
