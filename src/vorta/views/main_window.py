@@ -7,7 +7,7 @@ from vorta.borg.break_lock import BorgBreakThread
 from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
-from vorta.views.utils import get_colored_icon, process_log
+from vorta.views.utils import get_colored_icon
 from vorta.views.partials.loading_button import LoadingButton
 
 from .archive_tab import ArchiveTab
@@ -110,15 +110,42 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def set_log(self, text='', context={}):
         self.logText.setText(text)
         self.logText.repaint()
-        process_log(self, context)
+        self.process_log(context)
 
     def break_lock(self, profile):
         params = BorgBreakThread.prepare(profile)
         if not params['ok']:
-            self._set_status(params['message'])
+            self.set_progress(params['message'])
             return
         thread = BorgBreakThread(params['cmd'], params, parent=self.app)
         thread.start()
+
+    def process_log(self, context):
+        cmd = context.get('cmd')
+        if cmd is not None and cmd != 'init':
+            msgid = context.get('msgid')
+            repo_url = context.get('repo_url')
+            if msgid == 'LockTimeout':
+                profile = BackupProfileModel.get(name=context['profile_name'])
+                msg = QMessageBox()
+                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                msg.setParent(self, QtCore.Qt.Sheet)
+                msg.setText(
+                    self.tr(
+                        f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
+                msg.accepted.connect(lambda: self.break_lock(profile))
+                msg.setWindowTitle(self.tr("MainWindow QMessagebox", "Repository In Use"))
+                self._msg = msg
+                msg.show()
+            elif msgid == 'LockFailed':
+                msg = QMessageBox()
+                msg.setParent(self, QtCore.Qt.Sheet)
+                msg.setText(
+                    self.tr(
+                        f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))  # noqa: E501
+                msg.setWindowTitle(self.tr("MainWindow QMessagebox", "No Repository Permissions"))
+                self._msg = msg
+                msg.show()
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
@@ -136,8 +163,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
-        SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
-            .where(SettingsModel.key == 'previous_profile_id')\
+        SettingsModel.update({SettingsModel.str_value: self.current_profile.id}) \
+            .where(SettingsModel.key == 'previous_profile_id') \
             .execute()
 
     def profile_rename_action(self):
