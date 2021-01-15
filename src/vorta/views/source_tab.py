@@ -106,7 +106,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.updateThreads.append(getDir)  # this is ugly, is there a better way to keep the thread object?
         getDir.start()
 
-    def add_source_to_table(self, source, update_data):
+    def add_source_to_table(self, source, update_data=None):
+        if update_data is None:
+            update_data = SettingsModel.get(key="get_srcpath_datasize").value
+
         index_row = self.sourceFilesWidget.rowCount()
         self.sourceFilesWidget.insertRow(index_row)
         # Insert all items on current row
@@ -154,13 +157,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         def receive():
             dirs = dialog.selectedFiles()
             for dir in dirs:
-                new_source, created = SourceFileModel.get_or_create(dir=dir,
-                                                                    dir_size=-1,
-                                                                    dir_files_count=-1,
-                                                                    path_isdir=False,
-                                                                    profile=self.profile())
+                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
                 if created:
-                    self.add_source_to_table(new_source, SettingsModel.get(key="get_srcpath_datasize").value)
+                    self.add_source_to_table(new_source)
                     new_source.save()
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
@@ -192,12 +191,14 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         invalidSources = ""
         for source in sources:
             if len(source) > 0:  # Ignore empty newlines
+                if source.startswith('file://'):  # Strip prefix to allow pasting multiple files/folders copied from
+                    source = source[7:]
                 if not os.path.exists(source):
                     invalidSources = invalidSources + "\n" + source
                 else:
                     new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
                     if created:
-                        self.sourceFilesWidget.addItem(source)
+                        self.add_source_to_table(new_source)
                         new_source.save()
 
         if len(invalidSources) != 0:  # Check if any invalid paths
