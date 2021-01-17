@@ -191,7 +191,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         invalidSources = ""
         for source in sources:
             if len(source) > 0:  # Ignore empty newlines
-                if source.startswith('file://'):  # Strip prefix to allow pasting multiple files/folders copied from
+                if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
                     source = source[7:]
                 if not os.path.exists(source):
                     invalidSources = invalidSources + "\n" + source
