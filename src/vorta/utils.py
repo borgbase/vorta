@@ -111,12 +111,11 @@ def get_dict_from_list(dataDict, mapList):
 
 
 def choose_file_dialog(parent, title, want_folder=True):
-    options = QFileDialog.Options()
-    if want_folder:
-        options |= QFileDialog.ShowDirsOnly
-    dialog = QFileDialog(parent, title, os.path.expanduser('~'), options=options)
+    dialog = QFileDialog(parent, title, os.path.expanduser('~'))
     dialog.setFileMode(QFileDialog.Directory if want_folder else QFileDialog.ExistingFiles)
     dialog.setParent(parent, QtCore.Qt.Sheet)
+    if want_folder:
+        dialog.setOption(QFileDialog.ShowDirsOnly)
     return dialog
 
 
