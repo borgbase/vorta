@@ -1,11 +1,6 @@
-from collections import namedtuple
-from .borg_thread import BorgThread
+from .borg_thread import BorgThread, FakeProfile, FakeRepo
 from vorta.i18n import trans_late
 from vorta.models import RepoModel
-from vorta.keyring.abc import get_keyring
-
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
-FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
 
 class BorgInfoThread(BorgThread):
@@ -43,7 +38,7 @@ class BorgInfoThread(BorgThread):
         ret['password'] = params['password']  # Empty password is '', which disables prompt
         if params['password'] != '':
             # Cannot tell if repo has encryption, assuming based off of password
-            if not get_keyring().is_unlocked:
+            if not cls.keyring.is_unlocked:
                 ret['message'] = trans_late('messages', 'Please unlock your password manager.')
                 return ret
 
@@ -66,7 +61,7 @@ class BorgInfoThread(BorgThread):
             if 'encryption' in result['data']:
                 new_repo.encryption = result['data']['encryption']['mode']
             if new_repo.encryption != 'none':
-                get_keyring().set_password("vorta-repo", new_repo.url, result['params']['password'])
+                self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
 
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']
 
