@@ -6,7 +6,7 @@ from vorta.models import db, BackupProfileModel, BackupProfileMixin, EventLogMod
     SourceFileModel, SettingsModel, ArchiveModel, WifiSettingModel, RepoModel, SCHEMA_VERSION
 from vorta.utils import get_asset
 from vorta.keyring.db import VortaDBKeyring
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from .utils import get_colored_icon
 from pathlib import Path
 import json
@@ -45,7 +45,7 @@ class BackupWindow(BackupWindowBase, BackupWindowUI, BackupProfileMixin):
         # Profile to dict
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
-        keyring = get_keyring()
+        keyring = VortaKeyring.get_keyring()
         if self.storePassword.isChecked():
             profile_dict['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
@@ -132,7 +132,7 @@ class RestoreWindow(BackupWindow):
         profile_schema = profile_dict['SchemaVersion']['version']
         returns = {}
 
-        keyring = get_keyring()
+        keyring = VortaKeyring.get_keyring()
 
         if SCHEMA_VERSION < profile_schema:
             raise VersionException()
@@ -233,7 +233,7 @@ class RestoreWindow(BackupWindow):
                 self.errors.setText(self.tr("Backup file not found."))
             else:
                 repo_url = new_profile.repo.url
-                keyring = get_keyring()
+                keyring = VortaKeyring.get_keyring()
                 if keyring.get_password('vorta-repo', repo_url):
                     self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully."))
                 else:
