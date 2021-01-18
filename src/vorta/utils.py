@@ -327,16 +327,16 @@ def is_system_tray_available():
     return is_available
 
 
-def validate_passwords(firstPass, secondPass):
-    ''' Validates the password for borg '''
-    passEqual = firstPass == secondPass
-    passLong = len(firstPass) > 8
+def validate_passwords(first_pass, second_pass):
+    ''' Validates the password for borg, do not use on single fields '''
+    pass_equal = first_pass == second_pass
+    pass_long = len(first_pass) > 8
 
-    if not passLong and not passEqual:
+    if not pass_long and not pass_equal:
         return trans_late('utils', "Passwords must be identical and greater than 8 characters long.")
-    if not passEqual:
+    if not pass_equal:
         return trans_late('utils', "Passwords must be identical.")
-    if not passLong:
+    if not pass_long:
         return trans_late('utils', "Passwords must be greater than 8 characters long.")
 
     return ""
