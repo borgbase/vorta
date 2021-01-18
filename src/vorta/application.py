@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 import time
-import ast
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -50,7 +49,7 @@ class VortaApp(QtSingleApplication):
                 sys.exit()
             elif args.profile:
                 self.sendMessage(f"create {args.profile}")
-                print('Creating backups using existing Vorta instance.')
+                print('Creating backup using existing Vorta instance.')
                 sys.exit()
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
@@ -78,22 +77,17 @@ class VortaApp(QtSingleApplication):
         self.set_borg_details_action()
         self.installEventFilter(self)
 
-    def create_backups_cmdline(self, profiles):
-        self.completedProfiles = []
-        self.validProfiles = []
-        for profile_name in profiles:
-            profile = BackupProfileModel.get_or_none(name=profile_name)
-            if profile is not None:
-                if profile.repo is None:
-                    logger.warning(f"Add a repository to {profile_name}")
-                    continue
-                self.validProfiles.append(profile_name)
-                # Wait a bit in case something is running
-                while BorgThread.is_running():
-                    time.sleep(0.1)
-                self.create_backup_action(profile_id=profile.id)
-            else:
-                logger.warning(f"Invalid profile name {profile_name}")
+    def create_backups_cmdline(self, profile_name):
+        profile = BackupProfileModel.get_or_none(name=profile_name)
+        if profile is not None:
+            if profile.repo is None:
+                logger.warning(f"Add a repository to {profile_name}")
+            # Wait a bit in case something is running
+            while BorgThread.is_running():
+                time.sleep(0.1)
+            self.create_backup_action(profile_id=profile.id)
+        else:
+            logger.warning(f"Invalid profile name {profile_name}")
 
     def eventFilter(self, source, event):
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and isinstance(source, MainWindow):
@@ -144,11 +138,10 @@ class VortaApp(QtSingleApplication):
             self.open_main_window_action()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
-            profiles = ast.literal_eval(message)  # Safely parse string array
             if BorgThread.is_running():
                 logger.warning("Cannot run while backups are already running")
             else:
-                self.create_backups_cmdline(profiles)
+                self.create_backups_cmdline(message)
 
     def set_borg_details_action(self):
         params = BorgVersionThread.prepare()
