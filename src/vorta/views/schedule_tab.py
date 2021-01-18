@@ -70,7 +70,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.preBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='pre_backup_cmd': self.save_backup_cmd(attr, new_val))
         self.createCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='create_backup_cmd': self.save_backup_cmd(attr, new_val))
+            lambda new_val, attr='create_backup_cmd': self.save_repo_cmd(attr, new_val))
 
         self._draw_next_scheduled_backup()
         self.init_wifi()
