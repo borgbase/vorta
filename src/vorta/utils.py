@@ -346,16 +346,8 @@ def display_password_backend(encryption):
     ''' Display password backend message based off current keyring '''
     # flake8: noqa E501
     if encryption != 'none':
-        keyringClass = VortaKeyring.get_keyring().__class__.__name__
-        messages = {
-            'VortaDBKeyring':
-            trans_late(
-                'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC'),
-            'VortaSecretStorageKeyring': trans_late('utils', 'Storing the password in the Secret Service keyring.'),
-            'VortaDarwinKeyring': trans_late('utils', 'Storing the password in in Keychain Access.'),
-            'VortaKWallet5Keyring': trans_late('utils', 'Storing the password in in KWallet.'),
-        }
-        # Will throw exception for unknown keyring, acceptable due to low frequency of adding keyrings
-        return messages[keyringClass]
+        keyring = VortaKeyring.get_keyring()
+        return trans_late('utils', "Storing the password in your password manager.") if keyring.is_primary else trans_late(
+            'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC')
     else:
         return ""
