@@ -24,6 +24,7 @@ def init_db(qapp):
     vorta.models.init_db()
 
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
+    new_repo.encryption = 'none'
     new_repo.save()
 
     profile = BackupProfileModel.get(id=1)

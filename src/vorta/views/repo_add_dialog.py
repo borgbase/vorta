@@ -1,9 +1,13 @@
 import re
 from PyQt5 import uic, QtCore
+from PyQt5.QtWidgets import QLineEdit, QAction
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, borg_compat
+from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
+    borg_compat, validate_passwords, display_password_backend
+from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info import BorgInfoThread
+from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
 
@@ -24,15 +28,29 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.clicked.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
+        self.repoURL.textChanged.connect(self.set_password)
+        self.passwordLineEdit.textChanged.connect(self.password_listener)
+        self.confirmLineEdit.textChanged.connect(self.password_listener)
+        self.encryptionComboBox.activated.connect(self.display_password_backend)
+
+        # Add clickable icon to toggle password visibility to end of box
+        self.showHideAction = QAction(self.tr("Show my passwords"), self)
+        self.showHideAction.setCheckable(True)
+        self.showHideAction.toggled.connect(self.set_visibility)
+
+        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
+
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
+        self.display_password_backend()
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
         self.useRemoteRepoButton.setIcon(get_colored_icon('globe'))
+        self.showHideAction.setIcon(get_colored_icon("eye"))
 
     @property
     def values(self):
@@ -45,6 +63,9 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    def display_password_backend(self):
+        self.passwordLabel.setText(translate('utils', display_password_backend(self.encryptionComboBox.currentData())))
 
     def choose_local_backup_folder(self):
         def receive():
@@ -59,6 +80,27 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
         dialog.open(receive)
 
+    def set_password(self, URL):
+        ''' Autofill password from keyring only if current entry is empty '''
+        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
+        if password and self.passwordLineEdit.text() == "":
+            self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
+            self.passwordLineEdit.setText(password)
+            if self.__class__ == AddRepoWindow:
+                self.confirmLineEdit.setText(password)
+
+    def set_visibility(self, visible):
+        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        self.passwordLineEdit.setEchoMode(visibility)
+        self.confirmLineEdit.setEchoMode(visibility)
+
+        if visible:
+            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+            self.showHideAction.setText(self.tr("Hide my passwords"))
+        else:
+            self.showHideAction.setIcon(get_colored_icon("eye"))
+            self.showHideAction.setText(self.tr("Show my passwords"))
+
     def use_remote_repo_action(self):
         self.repoURL.setText('')
         self.repoURL.setEnabled(True)
@@ -68,7 +110,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.is_remote_repo = True
 
     def run(self):
-        if self.validate():
+        if self.validate() and self.password_listener():
             params = BorgInitThread.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -124,13 +166,19 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('This repo has already been added.'))
             return False
 
-        if self.__class__ == AddRepoWindow:
-            if self.values['encryption'] != 'none':
-                if len(self.values['password']) < 8:
-                    self._set_status(self.tr('Please use a longer passphrase.'))
-                    return False
-
         return True
+
+    def password_listener(self):
+        ''' Validates passwords only if its going to be used '''
+        if self.values['encryption'] == 'none':
+            self.passwordLabel.setText("")
+            return True
+        else:
+            firstPass = self.passwordLineEdit.text()
+            secondPass = self.confirmLineEdit.text()
+            msg = validate_passwords(firstPass, secondPass)
+            self.passwordLabel.setText(translate('utils', msg))
+            return not bool(msg)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -139,6 +187,24 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.showHideAction.setText(self.tr("Show my password"))
+        self.passwordLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.textChanged.disconnect()
+        self.confirmLineEdit.hide()
+        self.confirmLabel.hide()
+        del self.confirmLineEdit
+        del self.confirmLabel
+
+    def set_visibility(self, visible):
+        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        self.passwordLineEdit.setEchoMode(visibility)
+
+        if visible:
+            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+            self.showHideAction.setText(self.tr("Hide my password"))
+        else:
+            self.showHideAction.setIcon(get_colored_icon("eye"))
+            self.showHideAction.setText(self.tr("Show my password"))
 
     def run(self):
         if self.validate():

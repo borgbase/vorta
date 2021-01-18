@@ -1,0 +1,13 @@
+<svg width="576" height="512" xmlns="http://www.w3.org/2000/svg">
+ <!-- Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="602" width="802" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_1" d="m288,144a110.94,110.94 0 0 0 -31.24,5a55.4,55.4 0 0 1 7.24,27a56,56 0 0 1 -56,56a55.4,55.4 0 0 1 -27,-7.24a111.71,111.71 0 1 0 107,-80.76zm284.52,97.4c-54.23,-105.81 -161.59,-177.4 -284.52,-177.4s-230.32,71.64 -284.52,177.41a32.35,32.35 0 0 0 0,29.19c54.23,105.81 161.59,177.4 284.52,177.4s230.32,-71.64 284.52,-177.41a32.35,32.35 0 0 0 0,-29.19zm-284.52,158.6c-98.65,0 -189.09,-55 -237.93,-144c48.84,-89 139.27,-144 237.93,-144s189.09,55 237.93,144c-48.83,89 -139.27,144 -237.93,144z"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="512" x2="575" stroke-width="40" stroke="#000" fill="none"/>
+ </g>
+</svg>
