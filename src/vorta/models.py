@@ -262,6 +262,11 @@ def get_misc_settings():
     return settings
 
 
+def cleanup_db():
+    # Clean up database
+    db.execute_sql("VACUUM")
+
+
 def init_db(con=None):
     if con is not None:
         os.umask(0o0077)
