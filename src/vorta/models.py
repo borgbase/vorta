@@ -15,7 +15,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import slugify
+from vorta.utils import slugify, is_system_tray_available
 
 SCHEMA_VERSION = 16
 
@@ -251,6 +251,16 @@ def get_misc_settings():
                                     'Include pre-release versions when checking for updates')
             },
         ]
+    if not is_system_tray_available():
+        settings += [{
+            'key': 'enable_background_question', 'value': True, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Display background exit dialog')
+        },
+            {
+            'key': 'disable_background_state', 'value': False, 'type': 'internal',
+            'label': 'Previous background exit button state'
+        }]
     return settings
 
 
@@ -363,7 +373,7 @@ def init_db(con=None):
             with db.atomic():
                 size = 1000
                 for i in range(0, len(data), size):
-                    ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
+                    ArchiveModel.insert_many(data[i: i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
 
