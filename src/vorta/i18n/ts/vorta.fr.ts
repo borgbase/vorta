@@ -280,12 +280,12 @@
     <message>
         <location filename="../../borg/diff.py" line="8"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Récupère des différences entre les archives…</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="12"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Différences entre les archives récupérées.</translation>
     </message>
 </context>
 <context>
@@ -356,7 +356,7 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation>Élagage des vieilles archives...</translation>
+        <translation>Élagage des anciennes archives...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
@@ -420,7 +420,7 @@
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Les profils de sauvegarde permettent des sauvegardes granulaires depuis différentes sources vers des destinations différentes. Vous pouvez, par exemple, sauvegarder des documents essentiels vers un dépôt distant via Wifi et réaliser une sauvegarde complète sur un appareil de stockage local. &lt;/p&gt;&lt;p&gt;Les dépôts et clés SSH sont partagées entre les profils. Les dossiers sources, dépôts de destination actifs, réseaux autorisé, paramètres d&apos;élagage et de validation ainsi que les horaires de sauvegarde sont spécifiques au profil. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Les profils de sauvegarde permettent des sauvegardes granulaires depuis différentes sources vers des destinations différentes. Vous pouvez, par exemple, sauvegarder des documents essentiels vers un dépôt distant via Wifi et réaliser une sauvegarde complète sur un appareil de stockage local. &lt;/p&gt;&lt;p&gt;Les dépôts et clés SSH sont partagées entre les profils. Les dossiers sources, dépôts de destination actifs, réseaux autorisés, paramètres d&apos;élagage et de validation ainsi que les horaires de sauvegarde sont spécifiques au profil. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="84"/>
@@ -505,7 +505,7 @@
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="25"/>
         <source>Difference between</source>
-        <translation type="unfinished"/>
+        <translation>Différence entre</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="38"/>
@@ -781,7 +781,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="243"/>
         <source>Prune old Archives after each backup</source>
-        <translation>Élaguer les vieilles archives après chaque sauvegarde</translation>
+        <translation>Élaguer les anciennes archives après chaque sauvegarde</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="283"/>
@@ -801,7 +801,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="363"/>
         <source>Networks</source>
-        <translation>Réseaux :</translation>
+        <translation>Réseaux</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="375"/>
@@ -896,7 +896,7 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L&apos;élagage efface les archives les plus anciennes. Vous pouvez choisir le nombre d&apos;archives qui sont conservées par heure, jour, etc. En règle générale, on conserve plus d&apos;archives récentes et moins d&apos;anciennes. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;En savoir plus&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="64"/>
@@ -942,7 +942,7 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclure les paternes (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;plus&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclure les motifs (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;plus&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="119"/>
@@ -957,38 +957,38 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../assets/UI/repotab.ui" line="149"/>
         <source>Copy repo URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copier l&apos;URL du dépôt dans le presse-papier</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="382"/>
         <source>Don&apos;t run backup over metered networks</source>
-        <translation type="unfinished"/>
+        <translation>Ne pas lancer de sauvegarde via une connexion limitée.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="60"/>
         <source>Add File(s)</source>
-        <translation type="unfinished"/>
+        <translation>Ajouter des fichiers</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="67"/>
         <source>One folder or file per line</source>
-        <translation type="unfinished"/>
+        <translation>Un dossier ou fichier par ligne</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="70"/>
         <source>Paste Folders/Files</source>
-        <translation type="unfinished"/>
+        <translation>Coller les Dossiers/Fichiers</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="94"/>
+        <location filename="../../views/main_window.py" line="95"/>
         <source>Backup in progress.</source>
         <translation>Sauvegarde en cours.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="180"/>
+        <location filename="../../views/main_window.py" line="181"/>
         <source>Task cancelled</source>
         <translation>Tâche annulée</translation>
     </message>
@@ -1063,12 +1063,12 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
         <translation>Ajouter un profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="147"/>
+        <location filename="../../views/main_window.py" line="148"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
         <translation>Êtes vous sûr·e de vouloir supprimer le profil &apos;{}&apos;?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="148"/>
+        <location filename="../../views/main_window.py" line="149"/>
         <source>Confirm deletion</source>
         <translation>Confirmer la suppression</translation>
     </message>
@@ -1076,12 +1076,12 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
 <context>
     <name>MainWindow QMessagebox</name>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Vorta doit-il continuer à fonctionner en arrière-plan ?</translation>
     </message>
@@ -1222,7 +1222,7 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/source_tab.py" line="49"/>
         <source>Choose file(s) to back up</source>
-        <translation type="unfinished"/>
+        <translation>Choisissez les fichier à sauvegarder</translation>
     </message>
 </context>
 <context>
@@ -1374,7 +1374,7 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../borg/create.py" line="97"/>
         <source>Not running backup over metered connection.</source>
-        <translation type="unfinished"/>
+        <translation>Connexion limitée : la sauvegarde ne va pas être lancée.</translation>
     </message>
 </context>
 <context>
@@ -1382,7 +1382,7 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../models.py" line="200"/>
         <source>Display notifications when background tasks fail</source>
-        <translation>Afficher les notifications lorsqu&apos;une tâche en arrière-plan échoue</translation>
+        <translation>Afficher une notifications lorsqu&apos;une tâche en arrière-plan échoue.</translation>
     </message>
     <message>
         <location filename="../../models.py" line="205"/>

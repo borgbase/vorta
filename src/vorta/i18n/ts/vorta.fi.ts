@@ -14,7 +14,7 @@
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="55"/>
         <source>A profile with this name already exists.</source>
-        <translation>Profiili samalla nimellä on olemassa.</translation>
+        <translation>Samanniminen profiili on jo olemassa.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="20"/>
@@ -57,7 +57,7 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="122"/>
         <source>This repo has already been added.</source>
-        <translation type="unfinished"/>
+        <translation>Tämä tietovarasto on jo lisätty.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="128"/>
@@ -158,7 +158,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="160"/>
         <source>Error in archive name template.</source>
-        <translation type="unfinished"/>
+        <translation>Virhe arkistonimen kaavassa.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="202"/>
@@ -168,7 +168,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="219"/>
         <source>Refreshed archives.</source>
-        <translation>Päivitettiin arkistot.</translation>
+        <translation>Arkistot päivitetty.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="262"/>
@@ -188,7 +188,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="303"/>
         <source>Un-mounted successfully.</source>
-        <translation>Irrotettiin liitos onnistuneesti.</translation>
+        <translation>Liitos irrotettu onnistuneesti.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="341"/>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"/>
+        <translation>Valintaikkuna</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="25"/>
@@ -395,12 +395,12 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation type="unfinished"/>
+        <translation>nyx2.local-2018-11-16T09:49:58 marraskuun 16., 2018</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
-        <translation type="unfinished"/>
+        <translation>Huomio: Jos valitset ylätason hakemiston, sen alihakemistot palautetaan vaikka niitä ei olisi valittu.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="88"/>
@@ -420,7 +420,7 @@
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Varmuuskopioinnin profiilit mahdollistavat jaotellut varmuuskopiot eri lähteille eri kohteisiin. Voit esimerkiksi varmuuskopioida vain tärkeät dokumentit etäpalvelimelle Wifin kautta ja luoda täyden varmuuskopion paikalliselle tallennuslaitteelle.&lt;/p&gt;&lt;p&gt;Tietovarastot ja SSH-avaimet jaetaan profiilien kesken. Lähdekansiot, aktiiviset kohdetietovarastot sekä verkko-, karsimis-, tarkistus- ja ajastusasetukset ovat profiilikohtaisia.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="84"/>
@@ -500,7 +500,7 @@
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="113"/>
         <source>Diff</source>
-        <translation type="unfinished"/>
+        <translation>Eroavaisuudet</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="25"/>
@@ -510,7 +510,7 @@
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
-        <translation type="unfinished"/>
+        <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="45"/>
@@ -520,7 +520,7 @@
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
-        <translation type="unfinished"/>
+        <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffresult.ui" line="101"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Lomake</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="44"/>
@@ -621,37 +621,37 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="255"/>
         <source> hourly, </source>
-        <translation type="unfinished"/>
+        <translation>tunnittaista,</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="272"/>
         <source> daily, </source>
-        <translation type="unfinished"/>
+        <translation>päivittäistä,</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="286"/>
         <source> weekly, </source>
-        <translation type="unfinished"/>
+        <translation>viikottaista,</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="300"/>
         <source> monthly and</source>
-        <translation type="unfinished"/>
+        <translation>kuukausittaista ja</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="314"/>
         <source> annual archives</source>
-        <translation type="unfinished"/>
+        <translation>vuosittaista arkistoa</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="341"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation type="unfinished"/>
+        <translation>Säilytä aina arkistot, jotka on luotu tämän ajan sisällä:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="351"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
-        <translation type="unfinished"/>
+        <translation>24t, 1pv, 52vk, 12kk, 1v</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="391"/>
@@ -666,17 +666,17 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="401"/>
         <source>{hostname}-{profile_slug}-</source>
-        <translation type="unfinished"/>
+        <translation>{hostname}-{profile_slug}-</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="435"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</source>
-        <translation type="unfinished"/>
+        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="442"/>
         <source>Prune Prefix:</source>
-        <translation type="unfinished"/>
+        <translation>Karsittavien etuliite:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="71"/>
@@ -741,7 +741,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="47"/>
         <source>Schedule</source>
-        <translation>Aikataulu</translation>
+        <translation>Ajastus</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="73"/>
@@ -756,7 +756,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="113"/>
         <source>hours at</source>
-        <translation>tunnin välein</translation>
+        <translation>tunnin välein,</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="136"/>
@@ -866,7 +866,7 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="20"/>
         <source>Source Folders and Files to Back Up:</source>
-        <translation>Lähdekansiot ja -tiedostot varmuuskopioitavaksi:</translation>
+        <translation>Varmuuskopioitavat kansiot ja tiedostot:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="53"/>
@@ -881,12 +881,12 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="103"/>
         <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Ohita jos läsnä (ohita kansiot, joiden sisällä olevien tiedostojen nimissä):</translation>
+        <translation>Ohita hakemistot, jotka sisältävät tiedoston, jonka nimi sisältää:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="152"/>
         <source>Diff</source>
-        <translation type="unfinished"/>
+        <translation>Erot</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="192"/>
@@ -896,7 +896,7 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Karsiminen poistaa vanhoja arkistoja. Voit valita, kuinka monta tunnittaista, päivittäistä jne. arkistoa säilytetään. Yleensä säilytetään useampia uudemmista arkistoista ja harvempia vanhemmista. Lue &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;lisää&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misctab.ui" line="64"/>
@@ -931,17 +931,17 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="99"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tietovarasto etäpalvelimella tai paikallisesti. Yksinkertaiseen ja turvalliseen varmuuskopiointiin testaa &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBasea&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="297"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pakkausmetodi uudelle datalle. Tätä voi vaihtaa eikä se vaikuta deduplikaatioon. Lue &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;lisää&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kaavat tiedon poisjättämiselle (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;lisää&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="119"/>
@@ -956,45 +956,45 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="149"/>
         <source>Copy repo URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Kopioi tietovaraston URL leikepöydälle</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="382"/>
         <source>Don&apos;t run backup over metered networks</source>
-        <translation type="unfinished"/>
+        <translation>Älä varmuuskopioi laskutettavissa verkoissa</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="60"/>
         <source>Add File(s)</source>
-        <translation type="unfinished"/>
+        <translation>Lisää tiedosto(ja)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="67"/>
         <source>One folder or file per line</source>
-        <translation type="unfinished"/>
+        <translation>Yksi hakemisto tai tiedosto per rivi</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="70"/>
         <source>Paste Folders/Files</source>
-        <translation type="unfinished"/>
+        <translation>Liitä kansioita/tiedostoja</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="94"/>
+        <location filename="../../views/main_window.py" line="95"/>
         <source>Backup in progress.</source>
         <translation>Varmuuskopiointi käynnissä.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="180"/>
+        <location filename="../../views/main_window.py" line="181"/>
         <source>Task cancelled</source>
         <translation>Tehtävä peruttu</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="20"/>
         <source>MainWindow</source>
-        <translation type="unfinished"/>
+        <translation>MainWindow</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="51"/>
@@ -1024,7 +1024,7 @@
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="145"/>
         <source>Schedule</source>
-        <translation>Aikataulu</translation>
+        <translation>Ajastus</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="150"/>
@@ -1062,12 +1062,12 @@
         <translation>Lisää profiili</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="147"/>
+        <location filename="../../views/main_window.py" line="148"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
         <translation>Haluatko varmasti poistaa profiilin &apos;{}&apos;?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="148"/>
+        <location filename="../../views/main_window.py" line="149"/>
         <source>Confirm deletion</source>
         <translation>Vahvista poistaminen</translation>
     </message>
@@ -1075,12 +1075,12 @@
 <context>
     <name>MainWindow QMessagebox</name>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Quit</source>
         <translation>Lopeta</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Tulisiko Vortan jatkaa käynnissä taustalla?</translation>
     </message>
@@ -1221,7 +1221,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="49"/>
         <source>Choose file(s) to back up</source>
-        <translation type="unfinished"/>
+        <translation>Valitse varmuuskopioitava(t) tiedosto(t)</translation>
     </message>
 </context>
 <context>
@@ -1229,7 +1229,7 @@
     <message>
         <location filename="../../tray_menu.py" line="39"/>
         <source>Vorta for Borg Backup</source>
-        <translation>Vorta Borg-varmuuskopiointiin</translation>
+        <translation>Vorta Borg-varmuuskopiointi</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="48"/>
@@ -1300,12 +1300,12 @@
     <message>
         <location filename="../../scheduler.py" line="98"/>
         <source>Starting background backup for %s.</source>
-        <translation type="unfinished"/>
+        <translation>Aloitetaan profiilin %s varmuuskopiointia taustalla.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="109"/>
         <source>Backup successful for %s.</source>
-        <translation type="unfinished"/>
+        <translation>Profiilin %s varmuuskopiointi onnistui.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="115"/>
@@ -1373,7 +1373,7 @@
     <message>
         <location filename="../../borg/create.py" line="97"/>
         <source>Not running backup over metered connection.</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopiointia ei suoriteta laskutettavalla yhteydellä.</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@
     <message>
         <location filename="../../models.py" line="200"/>
         <source>Display notifications when background tasks fail</source>
-        <translation>Näytä ilmoitukset kun taustatehtävät epäonnistuvat</translation>
+        <translation>Näytä ilmoitukset jos taustatehtävät epäonnistuvat</translation>
     </message>
     <message>
         <location filename="../../models.py" line="205"/>
