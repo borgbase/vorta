@@ -1,9 +1,10 @@
-transifex-client
-pytest
-pytest-qt
-pytest-mock
-pytest-faulthandler
-pyinstaller
-tox
 flake8
+pyinstaller
 pylint
+pytest
+pytest-faulthandler
+pytest-mock
+pytest-qt
+tox
+transifex-client
+wheel
