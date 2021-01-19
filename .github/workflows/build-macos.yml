@@ -25,8 +25,9 @@ jobs:
         brew upgrade openssl readline xz
     - name: Install build dependencies
       run: |
-        # qt-creator server wasd own before. too large anyway?
+        # qt-creator server was own before. too large anyway?
         # brew bundle
+        brew install --cask sparkle
         pip install -r dev.txt
       working-directory: requirements.d
     - name: Install Vorta
@@ -37,10 +38,10 @@ jobs:
         make clean
         # make translations-to-qm TODO: add .qm files back to vorta.spec
         pyinstaller --clean --noconfirm package/vorta.spec
-        # cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+        cp -r /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         rm -rf build/vorta
         rm -rf dist/vorta
-        zip -rq dist/Vorta.app.zip dist/Vorta.app
+        cd dist && zip -rq Vorta.app.zip Vorta.app
     - name: Upload build
       uses: actions/upload-artifact@v2
       with:
