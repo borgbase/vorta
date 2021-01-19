@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Inspired by https://github.com/metabrainz/picard/blob/master/scripts/package/macos-notarize-app.sh
 
-set -e
+set -eux
 
-CERTIFICATE_NAME="Developer ID Application: Manuel Riel (CNMSCAXT48)"
 APP_BUNDLE_ID="com.borgbase.client.macos"
 APP_BUNDLE="Vorta"
-APPLE_ID_USER="manu@snapdragon.cc"
-APPLE_ID_PASSWORD="@keychain:Notarization"
+# CERTIFICATE_NAME="Developer ID Application: Joe Doe (XXXXXX)"
+# APPLE_ID_USER="name@example.com"
+# APPLE_ID_PASSWORD="@keychain:Notarization"
 
-# Sign app and parts
-# 'codesign --deep' is only 1 level deep. It misses Sparkle embedded app AutoUpdate
+
+# Sign app bundle, Sparkle and Borg
 codesign --verbose --force --sign "$CERTIFICATE_NAME" --timestamp --deep --options runtime \
     $APP_BUNDLE.app/Contents/Frameworks/Sparkle.framework/Resources/Autoupdate.app
 
-# Need to sign Borg?
-# find ${BORG_SRC}/dist/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
-#     -exec codesign --verbose --force --sign "${CERTIFICATE_NAME}" \
-#     --entitlements package/entitlements.plist --timestamp --deep --options runtime {} \;
+find $APP_BUNDLE.app/Contents/Resources/borg-dir \
+    -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe -or -name Python \) \
+    -exec codesign --verbose --force --timestamp --deep --sign "${CERTIFICATE_NAME}" \
+    --entitlements ../package/entitlements.plist  --options runtime {} \;
 
 codesign --verify --force --verbose --deep \
         --options runtime --timestamp \
@@ -34,8 +34,8 @@ create-dmg \
   --icon "Vorta.app" 70 150 \
   --hide-extension "Vorta.app" \
   --app-drop-link 240 150 \
-  "dist/Vorta.dmg" \
-  "dist/"
+  "Vorta.dmg" \
+  "Vorta.app"
 
 
 # Notarize DMG
@@ -44,7 +44,7 @@ RESULT=$(xcrun altool --notarize-app --type osx \
     --username $APPLE_ID_USER --password $APPLE_ID_PASSWORD \
     --file "$APP_BUNDLE.dmg" --output-format xml)
 
-REQUEST_UUID=$(echo "$RESULT" | xpath \
+REQUEST_UUID=$(echo "$RESULT" | xpath -q -e \
   "//key[normalize-space(text()) = 'RequestUUID']/following-sibling::string[1]/text()" 2> /dev/null)
 
 # Poll for notarization status
@@ -56,7 +56,7 @@ do
     --username "$APPLE_ID_USER" \
     --password "$APPLE_ID_PASSWORD" \
     --output-format xml)
-  STATUS=$(echo "$RESULT" | xpath "//key[normalize-space(text()) = 'Status']/following-sibling::string[1]/text()" 2> /dev/null)
+  STATUS=$(echo "$RESULT" | xpath -q -e "//key[normalize-space(text()) = 'Status']/following-sibling::string[1]/text()" 2> /dev/null)
 
   if [ "$STATUS" = "success" ]; then
     echo "Notarization of $APP_BUNDLE succeeded!"
