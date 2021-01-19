@@ -10,18 +10,9 @@ clean:
 
 dist/Vorta.app:
 	pyinstaller --clean --noconfirm package/vorta.spec
-	cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-	cp -R ${BORG_SRC}/dist/borg-dir dist/Vorta.app/Contents/Resources/
+	cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	rm -rf build/vorta
 	rm -rf dist/vorta
-
-borg:  ## Build Borg single-dir release for bundling in macOS
-	rm -rf ${BORG_SRC}/dist/*
-	cd ${BORG_SRC} && python setup.py clean && pip install -U -e .
-	cd ${BORG_SRC} && pyinstaller --clean --noconfirm ../vorta/package/borg.spec .
-	find ${BORG_SRC}/dist/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
-		-exec codesign --verbose --force --sign "${CERTIFICATE_NAME}" \
-		--entitlements package/entitlements.plist --timestamp --deep --options runtime {} \;
 
 dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
 	# Workaround for dots in filenames. See https://github.com/pyinstaller/pyinstaller/wiki/Recipe-OSX-Code-Signing-Qt
