@@ -41,7 +41,7 @@ jobs:
         cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macosx64.tgz
         tar xvf borg-macosx64.tgz -C dist/Vorta.app/Contents/Resources/
-        cd dist && zip -rq Vorta.zip Vorta.app
+        cd dist && zip -rq --symlinks Vorta.zip Vorta.app
     - name: Upload build
       uses: actions/upload-artifact@v2
       with:
