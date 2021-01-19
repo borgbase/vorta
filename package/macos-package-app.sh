@@ -9,21 +9,36 @@ APP_BUNDLE="Vorta"
 APPLE_ID_USER="manu@snapdragon.cc"
 APPLE_ID_PASSWORD="@keychain:Notarization"
 
-cd dist
-
-# codesign --deep is only 1 level deep. It misses Sparkle embedded app AutoUpdate
+# Sign app and parts
+# 'codesign --deep' is only 1 level deep. It misses Sparkle embedded app AutoUpdate
 codesign --verbose --force --sign "$CERTIFICATE_NAME" --timestamp --deep --options runtime \
     $APP_BUNDLE.app/Contents/Frameworks/Sparkle.framework/Resources/Autoupdate.app
+
+# Need to sign Borg?
+# find ${BORG_SRC}/dist/borg-dir -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe \) \
+#     -exec codesign --verbose --force --sign "${CERTIFICATE_NAME}" \
+#     --entitlements package/entitlements.plist --timestamp --deep --options runtime {} \;
 
 codesign --verify --force --verbose --deep \
         --options runtime --timestamp \
         --entitlements ../package/entitlements.plist \
         --sign "$CERTIFICATE_NAME" $APP_BUNDLE.app
 
-# ditto -c -k --rsrc --keepParent "$APP_BUNDLE.app" "${APP_BUNDLE}.zip"
-rm -rf $APP_BUNDLE.dmg
-appdmg ../package/appdmg.json $APP_BUNDLE.dmg
 
+# Create DMG
+rm -rf $APP_BUNDLE.dmg
+create-dmg \
+  --volname "Vorta Installer" \
+  --window-size 410 300 \
+  --icon-size 100 \
+  --icon "Vorta.app" 70 150 \
+  --hide-extension "Vorta.app" \
+  --app-drop-link 240 150 \
+  "dist/Vorta.dmg" \
+  "dist/"
+
+
+# Notarize DMG
 RESULT=$(xcrun altool --notarize-app --type osx \
     --primary-bundle-id $APP_BUNDLE_ID \
     --username $APPLE_ID_USER --password $APPLE_ID_PASSWORD \

@@ -1,6 +1,7 @@
 # Install required non-Python dev packages using Homebrew on macOS:
 # Run `brew bundle` while in this folder
 
+brew 'create-dmg'
 brew 'qt'
 brew 'hub'
 brew 'xmlstarlet'
