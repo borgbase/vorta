@@ -15,7 +15,7 @@ jobs:
     - name: Check out selected branch
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.inputs.branch }}!"
+        ref: ${{ github.event.inputs.branch }}
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -29,6 +29,7 @@ jobs:
         pip install -r requirements.d/dev.txt
     - name: Package with PyInstaller
       run: |
+        make clean translations-to-qm
         pyinstaller --clean --noconfirm package/vorta.spec
         # cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         rm -rf build/vorta
