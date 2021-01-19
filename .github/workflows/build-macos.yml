@@ -35,7 +35,7 @@ jobs:
     - name: Package with PyInstaller
       run: |
         make clean
-        for f in $(ls src/vorta/i18n/ts/vorta.*.ts); do package/lrelease $f -qm src/vorta/i18n/qm/$(basename $f .ts).qm; done
+        # make translations-to-qm TODO: add .qm files back to vorta.spec
         pyinstaller --clean --noconfirm package/vorta.spec
         # cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         rm -rf build/vorta
