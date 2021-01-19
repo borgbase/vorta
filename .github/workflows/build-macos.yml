@@ -1,0 +1,41 @@
+name: Build macOS release
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to use for building macOS release'
+        required: true
+        default: 'master'
+
+jobs:
+  build:
+    runs-on: macos-10.15
+
+    steps:
+    - name: Check out selected branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}!"
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - name: Install system dependencies (macOS)
+      run: |
+        brew upgrade openssl readline xz
+    - name: Install Vorta
+      run: |
+        pip install .
+        pip install -r requirements.d/dev.txt
+    - name: Package with PyInstaller
+      run: |
+        pyinstaller --clean --noconfirm package/vorta.spec
+        # cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+        rm -rf build/vorta
+        rm -rf dist/vorta
+        zip -rq dist/Vorta.app.zip dist/Vorta.app
+    - name: Upload build
+      uses: actions/upload-artifact@v2
+      with:
+        name: Vorta.app.zip
+        path: dist/Vorta.app.zip
