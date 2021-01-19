@@ -20,19 +20,22 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.9
-    - name: Install system dependencies (macOS)
+    - name: Install system dependencies
       run: |
         brew upgrade openssl readline xz
-    - name: Install Homebrew build dependencies
-      run: brew bundle
+    - name: Install build dependencies
+      run: |
+        # qt-creator server wasd own before. too large anyway?
+        # brew bundle
+        pip install -r dev.txt
       working-directory: requirements.d
     - name: Install Vorta
       run: |
         pip install .
-        pip install -r requirements.d/dev.txt
     - name: Package with PyInstaller
       run: |
-        make clean translations-to-qm
+        make clean
+        for f in $(ls src/vorta/i18n/ts/vorta.*.ts); do package/lrelease $f -qm src/vorta/i18n/qm/$(basename $f .ts).qm; done
         pyinstaller --clean --noconfirm package/vorta.spec
         # cp -R bin/darwin/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         rm -rf build/vorta

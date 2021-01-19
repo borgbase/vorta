@@ -956,38 +956,38 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="149"/>
         <source>Copy repo URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Adresse der Installationsquelle in die Zwischenablage kopieren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="382"/>
         <source>Don&apos;t run backup over metered networks</source>
-        <translation type="unfinished"/>
+        <translation>Kein Backup über kostenpflichtige Netzwerke durchführen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="60"/>
         <source>Add File(s)</source>
-        <translation type="unfinished"/>
+        <translation>Datei(en) hinzufügen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="67"/>
         <source>One folder or file per line</source>
-        <translation type="unfinished"/>
+        <translation>Ein Verzeichnis oder eine Datei pro Zeile</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="70"/>
         <source>Paste Folders/Files</source>
-        <translation type="unfinished"/>
+        <translation>Verzeichnisse/Dateien einfügen</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="94"/>
+        <location filename="../../views/main_window.py" line="95"/>
         <source>Backup in progress.</source>
         <translation>Backup läuft</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="180"/>
+        <location filename="../../views/main_window.py" line="181"/>
         <source>Task cancelled</source>
         <translation>Aufgabe abgebrochen</translation>
     </message>
@@ -1062,12 +1062,12 @@
         <translation>Neues Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="147"/>
+        <location filename="../../views/main_window.py" line="148"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
         <translation>Soll das gewählte Archiv gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="148"/>
+        <location filename="../../views/main_window.py" line="149"/>
         <source>Confirm deletion</source>
         <translation>Löschen bestätigen</translation>
     </message>
@@ -1075,12 +1075,12 @@
 <context>
     <name>MainWindow QMessagebox</name>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="192"/>
+        <location filename="../../views/main_window.py" line="193"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Soll Vorta im Hintergrund weiter ausgeführt werden?</translation>
     </message>
@@ -1221,7 +1221,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="49"/>
         <source>Choose file(s) to back up</source>
-        <translation type="unfinished"/>
+        <translation>Datei(en) für die Sicherung auswählen</translation>
     </message>
 </context>
 <context>
@@ -1373,7 +1373,7 @@
     <message>
         <location filename="../../borg/create.py" line="97"/>
         <source>Not running backup over metered connection.</source>
-        <translation type="unfinished"/>
+        <translation>Sicherung über kostenpflichtige Verbindung wird nicht durchgeführt.</translation>
     </message>
 </context>
 <context>
