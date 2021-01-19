@@ -8,14 +8,12 @@ VERSION := $(shell python -c "from src.vorta._version import __version__; print(
 clean:
 	rm -rf dist/*
 
-dist/Vorta.app:  ## Build macOS app locally. (without Borg)
+dist/Vorta.app:  ## Build macOS app locally (without Borg)
 	pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-	rm -rf build/vorta
-	rm -rf dist/vorta
+	rm -rf build/vorta dist/vorta
 
 dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
-	# Workaround for dots in filenames. See https://github.com/pyinstaller/pyinstaller/wiki/Recipe-OSX-Code-Signing-Qt
 	python3 package/fix_app_qt_folder_names_for_codesign.py dist/Vorta.app
 	cd dist && sh ../package/macos-package-app.sh
 

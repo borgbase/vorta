@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+
+"""
+Remove dots in filenames of libraries after PyInstaller.
+
+See https://github.com/pyinstaller/pyinstaller/wiki/Recipe-OSX-Code-Signing-Qt
+"""
+
 import os
 import shutil
 import sys
