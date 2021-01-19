@@ -8,7 +8,7 @@ VERSION := $(shell python -c "from src.vorta._version import __version__; print(
 clean:
 	rm -rf dist/*
 
-dist/Vorta.app:
+dist/Vorta.app:  ## Build macOS app locally. (without Borg)
 	pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	rm -rf build/vorta
