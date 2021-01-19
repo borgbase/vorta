@@ -83,7 +83,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.env = env
         self.cmd = cmd
-        self.cwd = params.get('cwd', None)
+        self.cwd = params.get('cwd', os.path.expanduser('~'))
         self.params = params
         self.process = None
 
