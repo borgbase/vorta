@@ -23,6 +23,9 @@ jobs:
     - name: Install system dependencies (macOS)
       run: |
         brew upgrade openssl readline xz
+    - name: Install Homebrew build dependencies
+      run: brew bundle
+      working-directory: requirements.d
     - name: Install Vorta
       run: |
         pip install .
