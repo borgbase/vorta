@@ -92,6 +92,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
 
+    def cancel_action(self):
+        self._set_status(self.tr("Action cancelled."))
+        self._toggle_all_buttons(True)
+
     def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
