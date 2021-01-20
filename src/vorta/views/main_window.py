@@ -178,6 +178,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_log(self.tr('Task cancelled'))
+        self.archiveTab.cancel_action()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
