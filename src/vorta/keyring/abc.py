@@ -27,7 +27,7 @@ class VortaKeyring:
                     cls._keyring = VortaKWallet5Keyring()
                 except KWalletNotAvailableException:
                     # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-                    # Put this last as secretstorage is included by default on many distros
+                    # Put this last as gnome keyring is included by default on many distros
                     import secretstorage
                     from .secretstorage import VortaSecretStorageKeyring
 
