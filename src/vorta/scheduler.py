@@ -49,8 +49,9 @@ class VortaScheduler(QtScheduler):
                     if profile.schedule_interval_minutes == 0:
                         cron_minutes = '*/1'
                     else:
-                        cron_minutes = f'*/{leftover_minutes}'
-                    trigger = cron.CronTrigger(hour=f'*',
+                        cron_minutes = f'*/{profile.schedule_interval_minutes}'
+                    trigger = cron.CronTrigger(day=f'*',
+                                               hour=f'*',
                                                minute=cron_minutes)
 
                 else:
