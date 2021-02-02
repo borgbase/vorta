@@ -27,7 +27,7 @@ class VortaScheduler(QtScheduler):
         # Set timer to make sure background tasks are scheduled
         self.qt_timer = QtCore.QTimer()
         self.qt_timer.timeout.connect(self.reload)
-        self.qt_timer.setInterval(45*60*1000)
+        self.qt_timer.setInterval(45 * 60 * 1000)
         self.qt_timer.start()
 
     def tr(self, *args, **kwargs):
