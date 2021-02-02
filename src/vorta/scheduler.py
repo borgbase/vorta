@@ -1,6 +1,7 @@
 import logging
 from datetime import date, timedelta
 
+from PyQt5 import QtCore
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 from vorta.borg.check import BorgCheckThread
@@ -15,12 +16,19 @@ from vorta.notifications import VortaNotifications
 logger = logging.getLogger(__name__)
 
 
+# TODO: refactor to use QtCore.QTimer directly
 class VortaScheduler(QtScheduler):
     def __init__(self, parent):
         super().__init__()
         self.app = parent
         self.start()
         self.reload()
+
+        # Set timer to make sure background tasks are scheduled
+        self.qt_timer = QtCore.QTimer()
+        self.qt_timer.timeout.connect(self.reload)
+        self.qt_timer.setInterval(45*60*1000)
+        self.qt_timer.start()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
