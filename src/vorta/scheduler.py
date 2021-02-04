@@ -59,8 +59,6 @@ class VortaScheduler(QtScheduler):
                                            minute=profile.schedule_fixed_minute)
             if self.get_job(job_id) is not None and trigger is not None:
                 self.reschedule_job(job_id, trigger=trigger)
-                notifier = VortaNotifications.pick()
-                notifier.deliver(self.tr('Vorta Scheduler'), self.tr('Background scheduler was changed.'))
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
                 self.add_job(
