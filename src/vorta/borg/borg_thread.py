@@ -71,7 +71,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if 'additional_env' in params:
             env = {**env, **params['additional_env']}
 
-        env['BORG_PASSPHRASE'] = params.get('password', '9999999')  # Set dummy password to avoid prompt.
+        password = params.get('password')
+        if password is not None:
+            env['BORG_PASSPHRASE'] = password
+        else:
+            env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
         if env.get('BORG_PASSCOMMAND', False):
             env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
