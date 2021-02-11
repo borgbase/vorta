@@ -16,6 +16,7 @@ models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
 
 def pytest_configure(config):
     sys._called_from_test = True
+    pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
 
 
