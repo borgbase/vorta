@@ -62,6 +62,17 @@ def init_db(qapp, tmpdir_factory):
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
 
+@pytest.fixture(scope='function', autouse=True)
+def cleanup(request, qapp, qtbot):
+    """
+    Ensure BorgThread is stopped when new test starts.
+    """
+    def ensure_borg_thread_stopped():
+        qapp.backup_cancelled_event.emit()
+        qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
+    request.addfinalizer(ensure_borg_thread_stopped)
+
+
 @pytest.fixture
 def choose_file_dialog(*args):
     class MockFileDialog:
