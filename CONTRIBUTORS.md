@@ -17,12 +17,6 @@ The following authors made major code contributions to Vorta source code:
 - Numerous incremental features
 - Maintainer
 
-### [Samuel Woon](https://github.com/samuel-w)
-- Numerous incremental fixes and features
-- Manage issues
-- Maintainer
-
-
 ### Others
 For other contributors, see [here](https://github.com/borgbase/vorta/graphs/contributors).
 
