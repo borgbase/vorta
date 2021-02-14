@@ -10,7 +10,7 @@ import logging
 from collections import namedtuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
@@ -71,7 +71,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if 'additional_env' in params:
             env = {**env, **params['additional_env']}
 
-        env['BORG_PASSPHRASE'] = params.get('password', '9999999')  # Set dummy password to avoid prompt.
+        password = params.get('password')
+        if password is not None:
+            env['BORG_PASSPHRASE'] = password
+        else:
+            env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
         if env.get('BORG_PASSCOMMAND', False):
             env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
@@ -265,9 +269,17 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         mutex.unlock()
 
     def cancel(self):
+        """
+        First try to terminate the running Borg process with SIGINT (Ctrl-C),
+        if this fails, use SIGTERM.
+        """
         if self.isRunning():
-            mutex.unlock()
             self.process.send_signal(signal.SIGINT)
+            try:
+                self.process.wait(timeout=3)
+            except TimeoutExpired:
+                self.process.terminate()
+            mutex.unlock()
             self.terminate()
 
     def process_result(self, result):

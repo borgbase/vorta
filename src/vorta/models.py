@@ -14,7 +14,7 @@ import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
-from vorta.utils import slugify, is_system_tray_available
+from vorta.utils import slugify
 
 SCHEMA_VERSION = 17
 
@@ -107,9 +107,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
-    dir_size = pw.BigIntegerField()
-    dir_files_count = pw.BigIntegerField()
-    path_isdir = pw.BooleanField()
+    dir_size = pw.BigIntegerField(default=-1)
+    dir_files_count = pw.BigIntegerField(default=-1)
+    path_isdir = pw.BooleanField(default=False)
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
@@ -197,6 +197,7 @@ def _apply_schema_update(current_schema, version_after, *operations):
 
 
 def get_misc_settings():
+    ''' Global settings that apply per platform '''
     # Default settings for all platforms.
     settings = [
         {
@@ -236,6 +237,7 @@ def get_misc_settings():
             'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
             'label': 'Previous window height'
         },
+
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -250,16 +252,18 @@ def get_misc_settings():
                                     'Include pre-release versions when checking for updates')
             },
         ]
-    if not is_system_tray_available():
-        settings += [{
-            'key': 'enable_background_question', 'value': True, 'type': 'checkbox',
-            'label': trans_late('settings',
-                                'Display background exit dialog')
-        },
+    else:
+        settings += [
             {
-            'key': 'disable_background_state', 'value': False, 'type': 'internal',
-            'label': 'Previous background exit button state'
-        }]
+                'key': 'enable_background_question', 'value': True, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Display background exit dialog')
+            },
+            {
+                'key': 'disable_background_state', 'value': False, 'type': 'internal',
+                'label': 'Previous background exit button state'
+            }
+        ]
     return settings
 
 
