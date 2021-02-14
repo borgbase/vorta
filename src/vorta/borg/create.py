@@ -130,7 +130,7 @@ class BorgCreateThread(BorgThread):
         ]
 
         if profile.repo.create_backup_cmd:
-            cmd.append(profile.repo.create_backup_cmd)
+            cmd.extend(profile.repo.create_backup_cmd.split(' '))
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
