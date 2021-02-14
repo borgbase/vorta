@@ -1,0 +1,50 @@
+name: Build macOS release
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to use for building macOS release'
+        required: true
+        default: 'master'
+      borg_version:
+        description: 'Borg version to package'
+        required: true
+        default: '1.1.15'
+
+jobs:
+  build:
+    runs-on: macos-10.15
+
+    steps:
+    - name: Check out selected branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - name: Install system dependencies
+      run: |
+        brew upgrade openssl readline xz
+    - name: Install build dependencies
+      run: |
+        brew install --cask sparkle
+        pip install -r dev.txt
+      working-directory: requirements.d
+    - name: Install Vorta
+      run: |
+        pip install .
+    - name: Package with PyInstaller
+      run: |
+        pyinstaller --clean --noconfirm package/vorta.spec
+        cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macosx64.tgz
+        tar xvf borg-macosx64.tgz -C dist/Vorta.app/Contents/Resources/
+        cd dist && zip -rq --symlinks Vorta.zip Vorta.app
+    - name: Upload build
+      uses: actions/upload-artifact@v2
+      with:
+        name: Vorta macOS
+        path: dist/Vorta.zip
+        retention-days: 10
