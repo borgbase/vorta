@@ -10,6 +10,9 @@ assignees: ''
 Thank you for reporting an issue. Please fill out the below template with
 as much detail as possible. Incomplete bug reports are likely to be closed
 without comment.
+
+If you want to suggest a feature or have any other question, please use our
+[Discussions](https://github.com/borgbase/vorta/discussions) instead.
 -->
 
 **Describe the bug**
