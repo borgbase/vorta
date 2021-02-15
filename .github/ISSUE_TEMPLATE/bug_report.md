@@ -6,6 +6,11 @@ labels: ''
 assignees: ''
 
 ---
+<!--
+Thank you for reporting an issue. Please fill out the below template with
+as much detail as possible. Incomplete bug reports are likely to be closed
+without comment.
+-->
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -17,12 +22,12 @@ Steps to reproduce the behavior:
 3. Scroll down to '....'
 4. See error
 
-**Desktop (please complete the following information):**
+**Environment (please complete the following information):**
 - OS:
 - Vorta version:
 - Installed from:
 
-Vorta and Borg versions can be found in Main Window > Misc Tab
+Vorta and Borg versions can be found in Main Window > Misc Tab.
 
 **Additional context**
 If appropriate include logs. Can be found in Main Window > Misc Tab > Log.
