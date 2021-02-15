@@ -46,7 +46,9 @@ class VortaSecretStorageKeyring(VortaKeyring):
     def is_unlocked(self):
         try:
             collection = secretstorage.get_default_collection(self.connection)
-            return not collection.is_locked()
+            if collection.is_locked():  # Prompt for unlock
+                collection.unlock()
+            return not collection.is_locked()  # In case of denial
         except secretstorage.exceptions.SecretServiceNotAvailableException:
             logger.debug('SecretStorage is closed.')
             return False

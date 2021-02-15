@@ -41,10 +41,10 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        self.get_handle()
+        self.try_unlock()
         return self.handle > 0
 
-    def get_handle(self):
+    def try_unlock(self):
         wallet_name = self.get_result("networkWallet")
         wId = QVariant(0)
         wId.convert(4)
