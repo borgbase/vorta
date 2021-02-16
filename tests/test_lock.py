@@ -5,7 +5,6 @@ import vorta.application
 
 def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
-    qtbot.addWidget(main)
     mocker.patch.object(vorta.application.QMessageBox, 'show')
 
     stdout, stderr = borg_json_output('create_perm')
@@ -21,7 +20,6 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
 
 def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
-    qtbot.addWidget(main)
     mocker.patch.object(vorta.application.QMessageBox, 'show')
 
     # Trigger locked repo
