@@ -43,8 +43,8 @@ jobs:
         pip install .
         pip install borgbackup
         pip install -r requirements.d/dev.txt
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v1
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v1
     - name: Test with pytest (Linux)
       if: runner.os == 'Linux'
       run: |
