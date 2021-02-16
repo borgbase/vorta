@@ -4,6 +4,8 @@ import sys
 import os
 from datetime import datetime as dt
 from unittest.mock import MagicMock
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5 import QtCore
 
 import vorta
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
@@ -56,7 +58,7 @@ def local_en():
 @pytest.fixture(scope='function', autouse=True)
 def cleanup(request, qapp, qtbot):
     """
-    Ensure BorgThread is stopped when new test starts.
+    Cleanup after each test
     """
     def ensure_borg_thread_stopped():
         qapp.backup_cancelled_event.emit()

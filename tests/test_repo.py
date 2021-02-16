@@ -1,9 +1,6 @@
 import os
 import uuid
-import sys
-import pytest
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
 
 import vorta.borg.borg_thread
 import vorta.models
@@ -129,49 +126,6 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
 
     qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))
-
-
-@pytest.mark.skipif(sys.platform != 'darwin', reason="Freezes test suite on CI")
-def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
-    # Display error
-    main = qapp.main_window
-    qtbot.addWidget(main)
-
-    stdout, stderr = borg_json_output('create_perm')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-
-    qtbot.waitUntil(lambda: hasattr(main, '_msg'), timeout=10000)
-    assert main._msg.text().startswith("You do not have permission")
-    qtbot.mouseClick(main._msg.button(QMessageBox.Ok), QtCore.Qt.LeftButton)
-
-
-@pytest.mark.skipif(sys.platform != 'darwin', reason="Freezes test suite on CI")
-def test_create_lock(qapp, borg_json_output, mocker, qtbot):
-    # Break lock
-    main = qapp.main_window
-    qtbot.addWidget(main)
-
-    stdout, stderr = borg_json_output('create_lock')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-
-    qtbot.waitUntil(lambda: hasattr(main, '_msg'), timeout=10000)
-    assert "The repository at" in main._msg.text()
-    qtbot.mouseClick(main._msg.button(QMessageBox.No), QtCore.Qt.LeftButton)
-
-    stdout, stderr = borg_json_output('create_break')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-
-    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)  # Prevent thread collision
-    qtbot.mouseClick(main._msg.button(QMessageBox.Yes), QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.progressText.text()
-                    == 'Repository lock broken. Please redo your last action.', timeout=5000)
 
 
 def test_create(qapp, borg_json_output, mocker, qtbot):

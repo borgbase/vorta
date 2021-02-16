@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
-from vorta.borg.break_lock import BorgBreakThread
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.utils import get_colored_icon
@@ -106,45 +105,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.progressText.setText(text)
         self.progressText.repaint()
 
-    def set_log(self, text='', context={}):
+    def set_log(self, text=''):
         self.logText.setText(text)
         self.logText.repaint()
-        self.process_log(context)
-
-    def break_lock(self, profile):
-        params = BorgBreakThread.prepare(profile)
-        if not params['ok']:
-            self.set_progress(params['message'])
-            return
-        thread = BorgBreakThread(params['cmd'], params, parent=self.app)
-        thread.start()
-
-    def process_log(self, context):
-        cmd = context.get('cmd')
-        if cmd is not None and cmd != 'init':
-            msgid = context.get('msgid')
-            repo_url = context.get('repo_url')
-            if msgid == 'LockTimeout':
-                profile = BackupProfileModel.get(name=context['profile_name'])
-                msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                msg.setParent(self, QtCore.Qt.Sheet)
-                msg.setText(
-                    self.tr(
-                        f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
-                msg.accepted.connect(lambda: self.break_lock(profile))
-                msg.setWindowTitle(self.tr("Repository In Use"))
-                self._msg = msg
-                msg.show()
-            elif msgid == 'LockFailed':
-                msg = QMessageBox()
-                msg.setParent(self, QtCore.Qt.Sheet)
-                msg.setText(
-                    self.tr(
-                        f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))  # noqa: E501
-                msg.setWindowTitle(self.tr("No Repository Permissions"))
-                self._msg = msg
-                msg.show()
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
