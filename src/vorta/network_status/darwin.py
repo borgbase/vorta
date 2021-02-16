@@ -1,5 +1,4 @@
 import plistlib
-import shlex
 import subprocess
 import xml
 from typing import Optional, Iterator
@@ -71,7 +70,7 @@ def call_ipconfig_getpacket(bsd_device):
     try:
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
-        logger.debug("Command %s failed", shlex.join(cmd))
+        logger.debug("Command %s failed", ' '.join(cmd))
         return b''
 
 
@@ -80,4 +79,4 @@ def call_networksetup_listallhardwareports():
     try:
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
-        logger.debug("Command %s failed", shlex.join(cmd))
+        logger.debug("Command %s failed", ' '.join(cmd))
