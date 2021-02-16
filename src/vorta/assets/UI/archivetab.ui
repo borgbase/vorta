@@ -432,7 +432,7 @@
             <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
            </property>
            <property name="placeholderText">
-            <string>{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}</string>
+            <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
            </property>
           </widget>
          </item>
