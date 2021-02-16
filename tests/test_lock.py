@@ -1,5 +1,4 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
 import vorta.borg.borg_thread
 import vorta.application
 
@@ -18,6 +17,7 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     qtbot.waitUntil(lambda: hasattr(qapp, '_msg'), timeout=10000)
     assert qapp._msg.text().startswith("You do not have permission")
     del qapp._msg
+
 
 def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
