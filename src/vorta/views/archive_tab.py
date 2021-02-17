@@ -69,7 +69,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.checkButton.clicked.connect(self.check_action)
         self.diffButton.clicked.connect(self.diff_action)
 
-        self.setArchiveActionMenu()
+        self.archiveActionMenu = QMenu(parent=self)
+        self.archiveActionMenu.aboutToShow.connect(self.showArchiveActionMenu)
+        self.archiveActionButton.setMenu(self.archiveActionMenu)
+        self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
+        self.archiveActionButton.setText(self.tr("Selected Archive"))
+        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -102,21 +107,31 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             button.setEnabled(enabled)
             button.repaint()
 
-    def setArchiveActionMenu(self):
-        menu = QMenu(parent=self)
+    def showArchiveActionMenu(self):
+        archive_name = self.selected_archive_name()
+        menu = self.archiveActionMenu
+        menu.clear()
+
+        if not archive_name:
+            action = menu.addAction(self.tr("Select an archive first."))
+            action.setEnabled(False)
+            return menu
+
         extractAction = menu.addAction("Extract", self.list_archive_action)
-        mountAction = menu.addAction("Mount", self.mount_action)
         deleteAction = menu.addAction("Delete", self.delete_action)
         renameAction = menu.addAction("Rename", self.rename_action)
+
+        if archive_name in self.mount_points:
+            unmountAction = menu.addAction("Unmount", self.umount_action)
+            unmountAction.setIcon(get_colored_icon('eject'))
+        else:
+            mountAction = menu.addAction("Mount", self.mount_action)
+            mountAction.setIcon(get_colored_icon('folder-open'))
+
         extractAction.setIcon(get_colored_icon('cloud-download'))
-        mountAction.setIcon(get_colored_icon('folder-open'))
         deleteAction.setIcon(get_colored_icon('trash'))
         renameAction.setIcon(get_colored_icon('edit'))
-        self.update_mount_button_text(mountAction)
-        self.archiveActionButton.setDefaultAction(menu.menuAction())
-        self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
-        self.archiveActionButton.setText(self.tr("Selected Archive"))
-        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
+        return menu
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
@@ -298,7 +313,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def umount_action(self):
         archive_name = self.selected_archive_name()
-
         mount_point = self.mount_points.get(archive_name)
 
         if mount_point is not None:
@@ -396,14 +410,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def extract_archive_result(self, result):
         self._toggle_all_buttons(True)
-
-    def update_mount_button_text(self, mountAction):
-        archive_name = self.selected_archive_name()
-        if not archive_name:
-            return
-
-        mode = 'Unmount' if archive_name in self.mount_points else 'Mount'
-        self.set_mount_button_mode(mode, mountAction)
 
     def cell_double_clicked(self, row, column):
         if column == 3:
