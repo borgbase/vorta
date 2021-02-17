@@ -94,7 +94,7 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     tab.populate_from_profile()
     tab.archiveTable.selectRow(0)
 
-    stdout, stderr = borg_json_output('prune')
+    stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 

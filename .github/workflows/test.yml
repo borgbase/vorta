@@ -30,11 +30,10 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew upgrade openssl readline xz
-        brew install --cask osxfuse
     - name: Install Vorta
       run: |
         pip install .
-        pip install 'borgbackup[fuse]'
+        pip install borgbackup
         pip install -r requirements.d/dev.txt
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v1

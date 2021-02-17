@@ -123,10 +123,10 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     pub_tmpfile_content = pub_tmpfile.read()
     assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
     assert pub_tmpfile_content.startswith('ssh-ed25519')
-    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'))
+    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
 
     qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'))
+    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'), **pytest._wait_defaults)
 
 
 def test_create(qapp, borg_json_output, mocker, qtbot):
