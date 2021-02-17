@@ -103,10 +103,10 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
         vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
     )
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.mount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.umount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
@@ -150,6 +150,33 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
+
+
+def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    tab.archiveTable.selectRow(0)
+    new_archive_name = 'idf89d8f9d8fd98'
+    stdout, stderr = borg_json_output('rename')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
+    tab.rename_action()
+
+    # Successful rename case
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
+    assert ArchiveModel.select().filter(name=new_archive_name).count() == 1
+
+    # Duplicate name case
+    exp_text = 'An archive with this name already exists.'
+    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
+    tab.rename_action()
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)
 
 
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
