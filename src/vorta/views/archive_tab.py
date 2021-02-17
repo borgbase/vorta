@@ -3,7 +3,7 @@ import sys
 from datetime import timedelta
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtGui import QDesktopServices, QCursor
+from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
                              QTableWidgetItem, QInputDialog, QMenu,
                              QToolButton)
@@ -506,7 +506,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             window.show()
 
     def rename_action(self):
-        params = BorgRenameThread.prepare(self.profile())
+        profile = self.profile()
+        params = BorgRenameThread.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return
@@ -524,6 +525,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             if not new_name:
                 self._set_status(self.tr('Archive name cannot be blank.'))
+                return
+
+            new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
+            if new_name_exists is not None:
+                self._set_status(self.tr('An archive with this name already exists.'))
                 return
 
             params['cmd'][-1] += f'::{archive_name}'

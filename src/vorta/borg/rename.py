@@ -24,7 +24,6 @@ class BorgRenameThread(BorgThread):
         return ret
 
     def process_result(self, result):
-        print(result)
         if result['returncode'] == 0:
             repo_url, old_name = result['cmd'][-2].split('::')
             new_name = result['cmd'][-1]
