@@ -1,7 +1,6 @@
 import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
-from .conftest import delete_current_profile
 from vorta.models import BackupProfileModel
 
 
@@ -18,8 +17,6 @@ def test_profile_add(qapp, qtbot):
 
     assert BackupProfileModel.get_or_none(name='Test Profile') is not None
     assert main.profileSelector.currentText() == 'Test Profile'
-
-    delete_current_profile(qapp)
 
 
 def test_profile_edit(qapp, qtbot):
