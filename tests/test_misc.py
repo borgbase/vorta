@@ -1,8 +1,9 @@
+import os
+import sys
+import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QCheckBox
 from pathlib import Path
-import os
-import sys
 
 
 def test_autostart(qapp, qtbot):
@@ -26,7 +27,7 @@ def test_autostart(qapp, qtbot):
     if sys.platform == 'linux':
         autostart_path = Path(os.environ.get(
             "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
-        qtbot.waitUntil(lambda: autostart_path.exists(), timeout=5000)
+        qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
 
         with open(autostart_path) as desktop_file:
             desktop_file_text = desktop_file.read()

@@ -40,11 +40,11 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
 
     main.tabWidget.setCurrentIndex(3)
     tab.list_action()
-    qtbot.waitUntil(lambda: not tab.checkButton.isEnabled(), timeout=3000)
+    qtbot.waitUntil(lambda: not tab.checkButton.isEnabled(), **pytest._wait_defaults)
 
     assert not tab.checkButton.isEnabled()
 
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', timeout=3000)
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 6
     assert main.progressText.text() == 'Refreshing archives done.'
     assert tab.checkButton.isEnabled()
@@ -61,7 +61,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.pruneButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), timeout=5000)
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), **pytest._wait_defaults)
 
 
 def test_check(qapp, mocker, borg_json_output, qtbot):
@@ -76,7 +76,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
 
     qtbot.mouseClick(tab.checkButton, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
-    qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), timeout=3000)
+    qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
 
 
 @pytest.mark.skipif(sys.platform == 'darwin', reason="Test currently broken by Homebrew")
@@ -104,10 +104,10 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     )
 
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), timeout=10000)
+    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
     qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), timeout=10000)
+    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
 def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
@@ -124,8 +124,8 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=10000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
@@ -147,7 +147,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', timeout=3000)
+    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
 
@@ -165,14 +165,14 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: hasattr(tab, '_window'), timeout=5000)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), timeout=5000)
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
     qtbot.mouseClick(tab._window.diffButton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), timeout=5000)
-    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), timeout=5000)
+    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
