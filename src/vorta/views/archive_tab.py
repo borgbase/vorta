@@ -92,6 +92,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
 
+    def cancel_action(self):
+        self._set_status(self.tr("Action cancelled."))
+        self._toggle_all_buttons(True)
+
     def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
@@ -123,6 +127,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
+            sorting = self.archiveTable.isSortingEnabled()
+            self.archiveTable.setSortingEnabled(False)
             for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
 
@@ -144,6 +150,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
 
             self.archiveTable.setRowCount(len(archives))
+            self.archiveTable.setSortingEnabled(sorting)
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
             self._toggle_all_buttons(enabled=True)

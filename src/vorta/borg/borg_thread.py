@@ -7,18 +7,22 @@ import signal
 import select
 import time
 import logging
+from collections import namedtuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
-from vorta.keyring.abc import get_keyring
+from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
 mutex = QtCore.QMutex()
 logger = logging.getLogger(__name__)
+
+FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
+FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):
@@ -29,6 +33,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
+    keyring = None  # Store keyring to minimize imports
 
     def __init__(self, cmd, params, parent=None):
         """
@@ -123,22 +128,28 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 
+        if profile.ssh_key is not None and profile.repo.is_remote_repo() and \
+                not os.path.isfile(os.path.expanduser(f'~/.ssh/{profile.ssh_key}')):
+            ret['message'] = trans_late(
+                'messages', 'Your SSH key {} is missing. Add or change your key and try again.'.format(profile.ssh_key))
+            return ret
+
         if not borg_compat.check('JSON_LOG'):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
 
         # Try to get password from chosen keyring backend.
-        keyring = get_keyring()
-        logger.debug("Using %s keyring to store passwords.", keyring.__class__.__name__)
-        ret['password'] = keyring.get_password('vorta-repo', profile.repo.url)
+        cls.keyring = VortaKeyring.get_keyring()
+        logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
+        ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
 
         # Check if keyring is locked
-        if profile.repo.encryption != 'none' and not keyring.is_unlocked:
+        if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
             ret['message'] = trans_late('messages', 'Please unlock your password manager.')
             return ret
 
         # Try to fall back to DB Keyring, if we use the system keychain.
-        if ret['password'] is None and keyring.is_primary:
+        if ret['password'] is None and cls.keyring.is_primary:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
             ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
 
@@ -146,6 +157,13 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             if ret['password'] is not None:
                 logger.warning('Found password in database, but secure storage was available. '
                                'Consider re-adding the repo to use it.')
+
+        # Password is required for encryption, cannot continue
+        if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
+            ret['message'] = trans_late(
+                'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
+                "Try unlinking and re-adding your repo.")
+            return ret
 
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
@@ -211,12 +229,20 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 for line in stderr.split('\n'):
                     try:
                         parsed = json.loads(line)
+
                         if parsed['type'] == 'log_message':
-                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                            context = {
+                                'msgid': parsed.get('msgid'),
+                                'repo_url': self.params['repo_url'],
+                                'profile_name': self.params.get('profile_name'),
+                                'cmd': self.params['cmd'][1]
+                            }
+                            self.app.backup_log_event.emit(
+                                f'{parsed["levelname"]}: {parsed["message"]}', context)
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
                         elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
+                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
                                 f"{self.category_label['files']}: {parsed['nfiles']}, "
@@ -228,7 +254,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(msg)
+                            self.app.backup_log_event.emit(msg, {})
                             logger.warning(msg)
 
             if p.poll() is not None:
@@ -257,9 +283,17 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         mutex.unlock()
 
     def cancel(self):
+        """
+        First try to terminate the running Borg process with SIGINT (Ctrl-C),
+        if this fails, use SIGTERM.
+        """
         if self.isRunning():
-            mutex.unlock()
             self.process.send_signal(signal.SIGINT)
+            try:
+                self.process.wait(timeout=3)
+            except TimeoutExpired:
+                self.process.terminate()
+            mutex.unlock()
             self.terminate()
 
     def process_result(self, result):
