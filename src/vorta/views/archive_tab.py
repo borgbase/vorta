@@ -266,12 +266,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 return archive_cell.text()
         return None
 
-    def set_mount_button_mode(self, mode, mountAction):
-        mountAction.triggered.disconnect()
-        mount = (mode == 'Mount')
-        mountAction.setText(self.tr('Mount') if mount else self.tr('Unmount'))
-        mountAction.triggered.connect(self.mount_action if mount else self.umount_action)
-
     def mount_action(self):
         profile = self.profile()
         params = BorgMountThread.prepare(profile)

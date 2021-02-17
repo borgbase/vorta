@@ -79,7 +79,6 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
 
 
-@pytest.mark.skipif(sys.platform == 'darwin', reason="Test currently broken by Homebrew")
 def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
