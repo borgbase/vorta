@@ -38,7 +38,7 @@ jobs:
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v1
     - name: Test with pytest (Linux)
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linuxxxx'
       run: |
         export DISPLAY=:99.0
         /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile \
@@ -48,8 +48,13 @@ jobs:
         (herbstluftwm) &
         sleep 3
         coverage run -m pytest
+    - name: Test with pytest (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        xvfb-run -a --server-args="-screen 0 1024x768x24+32" \
+         dbus-run-session coverage run -m pytest
     - name: Test with pytest (macOS)
-      if: runner.os == 'macOS'
+      if: runner.os == 'macOSxx'
       run: |
         coverage run -m pytest
     - name: Upload coverage to Codecov
