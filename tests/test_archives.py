@@ -189,13 +189,13 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
+    tab.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
-    qtbot.mouseClick(tab._window.diffButton, QtCore.Qt.LeftButton)
+    tab._window.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), **pytest._wait_defaults)
 
