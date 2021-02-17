@@ -23,7 +23,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update && sudo apt install -y \
-          xvfb herbstluftwm libssl-dev openssl libacl1-dev libacl1 build-essential \
+          xvfb libssl-dev openssl libacl1-dev libacl1 build-essential \
           libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
           libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
     - name: Install system dependencies (macOS)
@@ -40,7 +40,8 @@ jobs:
     - name: Test with pytest (Linux)
       if: runner.os == 'Linux'
       run: |
-        xvfb-run --server-args="-screen 0 1024x768x24+32" -a dbus-run-session -- coverage run -m pytest
+        xvfb-run --server-args="-screen 0 1024x768x24+32" \
+        -a dbus-run-session -- coverage run -m pytest
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
