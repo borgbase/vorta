@@ -123,7 +123,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     tab.list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
+    # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
@@ -191,13 +191,11 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
 
     tab.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
     tab._window.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
