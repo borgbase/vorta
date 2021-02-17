@@ -1,3 +1,4 @@
+from vorta.models import ArchiveModel, RepoModel
 from .borg_thread import BorgThread
 
 
@@ -21,3 +22,13 @@ class BorgRenameThread(BorgThread):
         ret['cmd'] = cmd
 
         return ret
+
+    def process_result(self, result):
+        print(result)
+        if result['returncode'] == 0:
+            repo_url, old_name = result['cmd'][-2].split('::')
+            new_name = result['cmd'][-1]
+            repo = RepoModel.get(url=repo_url)
+            renamed_archive = ArchiveModel.get(name=old_name, repo=repo)
+            renamed_archive.name = new_name
+            renamed_archive.save()

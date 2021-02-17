@@ -5,7 +5,8 @@ from datetime import timedelta
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices, QCursor
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
-                             QTableWidgetItem, QInputDialog, QMenu)
+                             QTableWidgetItem, QInputDialog, QMenu,
+                             QToolButton)
 
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.delete import BorgDeleteThread
@@ -62,13 +63,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
-        self.archiveTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.archiveTable.customContextMenuRequested.connect(self.show_menu)
 
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
         self.diffButton.clicked.connect(self.diff_action)
+
+        self.setArchiveActionMenu()
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -79,10 +80,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.set_icons()
 
         self.selected_archives = None
-
-    def show_menu(self, point):
-        cursorPos = QCursor.pos()
-        self._menu.exec(cursorPos)
 
     def set_icons(self):
         self.checkButton.setIcon(get_colored_icon('check-circle'))
@@ -105,8 +102,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             button.setEnabled(enabled)
             button.repaint()
 
-    @property
-    def _menu(self):
+    def setArchiveActionMenu(self):
         menu = QMenu(parent=self)
         extractAction = menu.addAction("Extract", self.list_archive_action)
         mountAction = menu.addAction("Mount", self.mount_action)
@@ -117,7 +113,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         deleteAction.setIcon(get_colored_icon('trash'))
         renameAction.setIcon(get_colored_icon('edit'))
         self.update_mount_button_text(mountAction)
-        return menu
+        self.archiveActionButton.setDefaultAction(menu.menuAction())
+        self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
+        self.archiveActionButton.setText(self.tr("Selected Archive"))
+        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
@@ -532,8 +531,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             thread = BorgRenameThread(params['cmd'], params, parent=self)
             thread.updated.connect(self._set_status)
-            thread.result.connect(self.delete_result)
+            thread.result.connect(self.rename_result)
             self._toggle_all_buttons(False)
             thread.start()
         else:
             self._set_status(self.tr("No archive selected"))
+
+    def rename_result(self, result):
+        if result['returncode'] == 0:
+            self._set_status(self.tr('Archive renamed.'))
+            self.populate_from_profile()
+        else:
+            self._toggle_all_buttons(True)

@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>787</width>
-        <height>449</height>
+        <width>757</width>
+        <height>374</height>
        </rect>
       </property>
       <attribute name="label">
@@ -97,9 +97,18 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QToolButton" name="archiveActionButton">
            <property name="text">
-            <string>Right click on an archive to show more actions.</string>
+            <string>...</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::NoArrow</enum>
            </property>
           </widget>
          </item>
@@ -163,6 +172,8 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -180,8 +191,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>557</width>
-        <height>289</height>
+        <width>757</width>
+        <height>374</height>
        </rect>
       </property>
       <attribute name="label">
@@ -390,6 +401,8 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
@@ -425,6 +438,8 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
