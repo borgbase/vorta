@@ -114,10 +114,10 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     pub_tmpfile = ssh_dir.join("id_rsa-test.pub")
     key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
     ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
-    qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
+    ssh_dialog.generate_key()
 
-    qtbot.waitUntil(lambda: key_tmpfile.check(file=1))
-    qtbot.waitUntil(lambda: pub_tmpfile.check(file=1))
+    qtbot.waitUntil(lambda: key_tmpfile.check(file=1), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: pub_tmpfile.check(file=1), **pytest._wait_defaults)
 
     key_tmpfile_content = key_tmpfile.read()
     pub_tmpfile_content = pub_tmpfile.read()
@@ -125,7 +125,7 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     assert pub_tmpfile_content.startswith('ssh-ed25519')
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
 
-    qtbot.mouseClick(ssh_dialog.generateButton, QtCore.Qt.LeftButton)
+    ssh_dialog.generate_key()
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'), **pytest._wait_defaults)
 
 
