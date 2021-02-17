@@ -183,12 +183,15 @@ class VortaApp(QtSingleApplication):
             profile = BackupProfileModel.get(name=context['profile_name'])
             repo_url = context.get('repo_url')
             msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            msg.setText(
-                self.tr(
-                    f"The repository at {repo_url} might be in use by another computer. Override it and continue?"))
-            msg.accepted.connect(lambda: self.break_lock(profile))
             msg.setWindowTitle(self.tr("Repository In Use"))
+            msg.setIcon(QMessageBox.Critical)
+            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.RejectRole)
+            msg.addButton(self.tr("Continue"), QMessageBox.AcceptRole)
+            msg.setDefaultButton(abortButton)
+            msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
+            msg.setInformativeText(self.tr("Only break the lock if you are certain no other Borg process "
+                                   "on any machine is accessing the repository. Abort or break the lock?"))
+            msg.accepted.connect(lambda: self.break_lock(profile))
             self._msg = msg
             msg.show()
         elif msgid == 'LockFailed':
