@@ -73,7 +73,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveActionMenu.aboutToShow.connect(self.showArchiveActionMenu)
         self.archiveActionButton.setMenu(self.archiveActionMenu)
         self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
-        self.archiveActionButton.setText(self.tr("Selected Archive"))
         self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
         self.archiveNameTemplate.textChanged.connect(
