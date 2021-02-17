@@ -126,39 +126,48 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="checkButton">
+          <widget class="QToolButton" name="checkButton">
            <property name="text">
             <string>Check</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="diffButton">
+          <widget class="QToolButton" name="diffButton">
            <property name="text">
             <string>Diff</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pruneButton">
+          <widget class="QToolButton" name="pruneButton">
            <property name="text">
             <string>Prune</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="listButton">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QToolButton" name="listButton">
            <property name="text">
             <string>Refresh</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -168,6 +177,12 @@
         <widget class="QLabel" name="mountErrors">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
          </property>
          <property name="font">
           <font>
