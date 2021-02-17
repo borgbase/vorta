@@ -1,5 +1,6 @@
 import os
 import uuid
+import pytest
 from PyQt5 import QtCore
 
 import vorta.borg.borg_thread
@@ -53,7 +54,7 @@ def test_repo_unlink(qapp, qtbot):
 
     main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, timeout=5000)
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
@@ -92,7 +93,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
 
-    with qtbot.waitSignal(add_repo_window.thread.result, timeout=3000) as _:
+    with qtbot.waitSignal(add_repo_window.thread.result, **pytest._wait_defaults) as _:
         pass
 
     assert EventLogModel.select().count() == 2
@@ -135,8 +136,8 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Backup finished.'), timeout=3000)
-    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), timeout=3000)
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Backup finished.'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     assert EventLogModel.select().count() == 1
     assert ArchiveModel.select().count() == 3
     assert RepoModel.get(id=1).unique_size == 15520474
