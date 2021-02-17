@@ -103,7 +103,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
-        for button in [self.checkButton, self.listButton, self.pruneButton, self.diffButton]:
+        for button in [self.checkButton, self.listButton, self.pruneButton,
+                       self.diffButton, self.archiveActionButton]:
             button.setEnabled(enabled)
             button.repaint()
 
