@@ -16,12 +16,31 @@ models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
 
 def pytest_configure(config):
     sys._called_from_test = True
+    pytest._wait_defaults = {'timeout': 20000}
+    os.environ['LANG'] = 'en'  # Ensure we test an English UI
+
+
+@pytest.fixture(scope='session')
+def qapp(tmpdir_factory):
+    # DB is required to init QApplication. New DB used for every test.
+    tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
+    mock_db = peewee.SqliteDatabase(str(tmp_db))
+    vorta.models.init_db(mock_db)
+
+    from vorta.application import VortaApp
+    VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
+    VortaApp.scheduler = MagicMock()
+
+    qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
+
+    yield qapp
 
 
 @pytest.fixture(scope='function', autouse=True)
-def init_db(qapp):
-    vorta.models.db.drop_tables(models)
-    vorta.models.init_db()
+def init_db(qapp, tmpdir_factory):
+    tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
+    mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
+    vorta.models.init_db(mock_db)
 
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
     new_repo.encryption = 'none'
@@ -44,15 +63,6 @@ def init_db(qapp):
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
 
-@pytest.fixture(scope='session', autouse=True)
-def local_en():
-    """
-    Some tests use English strings. So override whatever language the current user
-    has and run the tests with the English UI.
-    """
-    os.environ['LANG'] = 'en'
-
-
 @pytest.fixture(scope='function', autouse=True)
 def cleanup(request, qapp, qtbot):
     """
@@ -62,21 +72,6 @@ def cleanup(request, qapp, qtbot):
         qapp.backup_cancelled_event.emit()
         qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
     request.addfinalizer(ensure_borg_thread_stopped)
-
-
-@pytest.fixture(scope='session')
-def qapp(tmpdir_factory, local_en):
-    tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
-    vorta.models.init_db(mock_db)
-
-    from vorta.application import VortaApp
-    VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
-    VortaApp.scheduler = MagicMock()
-
-    qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
-
-    yield qapp
 
 
 @pytest.fixture

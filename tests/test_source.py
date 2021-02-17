@@ -1,4 +1,5 @@
 import os
+import pytest
 import vorta.models
 import vorta.views
 from PyQt5.QtWidgets import QApplication
@@ -14,7 +15,7 @@ def test_add_folder(qapp, qtbot, tmpdir, monkeypatch, choose_file_dialog):
     tab = main.sourceTab
 
     tab.sourceAddFolder.click()
-    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, timeout=5000)
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
 
     # Test paste button
     QApplication.clipboard().setText(os.path.expanduser('~'))  # Load clipboard

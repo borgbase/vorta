@@ -1,3 +1,4 @@
+import pytest
 import vorta.borg
 import vorta.models
 
@@ -9,4 +10,4 @@ def test_scheduler_create_backup(qapp, qtbot, mocker, borg_json_output):
 
     qapp.scheduler.create_backup(1)
 
-    qtbot.waitUntil(lambda: vorta.models.EventLogModel.select().count() == 2, timeout=5000)
+    qtbot.waitUntil(lambda: vorta.models.EventLogModel.select().count() == 2, **pytest._wait_defaults)
