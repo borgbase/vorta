@@ -133,9 +133,6 @@
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextBesideIcon</enum>
            </property>
-           <property name="autoRaise">
-            <bool>true</bool>
-           </property>
           </widget>
          </item>
          <item>
@@ -165,9 +162,6 @@
            </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextBesideIcon</enum>
-           </property>
-           <property name="autoRaise">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -206,8 +200,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>757</width>
-        <height>374</height>
+        <width>541</width>
+        <height>299</height>
        </rect>
       </property>
       <attribute name="label">
