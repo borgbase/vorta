@@ -1,4 +1,3 @@
-import sys
 import psutil
 from collections import namedtuple
 import pytest
