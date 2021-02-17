@@ -75,23 +75,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
         self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
-        self.archiveNameTemplate.textChanged.connect(
-            lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
-        self.prunePrefixTemplate.textChanged.connect(
-            lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
-
-        self.populate_from_profile()
-        self.set_icons()
-
-        self.selected_archives = None
-
-    def set_icons(self):
         self.checkButton.setIcon(get_colored_icon('check-circle'))
         self.diffButton.setIcon(get_colored_icon('stream-solid'))
         self.pruneButton.setIcon(get_colored_icon('cut'))
         self.listButton.setIcon(get_colored_icon('refresh'))
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
+
+        self.archiveNameTemplate.textChanged.connect(
+            lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
+        self.prunePrefixTemplate.textChanged.connect(
+            lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
+
+        self.populate_from_profile()
+        self.selected_archives = None
 
     def cancel_action(self):
         self._set_status(self.tr("Action cancelled."))
