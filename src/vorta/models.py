@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 db = pw.Proxy()
 
@@ -46,6 +46,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
+    create_backup_cmd = pw.CharField(default='')
     extra_borg_arguments = pw.CharField(default='')
 
     def is_remote_repo(self):
@@ -400,6 +401,13 @@ def init_db(con=None):
                                 'path_isdir', pw.BooleanField(default=False))
         )
 
+    if current_schema.version < 17:
+        _apply_schema_update(
+            current_schema, 17,
+            migrator.add_column(RepoModel._meta.table_name,
+                                'create_backup_cmd', pw.CharField(default=''))
+        )
+
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
@@ -408,4 +416,4 @@ def init_db(con=None):
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - rd(months=3)
-    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
+    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago).execute()

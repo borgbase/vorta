@@ -129,6 +129,9 @@ class BorgCreateThread(BorgThread):
             profile.compression,
         ]
 
+        if profile.repo.create_backup_cmd:
+            cmd.extend(profile.repo.create_backup_cmd.split(' '))
+
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
         if profile.exclude_patterns is not None:

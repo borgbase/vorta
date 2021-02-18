@@ -26,15 +26,15 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <property name="font">
@@ -355,8 +355,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="label">
@@ -416,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="label">
@@ -432,6 +432,8 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="showGrid">
@@ -477,8 +479,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>669</width>
-        <height>361</height>
+        <width>663</width>
+        <height>354</height>
        </rect>
       </property>
       <attribute name="label">
@@ -529,10 +531,51 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:'Courier';&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Maximum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>15</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="createCmdLineEdit">
+         <property name="styleSheet">
+          <string notr="true">font-family:'Courier';</string>
+         </property>
+         <property name="placeholderText">
+          <string>Arguments to add. E.g. --dry-run</string>
          </property>
         </widget>
        </item>
