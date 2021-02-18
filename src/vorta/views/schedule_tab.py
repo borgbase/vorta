@@ -22,15 +22,30 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             'fixed': self.scheduleFixedRadio
         }
 
-        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
-        self.app.backup_finished_event.connect(self.init_logs)
+        # Set up log table
+        self.logTableWidget.setAlternatingRowColors(True)
+        header = self.logTableWidget.horizontalHeader()
+        header.setVisible(True)
+        [header.setSectionResizeMode(i, QHeaderView.ResizeToContents) for i in range(5)]
+        header.setSectionResizeMode(3, QHeaderView.Stretch)
+        self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
 
-        self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
-            self.on_dont_run_on_metered_networks_changed)
-
-        self.init_logs()
+        # Populate with data
         self.populate_from_profile()
         self.set_icons()
+
+        # Connect events
+        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
+        self.app.backup_finished_event.connect(self.populate_logs)
+        self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
+            lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, new_val))
+        self.postBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val))
+        self.preBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val))
+        self.createCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val))
 
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
@@ -39,6 +54,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
 
     def populate_from_profile(self):
+        """Populate current view with data from selected profile."""
         profile = self.profile()
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
@@ -59,15 +75,17 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
-        self.postBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='post_backup_cmd': self.save_backup_cmd(attr, new_val))
-        self.preBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='pre_backup_cmd': self.save_backup_cmd(attr, new_val))
+        if profile.repo:
+            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
+            self.createCmdLineEdit.setEnabled(True)
+        else:
+            self.createCmdLineEdit.setEnabled(False)
 
         self._draw_next_scheduled_backup()
-        self.init_wifi()
+        self.populate_wifi()
+        self.populate_logs()
 
-    def init_wifi(self):
+    def populate_wifi(self):
         self.wifiListWidget.clear()
         for wifi in get_sorted_wifis(self.profile()):
             item = QListWidgetItem()
@@ -85,21 +103,17 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         db_item.allowed = item.checkState() == 2
         db_item.save()
 
-    def save_backup_cmd(self, attr, new_value):
+    def save_profile_attr(self, attr, new_value):
         profile = self.profile()
         setattr(profile, attr, new_value)
         profile.save()
 
-    def init_logs(self):
-        self.logTableWidget.setAlternatingRowColors(True)
-        header = self.logTableWidget.horizontalHeader()
-        header.setVisible(True)
-        [header.setSectionResizeMode(i, QHeaderView.ResizeToContents) for i in range(5)]
-        header.setSectionResizeMode(3, QHeaderView.Stretch)
+    def save_repo_attr(self, attr, new_value):
+        repo = self.profile().repo
+        setattr(repo, attr, new_value)
+        repo.save()
 
-        self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
-
+    def populate_logs(self):
         event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]
 
         for row, log_line in enumerate(event_logs):
@@ -111,7 +125,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             self.logTableWidget.setItem(row, 3, QTableWidgetItem(log_line.repo_url))
             self.logTableWidget.setItem(row, 4, QTableWidgetItem(str(log_line.returncode)))
         self.logTableWidget.setRowCount(len(event_logs))
-        self._draw_next_scheduled_backup()
 
     def _draw_next_scheduled_backup(self):
         self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
@@ -136,8 +149,3 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.save()
                 self.app.scheduler.reload()
                 self._draw_next_scheduled_backup()
-
-    def on_dont_run_on_metered_networks_changed(self, state):
-        profile = self.profile()
-        profile.dont_run_on_metered_networks = state
-        profile.save()

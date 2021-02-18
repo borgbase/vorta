@@ -52,6 +52,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
@@ -176,6 +177,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
+        self.scheduleTab.populate_logs()
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
