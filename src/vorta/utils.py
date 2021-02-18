@@ -210,7 +210,7 @@ def get_sorted_wifis(profile):
     system_wifis = get_network_status_monitor().get_known_wifis()
     from_other_profiles = WifiSettingModel.select() \
         .where(WifiSettingModel.profile != profile.id).execute()
-    print(system_wifis, list(from_other_profiles))
+
     for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
