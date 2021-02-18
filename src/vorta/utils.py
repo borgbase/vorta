@@ -218,7 +218,7 @@ def get_sorted_wifis(profile):
             defaults={'last_connected': wifi.last_connected, 'allowed': True}
         )
 
-        # update last connected time
+        # Update last connected time
         if not created and db_wifi.last_connected != wifi.last_connected:
             db_wifi.last_connected = wifi.last_connected
             db_wifi.save()
