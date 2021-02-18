@@ -270,8 +270,7 @@ def uses_dark_mode():
 
 def format_archive_name(profile, archive_name_tpl):
     """
-    Generate an archive name. Default:
-    {hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}
+    Generate an archive name. Default set in models.BackupProfileModel
     """
     available_vars = {
         'hostname': platform.node(),

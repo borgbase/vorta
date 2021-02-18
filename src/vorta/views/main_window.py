@@ -126,8 +126,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
-        SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
-            .where(SettingsModel.key == 'previous_profile_id')\
+        SettingsModel.update({SettingsModel.str_value: self.current_profile.id}) \
+            .where(SettingsModel.key == 'previous_profile_id') \
             .execute()
 
     def profile_rename_action(self):
@@ -169,10 +169,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
+        self.archiveTab._toggle_all_buttons(enabled=False)
         self.set_log('')
 
     def backup_finished_event(self):
         self._toggle_buttons(create_enabled=True)
+        self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
 
