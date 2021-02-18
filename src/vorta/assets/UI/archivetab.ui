@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>514</height>
+    <width>781</width>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>757</width>
+        <height>374</height>
        </rect>
       </property>
       <attribute name="label">
@@ -97,39 +97,12 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QPushButton" name="extractButton">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
+          <widget class="QToolButton" name="archiveActionButton">
            <property name="text">
-            <string>Extract</string>
+            <string>Selected Archive</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mountButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Mount</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="checkButton">
-           <property name="text">
-            <string>Check</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="deleteButton">
-           <property name="text">
-            <string>Delete</string>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
            </property>
           </widget>
          </item>
@@ -147,32 +120,42 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="diffButton">
+          <widget class="QToolButton" name="checkButton">
+           <property name="text">
+            <string>Check</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="diffButton">
            <property name="text">
             <string>Diff</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pruneButton">
+          <widget class="QToolButton" name="pruneButton">
            <property name="text">
             <string>Prune</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="listButton">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QToolButton" name="listButton">
            <property name="text">
             <string>Refresh</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
            </property>
           </widget>
          </item>
@@ -183,9 +166,17 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -203,8 +194,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>775</width>
-        <height>441</height>
+        <width>541</width>
+        <height>299</height>
        </rect>
       </property>
       <attribute name="label">
@@ -413,6 +404,8 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
@@ -448,6 +441,8 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="styleSheet">
