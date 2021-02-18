@@ -44,7 +44,7 @@ jobs:
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        coverage run -m pytest
+        pytest
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       env:
