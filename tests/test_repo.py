@@ -91,12 +91,9 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    add_repo_window.run()
+    qtbot.waitUntil(lambda: EventLogModel.select().count() == 2, **pytest._wait_defaults)
 
-    with qtbot.waitSignal(add_repo_window.thread.result, **pytest._wait_defaults) as _:
-        pass
-
-    assert EventLogModel.select().count() == 2
     assert RepoModel.get(id=2).url == test_repo_url
 
     keyring = VortaKeyring.get_keyring()
