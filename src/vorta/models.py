@@ -237,6 +237,11 @@ def get_misc_settings():
             'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
             'label': 'Previous window height'
         },
+        {
+            'key': 'override_mount_permissions', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Try to replace existing permissions when mounting an archive.')
+        },
 
     ]
     if sys.platform == 'darwin':

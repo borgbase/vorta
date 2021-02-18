@@ -268,7 +268,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def mount_action(self):
         profile = self.profile()
-        params = BorgMountThread.prepare(profile, self.overrideMountOpts.isChecked())
+        params = BorgMountThread.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return

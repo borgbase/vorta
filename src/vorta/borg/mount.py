@@ -1,5 +1,6 @@
 from os import getuid
 from .borg_thread import BorgThread
+from vorta.models import SettingsModel
 
 
 class BorgMountThread(BorgThread):
@@ -8,17 +9,20 @@ class BorgMountThread(BorgThread):
         self.updated.emit(self.tr('Mounting archive into folder...'))
 
     @classmethod
-    def prepare(cls, profile, override_mount_opts):
+    def prepare(cls, profile):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', '--log-json', 'mount', f"{profile.repo.url}"]
+        cmd = ['borg', '--log-json', 'mount']
 
-        if override_mount_opts:
-            cmd[3:3] = ['-o', f"umask=0277,uid={getuid()}"]
+        override_mount_permissions = SettingsModel.get(key='override_mount_permissions').value
+        if override_mount_permissions:
+            cmd += ['-o', f"umask=0277,uid={getuid()}"]
+
+        cmd += [f"{profile.repo.url}"]
 
         ret['ok'] = True
         ret['cmd'] = cmd
