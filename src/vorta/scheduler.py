@@ -1,6 +1,7 @@
 import logging
 from datetime import date, timedelta
 
+from PyQt5 import QtCore
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 from vorta.borg.check import BorgCheckThread
@@ -15,12 +16,19 @@ from vorta.notifications import VortaNotifications
 logger = logging.getLogger(__name__)
 
 
+# TODO: refactor to use QtCore.QTimer directly
 class VortaScheduler(QtScheduler):
     def __init__(self, parent):
         super().__init__()
         self.app = parent
         self.start()
         self.reload()
+
+        # Set timer to make sure background tasks are scheduled
+        self.qt_timer = QtCore.QTimer()
+        self.qt_timer.timeout.connect(self.reload)
+        self.qt_timer.setInterval(45 * 60 * 1000)
+        self.qt_timer.start()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -51,8 +59,6 @@ class VortaScheduler(QtScheduler):
                                            minute=profile.schedule_fixed_minute)
             if self.get_job(job_id) is not None and trigger is not None:
                 self.reschedule_job(job_id, trigger=trigger)
-                notifier = VortaNotifications.pick()
-                notifier.deliver(self.tr('Vorta Scheduler'), self.tr('Background scheduler was changed.'))
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
                 self.add_job(

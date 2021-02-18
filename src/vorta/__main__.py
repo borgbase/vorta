@@ -3,13 +3,32 @@ import signal
 import sys
 
 from vorta._version import __version__
-from vorta.log import init_logger
+from vorta.log import init_logger, logger
 from vorta.models import connect_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
 
 
 def main():
+    def exception_handler(type, value, tb):
+        from traceback import format_exception
+        from PyQt5.QtWidgets import QMessageBox
+        logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
+                        exc_info=(type, value, tb))
+        full_exception = ''.join(format_exception(type, value, tb))
+        if app:
+            QMessageBox.critical(None,
+                                 app.tr("Fatal Error"),
+                                 app.tr(
+                                     "Uncaught exception, please file a report with this text at\n"
+                                     "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
+        else:
+            # Crashed before app startup, cannot translate
+            sys.exit(1)
+
+    sys.excepthook = exception_handler
+    app = None
+
     args = parse_args()
     signal.signal(signal.SIGINT, signal.SIG_DFL)  # catch ctrl-c and exit
 
@@ -30,7 +49,7 @@ def main():
 
     # Init app after database is available
     from vorta.application import VortaApp
-    app = VortaApp(sys.argv, single_app=True)
+    app = VortaApp(sys.argv, single_app=args.profile is None)
     app.updater = get_updater()
 
     sys.exit(app.exec())

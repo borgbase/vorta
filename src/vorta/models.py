@@ -17,7 +17,7 @@ from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 db = pw.Proxy()
 
@@ -47,6 +47,7 @@ class RepoModel(pw.Model):
     unique_csize = pw.IntegerField(null=True)
     total_size = pw.IntegerField(null=True)
     total_unique_chunks = pw.IntegerField(null=True)
+    create_backup_cmd = pw.CharField(default='')
     extra_borg_arguments = pw.CharField(default='')
 
     def is_remote_repo(self):
@@ -88,8 +89,8 @@ class BackupProfileModel(pw.Model):
     prune_month = pw.IntegerField(default=6)
     prune_year = pw.IntegerField(default=2)
     prune_keep_within = pw.CharField(default='10H', null=True)
-    new_archive_name = pw.CharField(default="{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}")
-    prune_prefix = pw.CharField(default="{hostname}-{profile_slug}-")
+    new_archive_name = pw.CharField(default="{hostname}-{now:%Y-%m-%d-%H%M%S}")
+    prune_prefix = pw.CharField(default="{hostname}-")
     pre_backup_cmd = pw.CharField(default='')
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
@@ -107,9 +108,9 @@ class BackupProfileModel(pw.Model):
 class SourceFileModel(pw.Model):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
-    dir_size = pw.BigIntegerField()
-    dir_files_count = pw.BigIntegerField()
-    path_isdir = pw.BooleanField()
+    dir_size = pw.BigIntegerField(default=-1)
+    dir_files_count = pw.BigIntegerField(default=-1)
+    path_isdir = pw.BooleanField(default=False)
     profile = pw.ForeignKeyField(BackupProfileModel, default=1)
     added_at = pw.DateTimeField(default=datetime.utcnow)
 
@@ -197,6 +198,7 @@ def _apply_schema_update(current_schema, version_after, *operations):
 
 
 def get_misc_settings():
+    ''' Global settings that apply per platform '''
     # Default settings for all platforms.
     settings = [
         {
@@ -236,6 +238,7 @@ def get_misc_settings():
             'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
             'label': 'Previous window height'
         },
+
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -250,13 +253,30 @@ def get_misc_settings():
                                     'Include pre-release versions when checking for updates')
             },
         ]
+    else:
+        settings += [
+            {
+                'key': 'enable_background_question', 'value': True, 'type': 'checkbox',
+                'label': trans_late('settings',
+                                    'Display background exit dialog')
+            },
+            {
+                'key': 'disable_background_state', 'value': False, 'type': 'internal',
+                'label': 'Previous background exit button state'
+            }
+        ]
     return settings
 
 
 def connect_db():
     # Init database
-    sqlite_db = pw.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'))
+    sqlite_db = pw.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
     init_db(sqlite_db)
+
+
+def cleanup_db():
+    # Clean up database
+    db.execute_sql("VACUUM")
 
 
 def init_db(con=None):
@@ -360,7 +380,7 @@ def init_db(con=None):
             with db.atomic():
                 size = 1000
                 for i in range(0, len(data), size):
-                    ArchiveModel.insert_many(data[i:i + size], fields=fields).execute()
+                    ArchiveModel.insert_many(data[i: i + size], fields=fields).execute()
 
         _apply_schema_update(current_schema, 13)
 
@@ -388,6 +408,13 @@ def init_db(con=None):
                                 'path_isdir', pw.BooleanField(default=False))
         )
 
+    if current_schema.version < 17:
+        _apply_schema_update(
+            current_schema, 17,
+            migrator.add_column(RepoModel._meta.table_name,
+                                'create_backup_cmd', pw.CharField(default=''))
+        )
+
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
@@ -396,4 +423,4 @@ def init_db(con=None):
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - rd(months=3)
-    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)
+    EventLogModel.delete().where(EventLogModel.start_time < three_months_ago).execute()

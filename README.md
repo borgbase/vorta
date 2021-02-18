@@ -17,12 +17,12 @@ Learn more on [Vorta's website](https://vorta.borgbase.com).
 ## Installation
 Vorta should work on all platforms that support Qt and Borg. This includes macOS, Ubuntu, Debian, Fedora, Arch Linux and many others. Windows is currently not supported by Borg, but this may change in the future.
 
-See our website for [download links and and install instructions](https://vorta.borgbase.com/download).
+See our website for [download links and and install instructions](https://vorta.borgbase.com/install).
 
-## Development and Bugs
-- Report bugs and submit feature ideas by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
+## Connect and Contribute
+- To discuss everything around using, improving, packaging and translating Vorta, join the [discussion on Github](https://github.com/borgbase/vorta/discussions).
+- Report bugs by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
-- If you have questions or simply want to talk about Vorta, find us on [Matrix](https://matrix.to/#/#vorta:matrix.org). For Borg-specific topics, join the `#borgbackup` IRC channel on `chat.freenode.net` instead.
 
 ## License and Credits
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.
