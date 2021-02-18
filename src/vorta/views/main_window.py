@@ -168,10 +168,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
+        self.archiveTab._toggle_all_buttons(enabled=False)
         self.set_log('')
 
     def backup_finished_event(self):
         self._toggle_buttons(create_enabled=True)
+        self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
 

@@ -1,4 +1,3 @@
-import sys
 import psutil
 from collections import namedtuple
 import pytest
@@ -79,7 +78,6 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
 
 
-@pytest.mark.skipif(sys.platform == 'darwin', reason="Test currently broken by Homebrew")
 def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
@@ -95,7 +93,7 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     tab.populate_from_profile()
     tab.archiveTable.selectRow(0)
 
-    stdout, stderr = borg_json_output('prune')
+    stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
@@ -103,10 +101,10 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
         vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
     )
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.mount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    qtbot.mouseClick(tab.mountButton, QtCore.Qt.LeftButton)
+    tab.umount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
@@ -122,10 +120,10 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-    qtbot.mouseClick(tab.extractButton, QtCore.Qt.LeftButton)
+    tab.list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
+    # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
@@ -145,11 +143,38 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
-    qtbot.mouseClick(tab.deleteButton, QtCore.Qt.LeftButton)
+    tab.delete_action()
 
     qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
+
+
+def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    tab.archiveTable.selectRow(0)
+    new_archive_name = 'idf89d8f9d8fd98'
+    stdout, stderr = borg_json_output('rename')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
+    tab.rename_action()
+
+    # Successful rename case
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
+    assert ArchiveModel.select().filter(name=new_archive_name).count() == 1
+
+    # Duplicate name case
+    exp_text = 'An archive with this name already exists.'
+    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
+    tab.rename_action()
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)
 
 
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
@@ -164,15 +189,13 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.diffButton, QtCore.Qt.LeftButton)
+    tab.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     tab._window.archiveTable.selectRow(0)
     tab._window.archiveTable.selectRow(1)
-    qtbot.mouseClick(tab._window.diffButton, QtCore.Qt.LeftButton)
+    tab._window.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab._resultwindow == qapp.activeWindow(), **pytest._wait_defaults)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
