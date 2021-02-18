@@ -211,7 +211,7 @@ def get_sorted_wifis(profile):
     from_other_profiles = WifiSettingModel.select() \
         .where(WifiSettingModel.profile != profile.id).execute()
 
-    for wifi in system_wifis + list(from_other_profiles):
+    for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
             profile=profile.id,
