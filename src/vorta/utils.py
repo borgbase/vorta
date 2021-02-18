@@ -223,7 +223,7 @@ def get_sorted_wifis(profile):
             db_wifi.last_connected = wifi.last_connected
             db_wifi.save()
 
-    # Finally return all currently known networks.
+    # Finally return list of networks and settings for that profile
     return WifiSettingModel.select() \
         .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 
