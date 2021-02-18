@@ -32,7 +32,7 @@ jobs:
         brew install openssl readline xz borgbackup
     - name: Install Vorta
       run: |
-        pip install .
+        pip install -e .
         pip install -r requirements.d/dev.txt
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v1
@@ -40,11 +40,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                 -a dbus-run-session -- coverage run -m pytest
+                 -a dbus-run-session -- pytest --cov=vorta
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
       run: |
-        coverage run -m pytest
+        pytest --cov=vorta
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       env:

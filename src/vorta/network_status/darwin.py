@@ -1,9 +1,6 @@
-import plistlib
 import subprocess
-import xml
 from typing import Optional, Iterator
-
-from peewee import format_date_time
+from datetime import datetime as dt
 
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
@@ -29,30 +26,16 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
                 return split_line[1].strip()
 
     def get_known_wifis(self):
-        from vorta.models import WifiSettingModel
-        plist_path = '/Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist'
+        """
+        Listing all known Wifi networks isn't possible any more from macOS 11. Instead we
+        just return the current Wifi.
+        """
+        wifis = []
+        current_wifi = self.get_current_wifi()
+        if current_wifi is not None:
+            wifis.append(SystemWifiInfo(ssid=current_wifi, last_connected=dt.now()))
 
-        try:
-            plist_file = open(plist_path, 'rb')
-            wifis = plistlib.load(plist_file).get('KnownNetworks')
-        except xml.parsers.expat.ExpatError:
-            logger.error('Unable to parse list of Wifi networks.')
-            return None
-
-        result = []
-        if wifis is not None:
-            for wifi in wifis.values():
-                ssid = wifi.get('SSIDString', None)
-                if ssid is None:
-                    continue
-
-                last_connected = wifi.get('LastConnected', None) or wifi.get('LastAutoJoinAt', None)
-                if isinstance(last_connected, str):  # TODO: Maybe not needed any more?
-                    last_connected = format_date_time(last_connected, WifiSettingModel.last_connected.formats)
-
-                result.append(SystemWifiInfo(ssid=ssid, last_connected=last_connected))
-
-        return result
+        return wifis
 
 
 def get_network_devices() -> Iterator[str]:
