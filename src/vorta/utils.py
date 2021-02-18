@@ -143,7 +143,7 @@ def get_private_keys():
                         'fingerprint': parsed_key.get_fingerprint().hex()
                     }
                     available_private_keys.append(key_details)
-                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError):
+                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError, ValueError, PermissionError):
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:
@@ -270,8 +270,7 @@ def uses_dark_mode():
 
 def format_archive_name(profile, archive_name_tpl):
     """
-    Generate an archive name. Default:
-    {hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}
+    Generate an archive name. Default set in models.BackupProfileModel
     """
     available_vars = {
         'hostname': platform.node(),

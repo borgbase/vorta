@@ -1,3 +1,4 @@
+import pytest
 import vorta.borg
 import vorta.models
 from vorta.borg.prune import BorgPruneThread
@@ -11,7 +12,7 @@ def test_borg_prune(qapp, qtbot, mocker, borg_json_output):
     params = BorgPruneThread.prepare(vorta.models.BackupProfileModel.select().first())
     thread = BorgPruneThread(params['cmd'], params, qapp)
 
-    with qtbot.waitSignal(thread.result, timeout=10000) as blocker:
+    with qtbot.waitSignal(thread.result, **pytest._wait_defaults) as blocker:
         blocker.connect(thread.updated)
         thread.run()
 

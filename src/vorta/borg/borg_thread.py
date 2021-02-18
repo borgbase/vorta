@@ -10,7 +10,7 @@ import logging
 from collections import namedtuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.i18n import trans_late
 from vorta.models import EventLogModel, BackupProfileMixin
@@ -71,7 +71,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         if 'additional_env' in params:
             env = {**env, **params['additional_env']}
 
-        env['BORG_PASSPHRASE'] = params.get('password', '9999999')  # Set dummy password to avoid prompt.
+        password = params.get('password')
+        if password is not None:
+            env['BORG_PASSPHRASE'] = password
+        else:
+            env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
         if env.get('BORG_PASSCOMMAND', False):
             env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
@@ -122,6 +126,12 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         if profile.repo is None:
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
+            return ret
+
+        if profile.ssh_key is not None and profile.repo.is_remote_repo() and \
+                not os.path.isfile(os.path.expanduser(f'~/.ssh/{profile.ssh_key}')):
+            ret['message'] = trans_late(
+                'messages', 'Your SSH key {} is missing. Add or change your key and try again.'.format(profile.ssh_key))
             return ret
 
         if not borg_compat.check('JSON_LOG'):
@@ -219,12 +229,20 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 for line in stderr.split('\n'):
                     try:
                         parsed = json.loads(line)
+
                         if parsed['type'] == 'log_message':
-                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}')
+                            context = {
+                                'msgid': parsed.get('msgid'),
+                                'repo_url': self.params['repo_url'],
+                                'profile_name': self.params.get('profile_name'),
+                                'cmd': self.params['cmd'][1]
+                            }
+                            self.app.backup_log_event.emit(
+                                f'{parsed["levelname"]}: {parsed["message"]}', context)
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
                         elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})')
+                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
                                 f"{self.category_label['files']}: {parsed['nfiles']}, "
@@ -236,7 +254,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(msg)
+                            self.app.backup_log_event.emit(msg, {})
                             logger.warning(msg)
 
             if p.poll() is not None:
@@ -265,9 +283,17 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         mutex.unlock()
 
     def cancel(self):
+        """
+        First try to terminate the running Borg process with SIGINT (Ctrl-C),
+        if this fails, use SIGTERM.
+        """
         if self.isRunning():
-            mutex.unlock()
             self.process.send_signal(signal.SIGINT)
+            try:
+                self.process.wait(timeout=3)
+            except TimeoutExpired:
+                self.process.terminate()
+            mutex.unlock()
             self.terminate()
 
     def process_result(self, result):
