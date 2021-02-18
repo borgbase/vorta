@@ -30,7 +30,12 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         Listing all known Wifi networks isn't possible any more from macOS 11. Instead we
         just return the current Wifi.
         """
-        return [SystemWifiInfo(ssid=self.get_current_wifi(), last_connected=dt.now())]
+        wifis = []
+        current_wifi = self.get_current_wifi()
+        if current_wifi is not None:
+            wifis.append(SystemWifiInfo(ssid=current_wifi, last_connected=dt.now()))
+
+        return wifis
 
 
 def get_network_devices() -> Iterator[str]:
