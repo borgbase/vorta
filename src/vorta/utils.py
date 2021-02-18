@@ -21,6 +21,8 @@ from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
+from vorta.i18n import trans_late
+from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
@@ -111,12 +113,11 @@ def get_dict_from_list(dataDict, mapList):
 
 
 def choose_file_dialog(parent, title, want_folder=True):
-    options = QFileDialog.Options()
-    if want_folder:
-        options |= QFileDialog.ShowDirsOnly
-    dialog = QFileDialog(parent, title, os.path.expanduser('~'), options=options)
+    dialog = QFileDialog(parent, title, os.path.expanduser('~'))
     dialog.setFileMode(QFileDialog.Directory if want_folder else QFileDialog.ExistingFiles)
     dialog.setParent(parent, QtCore.Qt.Sheet)
+    if want_folder:
+        dialog.setOption(QFileDialog.ShowDirsOnly)
     return dialog
 
 
@@ -142,7 +143,7 @@ def get_private_keys():
                         'fingerprint': parsed_key.get_fingerprint().hex()
                     }
                     available_private_keys.append(key_details)
-                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError):
+                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError, ValueError, PermissionError):
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:
@@ -198,33 +199,31 @@ def get_asset(path):
 
 
 def get_sorted_wifis(profile):
-    """Get SSIDs from OS and merge with settings in DB."""
+    """
+    Get Wifi networks known to the OS (only current one on macOS) and
+    merge with networks from other profiles. Update last connected time.
+    """
 
     from vorta.models import WifiSettingModel
 
+    # Pull networks known to OS and all other backup profiles
     system_wifis = get_network_status_monitor().get_known_wifis()
-    if system_wifis is None:
-        # Don't show any networks if we can't get the current list
-        return []
+    from_other_profiles = WifiSettingModel.select() \
+        .where(WifiSettingModel.profile != profile.id).execute()
 
-    for wifi in system_wifis:
+    for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
             profile=profile.id,
             defaults={'last_connected': wifi.last_connected, 'allowed': True}
         )
 
-        # update last connected time
+        # Update last connected time
         if not created and db_wifi.last_connected != wifi.last_connected:
             db_wifi.last_connected = wifi.last_connected
             db_wifi.save()
 
-    # remove Wifis that were deleted in the system.
-    deleted_wifis = WifiSettingModel.select() \
-        .where(WifiSettingModel.ssid.not_in([wifi.ssid for wifi in system_wifis]))
-    for wifi in deleted_wifis:
-        wifi.delete_instance()
-
+    # Finally return list of networks and settings for that profile
     return WifiSettingModel.select() \
         .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 
@@ -237,6 +236,11 @@ def parse_args():
     parser.add_argument('--daemonize', '-d',
                         action='store_true',
                         help="Fork to background and don't open window on startup.")
+    parser.add_argument(
+        '--create',
+        dest='profile',
+        help='Create a backup in the background using the given profile. '
+        'Vorta must already be running for this to work.')
 
     return parser.parse_known_args()[0]
 
@@ -264,8 +268,7 @@ def uses_dark_mode():
 
 def format_archive_name(profile, archive_name_tpl):
     """
-    Generate an archive name. Default:
-    {hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}
+    Generate an archive name. Default set in models.BackupProfileModel
     """
     available_vars = {
         'hostname': platform.node(),
@@ -318,3 +321,29 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
+
+
+def validate_passwords(first_pass, second_pass):
+    ''' Validates the password for borg, do not use on single fields '''
+    pass_equal = first_pass == second_pass
+    pass_long = len(first_pass) > 8
+
+    if not pass_long and not pass_equal:
+        return trans_late('utils', "Passwords must be identical and greater than 8 characters long.")
+    if not pass_equal:
+        return trans_late('utils', "Passwords must be identical.")
+    if not pass_long:
+        return trans_late('utils', "Passwords must be greater than 8 characters long.")
+
+    return ""
+
+
+def display_password_backend(encryption):
+    ''' Display password backend message based off current keyring '''
+    # flake8: noqa E501
+    if encryption != 'none':
+        keyring = VortaKeyring.get_keyring()
+        return trans_late('utils', "Storing the password in your password manager.") if keyring.is_primary else trans_late(
+            'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC')
+    else:
+        return ""

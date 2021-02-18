@@ -1,9 +1,8 @@
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QShortcut, QMessageBox
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox
 from PyQt5.QtGui import QKeySequence
 
 from vorta.borg.borg_thread import BorgThread
-from vorta.i18n import trans_late
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.utils import get_colored_icon
@@ -53,6 +52,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
@@ -126,8 +126,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
-        SettingsModel.update({SettingsModel.str_value: self.current_profile.id})\
-            .where(SettingsModel.key == 'previous_profile_id')\
+        SettingsModel.update({SettingsModel.str_value: self.current_profile.id}) \
+            .where(SettingsModel.key == 'previous_profile_id') \
             .execute()
 
     def profile_rename_action(self):
@@ -169,16 +169,20 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
+        self.archiveTab._toggle_all_buttons(enabled=False)
         self.set_log('')
 
     def backup_finished_event(self):
         self._toggle_buttons(create_enabled=True)
+        self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
+        self.scheduleTab.populate_logs()
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_log(self.tr('Task cancelled'))
+        self.archiveTab.cancel_action()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
@@ -190,12 +194,21 @@ class MainWindow(MainWindowBase, MainWindowUI):
             .execute()
 
         if not is_system_tray_available():
-            run_in_background = QMessageBox.question(self,
-                                                     trans_late("MainWindow QMessagebox",
-                                                                "Quit"),
-                                                     trans_late("MainWindow QMessagebox",
-                                                                "Should Vorta continue to run in the background?"),
-                                                     QMessageBox.Yes | QMessageBox.No)
-            if run_in_background == QMessageBox.No:
+            if SettingsModel.get(key="enable_background_question").value:
+                msg = QMessageBox()
+                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                msg.setParent(self, QtCore.Qt.Sheet)
+                msg.setText(self.tr("Should Vorta continue to run in the background?"))
+                msg.button(QMessageBox.Yes).clicked.connect(
+                    lambda: self.miscTab.save_setting("disable_background_state", True))
+                msg.button(QMessageBox.No).clicked.connect(lambda: (self.miscTab.save_setting(
+                    "disable_background_state", False), self.app.quit()))
+                msg.setWindowTitle(self.tr("Quit"))
+                dont_show_box = QCheckBox(self.tr("Don't show this again"))
+                dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))
+                dont_show_box.setTristate(False)
+                msg.setCheckBox(dont_show_box)
+                msg.exec()
+            elif not SettingsModel.get(key="disable_background_state").value:
                 self.app.quit()
         event.accept()

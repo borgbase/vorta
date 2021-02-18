@@ -39,14 +39,14 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to get currently connected WiFi network, assuming none")
             return None
 
-    def get_known_wifis(self) -> Optional[List[SystemWifiInfo]]:
+    def get_known_wifis(self) -> List[SystemWifiInfo]:
+        wifis = []
         try:
             connections_paths = self._nm.get_connections_paths()
         except DBusException:
             logger.exception("Failed to list connections")
-            return None
+            return wifis
 
-        wifis = []
         for connection_path in connections_paths:
             try:
                 settings = self._nm.get_settings(connection_path)

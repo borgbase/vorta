@@ -28,7 +28,7 @@ class NetworkStatusMonitor:
         """Get current SSID or None if Wifi is off."""
         raise NotImplementedError()
 
-    def get_known_wifis(self) -> Optional[List['SystemWifiInfo']]:
+    def get_known_wifis(self) -> List['SystemWifiInfo']:
         """Get WiFi networks known to system."""
         raise NotImplementedError()
 
@@ -50,5 +50,5 @@ class NullNetworkStatusMonitor(NetworkStatusMonitor):
     def get_current_wifi(self) -> Optional[str]:
         pass
 
-    def get_known_wifis(self) -> Optional[List['SystemWifiInfo']]:
-        pass
+    def get_known_wifis(self) -> List['SystemWifiInfo']:
+        return []
