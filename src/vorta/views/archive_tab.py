@@ -73,7 +73,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveActionMenu.aboutToShow.connect(self.showArchiveActionMenu)
         self.archiveActionButton.setMenu(self.archiveActionMenu)
         self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
-        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -92,6 +91,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.listButton.setIcon(get_colored_icon('refresh'))
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
+        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
     def cancel_action(self):
         self._set_status(self.tr("Action cancelled."))
