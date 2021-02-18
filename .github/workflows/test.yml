@@ -40,12 +40,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                 -a dbus-run-session -- coverage run -m pytest
+                 -a dbus-run-session -- pytest --cov=vorta
     - name: Test with pytest (macOS)
-      # no codecov due to hangs.
       if: runner.os == 'macOS'
       run: |
-        pytest
+        pytest --cov=vorta
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       env:
