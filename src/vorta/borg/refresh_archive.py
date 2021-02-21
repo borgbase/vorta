@@ -1,5 +1,5 @@
 from .borg_thread import BorgThread
-from vorta.models import ArchiveModel
+from vorta.models import ArchiveModel, RepoModel
 
 
 class BorgRefreshArchiveThread(BorgThread):
@@ -46,3 +46,12 @@ class BorgRefreshArchiveThread(BorgThread):
                 archive.size = remote_archive['stats']['deduplicated_size']
 
                 archive.save()
+
+            if 'cache' in result['data']:
+                stats = result['data']['cache']['stats']
+                repo = RepoModel.get(id=result['params']['repo_id'])
+                repo.total_size = stats['total_size']
+                repo.unique_csize = stats['unique_csize']
+                repo.unique_size = stats['unique_size']
+                repo.total_unique_chunks = stats['total_unique_chunks']
+                repo.save()
