@@ -14,6 +14,7 @@ from vorta.borg.diff import BorgDiffThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.list_archive import BorgListArchiveThread
 from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.refresh_archive import BorgRefreshArchiveThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.umount import BorgUmountThread
@@ -131,6 +132,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         extractAction.setIcon(get_colored_icon('cloud-download'))
         deleteAction.setIcon(get_colored_icon('trash'))
         renameAction.setIcon(get_colored_icon('edit'))
+        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
+        refreshAction.setIcon(get_colored_icon('refresh'))
         return menu
 
     def populate_from_profile(self):
@@ -256,6 +259,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archives.'))
+            self.populate_from_profile()
+
+    def refresh_archive_action(self):
+        archive_name = self.selected_archive_name()
+        if archive_name is not None:
+            params = BorgRefreshArchiveThread.prepare(self.profile(), archive_name)
+            if params['ok']:
+                thread = BorgRefreshArchiveThread(params['cmd'], params, parent=self.app)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.refresh_archive_result)
+                self._toggle_all_buttons(False)
+                thread.start()
+
+    def refresh_archive_result(self, result):
+        self._toggle_all_buttons(True)
+        if result['returncode'] == 0:
+            self._set_status(self.tr('Refreshed archive.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):
