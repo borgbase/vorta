@@ -1,12 +1,8 @@
-import os
 import pytest
-import vorta.models
 import vorta.views
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtCore
 
 
-def test_add_folder(qapp, qtbot, tmpdir, monkeypatch, choose_file_dialog):
+def test_add_folder(qapp, qtbot, mocker, monkeypatch, choose_file_dialog):
     monkeypatch.setattr(
         vorta.views.source_tab, "choose_file_dialog", choose_file_dialog
     )
@@ -17,7 +13,12 @@ def test_add_folder(qapp, qtbot, tmpdir, monkeypatch, choose_file_dialog):
     tab.sourceAddFolder.click()
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
 
-    # Test paste button
-    QApplication.clipboard().setText(os.path.expanduser('~'))  # Load clipboard
-    qtbot.mouseClick(tab.paste, QtCore.Qt.LeftButton)
-    assert tab.sourceFilesWidget.rowCount() == 3
+    # Test paste button with mocked clipboard
+    mock_clipboard = mocker.Mock()
+    mock_clipboard.text.return_value = __file__
+    mocker.patch.object(vorta.views.source_tab.QApplication, 'clipboard', return_value=mock_clipboard)
+    tab.paste_text()
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 3, **pytest._wait_defaults)
+
+    # Wait for directory sizing to finish
+    qtbot.waitUntil(lambda: len(qapp.main_window.sourceTab.updateThreads) == 0, **pytest._wait_defaults)
