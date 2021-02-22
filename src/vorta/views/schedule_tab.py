@@ -8,6 +8,14 @@ uifile = get_asset('UI/scheduletab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
 
+class LogTableColumn:
+    Time = 0
+    Category = 1
+    Subcommand = 2
+    Repository = 3
+    ReturnCode = 4
+
+
 class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
     def __init__(self, parent=None):
@@ -116,15 +124,17 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
     def populate_logs(self):
         event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]
 
+        sorting = self.logTableWidget.isSortingEnabled()
+        self.logTableWidget.setSortingEnabled(False)        # disable sorting while modifying the table.
+        self.logTableWidget.setRowCount(len(event_logs))    # go ahead and set table length and then update the rows
         for row, log_line in enumerate(event_logs):
-            self.logTableWidget.insertRow(row)
             formatted_time = log_line.start_time.strftime('%Y-%m-%d %H:%M')
-            self.logTableWidget.setItem(row, 0, QTableWidgetItem(formatted_time))
-            self.logTableWidget.setItem(row, 1, QTableWidgetItem(log_line.category))
-            self.logTableWidget.setItem(row, 2, QTableWidgetItem(log_line.subcommand))
-            self.logTableWidget.setItem(row, 3, QTableWidgetItem(log_line.repo_url))
-            self.logTableWidget.setItem(row, 4, QTableWidgetItem(str(log_line.returncode)))
-        self.logTableWidget.setRowCount(len(event_logs))
+            self.logTableWidget.setItem(row, LogTableColumn.Time, QTableWidgetItem(formatted_time))
+            self.logTableWidget.setItem(row, LogTableColumn.Category, QTableWidgetItem(log_line.category))
+            self.logTableWidget.setItem(row, LogTableColumn.Subcommand, QTableWidgetItem(log_line.subcommand))
+            self.logTableWidget.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
+            self.logTableWidget.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
+        self.logTableWidget.setSortingEnabled(sorting)      # restore sorting now that modifications are done
 
     def _draw_next_scheduled_backup(self):
         self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
