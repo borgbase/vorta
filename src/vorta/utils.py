@@ -62,12 +62,13 @@ def get_directory_size(dir_path):
             if os.path.islink(file_path):
                 continue
 
-            stat = os.stat(file_path)
-
-            # Visit each file once
-            if stat.st_ino not in seen:
-                seen.add(stat.st_ino)
-                data_size += stat.st_size
+            try:
+                stat = os.stat(file_path)
+                if stat.st_ino not in seen:  # Visit each file only once
+                    seen.add(stat.st_ino)
+                    data_size += stat.st_size
+            except FileNotFoundError:
+                continue
 
     files_count = len(seen)
 

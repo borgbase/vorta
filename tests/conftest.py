@@ -34,6 +34,7 @@ def qapp(tmpdir_factory):
     qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
 
     yield qapp
+    qapp.quit()
 
 
 @pytest.fixture(scope='function', autouse=True)

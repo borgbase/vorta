@@ -75,7 +75,7 @@ class VortaApp(QtSingleApplication):
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
         self.backup_log_event.connect(self.react_to_log)
-        self.aboutToQuit.connect(cleanup_db)
+        self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
         self.installEventFilter(self)
 
@@ -100,6 +100,12 @@ class VortaApp(QtSingleApplication):
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and source == self.tray.contextMenu():
             self.tray.set_tray_icon()
         return False
+
+    def quit_app_action(self):
+        del self.main_window
+        self.scheduler.shutdown()
+        self.backup_cancelled_event.emit()
+        cleanup_db()
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
