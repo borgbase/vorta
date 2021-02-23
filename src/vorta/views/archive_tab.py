@@ -14,7 +14,7 @@ from vorta.borg.diff import BorgDiffThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.list_archive import BorgListArchiveThread
 from vorta.borg.list_repo import BorgListRepoThread
-from vorta.borg.refresh_archive import BorgRefreshArchiveThread
+from vorta.borg.info_archive import BorgInfoArchiveThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.umount import BorgUmountThread
@@ -264,9 +264,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
         if archive_name is not None:
-            params = BorgRefreshArchiveThread.prepare(self.profile(), archive_name)
+            params = BorgInfoArchiveThread.prepare(self.profile(), archive_name)
             if params['ok']:
-                thread = BorgRefreshArchiveThread(params['cmd'], params, parent=self.app)
+                thread = BorgInfoArchiveThread(params['cmd'], params, parent=self.app)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.refresh_archive_result)
                 self._toggle_all_buttons(False)

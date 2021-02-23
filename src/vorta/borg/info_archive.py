@@ -2,7 +2,7 @@ from .borg_thread import BorgThread
 from vorta.models import ArchiveModel, RepoModel
 
 
-class BorgRefreshArchiveThread(BorgThread):
+class BorgInfoArchiveThread(BorgThread):
 
     def started_event(self):
         self.app.backup_started_event.emit()
