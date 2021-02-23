@@ -118,10 +118,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             action.setEnabled(False)
             return menu
 
-        extractAction = menu.addAction("Extract", self.list_archive_action)
-        deleteAction = menu.addAction("Delete", self.delete_action)
-        renameAction = menu.addAction("Rename", self.rename_action)
-
         if archive_name in self.mount_points:
             unmountAction = menu.addAction("Unmount", self.umount_action)
             unmountAction.setIcon(get_colored_icon('eject'))
@@ -129,11 +125,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             mountAction = menu.addAction("Mount", self.mount_action)
             mountAction.setIcon(get_colored_icon('folder-open'))
 
-        extractAction.setIcon(get_colored_icon('cloud-download'))
-        deleteAction.setIcon(get_colored_icon('trash'))
-        renameAction.setIcon(get_colored_icon('edit'))
+        extractAction = menu.addAction("Extract", self.list_archive_action)
         refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
+        renameAction = menu.addAction("Rename", self.rename_action)
+        deleteAction = menu.addAction("Delete", self.delete_action)
+
+        extractAction.setIcon(get_colored_icon('cloud-download'))
         refreshAction.setIcon(get_colored_icon('refresh'))
+        renameAction.setIcon(get_colored_icon('edit'))
+        deleteAction.setIcon(get_colored_icon('trash'))
         return menu
 
     def populate_from_profile(self):
