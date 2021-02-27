@@ -139,7 +139,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         # Check if keyring is locked
         if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+            ret['message'] = trans_late('messages',
+                                        'Please unlock your system password manager or disable it under Misc')
             return ret
 
         # Try to fall back to DB Keyring, if we use the system keychain.
