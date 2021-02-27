@@ -42,18 +42,20 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        self.try_unlock()
-        return self.handle >= 0
+        return self.try_unlock() and self.handle >= 0
 
     def try_unlock(self):
+        ''' Returns whether "open" call succeeded '''
         wallet_name = self.get_result("networkWallet")
         wId = QVariant(0)
         wId.convert(4)
         output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
         try:
             self.handle = int(output)
-        except ValueError:  # Broken, fake being unlocked to allow getting pass to fail
-            return 2
+            return True
+        except ValueError:  # DBus error
+            self.handle = -2
+            return False
 
 
 class KWalletNotAvailableException(Exception):
