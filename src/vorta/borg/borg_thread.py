@@ -259,6 +259,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             # This might trigger in cases where some other program uses settings.db
                             # Just want to avoid it triggering on every single extract operation
                             refresh_db = True
+                            logger.debug("Refreshing database on completion.")
 
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
