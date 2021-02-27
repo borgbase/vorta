@@ -20,6 +20,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             self.object_path,
             self.interface_name,
             QtDBus.QDBusConnection.sessionBus())
+        self.handle = -1
         if not (self.iface.isValid() and self.get_result("isEnabled") is True):
             raise KWalletNotAvailableException
 
