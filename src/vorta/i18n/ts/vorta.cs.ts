@@ -161,133 +161,138 @@
 <context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="141"/>
+        <location filename="../../views/archive_tab.py" line="144"/>
         <source>Archives for %s</source>
         <translation>Archivy pro %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="174"/>
+        <location filename="../../views/archive_tab.py" line="177"/>
         <source>Archives</source>
         <translation>Archivy</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="191"/>
+        <location filename="../../views/archive_tab.py" line="194"/>
         <source>Preview: %s</source>
         <translation>Náhled: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="195"/>
+        <location filename="../../views/archive_tab.py" line="198"/>
         <source>Error in archive name template.</source>
         <translation>Chyba v šabloně názvu archivu.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="239"/>
+        <location filename="../../views/archive_tab.py" line="242"/>
         <source>Pruning finished.</source>
         <translation>Vyčistění dokončeno.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="258"/>
+        <location filename="../../views/archive_tab.py" line="261"/>
         <source>Refreshed archives.</source>
         <translation>Znovunačtené archivy.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="295"/>
+        <location filename="../../views/archive_tab.py" line="315"/>
         <source>Choose Mount Point</source>
         <translation>Zvolte přípojný bod</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="301"/>
+        <location filename="../../views/archive_tab.py" line="321"/>
         <source>Mounted successfully.</source>
         <translation>Úspěšně připojeno (mount).</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="328"/>
+        <location filename="../../views/archive_tab.py" line="348"/>
         <source>Mount point not active.</source>
         <translation>Přípojný bod není aktivní.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="335"/>
+        <location filename="../../views/archive_tab.py" line="355"/>
         <source>Un-mounted successfully.</source>
         <translation>Odpojení (unmount) úspěšné.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="374"/>
+        <location filename="../../views/archive_tab.py" line="394"/>
         <source>Select an archive to restore first.</source>
         <translation>Nejprve je třeba vybrat archiv, ze kterého obnovit.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="394"/>
+        <location filename="../../views/archive_tab.py" line="414"/>
         <source>Choose Extraction Point</source>
         <translation>Zvolte bod, do kterého rozbalit</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="457"/>
+        <location filename="../../views/archive_tab.py" line="477"/>
         <source>Archive deleted.</source>
         <translation>Archiv smazán.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="442"/>
+        <location filename="../../views/archive_tab.py" line="462"/>
         <source>Confirm deletion</source>
         <translation>Potvrďte smazání</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="544"/>
+        <location filename="../../views/archive_tab.py" line="564"/>
         <source>No archive selected</source>
         <translation>Není vybrán žádný archiv</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="442"/>
+        <location filename="../../views/archive_tab.py" line="462"/>
         <source>Are you sure you want to delete the archive?</source>
         <translation>Opravdu chcete tento archiv smazat?</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="430"/>
+        <location filename="../../views/archive_tab.py" line="450"/>
         <source>Yes</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="431"/>
+        <location filename="../../views/archive_tab.py" line="451"/>
         <source>Cancel</source>
         <translation>Storno</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="97"/>
+        <location filename="../../views/archive_tab.py" line="98"/>
         <source>Action cancelled.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="341"/>
+        <location filename="../../views/archive_tab.py" line="361"/>
         <source>Unmounting failed. Make sure no programs are using {}</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="116"/>
+        <location filename="../../views/archive_tab.py" line="117"/>
         <source>Select an archive first.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="517"/>
+        <location filename="../../views/archive_tab.py" line="537"/>
         <source>Change name</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="517"/>
+        <location filename="../../views/archive_tab.py" line="537"/>
         <source>New archive name:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="527"/>
+        <location filename="../../views/archive_tab.py" line="547"/>
         <source>Archive name cannot be blank.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="532"/>
+        <location filename="../../views/archive_tab.py" line="552"/>
         <source>An archive with this name already exists.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="548"/>
+        <location filename="../../views/archive_tab.py" line="568"/>
         <source>Archive renamed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="278"/>
+        <source>Refreshed archive.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -370,11 +375,24 @@
     </message>
 </context>
 <context>
-    <name>BorgInfoThread</name>
+    <name>BorgInfoArchiveThread</name>
     <message>
-        <location filename="../../borg/info.py" line="9"/>
+        <location filename="../../borg/info_archive.py" line="9"/>
+        <source>Refreshing archive...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../borg/info_archive.py" line="14"/>
+        <source>Refreshing archive done.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>BorgInfoRepoThread</name>
+    <message>
+        <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation>Ověřování správnosti stávajícího repozitáře…</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1395,52 +1413,52 @@
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="115"/>
+        <location filename="../../application.py" line="121"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="172"/>
+        <location filename="../../application.py" line="178"/>
         <source>No Borg Binary Found</source>
         <translation>Nenalezen žádný spustitelný soubor s nástrojem Borg</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="173"/>
+        <location filename="../../application.py" line="179"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta se nepodařilo nalézt použitelný spustitelný soubor s nástrojem Borg Backup.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="186"/>
+        <location filename="../../application.py" line="192"/>
         <source>Repository In Use</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="194"/>
         <source>Abort</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="189"/>
+        <location filename="../../application.py" line="195"/>
         <source>Continue</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="191"/>
+        <location filename="../../application.py" line="197"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="192"/>
+        <location filename="../../application.py" line="198"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="200"/>
+        <location filename="../../application.py" line="206"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="203"/>
+        <location filename="../../application.py" line="209"/>
         <source>No Repository Permissions</source>
         <translation type="unfinished"/>
     </message>
@@ -1551,7 +1569,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Není spouštěna záloha přes připojení s placenými daty.</translation>
     </message>
     <message>
-        <location filename="../../borg/info.py" line="42"/>
+        <location filename="../../borg/info_repo.py" line="42"/>
         <source>Please unlock your password manager.</source>
         <translation type="unfinished"/>
     </message>
@@ -1613,27 +1631,27 @@ Try unlinking and re-adding your repo.</source>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../../utils.py" line="332"/>
+        <location filename="../../utils.py" line="333"/>
         <source>Passwords must be identical and greater than 8 characters long.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../utils.py" line="334"/>
+        <location filename="../../utils.py" line="335"/>
         <source>Passwords must be identical.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../utils.py" line="336"/>
+        <location filename="../../utils.py" line="337"/>
         <source>Passwords must be greater than 8 characters long.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../utils.py" line="346"/>
+        <location filename="../../utils.py" line="347"/>
         <source>Storing the password in your password manager.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../utils.py" line="346"/>
+        <location filename="../../utils.py" line="347"/>
         <source>Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC</source>
         <translation type="unfinished"/>
     </message>

@@ -3,7 +3,7 @@ from vorta.i18n import trans_late
 from vorta.models import RepoModel
 
 
-class BorgInfoThread(BorgThread):
+class BorgInfoRepoThread(BorgThread):
 
     def started_event(self):
         self.updated.emit(self.tr('Validating existing repo...'))

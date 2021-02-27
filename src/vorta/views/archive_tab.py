@@ -14,6 +14,7 @@ from vorta.borg.diff import BorgDiffThread
 from vorta.borg.extract import BorgExtractThread
 from vorta.borg.list_archive import BorgListArchiveThread
 from vorta.borg.list_repo import BorgListRepoThread
+from vorta.borg.info_archive import BorgInfoArchiveThread
 from vorta.borg.mount import BorgMountThread
 from vorta.borg.prune import BorgPruneThread
 from vorta.borg.umount import BorgUmountThread
@@ -117,10 +118,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             action.setEnabled(False)
             return menu
 
-        extractAction = menu.addAction("Extract", self.list_archive_action)
-        deleteAction = menu.addAction("Delete", self.delete_action)
-        renameAction = menu.addAction("Rename", self.rename_action)
-
         if archive_name in self.mount_points:
             unmountAction = menu.addAction("Unmount", self.umount_action)
             unmountAction.setIcon(get_colored_icon('eject'))
@@ -128,9 +125,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             mountAction = menu.addAction("Mount", self.mount_action)
             mountAction.setIcon(get_colored_icon('folder-open'))
 
+        extractAction = menu.addAction("Extract", self.list_archive_action)
+        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
+        renameAction = menu.addAction("Rename", self.rename_action)
+        deleteAction = menu.addAction("Delete", self.delete_action)
+
         extractAction.setIcon(get_colored_icon('cloud-download'))
-        deleteAction.setIcon(get_colored_icon('trash'))
+        refreshAction.setIcon(get_colored_icon('refresh'))
         renameAction.setIcon(get_colored_icon('edit'))
+        deleteAction.setIcon(get_colored_icon('trash'))
         return menu
 
     def populate_from_profile(self):
@@ -256,6 +259,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archives.'))
+            self.populate_from_profile()
+
+    def refresh_archive_action(self):
+        archive_name = self.selected_archive_name()
+        if archive_name is not None:
+            params = BorgInfoArchiveThread.prepare(self.profile(), archive_name)
+            if params['ok']:
+                thread = BorgInfoArchiveThread(params['cmd'], params, parent=self.app)
+                thread.updated.connect(self._set_status)
+                thread.result.connect(self.refresh_archive_result)
+                self._toggle_all_buttons(False)
+                thread.start()
+
+    def refresh_archive_result(self, result):
+        self._toggle_all_buttons(True)
+        if result['returncode'] == 0:
+            self._set_status(self.tr('Refreshed archive.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):
