@@ -20,6 +20,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             self.object_path,
             self.interface_name,
             QtDBus.QDBusConnection.sessionBus())
+        self.handle = -1
         if not (self.iface.isValid() and self.get_result("isEnabled") is True):
             raise KWalletNotAvailableException
 
@@ -28,7 +29,7 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     def get_password(self, service, repo_url):
         if not (self.is_unlocked and self.get_result("hasEntry",
-                                                     args=[self.handle, self.folder_name, repo_url, service])):
+                                                     args=[self.handle, self.folder_name, repo_url, service]) is True):
             return None
         return self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
 
@@ -42,7 +43,7 @@ class VortaKWallet5Keyring(VortaKeyring):
     @property
     def is_unlocked(self):
         self.try_unlock()
-        return self.handle > 0
+        return self.handle >= 0
 
     def try_unlock(self):
         wallet_name = self.get_result("networkWallet")
@@ -51,8 +52,8 @@ class VortaKWallet5Keyring(VortaKeyring):
         output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
         try:
             self.handle = int(output)
-        except ValueError:  # For when kwallet is disabled or dbus otherwise broken
-            return -2
+        except ValueError:  # Broken, fake being unlocked to allow getting pass to fail
+            return 2
 
 
 class KWalletNotAvailableException(Exception):
