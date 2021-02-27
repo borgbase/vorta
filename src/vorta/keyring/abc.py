@@ -16,7 +16,13 @@ class VortaKeyring:
         Attempts to get secure keyring at runtime if current keyring is insecure.
         Once it finds a secure keyring, it wil always use that keyring
         """
-        if cls._keyring is None or not cls._keyring.is_primary:
+
+        # Using system keychain is disabled in settings
+        from vorta.models import SettingsModel
+        if not SettingsModel.get(key='use_system_keyring').value:
+            from .db import VortaDBKeyring
+            cls._keyring = VortaDBKeyring()
+        elif cls._keyring is None or not cls._keyring.is_primary:
             if sys.platform == 'darwin':  # Use Keychain on macOS
                 from .darwin import VortaDarwinKeyring
                 cls._keyring = VortaDarwinKeyring()
