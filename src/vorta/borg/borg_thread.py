@@ -290,6 +290,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 self.process.terminate()
             mutex.unlock()
             self.terminate()
+            self.wait()
 
     def process_result(self, result):
         pass

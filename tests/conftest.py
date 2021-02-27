@@ -1,7 +1,7 @@
-import pytest
-import peewee
-import sys
 import os
+import peewee
+import pytest
+import sys
 from datetime import datetime as dt
 from unittest.mock import MagicMock
 

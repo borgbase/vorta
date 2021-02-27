@@ -48,8 +48,8 @@ jobs:
         pip install -e .
         pip install -r requirements.d/dev.txt
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v1
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v1
 
     - name: Test with pytest (Linux)
       if: runner.os == 'Linux'
@@ -62,6 +62,7 @@ jobs:
         pytest
 
     - name: Upload coverage to Codecov
+      if: runner.os == 'Linux'
       uses: codecov/codecov-action@v1
       env:
         OS: ${{ runner.os }}

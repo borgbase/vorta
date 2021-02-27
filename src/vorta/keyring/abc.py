@@ -16,8 +16,8 @@ class VortaKeyring:
         Choose available Keyring or save passwords to settings database.
 
         Will always use Keychain on macOS. Will try KWallet and then Secret
-        Storage on Linux and *BSD. If non are available or usage of system keychain
-        is disabled, fall back to saving passwords to DB.
+        Storage on Linux and *BSD. If none are available or usage of system
+        keychain is disabled, fall back to saving passwords to DB.
         """
 
         from vorta.models import SettingsModel
