@@ -52,7 +52,7 @@ class VortaKWallet5Keyring(VortaKeyring):
         try:
             self.handle = int(output)
         except ValueError:  # For when kwallet is disabled or dbus otherwise broken
-            return -2
+            self.handle = -2
 
 
 class KWalletNotAvailableException(Exception):
