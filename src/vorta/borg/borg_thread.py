@@ -12,7 +12,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.i18n import trans_late
+from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
@@ -50,10 +50,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
-        self.category_label = {"files": self.tr("Files"),
-                               "original": self.tr("Original"),
-                               "deduplicated": self.tr("Deduplicated"),
-                               "compressed": self.tr("Compressed"), }
+        self.category_label = {"files": trans_late("BorgThread", "Files"),
+                               "original": trans_late("BorgThread", "Original"),
+                               "deduplicated": trans_late("BorgThread", "Deduplicated"),
+                               "compressed": trans_late("BorgThread", "Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
@@ -239,10 +239,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{self.category_label['files']}: {parsed['nfiles']}, "
-                                f"{self.category_label['original']}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{self.category_label['deduplicated']}: {pretty_bytes(parsed['deduplicated_size'])}, "
-                                f"{self.category_label['compressed']}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
