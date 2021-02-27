@@ -6,7 +6,7 @@ from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords, display_password_backend
 from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
-from vorta.borg.info import BorgInfoThread
+from vorta.borg.info_repo import BorgInfoRepoThread
 from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
@@ -208,10 +208,10 @@ class ExistingRepoWindow(AddRepoWindow):
 
     def run(self):
         if self.validate():
-            params = BorgInfoThread.prepare(self.values)
+            params = BorgInfoRepoThread.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoThread(params['cmd'], params, parent=self)
+                thread = BorgInfoRepoThread(params['cmd'], params, parent=self)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.

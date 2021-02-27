@@ -2,7 +2,7 @@ import uuid
 from vorta.keyring.abc import VortaKeyring
 
 
-def test_keyring(qapp):
+def test_keyring():
     UNICODE_PW = 'kjalsdfüadsfäadsfß'
     REPO = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL
 

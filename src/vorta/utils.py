@@ -62,12 +62,13 @@ def get_directory_size(dir_path):
             if os.path.islink(file_path):
                 continue
 
-            stat = os.stat(file_path)
-
-            # Visit each file once
-            if stat.st_ino not in seen:
-                seen.add(stat.st_ino)
-                data_size += stat.st_size
+            try:
+                stat = os.stat(file_path)
+                if stat.st_ino not in seen:  # Visit each file only once
+                    seen.add(stat.st_ino)
+                    data_size += stat.st_size
+            except FileNotFoundError:
+                continue
 
     files_count = len(seen)
 
@@ -199,33 +200,31 @@ def get_asset(path):
 
 
 def get_sorted_wifis(profile):
-    """Get SSIDs from OS and merge with settings in DB."""
+    """
+    Get Wifi networks known to the OS (only current one on macOS) and
+    merge with networks from other profiles. Update last connected time.
+    """
 
     from vorta.models import WifiSettingModel
 
+    # Pull networks known to OS and all other backup profiles
     system_wifis = get_network_status_monitor().get_known_wifis()
-    if system_wifis is None:
-        # Don't show any networks if we can't get the current list
-        return []
+    from_other_profiles = WifiSettingModel.select() \
+        .where(WifiSettingModel.profile != profile.id).execute()
 
-    for wifi in system_wifis:
+    for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
             profile=profile.id,
             defaults={'last_connected': wifi.last_connected, 'allowed': True}
         )
 
-        # update last connected time
+        # Update last connected time
         if not created and db_wifi.last_connected != wifi.last_connected:
             db_wifi.last_connected = wifi.last_connected
             db_wifi.save()
 
-    # remove Wifis that were deleted in the system.
-    deleted_wifis = WifiSettingModel.select() \
-        .where(WifiSettingModel.ssid.not_in([wifi.ssid for wifi in system_wifis]))
-    for wifi in deleted_wifis:
-        wifi.delete_instance()
-
+    # Finally return list of networks and settings for that profile
     return WifiSettingModel.select() \
         .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
 

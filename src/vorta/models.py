@@ -227,6 +227,11 @@ def get_misc_settings():
                                 'Get statistics of file/folder when added')
         },
         {
+            'key': 'override_mount_permissions', 'value': False, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Try to replace existing permissions when mounting an archive.')
+        },
+        {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
             'label': 'Previously selected profile'
         },
@@ -238,7 +243,6 @@ def get_misc_settings():
             'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
             'label': 'Previous window height'
         },
-
     ]
     if sys.platform == 'darwin':
         settings += [

@@ -1,5 +1,6 @@
 import os
 from .borg_thread import BorgThread
+from vorta.models import SettingsModel
 
 
 class BorgMountThread(BorgThread):
@@ -15,7 +16,15 @@ class BorgMountThread(BorgThread):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', '--log-json', 'mount', '-o', f"umask=0277,uid={os.getuid()}", f"{profile.repo.url}"]
+        cmd = ['borg', '--log-json', 'mount']
+
+        # Try to override existing permissions when mounting an archive. May help to read
+        # files that come from a different system, like a restrictive NAS.
+        override_mount_permissions = SettingsModel.get(key='override_mount_permissions').value
+        if override_mount_permissions:
+            cmd += ['-o', f"umask=0277,uid={os.getuid()}"]
+
+        cmd += [f"{profile.repo.url}"]
 
         ret['ok'] = True
         ret['cmd'] = cmd

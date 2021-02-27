@@ -128,12 +128,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 
-        if profile.ssh_key is not None and profile.repo.is_remote_repo() and \
-                not os.path.isfile(os.path.expanduser(f'~/.ssh/{profile.ssh_key}')):
-            ret['message'] = trans_late(
-                'messages', 'Your SSH key {} is missing. Add or change your key and try again.'.format(profile.ssh_key))
-            return ret
-
         if not borg_compat.check('JSON_LOG'):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
