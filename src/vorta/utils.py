@@ -344,7 +344,7 @@ def display_password_backend(encryption):
     # flake8: noqa E501
     if encryption != 'none':
         keyring = VortaKeyring.get_keyring()
-        return trans_late('utils', "Storing the password in your password manager.") if keyring.is_primary else trans_late(
+        return trans_late('utils', "Storing the password in your password manager.") if keyring.is_system else trans_late(
             'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC')
     else:
         return ""

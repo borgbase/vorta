@@ -27,7 +27,7 @@ class VortaDBKeyring(VortaKeyring):
             return None
 
     @property
-    def is_primary(self):
+    def is_system(self):
         return False
 
     @property
