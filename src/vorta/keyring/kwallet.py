@@ -42,7 +42,7 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        return self.try_unlock()
+        return self.try_unlock() and self.handle >= 0
 
     def try_unlock(self):
         ''' Returns whether "open" call succeeded '''
