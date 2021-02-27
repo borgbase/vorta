@@ -406,8 +406,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             # Reload tabs since db might have reloaded
-            self.app.main_window.db_reload_action()
-            self.list_action()
+            if result['params'].get("refresh_db"):
+                self.app.main_window.db_reload_action()
+                self.list_action()
 
     def cell_double_clicked(self, row, column):
         if column == 3:
