@@ -3,11 +3,11 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
-    borg_compat, validate_passwords, display_password_backend
+    borg_compat, validate_passwords
 from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info_repo import BorgInfoRepoThread
-from vorta.i18n import translate
+from vorta.i18n import translate, trans_late
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
 
@@ -65,7 +65,16 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return out
 
     def display_password_backend(self):
-        self.passwordLabel.setText(translate('utils', display_password_backend(self.encryptionComboBox.currentData())))
+        '''Display password backend message based off current keyring'''
+        backend_msg = ''
+        if self.encryptionComboBox.currentData() != 'none':
+            keyring = VortaKeyring.get_keyring()
+            if keyring.is_system:
+                backend_msg = trans_late('utils', 'Storing password in your password manager.')
+            else:
+                backend_msg = trans_late('utils', 'Saving password with Vorta settings.')
+
+        self.passwordLabel.setText(backend_msg)
 
     def choose_local_backup_folder(self):
         def receive():
