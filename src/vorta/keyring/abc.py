@@ -3,6 +3,7 @@ Set the most appropriate Keyring backend for the current system.
 For Linux not every system has SecretService available, so it will
 fall back to a simple database keystore if needed.
 """
+import os
 import sys
 from pkg_resources import parse_version
 from vorta.i18n import trans_late
@@ -26,31 +27,36 @@ class VortaKeyring:
 
         if SettingsModel.get(key='use_system_keyring').value:
             if cls._keyring is None or not cls._keyring.is_system:
+
                 # macOS: Only Keychain available
                 if sys.platform == 'darwin':
                     from .darwin import VortaDarwinKeyring
                     cls._keyring = VortaDarwinKeyring()
-                else:
-                    # Others: Try KWallet first
+
+                # Try KWallet if desktop is KDE
+                elif "KDE" in os.getenv("XDG_CURRENT_DESKTOP", ""):
                     from .kwallet import VortaKWallet5Keyring, KWalletNotAvailableException
                     try:
                         cls._keyring = VortaKWallet5Keyring()
                     except KWalletNotAvailableException:
-                        # Try to use DBus and Gnome Keyring (available on Linux and *BSD)
-                        # Put this last as Gnome Keyring is included by default on many distros
-                        import secretstorage
-                        from .secretstorage import VortaSecretStorageKeyring
+                        pass
 
-                        # Secret Storage has two different libraries based on version
-                        if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
-                            from jeepney.wrappers import DBusErrorResponse as DBusException
-                        else:
-                            from dbus.exceptions import DBusException
-                        try:
-                            cls._keyring = VortaSecretStorageKeyring()
-                        except (secretstorage.exceptions.SecretStorageException, DBusException):
-                            # Fall back to using DB, if all else fails.
-                            cls._keyring = VortaDBKeyring()
+                # Try to use DBus and Gnome Keyring (available on Linux and *BSD)
+                # Put this last as Gnome Keyring is included by default on many distros
+                if cls._keyring is None:
+                    import secretstorage
+                    from .secretstorage import VortaSecretStorageKeyring
+
+                    # Secret Storage has two different libraries based on version
+                    if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
+                        from jeepney.wrappers import DBusErrorResponse as DBusException
+                    else:
+                        from dbus.exceptions import DBusException
+                    try:
+                        cls._keyring = VortaSecretStorageKeyring()
+                    except (secretstorage.exceptions.SecretStorageException, DBusException):
+                        # Finally, fall back to using DB, if all else fails.
+                        cls._keyring = VortaDBKeyring()
         else:
             cls._keyring = VortaDBKeyring()
 
