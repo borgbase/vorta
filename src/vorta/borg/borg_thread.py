@@ -8,6 +8,7 @@ import select
 import time
 import logging
 from collections import namedtuple
+from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
@@ -18,7 +19,7 @@ from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
-mutex = QtCore.QMutex()
+mutex = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
@@ -93,11 +94,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     @classmethod
     def is_running(cls):
-        if mutex.tryLock():
-            mutex.unlock()
-            return False
-        else:
-            return True
+        return mutex.locked()
 
     @classmethod
     def prepare(cls, profile):
@@ -190,7 +187,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        mutex.lock()
+        mutex.acquire()
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
@@ -275,7 +272,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        mutex.unlock()
+        mutex.release()
 
     def cancel(self):
         """
@@ -287,10 +284,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             try:
                 self.process.wait(timeout=3)
             except TimeoutExpired:
-                self.process.terminate()
-            mutex.unlock()
-            self.terminate()
+                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
+            self.quit()
             self.wait()
+            if mutex.locked():
+                mutex.release()
 
     def process_result(self, result):
         pass

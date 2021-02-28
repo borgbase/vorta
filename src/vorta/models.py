@@ -279,6 +279,7 @@ def get_misc_settings():
 def cleanup_db():
     # Clean up database
     db.execute_sql("VACUUM")
+    db.close()
 
 
 def init_db(con=None):

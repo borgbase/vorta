@@ -5,6 +5,7 @@ fall back to a simple database keystore if needed.
 """
 import sys
 from pkg_resources import parse_version
+from vorta.i18n import trans_late
 
 
 class VortaKeyring:
@@ -54,6 +55,12 @@ class VortaKeyring:
             cls._keyring = VortaDBKeyring()
 
         return cls._keyring
+
+    def get_backend_warning(self):
+        if self.is_system:
+            return trans_late('utils', 'Storing password in your password manager.')
+        else:
+            return trans_late('utils', 'Saving password with Vorta settings.')
 
     def set_password(self, service, repo_url, password):
         """

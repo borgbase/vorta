@@ -7,7 +7,7 @@ from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
 from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info_repo import BorgInfoRepoThread
-from vorta.i18n import translate, trans_late
+from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
 
@@ -31,7 +31,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.repoURL.textChanged.connect(self.set_password)
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
-        self.encryptionComboBox.activated.connect(self.display_password_backend)
+        self.encryptionComboBox.activated.connect(self.display_backend_warning)
 
         # Add clickable icon to toggle password visibility to end of box
         self.showHideAction = QAction(self.tr("Show my passwords"), self)
@@ -45,7 +45,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-        self.display_password_backend()
+        self.display_backend_warning()
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
@@ -64,17 +64,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
 
-    def display_password_backend(self):
+    def display_backend_warning(self):
         '''Display password backend message based off current keyring'''
-        backend_msg = ''
         if self.encryptionComboBox.currentData() != 'none':
-            keyring = VortaKeyring.get_keyring()
-            if keyring.is_system:
-                backend_msg = trans_late('utils', 'Storing password in your password manager.')
-            else:
-                backend_msg = trans_late('utils', 'Saving password with Vorta settings.')
-
-        self.passwordLabel.setText(backend_msg)
+            self.passwordLabel.setText(VortaKeyring.get_keyring().get_backend_warning())
 
     def choose_local_backup_folder(self):
         def receive():

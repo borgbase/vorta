@@ -34,11 +34,12 @@ def qapp(tmpdir_factory):
     qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
 
     yield qapp
+    mock_db.close()
     qapp.quit()
 
 
 @pytest.fixture(scope='function', autouse=True)
-def init_db(qapp, tmpdir_factory):
+def init_db(qapp, qtbot, tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
@@ -61,18 +62,14 @@ def init_db(qapp, tmpdir_factory):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
+    qapp.main_window.deleteLater()
+    del qapp.main_window
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
-
-@pytest.fixture(scope='function', autouse=True)
-def cleanup(request, qapp, qtbot):
-    """
-    Cleanup after each test
-    """
-    def ensure_borg_thread_stopped():
-        qapp.backup_cancelled_event.emit()
-        qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
-    request.addfinalizer(ensure_borg_thread_stopped)
+    yield
+    qapp.backup_cancelled_event.emit()
+    qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
+    mock_db.close()
 
 
 @pytest.fixture
