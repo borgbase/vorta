@@ -272,16 +272,22 @@ def get_misc_settings():
     return settings
 
 
+def connect_db():
+    # Init database
+    sqlite_db = pw.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
+    init_db(sqlite_db)
+
+
 def cleanup_db():
     # Clean up database
     db.execute_sql("VACUUM")
 
 
-def init_db():
-    con = pw.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
-    os.umask(0o0077)
-    db.initialize(con)
-    db.connect()
+def init_db(con=None):
+    if con is not None:
+        os.umask(0o0077)
+        db.initialize(con)
+        db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
