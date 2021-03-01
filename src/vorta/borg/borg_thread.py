@@ -214,6 +214,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         stdout = []
         refresh_db = False
+
         while True:
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
@@ -246,14 +247,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                                 f"{self.category_label['compressed']}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
-
-                        if self.cmd[1] == 'extract' \
-                                and parsed['name'] == "borg.output.list" \
-                                and "settings.db" in parsed['message']:
-                            # This might trigger in cases where some other program uses settings.db
-                            # Just want to avoid it triggering on every single extract operation
-                            refresh_db = True
-                            logger.debug("Refreshing database on completion.")
 
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
