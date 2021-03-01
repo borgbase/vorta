@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.i18n import trans_late
-from vorta.models import EventLogModel, BackupProfileMixin, connect_db
+from vorta.models import EventLogModel, BackupProfileMixin, init_db
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
@@ -274,7 +274,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         # Reload database if extracting, since it can be overwritten.
         # Second part done in archive tab due to GUI non reentrant.
         if refresh_db:
-            connect_db()
+            init_db()
             self.params['refresh_db'] = True
 
         log_entry.returncode = p.returncode

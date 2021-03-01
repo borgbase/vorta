@@ -4,7 +4,7 @@ import sys
 
 from vorta._version import __version__
 from vorta.log import init_logger, logger
-from vorta.models import connect_db
+from vorta.models import init_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
 
@@ -45,7 +45,7 @@ def main():
 
     init_logger(background=want_background)
 
-    connect_db()
+    init_db()
 
     # Init app after database is available
     from vorta.application import VortaApp
