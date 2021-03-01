@@ -1,49 +1,39 @@
-"""
-Set the most appropriate Keyring backend for the current system.
-For Linux not every system has SecretService available, so it will
-fall back to a simple database keystore if needed.
-"""
-import sys
-from pkg_resources import parse_version
+import importlib
+from vorta.i18n import trans_late
 
 
 class VortaKeyring:
-    _keyring = None
+    all_keyrings = [
+        ('.db', 'VortaDBKeyring'),
+        ('.darwin', 'VortaDarwinKeyring'),
+        ('.kwallet', 'VortaKWallet5Keyring'),
+        ('.secretstorage', 'VortaSecretStorageKeyring')
+    ]
 
     @classmethod
     def get_keyring(cls):
         """
-        Attempts to get secure keyring at runtime if current keyring is insecure.
-        Once it finds a secure keyring, it wil always use that keyring
+        Choose available Keyring. First assign a score and then try to initialize it.
         """
-        if cls._keyring is None or not cls._keyring.is_primary:
-            if sys.platform == 'darwin':  # Use Keychain on macOS
-                from .darwin import VortaDarwinKeyring
-                cls._keyring = VortaDarwinKeyring()
-            else:
-                # Try to use KWallet (KDE)
-                from .kwallet import VortaKWallet5Keyring, KWalletNotAvailableException
-                try:
-                    cls._keyring = VortaKWallet5Keyring()
-                except KWalletNotAvailableException:
-                    # Try to use DBus and Gnome-Keyring (available on Linux and *BSD)
-                    # Put this last as gnome keyring is included by default on many distros
-                    import secretstorage
-                    from .secretstorage import VortaSecretStorageKeyring
+        available_keyrings = []
+        for _module, _class in cls.all_keyrings:
+            try:
+                keyring = getattr(importlib.import_module(_module, package='vorta.keyring'), _class)
+                available_keyrings.append((keyring, keyring.get_priority()))
+            except Exception:
+                continue
 
-                    # secretstorage has two different libraries based on version
-                    if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
-                        from jeepney.wrappers import DBusErrorResponse as DBusException
-                    else:
-                        from dbus.exceptions import DBusException
+        for keyring, _ in sorted(available_keyrings, key=lambda k: k[1], reverse=True):
+            try:
+                return keyring()
+            except Exception:
+                continue
 
-                    try:
-                        cls._keyring = VortaSecretStorageKeyring()
-                    except (secretstorage.exceptions.SecretStorageException, DBusException):
-                        # Save passwords in DB, if all else fails.
-                        from .db import VortaDBKeyring
-                        cls._keyring = VortaDBKeyring()
-        return cls._keyring
+    def get_backend_warning(self):
+        if self.is_system:
+            return trans_late('utils', 'Storing password in your password manager.')
+        else:
+            return trans_late('utils', 'Saving password with Vorta settings.')
 
     def set_password(self, service, repo_url, password):
         """
@@ -58,12 +48,21 @@ class VortaKeyring:
         raise NotImplementedError
 
     @property
-    def is_primary(self):
+    def is_system(self):
         """
         Return True if the current subclass is the system's primary keychain mechanism,
         rather than a fallback (like our own VortaDBKeyring).
         """
-        return True
+        raise NotImplementedError
+
+    @classmethod
+    def get_priority(cls):
+        """
+        Return priority of this keyring on current system. Higher is more important.
+
+        Shout-out to https://github.com/jaraco/keyring for this idea.
+        """
+        raise NotImplementedError
 
     @property
     def is_unlocked(self):
