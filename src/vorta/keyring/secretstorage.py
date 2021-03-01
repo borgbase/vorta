@@ -55,7 +55,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
 
     @classmethod
     def get_priority(cls):
-        return 6 if "GNOME" in os.getenv("XDG_CURRENT_DESKTOP", "") else 4
+        return 6 if "GNOME" in os.getenv("XDG_CURRENT_DESKTOP", "") else 5
 
     @property
     def is_system(self):
