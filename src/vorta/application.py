@@ -102,9 +102,11 @@ class VortaApp(QtSingleApplication):
         return False
 
     def quit_app_action(self):
-        del self.main_window
-        self.scheduler.shutdown()
         self.backup_cancelled_event.emit()
+        self.scheduler.shutdown()
+        del self.main_window
+        self.tray.deleteLater()
+        del self.tray
         cleanup_db()
 
     def create_backup_action(self, profile_id=None):
@@ -196,7 +198,7 @@ class VortaApp(QtSingleApplication):
             msg.setDefaultButton(abortButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(self.tr("Only break the lock if you are certain no other Borg process "
-                                   "on any machine is accessing the repository. Abort or break the lock?"))
+                                           "on any machine is accessing the repository. Abort or break the lock?"))
             msg.accepted.connect(lambda: self.break_lock(profile))
             self._msg = msg
             msg.show()

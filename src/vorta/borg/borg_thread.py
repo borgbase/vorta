@@ -8,17 +8,18 @@ import select
 import time
 import logging
 from collections import namedtuple
+from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.i18n import trans_late
+from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin, connect_db
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
-mutex = QtCore.QMutex()
+mutex = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
@@ -50,10 +51,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
-        self.category_label = {"files": self.tr("Files"),
-                               "original": self.tr("Original"),
-                               "deduplicated": self.tr("Deduplicated"),
-                               "compressed": self.tr("Compressed"), }
+        self.category_label = {"files": trans_late("BorgThread", "Files"),
+                               "original": trans_late("BorgThread", "Original"),
+                               "deduplicated": trans_late("BorgThread", "Deduplicated"),
+                               "compressed": trans_late("BorgThread", "Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
@@ -93,11 +94,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     @classmethod
     def is_running(cls):
-        if mutex.tryLock():
-            mutex.unlock()
-            return False
-        else:
-            return True
+        return mutex.locked()
 
     @classmethod
     def prepare(cls, profile):
@@ -139,11 +136,12 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         # Check if keyring is locked
         if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-            ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+            ret['message'] = trans_late('messages',
+                                        'Please unlock your system password manager or disable it under Misc')
             return ret
 
         # Try to fall back to DB Keyring, if we use the system keychain.
-        if ret['password'] is None and cls.keyring.is_primary:
+        if ret['password'] is None and cls.keyring.is_system:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
             ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
 
@@ -189,7 +187,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        mutex.lock()
+        mutex.acquire()
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
@@ -241,10 +239,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{self.category_label['files']}: {parsed['nfiles']}, "
-                                f"{self.category_label['original']}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{self.category_label['deduplicated']}: {pretty_bytes(parsed['deduplicated_size'])}, "
-                                f"{self.category_label['compressed']}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
 
@@ -283,7 +281,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        mutex.unlock()
+        mutex.release()
 
     def cancel(self):
         """
@@ -295,9 +293,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             try:
                 self.process.wait(timeout=3)
             except TimeoutExpired:
-                self.process.terminate()
-            mutex.unlock()
-            self.terminate()
+                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
+            self.quit()
+            self.wait()
+            if mutex.locked():
+                mutex.release()
 
     def process_result(self, result):
         pass

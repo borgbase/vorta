@@ -1,5 +1,6 @@
 import peewee
 from .abc import VortaKeyring
+from vorta.models import SettingsModel
 
 
 class VortaDBKeyring(VortaKeyring):
@@ -27,9 +28,13 @@ class VortaDBKeyring(VortaKeyring):
             return None
 
     @property
-    def is_primary(self):
+    def is_system(self):
         return False
 
     @property
     def is_unlocked(self):
         return True
+
+    @classmethod
+    def get_priority(cls):
+        return 1 if SettingsModel.get(key='use_system_keyring').value else 10

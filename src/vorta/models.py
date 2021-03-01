@@ -227,6 +227,11 @@ def get_misc_settings():
                                 'Get statistics of file/folder when added')
         },
         {
+            'key': 'use_system_keyring', 'value': True, 'type': 'checkbox',
+            'label': trans_late('settings',
+                                'Store repository passwords in system keychain, if available.')
+        },
+        {
             'key': 'override_mount_permissions', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
                                 'Try to replace existing permissions when mounting an archive.')
@@ -281,6 +286,7 @@ def connect_db():
 def cleanup_db():
     # Clean up database
     db.execute_sql("VACUUM")
+    db.close()
 
 
 def init_db(con=None):
