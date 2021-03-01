@@ -1,3 +1,4 @@
+import os
 from PyQt5 import QtDBus
 from PyQt5.QtCore import QVariant
 from vorta.keyring.abc import VortaKeyring
@@ -54,6 +55,14 @@ class VortaKWallet5Keyring(VortaKeyring):
             self.handle = int(output)
         except ValueError:  # For when kwallet is disabled or dbus otherwise broken
             self.handle = -2
+
+    @classmethod
+    def get_priority(cls):
+        return 6 if "KDE" in os.getenv("XDG_CURRENT_DESKTOP", "") else 4
+
+    @property
+    def is_system(self):
+        return True
 
 
 class KWalletNotAvailableException(Exception):

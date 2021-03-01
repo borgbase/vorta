@@ -1,66 +1,33 @@
-"""
-Set the most appropriate Keyring backend for the current system.
-For Linux not every system has SecretService available, so it will
-fall back to a simple database keystore if needed.
-"""
-import os
-import sys
-from pkg_resources import parse_version
+import importlib
 from vorta.i18n import trans_late
 
 
 class VortaKeyring:
-    _keyring = None
+    all_keyrings = [
+        ('.db', 'VortaDBKeyring'),
+        ('.darwin', 'VortaDarwinKeyring'),
+        ('.kwallet', 'VortaKWallet5Keyring'),
+        ('.secretstorage', 'VortaSecretStorageKeyring')
+    ]
 
     @classmethod
     def get_keyring(cls):
         """
-        Choose available Keyring or save passwords to settings database.
-
-        Will always use Keychain on macOS. Will try KWallet and then Secret
-        Storage on Linux and *BSD. If none are available or usage of system
-        keychain is disabled, fall back to saving passwords to DB.
+        Choose available Keyring. First assign a score and then try to initialize it.
         """
+        available_keyrings = []
+        for _module, _class in cls.all_keyrings:
+            try:
+                keyring = getattr(importlib.import_module(_module, package='vorta.keyring'), _class)
+                available_keyrings.append((keyring, keyring.get_priority()))
+            except Exception:
+                continue
 
-        from vorta.models import SettingsModel
-        from .db import VortaDBKeyring
-
-        if SettingsModel.get(key='use_system_keyring').value:
-            if cls._keyring is None or not cls._keyring.is_system:
-
-                # macOS: Only Keychain available
-                if sys.platform == 'darwin':
-                    from .darwin import VortaDarwinKeyring
-                    cls._keyring = VortaDarwinKeyring()
-
-                # Try KWallet if desktop is KDE
-                elif "KDE" in os.getenv("XDG_CURRENT_DESKTOP", ""):
-                    from .kwallet import VortaKWallet5Keyring, KWalletNotAvailableException
-                    try:
-                        cls._keyring = VortaKWallet5Keyring()
-                    except KWalletNotAvailableException:
-                        pass
-
-                # Try to use DBus and Gnome Keyring (available on Linux and *BSD)
-                # Put this last as Gnome Keyring is included by default on many distros
-                if cls._keyring is None:
-                    import secretstorage
-                    from .secretstorage import VortaSecretStorageKeyring
-
-                    # Secret Storage has two different libraries based on version
-                    if parse_version(secretstorage.__version__) >= parse_version("3.0.0"):
-                        from jeepney.wrappers import DBusErrorResponse as DBusException
-                    else:
-                        from dbus.exceptions import DBusException
-                    try:
-                        cls._keyring = VortaSecretStorageKeyring()
-                    except (secretstorage.exceptions.SecretStorageException, DBusException):
-                        # Finally, fall back to using DB, if all else fails.
-                        cls._keyring = VortaDBKeyring()
-        else:
-            cls._keyring = VortaDBKeyring()
-
-        return cls._keyring
+        for keyring, _ in sorted(available_keyrings, key=lambda k: k[1], reverse=True):
+            try:
+                return keyring()
+            except Exception:
+                continue
 
     def get_backend_warning(self):
         if self.is_system:
@@ -86,7 +53,16 @@ class VortaKeyring:
         Return True if the current subclass is the system's primary keychain mechanism,
         rather than a fallback (like our own VortaDBKeyring).
         """
-        return True
+        raise NotImplementedError
+
+    @classmethod
+    def get_priority(cls):
+        """
+        Return priority of this keyring on current system. Higher is more important.
+
+        Shout-out to https://github.com/jaraco/keyring for this idea.
+        """
+        raise NotImplementedError
 
     @property
     def is_unlocked(self):
