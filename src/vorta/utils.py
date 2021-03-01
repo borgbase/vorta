@@ -22,7 +22,6 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
-from vorta.keyring.abc import VortaKeyring
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
@@ -337,14 +336,3 @@ def validate_passwords(first_pass, second_pass):
         return trans_late('utils', "Passwords must be greater than 8 characters long.")
 
     return ""
-
-
-def display_password_backend(encryption):
-    ''' Display password backend message based off current keyring '''
-    # flake8: noqa E501
-    if encryption != 'none':
-        keyring = VortaKeyring.get_keyring()
-        return trans_late('utils', "Storing the password in your password manager.") if keyring.is_primary else trans_late(
-            'utils', 'Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC')
-    else:
-        return ""

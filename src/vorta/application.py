@@ -102,9 +102,11 @@ class VortaApp(QtSingleApplication):
         return False
 
     def quit_app_action(self):
-        del self.main_window
-        self.scheduler.shutdown()
         self.backup_cancelled_event.emit()
+        self.scheduler.shutdown()
+        del self.main_window
+        self.tray.deleteLater()
+        del self.tray
         cleanup_db()
 
     def create_backup_action(self, profile_id=None):

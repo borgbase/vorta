@@ -1,6 +1,6 @@
 import asyncio
 import sys
-
+import os
 import secretstorage
 
 from vorta.keyring.abc import VortaKeyring
@@ -52,3 +52,11 @@ class VortaSecretStorageKeyring(VortaKeyring):
         except secretstorage.exceptions.SecretServiceNotAvailableException:
             logger.debug('SecretStorage is closed.')
             return False
+
+    @classmethod
+    def get_priority(cls):
+        return 6 if "GNOME" in os.getenv("XDG_CURRENT_DESKTOP", "") else 5
+
+    @property
+    def is_system(self):
+        return True
