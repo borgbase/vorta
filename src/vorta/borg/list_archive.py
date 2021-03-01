@@ -13,17 +13,16 @@ class BorgListArchiveThread(BorgThread):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, archive_name):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
-        else:
-            ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'list', '--info', '--log-json', '--format', "{size:8d}{TAB}{mtime}{TAB}{path}{NL}"]
-        cmd.append(f'{profile.repo.url}')
-
+        ret['archive_name'] = archive_name
+        ret['cmd'] = [
+            'borg', 'list', '--info', '--log-json', '--json-lines',
+            '--format', "{size:8d}{TAB}{mtime}{TAB}{path}{NL}",
+            f'{profile.repo.url}::{archive_name}']
         ret['ok'] = True
-        ret['cmd'] = cmd
 
         return ret

@@ -1,4 +1,6 @@
+import json
 import os
+from datetime import datetime
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
@@ -20,21 +22,26 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         nested_file_list = nested_dict()
         self.selected = set()
 
-        def parse_line(line):
-            size, modified, full_path = line.split("\t")
-            size = int(size)
-            dir, name = os.path.split(full_path)
-
+        def parse_json_line(line):
+            data = json.loads(line)
+            size = data["size"]
+            # python >= 3.7
+            # modified = datetime.fromisoformat(data["mtime"]).ctime()
+            # python < 3.7
+            try:
+                modified = datetime.strptime(data["mtime"], "%Y-%m-%dT%H:%M:%S.%f").ctime()
+            except ValueError:
+                modified = datetime.strptime(data["mtime"], "%Y-%m-%dT%H:%M:%S").ctime()
+            dirpath, name = os.path.split(data["path"])
             # add to nested dict of folders to find nested dirs.
-            d = get_dict_from_list(nested_file_list, dir.split("/"))
+            d = get_dict_from_list(nested_file_list, dirpath.split("/"))
             if name not in d:
                 d[name] = {}
-
-            return size, modified, name, dir
+            return size, modified, name, dirpath
 
         for line in fs_data.split("\n"):
             try:
-                files_with_attributes.append(parse_line(line))
+                files_with_attributes.append(parse_json_line(line))
             except ValueError:
                 pass
 

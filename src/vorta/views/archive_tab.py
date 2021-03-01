@@ -376,13 +376,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if archive_cell:
                 archive_name = archive_cell.text()
-                params = BorgListArchiveThread.prepare(profile)
+                params = BorgListArchiveThread.prepare(profile, archive_name)
 
                 if not params['ok']:
                     self._set_status(params['message'])
                     return
-                params['cmd'][-1] += f'::{archive_name}'
-                params['archive_name'] = archive_name
                 self._set_status('')
                 self._toggle_all_buttons(False)
 
