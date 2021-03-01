@@ -4,6 +4,7 @@ import sys
 
 import peewee
 from vorta._version import __version__
+from vorta.i18n import trans_late, translate
 from vorta.config import SETTINGS_DIR
 from vorta.log import init_logger, logger
 from vorta.models import init_db
@@ -18,12 +19,13 @@ def main():
         logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))
         full_exception = ''.join(format_exception(type, value, tb))
+        title = trans_late('app', 'Fatal Error')
+        error_message = trans_late('app', 'Uncaught exception, please file a report with this text at\n'
+                                   'https://github.com/borgbase/vorta/issues/new\n')
         if app:
             QMessageBox.critical(None,
-                                 app.tr("Fatal Error"),
-                                 app.tr(
-                                     "Uncaught exception, please file a report with this text at\n"
-                                     "https://github.com/borgbase/vorta/issues/new\n") + full_exception)
+                                 translate('app', title),
+                                 translate('app', error_message) + full_exception)
         else:
             # Crashed before app startup, cannot translate
             sys.exit(1)
