@@ -3,7 +3,7 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QLineEdit, QAction
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
-    borg_compat, validate_passwords, display_password_backend
+    borg_compat, validate_passwords
 from vorta.keyring.abc import VortaKeyring
 from vorta.borg.init import BorgInitThread
 from vorta.borg.info_repo import BorgInfoRepoThread
@@ -31,7 +31,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.repoURL.textChanged.connect(self.set_password)
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
-        self.encryptionComboBox.activated.connect(self.display_password_backend)
+        self.encryptionComboBox.activated.connect(self.display_backend_warning)
 
         # Add clickable icon to toggle password visibility to end of box
         self.showHideAction = QAction(self.tr("Show my passwords"), self)
@@ -45,7 +45,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-        self.display_password_backend()
+        self.display_backend_warning()
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
@@ -64,8 +64,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             out['encryption'] = self.encryptionComboBox.currentData()
         return out
 
-    def display_password_backend(self):
-        self.passwordLabel.setText(translate('utils', display_password_backend(self.encryptionComboBox.currentData())))
+    def display_backend_warning(self):
+        '''Display password backend message based off current keyring'''
+        if self.encryptionComboBox.currentData() != 'none':
+            self.passwordLabel.setText(VortaKeyring.get_keyring().get_backend_warning())
 
     def choose_local_backup_folder(self):
         def receive():
