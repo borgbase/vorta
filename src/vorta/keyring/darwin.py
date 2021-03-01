@@ -7,6 +7,7 @@ objc modules.
 
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
+import sys
 from .abc import VortaKeyring
 
 
@@ -79,8 +80,20 @@ class VortaDarwinKeyring(VortaKeyring):
 
         return keychain_status & kSecUnlockStateStatus
 
+    @classmethod
+    def get_priority(cls):
+        if sys.platform == 'darwin':
+            return 8
+        else:
+            raise RuntimeError('Only available on macOS')
+
+    @property
+    def is_system(self):
+        return True
+
 
 def _resolve_password(password_length, password_buffer):
     from ctypes import c_char
     s = (c_char*password_length).from_address(password_buffer.__pointer__)[:]
     return s.decode()
+
