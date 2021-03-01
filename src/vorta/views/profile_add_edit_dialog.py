@@ -1,5 +1,6 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
+from ..i18n import translate, trans_late
 from ..utils import get_asset
 from ..models import BackupProfileModel
 
@@ -8,10 +9,9 @@ AddProfileUI, AddProfileBase = uic.loadUiType(uifile)
 
 
 class AddProfileWindow(AddProfileBase, AddProfileUI):
-
     profile_changed = QtCore.pyqtSignal(str, int)
 
-    def __init__(self, parent=None, rename_existing_id=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.edited_profile = None
@@ -23,12 +23,8 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
         self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
         self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
-        if rename_existing_id is not None:
-            existing_profile = BackupProfileModel.get(id=rename_existing_id)
-            self.profileNameField.setText(existing_profile.name)
-            self.existing_id = rename_existing_id
-            self.modalTitle.setText(self.tr('Rename Profile'))
-
+        self.name_blank = trans_late('AddProfileWindow', 'Please enter a profile name.')
+        self.name_exists = trans_late('AddProfileWindow', 'A profile with this name already exists.')
         # Call validate to set inital messages
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
 
@@ -49,13 +45,13 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
         name = self.profileNameField.text()
         # A name was entered?
         if len(name) == 0:
-            self._set_status(self.tr('Please enter a profile name.'))
+            self._set_status(translate('AddProfileWindow', self.name_blank))
             return False
 
         # Profile with this name already exists?
         exists = BackupProfileModel.select().where(BackupProfileModel.name == name).count()
         if exists > 0:
-            self._set_status(self.tr('A profile with this name already exists.'))
+            self._set_status(translate('AddProfileWindow', self.name_exists))
             return False
 
         self._set_status(self.tr(''))
@@ -63,6 +59,13 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
 
 class EditProfileWindow(AddProfileWindow):
+    def __init__(self, parent=None, rename_existing_id=None):
+        super().__init__(parent)
+        existing_profile = BackupProfileModel.get(id=rename_existing_id)
+        self.profileNameField.setText(existing_profile.name)
+        self.existing_id = rename_existing_id
+        self.modalTitle.setText(self.tr('Rename Profile'))
+
     def save(self):
         renamed_profile = BackupProfileModel.get(id=self.existing_id)
         renamed_profile.name = self.profileNameField.text()
