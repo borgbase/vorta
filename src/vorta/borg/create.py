@@ -63,7 +63,7 @@ class BorgCreateThread(BorgThread):
             return 0  # 0 if no command was run.
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, initiator='user'):
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.

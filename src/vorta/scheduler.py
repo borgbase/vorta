@@ -1,4 +1,5 @@
 import logging
+import time
 from datetime import datetime as dt, date, timedelta
 import threading
 from PyQt5 import QtCore
@@ -13,23 +14,40 @@ from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
 
+# http://ilearnstuff.blogspot.com/2012/09/qthread-best-practices-when-qthread.html
+# https://stackoverflow.com/questions/20324804/how-to-use-qthread-correctly-in-pyqt-with-movetothread
 
-class VortaScheduler():
-    def __init__(self):
-        print("thread started from :" + str(threading.get_ident()))
+class VortaScheduler(QtCore.QObject):
+    process_jobs_signal = QtCore.pyqtSignal()
+
+    def __init__(self, app):
+        super().__init__()
         self.jobs = {}
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.process_jobs)
-        self.timer.setInterval(2 * 1000)  # Run first 20s after startup.
-        self.timer.start()
+        self.app = app
+        self.process_jobs_signal.connect(self.process_jobs)
+
+    @classmethod
+    def get_scheduler_thread(cls):
+        worker = cls()
+        workerThread = QtCore.QThread()
+        timer = QtCore.QTimer()
+        worker.moveToThread(workerThread)
+        timer.moveToThread(workerThread)
+        timer.timeout.connect(worker.process_jobs)
+        timer.setInterval(1000)
+        workerThread.started.connect(timer.start)
+        worker.timer = timer
+        workerThread.worker = worker
+        workerThread.start()
+        return workerThread
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
+    @QtCore.pyqtSlot
     def process_jobs(self):
-        print("running from :" + str(threading.get_ident()))
-
+        print("processing started from :" + str(threading.get_ident()))
         # First run scheduled backups. 2 minutes grace time
         for profile_id, job_time in self.jobs.items():
             if job_time > dt.now() + timedelta(minutes=2) \
@@ -47,10 +65,11 @@ class VortaScheduler():
 
             # Job has no next_run set. Let's figure one out.
             last_run = EventLogModel.select().where(
-                (EventLogModel.subcommand == 'create') &
-                (EventLogModel.category == 'scheduled') &
-                (EventLogModel.profile == profile.id)
-            ).order_by(EventLogModel.start_time).first()
+                EventLogModel.subcommand == 'create',
+                EventLogModel.category == 'scheduled',
+                EventLogModel.profile == profile.id,
+            ).order_by(EventLogModel.start_time.desc()).first()
+            print('last', last_run, profile.schedule_make_up_missed)
 
             if profile.schedule_mode == 'interval':
                 interval = {profile.schedule_interval_unit: profile.schedule_interval_hours}
@@ -60,13 +79,16 @@ class VortaScheduler():
             # If last run was too long ago, catch up now
             if profile.schedule_make_up_missed \
                     and last_run is not None \
-                    and last_run + timedelta(**interval) < dt.now():
+                    and last_run.start_time + timedelta(**interval) < dt.now():
                 logger.debug('Catching up by running job for %s', profile.name)
+                time.sleep(10)
                 # self.create_backup(profile.id)
 
             # If the job never ran, start now.
             if last_run is None:
                 last_run = dt.now()
+            else:
+                last_run = last_run.start_time
 
             # Fixed time is a special case of days = 1
             if profile.schedule_mode == 'fixed':
@@ -81,16 +103,20 @@ class VortaScheduler():
             logger.debug('New job for profile %s was added for %s.', profile.name, next_run)
             self.jobs[profile.id] = next_run
 
-        print(self.jobs)
-        self.timer.setInterval(5*1000)
-        # self.timer.start()
+        next_wakeup_seconds = 60*40
+        if self.jobs:
+            nearest_job = sorted(self.jobs.items(), key=lambda x: x[1])[0]
+            print(nearest_job)
+            next_wakeup_seconds = (nearest_job[1] - dt.now()).seconds
+        self.timer.setInterval(next_wakeup_seconds)
+        logger.debug('Next wakeup in %s seconds', next_wakeup_seconds)
 
     @property
     def next_job(self):
-        if len(jobs) > 0:
+        if len(self.jobs) > 0:
             self.jobs.sort(key=lambda job: job[0])
             profile = BackupProfileModel.get(id=int(jobs[0][1]))
-            return f"{jobs[0][0].strftime('%H:%M')} ({profile.name})"
+            return f"{self.jobs[0][0].strftime('%H:%M')} ({profile.name})"
         else:
             return self.tr('None scheduled')
 
@@ -111,6 +137,7 @@ class VortaScheduler():
                          level='info')
 
         msg = BorgCreateThread.prepare(profile)
+        msg['initiator'] = 'scheduled'
         if msg['ok']:
             logger.info('Preparation for backup successful.')
             thread = BorgCreateThread(msg['cmd'], msg)

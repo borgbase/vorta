@@ -58,7 +58,7 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
-        self.scheduler = VortaScheduler()
+        self.scheduler = VortaScheduler.get_scheduler_thread()
         self.setApplicationName("Vorta")
 
         # Prepare tray and main window
