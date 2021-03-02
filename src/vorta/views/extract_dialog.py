@@ -18,12 +18,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         super().__init__()
         self.setupUi(self)
 
-        files_with_attributes = []
         nested_file_list = nested_dict()
         self.selected = set()
 
-        def parse_json_line(line):
-            data = json.loads(line)
+        def parse_json_line(data):
             size = data["size"]
             # python >= 3.7
             # modified = datetime.fromisoformat(data["mtime"]).ctime()
@@ -39,11 +37,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
                 d[name] = {}
             return size, modified, name, dirpath
 
-        for line in fs_data.split("\n"):
-            try:
-                files_with_attributes.append(parse_json_line(line))
-            except ValueError:
-                pass
+        # handle case of a single line of result, which will already be a dict
+        lines = [fs_data] if isinstance(fs_data, dict) else \
+            [json.loads(line) for line in fs_data.split('\n') if line]
+
+        files_with_attributes = [parse_json_line(line) for line in lines]
 
         model = ExtractTree(files_with_attributes, nested_file_list, self.selected)
 
