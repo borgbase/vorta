@@ -1,9 +1,7 @@
 import logging
-from datetime import date, timedelta
-
+from datetime import datetime as dt, date, timedelta
+import threading
 from PyQt5 import QtCore
-from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import cron
 from vorta.borg.check import BorgCheckThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.list_repo import BorgListRepoThread
@@ -16,81 +14,88 @@ from vorta.notifications import VortaNotifications
 logger = logging.getLogger(__name__)
 
 
-# TODO: refactor to use QtCore.QTimer directly
-class VortaScheduler(QtScheduler):
-    def __init__(self, parent):
-        super().__init__()
-        self.app = parent
-        self.start()
-        self.reload()
-
-        # Set timer to make sure background tasks are scheduled
-        self.qt_timer = QtCore.QTimer()
-        self.qt_timer.timeout.connect(self.reload)
-        self.qt_timer.setInterval(45 * 60 * 1000)
-        self.qt_timer.start()
+class VortaScheduler():
+    def __init__(self):
+        print("thread started from :" + str(threading.get_ident()))
+        self.jobs = {}
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.process_jobs)
+        self.timer.setInterval(2 * 1000)  # Run first 20s after startup.
+        self.timer.start()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
-    def reload(self):
+    def process_jobs(self):
+        print("running from :" + str(threading.get_ident()))
+
+        # First run scheduled backups. 2 minutes grace time
+        for profile_id, job_time in self.jobs.items():
+            if job_time > dt.now() + timedelta(minutes=2) \
+                    and job_time < dt.now() + timedelta(minutes=2):
+                self.create_backup(profile_id)
+
+        # Check future schedule for all profiles
         for profile in BackupProfileModel.select():
-            trigger = None
-            job_id = f'{profile.id}'
+            if profile.schedule_mode == 'off':
+                continue
+
+            next_run = self.jobs.get(profile.id, dt.now())
+            if next_run is not None and next_run > dt.now():
+                continue
+
+            # Job has no next_run set. Let's figure one out.
+            last_run = EventLogModel.select().where(
+                (EventLogModel.subcommand == 'create') &
+                (EventLogModel.category == 'scheduled') &
+                (EventLogModel.profile == profile.id)
+            ).order_by(EventLogModel.start_time).first()
+
             if profile.schedule_mode == 'interval':
-                if profile.schedule_interval_hours >= 24:
-                    days = profile.schedule_interval_hours // 24
-                    leftover_hours = profile.schedule_interval_hours % 24
-
-                    if leftover_hours == 0:
-                        cron_hours = '1'
-                    else:
-                        cron_hours = f'*/{leftover_hours}'
-
-                    trigger = cron.CronTrigger(day=f'*/{days}',
-                                               hour=cron_hours,
-                                               minute=profile.schedule_interval_minutes)
-                else:
-                    trigger = cron.CronTrigger(hour=f'*/{profile.schedule_interval_hours}',
-                                               minute=profile.schedule_interval_minutes)
+                interval = {profile.schedule_interval_unit: profile.schedule_interval_hours}
             elif profile.schedule_mode == 'fixed':
-                trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
-                                           minute=profile.schedule_fixed_minute)
-            if self.get_job(job_id) is not None and trigger is not None:
-                self.reschedule_job(job_id, trigger=trigger)
-                logger.debug('Job for profile %s was rescheduled.', profile.name)
-            elif trigger is not None:
-                self.add_job(
-                    func=self.create_backup,
-                    args=[profile.id],
-                    trigger=trigger,
-                    id=job_id,
-                    misfire_grace_time=180
-                )
-                logger.debug('New job for profile %s was added.', profile.name)
-            elif self.get_job(job_id) is not None and trigger is None:
-                self.remove_job(job_id)
-                logger.debug('Job for profile %s was removed.', profile.name)
+                interval = {'days': 1}
+
+            # If last run was too long ago, catch up now
+            if profile.schedule_make_up_missed \
+                    and last_run is not None \
+                    and last_run + timedelta(**interval) < dt.now():
+                logger.debug('Catching up by running job for %s', profile.name)
+                # self.create_backup(profile.id)
+
+            # If the job never ran, start now.
+            if last_run is None:
+                last_run = dt.now()
+
+            # Fixed time is a special case of days = 1
+            if profile.schedule_mode == 'fixed':
+                last_run.hour = profile.schedule_fixed_hour
+                last_run.minut = profile.schedule_fixed_minut
+
+            # Add interval to arrive at next run.
+            next_run = last_run
+            while next_run < dt.now():
+                next_run += timedelta(**interval)
+
+            logger.debug('New job for profile %s was added for %s.', profile.name, next_run)
+            self.jobs[profile.id] = next_run
+
+        print(self.jobs)
+        self.timer.setInterval(5*1000)
+        # self.timer.start()
 
     @property
     def next_job(self):
-        self.wakeup()
-        self._process_jobs()
-        jobs = []
-        for job in self.get_jobs():
-            jobs.append((job.next_run_time, job.id))
-
-        if jobs:
-            jobs.sort(key=lambda job: job[0])
+        if len(jobs) > 0:
+            self.jobs.sort(key=lambda job: job[0])
             profile = BackupProfileModel.get(id=int(jobs[0][1]))
             return f"{jobs[0][0].strftime('%H:%M')} ({profile.name})"
         else:
             return self.tr('None scheduled')
 
     def next_job_for_profile(self, profile_id):
-        self.wakeup()
-        job = self.get_job(str(profile_id))
+        job = self.jobs.get(profile_id)
         if job is None:
             return self.tr('None scheduled')
         else:

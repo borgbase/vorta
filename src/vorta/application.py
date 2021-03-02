@@ -58,7 +58,7 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
-        self.scheduler = VortaScheduler(self)
+        self.scheduler = VortaScheduler()
         self.setApplicationName("Vorta")
 
         # Prepare tray and main window
@@ -103,7 +103,7 @@ class VortaApp(QtSingleApplication):
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
-        self.scheduler.shutdown()
+        # self.scheduler.exit()
         del self.main_window
         self.tray.deleteLater()
         del self.tray

@@ -188,9 +188,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     def run(self):
         self.started_event()
         mutex.acquire()
-        log_entry = EventLogModel(category='borg-run',
+        log_entry = EventLogModel(category=self.params.get('initiator', 'user'),
                                   subcommand=self.cmd[1],
-                                  profile=self.params.get('profile_name', None)
+                                  profile=self.params.get('profile_id', None)
                                   )
         log_entry.save()
         logger.info('Running command %s', ' '.join(self.cmd))

@@ -101,6 +101,7 @@ class BorgCreateThread(BorgThread):
             return ret
 
         ret['profile'] = profile
+        ret['profile_id'] = profile.id
         ret['repo'] = profile.repo
 
         # Run user-supplied pre-backup command

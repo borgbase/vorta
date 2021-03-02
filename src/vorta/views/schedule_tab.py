@@ -39,12 +39,16 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
 
+        self.scheduleIntervalUnit.addItem(self.tr('Minutes'), 'minutes')
+        self.scheduleIntervalUnit.addItem(self.tr('Hours'), 'hours')
+        self.scheduleIntervalUnit.addItem(self.tr('Days'), 'days')
+        self.scheduleIntervalUnit.addItem(self.tr('Weeks'), 'weeks')
+
         # Populate with data
         self.populate_from_profile()
         self.set_icons()
 
         # Connect events
-        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
         self.app.backup_finished_event.connect(self.populate_logs)
         self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
             lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, new_val))
@@ -67,17 +71,22 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
         self.scheduleIntervalHours.setValue(profile.schedule_interval_hours)
-        self.scheduleIntervalMinutes.setValue(profile.schedule_interval_minutes)
+        self.scheduleIntervalUnit.setCurrentIndex(
+            self.scheduleIntervalUnit.findData(profile.schedule_interval_unit))
+
         self.scheduleFixedTime.setTime(
             QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
 
         # Set checking options
         self.validationCheckBox.setCheckState(profile.validation_on)
         self.validationSpinBox.setValue(profile.validation_weeks)
+        self.validationCheckBox.setTristate(False)
 
         self.pruneCheckBox.setCheckState(profile.prune_on)
-        self.validationCheckBox.setTristate(False)
         self.pruneCheckBox.setTristate(False)
+
+        self.missedBackupsCheckBox.setCheckState(profile.schedule_make_up_missed)
+        self.missedBackupsCheckBox.setTristate(False)
 
         self.dontRunOnMeteredNetworksCheckBox.setChecked(profile.dont_run_on_metered_networks)
 
@@ -89,7 +98,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         else:
             self.createCmdLineEdit.setEnabled(False)
 
-        self._draw_next_scheduled_backup()
         self.populate_wifi()
         self.populate_logs()
 
