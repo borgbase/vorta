@@ -30,6 +30,7 @@ jobs:
     - name: Install build dependencies
       run: |
         brew install --cask sparkle
+        brew install create-dmg
         pip install -r dev.txt
       working-directory: requirements.d
     - name: Install Vorta
@@ -42,9 +43,24 @@ jobs:
         curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macosx64.tgz
         tar xvf borg-macosx64.tgz -C dist/Vorta.app/Contents/Resources/
         cd dist && zip -rq --symlinks Vorta.zip Vorta.app
+
+    # From https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+    - name: Codesign executable
+      env:
+        MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+        MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      run: |
+        echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
+        security create-keychain -p 123 build.keychain security default-keychain -s build.keychain
+        security unlock-keychain -p 123 build.keychain
+        security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k 123 build.keychain
+	      python3 package/fix_app_qt_folder_names_for_codesign.py dist/Vorta.app
+	      cd dist && sh ../package/macos-package-app.sh
+
     - name: Upload build
       uses: actions/upload-artifact@v2
       with:
         name: Vorta macOS
-        path: dist/Vorta.zip
+        path: dist/Vorta.dmg
         retention-days: 10
