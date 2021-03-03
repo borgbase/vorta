@@ -49,7 +49,7 @@ jobs:
         pip install -r requirements.d/dev.txt
 
     # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v1
+    #   uses: mxschmitt/action-tmate@v3
 
     - name: Test with pytest (Linux)
       if: runner.os == 'Linux'

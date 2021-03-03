@@ -44,8 +44,7 @@ RESULT=$(xcrun altool --notarize-app --type osx \
     --username $APPLE_ID_USER --password $APPLE_ID_PASSWORD \
     --file "$APP_BUNDLE.dmg" --output-format xml)
 
-REQUEST_UUID=$(echo "$RESULT" | xpath -q -e \
-  "//key[normalize-space(text()) = 'RequestUUID']/following-sibling::string[1]/text()" 2> /dev/null)
+REQUEST_UUID=$(echo "$RESULT" | xpath5.18 "//key[normalize-space(text()) = 'RequestUUID']/following-sibling::string[1]/text()" 2> /dev/null)
 
 # Poll for notarization status
 echo "Submitted notarization request $REQUEST_UUID, waiting for response..."
@@ -56,7 +55,7 @@ do
     --username "$APPLE_ID_USER" \
     --password "$APPLE_ID_PASSWORD" \
     --output-format xml)
-  STATUS=$(echo "$RESULT" | xpath -q -e "//key[normalize-space(text()) = 'Status']/following-sibling::string[1]/text()" 2> /dev/null)
+  STATUS=$(echo "$RESULT" | xpath5.18 "//key[normalize-space(text()) = 'Status']/following-sibling::string[1]/text()" 2> /dev/null)
 
   if [ "$STATUS" = "success" ]; then
     echo "Notarization of $APP_BUNDLE succeeded!"
