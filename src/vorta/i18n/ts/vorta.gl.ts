@@ -2,17 +2,12 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="30"/>
-        <source>Rename Profile</source>
-        <translation>Cambiar o nome do perfil</translation>
-    </message>
-    <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="52"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Please enter a profile name.</source>
         <translation>Introduza un nome de perfil.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="58"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
         <source>A profile with this name already exists.</source>
         <translation>Xa existe un perfil con este nome.</translation>
     </message>
@@ -30,47 +25,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="77"/>
+        <location filename="../../views/repo_add_dialog.py" line="79"/>
         <source>Repository Path:</source>
         <translation>Ruta ao repositorio:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/repo_add_dialog.py" line="82"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Escolla localización do repositorio Borg</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="109"/>
+        <location filename="../../views/repo_add_dialog.py" line="111"/>
         <source>Repository URL:</source>
         <translation>URL do repositorio:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="135"/>
+        <location filename="../../views/repo_add_dialog.py" line="137"/>
         <source>Unable to add your repository.</source>
         <translation>Non é posíbel engadir o seu repositorio.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="162"/>
+        <location filename="../../views/repo_add_dialog.py" line="164"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Introduza un URL de repositorio válido ou seleccione unha ruta local.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="166"/>
+        <location filename="../../views/repo_add_dialog.py" line="168"/>
         <source>This repo has already been added.</source>
         <translation>Este repositorio xa foi engadido.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/repo_add_dialog.py" line="104"/>
         <source>Show my passwords</source>
         <translation>Amosar os meus contrasinais</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="87"/>
+        <location filename="../../views/repo_add_dialog.py" line="89"/>
         <source>Autofilled password from password manager.</source>
         <translation>Contrasinal autocompletado dende o xestor de contrasinais.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="99"/>
+        <location filename="../../views/repo_add_dialog.py" line="101"/>
         <source>Hide my passwords</source>
         <translation>Agochar os meus contrasinais</translation>
     </message>
@@ -453,27 +448,27 @@
 <context>
     <name>BorgThread</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="303"/>
+        <location filename="../../borg/borg_thread.py" line="297"/>
         <source>Task started</source>
         <translation>Iniciada a tarefa</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="53"/>
+        <location filename="../../borg/borg_thread.py" line="54"/>
         <source>Files</source>
         <translation>Ficheiros</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="54"/>
+        <location filename="../../borg/borg_thread.py" line="55"/>
         <source>Original</source>
         <translation>Orixinal</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="55"/>
+        <location filename="../../borg/borg_thread.py" line="56"/>
         <source>Deduplicated</source>
         <translation>Desduplicado</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="56"/>
+        <location filename="../../borg/borg_thread.py" line="57"/>
         <source>Compressed</source>
         <translation>Comprimido</translation>
     </message>
@@ -635,19 +630,27 @@
     </message>
 </context>
 <context>
+    <name>EditProfileWindow</name>
+    <message>
+        <location filename="../../views/profile_add_edit_dialog.py" line="67"/>
+        <source>Rename Profile</source>
+        <translation>Cambiar o nome do perfil</translation>
+    </message>
+</context>
+<context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="189"/>
+        <location filename="../../views/repo_add_dialog.py" line="191"/>
         <source>Connect to existing Repository</source>
         <translation>Conectar ao repositorio existente</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/repo_add_dialog.py" line="209"/>
         <source>Show my password</source>
         <translation>Amosar o meu contrasinal</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="204"/>
+        <location filename="../../views/repo_add_dialog.py" line="206"/>
         <source>Hide my password</source>
         <translation>Agochar o meu contrasinal</translation>
     </message>
@@ -1413,52 +1416,52 @@
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="121"/>
+        <location filename="../../application.py" line="123"/>
         <source>Vorta Backup</source>
         <translation>Copia de seguridade de Vorta</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="178"/>
+        <location filename="../../application.py" line="180"/>
         <source>No Borg Binary Found</source>
         <translation>Non se atopou ningún binario de Borg</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="179"/>
+        <location filename="../../application.py" line="181"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta non foi quen de atopar un binario de Borg Backup utilizábel.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="192"/>
+        <location filename="../../application.py" line="194"/>
         <source>Repository In Use</source>
         <translation>Repositorio en uso</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="194"/>
+        <location filename="../../application.py" line="196"/>
         <source>Abort</source>
         <translation>Interromper</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="195"/>
+        <location filename="../../application.py" line="197"/>
         <source>Continue</source>
         <translation>Continuar</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="197"/>
+        <location filename="../../application.py" line="199"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>O repositorio en {repo_url} podería estar en uso noutros lugares.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="198"/>
+        <location filename="../../application.py" line="200"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Rache o bloqueo só se está seguro de que ningún outro proceso Borg en ningunha máquina accede ao repositorio. Interromper ou rachar o bloqueo?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="208"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Non ten permiso para acceder ao repositorio en {repo_url}. Obteña acces e ténteo de novo.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="209"/>
+        <location filename="../../application.py" line="211"/>
         <source>No Repository Permissions</source>
         <translation>Sen permisos de repositorio</translation>
     </message>
@@ -1499,7 +1502,7 @@
         <translation>Produciuse un erro fatal</translation>
     </message>
     <message>
-        <location filename="../../__main__.py" line="22"/>
+        <location filename="../../__main__.py" line="23"/>
         <source>Uncaught exception, please file a report with this text at
 https://github.com/borgbase/vorta/issues/new
 </source>
@@ -1511,7 +1514,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>messages</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="120"/>
+        <location filename="../../borg/borg_thread.py" line="117"/>
         <source>Backup is already in progress.</source>
         <translation>A copia de seguridade xa está en curso.</translation>
     </message>
@@ -1521,7 +1524,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Non se atopou o binario de Borg.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="128"/>
+        <location filename="../../borg/borg_thread.py" line="125"/>
         <source>Add a backup repository first.</source>
         <translation>Engada primeiro un repositorio de copia de seguridade.</translation>
     </message>
@@ -1556,7 +1559,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Non se atoparon montaxes de Borg activas.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="138"/>
+        <location filename="../../borg/borg_thread.py" line="129"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>A súa versión de Borg é demasiado antiga. ë necesaria unha &gt;=1.1.0.</translation>
     </message>
@@ -1576,11 +1579,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Desbloquee o seu xestor de contrasinais.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="163"/>
+        <location filename="../../borg/borg_thread.py" line="155"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>A súa frase de paso do repositorio foi almacenada nun xestor de contrasinais que xa non está dispoñíbel.
 Probe a desvincular e engadir de novo o repositorio.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_thread.py" line="139"/>
+        <source>Please unlock your system password manager or disable it under Misc</source>
+        <translation>Desbloquee o xestor de contrasinais do sistema ou desactíveo en Varios</translation>
     </message>
 </context>
 <context>
@@ -1601,12 +1609,12 @@ Probe a desvincular e engadir de novo o repositorio.</translation>
         <translation>Iniciar automaticamente Vorta ao iniciar sesión</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="250"/>
+        <location filename="../../models.py" line="255"/>
         <source>Check for updates on startup</source>
         <translation>Comprobe se hai actualizacións ao iniciar</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="255"/>
+        <location filename="../../models.py" line="260"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Incluír as versións previas de publicación cando busque actualizacións</translation>
     </message>
@@ -1621,42 +1629,37 @@ Probe a desvincular e engadir de novo o repositorio.</translation>
         <translation>Obter as estatísticas do ficheiro/cartafol cando se engade</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="263"/>
+        <location filename="../../models.py" line="268"/>
         <source>Display background exit dialog</source>
         <translation>Amosar o diálogo de saída en segundo plano</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="230"/>
+        <location filename="../../models.py" line="235"/>
         <source>Try to replace existing permissions when mounting an archive.</source>
         <translation>Tente substituír os permisos existentes ao montar un arquivo.</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="230"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Garde os contrasinais do repositorio no chaveiro do sistema, se está dispoñíbel.</translation>
     </message>
 </context>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../../utils.py" line="333"/>
+        <location filename="../../utils.py" line="332"/>
         <source>Passwords must be identical and greater than 8 characters long.</source>
         <translation>Os contrasinais deben ter idénticos e ter máis de 8 caracteres.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="335"/>
+        <location filename="../../utils.py" line="334"/>
         <source>Passwords must be identical.</source>
         <translation>Os contrasinais deben ser idénticos.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="337"/>
+        <location filename="../../utils.py" line="336"/>
         <source>Passwords must be greater than 8 characters long.</source>
         <translation>Os contrasinais deben ter máis de 8 caracteres.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Storing the password in your password manager.</source>
-        <translation>Almacenar o contrasinal no seu xestor de contrasinais.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC</source>
-        <translation>Gardar o contrasinal no disco. Para almacenar o contrasinal de forma máis segura, instale un almacén segredo compatíbel como KeepassXC</translation>
     </message>
 </context>
 </TS>
