@@ -1,5 +1,6 @@
 coverage
 flake8
+macholib
 pyinstaller
 pylint
 pytest
