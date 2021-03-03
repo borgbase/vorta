@@ -16,9 +16,10 @@ logger = logging.getLogger(__name__)
 
 # http://ilearnstuff.blogspot.com/2012/09/qthread-best-practices-when-qthread.html
 # https://stackoverflow.com/questions/20324804/how-to-use-qthread-correctly-in-pyqt-with-movetothread
+# https://stackoverflow.com/questions/38291105/explanation-needed-for-this-subclassing-qthread-vs-movetothread-example
 
 class VortaScheduler(QtCore.QObject):
-    process_jobs_signal = QtCore.pyqtSignal()
+    process_jobs_signal = QtCore.pyqtSignal()  # When scheduler changes are made from UI
 
     def __init__(self, app):
         super().__init__()
