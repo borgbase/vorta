@@ -1,5 +1,8 @@
 import importlib
+import logging
 from vorta.i18n import trans_late
+
+logger = logging.getLogger(__name__)
 
 
 class VortaKeyring:
@@ -20,13 +23,15 @@ class VortaKeyring:
             try:
                 keyring = getattr(importlib.import_module(_module, package='vorta.keyring'), _class)
                 available_keyrings.append((keyring, keyring.get_priority()))
-            except Exception:
+            except Exception as e:
+                logger.debug(e)
                 continue
 
         for keyring, _ in sorted(available_keyrings, key=lambda k: k[1], reverse=True):
             try:
                 return keyring()
-            except Exception:
+            except Exception as e:
+                logger.debug(e)
                 continue
 
     def get_backend_warning(self):
