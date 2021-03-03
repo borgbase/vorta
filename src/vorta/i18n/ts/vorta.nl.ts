@@ -2,17 +2,12 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="30"/>
-        <source>Rename Profile</source>
-        <translation>Profielnaam wijzigen</translation>
-    </message>
-    <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="52"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Please enter a profile name.</source>
         <translation>Voer een profielnaam in.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="58"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
         <source>A profile with this name already exists.</source>
         <translation>Er is al een profiel met die naam.</translation>
     </message>
@@ -30,47 +25,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="77"/>
+        <location filename="../../views/repo_add_dialog.py" line="79"/>
         <source>Repository Path:</source>
         <translation>Repo-pad:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/repo_add_dialog.py" line="82"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Geef de locatie op van de Borg-repo</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="109"/>
+        <location filename="../../views/repo_add_dialog.py" line="111"/>
         <source>Repository URL:</source>
         <translation>Repo-url:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="135"/>
+        <location filename="../../views/repo_add_dialog.py" line="137"/>
         <source>Unable to add your repository.</source>
         <translation>De repo kan niet worden toegevoegd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="162"/>
+        <location filename="../../views/repo_add_dialog.py" line="164"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Voer een geldige repo-url in of kies een lokaal pad.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="166"/>
+        <location filename="../../views/repo_add_dialog.py" line="168"/>
         <source>This repo has already been added.</source>
         <translation>Deze repo is al toegevoegd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/repo_add_dialog.py" line="104"/>
         <source>Show my passwords</source>
         <translation>Wachtwoorden tonen</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="87"/>
+        <location filename="../../views/repo_add_dialog.py" line="89"/>
         <source>Autofilled password from password manager.</source>
         <translation>Automatisch ingevuld wachtwoord door wachtwoorbeheerder.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="99"/>
+        <location filename="../../views/repo_add_dialog.py" line="101"/>
         <source>Hide my passwords</source>
         <translation>Wachtwoorden verbergen</translation>
     </message>
@@ -453,27 +448,27 @@
 <context>
     <name>BorgThread</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="303"/>
+        <location filename="../../borg/borg_thread.py" line="297"/>
         <source>Task started</source>
         <translation>Taak gestart</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="53"/>
+        <location filename="../../borg/borg_thread.py" line="54"/>
         <source>Files</source>
         <translation>Bestanden</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="54"/>
+        <location filename="../../borg/borg_thread.py" line="55"/>
         <source>Original</source>
         <translation>Origineel</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="55"/>
+        <location filename="../../borg/borg_thread.py" line="56"/>
         <source>Deduplicated</source>
         <translation>Uitgepakt</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="56"/>
+        <location filename="../../borg/borg_thread.py" line="57"/>
         <source>Compressed</source>
         <translation>Ingepakt</translation>
     </message>
@@ -635,19 +630,27 @@
     </message>
 </context>
 <context>
+    <name>EditProfileWindow</name>
+    <message>
+        <location filename="../../views/profile_add_edit_dialog.py" line="67"/>
+        <source>Rename Profile</source>
+        <translation>Profielnaam wijzigen</translation>
+    </message>
+</context>
+<context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="189"/>
+        <location filename="../../views/repo_add_dialog.py" line="191"/>
         <source>Connect to existing Repository</source>
         <translation>Verbinden met externe repo</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/repo_add_dialog.py" line="209"/>
         <source>Show my password</source>
         <translation>Wachtwoord tonen</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="204"/>
+        <location filename="../../views/repo_add_dialog.py" line="206"/>
         <source>Hide my password</source>
         <translation>Wachtwoord verbergen</translation>
     </message>
@@ -1413,52 +1416,52 @@
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="121"/>
+        <location filename="../../application.py" line="123"/>
         <source>Vorta Backup</source>
         <translation>Vorta-back-up</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="178"/>
+        <location filename="../../application.py" line="180"/>
         <source>No Borg Binary Found</source>
         <translation>Borg is niet aangetroffen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="179"/>
+        <location filename="../../application.py" line="181"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta heeft Borg niet aangetroffen op je systeem.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="192"/>
+        <location filename="../../application.py" line="194"/>
         <source>Repository In Use</source>
         <translation>De repo is in gebruik</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="194"/>
+        <location filename="../../application.py" line="196"/>
         <source>Abort</source>
         <translation>Afbreken</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="195"/>
+        <location filename="../../application.py" line="197"/>
         <source>Continue</source>
         <translation>Doorgaan</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="197"/>
+        <location filename="../../application.py" line="199"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>De repo, {repo_url}, is mogelijk al in gebruik.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="198"/>
+        <location filename="../../application.py" line="200"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Breek het slot alleen open als er geen ander Borg-proces actief is. Wil je afbreken of het slot openbreken?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="208"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Je hebt geen toegang tot de repo &apos;{repo_url}&apos;. Verkrijg toegang en probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="209"/>
+        <location filename="../../application.py" line="211"/>
         <source>No Repository Permissions</source>
         <translation>Niet bevoegd</translation>
     </message>
@@ -1499,7 +1502,7 @@
         <translation>Fatale fout</translation>
     </message>
     <message>
-        <location filename="../../__main__.py" line="22"/>
+        <location filename="../../__main__.py" line="23"/>
         <source>Uncaught exception, please file a report with this text at
 https://github.com/borgbase/vorta/issues/new
 </source>
@@ -1511,7 +1514,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>messages</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="120"/>
+        <location filename="../../borg/borg_thread.py" line="117"/>
         <source>Backup is already in progress.</source>
         <translation>Er wordt al een back-up gemaakt.</translation>
     </message>
@@ -1521,7 +1524,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Borg is niet aangetroffen.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="128"/>
+        <location filename="../../borg/borg_thread.py" line="125"/>
         <source>Add a backup repository first.</source>
         <translation>Voeg eerst een back-uprepo toe.</translation>
     </message>
@@ -1556,7 +1559,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Geen actieve Borg-aankoppelpunten aangetroffen.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="138"/>
+        <location filename="../../borg/borg_thread.py" line="129"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Je Borg-versie is verouderd. &gt;=1.1.0 is vereist.</translation>
     </message>
@@ -1576,11 +1579,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Ontgrendel je wachtwoordbeheerder.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="163"/>
+        <location filename="../../borg/borg_thread.py" line="155"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>De toegangszin van je repo is opgeslagen in een wachtwoordbeheerder die niet meer beschikbaar is.
 Herkoppel je repo.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_thread.py" line="139"/>
+        <source>Please unlock your system password manager or disable it under Misc</source>
+        <translation>Ontgrendel je wachtwoordbeheerder of schakel deze optie uit in &apos;Overig&apos;.</translation>
     </message>
 </context>
 <context>
@@ -1601,12 +1609,12 @@ Herkoppel je repo.</translation>
         <translation>Vorta automatisch opstarten</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="250"/>
+        <location filename="../../models.py" line="255"/>
         <source>Check for updates on startup</source>
         <translation>Automatisch controleren op updates</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="255"/>
+        <location filename="../../models.py" line="260"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Controleren op vooraf vrijgeven versies</translation>
     </message>
@@ -1621,42 +1629,37 @@ Herkoppel je repo.</translation>
         <translation>Statistieken van map/bestand tonen na toevoegen</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="263"/>
+        <location filename="../../models.py" line="268"/>
         <source>Display background exit dialog</source>
         <translation>Afsluitvenster tonen als Vorta op de achtergrond draait</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="230"/>
+        <location filename="../../models.py" line="235"/>
         <source>Try to replace existing permissions when mounting an archive.</source>
         <translation>Vervang de  bestaande rechten tijdens het aankoppelen van een archief.</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="230"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Sla repo-wachtwoorden op in de sleutelbeheerder van het systeem (indien beschikbaar).</translation>
     </message>
 </context>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../../utils.py" line="333"/>
+        <location filename="../../utils.py" line="332"/>
         <source>Passwords must be identical and greater than 8 characters long.</source>
         <translation>De wachtwoorden moeten identiek zijn en meer dan 8 tekens bevatten.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="335"/>
+        <location filename="../../utils.py" line="334"/>
         <source>Passwords must be identical.</source>
         <translation>De wachtwoorden moeten identiek zijn.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="337"/>
+        <location filename="../../utils.py" line="336"/>
         <source>Passwords must be greater than 8 characters long.</source>
         <translation>De wachtwoorden moeten meer dan 8 tekens bevatten.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Storing the password in your password manager.</source>
-        <translation>Het wachtwoord wordt opgeslagen in je wachtwoordbeheerder.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC</source>
-        <translation>Het wachtwoord wordt opgeslagen op je schijf. Wil je een veiliger oplossing? Installeer dan een wachtwoordbeheerder als KeePassXC.</translation>
     </message>
 </context>
 </TS>

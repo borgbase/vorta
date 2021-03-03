@@ -2,17 +2,12 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="30"/>
-        <source>Rename Profile</source>
-        <translation>Byt profilnamn</translation>
-    </message>
-    <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="52"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Please enter a profile name.</source>
         <translation>Ange ett profilnamn.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="58"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
         <source>A profile with this name already exists.</source>
         <translation>Det finns redan en profil med det här namne.</translation>
     </message>
@@ -30,47 +25,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="77"/>
+        <location filename="../../views/repo_add_dialog.py" line="79"/>
         <source>Repository Path:</source>
         <translation>Förrådssökväg:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/repo_add_dialog.py" line="82"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Välj en plats för Borg-förrådet</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="109"/>
+        <location filename="../../views/repo_add_dialog.py" line="111"/>
         <source>Repository URL:</source>
         <translation>Förrådets URL:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="135"/>
+        <location filename="../../views/repo_add_dialog.py" line="137"/>
         <source>Unable to add your repository.</source>
         <translation>Kunde inte lägga till ditt förråd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="162"/>
+        <location filename="../../views/repo_add_dialog.py" line="164"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="166"/>
+        <location filename="../../views/repo_add_dialog.py" line="168"/>
         <source>This repo has already been added.</source>
         <translation>Detta förråd har redan lagts till.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/repo_add_dialog.py" line="104"/>
         <source>Show my passwords</source>
         <translation>Visa mina lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="87"/>
+        <location filename="../../views/repo_add_dialog.py" line="89"/>
         <source>Autofilled password from password manager.</source>
         <translation>Automatiskt ifyllt lösenord från lösenordshanterare.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="99"/>
+        <location filename="../../views/repo_add_dialog.py" line="101"/>
         <source>Hide my passwords</source>
         <translation>Dölj mina lösenord</translation>
     </message>
@@ -453,27 +448,27 @@
 <context>
     <name>BorgThread</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="303"/>
+        <location filename="../../borg/borg_thread.py" line="297"/>
         <source>Task started</source>
         <translation>Aktivitet startad</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="53"/>
+        <location filename="../../borg/borg_thread.py" line="54"/>
         <source>Files</source>
         <translation>Filer</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="54"/>
+        <location filename="../../borg/borg_thread.py" line="55"/>
         <source>Original</source>
         <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="55"/>
+        <location filename="../../borg/borg_thread.py" line="56"/>
         <source>Deduplicated</source>
         <translation>Deduplicerat</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="56"/>
+        <location filename="../../borg/borg_thread.py" line="57"/>
         <source>Compressed</source>
         <translation>Komprimerat</translation>
     </message>
@@ -635,19 +630,27 @@
     </message>
 </context>
 <context>
+    <name>EditProfileWindow</name>
+    <message>
+        <location filename="../../views/profile_add_edit_dialog.py" line="67"/>
+        <source>Rename Profile</source>
+        <translation>Byt profilnamn</translation>
+    </message>
+</context>
+<context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="189"/>
+        <location filename="../../views/repo_add_dialog.py" line="191"/>
         <source>Connect to existing Repository</source>
         <translation>Anslut till befintligt förråd</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/repo_add_dialog.py" line="209"/>
         <source>Show my password</source>
         <translation>Visa mitt lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="204"/>
+        <location filename="../../views/repo_add_dialog.py" line="206"/>
         <source>Hide my password</source>
         <translation>Dölj mitt lösenord</translation>
     </message>
@@ -1413,52 +1416,52 @@
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="121"/>
+        <location filename="../../application.py" line="123"/>
         <source>Vorta Backup</source>
         <translation>Vorta säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="178"/>
+        <location filename="../../application.py" line="180"/>
         <source>No Borg Binary Found</source>
         <translation>Ingen Borg-binär hittades</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="179"/>
+        <location filename="../../application.py" line="181"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta kunde inte hitta någon användbar Borg Backup-binär.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="192"/>
+        <location filename="../../application.py" line="194"/>
         <source>Repository In Use</source>
         <translation>Förråd som används</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="194"/>
+        <location filename="../../application.py" line="196"/>
         <source>Abort</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="195"/>
+        <location filename="../../application.py" line="197"/>
         <source>Continue</source>
         <translation>Fortsätt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="197"/>
+        <location filename="../../application.py" line="199"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Förrådet på {repo_url} kanske används någon annan stans.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="198"/>
+        <location filename="../../application.py" line="200"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Bryt bara låset om du är säker på att ingen annan Borg-process, på någon maskin, använder förrådet. Vill du avbryta eller bryta låset?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="208"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Du har inte behörighet att komma åt förrådet på {repo_url}. Skaffa åtkomst och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="209"/>
+        <location filename="../../application.py" line="211"/>
         <source>No Repository Permissions</source>
         <translation>Inga förrådsrättigheter</translation>
     </message>
@@ -1499,7 +1502,7 @@
         <translation>Allvarligt fel</translation>
     </message>
     <message>
-        <location filename="../../__main__.py" line="22"/>
+        <location filename="../../__main__.py" line="23"/>
         <source>Uncaught exception, please file a report with this text at
 https://github.com/borgbase/vorta/issues/new
 </source>
@@ -1511,7 +1514,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>messages</name>
     <message>
-        <location filename="../../borg/borg_thread.py" line="120"/>
+        <location filename="../../borg/borg_thread.py" line="117"/>
         <source>Backup is already in progress.</source>
         <translation>Säkerhetskopiering pågår redan.</translation>
     </message>
@@ -1521,7 +1524,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Borg-binär hittades inte.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="128"/>
+        <location filename="../../borg/borg_thread.py" line="125"/>
         <source>Add a backup repository first.</source>
         <translation>Lägg först till ett säkerhetskopieringsförråd.</translation>
     </message>
@@ -1556,7 +1559,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Inga aktiva Borg-monteringar hittades.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="138"/>
+        <location filename="../../borg/borg_thread.py" line="129"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Din Borg-version är för gammal. &gt;=1.1.0 är obligatoriskt.</translation>
     </message>
@@ -1576,11 +1579,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Lås upp din lösenordshanterare.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_thread.py" line="163"/>
+        <location filename="../../borg/borg_thread.py" line="155"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
 Försök avlänka och återansluta ditt förråd.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_thread.py" line="139"/>
+        <source>Please unlock your system password manager or disable it under Misc</source>
+        <translation>Lås upp din lösenordshanterare eller avaktivera den under Diverse</translation>
     </message>
 </context>
 <context>
@@ -1601,12 +1609,12 @@ Försök avlänka och återansluta ditt förråd.</translation>
         <translation>Starta Vorta automatiskt vid inloggning</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="250"/>
+        <location filename="../../models.py" line="255"/>
         <source>Check for updates on startup</source>
         <translation>Sök efter uppdateringar vid programstart</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="255"/>
+        <location filename="../../models.py" line="260"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Inkludera förhandsversioner vid sökning efter uppdateringar</translation>
     </message>
@@ -1621,42 +1629,37 @@ Försök avlänka och återansluta ditt förråd.</translation>
         <translation>Hämta statistik för fil/mapp när den läggs till</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="263"/>
+        <location filename="../../models.py" line="268"/>
         <source>Display background exit dialog</source>
         <translation>Visa dialog när bakgrundsaktiviteter avslutas</translation>
     </message>
     <message>
-        <location filename="../../models.py" line="230"/>
+        <location filename="../../models.py" line="235"/>
         <source>Try to replace existing permissions when mounting an archive.</source>
         <translation>Försök att ersätta befintliga behörigheter när arkiv monteras.</translation>
+    </message>
+    <message>
+        <location filename="../../models.py" line="230"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Lagra förrådslösenord i systemets nyckelkedja, om tillgänglig.</translation>
     </message>
 </context>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../../utils.py" line="333"/>
+        <location filename="../../utils.py" line="332"/>
         <source>Passwords must be identical and greater than 8 characters long.</source>
         <translation>Lösenord måste vara identiska och längre än 8 tecken.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="335"/>
+        <location filename="../../utils.py" line="334"/>
         <source>Passwords must be identical.</source>
         <translation>Lösenorden måste vara identiska.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="337"/>
+        <location filename="../../utils.py" line="336"/>
         <source>Passwords must be greater than 8 characters long.</source>
         <translation>Lösenord måste vara längre än 8 tecken.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Storing the password in your password manager.</source>
-        <translation>Lagrar lösenordet i din lösenordshanterare.</translation>
-    </message>
-    <message>
-        <location filename="../../utils.py" line="347"/>
-        <source>Saving the password to disk. To store password more securely install a supported secret store such as KeepassXC</source>
-        <translation>Sparar lösenordet på disk. För att lagra lösenordet säkrare installerar du ett säkert lagringsprogram som stöds, t.ex KeepassXC.</translation>
     </message>
 </context>
 </TS>
