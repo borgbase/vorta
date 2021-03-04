@@ -123,11 +123,16 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     tab.list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
+    assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
+    qtbot.waitUntil(
+        lambda: len(tab._window.treeView.model().rootItem.childItems) > 0,
+        **pytest._wait_defaults)
 
     assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
     tab._window.treeView.model().rootItem.childItems[0].load_children()
-    assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
+    qtbot.waitUntil(
+        lambda: len(tab._window.treeView.model().rootItem.childItems[0].childItems) > 0,
+        **pytest._wait_defaults)
 
 
 def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
