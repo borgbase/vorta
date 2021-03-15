@@ -14,6 +14,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.edited_profile = None
 
         self.buttonBox.rejected.connect(self.close)

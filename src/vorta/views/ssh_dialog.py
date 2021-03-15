@@ -1,6 +1,6 @@
 import os
 from PyQt5 import uic
-from PyQt5.QtCore import QProcess
+from PyQt5.QtCore import QProcess, Qt
 from PyQt5.QtWidgets import QApplication
 
 from paramiko.rsakey import RSAKey
@@ -23,6 +23,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.closeButton.clicked.connect(self.accept)
         self.generateButton.clicked.connect(self.generate_key)
