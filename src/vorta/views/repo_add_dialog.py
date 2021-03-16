@@ -21,6 +21,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.result = None
         self.is_remote_repo = True
 
