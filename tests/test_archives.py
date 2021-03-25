@@ -234,3 +234,41 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
 def test_archive_diff_parser(line, expected):
     files_with_attributes, nested_file_list = vorta.views.diff_result.parse_diff_lines([line])
     assert files_with_attributes == [expected]
+
+
+@pytest.mark.parametrize('line, expected', [
+    ({'path': 'some/changed/link', 'changes': [{'type': 'changed link'}]},
+     (0, 'changed', 'link', 'some/changed')),
+    ({'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800}]},
+     (77800, 'modified', 'file', 'some/changed')),
+    ({'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800},
+                                               {'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}]},
+     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed')),
+    ({'path': 'some/changed/file', 'changes': [{'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}]},
+     (0, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed')),
+    ({'path': 'some/changed/dir', 'changes': [{'type': 'added directory'}]},
+     (0, 'added', 'dir', 'some/changed')),
+    ({'path': 'some/changed/dir', 'changes': [{'type': 'removed directory'}]},
+     (0, 'removed', 'dir', 'some/changed')),
+
+    # Example from https://github.com/borgbase/vorta/issues/521
+    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'owner', 'old_user': 'user', 'new_user': 'nfsnobody',
+                                                        'old_group': 'user', 'new_group': 'nfsnobody'}]},
+     (0, 'modified', 'test.txt', 'home/user/arrays')),
+
+    # Very short owner change, to check stripping whitespace from file path
+    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'owner', 'old_user': 'a', 'new_user': 'b',
+                                                        'old_group': 'a', 'new_group': 'b'}]},
+     (0, 'modified', 'test.txt', 'home/user/arrays')),
+
+    # All file-related changes in one test
+    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800},
+                                                       {'type': 'mode', 'old_mode': '-rw-rw-rw-',
+                                                        'new_mode': '-rw-r--r--'},
+                                                       {'type': 'owner', 'old_user': 'user', 'new_user': 'nfsnobody',
+                                                        'old_group': 'user', 'new_group': 'nfsnobody'}]},
+     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'test.txt', 'home/user/arrays')),
+])
+def test_archive_diff_json_parser(line, expected):
+    files_with_attributes, _nested_file_list = vorta.views.diff_result.parse_diff_json_lines([line])
+    assert files_with_attributes == [expected]
