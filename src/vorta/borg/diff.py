@@ -1,4 +1,5 @@
 from .borg_thread import BorgThread
+from vorta.utils import borg_compat
 
 
 class BorgDiffThread(BorgThread):
@@ -17,17 +18,19 @@ class BorgDiffThread(BorgThread):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
-        else:
-            ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'diff', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}::{archive_name_1}')
-        cmd.append(f'{archive_name_2}')
+        ret['cmd'] = ['borg', 'diff', '--info', '--log-json']
+        ret['json_lines'] = False
+        if borg_compat.check('DIFF_JSON_LINES'):
+            ret['cmd'].append('--json-lines')
+            ret['json_lines'] = True
 
+        ret['cmd'].extend([
+            f'{profile.repo.url}::{archive_name_1}',
+            f'{archive_name_2}'
+        ])
         ret['ok'] = True
-        ret['cmd'] = cmd
+        ret['archive_name_older'] = archive_name_1
+        ret['archive_name_newer'] = archive_name_2
 
         return ret
-
-    def process_result(self, result):
-        pass

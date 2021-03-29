@@ -169,20 +169,19 @@ def sort_sizes(size_list):
     return final_list
 
 
-def pretty_bytes(size):
-    """from https://stackoverflow.com/questions/12523586/
-            python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
+def pretty_bytes(size, metric=True, sign=False, precision=1):
     if not isinstance(size, int):
         return ''
-    power = 1000  # GiB is base 2**10, GB is base 10**3.
+    prefix = '+' if sign and size > 0 else ''
+    power, units = (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']) if metric else \
+                   (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
     n = 0
-    Dic_powerN = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
-    while size >= power:
+    while abs(round(size, precision)) >= power and n + 1 < len(units):
         size /= power
         n += 1
     try:
-        unit = Dic_powerN[n]
-        return f'{round(size, 1)} {unit}B'
+        unit = units[n]
+        return f'{prefix}{round(size, precision)} {unit}B'
     except KeyError as e:
         logger.error(e)
         return "NaN"

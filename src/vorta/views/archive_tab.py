@@ -491,8 +491,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 archive_name_older = archive_cell_older.text()
 
                 params = BorgDiffThread.prepare(profile, archive_name_older, archive_name_newer)
-                params['archive_name_newer'] = archive_name_newer
-                params['archive_name_older'] = archive_name_older
 
                 if params['ok']:
                     self._toggle_all_buttons(False)
@@ -517,7 +515,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if result['returncode'] == 0:
             archive_newer = ArchiveModel.get(name=result['params']['archive_name_newer'])
             archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
-            window = DiffResult(result['data'], archive_newer, archive_older)
+            window = DiffResult(result['data'], archive_newer, archive_older, result['params']['json_lines'])
             self._toggle_all_buttons(True)
             window.setParent(self, QtCore.Qt.Sheet)
             self._resultwindow = window  # for testing
