@@ -175,4 +175,3 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
     tab.rename_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)
-
