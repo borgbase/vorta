@@ -1,3 +1,4 @@
+import json
 import os
 import re
 
@@ -15,11 +16,21 @@ DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
 
 
 class DiffResult(DiffResultBase, DiffResultUI):
-    def __init__(self, fs_data, archive_newer, archive_older):
+    def __init__(self, fs_data, archive_newer, archive_older, json_lines):
         super().__init__()
         self.setupUi(self)
 
-        files_with_attributes, nested_file_list = parse_diff_lines(fs_data.split('\n'))
+        if json_lines:
+            # If fs_data is already a dict, then there was just a single json-line
+            # and the default handler already parsed into json dict, otherwise
+            # fs_data is a str, and needs to be split and parsed into json dicts
+            lines = [fs_data] if isinstance(fs_data, dict) else \
+                    [json.loads(line) for line in fs_data.split('\n') if line]
+        else:
+            lines = [line for line in fs_data.split('\n') if line]
+
+        files_with_attributes, nested_file_list = parse_diff_json_lines(lines) \
+            if json_lines else parse_diff_lines(lines)
         model = DiffTree(files_with_attributes, nested_file_list)
 
         view = self.treeView
@@ -37,15 +48,77 @@ class DiffResult(DiffResultBase, DiffResultUI):
         self.okButton.clicked.connect(self.accept)
 
 
-def parse_diff_lines(diff_lines):
+def parse_diff_json_lines(diffs):
     files_with_attributes = []
     nested_file_list = nested_dict()
 
+    for item in diffs:
+        dirpath, name = os.path.split(item['path'])
+
+        # add to nested dict of folders to find nested dirs.
+        d = get_dict_from_list(nested_file_list, dirpath.split('/'))
+        if name not in d:
+            d[name] = {}
+
+        # added link, removed link, changed link
+        # modified (added, removed), added (size), removed (size)
+        # added directory, removed directory
+        # owner (old_user, new_user, old_group, new_group))
+        # mode (old_mode, new_mode)
+        size = 0
+        change_type = None
+        change_type_priority = 0
+        for change in item['changes']:
+            # if more than one type of change has happened for this file/dir/link, then report the most important
+            # (higher priority)
+            if {'type': 'modified'} == change:
+                # modified, but can't compare ids
+                if change_type_priority < 3:
+                    change_type = 'modified'
+                    change_type_priority = 3
+            elif change['type'] == 'modified':
+                # only reveal 'added' to match what happens in non-json parsing - maybe update dialog to show more info.
+                # size = change['added'] - change['removed']
+                size = change['added']
+                if change_type_priority < 3:
+                    # non-json-lines mode only reports owner changes as 'modified' in the tree - maybe update dialog to
+                    # show more info.
+                    # change_type = '{:>9} {:>9}'.format(pretty_bytes(change['added'], precision=1, sign=True),
+                    #                                    pretty_bytes(-change['removed'], precision=1, sign=True))
+                    change_type = 'modified'
+                    change_type_priority = 3
+            elif change['type'] in ['added', 'removed', 'added link', 'removed link', 'changed link',
+                                    'added directory', 'removed directory']:
+                size = change.get('size', 0)
+                if change_type_priority < 2:
+                    change_type = change['type'].split()[0]     # 'added', 'removed' or 'changed'
+                    change_type_priority = 2
+            elif change['type'] == 'mode':
+                # mode change can occur along with previous changes - don't override
+                if change_type_priority < 4:
+                    change_type = '[{} -> {}]'.format(change['old_mode'], change['new_mode'])
+                    change_type_priority = 4
+            elif change['type'] == 'owner':
+                # owner change can occur along with previous changes - don't override
+                if change_type_priority < 1:
+                    # non-json-lines mode only reports owner changes as 'modified' in the tree - matbe update dialog to
+                    # show more info.
+                    # change_type = '{}:{} -> {}:{}'.format(change['old_user'], change['old_group'],
+                    #                                       change['new_user'], change['new_group'])
+                    change_type = 'modified'
+                    change_type_priority = 1
+        assert change_type  # either no changes, or unrecognized change(s)
+
+        files_with_attributes.append((size, change_type, name, dirpath))
+
+    return (files_with_attributes, nested_file_list)
+
+
+def parse_diff_lines(diff_lines):
+    nested_file_list = nested_dict()
+
     def parse_line(line):
-        if line:
-            line_split = line.split()
-        else:
-            return 0, "", "", ""
+        line_split = line.split()
 
         if line_split[0] in {'added', 'removed', 'changed'}:
             change_type = line_split[0]
@@ -90,8 +163,7 @@ def parse_diff_lines(diff_lines):
 
         return size, change_type, name, dir
 
-    for line in diff_lines:
-        files_with_attributes.append(parse_line(line))
+    files_with_attributes = [parse_line(line) for line in diff_lines if line]
 
     return (files_with_attributes, nested_file_list)
 
