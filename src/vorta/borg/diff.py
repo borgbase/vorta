@@ -19,16 +19,18 @@ class BorgDiffThread(BorgThread):
         if not ret['ok']:
             return ret
 
-        ret['cmd'] = [
-            'borg', 'diff', '--info', '--log-json',
+        ret['cmd'] = ['borg', 'diff', '--info', '--log-json']
+        ret['json_lines'] = False
+        if borg_compat.check('DIFF_JSON_LINES'):
+            ret['cmd'].append('--json-lines')
+            ret['json_lines'] = True
+
+        ret['cmd'].extend([
             f'{profile.repo.url}::{archive_name_1}',
-            f'{archive_name_2}']
+            f'{archive_name_2}'
+        ])
         ret['ok'] = True
         ret['archive_name_older'] = archive_name_1
         ret['archive_name_newer'] = archive_name_2
-        ret['json_lines'] = False
-        if borg_compat.check('DIFF_JSON_LINES'):
-            ret['cmd'].insert(4, '--json-lines')
-            ret['json_lines'] = True
 
         return ret

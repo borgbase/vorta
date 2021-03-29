@@ -81,7 +81,7 @@ def parse_diff_json_lines(diffs):
                 # size = change['added'] - change['removed']
                 size = change['added']
                 if change_type_priority < 3:
-                    # non-json-lines mode only reports owner changes as 'modified' in the tree - matbe update dialog to
+                    # non-json-lines mode only reports owner changes as 'modified' in the tree - maybe update dialog to
                     # show more info.
                     # change_type = '{:>9} {:>9}'.format(pretty_bytes(change['added'], precision=1, sign=True),
                     #                                    pretty_bytes(-change['removed'], precision=1, sign=True))

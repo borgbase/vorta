@@ -170,8 +170,6 @@ def sort_sizes(size_list):
 
 
 def pretty_bytes(size, metric=True, sign=False, precision=1):
-    """from https://stackoverflow.com/questions/12523586/\
-python-format-size-application-converting-b-to-kb-mb-gb-tb/37423778"""
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
