@@ -25,7 +25,7 @@ class TrayMenu(QSystemTrayIcon):
 
     def on_activation(self, reason):
         if reason == QSystemTrayIcon.Trigger:
-            if os.environ.get('XDG_CURRENT_DESKTOP', '') == 'KDE':
+            if os.environ.get('XDG_CURRENT_DESKTOP', '').startswith(('KDE', 'GNOME')):
                 self.app.toggle_main_window_visibility()
             else:
                 self.on_user_click()
