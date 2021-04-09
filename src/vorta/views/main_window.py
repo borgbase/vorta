@@ -135,7 +135,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.window = window  # For tests
         window.setParent(self, QtCore.Qt.Sheet)
         window.open()
-        window.profile_changed.connect(self.add_profile_entry)
+        window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_delete_action(self):
@@ -160,12 +160,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.window = window  # For tests
         window.setParent(self, QtCore.Qt.Sheet)
         window.open()
-        window.profile_changed.connect(self.add_profile_entry)
+        window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
-    def add_profile_entry(self, profile_name, profile_id):
-        self.profileSelector.addItem(profile_name, profile_id)
-        self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+    def profile_add_edit_result(self, profile_name, profile_id):
+        # Profile is renamed
+        if self.profileSelector.currentData() == profile_id:
+            self.profileSelector.setItemText(self.profileSelector.currentIndex(), profile_name)
+        # Profile is added
+        else:
+            self.profileSelector.addItem(profile_name, profile_id)
+            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
