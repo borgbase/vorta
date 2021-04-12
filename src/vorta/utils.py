@@ -1,13 +1,11 @@
 import argparse
 import errno
 import getpass
-import operator
 import os
 import platform
 import re
 import sys
 import unicodedata
-from collections import defaultdict
 from datetime import datetime as dt
 from functools import reduce
 
@@ -105,11 +103,11 @@ def nested_dict():
     - https://stackoverflow.com/a/16724937/3983708
     - https://stackoverflow.com/a/14692747/3983708
     """
-    return defaultdict(nested_dict)
+    return dict()
 
 
 def get_dict_from_list(dataDict, mapList):
-    return reduce(operator.getitem, mapList, dataDict)
+    return reduce(lambda d, k: d.setdefault(k, {}), mapList, dataDict)
 
 
 def choose_file_dialog(parent, title, want_folder=True):
