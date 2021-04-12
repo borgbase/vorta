@@ -4,7 +4,9 @@ import vorta.views.archive_tab
 import vorta.utils
 
 
-def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
+@pytest.mark.parametrize('json_mock_file,folder_root', [
+    ('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')])
+def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root):
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
@@ -12,7 +14,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
     tab.populate_from_profile()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
-    stdout, stderr = borg_json_output('diff_archives')
+    stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
@@ -24,7 +26,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output):
     tab._window.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
 
-    assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == 'test'
+    assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == folder_root
     tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
 
     assert tab._resultwindow.archiveNameLabel_1.text() == 'test-archive'
