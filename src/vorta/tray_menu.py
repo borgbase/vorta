@@ -24,11 +24,17 @@ class TrayMenu(QSystemTrayIcon):
         self.show()
 
     def on_activation(self, reason):
-        if reason == QSystemTrayIcon.Trigger:
-            if os.environ.get('XDG_CURRENT_DESKTOP', '') == 'KDE':
-                self.app.toggle_main_window_visibility()
-            else:
-                self.on_user_click()
+        """
+        XDG-compliant tray behavior: right click to open a context menu, and left click to
+        restore the application.
+
+        If XDG_CURRENT_DESKTOP isn't set, always open the tray menu (macOS)
+        """
+        if reason in [QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick] and \
+                os.environ.get('XDG_CURRENT_DESKTOP'):
+            self.app.toggle_main_window_visibility()
+        else:
+            self.on_user_click()
 
     def on_user_click(self):
         """Build system tray menu based on current state."""
