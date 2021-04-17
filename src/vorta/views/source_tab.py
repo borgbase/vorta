@@ -157,6 +157,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         def receive():
             dirs = dialog.selectedFiles()
             for dir in dirs:
+                if not os.access(dir, os.R_OK):
+                    msg = QMessageBox()
+                    msg.setText(self.tr("You don't have read access to this folder: ") + dir)
+                    msg.exec()
+                    return
+
                 new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
                 if created:
                     self.add_source_to_table(new_source)
