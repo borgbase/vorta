@@ -159,7 +159,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             for dir in dirs:
                 if not os.access(dir, os.R_OK):
                     msg = QMessageBox()
-                    msg.setText(self.tr("You don't have read access to this folder: ") + dir)
+                    msg.setText(self.tr(f"You don't have read access to {dir}."))
                     msg.exec()
                     return
 
