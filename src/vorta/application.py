@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 import time
-import platform
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -78,7 +77,7 @@ class VortaApp(QtSingleApplication):
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
-        if platform.system().lower() == 'darwin':
+        if sys.platform == 'darwin':
             self.check_darwin_permissions()
 
         self.installEventFilter(self)
