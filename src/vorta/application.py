@@ -77,6 +77,9 @@ class VortaApp(QtSingleApplication):
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
+        if sys.platform == 'darwin':
+            self.check_darwin_permissions()
+
         self.installEventFilter(self)
 
     def create_backups_cmdline(self, profile_name):
@@ -181,6 +184,30 @@ class VortaApp(QtSingleApplication):
         msg.setInformativeText(self.tr("Vorta was unable to locate a usable Borg Backup binary."))
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec()
+
+    def check_darwin_permissions(self):
+        """
+        macOS restricts access to certain folders by default. For some folders, the user
+        will get a prompt (e.g. Documents, Downloads), while others will cause file access
+        errors.
+
+        This function tries reading a file that is known to be restricted and warn the user about
+        incomplete backups.
+        """
+        test_path = os.path.expanduser('~/Library/Cookies')
+        if os.path.exists(test_path) and not os.access(test_path, os.R_OK):
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
+            msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
+            msg.setInformativeText(self.tr(
+                "Without this, some files won't be accessible and you may end up with an incomplete "
+                "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
+                "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
+                "System Preferences > Security & Privacy</a>."
+            ))
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
     def react_to_log(self, mgs, context):
         """
