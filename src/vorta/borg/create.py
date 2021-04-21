@@ -33,7 +33,7 @@ class BorgCreateThread(BorgThread):
                 repo.save()
 
             if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(self.tr('Backup finished. Some files were not accessible.'))
+                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
 
