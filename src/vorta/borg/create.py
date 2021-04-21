@@ -32,7 +32,10 @@ class BorgCreateThread(BorgThread):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            self.app.backup_progress_event.emit(self.tr('Backup finished.'))
+            if result['returncode'] == 1:
+                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
+            else:
+                self.app.backup_progress_event.emit(self.tr('Backup finished.'))
 
     def progress_event(self, fmt):
         self.app.backup_progress_event.emit(fmt)
