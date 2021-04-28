@@ -242,7 +242,7 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakThread.prepare(profile)
         if not params['ok']:
-            self.set_progress(params['message'])
+            self.backup_progress_event.emit(params['message'])
             return
         thread = BorgBreakThread(params['cmd'], params, parent=self)
         thread.start()
