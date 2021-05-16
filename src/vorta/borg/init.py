@@ -10,7 +10,7 @@ class BorgInitThread(BorgThread):
     @classmethod
     def prepare(cls, params):
 
-        # Build fake profile because we don't have it in the DB yet.
+        # Build fake profile_export because we don't have it in the DB yet.
         profile = FakeProfile(
             FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'],
                      params['encryption']), 'Init Repo', params['ssh_key']

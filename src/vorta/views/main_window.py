@@ -1,6 +1,8 @@
+from pathlib import Path
+
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
@@ -14,6 +16,7 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
+from ..profile_export import ProfileExport
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
@@ -36,7 +39,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         previous_window_height = SettingsModel.get(key='previous_window_height')
         self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
 
-        # Select previously used profile, if available
+        # Select previously used profile_export, if available
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
         self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
         if self.current_profile is None:
@@ -68,14 +71,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
-        # Init profile list
+        # Init profile_export list
         self.populate_profile_selector()
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
-        self.profileExportButton.clicked.connect(self.profile_backup_action)
+        self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
         profile_add_menu = QMenu()
-        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_restore_action)
+        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_import_action)
         self.profileAddButton.setMenu(profile_add_menu)
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
@@ -156,7 +159,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             # Remove pending background jobs
             to_delete_id = str(to_delete.id)
-            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            msg = self.tr("Are you sure you want to delete profile_export '{}'?".format(to_delete.name))
             reply = QMessageBox.question(self, self.tr("Confirm deletion"),
                                          msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
@@ -175,25 +178,34 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
-    def profile_backup_action(self):
-        window = ExportWindow(parent=self)
+    def profile_export_action(self):
+        window = ExportWindow(profile=self.current_profile)
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
 
-    def profile_restore_action(self):
-        def profile_restored_event():
+    def profile_import_action(self):
+        def profile_imported_event(profile):
             self.repoTab.set_repos()
             self.scheduleTab.populate_logs()
             self.scheduleTab.populate_wifi()
             self.miscTab.populate()
             self.populate_profile_selector()
 
-        window = ImportWindow(parent=self)
-        self.window = window
-        window.setParent(self, QtCore.Qt.Sheet)
-        window.profile_imported.connect(profile_restored_event)
-        window.show()
+        filename = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Load profile"),
+            str(Path.home()),
+            self.tr("JSON (*.json);;All files (*)"))[0]
+        if filename:
+            with open(filename, 'r') as file:
+                json_string = file.read()
+                profile_export = ProfileExport.from_json(json_string)
+            window = ImportWindow(profile_export=profile_export)
+            self.window = window
+            window.setParent(self, QtCore.Qt.Sheet)
+            window.profile_imported.connect(profile_imported_event)
+            window.show()
 
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed

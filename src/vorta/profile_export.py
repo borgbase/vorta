@@ -12,6 +12,24 @@ class ProfileExport:
     def __init__(self, profile_dict):
         self._profile_dict = profile_dict
 
+    @property
+    def schema_version(self):
+        return self._profile_dict['SchemaVersion']['version']
+
+    @property
+    def repo_url(self):
+        if 'repo' in self._profile_dict and 'url' in self._profile_dict['repo']:
+            return self._profile_dict['repo']['url']
+        return None
+
+    @property
+    def repo_password(self):
+        return self._profile_dict['password'] if 'password' in self._profile_dict else None
+
+    @repo_password.setter
+    def repo_password(self, password):
+        self._profile_dict['password'] = password
+
     @classmethod
     def from_db(cls, profile, store_password=True, include_settings=True):
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
@@ -113,7 +131,6 @@ class ProfileExport:
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
         new_profile.save(force_insert=True)
-        print(new_profile)
         return new_profile
 
     @classmethod
