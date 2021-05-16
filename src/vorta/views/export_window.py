@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from pathlib import Path
 
 from PyQt5 import QtCore
@@ -7,7 +8,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.models import SCHEMA_VERSION
+from vorta.models import SCHEMA_VERSION, BackupProfileModel
 from vorta.utils import get_asset
 from .utils import get_colored_icon
 from ..notifications import VortaNotifications
@@ -30,28 +31,31 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
         self.buttonBox.rejected.connect(self.reject)
 
         self.keyring = VortaKeyring.get_keyring()
-        profile = self.parent.current_profile
+        profile = self.get_current_profile()
         if profile.repo is None or self.keyring.get_password('vorta-repo', profile.repo.url) is None:
-            self.storePassword.hide()
+            self.storePassword.setCheckState(False)
+            self.storePassword.setDisabled(True)
+            self.storePassword.setToolTip(self.tr('The current profile has no password'))
 
     def get_file(self):
         """ Get targetted save file with custom extension """
-        fileName = QFileDialog.getSaveFileName(
+        default_file = os.path.join(Path.home(), '{}.json'.format(self.get_current_profile().name))
+        file_name = QFileDialog.getSaveFileName(
             self,
             self.tr("Save profile"),
-            str(Path.home()),
+            default_file,
             "JSON (*.json)")[0]
-        if fileName:
-            if not fileName.endswith('.json'):
-                fileName += '.json'
-        return fileName
+        if file_name:
+            if not file_name.endswith('.json'):
+                file_name += '.json'
+        return file_name
 
     def run(self):
         """ Attempt to write profile export to file """
         filename = self.get_file()
         if not filename:
             return False
-        profile = self.parent.current_profile
+        profile = self.get_current_profile()
         json_string = ProfileExport.from_db(profile, self.storePassword.isChecked()).to_json()
         try:
             with open(filename, 'w') as file:
@@ -70,6 +74,14 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
                              self.tr('Profile export written to {}.').format(filename), level='info')
             self.close()
 
+    def get_current_profile(self):
+        """Shorthand for retrieving the current profile from the main window.
+
+        @rtype: BackupProfileModel
+        """
+        profile = self.parent.current_profile
+        return profile
+
 
 class ImportWindow(ImportWindowUI, ImportWindowBase):
     profile_imported = QtCore.pyqtSignal()
@@ -87,8 +99,9 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
 
     def run(self):
         """ Attempt to read a profile export and import it """
-        def get_schema_version(jsonData):
-            return json.loads(jsonData)['SchemaVersion']['version']
+
+        def get_schema_version(json_data):
+            return json.loads(json_data)['SchemaVersion']['version']
 
         with open(self.locationLabel.text(), 'r') as file:
             try:
