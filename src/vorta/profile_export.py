@@ -8,7 +8,7 @@ from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, EventLogM
     SettingsModel, BackupProfileModel, db, SCHEMA_VERSION
 
 
-class ConfigBackup:
+class ProfileExport:
     def __init__(self, profile_dict):
         self._profile_dict = profile_dict
 
@@ -43,7 +43,7 @@ class ConfigBackup:
             # Add SettingsModel
             profile_dict['SettingsModel'] = [
                 model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
-        return ConfigBackup(profile_dict)
+        return ProfileExport(profile_dict)
 
     def to_db(self, override_settings=True):
         profile_schema = self._profile_dict['SchemaVersion']['version']
@@ -77,7 +77,7 @@ class ConfigBackup:
         if self._profile_dict['repo']:
             repo = RepoModel.get_or_none(RepoModel.url == self._profile_dict['repo']['url'])
             if repo is None:
-                # Load repo from backup
+                # Load repo from export
                 repo = dict_to_model(RepoModel, self._profile_dict['repo'])
                 repo.save(force_insert=True)
                 returns['repo'] = True
@@ -118,7 +118,7 @@ class ConfigBackup:
 
     @classmethod
     def from_json(cls, json_string):
-        return ConfigBackup(json.loads(json_string))
+        return ProfileExport(json.loads(json_string))
 
     def to_json(self):
         return json.dumps(self._profile_dict, default=self._converter, indent=4)
@@ -130,5 +130,5 @@ class ConfigBackup:
 
 
 class VersionException(Exception):
-    """ For when current_version < backup_version. Should only occur if downgrading """
+    """ For when current_version < export_version. Should only occur if downgrading """
     pass

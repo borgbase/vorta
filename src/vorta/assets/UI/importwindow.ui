@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>551</width>
-    <height>245</height>
+    <height>136</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,29 +53,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="profilesGroupBox">
-     <property name="title">
-      <string>Profiles</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
-        </property>
-        <item>
-         <widget class="QLabel" name="profileSecectionPlaceholder">
-          <property name="text">
-           <string>Please select a file to see profiles to restore.  TODO: Actually show profiles</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">

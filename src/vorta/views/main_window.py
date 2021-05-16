@@ -8,7 +8,7 @@ from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_ne
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
 from .archive_tab import ArchiveTab
-from .backup_window import RestoreWindow, BackupWindow
+from .export_window import ImportWindow, ExportWindow
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
@@ -72,10 +72,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.populate_profile_selector()
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
-        self.profileBackupButton.clicked.connect(self.profile_backup_action)
+        self.profileExportButton.clicked.connect(self.profile_backup_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
         profile_add_menu = QMenu()
-        profile_add_menu.addAction(self.tr('Restore from file...'), self.profile_restore_action)
+        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_restore_action)
         self.profileAddButton.setMenu(profile_add_menu)
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
@@ -101,7 +101,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
-        self.profileBackupButton.setIcon(get_colored_icon('file-import-solid'))
+        self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
 
     def set_progress(self, text=''):
@@ -176,7 +176,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_backup_action(self):
-        window = BackupWindow(parent=self)
+        window = ExportWindow(parent=self)
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
@@ -189,10 +189,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.miscTab.populate()
             self.populate_profile_selector()
 
-        window = RestoreWindow(parent=self)
+        window = ImportWindow(parent=self)
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
-        window.profile_restored.connect(profile_restored_event)
+        window.profile_imported.connect(profile_restored_event)
         window.show()
 
     def profile_add_edit_result(self, profile_name, profile_id):

@@ -1,7 +1,7 @@
 import os
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
-from vorta.views.backup_window import RestoreWindow
+from vorta.views.export_window import ImportWindow
 from vorta.models import BackupProfileModel, SourceFileModel
 
 
@@ -22,7 +22,7 @@ def test_restore_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.waitUntil(lambda: hasattr(main, 'window'), timeout=10000)
     restore_dialog = main.window
     '''
-    restore_dialog = RestoreWindow(parent=qapp.main_window)
+    restore_dialog = ImportWindow(parent=qapp.main_window)
 
     qtbot.mouseClick(restore_dialog.fileButton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: restore_dialog.locationLabel.text() == GOOD_FILE, timeout=5000)

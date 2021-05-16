@@ -92,9 +92,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="profileBackupButton">
+       <widget class="QToolButton" name="profileExportButton">
         <property name="toolTip">
-         <string>Backup Profile</string>
+         <string>Export Profile</string>
         </property>
         <property name="text">
          <string/>

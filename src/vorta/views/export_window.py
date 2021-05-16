@@ -10,22 +10,22 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.models import SCHEMA_VERSION
 from vorta.utils import get_asset
 from .utils import get_colored_icon
-from ..config_backup import ConfigBackup, VersionException
 from ..notifications import VortaNotifications
+from ..profile_export import ProfileExport, VersionException
 
-uifile_import = get_asset('UI/backupwindow.ui')
-BackupWindowUI, BackupWindowBase = uic.loadUiType(uifile_import)
-uifile_export = get_asset('UI/restorewindow.ui')
-RestoreWindowUI, RestoreWindowBase = uic.loadUiType(uifile_export)
+uifile_import = get_asset('UI/exportwindow.ui')
+ExportWindowUI, ExportWindowBase = uic.loadUiType(uifile_import)
+uifile_export = get_asset('UI/importwindow.ui')
+ImportWindowUI, ImportWindowBase = uic.loadUiType(uifile_export)
 logger = logging.getLogger(__name__)
 
 
-class BackupWindow(BackupWindowBase, BackupWindowUI):
+class ExportWindow(ExportWindowBase, ExportWindowUI):
     def __init__(self, parent):
         super().__init__()
         self.setupUi(self)
         self.parent = parent
-        self.setWindowTitle(self.tr("Backup Profile"))
+        self.setWindowTitle(self.tr("Export Profile"))
         self.buttonBox.accepted.connect(self.run)
         self.buttonBox.rejected.connect(self.reject)
 
@@ -47,32 +47,32 @@ class BackupWindow(BackupWindowBase, BackupWindowUI):
         return fileName
 
     def run(self):
-        """ Attempt to write backup to file """
+        """ Attempt to write profile export to file """
         filename = self.get_file()
         if not filename:
             return False
         profile = self.parent.current_profile
-        json_string = ConfigBackup.from_db(profile, self.storePassword.isChecked()).to_json()
+        json_string = ProfileExport.from_db(profile, self.storePassword.isChecked()).to_json()
         try:
             with open(filename, 'w') as file:
                 file.write(json_string)
         except (PermissionError, OSError):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
-            msg.setWindowTitle(self.tr('Backup file unwritable'))
+            msg.setWindowTitle(self.tr('Profile export file unwritable'))
             msg.setText(self.tr('The file {} could not be created. Please choose another location.')
                         .format(filename))
             msg.exec()
             return False
         else:
             notifier = VortaNotifications.pick()
-            notifier.deliver(self.tr('Config backup successful!'),
-                             self.tr('Config backup written to {}.').format(filename), level='info')
+            notifier.deliver(self.tr('Profile export successful!'),
+                             self.tr('Profile export written to {}.').format(filename), level='info')
             self.close()
 
 
-class RestoreWindow(RestoreWindowUI, RestoreWindowBase):
-    profile_restored = QtCore.pyqtSignal()
+class ImportWindow(ImportWindowUI, ImportWindowBase):
+    profile_imported = QtCore.pyqtSignal()
 
     def __init__(self, parent):
         super().__init__()
@@ -83,26 +83,25 @@ class RestoreWindow(RestoreWindowUI, RestoreWindowBase):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.buttonBox.accepted.connect(self.run)
         self.buttonBox.rejected.connect(self.reject)
-        self.setWindowTitle(self.tr("Restore Profile"))
+        self.setWindowTitle(self.tr("Import Profile"))
 
     def run(self):
-        """ Attempt to read backup file and restore profile """
-
+        """ Attempt to read a profile export and import it """
         def get_schema_version(jsonData):
             return json.loads(jsonData)['SchemaVersion']['version']
 
         with open(self.locationLabel.text(), 'r') as file:
             try:
                 json_string = file.read()
-                new_profile = ConfigBackup.from_json(json_string).to_db(
+                new_profile = ProfileExport.from_json(json_string).to_db(
                     override_settings=self.overrideExisting.isChecked())
             except (json.decoder.JSONDecodeError, KeyError) as e:
                 logger.error(e)
-                self.errors.setText(self.tr("Invalid backup file"))
+                self.errors.setText(self.tr("Invalid profile export file"))
             except AttributeError as e:
                 logger.error(e)
                 # Runs when model upgrading code in json_to_profile incomplete
-                schema_message = "Current schema: {0}\n Backup schema: {1}".format(
+                schema_message = "Current schema: {0}\n Profile export schema: {1}".format(
                     SCHEMA_VERSION, get_schema_version(json_string))
                 self.errors.setText(
                     self.tr("Schema upgrade failure, file a bug report with the link in the Misc tab "
@@ -110,32 +109,32 @@ class RestoreWindow(RestoreWindowUI, RestoreWindowBase):
                 raise e
             except VersionException as e:
                 logger.error(e)
-                self.errors.setText(self.tr("Newer backup files cannot be used on older versions."))
+                self.errors.setText(self.tr("Newer profile export files cannot be used on older versions."))
             except PermissionError as e:
                 logger.error(e)
-                self.errors.setText(self.tr("Cannot read backup file due to permission error."))
+                self.errors.setText(self.tr("Cannot read profile export file due to permission error."))
             except FileNotFoundError as e:
                 logger.error(e)
-                self.errors.setText(self.tr("Backup file not found."))
+                self.errors.setText(self.tr("Profile export file not found."))
             else:
                 if new_profile.repo:
                     repo_url = new_profile.repo.url
                     keyring = VortaKeyring.get_keyring()
                     if keyring.get_password('vorta-repo', repo_url):
-                        self.errors.setText(self.tr(f"Profile {new_profile.name} restored sucessfully."))
+                        self.errors.setText(self.tr(f"Profile {new_profile.name} imported sucessfully."))
                     else:
                         self.errors.setText(
                             self.tr(
-                                f"Profile {new_profile.name} restored, but the password for {repo_url} cannot be found, consider unlinking and readding the repository."))  # noqa
-                self.profile_restored.emit()
+                                f"Profile {new_profile.name} imported, but the password for {repo_url} cannot be found, consider unlinking and readding the repository."))  # noqa
+                self.profile_imported.emit()
                 notifier = VortaNotifications.pick()
-                notifier.deliver(self.tr('Config restore successful!'),
-                                 self.tr('Config backup restored from {}.').format(self.locationLabel.text()),
+                notifier.deliver(self.tr('Profile import successful!'),
+                                 self.tr('Profile imported from {}.').format(self.locationLabel.text()),
                                  level='info')
                 self.close()
 
     def get_file(self):
-        """ Attempt to read backup from file """
+        """ Attempt to read profile export from file """
         filename = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
