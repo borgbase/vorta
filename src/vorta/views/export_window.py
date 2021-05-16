@@ -39,7 +39,7 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
             self.storePassword.setToolTip(self.tr('The current profile_export has no password'))
 
     def get_file(self):
-        """ Get targetted save file with custom extension """
+        """ Get targeted save file with custom extension """
         default_file = os.path.join(Path.home(), '{}.json'.format(self.profile.name))
         file_name = QFileDialog.getSaveFileName(
             self,

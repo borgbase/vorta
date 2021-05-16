@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>551</width>
-    <height>103</height>
+    <height>105</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,7 +53,7 @@
       <string>Overwrite existing settings</string>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>

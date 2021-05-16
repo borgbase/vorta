@@ -186,7 +186,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_import_action(self):
         def profile_imported_event(profile):
-            self.repoTab.set_repos()
+            self.repoTab.populate_repositories()
             self.scheduleTab.populate_logs()
             self.scheduleTab.populate_wifi()
             self.miscTab.populate()

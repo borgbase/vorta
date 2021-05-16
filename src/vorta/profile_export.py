@@ -65,10 +65,7 @@ class ProfileExport:
 
     def to_db(self, override_settings=True):
         profile_schema = self._profile_dict['SchemaVersion']['version']
-        returns = {}
-
         keyring = VortaKeyring.get_keyring()
-
         if SCHEMA_VERSION < profile_schema:
             raise VersionException()
         elif SCHEMA_VERSION > profile_schema:
@@ -98,7 +95,6 @@ class ProfileExport:
                 # Load repo from export
                 repo = dict_to_model(RepoModel, self._profile_dict['repo'])
                 repo.save(force_insert=True)
-                returns['repo'] = True
             else:
                 # Use pre-exisitng repo
                 self._profile_dict['repo'] = model_to_dict(repo)
@@ -114,7 +110,6 @@ class ProfileExport:
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
             EventLogModel.insert_many(self._profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
-            returns['overrideExisting'] = True
 
         # Set the profile ids to be match new profile
         for source in self._profile_dict['SourceFileModel']:
