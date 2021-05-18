@@ -64,7 +64,7 @@ def get_directory_size(dir_path):
                 if stat.st_ino not in seen:  # Visit each file only once
                     seen.add(stat.st_ino)
                     data_size += stat.st_size
-            except FileNotFoundError:
+            except (FileNotFoundError, PermissionError):
                 continue
 
     files_count = len(seen)
