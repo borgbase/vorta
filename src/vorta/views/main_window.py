@@ -1,8 +1,9 @@
+from json import JSONDecodeError
 from pathlib import Path
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog, QErrorMessage
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
@@ -200,7 +201,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if filename:
             with open(filename, 'r') as file:
                 json_string = file.read()
-                profile_export = ProfileExport.from_json(json_string)
+                try:
+                    profile_export = ProfileExport.from_json(json_string)
+                except JSONDecodeError:
+                    QMessageBox.critical(None,
+                                         self.tr('Error'),
+                                         self.tr('This file does not contain valid JSON.'))
+                    return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
             window.setParent(self, QtCore.Qt.Sheet)

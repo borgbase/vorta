@@ -51,6 +51,13 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
                 file_name += '.json'
         return file_name
 
+    def on_error(self, error, message):
+        logger.error(error)
+        QMessageBox.critical(None,
+                             self.tr("Error while exporting"),
+                             message)
+        self.close()
+
     def run(self):
         """ Attempt to write profile_export export to file """
         filename = self.get_file()
@@ -61,13 +68,11 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
         try:
             with open(filename, 'w') as file:
                 file.write(json_string)
-        except (PermissionError, OSError):
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setWindowTitle(self.tr('Profile export file unwritable'))
-            msg.setText(self.tr('The file {} could not be created. Please choose another location.')
-                        .format(filename))
-            msg.exec()
+        except (PermissionError, OSError) as e:
+            self.on_error(
+                e,
+                self.tr('The file {} could not be created. Please choose another location.').format(filename)
+            )
             return False
         else:
             notifier = VortaNotifications.pick()
@@ -107,12 +112,9 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
 
     def on_error(self, error, message):
         logger.error(error)
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
-        msg.setText(self.tr("Error while importing"))
-        msg.setInformativeText(message)
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec()
+        QMessageBox.critical(None,
+                             self.tr("Error while importing"),
+                             message)
         self.close()
 
     def run(self):

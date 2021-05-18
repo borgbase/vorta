@@ -95,9 +95,7 @@ class ProfileExport:
                 # Load repo from export
                 repo = dict_to_model(RepoModel, self._profile_dict['repo'])
                 repo.save(force_insert=True)
-            else:
-                # Use pre-exisitng repo
-                self._profile_dict['repo'] = model_to_dict(repo)
+            self._profile_dict['repo'] = model_to_dict(repo)
 
         if self._profile_dict.get('password'):
             keyring.set_password('vorta-repo', self._profile_dict['repo']['url'], self._profile_dict['password'])
