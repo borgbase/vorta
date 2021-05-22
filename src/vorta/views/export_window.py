@@ -91,6 +91,14 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
         super().__init__()
         self.profile_export = profile_export
         self.setupUi(self)
+        self.init_repo_password_field(profile_export)
+        self.init_overwrite_profile_checkbox()
+        self.buttonBox.accepted.connect(self.run)
+        self.buttonBox.rejected.connect(self.reject)
+        self.setWindowTitle(self.tr("Import Profile"))
+
+    def init_repo_password_field(self, profile_export):
+        """Try to prefill the borg passphrase either from the export or from the keyring."""
         self.repoPassword.textChanged[str].connect(self.on_repo_password_changed)
         if profile_export.repo_password:
             self.repoPassword.setText(profile_export.repo_password)
@@ -103,9 +111,20 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
                 self.repoPassword.setText(repo_password)
                 self.repoPassword.setDisabled(True)
                 self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from your keyring'))
-        self.buttonBox.accepted.connect(self.run)
-        self.buttonBox.rejected.connect(self.reject)
-        self.setWindowTitle(self.tr("Import Profile"))
+
+    def init_overwrite_profile_checkbox(self):
+        """Disable the overwrite profile checkbox if no profile with that name currently exists."""
+        existing_backup_profile = BackupProfileModel.get_or_none(
+            BackupProfileModel.name == self.profile_export.name
+        )
+        if not existing_backup_profile:
+            self.overwriteExistingProfile.setChecked(False)
+            self.overwriteExistingProfile.setEnabled(False)
+            self.overwriteExistingProfile.setToolTip(
+                self.tr(
+                    'A profile with the name {} does not exist. Nothing to overwrite.'.format(self.profile_export.name)
+                )
+            )
 
     def on_repo_password_changed(self, password):
         self.profile_export.repo_password = password
@@ -121,7 +140,9 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
         """ Attempt to read a profile export and import it """
         try:
             new_profile = self.profile_export.to_db(
-                override_settings=self.overrideExisting.isChecked())
+                overwrite_profile=self.overwriteExistingProfile.isChecked(),
+                overwrite_settings=self.overwriteExistingSettings.isChecked()
+            )
         except AttributeError as e:
             # Runs when model upgrading code in json_to_profile incomplete
             schema_message = "Current schema: {0}\n Profile export schema: {1}".format(

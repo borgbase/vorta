@@ -13,12 +13,21 @@ class ProfileExport:
         self._profile_dict = profile_dict
 
     @property
+    def id(self):
+        return self._profile_dict['id']
+
+    @property
+    def name(self):
+        return self._profile_dict['name']
+
+    @property
     def schema_version(self):
         return self._profile_dict['SchemaVersion']['version']
 
     @property
     def repo_url(self):
-        if 'repo' in self._profile_dict and 'url' in self._profile_dict['repo']:
+        if 'repo' in self._profile_dict and type(self._profile_dict['repo']) == dict and \
+            'url' in self._profile_dict['repo']:
             return self._profile_dict['repo']['url']
         return None
 
@@ -63,7 +72,7 @@ class ProfileExport:
                 model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
         return ProfileExport(profile_dict)
 
-    def to_db(self, override_settings=True):
+    def to_db(self, overwrite_profile=False, overwrite_settings=True):
         profile_schema = self._profile_dict['SchemaVersion']['version']
         keyring = VortaKeyring.get_keyring()
         if SCHEMA_VERSION < profile_schema:
@@ -76,33 +85,37 @@ class ProfileExport:
                     sourcedir['dir_size'] = -1
                     sourcedir['path_isdir'] = False
 
-        # Guarantee uniqueness of ids
-        while BackupProfileModel.get_or_none(BackupProfileModel.id == self._profile_dict['id']) is not None:
-            self._profile_dict['id'] += 1
+        if overwrite_profile:
+            existing_model = BackupProfileModel.get_or_none(BackupProfileModel.name == self.name)
+            self._profile_dict['id'] = existing_model.id
+        else:
+            # Guarantee uniqueness of ids
+            while BackupProfileModel.get_or_none(BackupProfileModel.id == self.id) is not None:
+                self._profile_dict['id'] += 1
 
-        # Add suffix incase names are the same
-        if BackupProfileModel.get_or_none(BackupProfileModel.name == self._profile_dict['name']) is not None:
-            suffix = 1
-            while BackupProfileModel.get_or_none(
-                BackupProfileModel.name == f"{self._profile_dict['name']}-{suffix}") is not None:
-                suffix += 1
-            self._profile_dict['name'] = f"{self._profile_dict['name']}-{suffix}"
+            # Add suffix incase names are the same
+            if BackupProfileModel.get_or_none(BackupProfileModel.name == self.name) is not None:
+                suffix = 1
+                while BackupProfileModel.get_or_none(
+                    BackupProfileModel.name == f"{self.name}-{suffix}") is not None:
+                    suffix += 1
+                self._profile_dict['name'] = f"{self.name}-{suffix}"
 
         # Load existing repo or restore it
         if self._profile_dict['repo']:
-            repo = RepoModel.get_or_none(RepoModel.url == self._profile_dict['repo']['url'])
+            repo = RepoModel.get_or_none(RepoModel.url == self.repo_url)
             if repo is None:
                 # Load repo from export
                 repo = dict_to_model(RepoModel, self._profile_dict['repo'])
                 repo.save(force_insert=True)
             self._profile_dict['repo'] = model_to_dict(repo)
 
-        if self._profile_dict.get('password'):
-            keyring.set_password('vorta-repo', self._profile_dict['repo']['url'], self._profile_dict['password'])
+        if self.repo_password:
+            keyring.set_password('vorta-repo', self.repo_url, self.repo_password)
             del self._profile_dict['password']
 
         # Delete and recreate the tables to clear them
-        if override_settings:
+        if overwrite_settings:
             db.drop_tables([SettingsModel, EventLogModel, WifiSettingModel])
             db.create_tables([SettingsModel, EventLogModel, WifiSettingModel])
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
@@ -111,7 +124,7 @@ class ProfileExport:
 
         # Set the profile ids to be match new profile
         for source in self._profile_dict['SourceFileModel']:
-            source['profile'] = self._profile_dict['id']
+            source['profile'] = self.id
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
@@ -123,7 +136,11 @@ class ProfileExport:
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
-        new_profile.save(force_insert=True)
+        if overwrite_profile:
+            force_insert = False
+        else:
+            force_insert = True
+        new_profile.save(force_insert=force_insert)
         return new_profile
 
     @classmethod

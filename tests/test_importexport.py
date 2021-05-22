@@ -21,7 +21,7 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     main = qapp.main_window
     main.profile_import_action()
     import_dialog: ImportWindow = main.window
-    import_dialog.overrideExisting.setChecked(True)
+    import_dialog.overwriteExistingSettings.setChecked(True)
 
     qtbot.mouseClick(import_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: qapp.activeWindow() is None)
