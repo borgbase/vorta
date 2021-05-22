@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 
 from vorta.models import BackupProfileModel, SourceFileModel
-from vorta.views.export_window import ImportWindow
+from vorta.views.import_window import ImportWindow
 
 
 def test_import_success(qapp, qtbot, rootdir, monkeypatch):

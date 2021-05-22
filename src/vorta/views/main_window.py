@@ -11,7 +11,8 @@ from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_ne
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
 from .archive_tab import ArchiveTab
-from .export_window import ImportWindow, ExportWindow
+from .export_window import ExportWindow
+from .import_window import ImportWindow
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
