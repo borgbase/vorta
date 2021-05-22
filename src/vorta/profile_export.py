@@ -26,8 +26,8 @@ class ProfileExport:
 
     @property
     def repo_url(self):
-        if 'repo' in self._profile_dict and type(self._profile_dict['repo']) == dict and \
-            'url' in self._profile_dict['repo']:
+        if 'repo' in self._profile_dict and \
+                type(self._profile_dict['repo']) == dict and 'url' in self._profile_dict['repo']:
             return self._profile_dict['repo']['url']
         return None
 
@@ -96,8 +96,7 @@ class ProfileExport:
             # Add suffix incase names are the same
             if BackupProfileModel.get_or_none(BackupProfileModel.name == self.name) is not None:
                 suffix = 1
-                while BackupProfileModel.get_or_none(
-                    BackupProfileModel.name == f"{self.name}-{suffix}") is not None:
+                while BackupProfileModel.get_or_none(BackupProfileModel.name == f"{self.name}-{suffix}") is not None:
                     suffix += 1
                 self._profile_dict['name'] = f"{self.name}-{suffix}"
 

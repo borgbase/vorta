@@ -3,7 +3,7 @@ from pathlib import Path
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog, QErrorMessage
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
