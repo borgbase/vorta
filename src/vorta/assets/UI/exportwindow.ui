@@ -19,8 +19,11 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QCheckBox" name="storePassword">
+     <property name="toolTip">
+      <string>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</string>
+     </property>
      <property name="text">
-      <string>Include passwords in export (Will be stored in plain text, anyone can read it)</string>
+      <string>Include borg passphrase in export</string>
      </property>
     </widget>
    </item>
