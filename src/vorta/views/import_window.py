@@ -84,8 +84,4 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
             self.on_error(e, self.tr("Profile export file not found."))
         else:
             self.profile_imported.emit(new_profile)
-            notifier = VortaNotifications.pick()
-            notifier.deliver(self.tr('Profile import successful!'),
-                             self.tr('Profile {} imported.').format(new_profile.name),
-                             level='info')
             self.close()

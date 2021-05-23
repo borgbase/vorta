@@ -18,6 +18,7 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
+from ..notifications import VortaNotifications
 from ..profile_export import ProfileExport
 
 uifile = get_asset('UI/mainwindow.ui')
@@ -99,6 +100,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
 
         self.set_icons()
+        self.bootstrap_from_export()
 
     def on_close_window(self):
         self.close()
@@ -186,33 +188,52 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
 
-    def profile_import_action(self):
-        def profile_imported_event(profile):
-            self.repoTab.populate_repositories()
-            self.scheduleTab.populate_logs()
-            self.scheduleTab.populate_wifi()
-            self.miscTab.populate()
-            self.populate_profile_selector()
+    def load_export_profile(self, filename):
+        with open(filename, 'r') as file:
+            json_string = file.read()
+            try:
+                profile_export = ProfileExport.from_json(json_string)
+            except JSONDecodeError:
+                QMessageBox.critical(None,
+                                     self.tr('Error'),
+                                     self.tr('This file does not contain valid JSON.'))
+                return None
+        return profile_export
 
+    def profile_imported_event(self, profile):
+        notifier = VortaNotifications.pick()
+        notifier.deliver(self.tr('Profile import successful!'),
+                         self.tr('Profile {} imported.').format(profile.name),
+                         level='info')
+        self.repoTab.populate_repositories()
+        self.scheduleTab.populate_logs()
+        self.scheduleTab.populate_wifi()
+        self.miscTab.populate()
+        self.populate_profile_selector()
+
+    def bootstrap_from_export(self):
+        bootstrap_profile_export = Path.home() / '.vorta-init.json'
+        if not bootstrap_profile_export.is_file():
+            return
+        profile_export = self.load_export_profile(bootstrap_profile_export)
+        profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+        bootstrap_profile_export.unlink()
+        self.profile_imported_event(profile)
+
+    def profile_import_action(self):
         filename = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
             str(Path.home()),
             self.tr("JSON (*.json);;All files (*)"))[0]
         if filename:
-            with open(filename, 'r') as file:
-                json_string = file.read()
-                try:
-                    profile_export = ProfileExport.from_json(json_string)
-                except JSONDecodeError:
-                    QMessageBox.critical(None,
-                                         self.tr('Error'),
-                                         self.tr('This file does not contain valid JSON.'))
-                    return
+            profile_export = self.load_export_profile(filename)
+            if not profile_export:
+                return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
             window.setParent(self, QtCore.Qt.Sheet)
-            window.profile_imported.connect(profile_imported_event)
+            window.profile_imported.connect(self.profile_imported_event)
             window.show()
 
     def profile_add_edit_result(self, profile_name, profile_id):
