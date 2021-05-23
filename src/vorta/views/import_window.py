@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QMessageBox
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.models import BackupProfileModel, SCHEMA_VERSION
-from vorta.notifications import VortaNotifications
 from vorta.profile_export import VersionException
 from vorta.views.export_window import ImportWindowUI, ImportWindowBase, logger
 
