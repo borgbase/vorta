@@ -4,7 +4,7 @@ import json
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, EventLogModel, SchemaVersion, \
+from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, SchemaVersion, \
     SettingsModel, BackupProfileModel, db, SCHEMA_VERSION
 
 
@@ -54,10 +54,6 @@ class ProfileExport:
                 source,
                 recurse=False, exclude=[SourceFileModel.id]) for source in SourceFileModel.select().where(
                 SourceFileModel.profile == profile)]
-        # Add EventLogModel
-        profile_dict['EventLogModel'] = [
-            model_to_dict(s) for s in EventLogModel.select().order_by(
-                EventLogModel.start_time.desc())]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
 
@@ -115,10 +111,9 @@ class ProfileExport:
 
         # Delete and recreate the tables to clear them
         if overwrite_settings:
-            db.drop_tables([SettingsModel, EventLogModel, WifiSettingModel])
-            db.create_tables([SettingsModel, EventLogModel, WifiSettingModel])
+            db.drop_tables([SettingsModel, WifiSettingModel])
+            db.create_tables([SettingsModel, WifiSettingModel])
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
-            EventLogModel.insert_many(self._profile_dict['EventLogModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
 
         # Set the profile ids to be match new profile
@@ -129,7 +124,6 @@ class ProfileExport:
         # Delete added dictionaries to make it match BackupProfileModel
         del self._profile_dict['SettingsModel']
         del self._profile_dict['SourceFileModel']
-        del self._profile_dict['EventLogModel']
         del self._profile_dict['WifiSettingModel']
         del self._profile_dict['SchemaVersion']
 
