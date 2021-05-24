@@ -51,13 +51,13 @@ class BorgCreateThread(BorgThread):
 
     @classmethod
     def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
-        cmd = getattr(params['profile_export'], cmd)
+        cmd = getattr(params['profile'], cmd)
         if cmd:
             env = {
                 **os.environ.copy(),
                 'repo_url': params['repo'].url,
-                'profile_name': params['profile_export'].name,
-                'profile_slug': params['profile_export'].slug(),
+                'profile_name': params['profile'].name,
+                'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode)
             }
             proc = subprocess.run(cmd, shell=True, env=env)
@@ -103,7 +103,7 @@ class BorgCreateThread(BorgThread):
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
             return ret
 
-        ret['profile_export'] = profile
+        ret['profile'] = profile
         ret['repo'] = profile.repo
 
         # Run user-supplied pre-backup command

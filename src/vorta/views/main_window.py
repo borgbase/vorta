@@ -42,7 +42,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         previous_window_height = SettingsModel.get(key='previous_window_height')
         self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
 
-        # Select previously used profile_export, if available
+        # Select previously used profile, if available
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
         self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
         if self.current_profile is None:
@@ -74,7 +74,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
-        # Init profile_export list
+        # Init profile list
         self.populate_profile_selector()
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
@@ -163,7 +163,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             # Remove pending background jobs
             to_delete_id = str(to_delete.id)
-            msg = self.tr("Are you sure you want to delete profile_export '{}'?".format(to_delete.name))
+            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
             reply = QMessageBox.question(self, self.tr("Confirm deletion"),
                                          msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
