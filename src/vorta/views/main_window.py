@@ -183,7 +183,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_export_action(self):
-        window = ExportWindow(profile=self.current_profile)
+        window = ExportWindow(profile=self.profile())
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
