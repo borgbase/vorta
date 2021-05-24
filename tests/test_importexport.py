@@ -1,5 +1,6 @@
 import os
 
+import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 
@@ -24,7 +25,7 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     import_dialog.overwriteExistingSettings.setChecked(True)
 
     qtbot.mouseClick(import_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: qapp.activeWindow() is None)
+    qtbot.waitSignal(import_dialog.profile_imported, **pytest._wait_defaults)
 
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
