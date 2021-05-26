@@ -25,7 +25,7 @@ uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
-class MainWindow(MainWindowBase, MainWindowUI, BackupProfileMixin):
+class MainWindow(MainWindowBase, MainWindowUI):
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
@@ -183,7 +183,7 @@ class MainWindow(MainWindowBase, MainWindowUI, BackupProfileMixin):
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_export_action(self):
-        window = ExportWindow(profile=self.profile())
+        window = ExportWindow(profile=self.current_profile.refresh())
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
