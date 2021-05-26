@@ -6,7 +6,7 @@ from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog
 
 from vorta.borg.borg_thread import BorgThread
-from vorta.models import BackupProfileModel, SettingsModel, BackupProfileMixin
+from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
