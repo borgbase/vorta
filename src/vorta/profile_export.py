@@ -81,10 +81,12 @@ class ProfileExport:
                     sourcedir['dir_size'] = -1
                     sourcedir['path_isdir'] = False
 
+        existing_profile = None
         if overwrite_profile:
-            existing_model = BackupProfileModel.get_or_none(BackupProfileModel.name == self.name)
-            self._profile_dict['id'] = existing_model.id
-        else:
+            existing_profile = BackupProfileModel.get_or_none(BackupProfileModel.name == self.name)
+            if existing_profile:
+                self._profile_dict['id'] = existing_profile.id
+        if not overwrite_profile or not existing_profile:
             # Guarantee uniqueness of ids
             while BackupProfileModel.get_or_none(BackupProfileModel.id == self.id) is not None:
                 self._profile_dict['id'] += 1
@@ -129,7 +131,7 @@ class ProfileExport:
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
-        if overwrite_profile:
+        if overwrite_profile and existing_profile:
             force_insert = False
         else:
             force_insert = True

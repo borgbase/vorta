@@ -211,8 +211,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab.populate()
         self.populate_profile_selector()
 
-    def bootstrap_from_export(self):
-        bootstrap_profile_export = Path.home() / '.vorta-init.json'
+    def bootstrap_from_export(self, path=Path.home() / '.vorta-init.json'):
+        bootstrap_profile_export = path
         if not bootstrap_profile_export.is_file():
             return
         profile_export = self.load_export_profile(bootstrap_profile_export)

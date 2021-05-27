@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from shutil import copyfile
 
 import pytest
 from PyQt5 import QtCore
@@ -27,6 +29,23 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     qtbot.mouseClick(import_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
     qtbot.waitSignal(import_dialog.profile_imported, **pytest._wait_defaults)
 
+    restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
+    assert restored_profile is not None
+    restored_repo = restored_profile.repo
+    assert restored_repo is not None
+    assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
+
+
+def test_import_bootstrap_success(qapp, qtbot, rootdir, monkeypatch, tmpdir):
+    # copy the test file because is is deleted afterwards
+    original_good_file = Path(rootdir) / 'profile_exports' / 'valid.json'
+    GOOD_FILE = tmpdir / 'valid.json'
+    copyfile(original_good_file, GOOD_FILE)
+
+    main = qapp.main_window
+    main.bootstrap_from_export(Path(GOOD_FILE))
+
+    assert not GOOD_FILE.exists()
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
     restored_repo = restored_profile.repo
