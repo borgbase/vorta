@@ -188,7 +188,7 @@ class TreeModel(QAbstractItemModel):
         parent=None,
     ):
         files_with_attributes.sort(key=lambda x: x[2].upper())  # Sorts tuples by name ignoring case
-        files_with_attributes.sort(key=lambda x: x[0] != 0)  # Pushes folders (size zero) to start of list
+        files_with_attributes.sort(key=lambda x: x[4] != 'd')  # Pushes folders (type 'd') to start of list
 
         super(TreeModel, self).__init__(parent)
 
