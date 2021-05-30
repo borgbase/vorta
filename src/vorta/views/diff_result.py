@@ -31,6 +31,8 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
         files_with_attributes, nested_file_list = parse_diff_json_lines(lines) \
             if json_lines else parse_diff_lines(lines)
+        # add type attributes : directory, files
+        files_with_attributes = [attrs + (type_f, ) for attrs, type_f in zip(files_with_attributes, fs_data[1])]
         model = DiffTree(files_with_attributes, nested_file_list)
 
         view = self.treeView
@@ -165,7 +167,7 @@ def parse_diff_lines(diff_lines):
 
     files_with_attributes = [parse_line(line) for line in diff_lines if line]
 
-    return (files_with_attributes, nested_file_list)
+    return files_with_attributes, nested_file_list
 
 
 def calc_size(significand, unit):
