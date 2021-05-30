@@ -35,7 +35,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             d = get_dict_from_list(nested_file_list, dirpath.split("/"))
             if name not in d:
                 d[name] = {}
-            return size, modified, name, dirpath
+            return size, modified, name, dirpath, data["type"]
 
         # handle case of a single line of result, which will already be a dict
         lines = [fs_data] if isinstance(fs_data, dict) else \
