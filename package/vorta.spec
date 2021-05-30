@@ -80,7 +80,7 @@ app = BUNDLE(coll,
                  'SUFeedURL': APP_APPCAST_URL,
                  'LSEnvironment': {
                              'LC_CTYPE': 'en_US.UTF-8',
-                             'PATH': '/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin'
+                             'PATH': '/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin'
                          }
              })
 
