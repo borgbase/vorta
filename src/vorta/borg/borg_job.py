@@ -16,7 +16,7 @@ from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
-from vorta.models import EventLogModel, BackupProfileMixin
+from vorta.models import EventLogModel
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
@@ -59,7 +59,6 @@ class BorgJob(Job):
         super().__init__()
         self.site_id = site
         self.app = QApplication.instance()
-
         # Declare labels here for translation
         self.category_label = {"files": trans_late("BorgJob", "Files"),
                                "original": trans_late("BorgJob", "Original"),

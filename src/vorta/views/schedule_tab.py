@@ -1,7 +1,7 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
 from vorta.utils import get_asset, get_sorted_wifis
-from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin
+from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin, BackupProfileModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -16,11 +16,7 @@ class LogTableColumn:
     ReturnCode = 4
 
 
-class mChild(type(ScheduleBase), type(BackupProfileMixin)):
-    pass
-
-
-class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin, metaclass=mChild):
+class ScheduleTab(ScheduleBase, ScheduleUI):
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -104,7 +100,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin, metaclass=mChild
 
     def populate_from_profile(self):
         """Populate current view with data from selected profile."""
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
         # Set interval scheduler options
@@ -145,7 +141,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin, metaclass=mChild
 
     def populate_wifi(self):
         self.wifiListWidget.clear()
-        for wifi in get_sorted_wifis(self.profile()):
+        for wifi in get_sorted_wifis(BackupProfileModel.get(id=self.window().current_profile.id)):
             item = QListWidgetItem()
             item.setText(wifi.ssid)
             item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
@@ -157,17 +153,19 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin, metaclass=mChild
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
 
     def save_wifi_item(self, item):
-        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
+        db_item = WifiSettingModel.get(ssid=item.text(), profile=profile.id)
         db_item.allowed = item.checkState() == 2
         db_item.save()
 
     def save_profile_attr(self, attr, new_value):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         setattr(profile, attr, new_value)
         profile.save()
 
     def save_repo_attr(self, attr, new_value):
-        repo = self.profile().repo
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
+        repo = profile.repo
         setattr(repo, attr, new_value)
         repo.save()
 

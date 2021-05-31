@@ -118,7 +118,7 @@ class VortaApp(QtSingleApplication):
         query = RepoModel \
             .select() \
             .join(BackupProfileMixin)\
-            .where(BackupProfileMixin.my_profile == self.main_window.current_profile.id)
+            .where(BackupProfileMixin.profile == self.main_window.current_profile.id)
 
         cpt = len(query)
 
@@ -128,12 +128,11 @@ class VortaApp(QtSingleApplication):
                 profile = BackupProfileModel.get(id=profile_id)
                 profile.repo = query[cpt].id
                 profile.save
-                profile = BackupProfileModel.get(id=profile_id)
                 msg = BorgCreateJob.prepare(profile)
                 if msg['ok']:
-                    thread = BorgCreateJob(msg['cmd'], msg, parent=self)
-                    thread.result.connect(lambda: aux(query, cpt))
-                    thread.start()
+                    job = BorgCreateJob(msg['cmd'], msg, parent=self)
+                    job.result.connect(lambda: aux(query, cpt))
+                    self.scheduler.jobs_manager.add_job(job)
                 else:
                     notifier = VortaNotifications.pick()
                     notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')

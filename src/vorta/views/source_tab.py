@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from ..models import SourceFileModel, BackupProfileMixin, SettingsModel
+from ..models import SourceFileModel, BackupProfileMixin, SettingsModel, BackupProfileModel
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo
@@ -41,11 +41,7 @@ class FilesCount(QTableWidgetItem):
                 return 0
 
 
-class mChild(type(SourceBase), type(BackupProfileMixin)):
-    pass
-
-
-class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
+class SourceTab(SourceBase, SourceUI):
     updateThreads = []
 
     def __init__(self, parent=None):
@@ -138,7 +134,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
                     self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("File"))
 
     def populate_from_profile(self):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
         self.sourceFilesWidget.setRowCount(0)  # Clear rows
@@ -161,6 +157,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
 
     def source_add(self, want_folder):
         def receive():
+            profile = BackupProfileModel.get(id=self.window().current_profile.id)
             dirs = dialog.selectedFiles()
             for dir in dirs:
                 if not os.access(dir, os.R_OK):
@@ -169,7 +166,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
                     msg.exec()
                     return
 
-                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
+                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=profile)
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
@@ -189,18 +186,19 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
             self.sourceFilesWidget.removeRow(index.row())
 
     def save_exclude_patterns(self):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         profile.exclude_patterns = self.excludePatternsField.toPlainText()
         profile.save()
 
     def save_exclude_if_present(self):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
         profile.save()
 
     def paste_text(self):
         sources = QApplication.clipboard().text().splitlines()
         invalidSources = ""
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         for source in sources:
             if len(source) > 0:  # Ignore empty newlines
                 if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
@@ -208,7 +206,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
                 if not os.path.exists(source):
                     invalidSources = invalidSources + "\n" + source
                 else:
-                    new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
+                    new_source, created = SourceFileModel.get_or_create(dir=source, profile=profile)
                     if created:
                         self.add_source_to_table(new_source)
                         new_source.save()

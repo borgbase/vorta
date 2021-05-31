@@ -187,46 +187,29 @@ class SettingsModel(pw.Model):
 class BackupProfileMixin(pw.Model):
     """Extend to support multiple profiles later."""
     # columns url and name are primary keys
-    my_repo = pw.ForeignKeyField(RepoModel, column_name='my_repo')
-    my_profile = pw.ForeignKeyField(BackupProfileModel, column_name='my_profile')
+    profile = pw.ForeignKeyField(BackupProfileModel)
+    repo = pw.ForeignKeyField(RepoModel)
 
     class Meta:
         database = db
 
-    def profile(self):
-        return BackupProfileModel.get(id=self.window().current_profile.id)
-
-    def allProfile(self):
-        print("All profile :")
-        """for person in BackupProfileMixin.select():
-            print(person.repo, person.profile)"""
-
-        print("end")
-
     def add_repo(self, repo):
-        query = BackupProfileMixin\
-            .select()\
-            .where((BackupProfileMixin.my_repo == repo) &
-                   (BackupProfileMixin.my_profile == self.window().current_profile.id))
+        query = BackupProfileMixin \
+            .select() \
+            .where((BackupProfileMixin.repo == repo) &
+                   (BackupProfileMixin.profile == self.window().current_profile.id))
 
         if query.exists():
-            BackupProfileMixin\
+            BackupProfileMixin \
                 .delete() \
-                .where((BackupProfileMixin.my_repo == repo) &
-                       (BackupProfileMixin.my_profile == self.window().current_profile.id))\
+                .where((BackupProfileMixin.repo == repo) &
+                       (BackupProfileMixin.profile == self.window().current_profile.id)) \
                 .execute()
-            return False # repo has been removed from DB
+            return False  # repo has been removed from DB
         else:
-            p = BackupProfileMixin(my_repo=repo, my_profile=self.window().current_profile.id)
+            p = BackupProfileMixin(repo=repo, profile=self.window().current_profile.id)
             p.save()
-            return True # repo has been added
-
-
-    def get_repos(self, profile_id=None):
-        if not profile_id:
-            profile_id = self.window().current_profile.id
-
-        print(BackupProfileMixin.select().where(BackupProfileMixin.id == profile_id))
+            return True  # repo has been added
 
 
 def _apply_schema_update(current_schema, version_after, *operations):

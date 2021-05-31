@@ -4,7 +4,7 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
+from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin, BackupProfileModel
 from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
@@ -14,11 +14,7 @@ uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
-class mChild(type(RepoBase), type(BackupProfileMixin)):
-    pass
-
-
-class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
+class RepoTab(RepoBase, RepoUI):
     repo_changed = QtCore.pyqtSignal()
     repo_added = QtCore.pyqtSignal()
 
@@ -70,6 +66,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
 
     def set_repos(self):
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         count = self.repoSelector.count()
         for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
             self.repoSelector.removeItem(4)
@@ -79,8 +76,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
             self.repoSelector.addItem(repo.url, repo.id)
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.my_repo).where((BackupProfileMixin.my_profile == self.profile().id)):
-            active_repo = repo.my_repo.id + 3
+        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where((BackupProfileMixin.profile == profile.id)):
+            active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def populate_repositories(self):
@@ -93,7 +90,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
 
     def populate_from_profile(self):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         if profile.repo:
             self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
         else:
@@ -108,12 +105,13 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
             repo_i += 1
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.my_repo).where((BackupProfileMixin.my_profile == profile.id)):
-            active_repo = repo.my_repo.id + 3
+        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where((BackupProfileMixin.profile == profile.id)):
+            active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def init_repo_stats(self):
-        repo = self.profile().repo
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
+        repo = profile.repo
         if repo is not None:
             self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
             self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
@@ -149,7 +147,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
             ssh_add_window.accepted.connect(self.init_ssh)
             ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
         else:
-            profile = self.profile()
+            profile = BackupProfileModel.get(id=self.window().current_profile.id)
             profile.ssh_key = self.sshComboBox.itemData(index)
             profile.save()
 
@@ -179,7 +177,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
         msg.show()
 
     def compression_select_action(self, index):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         profile.compression = self.repoCompression.currentData()
         profile.save()
 
@@ -198,10 +196,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
             window.added_repo.connect(self.process_new_repo)
             window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         else:
-            profile = self.profile()
+            profile = BackupProfileModel.get(id=self.window().current_profile.id)
             profile.repo = self.repoSelector.currentData()
             profile.save()
-            is_new_repo = self.add_repo(self.repoSelector.currentData())
+            is_new_repo = BackupProfileMixin.add_repo(self, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
             if is_new_repo :
                 self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
@@ -212,7 +210,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
     def process_new_repo(self, result):
         if result['returncode'] == 0:
             new_repo = RepoModel.get(url=result['params']['repo_url'])
-            profile = self.profile()
+            profile = BackupProfileModel.get(id=self.window().current_profile.id)
             profile.repo = new_repo.id
             profile.save()
 
@@ -222,7 +220,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
             self.init_repo_stats()
 
     def repo_unlink_action(self):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         self.init_repo_stats()
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.Ok)

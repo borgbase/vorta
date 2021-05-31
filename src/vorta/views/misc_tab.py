@@ -1,6 +1,10 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
 
+from vorta.i18n import translate
+from vorta.utils import get_asset
+from vorta.autostart import open_app_at_startup
+from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings, BackupProfileModel
 from vorta._version import __version__
 from vorta.autostart import open_app_at_startup
 from vorta.config import LOG_DIR
@@ -12,11 +16,7 @@ uifile = get_asset('UI/misctab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 
 
-class mChild(type(MiscTabBase), type(BackupProfileMixin)):
-    pass
-
-
-class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin, metaclass=mChild):
+class MiscTab(MiscTabBase, MiscTabUI):
 
     def __init__(self, parent=None):
         super().__init__(parent)

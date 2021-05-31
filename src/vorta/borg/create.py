@@ -77,7 +77,7 @@ class BorgCreateJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to False, so we can do our own checks here.
 
-        n_backup_folders = SourceFileModel.select().where(profile.id == SourceFileModel.profile_id).count()
+        n_backup_folders = SourceFileModel.select().count()
         if n_backup_folders == 0:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
