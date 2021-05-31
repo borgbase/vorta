@@ -74,12 +74,21 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         password = params.get('password')
         if password is not None:
-            env['BORG_PASSPHRASE'] = password
+            pass_pipe_r, pass_pipe_w = os.pipe()
+            logger.debug("Passphrase pipe reading fd: {}, writing fd: {}".format(pass_pipe_r, pass_pipe_w))
+            os.set_inheritable(pass_pipe_r, True)
+            with os.fdopen(pass_pipe_w, "w") as p:
+                p.write(password)
+            env['BORG_PASSPHRASE_FD'] = "{}".format(pass_pipe_r)
         else:
+            pass_pipe_r = None
             env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
 
         if env.get('BORG_PASSCOMMAND', False):
-            env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
+            # Close the passphrase pipe
+            os.close(pass_pipe_r)
+            pass_pipe_r = None
+            env.pop('BORG_PASSPHRASE_FD', None)
 
         ssh_key = params.get('ssh_key')
         if ssh_key is not None:
@@ -91,6 +100,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
+        self.pass_pipe_r = pass_pipe_r
 
     @classmethod
     def is_running(cls):
@@ -196,7 +206,11 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         logger.info('Running command %s', ' '.join(self.cmd))
 
         p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
-                  env=self.env, cwd=self.cwd, start_new_session=True)
+                  env=self.env, cwd=self.cwd, start_new_session=True,
+                  close_fds=self.pass_pipe_r is None)
+
+        if self.pass_pipe_r is not None:
+            os.close(self.pass_pipe_r)
 
         self.process = p
 
