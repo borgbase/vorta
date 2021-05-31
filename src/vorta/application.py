@@ -10,7 +10,7 @@ from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
-from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
+from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin, RepoModel
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.borg.job_scheduler import JobsManager
@@ -115,16 +115,31 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
-        profile = BackupProfileModel.get(id=profile_id)
-        msg = BorgCreateJob.prepare(profile)
-        if msg['ok']:
-            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
-            self.scheduler.jobs_manager.add_job(job)
-        else:
-            notifier = VortaNotifications.pick()
-            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-            self.backup_progress_event.emit(translate('messages', msg['message']))
-            return None
+        query = RepoModel \
+            .select() \
+            .join(BackupProfileMixin)\
+            .where(BackupProfileMixin.my_profile == self.main_window.current_profile.id)
+
+        cpt = len(query)
+
+        def aux(query, cpt):
+            if cpt >= 1 :
+                cpt -= 1
+                profile = BackupProfileModel.get(id=profile_id)
+                profile.repo = query[cpt].id
+                profile.save
+                profile = BackupProfileModel.get(id=profile_id)
+                msg = BorgCreateJob.prepare(profile)
+                if msg['ok']:
+                    thread = BorgCreateJob(msg['cmd'], msg, parent=self)
+                    thread.result.connect(lambda: aux(query, cpt))
+                    thread.start()
+                else:
+                    notifier = VortaNotifications.pick()
+                    notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+                    self.backup_progress_event.emit(translate('messages', msg['message']))
+
+        aux(query, cpt)
 
     def open_main_window_action(self):
         self.main_window.show()

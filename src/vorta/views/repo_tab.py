@@ -1,6 +1,7 @@
 import os
 
 from PyQt5 import uic, QtCore
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
@@ -13,7 +14,11 @@ uifile = get_asset('UI/repotab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
-class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
+class mChild(type(RepoBase), type(BackupProfileMixin)):
+    pass
+
+
+class RepoTab(RepoBase, RepoUI, BackupProfileMixin, metaclass=mChild):
     repo_changed = QtCore.pyqtSignal()
     repo_added = QtCore.pyqtSignal()
 
@@ -68,8 +73,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         count = self.repoSelector.count()
         for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
             self.repoSelector.removeItem(4)
+        repo_i = 3
         for repo in RepoModel.select():
+            repo_i += 1
             self.repoSelector.addItem(repo.url, repo.id)
+            self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
+
+        for repo in BackupProfileMixin.select(BackupProfileMixin.my_repo).where((BackupProfileMixin.my_profile == self.profile().id)):
+            active_repo = repo.my_repo.id + 3
+            self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def populate_repositories(self):
         try:
@@ -90,6 +102,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
+
+        repo_i = 3
+        for repo in RepoModel.select():
+            repo_i += 1
+            self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
+
+        for repo in BackupProfileMixin.select(BackupProfileMixin.my_repo).where((BackupProfileMixin.my_profile == profile.id)):
+            active_repo = repo.my_repo.id + 3
+            self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def init_repo_stats(self):
         repo = self.profile().repo
@@ -180,6 +201,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             profile = self.profile()
             profile.repo = self.repoSelector.currentData()
             profile.save()
+            is_new_repo = self.add_repo(self.repoSelector.currentData())
+            repo_i = self.repoSelector.currentIndex()
+            if is_new_repo :
+                self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
+            else:
+                self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
             self.init_repo_stats()
 
     def process_new_repo(self, result):

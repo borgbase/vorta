@@ -41,7 +41,11 @@ class FilesCount(QTableWidgetItem):
                 return 0
 
 
-class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
+class mChild(type(SourceBase), type(BackupProfileMixin)):
+    pass
+
+
+class SourceTab(SourceBase, SourceUI, BackupProfileMixin, metaclass=mChild):
     updateThreads = []
 
     def __init__(self, parent=None):

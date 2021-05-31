@@ -16,7 +16,11 @@ class LogTableColumn:
     ReturnCode = 4
 
 
-class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
+class mChild(type(ScheduleBase), type(BackupProfileMixin)):
+    pass
+
+
+class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin, metaclass=mChild):
 
     def __init__(self, parent=None):
         super().__init__(parent)

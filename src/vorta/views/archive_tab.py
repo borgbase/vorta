@@ -33,7 +33,11 @@ uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 
-class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
+class mChild(type(ArchiveTabBase), type(BackupProfileMixin)):
+    pass
+
+
+class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin, metaclass=mChild):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
     def __init__(self, parent=None, app=None):

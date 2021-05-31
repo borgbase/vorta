@@ -3,10 +3,10 @@ import tempfile
 import subprocess
 from datetime import datetime as dt
 
+from vorta.borg.borg_job import BorgJob
 from vorta.i18n import trans_late
 from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
 from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
-from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
@@ -77,7 +77,7 @@ class BorgCreateJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to False, so we can do our own checks here.
 
-        n_backup_folders = SourceFileModel.select().count()
+        n_backup_folders = SourceFileModel.select().where(profile.id == SourceFileModel.profile_id).count()
         if n_backup_folders == 0:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret

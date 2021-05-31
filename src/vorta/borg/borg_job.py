@@ -36,7 +36,7 @@ temporary mutex.
 """
 
 
-class BorgJob(Job, BackupProfileMixin):
+class BorgJob(Job):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
     it should subclass `BorgJob`.
@@ -173,7 +173,7 @@ class BorgJob(Job, BackupProfileMixin):
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
             ret['message'] = trans_late(
                 'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
-                "Try unlinking and re-adding your repo.")
+                            "Try unlinking and re-adding your repo.")
             return ret
 
         ret['ssh_key'] = profile.ssh_key
@@ -256,10 +256,10 @@ class BorgJob(Job, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgThread', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgThread', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgThread', 'Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgThread', 'Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

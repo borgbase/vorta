@@ -12,7 +12,11 @@ uifile = get_asset('UI/misctab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 
 
-class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
+class mChild(type(MiscTabBase), type(BackupProfileMixin)):
+    pass
+
+
+class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin, metaclass=mChild):
 
     def __init__(self, parent=None):
         super().__init__(parent)

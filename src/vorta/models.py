@@ -184,11 +184,49 @@ class SettingsModel(pw.Model):
         database = db
 
 
-class BackupProfileMixin:
+class BackupProfileMixin(pw.Model):
     """Extend to support multiple profiles later."""
+    # columns url and name are primary keys
+    my_repo = pw.ForeignKeyField(RepoModel, column_name='my_repo')
+    my_profile = pw.ForeignKeyField(BackupProfileModel, column_name='my_profile')
+
+    class Meta:
+        database = db
 
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
+
+    def allProfile(self):
+        print("All profile :")
+        """for person in BackupProfileMixin.select():
+            print(person.repo, person.profile)"""
+
+        print("end")
+
+    def add_repo(self, repo):
+        query = BackupProfileMixin\
+            .select()\
+            .where((BackupProfileMixin.my_repo == repo) &
+                   (BackupProfileMixin.my_profile == self.window().current_profile.id))
+
+        if query.exists():
+            BackupProfileMixin\
+                .delete() \
+                .where((BackupProfileMixin.my_repo == repo) &
+                       (BackupProfileMixin.my_profile == self.window().current_profile.id))\
+                .execute()
+            return False # repo has been removed from DB
+        else:
+            p = BackupProfileMixin(my_repo=repo, my_profile=self.window().current_profile.id)
+            p.save()
+            return True # repo has been added
+
+
+    def get_repos(self, profile_id=None):
+        if not profile_id:
+            profile_id = self.window().current_profile.id
+
+        print(BackupProfileMixin.select().where(BackupProfileMixin.id == profile_id))
 
 
 def _apply_schema_update(current_schema, version_after, *operations):
@@ -429,6 +467,10 @@ def init_db(con=None):
             migrator.add_column(EventLogModel._meta.table_name,
                                 'end_time', pw.DateTimeField(default=datetime.now))
         )
+
+    if current_schema.version < 19:
+        db.create_tables([BackupProfileMixin])
+        current_schema.version = 18
 
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
