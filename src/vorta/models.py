@@ -10,6 +10,7 @@ import sys
 from datetime import datetime, timedelta
 
 import peewee as pw
+from dateutil.relativedelta import relativedelta as rd
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late

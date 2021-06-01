@@ -1,10 +1,12 @@
-from PyQt5 import uic
-from ..models import SourceFileModel, BackupProfileMixin, SettingsModel, BackupProfileModel
-from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
+import os
+
 from PyQt5 import QtCore
+from PyQt5 import uic
 from PyQt5.QtCore import QFileInfo
 from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
-import os
+
+from ..models import SourceFileModel, SettingsModel, BackupProfileModel
+from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)

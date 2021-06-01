@@ -1,7 +1,6 @@
 import os
 
 from PyQt5 import uic, QtCore
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin, BackupProfileModel
@@ -76,7 +75,8 @@ class RepoTab(RepoBase, RepoUI):
             self.repoSelector.addItem(repo.url, repo.id)
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where((BackupProfileMixin.profile == profile.id)):
+        for repo in BackupProfileMixin.select(BackupProfileMixin.repo) \
+            .where((BackupProfileMixin.profile == profile.id)):
             active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
@@ -105,7 +105,8 @@ class RepoTab(RepoBase, RepoUI):
             repo_i += 1
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where((BackupProfileMixin.profile == profile.id)):
+        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where(
+            (BackupProfileMixin.profile == profile.id)):
             active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
@@ -201,7 +202,7 @@ class RepoTab(RepoBase, RepoUI):
             profile.save()
             is_new_repo = BackupProfileMixin.add_repo(self, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
-            if is_new_repo :
+            if is_new_repo:
                 self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
             else:
                 self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))

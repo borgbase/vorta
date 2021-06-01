@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import signal
 import sys
@@ -9,17 +10,18 @@ import time
 import logging
 from datetime import datetime as dt
 from collections import namedtuple
+from subprocess import Popen, PIPE, TimeoutExpired
 from threading import Lock
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
-from vorta.models import EventLogModel
-from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
+from vorta.models import EventLogModel
+from vorta.utils import borg_compat, pretty_bytes
 
 temp_mutex = Lock()
 logger = logging.getLogger(__name__)
@@ -138,6 +140,7 @@ class BorgJob(Job):
             return ret
 
         if profile.repo is None:
+        #if BackupProfileMixin.select().where(BackupProfileMixin.profile == profile.id).count() == 0:
             ret['message'] = trans_late('messages', 'Add a backup repository first.')
             return ret
 

@@ -11,6 +11,7 @@ from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin, RepoModel
+from vorta.notifications import VortaNotifications
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.borg.job_scheduler import JobsManager
@@ -117,17 +118,16 @@ class VortaApp(QtSingleApplication):
 
         query = RepoModel \
             .select() \
-            .join(BackupProfileMixin)\
+            .join(BackupProfileMixin) \
             .where(BackupProfileMixin.profile == self.main_window.current_profile.id)
 
-        cpt = len(query)
-
         def aux(query, cpt):
-            if cpt >= 1 :
-                cpt -= 1
+            if cpt < len(query) or len(query) == 0:
                 profile = BackupProfileModel.get(id=profile_id)
-                profile.repo = query[cpt].id
-                profile.save
+                if len(query) != 0:
+                    profile.repo = query[cpt].id
+                    profile.save
+                cpt += 1
                 msg = BorgCreateJob.prepare(profile)
                 if msg['ok']:
                     job = BorgCreateJob(msg['cmd'], msg, parent=self)
@@ -138,7 +138,7 @@ class VortaApp(QtSingleApplication):
                     notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
                     self.backup_progress_event.emit(translate('messages', msg['message']))
 
-        aux(query, cpt)
+        aux(query, 0)
 
     def open_main_window_action(self):
         self.main_window.show()

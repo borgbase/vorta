@@ -19,14 +19,15 @@ from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.borg.rename import BorgRenameJob
+
 from vorta.i18n import trans_late
-from vorta.models import ArchiveModel, BackupProfileMixin, BackupProfileModel
+from vorta.models import ArchiveModel, BackupProfileModel
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
+from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archivetab.ui')
