@@ -10,7 +10,7 @@ from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
-from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin, RepoModel
+from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin
 from vorta.notifications import VortaNotifications
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
@@ -116,16 +116,13 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
-        query = RepoModel \
-            .select() \
-            .join(BackupProfileMixin) \
-            .where(BackupProfileMixin.profile == self.main_window.current_profile.id)
+        query = BackupProfileMixin.get_repos(self.main_window.current_profile.id)
 
         def aux(query, cpt):
             if cpt < len(query) or len(query) == 0:
                 profile = BackupProfileModel.get(id=profile_id)
                 if len(query) != 0:
-                    profile.repo = query[cpt].id
+                    profile.repo = query[cpt].repo.id
                     profile.save
                 cpt += 1
                 msg = BorgCreateJob.prepare(profile)

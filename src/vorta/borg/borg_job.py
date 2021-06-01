@@ -20,7 +20,7 @@ from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.models import EventLogModel
+from vorta.models import EventLogModel, BackupProfileMixin, BackupProfileModel
 from vorta.utils import borg_compat, pretty_bytes
 
 temp_mutex = Lock()
@@ -139,10 +139,11 @@ class BorgJob(Job):
             ret['message'] = trans_late('messages', 'Borg binary was not found.')
             return ret
 
-        if profile.repo is None:
-        #if BackupProfileMixin.select().where(BackupProfileMixin.profile == profile.id).count() == 0:
-            ret['message'] = trans_late('messages', 'Add a backup repository first.')
-            return ret
+        if type(profile) is BackupProfileModel:
+            query = BackupProfileMixin.get_repos(profile)
+            if len(query) == 0:
+                ret['message'] = trans_late('messages', 'Add a backup repository first.')
+                return ret
 
         if not borg_compat.check('JSON_LOG'):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')

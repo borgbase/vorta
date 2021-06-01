@@ -194,17 +194,25 @@ class BackupProfileMixin(pw.Model):
     class Meta:
         database = db
 
-    def add_repo(self, repo):
+    @staticmethod
+    def get_repos(profile):
+        query = BackupProfileMixin \
+            .select(BackupProfileMixin, RepoModel) \
+            .join(RepoModel) \
+            .where((BackupProfileMixin.profile == profile))
+        return query
+
+    def delete_or_create(self, repo):
         query = BackupProfileMixin \
             .select() \
-            .where((BackupProfileMixin.repo == repo) &
-                   (BackupProfileMixin.profile == self.window().current_profile.id))
+            .where((BackupProfileMixin.repo == repo)
+                   & (BackupProfileMixin.profile == self.window().current_profile.id))
 
         if query.exists():
             BackupProfileMixin \
                 .delete() \
-                .where((BackupProfileMixin.repo == repo) &
-                       (BackupProfileMixin.profile == self.window().current_profile.id)) \
+                .where((BackupProfileMixin.repo == repo)
+                       & (BackupProfileMixin.profile == self.window().current_profile.id)) \
                 .execute()
             return False  # repo has been removed from DB
         else:
@@ -313,7 +321,7 @@ def init_db(con=None):
         db.initialize(con)
         db.connect()
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
-                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
+                      ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion, BackupProfileMixin])
 
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)
@@ -454,7 +462,9 @@ def init_db(con=None):
 
     if current_schema.version < 19:
         db.create_tables([BackupProfileMixin])
-        current_schema.version = 18
+        current_schema.version = 19
+        current_schema.changed_at = datetime.now()
+        current_schema.save()
 
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():

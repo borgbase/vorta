@@ -73,10 +73,10 @@ class RepoTab(RepoBase, RepoUI):
         for repo in RepoModel.select():
             repo_i += 1
             self.repoSelector.addItem(repo.url, repo.id)
-            self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
+            self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.repo) \
-            .where((BackupProfileMixin.profile == profile.id)):
+        repos = BackupProfileMixin.get_repos(profile.id)
+        for repo in repos:
             active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
@@ -103,26 +103,37 @@ class RepoTab(RepoBase, RepoUI):
         repo_i = 3
         for repo in RepoModel.select():
             repo_i += 1
-            self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
+            self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
 
-        for repo in BackupProfileMixin.select(BackupProfileMixin.repo).where(
-            (BackupProfileMixin.profile == profile.id)):
+        repos = BackupProfileMixin.get_repos(profile.id)
+        for repo in repos:
             active_repo = repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def init_repo_stats(self):
-        profile = BackupProfileModel.get(id=self.window().current_profile.id)
-        repo = profile.repo
-        if repo is not None:
-            self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
-            self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
-            self.sizeOriginal.setText(pretty_bytes(repo.total_size))
-            self.repoEncryption.setText(str(repo.encryption))
-        else:
-            self.sizeCompressed.setText('')
-            self.sizeDeduplicated.setText('')
-            self.sizeOriginal.setText('')
-            self.repoEncryption.setText('')
+        profile = self.window().current_profile.id
+        unique_csize = 0
+        unique_size = 0
+        total_size = 0
+        encryption = ""
+
+        query = BackupProfileMixin.get_repos(profile)
+
+        for repo_i in query:
+            repo = repo_i.repo
+            if repo.unique_csize is not None:
+                unique_csize += repo.unique_csize
+            if repo.unique_size is not None:
+                unique_size += repo.unique_size
+            if repo.total_size is not None:
+                total_size += repo.total_size
+            if repo.encryption is not None:
+                encryption += " %s" % (str(repo.encryption))
+
+        self.sizeCompressed.setText(pretty_bytes(unique_csize))
+        self.sizeDeduplicated.setText(pretty_bytes(unique_size))
+        self.sizeOriginal.setText(pretty_bytes(total_size))
+        self.repoEncryption.setText(str(encryption))
         self.repo_changed.emit()
 
     def init_ssh(self):
@@ -200,12 +211,13 @@ class RepoTab(RepoBase, RepoUI):
             profile = BackupProfileModel.get(id=self.window().current_profile.id)
             profile.repo = self.repoSelector.currentData()
             profile.save()
-            is_new_repo = BackupProfileMixin.add_repo(self, self.repoSelector.currentData())
+            # add repo if exist and remove either with add_repo
+            is_created = BackupProfileMixin.delete_or_create(self, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
-            if is_new_repo:
+            if is_created:
                 self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
             else:
-                self.repoSelector.setItemIcon(repo_i, get_colored_icon('copy'))
+                self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
             self.init_repo_stats()
 
     def process_new_repo(self, result):
@@ -217,6 +229,7 @@ class RepoTab(RepoBase, RepoUI):
 
             self.set_repos()
             self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
+            self.repo_select_action(self.repoSelector.count() - 1)
             self.repo_added.emit()
             self.init_repo_stats()
 
