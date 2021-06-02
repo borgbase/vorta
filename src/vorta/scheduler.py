@@ -8,8 +8,7 @@ from vorta.borg.job_scheduler import DEBUG, JobsManager
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
-
-from vorta.models import BackupProfileModel, EventLogModel
+from vorta.models import BackupProfileModel, EventLogModel, BackupProfileMixin
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
