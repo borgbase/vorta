@@ -1,13 +1,13 @@
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox
+from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QToolTip
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
-from vorta.views.utils import get_colored_icon
 from vorta.views.partials.loading_button import LoadingButton
-
+from vorta.views.utils import get_colored_icon
 from .archive_tab import ArchiveTab
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
@@ -154,6 +154,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 to_delete.delete_instance(recursive=True)
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
                 self.profile_select_action(0)
+
+        else:
+            warn = self.tr("Can't delete the last profile.")
+            point = QPoint(0, self.profileDeleteButton.size().height()/2)
+            QToolTip.showText(self.profileDeleteButton.mapToGlobal(point), warn)
 
     def profile_add_action(self):
         window = AddProfileWindow()
