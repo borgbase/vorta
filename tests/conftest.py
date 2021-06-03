@@ -3,6 +3,8 @@ import peewee
 import pytest
 import sys
 from datetime import datetime as dt
+from pathlib import Path
+from shutil import copyfile
 from unittest.mock import MagicMock
 
 import vorta
@@ -39,32 +41,49 @@ def qapp(tmpdir_factory):
 
 
 @pytest.fixture(scope='function', autouse=True)
-def init_db(qapp, qtbot, tmpdir_factory):
+def init_db(request, qapp, qtbot, tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
 
-    new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
-    new_repo.encryption = 'none'
-    new_repo.save()
+    # the bootstrap profile file can be set via @pytest.mark.profile_bootstrap_file('/some/path.json')
+    # using this pytest mark skips the creation of default data
+    profile_bootstrap_file_marker = request.node.get_closest_marker('profile_bootstrap_file')
+    if profile_bootstrap_file_marker:
+        # copy the file because it is consumed by the main window
+        original_bootstrap_file = profile_bootstrap_file_marker.args[0]
+        bootstrap_copy = Path(tmpdir_factory.mktemp('Vorta').join('profile.json'))
+        copyfile(original_bootstrap_file, bootstrap_copy)
+        profile_bootstrap_file = bootstrap_copy
+    else:
+        # point the bootstrap file to a non-existing file to prevent accidental import during tests
+        profile_bootstrap_file = Path(tmpdir_factory.mktemp('Vorta').join('does_not_exist.json'))
 
-    profile = BackupProfileModel.get(id=1)
-    profile.repo = new_repo.id
-    profile.dont_run_on_metered_networks = False
-    profile.save()
+        default_profile = BackupProfileModel(name='Default')
+        default_profile.save()
 
-    test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
-    test_archive.save()
+        new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
+        new_repo.encryption = 'none'
+        new_repo.save()
 
-    test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
-    test_archive1.save()
+        default_profile.repo = new_repo.id
+        default_profile.dont_run_on_metered_networks = False
+        default_profile.save()
 
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
-    source_dir.save()
+        test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
+        test_archive.save()
+
+        test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
+        test_archive1.save()
+
+        source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18,
+                                     path_isdir=True)
+        source_dir.save()
 
     qapp.main_window.deleteLater()
     del qapp.main_window
-    qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
+    # Re-open main window to apply mock data in UI
+    qapp.main_window = MainWindow(qapp, profile_bootstrap_file=profile_bootstrap_file)
 
     yield
     qapp.backup_cancelled_event.emit()

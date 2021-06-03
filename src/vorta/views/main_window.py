@@ -26,7 +26,7 @@ MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, profile_bootstrap_file=Path.home() / '.vorta-init.json'):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Vorta for Borg Backup')
@@ -41,6 +41,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         previous_window_width = SettingsModel.get(key='previous_window_width')
         previous_window_height = SettingsModel.get(key='previous_window_height')
         self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
+
+        # import bootstrap profile from file if exists; must be run before accessing profiles for the first time
+        self.bootstrap_profiles(profile_bootstrap_file)
 
         # Select previously used profile, if available
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
@@ -100,7 +103,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
 
         self.set_icons()
-        self.bootstrap_from_export()
 
     def on_close_window(self):
         self.close()
@@ -200,27 +202,32 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 return None
         return profile_export
 
-    def profile_imported_event(self, profile):
+    def profile_imported_notify(self, profile):
         notifier = VortaNotifications.pick()
         notifier.deliver(self.tr('Profile import successful!'),
                          self.tr('Profile {} imported.').format(profile.name),
                          level='info')
-        self.repoTab.populate_repositories()
-        self.scheduleTab.populate_logs()
-        self.scheduleTab.populate_wifi()
-        self.miscTab.populate()
-        self.populate_profile_selector()
 
-    def bootstrap_from_export(self, path=Path.home() / '.vorta-init.json'):
+    def bootstrap_profiles(self, path):
         bootstrap_profile_export = path
-        if not bootstrap_profile_export.is_file():
-            return
-        profile_export = self.load_export_profile(bootstrap_profile_export)
-        profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
-        bootstrap_profile_export.unlink()
-        self.profile_imported_event(profile)
+        if bootstrap_profile_export.is_file():
+            profile_export = self.load_export_profile(bootstrap_profile_export)
+            profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+            bootstrap_profile_export.unlink()
+            self.profile_imported_notify(profile)
+        if BackupProfileModel.select().count() == 0:
+            default_profile = BackupProfileModel(name='Default')
+            default_profile.save()
 
     def profile_import_action(self):
+        def profile_imported_event(profile):
+            self.profile_imported_notify(profile)
+            self.repoTab.populate_repositories()
+            self.scheduleTab.populate_logs()
+            self.scheduleTab.populate_wifi()
+            self.miscTab.populate()
+            self.populate_profile_selector()
+
         filename = QFileDialog.getOpenFileName(
             self,
             self.tr("Load profile"),
@@ -233,7 +240,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             window = ImportWindow(profile_export=profile_export)
             self.window = window
             window.setParent(self, QtCore.Qt.Sheet)
-            window.profile_imported.connect(self.profile_imported_event)
+            window.profile_imported.connect(profile_imported_event)
             window.show()
 
     def profile_add_edit_result(self, profile_name, profile_id):

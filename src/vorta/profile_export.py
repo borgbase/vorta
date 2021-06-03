@@ -5,7 +5,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, SchemaVersion, \
-    SettingsModel, BackupProfileModel, db, SCHEMA_VERSION
+    SettingsModel, BackupProfileModel, db, SCHEMA_VERSION, init_db
 
 
 class ProfileExport:
@@ -136,6 +136,7 @@ class ProfileExport:
         else:
             force_insert = True
         new_profile.save(force_insert=force_insert)
+        init_db()  # rerun db init code to perform the same operations on the new as as on application boot
         return new_profile
 
     @classmethod

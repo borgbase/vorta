@@ -9,6 +9,8 @@ from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 from vorta.models import BackupProfileModel, SourceFileModel
 from vorta.views.import_window import ImportWindow
 
+VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'
+
 
 def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     # Do not change this file, as it also tests restoring from older schema versions
@@ -36,21 +38,25 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
 
 
+@pytest.mark.profile_bootstrap_file(VALID_IMPORT_FILE)
 def test_import_bootstrap_success(qapp, qtbot, rootdir, monkeypatch, tmpdir):
-    # copy the test file because is is deleted afterwards
-    original_good_file = Path(rootdir) / 'profile_exports' / 'valid.json'
-    GOOD_FILE = tmpdir / 'valid.json'
-    copyfile(original_good_file, GOOD_FILE)
-
-    main = qapp.main_window
-    main.bootstrap_from_export(Path(GOOD_FILE))
-
-    assert not GOOD_FILE.exists()
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
     restored_repo = restored_profile.repo
     assert restored_repo is not None
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
+    assert BackupProfileModel.select().count() == 1
+
+
+def test_import_bootstrap_should_delete_import_file(qapp, qtbot, rootdir, monkeypatch, tmpdir):
+    # copy the test file because is is deleted afterwards
+    GOOD_FILE = tmpdir / 'valid.json'
+    copyfile(VALID_IMPORT_FILE, GOOD_FILE)
+
+    main = qapp.main_window
+    main.bootstrap_profiles(Path(GOOD_FILE))
+
+    assert not GOOD_FILE.exists()
 
 
 def test_import_fail_not_json(qapp, qtbot, rootdir, monkeypatch):
