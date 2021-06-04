@@ -32,18 +32,19 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
 
 
-def test_import_bootstrap_success(qapp, monkeypatch):
-    # copy the test file because is is deleted afterwards
-    # GOOD_FILE = tmpdir / 'valid.json'
-    # copyfile(VALID_IMPORT_FILE, GOOD_FILE)
-    monkeypatch.setattr(VALID_IMPORT_FILE, 'unlink', lambda: True)
+def test_import_bootstrap_success(qapp, mocker):
+    mocked_unlink = mocker.MagicMock()
+    mocker.patch.object(Path, 'unlink', mocked_unlink)
     qapp.bootstrap_profile(Path(VALID_IMPORT_FILE))
 
-    assert not GOOD_FILE.exists()
+    assert mocked_unlink.called
+
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
+
     restored_repo = restored_profile.repo
     assert restored_repo is not None
+
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
     assert BackupProfileModel.select().count() == 2
 
