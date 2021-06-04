@@ -47,21 +47,6 @@ def init_db(request, qapp, qtbot, tmpdir_factory, monkeypatch):
     mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
 
-    # # the bootstrap profile file can be set via @pytest.mark.profile_bootstrap_file('/some/path.json')
-    # # using this pytest mark skips the creation of default data
-    # profile_bootstrap_file_marker = request.node.get_closest_marker('profile_bootstrap_file')
-    # if profile_bootstrap_file_marker:
-    #     monkeypatch.setattr(vorta.application, "PROFILE_BOOTSTRAP_FILE", profile_bootstrap_file_marker.args[0])
-    #     monkeypatch.setattr(Path, "home", mockreturn)
-    #     # copy the file because it is consumed by the main window
-    #     # original_bootstrap_file = profile_bootstrap_file_marker.args[0]
-    #     # bootstrap_copy = Path(tmpdir_factory.mktemp('Vorta').join('profile.json'))
-    #     # copyfile(original_bootstrap_file, bootstrap_copy)
-    #     # profile_bootstrap_file = bootstrap_copy
-    # else:
-    #     # point the bootstrap file to a non-existing file to prevent accidental import during tests
-    #     profile_bootstrap_file = Path(tmpdir_factory.mktemp('Vorta').join('does_not_exist.json'))
-
     default_profile = BackupProfileModel(name='Default')
     default_profile.save()
 
