@@ -2,8 +2,9 @@ from json import JSONDecodeError
 from pathlib import Path
 
 from PyQt5 import QtCore, uic
+from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QFileDialog
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QToolTip, QFileDialog
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
@@ -175,6 +176,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 to_delete.delete_instance(recursive=True)
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
                 self.profile_select_action(0)
+
+        else:
+            warn = self.tr("Can't delete the last profile.")
+            point = QPoint(0, self.profileDeleteButton.size().height() / 2)
+            QToolTip.showText(self.profileDeleteButton.mapToGlobal(point), warn)
 
     def profile_add_action(self):
         window = AddProfileWindow()
