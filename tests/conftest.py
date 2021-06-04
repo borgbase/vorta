@@ -67,7 +67,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
     source_dir.save()
 
     qapp.main_window.deleteLater()
-    del qapp.main_window # Re-open main window to apply mock data in UI
+    del qapp.main_window  # Re-open main window to apply mock data in UI
     qapp.main_window = MainWindow(qapp)
 
     yield
