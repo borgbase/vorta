@@ -3,8 +3,6 @@ import peewee
 import pytest
 import sys
 from datetime import datetime as dt
-from pathlib import Path
-from shutil import copyfile
 from unittest.mock import MagicMock
 
 import vorta

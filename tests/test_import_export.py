@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 from PyQt5 import QtCore

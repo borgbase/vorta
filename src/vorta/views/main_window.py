@@ -10,7 +10,6 @@ from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
-from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
