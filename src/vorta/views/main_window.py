@@ -1,4 +1,3 @@
-from json import JSONDecodeError
 from pathlib import Path
 
 from PyQt5 import QtCore, uic
@@ -11,6 +10,8 @@ from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
+from vorta.notifications import VortaNotifications
+from vorta.profile_export import ProfileExport
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -19,15 +20,14 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
-from ..notifications import VortaNotifications
-from ..profile_export import ProfileExport
+
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
-    def __init__(self, parent=None, profile_bootstrap_file=Path.home() / '.vorta-init.json'):
+    def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Vorta for Borg Backup')
@@ -42,9 +42,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         previous_window_width = SettingsModel.get(key='previous_window_width')
         previous_window_height = SettingsModel.get(key='previous_window_height')
         self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
-
-        # import bootstrap profile from file if exists; must be run before accessing profiles for the first time
-        self.bootstrap_profiles(profile_bootstrap_file)
 
         # Select previously used profile, if available
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
@@ -191,43 +188,24 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_export_action(self):
+        """
+        React to pressing "Export Profile" button and save current
+        profile as .json file.
+        """
         window = ExportWindow(profile=self.current_profile.refresh())
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()
 
-    def load_export_profile(self, filename):
-        with open(filename, 'r') as file:
-            json_string = file.read()
-            try:
-                profile_export = ProfileExport.from_json(json_string)
-            except JSONDecodeError:
-                QMessageBox.critical(None,
-                                     self.tr('Error'),
-                                     self.tr('This file does not contain valid JSON.'))
-                return None
-        return profile_export
-
-    def profile_imported_notify(self, profile):
-        notifier = VortaNotifications.pick()
-        notifier.deliver(self.tr('Profile import successful!'),
-                         self.tr('Profile {} imported.').format(profile.name),
-                         level='info')
-
-    def bootstrap_profiles(self, path):
-        bootstrap_profile_export = path
-        if bootstrap_profile_export.is_file():
-            profile_export = self.load_export_profile(bootstrap_profile_export)
-            profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
-            bootstrap_profile_export.unlink()
-            self.profile_imported_notify(profile)
-        if BackupProfileModel.select().count() == 0:
-            default_profile = BackupProfileModel(name='Default')
-            default_profile.save()
-
     def profile_import_action(self):
+        """
+        React to "Import Profile". Ask to select a .json file and import it as
+        new profile.
+        """
         def profile_imported_event(profile):
-            self.profile_imported_notify(profile)
+            QMessageBox.information(None,
+                                    self.tr('Profile import successful!'),
+                                    self.tr('Profile {} imported.').format(profile.name))
             self.repoTab.populate_repositories()
             self.scheduleTab.populate_logs()
             self.scheduleTab.populate_wifi()
@@ -240,8 +218,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
             str(Path.home()),
             self.tr("JSON (*.json);;All files (*)"))[0]
         if filename:
-            profile_export = self.load_export_profile(filename)
-            if not profile_export:
+            profile_export = ProfileExport.from_json(filename)
+            if profile_export is None:
+                QMessageBox.critical(None,
+                                     self.tr('Error'),
+                                     self.tr('This file does not contain valid JSON.'))
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window

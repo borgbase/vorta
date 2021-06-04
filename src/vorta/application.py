@@ -10,7 +10,7 @@ from vorta.borg.borg_thread import BorgThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
 from vorta.borg.break_lock import BorgBreakThread
-from vorta.config import TEMP_DIR
+from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
@@ -19,6 +19,7 @@ from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
 from vorta.notifications import VortaNotifications
+from vorta.profile_export import ProfileExport
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,6 @@ class VortaApp(QtSingleApplication):
     backup_progress_event = QtCore.pyqtSignal(str)
 
     def __init__(self, args_raw, single_app=False):
-
         super().__init__(APP_ID, args_raw)
         args = parse_args()
         if self.isRunning():
@@ -60,6 +60,9 @@ class VortaApp(QtSingleApplication):
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
         self.setApplicationName("Vorta")
+
+        # Import profile from ~/.vorta-init.json or add empty "Default" profile.
+        self.bootstrap_profile()
 
         # Prepare tray and main window
         self.tray = TrayMenu(self)
@@ -246,3 +249,17 @@ class VortaApp(QtSingleApplication):
             return
         thread = BorgBreakThread(params['cmd'], params, parent=self)
         thread.start()
+
+    def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
+        """
+        Make sure there is at least one profile when first starting Vorta.
+        Will either import a profile placed in ~/.vorta-init.json
+        or add an empty "Default" profile.
+        """
+        if bootstrap_file.is_file():
+            profile_export = ProfileExport.from_json(bootstrap_file)
+            profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+            bootstrap_file.unlink()
+        if BackupProfileModel.select().count() == 0:
+            default_profile = BackupProfileModel(name='Default')
+            default_profile.save()

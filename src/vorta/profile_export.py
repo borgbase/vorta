@@ -1,5 +1,6 @@
 import datetime
 import json
+from json import JSONDecodeError
 
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
@@ -140,8 +141,13 @@ class ProfileExport:
         return new_profile
 
     @classmethod
-    def from_json(cls, json_string):
-        return ProfileExport(json.loads(json_string))
+    def from_json(self, filename):
+        with open(filename, 'r') as file:
+            try:
+                profile_export = ProfileExport(json.loads(file.read()))
+            except JSONDecodeError:
+                return None
+        return profile_export
 
     def to_json(self):
         return json.dumps(self._profile_dict, default=self._converter, indent=4)
