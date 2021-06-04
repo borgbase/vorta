@@ -18,33 +18,16 @@
     <number>5</number>
    </property>
    <item row="0" column="0">
-    <widget class="QToolBox" name="toolBox">
+    <widget class="QTabWidget" name="toolBox">
      <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
-     <property name="currentIndex">
-      <number>3</number>
-     </property>
-     <widget class="QWidget" name="schedule">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>663</width>
-        <height>354</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <attribute name="label">
-       <string>Schedule</string>
+     <widget class="QWidget" name="tabWidgetPage1" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -350,17 +333,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>663</width>
-        <height>354</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Networks</string>
+     <widget class="QWidget" name="tabWidgetPage2" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="topMargin">
@@ -411,17 +386,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>663</width>
-        <height>354</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Log</string>
+     <widget class="QWidget" name="tabWidgetPage3" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <property name="topMargin">
@@ -474,17 +441,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>663</width>
-        <height>354</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Shell Commands</string>
+     <widget class="QWidget" name="tabWidgetPage4" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="topMargin">
