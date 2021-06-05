@@ -86,8 +86,8 @@ class RepoTab(RepoBase, RepoUI):
         except TypeError:  # raised when signal is not connected
             pass
         self.set_repos()
-        self.populate_from_profile()
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
+        self.populate_from_profile()
 
     def populate_from_profile(self):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)

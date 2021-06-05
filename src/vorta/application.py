@@ -4,7 +4,6 @@ import sys
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
-
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
@@ -12,14 +11,13 @@ from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin
 from vorta.notifications import VortaNotifications
+from vorta.profile_export import ProfileExport
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.borg.job_scheduler import JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
-from vorta.notifications import VortaNotifications
-from vorta.profile_export import ProfileExport
 
 logger = logging.getLogger(__name__)
 
