@@ -1,19 +1,25 @@
+from pathlib import Path
+
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QToolTip
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QToolTip, QFileDialog
 
 from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
+from vorta.profile_export import ProfileExport
 from .archive_tab import ArchiveTab
+from .export_window import ExportWindow
+from .import_window import ImportWindow
 from .misc_tab import MiscTab
 from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
+
 
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
@@ -69,13 +75,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
 
         # Init profile list
-        for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
-            self.profileSelector.addItem(profile.name, profile.id)
-        current_profile_index = self.profileSelector.findData(self.current_profile.id)
-        self.profileSelector.setCurrentIndex(current_profile_index)
+        self.populate_profile_selector()
         self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
+        self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+        profile_add_menu = QMenu()
+        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_import_action)
+        self.profileAddButton.setMenu(profile_add_menu)
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
         # OS-specific startup options:
@@ -100,6 +107,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
+        self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
 
     def set_progress(self, text=''):
@@ -120,8 +128,18 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.cancelButton.setEnabled(not create_enabled)
         self.cancelButton.repaint()
 
+    def populate_profile_selector(self):
+        self.profileSelector.clear()
+        for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
+            self.profileSelector.addItem(profile.name, profile.id)
+        current_profile_index = self.profileSelector.findData(self.current_profile.id)
+        self.profileSelector.setCurrentIndex(current_profile_index)
+
     def profile_select_action(self, index):
-        self.current_profile = BackupProfileModel.get(id=self.profileSelector.currentData())
+        backup_profile_id = self.profileSelector.currentData()
+        if not backup_profile_id:
+            return
+        self.current_profile = BackupProfileModel.get(id=backup_profile_id)
         self.archiveTab.populate_from_profile()
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
@@ -168,6 +186,49 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
+    def profile_export_action(self):
+        """
+        React to pressing "Export Profile" button and save current
+        profile as .json file.
+        """
+        window = ExportWindow(profile=self.current_profile.refresh())
+        self.window = window
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.show()
+
+    def profile_import_action(self):
+        """
+        React to "Import Profile". Ask to select a .json file and import it as
+        new profile.
+        """
+        def profile_imported_event(profile):
+            QMessageBox.information(None,
+                                    self.tr('Profile import successful!'),
+                                    self.tr('Profile {} imported.').format(profile.name))
+            self.repoTab.populate_repositories()
+            self.scheduleTab.populate_logs()
+            self.scheduleTab.populate_wifi()
+            self.miscTab.populate()
+            self.populate_profile_selector()
+
+        filename = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Load profile"),
+            str(Path.home()),
+            self.tr("JSON (*.json);;All files (*)"))[0]
+        if filename:
+            profile_export = ProfileExport.from_json(filename)
+            if profile_export is None:
+                QMessageBox.critical(None,
+                                     self.tr('Error'),
+                                     self.tr('This file does not contain valid JSON.'))
+                return
+            window = ImportWindow(profile_export=profile_export)
+            self.window = window
+            window.setParent(self, QtCore.Qt.Sheet)
+            window.profile_imported.connect(profile_imported_event)
+            window.show()
+
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
         if self.profileSelector.currentData() == profile_id:
@@ -196,11 +257,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
-        SettingsModel.update({SettingsModel.str_value: str(self.width())})\
-            .where(SettingsModel.key == 'previous_window_width')\
+        SettingsModel.update({SettingsModel.str_value: str(self.width())}) \
+            .where(SettingsModel.key == 'previous_window_width') \
             .execute()
-        SettingsModel.update({SettingsModel.str_value: str(self.height())})\
-            .where(SettingsModel.key == 'previous_window_height')\
+        SettingsModel.update({SettingsModel.str_value: str(self.height())}) \
+            .where(SettingsModel.key == 'previous_window_height') \
             .execute()
 
         if not is_system_tray_available():
