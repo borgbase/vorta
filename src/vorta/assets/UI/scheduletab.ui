@@ -25,7 +25,10 @@
        <bold>false</bold>
       </font>
      </property>
-     <widget class="QWidget" name="tabWidgetPage1" native="true">
+     <property name="currentIndex">
+      <number>3</number>
+     </property>
+     <widget class="QWidget" name="page_1">
       <attribute name="title">
        <string/>
       </attribute>
@@ -333,7 +336,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabWidgetPage2" native="true">
+     <widget class="QWidget" name="page_2">
       <attribute name="title">
        <string/>
       </attribute>
@@ -386,7 +389,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabWidgetPage3" native="true">
+     <widget class="QWidget" name="page_3">
       <attribute name="title">
        <string/>
       </attribute>
@@ -441,7 +444,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabWidgetPage4" native="true">
+     <widget class="QWidget" name="page_4">
       <attribute name="title">
        <string/>
       </attribute>
