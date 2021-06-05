@@ -141,7 +141,7 @@ class ProfileExport:
         return new_profile
 
     @classmethod
-    def from_json(self, filename):
+    def from_json(cls, filename):
         with open(filename, 'r') as file:
             try:
                 profile_export = ProfileExport(json.loads(file.read()))
