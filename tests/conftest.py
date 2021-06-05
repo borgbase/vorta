@@ -6,6 +6,7 @@ from datetime import datetime as dt
 from unittest.mock import MagicMock
 
 import vorta
+import vorta.application
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
                           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
 from vorta.views.main_window import MainWindow
@@ -44,14 +45,16 @@ def init_db(qapp, qtbot, tmpdir_factory):
     mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
 
+    default_profile = BackupProfileModel(name='Default')
+    default_profile.save()
+
     new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
     new_repo.encryption = 'none'
     new_repo.save()
 
-    profile = BackupProfileModel.get(id=1)
-    profile.repo = new_repo.id
-    profile.dont_run_on_metered_networks = False
-    profile.save()
+    default_profile.repo = new_repo.id
+    default_profile.dont_run_on_metered_networks = False
+    default_profile.save()
 
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive.save()
@@ -59,7 +62,8 @@ def init_db(qapp, qtbot, tmpdir_factory):
     test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive1.save()
 
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
+    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18,
+                                 path_isdir=True)
     source_dir.save()
 
     qapp.main_window.deleteLater()

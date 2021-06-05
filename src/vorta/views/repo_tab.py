@@ -1,11 +1,12 @@
 import os
+
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
 from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
-from .ssh_dialog import SSHAddWindow
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
+from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
 
 uifile = get_asset('UI/repotab.ui')
@@ -25,8 +26,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoSelector.addItem(self.tr('+ Initialize New Repository'), 'new')
         self.repoSelector.addItem(self.tr('+ Add Existing Repository'), 'existing')
         self.repoSelector.insertSeparator(3)
-        self.set_repos()
-        self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
+        self.populate_repositories()
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
@@ -70,6 +70,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoSelector.removeItem(4)
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
+
+    def populate_repositories(self):
+        try:
+            self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
+        except TypeError:  # raised when signal is not connected
+            pass
+        self.set_repos()
+        self.populate_from_profile()
+        self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
 
     def populate_from_profile(self):
         profile = self.profile()

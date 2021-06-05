@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import appdirs
 
 APP_NAME = 'Vorta'
@@ -9,6 +10,7 @@ SETTINGS_DIR = dirs.user_data_dir
 LOG_DIR = dirs.user_log_dir
 CACHE_DIR = dirs.user_cache_dir
 TEMP_DIR = os.path.join(CACHE_DIR, "tmp")
+PROFILE_BOOTSTRAP_FILE = Path.home() / '.vorta-init.json'
 
 if not os.path.exists(SETTINGS_DIR):
     os.makedirs(SETTINGS_DIR)

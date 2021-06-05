@@ -290,10 +290,6 @@ def init_db(con=None):
     db.create_tables([RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, SettingsModel,
                       ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion])
 
-    if BackupProfileModel.select().count() == 0:
-        default_profile = BackupProfileModel(name='Default')
-        default_profile.save()
-
     # Delete old log entries after 3 months.
     three_months_ago = datetime.now() - timedelta(days=180)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago)

@@ -1,0 +1,96 @@
+{
+    "id": 1,
+    "name": "Test Profile Restoration",
+    "added_at": "2020-09-10 01:09:03.402268",
+    "repo": {
+        "url": "/tmp/asdf",
+        "added_at": "2020-09-10 21:48:21.427080",
+        "encryption": "repokey-blake2",
+        "unique_size": null,
+        "unique_csize": null,
+        "total_size": null,
+        "total_unique_chunks": null,
+        "extra_borg_arguments": ""
+    },
+    "ssh_key": null,
+    "compression": "zstd,8",
+    "exclude_patterns": null,
+    "exclude_if_present": ".nobackup",
+    "schedule_mode": "off",
+    "schedule_interval_hours": 1,
+    "schedule_interval_minutes": 26,
+    "schedule_fixed_hour": 16,
+    "schedule_fixed_minute": 0,
+    "validation_on": true,
+    "validation_weeks": 3,
+    "prune_on": true,
+    "prune_hour": 2,
+    "prune_day": 7,
+    "prune_week": 4,
+    "prune_month": 6,
+    "prune_year": 2,
+    "prune_keep_within": "10H",
+    "new_archive_name": "{hostname}-{profile_slug}-{now:%Y-%m-%dT%H:%M:%S}",
+    "prune_prefix": "{hostname}-{profile_slug}-",
+    "pre_backup_cmd": "",
+    "password": "Tr0ub4dor&3",
+    "post_backup_cmd": "",
+    "dont_run_on_metered_networks": true,
+    "SourceFileModel": [
+        {
+            "dir": "/this/is/a/test/file",
+            "profile": 1,
+            "added_at": "2020-07-03 03:39:35.226932"
+        },
+        {
+            "dir": "/this/is/another/test/file",
+            "profile": 1,
+            "added_at": "2020-07-03 04:37:02.367233"
+        },
+        {
+            "dir": "/why/are/you/reading/this",
+            "profile": 1,
+            "added_at": "2020-07-03 04:37:05.106150"
+        }
+    ],
+    "WifiSettingModel": [],
+    "SchemaVersion": {
+        "id": 1,
+        "version": 15,
+        "changed_at": "2020-10-19 19:07:35.305493"
+    },
+    "SettingsModel": [
+        {
+            "id": 1,
+            "key": "enable_notifications",
+            "value": true,
+            "str_value": "",
+            "label": "Display notifications when background tasks fail",
+            "type": "checkbox"
+        },
+        {
+            "id": 2,
+            "key": "enable_notifications_success",
+            "value": false,
+            "str_value": "",
+            "label": "Also notify about successful background tasks",
+            "type": "checkbox"
+        },
+        {
+            "id": 3,
+            "key": "autostart",
+            "value": false,
+            "str_value": "",
+            "label": "Automatically start Vorta at login",
+            "type": "checkbox"
+        },
+        {
+            "id": 4,
+            "key": "foreground",
+            "value": true,
+            "str_value": "",
+            "label": "Open main window on startup",
+            "type": "checkbox"
+        }
+    ]
+}

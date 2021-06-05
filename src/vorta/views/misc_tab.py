@@ -1,12 +1,12 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
 
-from vorta.i18n import translate
-from vorta.utils import get_asset
-from vorta.autostart import open_app_at_startup
-from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
 from vorta._version import __version__
+from vorta.autostart import open_app_at_startup
 from vorta.config import LOG_DIR
+from vorta.i18n import translate
+from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
+from vorta.utils import get_asset
 
 uifile = get_asset('UI/misctab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
@@ -21,6 +21,15 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.logLink.setText(f'<a href="file://{LOG_DIR}"><span style="text-decoration:'
                              'underline; color:#0984e3;">Log</span></a>')
 
+        self.populate()
+
+    def populate(self):
+        # clear layout
+        while self.checkboxLayout.count():
+            child = self.checkboxLayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+        # dynamically add widgets for settings
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
             if not list(x):  # Skip settings that aren't specified in vorta.models.
