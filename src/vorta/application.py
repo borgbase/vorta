@@ -258,8 +258,13 @@ class VortaApp(QtSingleApplication):
         """
         if bootstrap_file.is_file():
             profile_export = ProfileExport.from_json(bootstrap_file)
-            profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+            profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
             bootstrap_file.unlink()
+            notifier = VortaNotifications.pick()
+            notifier.deliver(self.tr('Profile import successful!'),
+                             self.tr('Profile {} imported.').format(profile.name),
+                             level='info')
+            logger.info('Profile {} imported.'.format(profile.name))
         if BackupProfileModel.select().count() == 0:
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
