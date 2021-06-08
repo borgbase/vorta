@@ -25,6 +25,26 @@
        <bold>false</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QTabWidget::pane { /* The tab widget frame */
+    border-top: 0px solid #C2C7CB;
+    position: absolute;
+    top: -0.5em;
+}
+
+QTabWidget::tab-bar {
+    alignment: center;
+}
+
+
+</string>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
      <property name="currentIndex">
       <number>3</number>
      </property>
@@ -37,7 +57,7 @@
         <number>2</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>16</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -342,7 +362,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="topMargin">
-        <number>0</number>
+        <number>16</number>
        </property>
        <item row="1" column="0">
         <widget class="QLabel" name="wifiListLabel">
@@ -395,7 +415,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <property name="topMargin">
-        <number>0</number>
+        <number>16</number>
        </property>
        <item row="0" column="0">
         <widget class="QTableWidget" name="logTableWidget">
@@ -450,7 +470,10 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="topMargin">
-        <number>0</number>
+        <number>16</number>
+       </property>
+       <property name="bottomMargin">
+        <number>9</number>
        </property>
        <item>
         <widget class="QLabel" name="label_4">
