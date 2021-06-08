@@ -1,10 +1,13 @@
+import os
+
+from PyQt5 import QtCore
 from PyQt5 import uic
+from PyQt5.QtCore import QFileInfo, QPoint
+from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView, QToolTip
+
+from vorta.views.utils import get_colored_icon
 from ..models import SourceFileModel, BackupProfileMixin, SettingsModel
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
-from PyQt5 import QtCore
-from PyQt5.QtCore import QFileInfo
-from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
-import os
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -62,6 +65,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
         self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
         self.sourceRemove.clicked.connect(self.source_remove)
+        self.sourceRemove.setIcon(get_colored_icon("trash"))
+        self.paste.setIcon(get_colored_icon('paste-solid'))
+        self.sourcesUpdate.setIcon(get_colored_icon('redo-alt-solid'))
         self.sourcesUpdate.clicked.connect(self.sources_update)
         self.paste.clicked.connect(self.paste_text)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
@@ -174,6 +180,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def source_remove(self):
         indexes = self.sourceFilesWidget.selectionModel().selectedRows()
+        if len(indexes) == 0:
+            warn = self.tr("Select a source first")
+            point = QPoint(0, self.sourceRemove.size().height() / 2)
+            QToolTip.showText(self.sourceRemove.mapToGlobal(point), warn)
         # sort indexes, starting with lowest
         indexes.sort()
         # remove each selected row, starting with highest index (otherways, higher indexes become invalid)
