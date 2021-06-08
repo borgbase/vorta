@@ -26,8 +26,6 @@ a = Analysis([os.path.join(SRC_DIR, '__main__.py')],
                 (os.path.join(SRC_DIR, 'i18n/qm/*'), 'vorta/i18n/qm'),
              ],
              hiddenimports=[
-                 'vorta.views.dark.collection_rc',
-                 'vorta.views.light.collection_rc',
                  'vorta.keyring.darwin',
                  'vorta.keyring.kwallet',
                  'vorta.keyring.secretstorage',
