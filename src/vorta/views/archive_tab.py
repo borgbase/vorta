@@ -23,10 +23,10 @@ from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
+from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archivetab.ui')
@@ -42,7 +42,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mount_points = {}
         self.menu = None
         self.app = app
-        self.toolBox.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -90,8 +90,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.diffButton.setIcon(get_colored_icon('stream-solid'))
         self.pruneButton.setIcon(get_colored_icon('cut'))
         self.listButton.setIcon(get_colored_icon('refresh'))
-        self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
-        self.toolBox.setItemIcon(1, get_colored_icon('cut'))
+        self.tabWidget.setTabIcon(0, get_colored_icon('tasks'))
+        self.tabWidget.setTabIcon(1, get_colored_icon('cut'))
         self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
 
     def cancel_action(self):
@@ -141,7 +141,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         if profile.repo is not None:
             self.mount_points = get_mount_points(profile.repo.url)
-            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
+            self.tabWidget.setTabText(0, self.tr('Archives'))
+            self.tabWidget.setTabText(1, self.tr('Prunes'))
+            self.label.setText(self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             sorting = self.archiveTable.isSortingEnabled()
@@ -174,7 +176,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
-            self.toolBox.setItemText(0, self.tr('Archives'))
+            self.tabWidget.setTabText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
         self.archiveNameTemplate.setText(profile.new_archive_name)

@@ -21,38 +21,51 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QToolBox" name="toolBox">
+    <widget class="QTabWidget" name="tabWidget">
      <property name="font">
       <font>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QTabWidget::pane { /* The tab widget frame */
+    border-top: 0px solid #C2C7CB;
+    position: absolute;
+    top: -0.5em;
+}
+
+QTabWidget::tab-bar {
+    alignment: center;
+}
+
+
+</string>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="archivesToolBox">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>757</width>
-        <height>374</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Archives</string>
+     <widget class="QWidget" name="tabWidgetPage1" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QTableWidget" name="archiveTable">
          <attribute name="horizontalHeaderVisible">
@@ -189,19 +202,14 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pruningToolBox">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>541</width>
-        <height>299</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Prune Options and Archive Naming</string>
+     <widget class="QWidget" name="tabWidgetPage2" native="true">
+      <attribute name="title">
+       <string/>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="topMargin">
+        <number>12</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">

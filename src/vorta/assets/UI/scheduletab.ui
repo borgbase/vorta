@@ -18,7 +18,7 @@
     <number>5</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTabWidget" name="toolBox">
+    <widget class="QTabWidget" name="scheduleTabWidget">
      <property name="font">
       <font>
        <weight>50</weight>
@@ -46,9 +46,15 @@ QTabWidget::tab-bar {
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_1">
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
       <attribute name="title">
        <string/>
       </attribute>

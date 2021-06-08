@@ -23,7 +23,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.app = QApplication.instance()
-        self.toolBox.setCurrentIndex(0)
+        self.scheduleTabWidget.setCurrentIndex(0)
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
@@ -57,14 +57,14 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val))
 
     def set_icons(self):
-        self.toolBox.setTabText(0, self.tr('clock'))
-        self.toolBox.setTabText(1, self.tr('wifi'))
-        self.toolBox.setTabText(2, self.tr('tasks'))
-        self.toolBox.setTabText(3, self.tr('terminal'))
-        self.toolBox.setTabIcon(0, get_colored_icon('clock-o'))
-        self.toolBox.setTabIcon(1, get_colored_icon('wifi'))
-        self.toolBox.setTabIcon(2, get_colored_icon('tasks'))
-        self.toolBox.setTabIcon(3, get_colored_icon('terminal'))
+        self.scheduleTabWidget.setTabText(0, self.tr('clock'))
+        self.scheduleTabWidget.setTabText(1, self.tr('wifi'))
+        self.scheduleTabWidget.setTabText(2, self.tr('tasks'))
+        self.scheduleTabWidget.setTabText(3, self.tr('terminal'))
+        self.scheduleTabWidget.setTabIcon(0, get_colored_icon('clock-o'))
+        self.scheduleTabWidget.setTabIcon(1, get_colored_icon('wifi'))
+        self.scheduleTabWidget.setTabIcon(2, get_colored_icon('tasks'))
+        self.scheduleTabWidget.setTabIcon(3, get_colored_icon('terminal'))
 
     def populate_from_profile(self):
         """Populate current view with data from selected profile."""
