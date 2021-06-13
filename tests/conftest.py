@@ -1,18 +1,20 @@
 import os
-import peewee
-import pytest
 import sys
 from datetime import datetime as dt
 from unittest.mock import MagicMock
+
+import peewee
+import pytest
 
 import vorta
 import vorta.application
 import vorta.borg.job_scheduler
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
-                          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
+                          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion,
+                          BackupProfileMixin)
 from vorta.views.main_window import MainWindow
 
-models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
+models = [RepoModel, RepoPassword, BackupProfileModel, BackupProfileMixin , SourceFileModel,
           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
 
 
@@ -54,6 +56,10 @@ def init_db(qapp, qtbot, tmpdir_factory):
     new_repo.save()
 
     default_profile.repo = new_repo.id
+
+    profile_mixin = BackupProfileMixin(repo=new_repo.id, profile=default_profile.id)
+    profile_mixin.save()
+
     default_profile.dont_run_on_metered_networks = False
     default_profile.save()
 

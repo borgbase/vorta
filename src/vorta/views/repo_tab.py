@@ -82,11 +82,11 @@ class RepoTab(RepoBase, RepoUI):
 
     def populate_repositories(self):
         try:
-            self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
+            self.repoSelector.activated.disconnect(self.repo_select_action)
         except TypeError:  # raised when signal is not connected
             pass
+        self.repoSelector.activated.connect(self.repo_select_action)
         self.set_repos()
-        self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
         self.populate_from_profile()
 
     def populate_from_profile(self):
