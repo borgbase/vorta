@@ -6,7 +6,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.models import BackupProfileModel  # noqa: F401
+from vorta.models import BackupProfileModel, BackupProfileMixin  # noqa: F401
 from vorta.utils import get_asset
 from ..notifications import VortaNotifications
 from ..profile_export import ProfileExport
@@ -32,7 +32,7 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
 
         self.keyring = VortaKeyring.get_keyring()
         profile = self.profile
-        if profile.repo is None or self.keyring.get_password('vorta-repo', profile.repo.url) is None:
+        if len(BackupProfileMixin.get_repos(profile)) == 0 or self.keyring.get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.setCheckState(False)
             self.storePassword.setDisabled(True)
             self.storePassword.setToolTip(self.tr('The current profile_export has no password'))

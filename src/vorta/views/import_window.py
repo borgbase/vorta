@@ -25,18 +25,15 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
 
     def init_repo_password_field(self, profile_export):
         """Try to prefill the borg passphrase either from the export or from the keyring."""
-        self.repoPassword.textChanged[str].connect(self.on_repo_password_changed)
-        if profile_export.repo_password:
-            self.repoPassword.setText(profile_export.repo_password)
-            self.repoPassword.setDisabled(True)
-            self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from the export file'))
-        elif profile_export.repo_url:
-            keyring = VortaKeyring.get_keyring()
-            repo_password = keyring.get_password('vorta-repo', profile_export.repo_url)
-            if repo_password:
-                self.repoPassword.setText(repo_password)
-                self.repoPassword.setDisabled(True)
-                self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from your keyring'))
+        # so user can't fill password anymore
+        self.repoPassword.setDisabled(True)
+        for prof_x_repo in profile_export.prof_x_repos:
+            if 'repo' in prof_x_repo['repo'] and 'url' in prof_x_repo['repo']:
+                keyring = VortaKeyring.get_keyring()
+                repo_password = keyring.get_password('vorta-repo', prof_x_repo['repo']['url'])
+                if repo_password:
+                    prof_x_repo['repo']['password'] = repo_password
+                    self.repoPassword.setText(repo_password)
 
     def init_overwrite_profile_checkbox(self):
         """Disable the overwrite profile checkbox if no profile with that name currently exists."""
@@ -51,9 +48,6 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
                     'A profile with the name {} does not exist. Nothing to overwrite.'.format(self.profile_export.name)
                 )
             )
-
-    def on_repo_password_changed(self, password):
-        self.profile_export.repo_password = password
 
     def on_error(self, error, message):
         logger.error(error)

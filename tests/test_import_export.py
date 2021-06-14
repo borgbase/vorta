@@ -5,7 +5,7 @@ import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 
-from vorta.models import BackupProfileModel, SourceFileModel
+from vorta.models import BackupProfileModel, SourceFileModel, BackupProfileMixin
 from vorta.views.import_window import ImportWindow
 
 VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'
@@ -26,7 +26,7 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
 
-    restored_repo = restored_profile.repo
+    restored_repo = BackupProfileMixin.get_or_none(profile=restored_profile.id)
     assert restored_repo is not None
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
 
@@ -41,7 +41,7 @@ def test_import_bootstrap_success(qapp, mocker):
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
     assert restored_profile is not None
 
-    restored_repo = restored_profile.repo
+    restored_repo = BackupProfileMixin.get_or_none(profile=restored_profile.id)
     assert restored_repo is not None
 
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3

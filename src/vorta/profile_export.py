@@ -6,7 +6,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, SchemaVersion, \
-    SettingsModel, BackupProfileModel, db, SCHEMA_VERSION, init_db
+    SettingsModel, BackupProfileModel, db, SCHEMA_VERSION, init_db, BackupProfileMixin
 
 
 class ProfileExport:
@@ -25,17 +25,24 @@ class ProfileExport:
     def schema_version(self):
         return self._profile_dict['SchemaVersion']['version']
 
+    # this property is not used
     @property
     def repo_url(self):
         if 'repo' in self._profile_dict and \
                 type(self._profile_dict['repo']) == dict and 'url' in self._profile_dict['repo']:
             return self._profile_dict['repo']['url']
-        return None
 
+    # this property is not used
     @property
     def repo_password(self):
         return self._profile_dict['password'] if 'password' in self._profile_dict else None
 
+    # this property is useless
+    @property
+    def prof_x_repos(self):
+        return self._profile_dict['BackupProfileMixin'] if 'BackupProfileMixin' in self._profile_dict else None
+
+    # this setter is useless
     @repo_password.setter
     def repo_password(self, password):
         self._profile_dict['password'] = password
@@ -44,9 +51,20 @@ class ProfileExport:
     def from_db(cls, profile, store_password=True, include_settings=True):
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
+        # Add multiple repos
+        profile_dict['BackupProfileMixin'] = [
+            model_to_dict(
+                repo,
+                recurse=True,
+                exclude=[BackupProfileMixin.id, BackupProfileMixin.repo.id])
+            for repo in BackupProfileMixin.get_repos(profile)]
+
         keyring = VortaKeyring.get_keyring()
         if store_password:
-            profile_dict['password'] = keyring.get_password('vorta-repo', profile.repo.url)
+            for repo in BackupProfileMixin.get_repos(profile):
+                for repo_dict in profile_dict['BackupProfileMixin']:
+                    repo_dict['repo']['password'] \
+                        = keyring.get_password('vorta-repo', repo.repo.url)
 
         # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
@@ -99,18 +117,26 @@ class ProfileExport:
                     suffix += 1
                 self._profile_dict['name'] = f"{self.name}-{suffix}"
 
-        # Load existing repo or restore it
-        if self._profile_dict['repo']:
-            repo = RepoModel.get_or_none(RepoModel.url == self.repo_url)
-            if repo is None:
-                # Load repo from export
-                repo = dict_to_model(RepoModel, self._profile_dict['repo'])
-                repo.save(force_insert=True)
-            self._profile_dict['repo'] = model_to_dict(repo)
+        if self.prof_x_repos:
+            for prof_x_repo in self.prof_x_repos:
+                if 'password' in prof_x_repo['repo']:
+                    keyring.set_password('vorta-repo', prof_x_repo['repo']['url'], prof_x_repo['repo']['password'])
+                    del prof_x_repo['repo']['password']
 
-        if self.repo_password:
-            keyring.set_password('vorta-repo', self.repo_url, self.repo_password)
-            del self._profile_dict['password']
+        # Load existing repo or restore it
+
+        if self.prof_x_repos:
+            for prof_x_repo in self.prof_x_repos:
+                prof_x_repo['profile']['id'] = self._profile_dict['id']
+                repo = RepoModel.get_or_none(RepoModel.url == prof_x_repo['repo']['url'])
+                if repo is None:
+                    # Load repo from export
+                    repo = dict_to_model(RepoModel, prof_x_repo['repo'])
+                    repo.save(force_insert=True)
+
+                prof_x_repo['repo'] = model_to_dict(repo)
+                prof_x_repo_db = dict_to_model(BackupProfileMixin, prof_x_repo)
+                prof_x_repo_db.save(force_insert=True)
 
         # Delete and recreate the tables to clear them
         if overwrite_settings:
@@ -129,6 +155,7 @@ class ProfileExport:
         del self._profile_dict['SourceFileModel']
         del self._profile_dict['WifiSettingModel']
         del self._profile_dict['SchemaVersion']
+        del self._profile_dict['BackupProfileMixin']
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)

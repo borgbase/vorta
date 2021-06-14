@@ -1,5 +1,6 @@
 import os
 import uuid
+
 import pytest
 from PyQt5 import QtCore
 
@@ -16,6 +17,8 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
     main.repoTab.repoSelector.setCurrentIndex(1)
+    # setCurrentIndex method doesn't call repo_select_action since the sent signal is activated
+    main.repoTab.repo_select_action(1)
     add_repo_window = main.repoTab._window
     qtbot.addWidget(add_repo_window)
 
@@ -67,6 +70,7 @@ def test_repo_unlink(qapp, qtbot):
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
     main.repoTab.repoSelector.setCurrentIndex(1)
+    main.repoTab.repo_select_action(1)
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
@@ -83,6 +87,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
     main.repoTab.repoSelector.setCurrentIndex(1)
+    main.repoTab.repo_select_action(1)
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 

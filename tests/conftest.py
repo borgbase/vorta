@@ -14,7 +14,7 @@ from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFil
                           BackupProfileMixin)
 from vorta.views.main_window import MainWindow
 
-models = [RepoModel, RepoPassword, BackupProfileModel, BackupProfileMixin , SourceFileModel,
+models = [RepoModel, RepoPassword, BackupProfileModel, BackupProfileMixin, SourceFileModel,
           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
 
 
@@ -104,6 +104,7 @@ def borg_json_output():
         stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json')
         stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
         return stdout, stderr
+
     return _read_json
 
 
