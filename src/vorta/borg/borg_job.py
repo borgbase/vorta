@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import signal
 import sys
@@ -10,18 +9,17 @@ import time
 import logging
 from datetime import datetime as dt
 from collections import namedtuple
-from subprocess import Popen, PIPE, TimeoutExpired
 from threading import Lock
-
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
+from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
-from vorta.keyring.abc import VortaKeyring
-from vorta.keyring.db import VortaDBKeyring
 from vorta.models import EventLogModel, BackupProfileMixin, BackupProfileModel
 from vorta.utils import borg_compat, pretty_bytes
+from vorta.keyring.abc import VortaKeyring
+from vorta.keyring.db import VortaDBKeyring
 
 temp_mutex = Lock()
 logger = logging.getLogger(__name__)
@@ -176,7 +174,7 @@ class BorgJob(Job):
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
             ret['message'] = trans_late(
                 'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
-                            "Try unlinking and re-adding your repo.")
+                "Try unlinking and re-adding your repo.")
             return ret
 
         ret['ssh_key'] = profile.ssh_key
@@ -259,10 +257,10 @@ class BorgJob(Job):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{translate('BorgThread', 'Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgThread', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgThread', 'Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgThread', 'Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

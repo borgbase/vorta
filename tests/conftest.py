@@ -14,7 +14,7 @@ from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFil
                           BackupProfileMixin)
 from vorta.views.main_window import MainWindow
 
-models = [RepoModel, RepoPassword, BackupProfileModel, BackupProfileMixin, SourceFileModel,
+models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
 
 

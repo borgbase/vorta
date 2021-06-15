@@ -196,13 +196,29 @@ class BackupProfileMixin(pw.Model):
 
     @staticmethod
     def get_repos(profile):
-        query = BackupProfileMixin \
-            .select(BackupProfileMixin, RepoModel) \
-            .join(RepoModel) \
-            .where((BackupProfileMixin.profile == profile))
+        """
+        This function select rows in BackupProfileMixin that contain profile and return all association
+        between this profile and its repositories.
+        Profile can be a string or on integer (name of the profile or his id)
+        To test if query contain no row, you can test the assertion len(query) == 0
+        """
+
+        if type(profile == str):
+            query = BackupProfileMixin\
+                .select(BackupProfileMixin, RepoModel).join(RepoModel)\
+                .where(BackupProfileMixin.profile.name == profile)
+
+        if type(profile == int):
+            query = BackupProfileMixin\
+                .select(BackupProfileMixin, RepoModel)\
+                .join(RepoModel)\
+                .where(BackupProfileMixin.profile == profile)
+
         return query
 
     def delete_or_create(self, repo):
+        # this function delete the repo associated with the current profile. If the repo doesn't exist,
+        # it is created in the database.
         query = BackupProfileMixin \
             .select() \
             .where((BackupProfileMixin.repo == repo)

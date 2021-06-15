@@ -106,8 +106,8 @@ class RepoTab(RepoBase, RepoUI):
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
 
         repos = BackupProfileMixin.get_repos(profile.id)
-        for repo in repos:
-            active_repo = repo.repo.id + 3
+        for prof_x_repo in repos:
+            active_repo = prof_x_repo.repo.id + 3
             self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
 
     def init_repo_stats(self):

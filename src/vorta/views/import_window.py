@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QDialogButtonBox
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.models import BackupProfileModel, SCHEMA_VERSION
@@ -9,6 +9,8 @@ from vorta.views.export_window import ImportWindowUI, ImportWindowBase, logger
 
 class ImportWindow(ImportWindowUI, ImportWindowBase):
     profile_imported = QtCore.pyqtSignal(BackupProfileModel)
+    password_fill_finished = QtCore.pyqtSignal()
+    next_password = QtCore.pyqtSignal()
 
     def __init__(self, profile_export):
         """
@@ -17,23 +19,95 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
         super().__init__()
         self.profile_export = profile_export
         self.setupUi(self)
-        self.init_repo_password_field(profile_export)
-        self.init_overwrite_profile_checkbox()
-        self.buttonBox.accepted.connect(self.run)
         self.buttonBox.rejected.connect(self.reject)
         self.setWindowTitle(self.tr("Import Profile"))
+        if self.check_version():
+            self.init_repo_password_field()
+            self.init_overwrite_profile_checkbox()
 
-    def init_repo_password_field(self, profile_export):
-        """Try to prefill the borg passphrase either from the export or from the keyring."""
-        # so user can't fill password anymore
+    def check_version(self):
+        if SCHEMA_VERSION >= 18 and self.profile_export.prof_x_repos is None:
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+            self.repoPassword.setEnabled(False)
+            self.overwriteExistingProfile.setEnabled(False)
+            self.overwriteExistingSettings.setEnabled(False)
+            self.askUser.setText(
+                self.tr("You are trying to import an older profile format of vorta. We can't import your profile."))
+            return False
+
+        if SCHEMA_VERSION <= 17 and self.profile_export.prof_x_repos is not None:
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+            self.repoPassword.setEnabled(False)
+            self.overwriteExistingProfile.setEnabled(False)
+            self.overwriteExistingSettings.setEnabled(False)
+            self.askUser.setText(
+                self.tr("You are trying to import a newer profile format of vorta. We can't import your profile "
+                        "until you upgrade vorta > ? "))
+            return False
+
+        return True
+
+    def init_repo_password_field(self):
+        self.repo_id = 0
+        self.repoPassword.textChanged[str].connect(self.on_repo_password_changed)
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+        self.next_password.connect(self.fill_next_password)
+        # connect button to next password if user enter text
+        self.buttonBox.accepted.connect(self.accept_user_input)
+        self.password_fill_finished.connect(self.run_enabled)
+        self.fill_next_password()
+
+    def accept_user_input(self):
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.repoPassword.setDisabled(True)
-        for prof_x_repo in profile_export.prof_x_repos:
-            if 'repo' in prof_x_repo['repo'] and 'url' in prof_x_repo['repo']:
+        self.repo_id += 1
+        self.next_password.emit()
+
+    def run_enabled(self):
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+        self.buttonBox.accepted.disconnect(self.accept_user_input)
+        self.buttonBox.accepted.connect(self.run)
+
+    def fill_next_password(self):
+        """Try to prefill the borg passphrase either from the export or from the keyring."""
+        prof_x_repos = self.profile_export.prof_x_repos
+        if prof_x_repos and self.repo_id < len(prof_x_repos):
+
+            prof_x_repo = prof_x_repos[self.repo_id]
+            # take password from file.
+            if 'password' in prof_x_repo['repo']:
+                self.repoPassword.setText(prof_x_repo['repo']['password'])
+                self.repoPassword.setDisabled(True)
+                self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from the export file'))
+                self.repo_id += 1
+                self.next_password.emit()
+
+            # take password from keyring
+            elif 'url' in prof_x_repo['repo']:
                 keyring = VortaKeyring.get_keyring()
                 repo_password = keyring.get_password('vorta-repo', prof_x_repo['repo']['url'])
                 if repo_password:
                     prof_x_repo['repo']['password'] = repo_password
                     self.repoPassword.setText(repo_password)
+                    self.repoPassword.setDisabled(True)
+                    self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from your keyring'))
+                    self.repo_id += 1
+                    self.next_password.emit()
+
+                # Take password from user
+                else:
+                    self.repoPassword.setEnabled(True)
+                    self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+                    self.askUser.setText(
+                        self.tr("Can't find the password for {} in your file or keyring. Please enter it if needed:".format(
+                            prof_x_repo['repo']['url'])))
+        else:
+            self.password_fill_finished.emit()
+
+    def on_repo_password_changed(self, repo_password):
+        prof_x_repo = self.profile_export.prof_x_repos[self.repo_id]
+        # password field is created if the user enters some text
+        prof_x_repo['repo']['password'] = repo_password
 
     def init_overwrite_profile_checkbox(self):
         """Disable the overwrite profile checkbox if no profile with that name currently exists."""
