@@ -81,7 +81,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self.prunePrefixTemplate.textChanged.connect(
             lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
 
-        self.populate_from_profile()
+        self.comboBox.currentIndexChanged.connect(self.populate_from_profile)
+
+        self.populate_repos_list()
         self.selected_archives = None
         self.set_icons()
 
@@ -137,13 +139,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         deleteAction.setIcon(get_colored_icon('trash'))
         return menu
 
-    def populate_from_profile(self):
+    def populate_from_profile(self, index):
         """Populate archive list and prune settings from profile."""
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
-        if profile.repo is not None:
-            self.mount_points = get_mount_points(profile.repo.url)
-            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
-            archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
+        repo = None
+        for prof_x_repo in BackupProfileMixin.get_repos(profile.id):
+            if prof_x_repo.repo.url == self.comboBox.itemText(index):
+                repo = prof_x_repo.repo
+
+        if repo is not None:
+            self.mount_points = get_mount_points(repo.url)
+
+            self.toolBox.setItemText(0, self.tr('Archives for %s') % repo.url)
+            archives = [s for s in repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
@@ -167,11 +175,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
 
-            self.archiveTable.setRowCount(len(archives))
-            self.archiveTable.setSortingEnabled(sorting)
-            item = self.archiveTable.item(0, 0)
-            self.archiveTable.scrollToItem(item)
-            self._toggle_all_buttons(enabled=True)
+                self.archiveTable.setRowCount(len(archives))
+                self.archiveTable.setSortingEnabled(sorting)
+                item = self.archiveTable.item(0, 0)
+                self.archiveTable.scrollToItem(item)
+                self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
@@ -188,6 +196,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.setText(profile.prune_keep_within)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+
+    def populate_repos_list(self):
+        """Populate archive combo box."""
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
+        # show all repos available for current profile
+        for repo_i in range(self.comboBox.count()):
+            self.comboBox.removeItem(0)
+        for prof_x_repo in BackupProfileMixin.get_repos(profile.id):
+            self.comboBox.insertItem(0, prof_x_repo.repo.url)
 
     def save_archive_template(self, tpl, key):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)

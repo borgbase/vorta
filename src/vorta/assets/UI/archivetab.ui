@@ -36,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>757</width>
-        <height>374</height>
+        <width>763</width>
+        <height>382</height>
        </rect>
       </property>
       <attribute name="label">
@@ -53,6 +53,9 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
+       <item>
+        <widget class="QComboBox" name="comboBox"/>
+       </item>
        <item>
         <widget class="QTableWidget" name="archiveTable">
          <attribute name="horizontalHeaderVisible">
@@ -194,8 +197,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>541</width>
-        <height>299</height>
+        <width>587</width>
+        <height>286</height>
        </rect>
       </property>
       <attribute name="label">

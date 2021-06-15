@@ -56,7 +56,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.tabWidget.setCurrentIndex(0)
 
-        self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.archiveTab.populate_repos_list)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
 
