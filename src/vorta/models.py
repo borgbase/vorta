@@ -68,6 +68,9 @@ class RepoPassword(pw.Model):
 class BackupProfileModel(pw.Model):
     """Allows the user to switch between different configurations."""
     name = pw.CharField()
+    # repo field can't be deleted now. It's not supported by peewee
+    # to remove attributes from model and call it (even if it is in the db)
+    repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
     added_at = pw.DateTimeField(default=datetime.now)
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
@@ -232,7 +235,7 @@ class BackupProfileMixin(pw.Model):
 
     def delete_or_create(self, repo):
         # this function delete the repo associated with the current profile. If the repo doesn't exist,
-        # it is created in the database.
+        # it is created in the database. repo is an integer.
         query = BackupProfileMixin \
             .select() \
             .where((BackupProfileMixin.repo == repo)
@@ -492,10 +495,16 @@ def init_db(con=None):
 
     if current_schema.version < 19:
         db.create_tables([BackupProfileMixin])
+        # keep repo backup in BackupProfileMixin
+        for profile in BackupProfileModel.select():
+            prof_x_repo = BackupProfileMixin(profile=profile.id, repo=profile.repo.id)
+            prof_x_repo.save()
         _apply_schema_update(
-            current_schema, 18,
-            migrator.drop_column(BackupProfileModel._meta.table_name, 'repo_id')
+            current_schema, 18
         )
+        # repo_id must be removed in the next update. peewee doesn't support deleting field in model and use
+        # it after even if it exists in the db
+        # migrator.drop_column(BackupProfileModel._meta.table_name, 'repo_id')
 
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
