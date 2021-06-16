@@ -138,7 +138,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if not backup_profile_id:
             return
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
-        # self.archiveTab.populate_from_profile()
+        self.archiveTab.populate_from_profile()
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()

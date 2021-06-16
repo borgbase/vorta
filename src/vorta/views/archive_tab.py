@@ -139,7 +139,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         deleteAction.setIcon(get_colored_icon('trash'))
         return menu
 
-    def populate_from_profile(self, index):
+    def populate_from_profile(self, index=0):
         """Populate archive list and prune settings from profile."""
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
         repo = BackupProfileMixin.get_repo(profile.id, self.comboBox.currentText())

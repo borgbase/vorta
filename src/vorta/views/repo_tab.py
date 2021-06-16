@@ -74,11 +74,9 @@ class RepoTab(RepoBase, RepoUI):
             repo_i += 1
             self.repoSelector.addItem(repo.url, repo.id)
             self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
-
-        repos = BackupProfileMixin.get_repos(profile.id)
-        for repo in repos:
-            active_repo = repo.repo.id + 3
-            self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
+            if BackupProfileMixin.get_repo(profile.id, repo.url) is not None:
+                self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
+        self.repoSelector.setCurrentIndex(0)
 
     def populate_repositories(self):
         try:
@@ -95,16 +93,7 @@ class RepoTab(RepoBase, RepoUI):
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
-
-        repo_i = 3
-        for repo in RepoModel.select():
-            repo_i += 1
-            self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
-
-        repos = BackupProfileMixin.get_repos(profile.id)
-        for prof_x_repo in repos:
-            active_repo = prof_x_repo.repo.id + 3
-            self.repoSelector.setItemIcon(active_repo, get_colored_icon('check-circle'))
+        self.set_repos()
 
     def init_repo_stats(self):
         profile = self.window().current_profile.id
@@ -204,10 +193,8 @@ class RepoTab(RepoBase, RepoUI):
             window.added_repo.connect(self.process_new_repo)
             window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         else:
-            profile = BackupProfileModel.get(id=self.window().current_profile.id)
-            profile.repo = self.repoSelector.currentData()
-            profile.save()
-            # add repo if exist and remove either with add_repo
+            # user can select more than one repository
+            # add repo if exist and remove either with add_repo<
             is_created = BackupProfileMixin.delete_or_create(self, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
             if is_created:
@@ -218,19 +205,14 @@ class RepoTab(RepoBase, RepoUI):
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
-            new_repo = RepoModel.get(url=result['params']['repo_url'])
-            profile = BackupProfileModel.get(id=self.window().current_profile.id)
-            profile.repo = new_repo.id
-            profile.save()
-
             self.set_repos()
             self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
+            # call repo_select_action to add this repository in repos of the current profile.
             self.repo_select_action(self.repoSelector.count() - 1)
             self.repo_added.emit()
             self.init_repo_stats()
 
     def repo_unlink_action(self):
-        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         self.init_repo_stats()
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.Ok)
@@ -240,8 +222,6 @@ class RepoTab(RepoBase, RepoUI):
         if selected_repo_index > 2:
             repo = RepoModel.get(id=selected_repo_id)
             ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
-            profile.repo = None
-            profile.save()
             repo.delete_instance(recursive=True)  # This also deletes archives.
             self.repoSelector.setCurrentIndex(0)
             self.repoSelector.removeItem(selected_repo_index)
