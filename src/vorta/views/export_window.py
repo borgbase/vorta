@@ -32,7 +32,9 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
 
         self.keyring = VortaKeyring.get_keyring()
         profile = self.profile
-        if len(BackupProfileMixin.get_repos(profile)) == 0 or self.keyring.get_password('vorta-repo', profile.repo.url) is None:
+        prof_x_repos = BackupProfileMixin.get_repos(profile)
+        repo = prof_x_repos[0].repo
+        if len(prof_x_repos) == 0 or self.keyring.get_password('vorta-repo', repo.url) is None:
             self.storePassword.setCheckState(False)
             self.storePassword.setDisabled(True)
             self.storePassword.setToolTip(self.tr('The current profile_export has no password'))

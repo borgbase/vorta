@@ -11,7 +11,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
-    tab.populate_from_profile()
+    tab.populate_repos_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     stdout, stderr = borg_json_output(json_mock_file)

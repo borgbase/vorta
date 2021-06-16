@@ -66,12 +66,12 @@ class BorgCreateJob(BorgJob):
             return 0  # 0 if no command was run.
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, repo):
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.
         """
-        ret = super().prepare(profile)
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
@@ -94,24 +94,24 @@ class BorgCreateJob(BorgJob):
                     WifiSettingModel.profile == profile
                 )
             )
-            if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
+            if wifi_is_disallowed.count() > 0 and repo.is_remote_repo():
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
 
-        if profile.repo.is_remote_repo() and profile.dont_run_on_metered_networks \
+        if repo.is_remote_repo() and profile.dont_run_on_metered_networks \
                 and network_status_monitor.is_network_metered():
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
             return ret
 
         ret['profile'] = profile
-        ret['repo'] = profile.repo
+        ret['repo'] = repo
 
         # Run user-supplied pre-backup command
         if cls.pre_post_backup_cmd(ret) != 0:
             ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
             return ret
 
-        if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
+        if not repo.is_remote_repo() and not os.path.exists(repo.url):
             ret['message'] = trans_late('messages', 'Repo folder not mounted or moved.')
             return ret
 
@@ -132,8 +132,8 @@ class BorgCreateJob(BorgJob):
             profile.compression,
         ]
 
-        if profile.repo.create_backup_cmd:
-            cmd.extend(profile.repo.create_backup_cmd.split(' '))
+        if repo.create_backup_cmd:
+            cmd.extend(repo.create_backup_cmd.split(' '))
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
@@ -157,7 +157,7 @@ class BorgCreateJob(BorgJob):
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
-        cmd.append(f"{profile.repo.url}::{new_archive_name}")
+        cmd.append(f"{repo.url}::{new_archive_name}")
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)

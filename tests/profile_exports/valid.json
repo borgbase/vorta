@@ -2,16 +2,6 @@
     "id": 1,
     "name": "Test Profile Restoration",
     "added_at": "2020-09-10 01:09:03.402268",
-    "repo": {
-        "url": "/tmp/asdf",
-        "added_at": "2020-09-10 21:48:21.427080",
-        "encryption": "repokey-blake2",
-        "unique_size": null,
-        "unique_csize": null,
-        "total_size": null,
-        "total_unique_chunks": null,
-        "extra_borg_arguments": ""
-    },
     "ssh_key": null,
     "compression": "zstd,8",
     "exclude_patterns": null,
@@ -41,16 +31,6 @@
             "profile": {
                 "name": "Test Profile Restoration",
                 "added_at": "2020-09-10 01:09:03.402268",
-                "repo": {
-                    "url": "/tmp/asdf",
-                    "added_at": "2020-09-10 21:48:21.427080",
-                    "encryption": "repokey-blake2",
-                    "unique_size": null,
-                    "unique_csize": null,
-                    "total_size": null,
-                    "total_unique_chunks": null,
-                    "extra_borg_arguments": ""
-                },
                 "ssh_key": null,
                 "compression": "zstd,8",
                 "exclude_patterns": null,

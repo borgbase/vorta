@@ -13,8 +13,8 @@ class BorgListArchiveJob(BorgJob):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile, archive_name):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo, archive_name):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
 
@@ -22,7 +22,7 @@ class BorgListArchiveJob(BorgJob):
         ret['cmd'] = [
             'borg', 'list', '--info', '--log-json', '--json-lines',
             '--format', "{size:8d}{TAB}{mtime}{TAB}{path}{NL}",
-            f'{profile.repo.url}::{archive_name}']
+            f'{repo.url}::{archive_name}']
         ret['ok'] = True
 
         return ret

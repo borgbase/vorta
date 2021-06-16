@@ -91,10 +91,6 @@ class RepoTab(RepoBase, RepoUI):
 
     def populate_from_profile(self):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
-        if profile.repo:
-            self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
-        else:
-            self.repoSelector.setCurrentIndex(0)
 
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))

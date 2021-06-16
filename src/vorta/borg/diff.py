@@ -14,8 +14,8 @@ class BorgDiffJob(BorgJob):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile, archive_name_1, archive_name_2):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo, archive_name_1, archive_name_2):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
 
@@ -26,7 +26,7 @@ class BorgDiffJob(BorgJob):
             ret['json_lines'] = True
 
         ret['cmd'].extend([
-            f'{profile.repo.url}::{archive_name_1}',
+            f'{repo.url}::{archive_name_1}',
             f'{archive_name_2}'
         ])
         ret['ok'] = True

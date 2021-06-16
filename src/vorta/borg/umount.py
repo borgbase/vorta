@@ -10,8 +10,8 @@ class BorgUmountJob(BorgJob):
         self.updated.emit(self.tr('Unmounting archive...'))
 
     @classmethod
-    def prepare(cls, profile):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:

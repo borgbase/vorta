@@ -17,7 +17,9 @@ class BorgInitJob(BorgJob):
                      params['encryption']), 'Init Repo', params['ssh_key']
         )
 
-        ret = super().prepare(profile)
+        repo = FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], params['encryption'])
+
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:

@@ -127,11 +127,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
-        if profile.repo:
+        # regression -> can't add a create_backup_cmd without select a repo
+        """if profile.repo:
             self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
             self.createCmdLineEdit.setEnabled(True)
         else:
-            self.createCmdLineEdit.setEnabled(False)
+            self.createCmdLineEdit.setEnabled(False)"""
 
         self.populate_wifi()
         self.populate_logs()
@@ -165,10 +166,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
         profile.save()
 
     def save_repo_attr(self, attr, new_value):
+        # not supported since repo column doesnt exist in database
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
-        repo = profile.repo
-        setattr(repo, attr, new_value)
-        repo.save()
+        # repo = profile.repo
+        # setattr(repo, attr, new_value)
+        # repo.save()
 
     def populate_logs(self):
         event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]

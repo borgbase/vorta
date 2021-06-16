@@ -9,8 +9,8 @@ class BorgMountJob(BorgJob):
         self.updated.emit(self.tr('Mounting archive into folder...'))
 
     @classmethod
-    def prepare(cls, profile):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
@@ -24,7 +24,7 @@ class BorgMountJob(BorgJob):
         if override_mount_permissions:
             cmd += ['-o', f"umask=0277,uid={os.getuid()}"]
 
-        cmd += [f"{profile.repo.url}"]
+        cmd += [f"{repo.url}"]
 
         ret['ok'] = True
         ret['cmd'] = cmd

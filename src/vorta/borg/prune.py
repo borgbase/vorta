@@ -14,8 +14,8 @@ class BorgPruneJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Pruning done.'))
 
     @classmethod
-    def prepare(cls, profile):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
@@ -38,7 +38,7 @@ class BorgPruneJob(BorgJob):
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
         cmd += pruning_opts
-        cmd.append(f'{profile.repo.url}')
+        cmd.append(f'{repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd

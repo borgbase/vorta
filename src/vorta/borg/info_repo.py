@@ -22,14 +22,16 @@ class BorgInfoRepoJob(BorgJob):
             params['ssh_key']
         )
 
-        ret = super().prepare(profile)
+        repo = FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none')
+
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ["borg", "info", "--info", "--json", "--log-json"]
-        cmd.append(profile.repo.url)
+        cmd.append(repo.url)
 
         ret['additional_env'] = {
             'BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK': "yes",

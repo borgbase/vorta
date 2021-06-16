@@ -118,7 +118,7 @@ class BorgJob(Job):
                 os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, repo):
         """
         Prepare for running Borg. This function in the base class should be called from all
         subclasses and calls that define their own `cmd`.
@@ -151,10 +151,10 @@ class BorgJob(Job):
         temp_mutex.acquire()
         cls.keyring = VortaKeyring.get_keyring()
         logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
-        ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
+        ret['password'] = cls.keyring.get_password('vorta-repo', repo.url)
 
         # Check if keyring is locked
-        if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
+        if repo.encryption != 'none' and not cls.keyring.is_unlocked:
             ret['message'] = trans_late('messages',
                                         'Please unlock your system password manager or disable it under Misc')
             return ret
@@ -162,7 +162,7 @@ class BorgJob(Job):
         # Try to fall back to DB Keyring, if we use the system keychain.
         if ret['password'] is None and cls.keyring.is_system:
             logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
-            ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
+            ret['password'] = VortaDBKeyring().get_password('vorta-repo', repo.url)
 
             # Give warning and continue if password is found there.
             if ret['password'] is not None:
@@ -171,16 +171,16 @@ class BorgJob(Job):
         temp_mutex.release()
 
         # Password is required for encryption, cannot continue
-        if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
+        if ret['password'] is None and not isinstance(repo, FakeRepo) and repo.encryption != 'none':
             ret['message'] = trans_late(
                 'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
                 "Try unlinking and re-adding your repo.")
             return ret
 
         ret['ssh_key'] = profile.ssh_key
-        ret['repo_id'] = profile.repo.id
-        ret['repo_url'] = profile.repo.url
-        ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
+        ret['repo_id'] = repo.id
+        ret['repo_url'] = repo.url
+        ret['extra_borg_arguments'] = repo.extra_borg_arguments
         ret['profile_name'] = profile.name
         ret['profile_id'] = profile.id
 

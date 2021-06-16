@@ -69,7 +69,6 @@ class BackupProfileModel(pw.Model):
     """Allows the user to switch between different configurations."""
     name = pw.CharField()
     added_at = pw.DateTimeField(default=datetime.now)
-    repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
     exclude_patterns = pw.TextField(null=True)
@@ -193,6 +192,21 @@ class BackupProfileMixin(pw.Model):
 
     class Meta:
         database = db
+
+    @staticmethod
+    def get_repo(profile_id, repo_url):
+        """
+        Return the repo associated with current profile. repo_url is a string.
+        """
+        query = BackupProfileMixin \
+            .select(BackupProfileMixin, RepoModel).join(RepoModel) \
+            .where((BackupProfileMixin.profile == profile_id) &
+                   (BackupProfileMixin.repo.url == repo_url))
+        if len(query) > 0:
+            return query[0].repo
+        else:
+            return None
+
 
     @staticmethod
     def get_repos(profile):
@@ -478,9 +492,10 @@ def init_db(con=None):
 
     if current_schema.version < 19:
         db.create_tables([BackupProfileMixin])
-        current_schema.version = 19
-        current_schema.changed_at = datetime.now()
-        current_schema.save()
+        _apply_schema_update(
+            current_schema, 18,
+            migrator.drop_column(BackupProfileModel._meta.table_name, 'repo_id')
+        )
 
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():

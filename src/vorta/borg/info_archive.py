@@ -14,15 +14,15 @@ class BorgInfoArchiveJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Refreshing archive done.'))
 
     @classmethod
-    def prepare(cls, profile, archive_name):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo, archive_name):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
 
         ret['ok'] = True
         ret['cmd'] = [
             'borg', 'info', '--log-json', '--json',
-            f'{profile.repo.url}::{archive_name}']
+            f'{repo.url}::{archive_name}']
         ret['archive_name'] = archive_name
 
         return ret

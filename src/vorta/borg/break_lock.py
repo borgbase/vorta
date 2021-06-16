@@ -13,15 +13,15 @@ class BorgBreakJob(BorgJob):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'break-lock', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}')
+        cmd.append(f'{repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd

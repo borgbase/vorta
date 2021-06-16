@@ -8,7 +8,7 @@ from vorta.borg.create import BorgCreateJob
 from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
-from vorta.i18n import init_translations, translate
+from vorta.i18n import init_translations, translate, trans_late
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db, BackupProfileMixin
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -114,16 +114,12 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
-        query = BackupProfileMixin.get_repos(self.main_window.current_profile.id)
-
         def aux(query, cpt):
-            if cpt < len(query) or len(query) == 0:
+            if cpt < len(query):
                 profile = BackupProfileModel.get(id=profile_id)
-                if len(query) != 0:
-                    profile.repo = query[cpt].repo.id
-                    profile.save
+                repo = query[cpt].repo
                 cpt += 1
-                msg = BorgCreateJob.prepare(profile)
+                msg = BorgCreateJob.prepare(profile, repo)
                 if msg['ok']:
                     job = BorgCreateJob(msg['cmd'], msg, parent=self)
                     job.result.connect(lambda: aux(query, cpt))
@@ -133,7 +129,14 @@ class VortaApp(QtSingleApplication):
                     notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
                     self.backup_progress_event.emit(translate('messages', msg['message']))
 
-        aux(query, 0)
+        query = BackupProfileMixin.get_repos(self.main_window.current_profile.id)
+        if len(query) == 0:
+            msg = trans_late('messages', 'Add a backup repository first.')
+            notifier = VortaNotifications.pick()
+            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg), level='error')
+            self.backup_progress_event.emit(translate('messages', msg))
+        else:
+            aux(query, 0)
 
     def open_main_window_action(self):
         self.main_window.show()

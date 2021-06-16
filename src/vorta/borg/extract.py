@@ -13,7 +13,7 @@ class BorgExtractJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Restored files from archive.'))
 
     @classmethod
-    def prepare(cls, profile, archive_name, selected_files, destination_folder):
+    def prepare(cls, profile, repo, archive_name, selected_files, destination_folder):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -21,7 +21,7 @@ class BorgExtractJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'extract', '--list', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}::{archive_name}')
+        cmd.append(f'{repo.url}::{archive_name}')
         for s in selected_files:
             cmd.append(s)
 

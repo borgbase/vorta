@@ -13,15 +13,15 @@ class BorgCheckJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Check completed.'))
 
     @classmethod
-    def prepare(cls, profile):
-        ret = super().prepare(profile)
+    def prepare(cls, profile, repo):
+        ret = super().prepare(profile, repo)
         if not ret['ok']:
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'check', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}')
+        cmd.append(f'{repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd

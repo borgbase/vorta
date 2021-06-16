@@ -53,7 +53,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+    tab.populate_repos_list()
     stdout, stderr = borg_json_output('prune')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
@@ -67,7 +67,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+    tab.populate_repos_list()
 
     stdout, stderr = borg_json_output('check')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -90,7 +90,7 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+    tab.populate_repos_list()
     tab.archiveTable.selectRow(0)
 
     stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
@@ -113,7 +113,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
-    tab.populate_from_profile()
+    tab.populate_repos_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     tab.archiveTable.selectRow(0)
@@ -135,7 +135,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
-    tab.populate_from_profile()
+    tab.populate_repos_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     tab.archiveTable.selectRow(0)
@@ -155,7 +155,8 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
-    tab.populate_from_profile()
+    # tab.populate_repos_list()
+    tab.populate_repos_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 
     tab.archiveTable.selectRow(0)
