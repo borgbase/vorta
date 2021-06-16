@@ -142,11 +142,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
     def populate_from_profile(self, index):
         """Populate archive list and prune settings from profile."""
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
-        repo = None
-        for prof_x_repo in BackupProfileMixin.get_repos(profile.id):
-            if prof_x_repo.repo.url == self.comboBox.itemText(index):
-                repo = prof_x_repo.repo
-
+        repo = BackupProfileMixin.get_repo(profile.id, self.comboBox.currentText())
         if repo is not None:
             self.mount_points = get_mount_points(repo.url)
 
@@ -199,12 +195,21 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
 
     def populate_repos_list(self):
         """Populate archive combo box."""
+        # keep current text to select this as default repo in comboBox
+        old_text = self.comboBox.currentText()
+        new_index = 0
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
         # show all repos available for current profile
         for repo_i in range(self.comboBox.count()):
             self.comboBox.removeItem(0)
         for prof_x_repo in BackupProfileMixin.get_repos(profile.id):
             self.comboBox.insertItem(0, prof_x_repo.repo.url)
+        # select the same repo in comboBox
+        for repo_i in range(self.comboBox.count()):
+            if old_text == self.comboBox.itemText(repo_i):
+                new_index = repo_i
+        self.comboBox.setCurrentIndex(new_index)
+
 
     def save_archive_template(self, tpl, key):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
