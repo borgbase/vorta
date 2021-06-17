@@ -8,9 +8,9 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta as rd
 
 import peewee as pw
-from dateutil.relativedelta import relativedelta as rd
 from playhouse.migrate import SqliteMigrator, migrate
 
 from vorta.i18n import trans_late
@@ -196,60 +196,57 @@ class BackupProfileMixin(pw.Model):
     class Meta:
         database = db
 
-    @staticmethod
-    def get_repo(profile_id, repo_url):
+    @classmethod
+    def get_repo(cls, profile_id, repo_url):
         """
         Return the repo associated with current profile. repo_url is a string.
         """
-        query = BackupProfileMixin \
-            .select(BackupProfileMixin, RepoModel).join(RepoModel) \
-            .where((BackupProfileMixin.profile == profile_id) &
-                   (BackupProfileMixin.repo.url == repo_url))
+        query = cls \
+            .select(cls, RepoModel).join(RepoModel) \
+            .where((cls.profile == profile_id) & (cls.repo.url == repo_url))
         if len(query) > 0:
             return query[0].repo
         else:
             return None
 
-
-    @staticmethod
-    def get_repos(profile):
+    @classmethod
+    def get_repos(cls, profile):
         """
         This function select rows in BackupProfileMixin that contain profile and return all association
         between this profile and its repositories.
-        Profile can be a string or on integer (name of the profile or his id)
-        To test if query contain no row, you can test the assertion len(query) == 0
+        Profile can be a string or on integer (name of the profile or its id)
+        To test if query contains no row, test the assertion len(query) == 0
         """
 
         if type(profile == str):
-            query = BackupProfileMixin\
-                .select(BackupProfileMixin, RepoModel).join(RepoModel)\
-                .where(BackupProfileMixin.profile.name == profile)
+            query = cls\
+                .select(cls, RepoModel).join(RepoModel)\
+                .where(cls.profile.name == profile)
 
         if type(profile == int):
-            query = BackupProfileMixin\
-                .select(BackupProfileMixin, RepoModel)\
+            query = cls\
+                .select(cls, RepoModel)\
                 .join(RepoModel)\
-                .where(BackupProfileMixin.profile == profile)
+                .where(cls.profile == profile)
 
         return query
 
-    def delete_or_create(self, repo):
+    @classmethod
+    def delete_or_create(cls, profile_id, repo):
         # this function delete the repo associated with the current profile. If the repo doesn't exist,
         # it is created in the database. repo is an integer.
-        query = BackupProfileMixin \
+        query = cls \
             .select() \
-            .where((BackupProfileMixin.repo == repo)
-                   & (BackupProfileMixin.profile == self.window().current_profile.id))
+            .where((cls.repo == repo) & (cls.profile == profile_id))
 
         if query.exists():
-            BackupProfileMixin \
+            cls \
                 .delete() \
-                .where((BackupProfileMixin.repo == repo)
-                       & (BackupProfileMixin.profile == self.window().current_profile.id)) \
+                .where((cls.repo == repo) & (cls.profile == profile_id)) \
                 .execute()
             return False  # repo has been removed from DB
         else:
-            p = BackupProfileMixin(repo=repo, profile=self.window().current_profile.id)
+            p = cls(repo=repo, profile=profile_id)
             p.save()
             return True  # repo has been added
 

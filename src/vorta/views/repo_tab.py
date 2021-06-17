@@ -194,8 +194,9 @@ class RepoTab(RepoBase, RepoUI):
             window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         else:
             # user can select more than one repository
-            # add repo if exist and remove either with add_repo<
-            is_created = BackupProfileMixin.delete_or_create(self, self.repoSelector.currentData())
+            # add repo if exist and remove either with add_repo
+            profile_id = self.window().current_profile.id
+            is_created = BackupProfileMixin.delete_or_create(profile_id, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
             if is_created:
                 self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))

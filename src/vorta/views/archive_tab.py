@@ -139,13 +139,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         deleteAction.setIcon(get_colored_icon('trash'))
         return menu
 
-    def populate_from_profile(self, index=0):
+    def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
         repo = BackupProfileMixin.get_repo(profile.id, self.comboBox.currentText())
         if repo is not None:
             self.mount_points = get_mount_points(repo.url)
-
             self.toolBox.setItemText(0, self.tr('Archives for %s') % repo.url)
             archives = [s for s in repo.archives.select().order_by(ArchiveModel.time.desc())]
 
@@ -171,11 +170,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
 
-                self.archiveTable.setRowCount(len(archives))
-                self.archiveTable.setSortingEnabled(sorting)
-                item = self.archiveTable.item(0, 0)
-                self.archiveTable.scrollToItem(item)
-                self._toggle_all_buttons(enabled=True)
+            self.archiveTable.setRowCount(len(archives))
+            self.archiveTable.setSortingEnabled(sorting)
+            item = self.archiveTable.item(0, 0)
+            self.archiveTable.scrollToItem(item)
+            self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
@@ -209,7 +208,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
             if old_text == self.comboBox.itemText(repo_i):
                 new_index = repo_i
         self.comboBox.setCurrentIndex(new_index)
-
 
     def save_archive_template(self, tpl, key):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
@@ -273,7 +271,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
 
     def list_action(self):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
-
         repo = BackupProfileMixin.get_repo(profile.id, self.comboBox.currentText())
         params = BorgListRepoJob.prepare(profile, repo)
         if params['ok']:
@@ -289,7 +286,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archives.'))
-            self.populate_from_profile(self.comboBox.currentIndex())
+            self.populate_from_profile()
 
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
@@ -308,7 +305,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archive.'))
-            # self.populate_from_profile()
+            # I removed it why ????
+            # TODO
+            self.populate_from_profile()
 
     def selected_archive_name(self):
         row_selected = self.archiveTable.selectionModel().selectedRows()
@@ -603,6 +602,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
     def rename_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Archive renamed.'))
-            self.populate_from_profile(self.comboBox.currentIndex())
+            self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
