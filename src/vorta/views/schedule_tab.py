@@ -57,10 +57,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val))
 
     def set_icons(self):
-        self.scheduleTabWidget.setTabText(0, self.tr('clock'))
-        self.scheduleTabWidget.setTabText(1, self.tr('wifi'))
-        self.scheduleTabWidget.setTabText(2, self.tr('tasks'))
-        self.scheduleTabWidget.setTabText(3, self.tr('terminal'))
         self.scheduleTabWidget.setTabIcon(0, get_colored_icon('clock-o'))
         self.scheduleTabWidget.setTabIcon(1, get_colored_icon('wifi'))
         self.scheduleTabWidget.setTabIcon(2, get_colored_icon('tasks'))

@@ -55,7 +55,7 @@ QTabWidget::tab-bar {
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="page_1">
       <property name="statusTip">
@@ -65,7 +65,7 @@ QTabWidget::tab-bar {
        <string/>
       </property>
       <attribute name="title">
-       <string/>
+       <string>clock</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -373,7 +373,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_2">
       <attribute name="title">
-       <string/>
+       <string>wifi</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="topMargin">
@@ -426,7 +426,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_3">
       <attribute name="title">
-       <string/>
+       <string>tasks</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <property name="topMargin">
@@ -481,7 +481,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_4">
       <attribute name="title">
-       <string/>
+       <string>terminal</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="topMargin">

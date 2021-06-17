@@ -59,19 +59,23 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setStyleSheet("QTabWidget#tabWidget::pane { border: 0; }")
         self.tabWidget.tabBar().hide()
         self.listWidget.currentRowChanged.connect(self.tab_switch)
+        self.listWidget_2.currentRowChanged.connect(self.tab_switch_list2)
 
         icon = get_colored_icon('hdd-o-active')
         pixmap = icon.pixmap(QSize(45, 45))
         self.iconVorta.setPixmap(pixmap)
 
-        icons = ['cloud-download', 'folder-open', 'clock-o', 'server', 'globe']
+        # add icons on the left tab in the main window
+        icons = ['cloud-download', 'folder-open', 'clock-o', 'server']
         for item_i in range(min(self.listWidget.count(), len(icons))):
-            if item_i == 0:
-                self.listWidget.setCurrentIndex(self.listWidget.indexFromItem(self.listWidget.item(item_i)))
-
             item = self.listWidget.item(item_i)
             item.setSizeHint(QSize(100, 50))
             item.setIcon(get_colored_icon(icons[item_i]))
+        self.listWidget.setCurrentRow(0)
+
+        item = self.listWidget_2.item(0)
+        item.setSizeHint(QSize(100, 40))
+        item.setIcon(get_colored_icon('globe'))
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
@@ -303,5 +307,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         event.accept()
 
     def tab_switch(self, current_row):
+        # unselect the item in other listWidget
+        self.listWidget_2.setCurrentRow(-1)
         self.tabWidget.setCurrentIndex(current_row)
-        # self.new = self.listWidget.currentIndex()
+
+    def tab_switch_list2(self):
+        self.listWidget.setCurrentRow(-1)
+        # The second list widget always selects the last tab
+        self.tabWidget.setCurrentIndex(self.listWidget.count())
+

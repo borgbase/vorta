@@ -141,8 +141,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         if profile.repo is not None:
             self.mount_points = get_mount_points(profile.repo.url)
-            self.tabWidget.setTabText(0, self.tr('Archives'))
-            self.tabWidget.setTabText(1, self.tr('Prunes'))
             self.label.setText(self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 

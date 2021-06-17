@@ -52,8 +52,11 @@ QTabWidget::tab-bar {
       <number>0</number>
      </property>
      <widget class="QWidget" name="tabWidgetPage1">
-      <attribute name="title">
+      <property name="accessibleName">
        <string/>
+      </property>
+      <attribute name="title">
+       <string>Archives</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -68,7 +71,7 @@ QTabWidget::tab-bar {
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Select a repository first.</string>
          </property>
         </widget>
        </item>
@@ -210,11 +213,14 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="tabWidgetPage2">
       <attribute name="title">
-       <string/>
+       <string>Prunes</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="topMargin">
         <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="label_5">
