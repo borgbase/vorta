@@ -31,7 +31,6 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
         files_with_attributes, nested_file_list = parse_diff_json_lines(lines) \
             if json_lines else parse_diff_lines(lines)
-        #
         model = DiffTree(files_with_attributes, nested_file_list)
 
         view = self.treeView
