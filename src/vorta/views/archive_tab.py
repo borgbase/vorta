@@ -194,6 +194,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
 
     def populate_repos_list(self):
         """Populate archive combo box."""
+        # disconnect to not call populate_from_profile multiple times with bad index
+        self.comboBox.currentIndexChanged.disconnect(self.populate_from_profile)
         # keep current text to select this as default repo in comboBox
         old_text = self.comboBox.currentText()
         new_index = 0
@@ -207,6 +209,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         for repo_i in range(self.comboBox.count()):
             if old_text == self.comboBox.itemText(repo_i):
                 new_index = repo_i
+        self.comboBox.currentIndexChanged.connect(self.populate_from_profile)
         self.comboBox.setCurrentIndex(new_index)
 
     def save_archive_template(self, tpl, key):
@@ -286,7 +289,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archives.'))
-            self.populate_from_profile()
 
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
@@ -305,8 +307,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archive.'))
-            # I removed it why ????
-            # TODO
             self.populate_from_profile()
 
     def selected_archive_name(self):
