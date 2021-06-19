@@ -209,8 +209,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         for repo_i in range(self.comboBox.count()):
             if old_text == self.comboBox.itemText(repo_i):
                 new_index = repo_i
-        self.comboBox.currentIndexChanged.connect(self.populate_from_profile)
         self.comboBox.setCurrentIndex(new_index)
+        self.comboBox.currentIndexChanged.connect(self.populate_from_profile)
+        self.populate_from_profile()
 
     def save_archive_template(self, tpl, key):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)

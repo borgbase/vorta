@@ -25,27 +25,32 @@ class ProfileExport:
     def schema_version(self):
         return self._profile_dict['SchemaVersion']['version']
 
-    # this property is not used
     @property
     def repo_url(self):
         if 'repo' in self._profile_dict and \
                 type(self._profile_dict['repo']) == dict and 'url' in self._profile_dict['repo']:
             return self._profile_dict['repo']['url']
 
-    # this property is not used
-    @property
-    def repo_password(self):
-        return self._profile_dict['password'] if 'password' in self._profile_dict else None
-
-    # this property is useless
     @property
     def prof_x_repos(self):
         return self._profile_dict['BackupProfileMixin'] if 'BackupProfileMixin' in self._profile_dict else None
 
-    # this setter is useless
-    @repo_password.setter
-    def repo_password(self, password):
-        self._profile_dict['password'] = password
+    def set_repo_password(self, repo_index, password):
+        self.prof_x_repos[repo_index]['repo']['password'] = password
+
+    def get_repo_password(self, repo_index):
+        if self.prof_x_repos and len(self.prof_x_repos) > repo_index \
+                and 'password' in self.prof_x_repos[repo_index]['repo']:
+            return self.prof_x_repos[repo_index]['repo']['password']
+        return None
+
+    def get_repo_url(self, repo_index):
+        if self.prof_x_repos and len(self.prof_x_repos) > repo_index and 'url' in self.prof_x_repos[repo_index]['repo']:
+            return self.prof_x_repos[repo_index]['repo']['url']
+        return None
+
+    def get_repo(self, repo_index):
+        return self.prof_x_repos[repo_index] if self.prof_x_repos and len(self.prof_x_repos) > repo_index else None
 
     @classmethod
     def from_db(cls, profile, store_password=True, include_settings=True):

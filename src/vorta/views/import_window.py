@@ -71,23 +71,23 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
     def fill_next_password(self):
         """Try to prefill the borg passphrase either from the export or from the keyring."""
         prof_x_repos = self.profile_export.prof_x_repos
+        repo_url = self.profile_export.get_repo_url(self.repo_id)
+        repo_password = self.profile_export.get_repo_password(self.repo_id)
         if prof_x_repos and self.repo_id < len(prof_x_repos):
-
-            prof_x_repo = prof_x_repos[self.repo_id]
             # take password from file.
-            if 'password' in prof_x_repo['repo']:
-                self.repoPassword.setText(prof_x_repo['repo']['password'])
+            if repo_password is not None:
+                self.repoPassword.setText(repo_password)
                 self.repoPassword.setDisabled(True)
                 self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from the export file'))
                 self.repo_id += 1
                 self.next_password.emit()
 
             # take password from keyring
-            elif 'url' in prof_x_repo['repo']:
+            elif repo_url is not None:
                 keyring = VortaKeyring.get_keyring()
-                repo_password = keyring.get_password('vorta-repo', prof_x_repo['repo']['url'])
+                repo_password = keyring.get_password('vorta-repo', repo_url)
                 if repo_password:
-                    prof_x_repo['repo']['password'] = repo_password
+                    self.profile_export.set_repo_password(self.repo_id, repo_password)
                     self.repoPassword.setText(repo_password)
                     self.repoPassword.setDisabled(True)
                     self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from your keyring'))
@@ -96,18 +96,18 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
 
                 # Take password from user
                 else:
+                    self.repoPassword.clear()
                     self.repoPassword.setEnabled(True)
                     self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
                     self.askUser.setText(
-                        self.tr("Can't find the password for {} in your file or keyring. Please enter it if needed:".format(
-                            prof_x_repo['repo']['url'])))
+                        self.tr("Can't find the password for {} in your file or keyring. Please enter it if needed:".
+                                format(repo_url)))
         else:
             self.password_fill_finished.emit()
 
     def on_repo_password_changed(self, repo_password):
-        prof_x_repo = self.profile_export.prof_x_repos[self.repo_id]
         # password field is created if the user enters some text
-        prof_x_repo['repo']['password'] = repo_password
+        self.profile_export.set_repo_password(self.repo_id, repo_password)
 
     def init_overwrite_profile_checkbox(self):
         """Disable the overwrite profile checkbox if no profile with that name currently exists."""
