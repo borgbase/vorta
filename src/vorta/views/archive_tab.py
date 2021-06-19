@@ -289,6 +289,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archives.'))
+            self.populate_from_profile()
 
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
