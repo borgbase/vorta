@@ -262,10 +262,12 @@ def pretty_bytes(size, metric=True, sign=False, precision=1):
         n += 1
     try:
         unit = units[n]
-        return f'{prefix}{round(size, precision)} {unit}B'
+        pretty = f'{prefix}{round(size, precision)} {unit}B'
+        fix_len = 12
+        return pretty + ' '*(fix_len-len(pretty))
     except KeyError as e:
         logger.error(e)
-        return "NaN"
+        return "NaN" + ' '*(fix_len - len('NaN'))
 
 
 def get_asset(path):

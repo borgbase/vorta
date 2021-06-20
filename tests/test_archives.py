@@ -155,7 +155,6 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
 
-    # tab.populate_repos_list()
     tab.populate_repos_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
 

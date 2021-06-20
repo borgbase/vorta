@@ -193,7 +193,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
     def populate_repos_list(self):
-        """Populate archive combo box."""
+        """Populate repo combo box in archive tab."""
         # disconnect to not call populate_from_profile multiple times with bad index
         self.comboBox.currentIndexChanged.disconnect(self.populate_from_profile)
         # keep current text to select this as default repo in comboBox
@@ -201,12 +201,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         new_index = 0
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
         # show all repos available for current profile
-        for repo_i in range(self.comboBox.count()):
-            self.comboBox.removeItem(0)
-        for prof_x_repo in BackupProfileMixin.get_repos(profile.id):
-            self.comboBox.insertItem(0, prof_x_repo.repo.url)
-        # select the same repo in comboBox
-        for repo_i in range(self.comboBox.count()):
+        self.comboBox.clear()
+        for repo_i, prof_x_repo in enumerate(BackupProfileMixin.get_repos(profile.id)):
+            self.comboBox.addItem(prof_x_repo.repo.url)
+            # select the same repo in comboBox
             if old_text == self.comboBox.itemText(repo_i):
                 new_index = repo_i
         self.comboBox.setCurrentIndex(new_index)

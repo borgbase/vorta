@@ -69,13 +69,12 @@ class RepoTab(RepoBase, RepoUI):
         count = self.repoSelector.count()
         for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
             self.repoSelector.removeItem(4)
-        repo_i = 3
         for repo in RepoModel.select():
-            repo_i += 1
-            self.repoSelector.addItem(repo.url, repo.id)
-            self.repoSelector.setItemIcon(repo_i, get_colored_icon('times-solid'))
-            if BackupProfileMixin.get_repo(profile.id, repo.url) is not None:
-                self.repoSelector.setItemIcon(repo_i, get_colored_icon('check-circle'))
+            if BackupProfileMixin.get_repo(profile.id, repo.url) is None:
+                icon = get_colored_icon('times-solid')
+            else:
+                icon = get_colored_icon('check-circle')
+            self.repoSelector.addItem(icon, repo.url, repo.id)
         self.repoSelector.setCurrentIndex(0)
 
     def populate_repositories(self):
@@ -83,9 +82,9 @@ class RepoTab(RepoBase, RepoUI):
             self.repoSelector.activated.disconnect(self.repo_select_action)
         except TypeError:  # raised when signal is not connected
             pass
-        self.repoSelector.activated.connect(self.repo_select_action)
         self.set_repos()
         self.populate_from_profile()
+        self.repoSelector.activated.connect(self.repo_select_action)
 
     def populate_from_profile(self):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
@@ -93,31 +92,26 @@ class RepoTab(RepoBase, RepoUI):
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
-        self.set_repos()
 
     def init_repo_stats(self):
         profile = self.window().current_profile.id
-        unique_csize = 0
-        unique_size = 0
-        total_size = 0
-        encryption = ""
+        unique_csize = ''
+        unique_size = ''
+        total_size = ''
+        encryption = ''
 
         query = BackupProfileMixin.get_repos(profile)
 
-        for repo_i in query:
-            repo = repo_i.repo
-            if repo.unique_csize is not None:
-                unique_csize += repo.unique_csize
-            if repo.unique_size is not None:
-                unique_size += repo.unique_size
-            if repo.total_size is not None:
-                total_size += repo.total_size
-            if repo.encryption is not None:
+        for prof_x_repos in query:
+            repo = prof_x_repos.repo
+            if repo is not None:
+                unique_csize += pretty_bytes(repo.unique_csize)
+                unique_size += pretty_bytes(repo.unique_size)
+                total_size += pretty_bytes(repo.total_size)
                 encryption += " %s" % (str(repo.encryption))
-
-        self.sizeCompressed.setText(pretty_bytes(unique_csize))
-        self.sizeDeduplicated.setText(pretty_bytes(unique_size))
-        self.sizeOriginal.setText(pretty_bytes(total_size))
+        self.sizeCompressed.setText(unique_csize)
+        self.sizeDeduplicated.setText(unique_size)
+        self.sizeOriginal.setText(total_size)
         self.repoEncryption.setText(str(encryption))
         self.repo_changed.emit()
 
@@ -194,8 +188,8 @@ class RepoTab(RepoBase, RepoUI):
             window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         else:
             # user can select more than one repository
-            # add repo if exist and remove either with add_repo
             profile_id = self.window().current_profile.id
+            # add repo if exist and remove either with add_repo
             is_created = BackupProfileMixin.delete_or_create(profile_id, self.repoSelector.currentData())
             repo_i = self.repoSelector.currentIndex()
             if is_created:

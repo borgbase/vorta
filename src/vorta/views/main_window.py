@@ -57,7 +57,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_repos_list)
-        self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.list_action)
 
@@ -139,7 +138,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if not backup_profile_id:
             return
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
-        self.repoTab.populate_from_profile()
+        self.repoTab.populate_repositories()
         self.archiveTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
