@@ -31,7 +31,7 @@ class FolderItem:
         search_path = os.path.join(self.path, name)
         if parent is None:  # Find path for root folder
             for root_folder in nested_file_list.keys():
-                self._filtered_children.append((0, "", root_folder, "",))
+                self._filtered_children.append((0, "", root_folder, "", 'd',))
         else:
             self.checkedState = (
                 parent.checkedState
@@ -52,14 +52,18 @@ class FolderItem:
                     if child[2] == immediate_child
                 ]:
                     self._filtered_children.append(
-                        (0, "", immediate_child, search_path)
+                        (0, "", immediate_child, search_path, 'd')
                     )
 
+        # Sorts tuples by name ignoring case
+        self._filtered_children.sort(key=lambda x: x[2].upper())
+        # Pushes folders (type 'd') to start of list
+        self._filtered_children.sort(key=lambda x: x[4] != 'd')
         self.is_loaded = False
 
     def load_children(self):
         for child_item in self._filtered_children:
-            if child_item[0] > 0:  # This is a file
+            if child_item[4] != 'd':  # This is a file
                 self.childItems.append(
                     FileItem(
                         name=child_item[2],
@@ -187,9 +191,6 @@ class TreeModel(QAbstractItemModel):
         selected_files_folders=None,
         parent=None,
     ):
-        files_with_attributes.sort(key=lambda x: x[2].upper())  # Sorts tuples by name ignoring case
-        files_with_attributes.sort(key=lambda x: x[4] != 'd')  # Pushes folders (type 'd') to start of list
-
         super(TreeModel, self).__init__(parent)
 
         self.rootItem = FolderItem(

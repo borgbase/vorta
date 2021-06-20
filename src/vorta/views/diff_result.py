@@ -31,8 +31,6 @@ class DiffResult(DiffResultBase, DiffResultUI):
 
         files_with_attributes, nested_file_list = parse_diff_json_lines(lines) \
             if json_lines else parse_diff_lines(lines)
-        # add type attributes : directory, files
-        files_with_attributes = [attrs + (type_f, ) for attrs, type_f in zip(files_with_attributes, fs_data[1])]
         model = DiffTree(files_with_attributes, nested_file_list)
 
         view = self.treeView
@@ -70,6 +68,7 @@ def parse_diff_json_lines(diffs):
         size = 0
         change_type = None
         change_type_priority = 0
+        file_type = '-'
         for change in item['changes']:
             # if more than one type of change has happened for this file/dir/link, then report the most important
             # (higher priority)
@@ -91,6 +90,8 @@ def parse_diff_json_lines(diffs):
                     change_type_priority = 3
             elif change['type'] in ['added', 'removed', 'added link', 'removed link', 'changed link',
                                     'added directory', 'removed directory']:
+                if change['type'] in ['added directory', 'removed directory']:
+                    file_type = 'd'
                 size = change.get('size', 0)
                 if change_type_priority < 2:
                     change_type = change['type'].split()[0]     # 'added', 'removed' or 'changed'
@@ -111,7 +112,7 @@ def parse_diff_json_lines(diffs):
                     change_type_priority = 1
         assert change_type  # either no changes, or unrecognized change(s)
 
-        files_with_attributes.append((size, change_type, name, dirpath))
+        files_with_attributes.append((size, change_type, name, dirpath, file_type))
 
     return (files_with_attributes, nested_file_list)
 
@@ -121,10 +122,12 @@ def parse_diff_lines(diff_lines):
 
     def parse_line(line):
         line_split = line.split()
-
+        file_type = '-'
         if line_split[0] in {'added', 'removed', 'changed'}:
             change_type = line_split[0]
             if line_split[1] in ['directory', 'link']:
+                if line_split[1] in ['directory']:
+                    file_type = 'd'
                 size = 0
                 full_path = re.search(r'^\w+ \w+ +(.*)', line).group(1)
             else:
@@ -163,7 +166,7 @@ def parse_diff_lines(diff_lines):
         if name not in d:
             d[name] = {}
 
-        return size, change_type, name, dir
+        return size, change_type, name, dir, file_type
 
     files_with_attributes = [parse_line(line) for line in diff_lines if line]
 
