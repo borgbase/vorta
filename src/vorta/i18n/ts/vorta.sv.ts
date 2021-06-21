@@ -636,27 +636,27 @@
     <message>
         <location filename="../../assets/UI/exportwindow.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
-        <translation type="unfinished"/>
+        <translation>Vid aktivering, avslöjas din borg-lösenfras om du delar den här filen med andra. Använd detta med försiktighet!</translation>
     </message>
     <message>
         <location filename="../../assets/UI/exportwindow.ui" line="26"/>
         <source>Include borg passphrase in export</source>
-        <translation type="unfinished"/>
+        <translation>Ta med borg-lösenfrasen i exporten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/importwindow.ui" line="25"/>
         <source>Borg passphrase:</source>
-        <translation type="unfinished"/>
+        <translation>Borg-lösenfras:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/importwindow.ui" line="53"/>
         <source>Overwrite existing profile</source>
-        <translation type="unfinished"/>
+        <translation>Skriv över befintlig profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/importwindow.ui" line="60"/>
         <source>Overwrite existing settings</source>
-        <translation type="unfinished"/>
+        <translation>Skriv över befintliga inställningar</translation>
     </message>
 </context>
 <context>
@@ -690,37 +690,37 @@
     <message>
         <location filename="../../views/export_window.py" line="29"/>
         <source>Export Profile</source>
-        <translation type="unfinished"/>
+        <translation>Exportera profil</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="38"/>
         <source>The current profile_export has no password</source>
-        <translation type="unfinished"/>
+        <translation>Den aktuella profile_export har inget lösenord</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="43"/>
         <source>Save profile_export</source>
-        <translation type="unfinished"/>
+        <translation>Spara profile_export</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="55"/>
         <source>Error while exporting</source>
-        <translation type="unfinished"/>
+        <translation>Fel vid export</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="71"/>
         <source>The file {} could not be created. Please choose another location.</source>
-        <translation type="unfinished"/>
+        <translation>Filen {} kunde inte skapas. Välj en annan plats.</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="78"/>
         <source>Profile export successful!</source>
-        <translation type="unfinished"/>
+        <translation>Profilexport slutförd!</translation>
     </message>
     <message>
         <location filename="../../views/export_window.py" line="78"/>
         <source>Profile export written to {}.</source>
-        <translation type="unfinished"/>
+        <translation>Profilexport skriven på {}.</translation>
     </message>
 </context>
 <context>
@@ -1191,49 +1191,51 @@
     <message>
         <location filename="../../views/import_window.py" line="24"/>
         <source>Import Profile</source>
-        <translation type="unfinished"/>
+        <translation>Importera profil</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="32"/>
         <source>The passphrase has been loaded from the export file</source>
-        <translation type="unfinished"/>
+        <translation>Lösenfrasen har lästs in från exportfilen</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="39"/>
         <source>The passphrase has been loaded from your keyring</source>
-        <translation type="unfinished"/>
+        <translation>Lösenfrasen har lästs in från din nyckelring</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="49"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
-        <translation type="unfinished"/>
+        <translation>Det finns ingen profil med namnet {}. Det finns inget att skriva över.</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="60"/>
         <source>Error while importing</source>
-        <translation type="unfinished"/>
+        <translation>Fel vid import</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="76"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
-        <translation type="unfinished"/>
+        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i diversefliken och ange följande fel:
+ {0}
+ {1}</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="79"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
-        <translation type="unfinished"/>
+        <translation>Nyare profile_export exportfiler kan inte användas i äldre versioner.</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="81"/>
         <source>Cannot read profile_export export file due to permission error.</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte läsa profile_export exportfil på grund av behörighetsfel.</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="83"/>
         <source>Profile export file not found.</source>
-        <translation type="unfinished"/>
+        <translation>Profilexportfil hittades inte</translation>
     </message>
 </context>
 <context>
@@ -1341,47 +1343,47 @@
     <message>
         <location filename="../../views/main_window.py" line="84"/>
         <source>Import from file...</source>
-        <translation type="unfinished"/>
+        <translation>Importera från fil...</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="177"/>
         <source>Can&apos;t delete the last profile.</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte ta bort senaste profilen.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="205"/>
         <source>Profile import successful!</source>
-        <translation type="unfinished"/>
+        <translation>Profilimport slutförd!</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="205"/>
         <source>Profile {} imported.</source>
-        <translation type="unfinished"/>
+        <translation>Profil {} importerad.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="214"/>
         <source>Load profile</source>
-        <translation type="unfinished"/>
+        <translation>Läs in profil</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="214"/>
         <source>JSON (*.json);;All files (*)</source>
-        <translation type="unfinished"/>
+        <translation>JSON (*.json);;Alla filer (*)</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="222"/>
         <source>Error</source>
-        <translation type="unfinished"/>
+        <translation>Fel</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="222"/>
         <source>This file does not contain valid JSON.</source>
-        <translation type="unfinished"/>
+        <translation>Denna fil innehåller inte giltig JSON.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="97"/>
         <source>Export Profile</source>
-        <translation type="unfinished"/>
+        <translation>Exportera profil</translation>
     </message>
 </context>
 <context>
@@ -1646,12 +1648,12 @@
     <message>
         <location filename="../../application.py" line="264"/>
         <source>Profile import successful!</source>
-        <translation type="unfinished"/>
+        <translation>Profilimport slutförd!</translation>
     </message>
     <message>
         <location filename="../../application.py" line="264"/>
         <source>Profile {} imported.</source>
-        <translation type="unfinished"/>
+        <translation>Profil {} importerad.</translation>
     </message>
 </context>
 <context>
