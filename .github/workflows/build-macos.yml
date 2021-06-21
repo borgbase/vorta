@@ -36,6 +36,9 @@ jobs:
       working-directory: requirements.d
     - name: Install Vorta
       run: |
+        # Use PyQt5 version supported by PyInstaller.
+        # See https://github.com/pyinstaller/pyinstaller/issues/5701
+        pip3 install 'pyqt5<=5.15.3'
         pip3 install .
     - name: Package with PyInstaller
       run: |
