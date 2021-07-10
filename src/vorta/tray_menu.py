@@ -16,6 +16,7 @@ class TrayMenu(QSystemTrayIcon):
 
         # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
         menu.aboutToShow.connect(self.on_user_click)
+        menu.aboutToHide.connect(self.on_menu_hide)
 
         self.setContextMenu(menu)
 
@@ -36,11 +37,16 @@ class TrayMenu(QSystemTrayIcon):
         else:
             self.on_user_click()
 
+    def on_menu_hide(self):
+        """Clear context menu when hidden from user"""
+
+        menu = self.contextMenu()
+        menu.clear()
+
     def on_user_click(self):
         """Build system tray menu based on current state."""
 
         menu = self.contextMenu()
-        menu.clear()
 
         open_action = menu.addAction(self.tr('Vorta for Borg Backup'))
         open_action.triggered.connect(self.app.open_main_window_action)
