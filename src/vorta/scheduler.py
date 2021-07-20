@@ -1,5 +1,10 @@
 import logging
+import queue
+import threading
+import time
 from datetime import date, timedelta
+from enum import Enum
+from queue import PriorityQueue
 
 from PyQt5 import QtCore
 from apscheduler.schedulers.qt import QtScheduler
@@ -163,3 +168,133 @@ class VortaScheduler(QtScheduler):
                 check_thread.wait()
 
         logger.info('Finished background task for profile %s', profile.name)
+
+
+class JobStatus(Enum):
+    # dont add and option to put the item at the end of the queue.
+    OK = 1
+    PASS = 2
+
+
+class VortaJob:
+    """
+    A job is a list of functions. Each function can have params.
+    A job can be run on a site.
+    func and params must always be lists.
+    One job is run on one site. There is one queue for each site. A "site" is simply a repository in
+    Vorta since borg can only run one task by repo. The site must implement a method get_id.
+    """
+
+    def __init__(self, func: list, params: list, site=0):
+        self.func = func
+        self.params = params
+        self.__id = time.time()  # this id identify a job. It can be use to kill a job
+        self.__status = JobStatus.OK  # the job can be runned. If False, the job is not run.
+        self.site_id = site
+
+    def get_jobs(self):
+        return self.func, self.params
+
+    def set_status(self, status):
+        self.__status = status
+
+    def get_status(self):
+        return self.__status
+
+    def get_site_id(self):
+        return self.site_id
+
+
+"""
+Priority queue. The following priorities are defined :
+0 : Safe. Default. The task is adding at the end of the queue.
+1 : Safe. This task takes priority over default task. But if default task is already running, this task
+has to wait. If a priority 2 is defined, this task will wait too.
+2 : Use this only if you know what you do. The task becomes the priority. It will stop all tasks 0 or 1 if necessary.
+But if a task of priority 2 or 3 is running, it will wait.
+3 : really dangerous. It will stop the task whatever the priority (even 3) and run the task.
+"""
+
+"""
+Don't use directly this private class ! Instead you can use VortaQueue bellow.
+"""
+
+
+class _QueueScheduler(PriorityQueue):
+    """
+    Be cautious when modified this class. It has to be reentrant and thrad-safe.
+    This queue will not run the thread. It is the role of the calling function to start
+    a thread in the function pass in the queue.
+    """
+
+    def __init__(self):
+        ## private. Never edit this without a method
+        self.__p_queue = queue.PriorityQueue()  # queue are thread-safe and reentrant in python
+
+    def add_job(self, task: VortaJob, priority=0):
+        """
+        A VortaJob contain all information to run a job. Particularly, it contains a function and
+        parameters. It can also contain more than one functions.
+        """
+        self.__p_queue.put((priority, task))
+        # TODO This function must add the job to the database
+
+    def get(self):
+        return self.__p_queue.get()
+
+    def cancel_job(self, id):
+        # TODO
+        pass
+
+    def run(self):
+        """
+        Run the job in the queue. If no job are in the queue, the function waits until a job comes.
+        :return:
+        """
+        # It's not active waiting since get block until there is item in the queue.
+        while True:
+            priority, vorta_job = self.get()
+
+            if vorta_job.get_status() == JobStatus.OK:
+                print("RUN JOB")
+                func, params = vorta_job.get_jobs()
+                for func_z, params_z in zip(func, params):
+                    func_z(params_z)
+            # TODO this job can be remove from the database now
+            self.__p_queue.task_done()
+
+
+"""
+This class is a complete scheduler. Only use this class and not QueueScheduler.
+Assertions :
+ - The user only creates few repos with scheduling jobs. So, we don't need to delete a queue each time a queue is empty
+ (it's problematic since I create one thread per queue/repo.).
+
+"""
+
+
+class VortaQueue():
+    def __init__(self):
+        self.__queues = {}  # we can use a dict since element of the dict are independent.
+
+    def load_from_db(self):
+        # load jobs from db if not running.
+        pass
+
+    def add_job(self, job: VortaJob, priority=0):
+        """
+        Return : This function return an id to identify a job. This id can be use to cancel this job.
+        """
+        if job.get_site_id() not in self.__queues:
+            self.__queues[str(job.get_site_id())] = _QueueScheduler()
+        self.__queues[str(job.get_site_id())].add_job(job, priority)
+
+    def run(self):
+        # each element of the dictionnary can be run in thread.
+        # use sync async ???
+        for queue in self.queues:
+            q_thread = threading.Thread(target=queue.run)
+            q_thread.start()
+
+    def cancel_job(self, id):
+        pass
