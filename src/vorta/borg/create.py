@@ -73,6 +73,7 @@ class BorgCreateThread(BorgThread):
         """
         ret = super().prepare(profile)
         if not ret['ok']:
+            print(ret)
             return ret
         else:
             ret['ok'] = False  # Set back to False, so we can do our own checks here.

@@ -2,11 +2,14 @@ import logging
 import queue
 import threading
 import time
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 from enum import Enum
 from queue import PriorityQueue
+from typing import Any
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import cron
 from vorta.borg.check import BorgCheckThread
@@ -27,6 +30,7 @@ class VortaScheduler(QtScheduler):
         super().__init__()
         self.app = parent
         self.start()
+        self.vorta_queue = VortaQueue()
         self.reload()
 
         # Set timer to make sure background tasks are scheduled
@@ -34,6 +38,7 @@ class VortaScheduler(QtScheduler):
         self.qt_timer.timeout.connect(self.reload)
         self.qt_timer.setInterval(45 * 60 * 1000)
         self.qt_timer.start()
+        self.scheduler = VortaQueue()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -43,6 +48,7 @@ class VortaScheduler(QtScheduler):
         for profile in BackupProfileModel.select():
             trigger = None
             job_id = f'{profile.id}'
+            repo_id = profile.repo.id
             if profile.schedule_mode == 'interval':
                 if profile.schedule_interval_hours >= 24:
                     days = profile.schedule_interval_hours // 24
@@ -67,8 +73,8 @@ class VortaScheduler(QtScheduler):
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
                 self.add_job(
-                    func=self.create_backup,
-                    args=[profile.id],
+                    func=self.enqueue_create_backup,
+                    args=[profile.id, repo_id, self.vorta_queue],
                     trigger=trigger,
                     id=job_id,
                     misfire_grace_time=180
@@ -101,6 +107,9 @@ class VortaScheduler(QtScheduler):
         else:
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
+    def enqueue_create_backup(self, profile_id, repo_id, vorta_queue):
+        vorta_queue.add_job(FuncJobQueue(func=self.create_backup, params=[profile_id], site=repo_id))
+
     def create_backup(self, profile_id):
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get(id=profile_id)
@@ -109,7 +118,6 @@ class VortaScheduler(QtScheduler):
         notifier.deliver(self.tr('Vorta Backup'),
                          self.tr('Starting background backup for %s.') % profile.name,
                          level='info')
-
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
             logger.info('Preparation for backup successful.')
@@ -176,24 +184,24 @@ class JobStatus(Enum):
     PASS = 2
 
 
-class VortaJob:
+"""
+To add a job to the vorta queue, you have to create a class which inherits JobQueue. The inherited class
+can override run and cancel. Don't use run and cancel method directly. 'cancel' method in VortaQueue
+call your custom cancel and add_job in VortaQueue call 'run' as soon as the queue is empty.
+"""
+
+
+@dataclass(order=True)
+class JobQueue(QObject):
     """
-    A job is a list of functions. Each function can have params.
-    A job can be run on a site.
     func and params must always be lists.
     One job is run on one site. There is one queue for each site. A "site" is simply a repository in
     Vorta since borg can only run one task by repo. The site must implement a method get_id.
     """
 
-    def __init__(self, func: list, params: list, site=0):
-        self.func = func
-        self.params = params
-        self.__id = time.time()  # this id identify a job. It can be use to kill a job
+    def __init__(self, priority=0):
+        self.priority = priority
         self.__status = JobStatus.OK  # the job can be runned. If False, the job is not run.
-        self.site_id = site
-
-    def get_jobs(self):
-        return self.func, self.params
 
     def set_status(self, status):
         self.__status = status
@@ -202,99 +210,106 @@ class VortaJob:
         return self.__status
 
     def get_site_id(self):
+        pass
+
+    def cancel(self):
+        pass
+
+    def run(self):
+        pass
+
+
+class FuncJobQueue(JobQueue):
+    # This is an exemple to add a task to the vorta queue.
+    # A 'site' represent a single queue. On a site, tasks are run one by one. Between site, tasks
+    # are run concurrently.
+    # 'run' method should be reentrant and thread-safe.
+    def __init__(self, func, params: list, site=0, priority=0):
+        super().__init__(priority)
+        self.func = func
+        self.params = params
+        self.site_id = site
+
+    def get_site_id(self):
         return self.site_id
 
+    def cancel(self):
+        pass
 
-"""
-Priority queue. The following priorities are defined :
-0 : Safe. Default. The task is adding at the end of the queue.
-1 : Safe. This task takes priority over default task. But if default task is already running, this task
-has to wait. If a priority 2 is defined, this task will wait too.
-2 : Use this only if you know what you do. The task becomes the priority. It will stop all tasks 0 or 1 if necessary.
-But if a task of priority 2 or 3 is running, it will wait.
-3 : really dangerous. It will stop the task whatever the priority (even 3) and run the task.
-"""
-
-"""
-Don't use directly this private class ! Instead you can use VortaQueue bellow.
-"""
+    def run(self):
+        self.func(*self.params)
 
 
-class _QueueScheduler(PriorityQueue):
+class _QueueScheduler(QRunnable, PriorityQueue):
     """
-    Be cautious when modified this class. It has to be reentrant and thrad-safe.
-    This queue will not run the thread. It is the role of the calling function to start
-    a thread in the function pass in the queue.
+    Don't use directly this private class ! Instead you can use VortaQueue bellow.
+    A _QueueScheduler represent a single site. On a site, tasks are run successively. For Borg, a site
+    represents a repository since only one task can run on this repository.
     """
 
     def __init__(self):
-        ## private. Never edit this without a method
-        self.__p_queue = queue.PriorityQueue()  # queue are thread-safe and reentrant in python
+        super().__init__()
+        self.__p_queue = queue.PriorityQueue()  # queues are thread-safe and reentrant in python
 
-    def add_job(self, task: VortaJob, priority=0):
-        """
-        A VortaJob contain all information to run a job. Particularly, it contains a function and
-        parameters. It can also contain more than one functions.
-        """
-        self.__p_queue.put((priority, task))
+    def add_job(self, task: JobQueue):
+        self.__p_queue.put((task.priority, task))
         # TODO This function must add the job to the database
+        # self.add_to_db(job)
 
     def get(self):
         return self.__p_queue.get()
 
-    def cancel_job(self, id):
-        # TODO
-        pass
+    def cancel_job(self, job: JobQueue):
+        # Dequeue the job
+        job.set_status(JobStatus.PASS)
+        # if already runnning, call the cancel job
+        job.cancel()
 
-    def run(self):
+    def process_jobs(self):
         """
-        Run the job in the queue. If no job are in the queue, the function waits until a job comes.
-        :return:
+        Launch a loop. Each site handles its own queue and processes the tasks. If no job are in the queue,
+        the site waits until a job comes. Since the loop is not launched in a thread,
+        it is up to the calling function to do so.
         """
         # It's not active waiting since get block until there is item in the queue.
         while True:
             priority, vorta_job = self.get()
-
             if vorta_job.get_status() == JobStatus.OK:
-                print("RUN JOB")
-                func, params = vorta_job.get_jobs()
-                for func_z, params_z in zip(func, params):
-                    func_z(params_z)
+                vorta_job.run()
             # TODO this job can be remove from the database now
-            self.__p_queue.task_done()
+            # self.remove_in_db(vorta_job)
+
+    def run(self):
+        # QRunnable inherited objects has to implement run method
+        self.process_jobs()
 
 
-"""
-This class is a complete scheduler. Only use this class and not QueueScheduler.
-Assertions :
- - The user only creates few repos with scheduling jobs. So, we don't need to delete a queue each time a queue is empty
- (it's problematic since I create one thread per queue/repo.).
-
-"""
-
-
-class VortaQueue():
+class VortaQueue:
+    """
+    This class is a complete scheduler. Only use this class and not _QueueScheduler.
+    """
     def __init__(self):
         self.__queues = {}  # we can use a dict since element of the dict are independent.
+        # load job from db
+        self.load_from_db()
+        # use a threadpool -> This could be changed in the future
+        self.threadpool = QThreadPool()
 
     def load_from_db(self):
-        # load jobs from db if not running.
+        # TODO load tasks from db
         pass
 
-    def add_job(self, job: VortaJob, priority=0):
+    def add_job(self, job: JobQueue):
         """
+        job must provide a function get_site_id. It's to the job to decide in which site running the job.
         Return : This function return an id to identify a job. This id can be use to cancel this job.
         """
         if job.get_site_id() not in self.__queues:
-            self.__queues[str(job.get_site_id())] = _QueueScheduler()
-        self.__queues[str(job.get_site_id())].add_job(job, priority)
+            self.__queues[job.get_site_id()] = _QueueScheduler()
+            # run the loop
+            self.threadpool.start(self.__queues[job.get_site_id()])
+        return self.__queues[job.get_site_id()].add_job(job)
 
-    def run(self):
-        # each element of the dictionnary can be run in thread.
-        # use sync async ???
-        for queue in self.queues:
-            q_thread = threading.Thread(target=queue.run)
-            q_thread.start()
-
-    def cancel_job(self, id):
-        pass
+    def cancel_job(self, job: JobQueue):
+        # call cancel job of the site queue
+        self.__queues[job.get_site_id].cancel_job(job)

@@ -19,11 +19,21 @@ from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
-mutex = Lock()
+temp_mutex = Lock()
+running = False
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
+
+"""
+All methods in this class must be thread safe (avoid data races). Particularly,
+I strongly unadvised global variable and class variables.
+Sqlite access are thread-safe because peewee is thread-safe.
+If you want to share data, “Do not communicate by sharing memory; instead, share memory by communicating.”
+The method prepare is not thread-safe because of keyring and I don't know why. That's why I added a
+temporary mutex.
+"""
 
 
 class BorgThread(QtCore.QThread, BackupProfileMixin):
@@ -93,8 +103,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.process = None
 
     @classmethod
-    def is_running(cls):
-        return mutex.locked()
+    def is_running(self):
+        # The user can't start a backup if a job is running. The scheduler can.
+        return running
 
     @classmethod
     def prepare(cls, profile):
@@ -113,9 +124,9 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         ret = {'ok': False}
 
         # Do checks to see if running Borg is possible.
-        if cls.is_running():
+        """if cls.is_running():
             ret['message'] = trans_late('messages', 'Backup is already in progress.')
-            return ret
+            return ret"""
 
         if cls.prepare_bin() is None:
             ret['message'] = trans_late('messages', 'Borg binary was not found.')
@@ -130,6 +141,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         # Try to get password from chosen keyring backend.
+        temp_mutex.acquire()
         cls.keyring = VortaKeyring.get_keyring()
         logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
         ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
@@ -149,6 +161,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             if ret['password'] is not None:
                 logger.warning('Found password in database, but secure storage was available. '
                                'Consider re-adding the repo to use it.')
+        temp_mutex.release()
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
@@ -187,7 +200,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        mutex.acquire()
+        running = True
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
@@ -272,7 +285,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        mutex.release()
+        running = False
 
     def cancel(self):
         """
