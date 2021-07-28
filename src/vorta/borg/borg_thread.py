@@ -20,7 +20,7 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
 temp_mutex = Lock()
-running = False
+RUNNING = False
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
@@ -105,7 +105,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
     @classmethod
     def is_running(self):
         # The user can't start a backup if a job is running. The scheduler can.
-        return running
+        return RUNNING
 
     @classmethod
     def prepare(cls, profile):
@@ -200,7 +200,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        running = True
+        RUNNING = True
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
@@ -285,14 +285,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        running = False
+        RUNNING = False
 
     def cancel(self):
         """
         First try to terminate the running Borg process with SIGINT (Ctrl-C),
         if this fails, use SIGTERM.
         """
-        if self.isRunning():
+        if True: # TODO cancel method doesnt work anymore -> self.process.id is not the right one. Don't know why.
             self.process.send_signal(signal.SIGINT)
             try:
                 self.process.wait(timeout=3)
@@ -300,8 +300,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
             self.quit()
             self.wait()
-            if mutex.locked():
-                mutex.release()
 
     def process_result(self, result):
         pass

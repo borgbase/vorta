@@ -129,8 +129,11 @@ class VortaApp(QtSingleApplication):
         profile = BackupProfileModel.get(id=profile_id)
         msg = BorgCreateThread.prepare(profile)
         if msg['ok']:
-            thread = BorgCreateThread(msg['cmd'], msg, parent=self)
+            thread = BorgCreateThread(msg['cmd'], msg)
             thread.start()
+            thread.wait()
+            # wait for thread. create_backup_action is run as a task in a thread in vorta_queue.
+            # So we can wait without freeze the ui.
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')

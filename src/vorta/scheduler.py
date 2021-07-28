@@ -1,12 +1,9 @@
 import logging
 import queue
-import threading
-import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date, timedelta
 from enum import Enum
 from queue import PriorityQueue
-from typing import Any
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable
@@ -22,6 +19,7 @@ from vorta.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
+DEBUG = False
 
 
 # TODO: refactor to use QtCore.QTimer directly
@@ -111,6 +109,8 @@ class VortaScheduler(QtScheduler):
         vorta_queue.add_job(FuncJobQueue(func=self.create_backup, params=[profile_id], site=repo_id))
 
     def create_backup(self, profile_id):
+        if DEBUG:
+            print("start backup for profile ", profile_id)
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get(id=profile_id)
 
@@ -137,6 +137,8 @@ class VortaScheduler(QtScheduler):
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+        if DEBUG:
+            print("End backup for profile ", profile_id)
 
     def post_backup_tasks(self, profile_id):
         """
@@ -186,8 +188,15 @@ class JobStatus(Enum):
 
 """
 To add a job to the vorta queue, you have to create a class which inherits JobQueue. The inherited class
-can override run and cancel. Don't use run and cancel method directly. 'cancel' method in VortaQueue
-call your custom cancel and add_job in VortaQueue call 'run' as soon as the queue is empty.
+must override run, cancel and get_site_id.
+
+A 'site' represent a single queue. On a site, tasks are run one by one.
+Between site, tasks are run concurrently. For Borg, a site
+represents a repository since only one task can run on this repository.
+So get_site_id must return the id of the repository. See FuncJobQueue class which inherits JobQueue.
+
+Don't use run and cancel method directly. 'cancel' method in class VortaQueue
+call your custom cancel and add_job in VortaQueue call 'run' when older job have been processed on his site.
 """
 
 
@@ -221,8 +230,6 @@ class JobQueue(QObject):
 
 class FuncJobQueue(JobQueue):
     # This is an exemple to add a task to the vorta queue.
-    # A 'site' represent a single queue. On a site, tasks are run one by one. Between site, tasks
-    # are run concurrently.
     # 'run' method should be reentrant and thread-safe.
     def __init__(self, func, params: list, site=0, priority=0):
         super().__init__(priority)
@@ -233,6 +240,7 @@ class FuncJobQueue(JobQueue):
     def get_site_id(self):
         return self.site_id
 
+    # This job can be dequeue but can't be cancelled. So a running FuncJobQueue can't be stopped.
     def cancel(self):
         pass
 
@@ -243,7 +251,7 @@ class FuncJobQueue(JobQueue):
 class _QueueScheduler(QRunnable, PriorityQueue):
     """
     Don't use directly this private class ! Instead you can use VortaQueue bellow.
-    A _QueueScheduler represent a single site. On a site, tasks are run successively. For Borg, a site
+    A _QueueScheduler represent a single site. On a site, tasks are processed successively. For Borg, a site
     represents a repository since only one task can run on this repository.
     """
 
@@ -275,7 +283,11 @@ class _QueueScheduler(QRunnable, PriorityQueue):
         while True:
             priority, vorta_job = self.get()
             if vorta_job.get_status() == JobStatus.OK:
+                if DEBUG:
+                    print("Run Job on repo : ", vorta_job.get_site_id())
                 vorta_job.run()
+                if DEBUG:
+                    print("End job on repo: ", vorta_job.get_site_id())
             # TODO this job can be remove from the database now
             # self.remove_in_db(vorta_job)
 
@@ -288,6 +300,7 @@ class VortaQueue:
     """
     This class is a complete scheduler. Only use this class and not _QueueScheduler.
     """
+
     def __init__(self):
         self.__queues = {}  # we can use a dict since element of the dict are independent.
         # load job from db
@@ -302,14 +315,19 @@ class VortaQueue:
     def add_job(self, job: JobQueue):
         """
         job must provide a function get_site_id. It's to the job to decide in which site running the job.
-        Return : This function return an id to identify a job. This id can be use to cancel this job.
+        This function is not thread safe. Always add a job from the main thread (ui loop).
         """
+        if DEBUG:
+            print("add Job")
         if job.get_site_id() not in self.__queues:
             self.__queues[job.get_site_id()] = _QueueScheduler()
             # run the loop
-            self.threadpool.start(self.__queues[job.get_site_id()])
-        return self.__queues[job.get_site_id()].add_job(job)
+            self.threadpool.start(self.__queues[job.get_site_id()]) # start call the run method.
+        self.__queues[job.get_site_id()].add_job(job)
 
     def cancel_job(self, job: JobQueue):
         # call cancel job of the site queue
         self.__queues[job.get_site_id].cancel_job(job)
+
+    def is_running(self):
+        pass
