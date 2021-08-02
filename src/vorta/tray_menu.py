@@ -33,8 +33,6 @@ class TrayMenu(QSystemTrayIcon):
         if reason in [QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick] and \
                 os.environ.get('XDG_CURRENT_DESKTOP'):
             self.app.toggle_main_window_visibility()
-        else:
-            self.on_user_click()
 
     def on_user_click(self):
         """Build system tray menu based on current state."""
