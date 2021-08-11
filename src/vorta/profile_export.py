@@ -145,8 +145,10 @@ class ProfileExport:
         with open(filename, 'r') as file:
             try:
                 profile_export = ProfileExport(json.loads(file.read()))
-            except JSONDecodeError:
-                return None
+            except JSONDecodeError as exception:
+                raise ImportFailedException(
+                    'This file does not contain valid JSON: {}'.format(str(exception))
+                ) from exception
         return profile_export
 
     def to_json(self):
@@ -160,4 +162,9 @@ class ProfileExport:
 
 class VersionException(Exception):
     """ For when current_version < export_version. Should only occur if downgrading """
+    pass
+
+
+class ImportFailedException(Exception):
+    """Raised when a profile could not be imported."""
     pass
