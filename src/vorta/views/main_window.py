@@ -10,7 +10,7 @@ from vorta.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
-from vorta.profile_export import ProfileExport
+from vorta.profile_export import ProfileExport, ImportFailedException
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -217,11 +217,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
             str(Path.home()),
             self.tr("JSON (*.json);;All files (*)"))[0]
         if filename:
-            profile_export = ProfileExport.from_json(filename)
-            if profile_export is None:
+            try:
+                profile_export = ProfileExport.from_json(filename)
+            except ImportFailedException as exception:
                 QMessageBox.critical(None,
-                                     self.tr('Error'),
-                                     self.tr('This file does not contain valid JSON.'))
+                                     self.tr('Failed to import profile'),
+                                     self.tr(str(exception)))
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
