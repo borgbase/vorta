@@ -257,8 +257,22 @@ class VortaApp(QtSingleApplication):
         or add an empty "Default" profile.
         """
         if bootstrap_file.is_file():
-            profile_export = ProfileExport.from_json(bootstrap_file)
-            profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+            try:
+                profile_export = ProfileExport.from_json(bootstrap_file)
+                profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+            except Exception as exception:
+                double_newline = os.linesep + os.linesep
+                QMessageBox.critical(None,
+                                     self.tr('Failed to import profile'),
+                                     "{}{}\"{}\"{}{}".format(
+                                         self.tr('Failed to import a profile from {}:').format(bootstrap_file),
+                                         double_newline,
+                                         str(exception),
+                                         double_newline,
+                                         self.tr('Consider removing or repairing this file to '
+                                                 'get rid of this message.'),
+                                     ))
+                return
             bootstrap_file.unlink()
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Profile import successful!'),

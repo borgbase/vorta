@@ -72,7 +72,7 @@ def test_import_fail_not_json(qapp, rootdir, monkeypatch):
     main.profile_import_action()
 
     # assert somehow that an alert is shown
-    assert alert_message == 'This file does not contain valid JSON.'
+    assert alert_message == 'This file does not contain valid JSON: Expecting value: line 1 column 1 (char 0)'
 
 
 def test_export_success(qapp, qtbot, tmpdir, monkeypatch):
