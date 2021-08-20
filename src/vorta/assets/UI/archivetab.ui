@@ -49,7 +49,7 @@ QTabWidget::tab-bar {
 </string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabWidgetPage1">
       <property name="accessibleName">
@@ -223,6 +223,19 @@ QTabWidget::tab-bar {
         <number>0</number>
        </property>
        <item>
+        <widget class="QLabel" name="label_11">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Pruning:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -390,20 +403,10 @@ QTabWidget::tab-bar {
          <property name="topMargin">
           <number>10</number>
          </property>
-         <property name="horizontalSpacing">
+         <property name="spacing">
           <number>6</number>
          </property>
-         <property name="verticalSpacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Archive Name:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
+         <item row="4" column="2">
           <widget class="QLineEdit" name="prunePrefixTemplate">
            <property name="toolTip">
             <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
@@ -413,7 +416,7 @@ QTabWidget::tab-bar {
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
+         <item row="2" column="2">
           <widget class="QLabel" name="archiveNamePreview">
            <property name="minimumSize">
             <size>
@@ -439,24 +442,7 @@ QTabWidget::tab-bar {
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
-          <widget class="QLineEdit" name="archiveNameTemplate">
-           <property name="toolTip">
-            <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
-           </property>
-           <property name="placeholderText">
-            <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Prune Prefix:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
+         <item row="5" column="2">
           <widget class="QLabel" name="prunePrefixPreview">
            <property name="font">
             <font>
@@ -470,6 +456,42 @@ QTabWidget::tab-bar {
            </property>
            <property name="margin">
             <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Archive Name:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLineEdit" name="archiveNameTemplate">
+           <property name="toolTip">
+            <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+           </property>
+           <property name="placeholderText">
+            <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="label_4">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Prune Prefix:</string>
            </property>
           </widget>
          </item>

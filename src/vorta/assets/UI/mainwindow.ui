@@ -22,6 +22,44 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QComboBox {
+    border: 0px solid gray;
+    border-radius: 3px;
+	min-height: 30px;
+}
+
+QComboBox:hover {
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+QLineEdit {
+    border: 0px solid gray;
+    border-radius: 3px;
+	min-height: 30px;
+}
+
+QLineEdit:hover {
+    border: 1px solid darkgray;
+    border-radius: 4px;
+}
+
+QLineEdit:focus {
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+QToolButton{
+	min-height: 25px;
+	min-width: 25px;
+}
+
+
+QComboBox::drop-down {border: 0px ; } 
+QToolButton {border-width: 0px; } 
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,0,0">
     <property name="bottomMargin">
@@ -43,7 +81,7 @@
       </property>
       <widget class="QWidget" name="repoTabSlot">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -161,6 +199,9 @@
     </item>
     <item row="1" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
       <property name="topMargin">
        <number>12</number>
       </property>
@@ -181,18 +222,11 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Current Profile:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QComboBox" name="profileSelector">
         <property name="minimumSize">
          <size>
           <width>300</width>
-          <height>0</height>
+          <height>30</height>
          </size>
         </property>
        </widget>

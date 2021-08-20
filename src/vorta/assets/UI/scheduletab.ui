@@ -55,7 +55,7 @@ QTabWidget::tab-bar {
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page_1">
       <property name="statusTip">
@@ -65,7 +65,7 @@ QTabWidget::tab-bar {
        <string/>
       </property>
       <attribute name="title">
-       <string>clock</string>
+       <string>Schedule</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -373,7 +373,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_2">
       <attribute name="title">
-       <string>wifi</string>
+       <string>Networks</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="topMargin">
@@ -407,6 +407,9 @@ QTabWidget::tab-bar {
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
         </widget>
        </item>
        <item row="3" column="0">
@@ -426,7 +429,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_3">
       <attribute name="title">
-       <string>tasks</string>
+       <string>Log</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <property name="topMargin">
@@ -481,7 +484,7 @@ QTabWidget::tab-bar {
      </widget>
      <widget class="QWidget" name="page_4">
       <attribute name="title">
-       <string>terminal</string>
+       <string>Shell Command</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="topMargin">
@@ -490,6 +493,19 @@ QTabWidget::tab-bar {
        <property name="bottomMargin">
         <number>9</number>
        </property>
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Pre and Post backup Command:</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
@@ -530,7 +546,7 @@ QTabWidget::tab-bar {
         <widget class="QLabel" name="label_6">
          <property name="font">
           <font>
-           <pointsize>11</pointsize>
+           <pointsize>10</pointsize>
            <weight>50</weight>
            <bold>false</bold>
           </font>
@@ -555,6 +571,19 @@ QTabWidget::tab-bar {
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Backup Command:</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_7">
