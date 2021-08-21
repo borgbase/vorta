@@ -34,20 +34,6 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QTabWidget::pane { /* The tab widget frame */
-    border-top: 0px solid #C2C7CB;
-    position: absolute;
-    top: -0.5em;
-}
-
-QTabWidget::tab-bar {
-    alignment: center;
-}
-
-
-</string>
-     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -55,7 +41,7 @@ QTabWidget::tab-bar {
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_1">
       <property name="statusTip">

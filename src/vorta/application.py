@@ -15,7 +15,7 @@ from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.borg.job_scheduler import JobsManager
 from vorta.tray_menu import TrayMenu
-from vorta.utils import borg_compat, parse_args
+from vorta.utils import borg_compat, parse_args, get_asset
 from vorta.views.main_window import MainWindow
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -54,6 +54,7 @@ class VortaApp(QtSingleApplication):
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
 
+        self.setStyleSheet(self.get_flat_style())
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
@@ -85,6 +86,13 @@ class VortaApp(QtSingleApplication):
             self.check_darwin_permissions()
 
         self.installEventFilter(self)
+
+    @staticmethod
+    def get_flat_style():
+        path = get_asset(os.path.join("UI", "flat.qss"))
+        with open(path) as flat_style:
+            flat_style_str = flat_style.read()
+            return flat_style_str
 
     def create_backups_cmdline(self, profile_name):
         profile = BackupProfileModel.get_or_none(name=profile_name)

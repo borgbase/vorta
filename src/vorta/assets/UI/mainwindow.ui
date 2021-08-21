@@ -23,42 +23,7 @@
    <double>1.000000000000000</double>
   </property>
   <property name="styleSheet">
-   <string notr="true">QComboBox {
-    border: 0px solid gray;
-    border-radius: 3px;
-	min-height: 30px;
-}
-
-QComboBox:hover {
-    border: 1px solid gray;
-    border-radius: 4px;
-}
-
-QLineEdit {
-    border: 0px solid gray;
-    border-radius: 3px;
-	min-height: 30px;
-}
-
-QLineEdit:hover {
-    border: 1px solid darkgray;
-    border-radius: 4px;
-}
-
-QLineEdit:focus {
-    border: 1px solid gray;
-    border-radius: 4px;
-}
-
-QToolButton{
-	min-height: 25px;
-	min-width: 25px;
-}
-
-
-QComboBox::drop-down {border: 0px ; } 
-QToolButton {border-width: 0px; } 
-</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,0,0">
@@ -226,7 +191,7 @@ QToolButton {border-width: 0px; }
         <property name="minimumSize">
          <size>
           <width>300</width>
-          <height>30</height>
+          <height>0</height>
          </size>
         </property>
        </widget>

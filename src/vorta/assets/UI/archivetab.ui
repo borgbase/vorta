@@ -34,22 +34,8 @@
        <bold>false</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">QTabWidget::pane { /* The tab widget frame */
-    border-top: 0px solid #C2C7CB;
-    position: absolute;
-    top: -0.5em;
-}
-
-QTabWidget::tab-bar {
-    alignment: center;
-}
-
-
-</string>
-     </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabWidgetPage1">
       <property name="accessibleName">
