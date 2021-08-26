@@ -1241,7 +1241,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="255"/>
+        <location filename="../../views/main_window.py" line="256"/>
         <source>Task cancelled</source>
         <translation>Aktivitet avbruten</translation>
     </message>
@@ -1326,17 +1326,17 @@
         <translation>Bekräfta borttagning</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="272"/>
+        <location filename="../../views/main_window.py" line="273"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Skall Vorta fortsätta köra i bakgrunden?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="277"/>
+        <location filename="../../views/main_window.py" line="278"/>
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278"/>
+        <location filename="../../views/main_window.py" line="279"/>
         <source>Don&apos;t show this again</source>
         <translation>Visa inte detta igen</translation>
     </message>
@@ -1371,19 +1371,14 @@
         <translation>JSON (*.json);;Alla filer (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="222"/>
-        <source>Error</source>
-        <translation>Fel</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="222"/>
-        <source>This file does not contain valid JSON.</source>
-        <translation>Denna fil innehåller inte giltig JSON.</translation>
-    </message>
-    <message>
         <location filename="../../assets/UI/mainwindow.ui" line="97"/>
         <source>Export Profile</source>
         <translation>Exportera profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="223"/>
+        <source>Failed to import profile</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1553,32 +1548,32 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="45"/>
+        <location filename="../../tray_menu.py" line="43"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta för Borg Backup</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="54"/>
+        <location filename="../../tray_menu.py" line="52"/>
         <source>Backup in Progress</source>
         <translation>Säkerhetskopiering pågår</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="55"/>
+        <location filename="../../tray_menu.py" line="53"/>
         <source>Cancel Backup</source>
         <translation>Avbryt säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="58"/>
+        <location filename="../../tray_menu.py" line="56"/>
         <source>Next Task: %s</source>
         <translation>Nästa aktivitet: %s</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="67"/>
+        <location filename="../../tray_menu.py" line="65"/>
         <source>Backup Now</source>
         <translation>Säkerhetskopiera nu</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="72"/>
+        <location filename="../../tray_menu.py" line="70"/>
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
@@ -1646,14 +1641,29 @@
         <translation>Utan detta kommer vissa filer inte att vara tillgängliga och det kan sluta med en ofullständig säkerhetskopia.  Ange &lt;b&gt;fullständig diskåtkomstbehörighet&lt;/b&gt; för Vorta i &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systeminställningar &gt; Säkerhet &amp; sekretess&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="264"/>
+        <location filename="../../application.py" line="278"/>
         <source>Profile import successful!</source>
         <translation>Profilimport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="264"/>
+        <location filename="../../application.py" line="278"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} importerad.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Failed to import profile</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Failed to import a profile from {}:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Consider removing or repairing this file to get rid of this message.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

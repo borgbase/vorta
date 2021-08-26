@@ -1242,7 +1242,7 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="255"/>
+        <location filename="../../views/main_window.py" line="256"/>
         <source>Task cancelled</source>
         <translation>Taak afgebroken</translation>
     </message>
@@ -1327,17 +1327,17 @@
         <translation>Verwijderen bevestigen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="272"/>
+        <location filename="../../views/main_window.py" line="273"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Wil je dat Vorta blijft draaien op de achtergrond?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="277"/>
+        <location filename="../../views/main_window.py" line="278"/>
         <source>Quit</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278"/>
+        <location filename="../../views/main_window.py" line="279"/>
         <source>Don&apos;t show this again</source>
         <translation>Niet meer tonen</translation>
     </message>
@@ -1372,19 +1372,14 @@
         <translation>JSON (*.json);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="222"/>
-        <source>Error</source>
-        <translation>Foutmelding</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="222"/>
-        <source>This file does not contain valid JSON.</source>
-        <translation>Het bestand bevat geen geldige json-opmaak.</translation>
-    </message>
-    <message>
         <location filename="../../assets/UI/mainwindow.ui" line="97"/>
         <source>Export Profile</source>
         <translation>Profiel exporteren</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="223"/>
+        <source>Failed to import profile</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1554,32 +1549,32 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="45"/>
+        <location filename="../../tray_menu.py" line="43"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta voor Borg Backup</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="54"/>
+        <location filename="../../tray_menu.py" line="52"/>
         <source>Backup in Progress</source>
         <translation>Er wordt een back-up gemaakt</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="55"/>
+        <location filename="../../tray_menu.py" line="53"/>
         <source>Cancel Backup</source>
         <translation>Back-uppen afbreken</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="58"/>
+        <location filename="../../tray_menu.py" line="56"/>
         <source>Next Task: %s</source>
         <translation>Volgende taak: %s</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="67"/>
+        <location filename="../../tray_menu.py" line="65"/>
         <source>Backup Now</source>
         <translation>Nu back-uppen</translation>
     </message>
     <message>
-        <location filename="../../tray_menu.py" line="72"/>
+        <location filename="../../tray_menu.py" line="70"/>
         <source>Quit</source>
         <translation>Afsluiten</translation>
     </message>
@@ -1647,14 +1642,29 @@
         <translation>Zonder deze toegang zijn sommige bestanden ontoegankelijk, wat kan leiden tot een onvolledige back-up. Verleen de bevoegdheid &lt;b&gt;Volledige schijftoegang&lt;/b&gt;  via &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systeemvoorkeuren &gt; Beveiliging en privacy&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="264"/>
+        <location filename="../../application.py" line="278"/>
         <source>Profile import successful!</source>
         <translation>Het importeren is voltooid!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="264"/>
+        <location filename="../../application.py" line="278"/>
         <source>Profile {} imported.</source>
         <translation>‘{}’ is geïmporteerd.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Failed to import profile</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Failed to import a profile from {}:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="265"/>
+        <source>Consider removing or repairing this file to get rid of this message.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
