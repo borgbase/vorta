@@ -74,6 +74,7 @@ class VortaApp(QtSingleApplication):
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
+        self.backup_cancelled_event.connect(self.scheduler.cancel_all_jobs)
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
@@ -131,13 +132,12 @@ class VortaApp(QtSingleApplication):
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg)
             thread.start()
-            thread.wait()
-            # wait for thread. create_backup_action is run as a task in a thread in vorta_queue.
-            # So we can wait without freeze the ui.
+            return thread
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
             self.backup_progress_event.emit(translate('messages', msg['message']))
+            return None
 
     def open_main_window_action(self):
         self.main_window.show()

@@ -58,7 +58,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         super().__init__(parent)
         self.app = QApplication.instance()
-        self.app.backup_cancelled_event.connect(self.cancel)
+        #self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
         self.category_label = {"files": trans_late("BorgThread", "Files"),
@@ -287,12 +287,14 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.finished_event(result)
         RUNNING = False
 
+    # TODO Remove this method -> useless
     def cancel(self):
+        print("START CANCEL")
         """
         First try to terminate the running Borg process with SIGINT (Ctrl-C),
         if this fails, use SIGTERM.
         """
-        if True: # TODO cancel method doesnt work anymore -> self.process.id is not the right one. Don't know why.
+        if True:
             self.process.send_signal(signal.SIGINT)
             try:
                 self.process.wait(timeout=3)
@@ -300,6 +302,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
             self.quit()
             self.wait()
+        print("END CANCEL")
 
     def process_result(self, result):
         pass
