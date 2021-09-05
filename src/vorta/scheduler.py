@@ -22,7 +22,7 @@ from vorta.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
-DEBUG = False
+DEBUG = True
 
 
 # TODO: refactor to use QtCore.QTimer directly
@@ -41,6 +41,8 @@ class VortaScheduler(QtScheduler):
         self.qt_timer.start()
 
     def cancel_all_jobs(self):
+        if DEBUG:
+            print("Cancel all Jobs on Vorta Queue")
         self.vorta_queue.cancel_all_jobs()
 
     def tr(self, *args, **kwargs):
@@ -51,7 +53,6 @@ class VortaScheduler(QtScheduler):
         for profile in BackupProfileModel.select():
             trigger = None
             job_id = f'{profile.id}'
-            repo_id = profile.repo.id
             if profile.schedule_mode == 'interval':
                 if profile.schedule_interval_hours >= 24:
                     days = profile.schedule_interval_hours // 24
@@ -75,6 +76,7 @@ class VortaScheduler(QtScheduler):
                 self.reschedule_job(job_id, trigger=trigger)
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
+                repo_id = profile.repo.id
                 self.add_job(
                     func=self.enqueue_create_backup,
                     args=[profile.id, repo_id, self.vorta_queue],
@@ -252,6 +254,8 @@ class FuncJobQueue(JobQueue):
     Cancel is called on the running job only. All others jobs are dequeued.
     """
     def cancel(self):
+        if DEBUG:
+            print("Cancel curent Job on site: ", self.site_id)
         self.set_status(JobStatus.CANCEL)
         if self.thread is not None:
             self.thread.process.send_signal(signal.SIGINT)
@@ -280,24 +284,30 @@ class _QueueScheduler(QRunnable, PriorityQueue):
     represents a repository since only one task can run on this repository.
     """
 
-    def __init__(self):
+    def __init__(self, site_id):
         super().__init__()
         self.__p_queue = queue.PriorityQueue()  # queues are thread-safe and reentrant in python
-        self.run = True
+        self.timeout = False
+        self.site_id = site_id
+        self.TIMEOUT = 2
+        self.current_job = None
 
     def add_job(self, task: JobQueue):
         self.__p_queue.put((task.priority, task))
         # TODO This function must add the job to the database
         # self.add_to_db(job)
 
-    def get(self):
-        return self.__p_queue.get()
+    def get_job(self, timeout):
+        return self.__p_queue.get(timeout=timeout)
 
     def cancel_all_jobs(self):
+        if DEBUG:
+            print("Cancel job")
         # cancel process_jobs
         self.run = False
         # cancel the current job
-        self.current_job.cancel()
+        if self.current_job is not None:
+            self.current_job.cancel()
 
     def cancel_job(self, job: JobQueue):
         # Dequeue the job
@@ -312,19 +322,24 @@ class _QueueScheduler(QRunnable, PriorityQueue):
         it is up to the calling function to do so.
         """
         # It's not active waiting since get blocks until there is item in the queue.
-        while self.run:
-            priority, vorta_job = self.get()
+        while not self.timeout:
             if DEBUG:
-                print("SET current job", vorta_job)
-            self.current_job = vorta_job
-            if vorta_job.get_status() == JobStatus.OK:
+                print("WAIT FOR A JOB")
+            try:
+                priority, vorta_job = self.get_job(self.TIMEOUT) # Wait for 2 seconds
+                self.current_job = vorta_job
+                if vorta_job.get_status() == JobStatus.OK:
+                    if DEBUG:
+                        print("Run Job on repo : ", vorta_job.get_site_id())
+                    vorta_job.run()
+                    if DEBUG:
+                        print("End job on repo: ", vorta_job.get_site_id())
+                # TODO this job can be remove from the database now
+                # self.remove_in_db(vorta_job)
+            except queue.Empty:
                 if DEBUG:
-                    print("Run Job on repo : ", vorta_job.get_site_id())
-                vorta_job.run()
-                if DEBUG:
-                    print("End job on repo: ", vorta_job.get_site_id())
-            # TODO this job can be remove from the database now
-            # self.remove_in_db(vorta_job)
+                    print("Timeout on site: ", self.site_id)
+                self.timeout = True
 
     def run(self):
         # QRunnable inherited objects has to implement run method
@@ -333,7 +348,8 @@ class _QueueScheduler(QRunnable, PriorityQueue):
 
 class VortaQueue:
     """
-    This class is a complete scheduler. Only use this class and not _QueueScheduler.
+    This class is a complete scheduler. Only use this class and not _QueueScheduler. This class MUST BE use
+    as a singleton.
     """
 
     def __init__(self):
@@ -342,6 +358,10 @@ class VortaQueue:
         self.load_from_db()
         # use a threadpool -> This could be changed in the future
         self.threadpool = QThreadPool()
+        self.lock_add_job = QtCore.QMutex()
+
+    def get_value(self, key):
+        return self.__queues.get(key)
 
     def load_from_db(self):
         # TODO load tasks from db
@@ -350,15 +370,17 @@ class VortaQueue:
     def add_job(self, job: JobQueue):
         """
         job must provide a function get_site_id. It's to the job to decide in which site running the job.
-        This function is not thread safe. Always add a job from the main thread (ui loop).
+        This function MUST BE thread safe.
         """
+        self.lock_add_job.lock()
         if DEBUG:
             print("Add Job")
-        if job.get_site_id() not in self.__queues:
-            self.__queues[job.get_site_id()] = _QueueScheduler()
+        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].timeout == True :
+            self.__queues[job.get_site_id()] = _QueueScheduler(job.get_site_id())
             # run the loop
             self.threadpool.start(self.__queues[job.get_site_id()]) # start call the run method.
         self.__queues[job.get_site_id()].add_job(job)
+        self.lock_add_job.unlock()
 
     """
     Ask to all queues to cancel all jobs. This is what the user expects when he presses the cancel button.
@@ -367,6 +389,8 @@ class VortaQueue:
         for id, queue in self.__queues.items():
             queue.cancel_all_jobs()
         self.__queues.clear()
+        if DEBUG:
+            print("End Cancel")
 
     def cancel_job(self, job: JobQueue):
         # call cancel job of the site queue
