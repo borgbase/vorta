@@ -22,7 +22,7 @@ from vorta.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
-DEBUG = True
+DEBUG = False
 
 
 # TODO: refactor to use QtCore.QTimer directly
@@ -113,9 +113,140 @@ class VortaScheduler(QtScheduler):
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
     def enqueue_create_backup(self, profile_id, repo_id, vorta_queue):
-        vorta_queue.add_job(FuncJobQueue(func=self.create_backup, params=[profile_id], site=repo_id))
+        vorta_queue.add_job(CreateBackupSchedulerJobQueue(profile_id=profile_id, site=repo_id))
 
-    def create_backup(self, profile_id):
+
+class JobStatus(Enum):
+    # dont add and option to put the item at the end of the queue.
+    OK = 1
+    CANCEL = 2
+
+
+"""
+To add a job to the vorta queue, you have to create a class which inherits JobQueue. The inherited class
+must override run, cancel and get_site_id.
+
+A 'site' represent a single queue. On a site, tasks are run one by one.
+Between site, tasks are run concurrently. For Borg, a site
+represents a repository since only one task can run on this repository.
+So get_site_id must return the id of the repository. See FuncJobQueue class which inherits JobQueue.
+
+Don't use run and cancel method directly. 'cancel' method in class VortaQueue
+call your custom cancel and add_job in VortaQueue call 'run' when older job have been processed on his site.
+"""
+
+
+@dataclass(order=True)
+class JobQueue(QObject):
+    """
+    One job is run on one site. There is one queue for each site. A "site" is simply a repository in
+    Vorta since borg can only run one task by repo. The site must implement a method get_id.
+    """
+
+    def __init__(self, priority=0):
+        super().__init__()
+        self.priority = priority
+        self.__status = JobStatus.OK  # the job can be runned. If False, the job is not run.
+
+    def set_status(self, status):
+        self.__status = status
+
+    def get_status(self):
+        return self.__status
+
+    def get_site_id(self):
+        pass
+
+    def cancel(self):
+        pass
+
+    def run(self):
+        pass
+
+
+class FuncJobQueue(JobQueue):
+    # This is an exemple to add a task to the vorta queue.
+    # 'run' method should be reentrant and thread-safe.
+    def __init__(self, func, params: list, site=0, priority=0):
+        super().__init__(priority)
+        self.func = func
+        self.params = params
+        self.site_id = site
+        self.thread = None
+
+    def get_site_id(self):
+        return self.site_id
+
+    """
+    Cancel can be called when the job is not started. It is the responsability of FuncJobQueue to not cancel job if
+    no job is running.
+    Cancel is called on the running job only. All others jobs are dequeued.
+    """
+
+    def cancel(self):
+        if DEBUG:
+            print("Cancel curent Job on site: ", self.site_id)
+        self.set_status(JobStatus.CANCEL)
+        if self.thread is not None:
+            print("Thread Not None")
+            self.thread.process.send_signal(signal.SIGINT)
+            try:
+                self.thread.process.wait(timeout=3)
+            except TimeoutExpired:
+                os.killpg(os.getpgid(self.thread.process.pid), signal.SIGTERM)
+            self.thread.quit()
+            self.thread.wait()
+
+    """
+    We suppose that the function return an object of type BorgThread. You can do nothing after thread is finished !
+    """
+
+    def run(self):
+        thread = self.func(*self.params)
+        if thread is not None:
+            self.thread = thread
+            thread.wait()
+
+
+class CreateBackupSchedulerJobQueue(JobQueue):
+    # This is an exemple to add a task to the vorta queue.
+    # 'run' method should be reentrant and thread-safe.
+    def __init__(self, profile_id, site=0, priority=0):
+        super().__init__(priority)
+        self.profile_id = profile_id
+        self.site_id = site
+        self.thread = None
+        self.obj_thread = None
+
+    def get_site_id(self):
+        return self.site_id
+
+    """
+    Cancel can be called when the job is not started. It is the responsability of FuncJobQueue to not cancel job if
+    no job is running.
+    Cancel is called on the running job only. All others jobs are dequeued.
+    """
+
+    def cancel(self):
+        if DEBUG:
+            print("Cancel curent Job on site: ", self.site_id)
+        self.set_status(JobStatus.CANCEL)
+        if self.thread is not None:
+            print("Thread Not None")
+            self.thread.process.send_signal(signal.SIGINT)
+            try:
+                self.thread.process.wait(timeout=3)
+            except TimeoutExpired:
+                os.killpg(os.getpgid(self.thread.process.pid), signal.SIGTERM)
+            self.thread.quit()
+            self.thread.wait()
+
+    """
+    We suppose that the function return an object of type BorgThread.
+    """
+
+    def run(self):
+        profile_id = self.profile_id
         if DEBUG:
             print("start backup for profile ", profile_id)
         notifier = VortaNotifications.pick()
@@ -129,9 +260,10 @@ class VortaScheduler(QtScheduler):
         if msg['ok']:
             logger.info('Preparation for backup successful.')
             thread = BorgCreateThread(msg['cmd'], msg)
+            self.thread = thread
             thread.start()
-            return thread
-            # TODO after this, the code is never called
+            thread.wait()
+
             if thread.process.returncode in [0, 1]:
                 notifier.deliver(self.tr('Vorta Backup'),
                                  self.tr('Backup successful for %s.') % profile.name,
@@ -141,6 +273,7 @@ class VortaScheduler(QtScheduler):
             else:
                 notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
                 logger.error('Error during backup creation.')
+
         else:
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
@@ -186,95 +319,6 @@ class VortaScheduler(QtScheduler):
                 check_thread.wait()
 
         logger.info('Finished background task for profile %s', profile.name)
-
-
-class JobStatus(Enum):
-    # dont add and option to put the item at the end of the queue.
-    OK = 1
-    CANCEL = 2
-
-
-"""
-To add a job to the vorta queue, you have to create a class which inherits JobQueue. The inherited class
-must override run, cancel and get_site_id.
-
-A 'site' represent a single queue. On a site, tasks are run one by one.
-Between site, tasks are run concurrently. For Borg, a site
-represents a repository since only one task can run on this repository.
-So get_site_id must return the id of the repository. See FuncJobQueue class which inherits JobQueue.
-
-Don't use run and cancel method directly. 'cancel' method in class VortaQueue
-call your custom cancel and add_job in VortaQueue call 'run' when older job have been processed on his site.
-"""
-
-
-@dataclass(order=True)
-class JobQueue(QObject):
-    """
-    One job is run on one site. There is one queue for each site. A "site" is simply a repository in
-    Vorta since borg can only run one task by repo. The site must implement a method get_id.
-    """
-
-    def __init__(self, priority=0):
-        self.priority = priority
-        self.__status = JobStatus.OK  # the job can be runned. If False, the job is not run.
-
-    def set_status(self, status):
-        self.__status = status
-
-    def get_status(self):
-        return self.__status
-
-    def get_site_id(self):
-        pass
-
-    def cancel(self):
-        pass
-
-    def run(self):
-        pass
-
-
-class FuncJobQueue(JobQueue):
-    # This is an exemple to add a task to the vorta queue.
-    # 'run' method should be reentrant and thread-safe.
-    def __init__(self, func, params: list, site=0, priority=0):
-        super().__init__(priority)
-        self.func = func
-        self.params = params
-        self.site_id = site
-        self.thread = None
-
-    def get_site_id(self):
-        return self.site_id
-
-    """
-    Cancel can be called when the job is not started. It is the responsability of FuncJobQueue to not cancel job if
-    no job is running.
-    Cancel is called on the running job only. All others jobs are dequeued.
-    """
-    def cancel(self):
-        if DEBUG:
-            print("Cancel curent Job on site: ", self.site_id)
-        self.set_status(JobStatus.CANCEL)
-        if self.thread is not None:
-            self.thread.process.send_signal(signal.SIGINT)
-            try:
-                self.thread.process.wait(timeout=3)
-            except TimeoutExpired:
-                os.killpg(os.getpgid(self.thread.process.pid), signal.SIGTERM)
-            self.thread.quit()
-            self.thread.wait()
-
-
-
-    """
-    We suppose that the function return an object of type BorgThread.
-    """
-    def run(self):
-        self.thread = self.func(*self.params)
-        if self.thread is not None:
-            self.thread.wait()
 
 
 class _QueueScheduler(QRunnable, PriorityQueue):
@@ -326,7 +370,7 @@ class _QueueScheduler(QRunnable, PriorityQueue):
             if DEBUG:
                 print("WAIT FOR A JOB")
             try:
-                priority, vorta_job = self.get_job(self.TIMEOUT) # Wait for 2 seconds
+                priority, vorta_job = self.get_job(self.TIMEOUT)  # Wait for 2 seconds
                 self.current_job = vorta_job
                 if vorta_job.get_status() == JobStatus.OK:
                     if DEBUG:
@@ -375,16 +419,17 @@ class VortaQueue:
         self.lock_add_job.lock()
         if DEBUG:
             print("Add Job")
-        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].timeout == True :
+        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].timeout == True:
             self.__queues[job.get_site_id()] = _QueueScheduler(job.get_site_id())
             # run the loop
-            self.threadpool.start(self.__queues[job.get_site_id()]) # start call the run method.
+            self.threadpool.start(self.__queues[job.get_site_id()])  # start call the run method.
         self.__queues[job.get_site_id()].add_job(job)
         self.lock_add_job.unlock()
 
     """
     Ask to all queues to cancel all jobs. This is what the user expects when he presses the cancel button.
     """
+
     def cancel_all_jobs(self):
         for id, queue in self.__queues.items():
             queue.cancel_all_jobs()
