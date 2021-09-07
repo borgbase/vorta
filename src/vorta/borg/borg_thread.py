@@ -287,9 +287,8 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.finished_event(result)
         RUNNING = False
 
-    # TODO Remove this method -> useless
+    # TODO Remove this method -> use cancel of JobQueue
     def cancel(self):
-        print("START CANCEL")
         """
         First try to terminate the running Borg process with SIGINT (Ctrl-C),
         if this fails, use SIGTERM.
@@ -302,7 +301,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                 os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
             self.quit()
             self.wait()
-        print("END CANCEL")
 
     def process_result(self, result):
         pass

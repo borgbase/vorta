@@ -120,8 +120,8 @@ class VortaApp(QtSingleApplication):
     def enq_create_backup_action(self, profile_id=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
-        #self.create_backup_action(profile_id)
-        self.scheduler.vorta_queue.add_job(FuncJobQueue(self.create_backup_action, [profile_id], profile_id))
+        profile = BackupProfileModel.get_or_none(id=profile_id)
+        self.scheduler.vorta_queue.add_job(FuncJobQueue(self.create_backup_action, [profile_id], site=profile.repo))
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
@@ -132,6 +132,7 @@ class VortaApp(QtSingleApplication):
         if msg['ok']:
             thread = BorgCreateThread(msg['cmd'], msg)
             thread.start()
+            # Don't wait. This function is added to the vorta queue which take the returned thread.
             return thread
         else:
             notifier = VortaNotifications.pick()
