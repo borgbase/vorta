@@ -74,15 +74,16 @@ class VortaScheduler(QtScheduler):
                 self.reschedule_job(job_id, trigger=trigger)
                 logger.debug('Job for profile %s was rescheduled.', profile.name)
             elif trigger is not None:
-                repo_id = profile.repo.id
-                self.add_job(
-                    func=self.enqueue_create_backup,
-                    args=[profile.id, repo_id, self.vorta_queue],
-                    trigger=trigger,
-                    id=job_id,
-                    misfire_grace_time=180
-                )
-                logger.debug('New job for profile %s was added.', profile.name)
+                if profile.repo is not None:
+                    repo_id = profile.repo.id
+                    self.add_job(
+                        func=self.enqueue_create_backup,
+                        args=[profile.id, repo_id, self.vorta_queue],
+                        trigger=trigger,
+                        id=job_id,
+                        misfire_grace_time=180
+                    )
+                    logger.debug('New job for profile %s was added.', profile.name)
             elif self.get_job(job_id) is not None and trigger is None:
                 self.remove_job(job_id)
                 logger.debug('Job for profile %s was removed.', profile.name)
