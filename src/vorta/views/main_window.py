@@ -111,7 +111,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.wifiListLabel.hide()
             self.scheduleTab.wifiListWidget.hide()
             self.scheduleTab.page_2.hide()
-            self.scheduleTab.toolBox.removeItem(1)
+            self.scheduleTab.scheduleTabWidget.setTabEnabled(1, False)
 
         # Connect to existing thread.
         if JobsManager.is_worker_running():
