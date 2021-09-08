@@ -170,6 +170,7 @@ class VortaApp(QtSingleApplication):
             else:
                 self.create_backups_cmdline(message)
 
+    # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
         params = BorgVersionThread.prepare()
         if not params['ok']:
@@ -253,6 +254,7 @@ class VortaApp(QtSingleApplication):
             self._msg = msg
             msg.show()
 
+    # Don't add break_lock to the JobsManager
     def break_lock(self, profile):
         params = BorgBreakThread.prepare(profile)
         if not params['ok']:

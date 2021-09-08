@@ -29,7 +29,7 @@ class VortaScheduler(QtScheduler):
         super().__init__()
         self.app = parent
         self.start()
-        self.vorta_queue = VortaQueue()
+        self.vorta_queue = JobsManager()
         self.reload()
 
         # Set timer to make sure background tasks are scheduled
@@ -112,7 +112,7 @@ class VortaScheduler(QtScheduler):
             return job.next_run_time.strftime('%Y-%m-%d %H:%M')
 
     def enqueue_create_backup(self, profile_id, repo_id, vorta_queue):
-        vorta_queue.add_job(CreateBackupSchedulerJobQueue(profile_id=profile_id, site=repo_id))
+        vorta_queue.add_job(CreateJobSched(profile_id=profile_id, site=repo_id))
 
 
 class JobStatus(Enum):
@@ -146,7 +146,7 @@ class JobQueue(QObject):
     """
         Cancel can be called when the job is not started. It is the responsability of FuncJobQueue to not cancel job if
         no job is running.
-        The cancel mehod of VortaQueue calls the cancel method on the running jobs only. Others jobs are dequeued.
+        The cancel mehod of JobsManager calls the cancel method on the running jobs only. Others jobs are dequeued.
     """
 
     def cancel(self):
@@ -160,7 +160,7 @@ class JobQueue(QObject):
 class FuncJobQueue(JobQueue):
     # This is an exemple to add a task to the vorta queue.
     # func must return an object of type BorgThread
-    def __init__(self, func, params: list, site=0):
+    def __init__(self, func, params: list = [], site=0):
         super().__init__()
         self.func = func
         self.params = params
@@ -193,7 +193,9 @@ class FuncJobQueue(JobQueue):
             thread.wait()
 
 
-class CreateBackupSchedulerJobQueue(JobQueue):
+class CreateJobSched(JobQueue):
+
+    # Since the scheduler do some stuff after the thread has ended, wa can't use FuncJobQueue
 
     def __init__(self, profile_id, site=0):
         super().__init__()
@@ -295,10 +297,10 @@ class CreateBackupSchedulerJobQueue(JobQueue):
         logger.info('Finished background task for profile %s', profile.name)
 
 
-class _QueueScheduler(QRunnable):
+class _Queue(QRunnable):
     """
-    Don't use directly this private class ! Instead you can use VortaQueue bellow.
-    A _QueueScheduler represent a single site. On a site, tasks are processed successively. For Borg, a site
+    Don't use directly this private class ! Instead you can use JobsManager bellow.
+    A _Queue represent a single site. On a site, tasks are processed successively. For Borg, a site
     represents a repository since only one task can run on this repository.
     """
 
@@ -363,9 +365,9 @@ class _QueueScheduler(QRunnable):
         self.process_jobs()
 
 
-class VortaQueue:
+class JobsManager:
     """
-    This class is a complete scheduler. Only use this class and not _QueueScheduler. This class MUST BE use
+    This class is a complete scheduler. Only use this class and not _Queue. This class MUST BE use
     as a singleton.
     """
 
@@ -390,7 +392,7 @@ class VortaQueue:
         if DEBUG:
             print("Add Job")
         if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].timeout == True:
-            self.__queues[job.get_site_id()] = _QueueScheduler(job.get_site_id())
+            self.__queues[job.get_site_id()] = _Queue(job.get_site_id())
             # run the loop
             self.threadpool.start(self.__queues[job.get_site_id()])  # start call the run method.
         self.__queues[job.get_site_id()].add_job(job)

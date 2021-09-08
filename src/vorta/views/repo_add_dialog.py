@@ -112,6 +112,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.repoLabel.setText(self.tr('Repository URL:'))
         self.is_remote_repo = True
 
+    # No need to add this function to JobsManager because repo is set for the first time
     def run(self):
         if self.validate() and self.password_listener():
             params = BorgInitThread.prepare(self.values)

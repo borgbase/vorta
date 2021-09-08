@@ -59,7 +59,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
-        self.repoTab.repo_added.connect(self.archiveTab.list_action)
+        self.repoTab.repo_added.connect(self.archiveTab.enq_list_action)
         self.tabWidget.currentChanged.connect(self.scheduleTab._draw_next_scheduled_backup)
 
         self.createStartBtn.clicked.connect(self.app.enq_create_backup_action)
