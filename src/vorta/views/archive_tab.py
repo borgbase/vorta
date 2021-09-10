@@ -21,7 +21,7 @@ from vorta.borg.umount import BorgUmountThread
 from vorta.borg.rename import BorgRenameThread
 from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin, BackupProfileModel
-from vorta.scheduler import FuncJobQueue
+from vorta.scheduler import FuncJob
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
 from vorta.views.source_tab import SizeItem
@@ -205,7 +205,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def enq_check_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(FuncJobQueue(self.check_action, site=profile.repo))
+        QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(self.check_action, site=profile.repo))
 
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
@@ -235,7 +235,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def enq_prune_action(self):
         profile = self.profile()
         QApplication.instance().scheduler.vorta_queue.add_job(
-            FuncJobQueue(self.prune_action, site=profile.repo))
+            FuncJob(self.prune_action, site=profile.repo))
 
     def prune_action(self):
         params = BorgPruneThread.prepare(self.profile())
@@ -259,7 +259,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def enq_list_action(self):
         profile = self.profile()
         QApplication.instance().scheduler.vorta_queue.add_job(
-            FuncJobQueue(self.list_action, site=profile.repo))
+            FuncJob(self.list_action, site=profile.repo))
 
     def list_action(self):
         params = BorgListRepoThread.prepare(self.profile())
@@ -282,7 +282,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def enq_refresh_archive_action(self):
         profile = self.profile()
         QApplication.instance().scheduler.vorta_queue.add_job(
-            FuncJobQueue(self.refresh_archive_action, site=profile.repo))
+            FuncJob(self.refresh_archive_action, site=profile.repo))
 
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
@@ -340,7 +340,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         def enq_receive():
             profile = self.profile()
             QApplication.instance().scheduler.vorta_queue.add_job(
-                FuncJobQueue(receive, site=profile.repo))
+                FuncJob(receive, site=profile.repo))
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
         dialog.open(enq_receive)
@@ -360,7 +360,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def enq_umount_action(self):
         profile = self.profile()
         QApplication.instance().scheduler.vorta_queue.add_job(
-            FuncJobQueue(self.umount_action, site=profile.repo))
+            FuncJob(self.umount_action, site=profile.repo))
 
     def umount_action(self):
         archive_name = self.selected_archive_name()
@@ -408,7 +408,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def enq_list_archive_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(FuncJobQueue(self.list_archive_action, site=profile.repo))
+        QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(self.list_archive_action, site=profile.repo))
 
     def list_archive_action(self):
         profile = self.profile()
@@ -456,7 +456,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 def enq_receive():
                     profile = self.profile()
                     QApplication.instance().scheduler.vorta_queue.add_job(
-                        FuncJobQueue(receive, site=profile.repo))
+                        FuncJob(receive, site=profile.repo))
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
                 dialog.open(enq_receive)
@@ -503,7 +503,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         def enq_delete_action():
             profile = self.profile()
-            QApplication.instance().scheduler.vorta_queue.add_job(FuncJobQueue(delete_action, site=profile.repo))
+            QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(delete_action, site=profile.repo))
 
         def delete_action():
             thread = BorgDeleteThread(params['cmd'], params)
@@ -563,7 +563,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         def enq_process_result():
             profile = self.profile()
             QApplication.instance().scheduler.vorta_queue.add_job(
-                FuncJobQueue(process_result, site=profile.repo))
+                FuncJob(process_result, site=profile.repo))
 
         profile = self.profile()
 
@@ -588,7 +588,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def enq_rename_action(self):
         profile = self.profile()
         QApplication.instance().scheduler.vorta_queue.add_job(
-            FuncJobQueue(self.rename_action, site=profile.repo))
+            FuncJob(self.rename_action, site=profile.repo))
 
     def rename_action(self):
         profile = self.profile()

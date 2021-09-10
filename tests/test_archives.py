@@ -164,7 +164,7 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.rename_action()
+    tab.enq_rename_action()
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
@@ -173,5 +173,5 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     # Duplicate name case
     exp_text = 'An archive with this name already exists.'
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.rename_action()
+    tab.enq_rename_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)

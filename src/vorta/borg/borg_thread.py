@@ -27,10 +27,9 @@ FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
 """
-All methods in this class must be thread safe (avoid data races). Particularly,
+All methods in this class must be thread safe. Particularly,
 I strongly unadvised global variable and class variables.
 Sqlite access are thread-safe because peewee is thread-safe.
-If you want to share data, “Do not communicate by sharing memory; instead, share memory by communicating.”
 The method prepare is not thread-safe because of keyring and I don't know why. That's why I added a
 temporary mutex.
 """
@@ -58,7 +57,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         super().__init__(parent)
         self.app = QApplication.instance()
-        #self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
         self.category_label = {"files": trans_late("BorgThread", "Files"),
@@ -122,11 +120,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         :return: dict(ok: book, message: str)
         """
         ret = {'ok': False}
-
-        # Do checks to see if running Borg is possible.
-        """if cls.is_running():
-            ret['message'] = trans_late('messages', 'Backup is already in progress.')
-            return ret"""
 
         if cls.prepare_bin() is None:
             ret['message'] = trans_late('messages', 'Borg binary was not found.')
@@ -288,20 +281,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.finished_event(result)
         running = False
 
-    # TODO Remove this method -> use cancel of JobQueue
-    def cancel(self):
-        """
-        First try to terminate the running Borg process with SIGINT (Ctrl-C),
-        if this fails, use SIGTERM.
-        """
-        if True:
-            self.process.send_signal(signal.SIGINT)
-            try:
-                self.process.wait(timeout=3)
-            except TimeoutExpired:
-                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
-            self.quit()
-            self.wait()
 
     def process_result(self, result):
         pass

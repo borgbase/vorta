@@ -121,9 +121,9 @@ class JobStatus(Enum):
     CANCEL = 2
 
 
-class JobQueue(QObject):
+class Job(QObject):
     """
-    To add a job to the vorta queue, you have to create a class which inherits JobQueue. The inherited class
+    To add a job to the vorta queue, you have to create a class which inherits Job. The inherited class
     must override run, cancel and get_site_id.
     """
 
@@ -144,7 +144,7 @@ class JobQueue(QObject):
         pass
 
     """
-        Cancel can be called when the job is not started. It is the responsability of FuncJobQueue to not cancel job if
+        Cancel can be called when the job is not started. It is the responsability of FuncJob to not cancel job if
         no job is running.
         The cancel mehod of JobsManager calls the cancel method on the running jobs only. Others jobs are dequeued.
     """
@@ -157,7 +157,7 @@ class JobQueue(QObject):
         pass
 
 
-class FuncJobQueue(JobQueue):
+class FuncJob(Job):
     # This is an exemple to add a task to the vorta queue.
     # func must return an object of type BorgThread
     def __init__(self, func, params: list = [], site=0):
@@ -193,9 +193,9 @@ class FuncJobQueue(JobQueue):
             thread.wait()
 
 
-class CreateJobSched(JobQueue):
+class CreateJobSched(Job):
 
-    # Since the scheduler do some stuff after the thread has ended, wa can't use FuncJobQueue
+    # Since the scheduler do some stuff after the thread has ended, we can't use FuncJob
 
     def __init__(self, profile_id, site=0):
         super().__init__()
@@ -312,7 +312,7 @@ class _Queue(QRunnable):
         self.TIMEOUT = 2
         self.current_job = None
 
-    def add_job(self, task: JobQueue):
+    def add_job(self, task: Job):
         self.__p_queue.put(task)
         # TODO This function must add the job to the database
         # self.add_to_db(job)
@@ -329,7 +329,7 @@ class _Queue(QRunnable):
         if self.current_job is not None:
             self.current_job.cancel()
 
-    def cancel_job(self, job: JobQueue):
+    def cancel_job(self, job: Job):
         # Dequeue the job
         job.set_status(JobStatus.CANCEL)
         # if already runnning, call the cancel job
@@ -386,7 +386,7 @@ class JobsManager:
         # TODO load tasks from db
         pass
 
-    def add_job(self, job: JobQueue):
+    def add_job(self, job: Job):
         # This function MUST BE thread safe.
         self.lock_add_job.lock()
         if DEBUG:
@@ -406,7 +406,7 @@ class JobsManager:
         if DEBUG:
             print("End Cancel")
 
-    def cancel_job(self, job: JobQueue):
+    def cancel_job(self, job: Job):
         # call cancel job of the site queue
         self.__queues[job.get_site_id].cancel_job(job)
 

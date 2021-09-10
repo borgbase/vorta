@@ -14,7 +14,7 @@ from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
-from vorta.scheduler import VortaScheduler, FuncJobQueue
+from vorta.scheduler import VortaScheduler, FuncJob
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
@@ -121,7 +121,7 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        self.scheduler.vorta_queue.add_job(FuncJobQueue(self.create_backup_action, [profile_id], site=profile.repo))
+        self.scheduler.vorta_queue.add_job(FuncJob(self.create_backup_action, [profile_id], site=profile.repo))
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:
