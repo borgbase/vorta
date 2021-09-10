@@ -3,7 +3,6 @@ import os
 import sys
 import shutil
 import shlex
-import signal
 import select
 import time
 import logging
@@ -11,7 +10,7 @@ from collections import namedtuple
 from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE, TimeoutExpired
+from subprocess import Popen, PIPE
 
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
@@ -280,7 +279,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.process_result(result)
         self.finished_event(result)
         running = False
-
 
     def process_result(self, result):
         pass

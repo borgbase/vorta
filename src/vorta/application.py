@@ -121,7 +121,11 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        self.scheduler.vorta_queue.add_job(FuncJob(self.create_backup_action, [profile_id], site=profile.repo))
+        if profile.repo is not None:
+            self.scheduler.vorta_queue.add_job(FuncJob(self.create_backup_action, [profile_id], site=profile.repo.id))
+        else:
+            # -1 is an not existing repo
+            self.scheduler.vorta_queue.add_job(FuncJob(self.create_backup_action, [profile_id], site=-1))
 
     def create_backup_action(self, profile_id=None):
         if not profile_id:

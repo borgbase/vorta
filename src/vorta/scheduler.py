@@ -307,9 +307,9 @@ class _Queue(QRunnable):
     def __init__(self, site_id):
         super().__init__()
         self.__p_queue = queue.Queue()  # queues are thread-safe and reentrant in python
-        self.timeout = False
+        self.is_timeout = False
         self.site_id = site_id
-        self.TIMEOUT = 2
+        self.timeout = 2
         self.current_job = None
 
     def add_job(self, task: Job):
@@ -341,11 +341,11 @@ class _Queue(QRunnable):
         the site waits until a job comes. If no jobs come, a timeout ends the loop.
         Since the loop is not launched in a thread, it is up to the calling function to do so.
         """
-        while not self.timeout:
+        while not self.is_timeout:
             if DEBUG:
                 print("WAIT FOR A JOB")
             try:
-                vorta_job = self.get_job(self.TIMEOUT)  # Wait for 2 seconds
+                vorta_job = self.get_job(self.timeout)  # Wait for 2 seconds
                 self.current_job = vorta_job
                 if vorta_job.get_status() == JobStatus.OK:
                     if DEBUG:
@@ -358,7 +358,7 @@ class _Queue(QRunnable):
             except queue.Empty:
                 if DEBUG:
                     print("Timeout on site: ", self.site_id)
-                self.timeout = True
+                self.is_timeout = True
 
     def run(self):
         # QRunnable inherited objects has to implement run method
@@ -390,8 +390,16 @@ class JobsManager:
         # This function MUST BE thread safe.
         self.lock_add_job.lock()
         if DEBUG:
-            print("Add Job")
-        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].timeout == True:
+            print("Add Job on site ", job.get_site_id(), type(job.get_site_id()))
+
+        if type(job.get_site_id()) is not int:
+            print("get_site_id must return an integer. A ", type(job.get_site_id()), " has be returned.")
+            self.lock_add_job.unlock()
+            return 1
+
+        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].is_timeout is True:
+            if DEBUG:
+                print("Create a site ", job.get_site_id())
             self.__queues[job.get_site_id()] = _Queue(job.get_site_id())
             # run the loop
             self.threadpool.start(self.__queues[job.get_site_id()])  # start call the run method.
@@ -400,8 +408,8 @@ class JobsManager:
 
     # Ask to all queues to cancel all jobs. This is what the user expects when he presses the cancel button.
     def cancel_all_jobs(self):
-        for id, queue in self.__queues.items():
-            queue.cancel_all_jobs()
+        for id_site, site in self.__queues.items():
+            site.cancel_all_jobs()
         self.__queues.clear()
         if DEBUG:
             print("End Cancel")
