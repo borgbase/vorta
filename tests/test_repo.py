@@ -59,7 +59,8 @@ def test_repo_unlink(qapp, qtbot):
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     # -1 is the repo id in this test
-    qtbot.waitUntil(lambda: qapp.scheduler.vorta_queue.get_value(-1).is_timeout is True, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: qapp.scheduler.vorta_queue.get_value(-1).worker_is_running is False,
+                    **pytest._wait_defaults)
     assert main.progressText.text() == 'Add a backup repository first.'
 
 
