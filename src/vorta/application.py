@@ -1,12 +1,10 @@
 import logging
 import os
 import sys
-import time
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
-from vorta.borg.borg_thread import BorgThread
 from vorta.borg.create import BorgCreateThread
 from vorta.borg.version import BorgVersionThread
 from vorta.borg.break_lock import BorgBreakThread
@@ -14,7 +12,7 @@ from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
-from vorta.scheduler import VortaScheduler, FuncJob
+from vorta.scheduler import VortaScheduler, FuncJob, JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
@@ -92,10 +90,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            # Wait a bit in case something is running
-            while BorgThread.is_running():
-                time.sleep(0.1)
-            self.create_backup_action(profile_id=profile.id)
+            self.enq_create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 
@@ -169,7 +164,7 @@ class VortaApp(QtSingleApplication):
             self.open_main_window_action()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
-            if BorgThread.is_running():
+            if JobsManager.is_worker_running():
                 logger.warning("Cannot run while backups are already running")
             else:
                 self.create_backups_cmdline(message)

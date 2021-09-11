@@ -76,14 +76,16 @@ class VortaScheduler(QtScheduler):
             elif trigger is not None:
                 if profile.repo is not None:
                     repo_id = profile.repo.id
-                    self.add_job(
-                        func=self.enqueue_create_backup,
-                        args=[profile.id, repo_id, self.vorta_queue],
-                        trigger=trigger,
-                        id=job_id,
-                        misfire_grace_time=180
-                    )
-                    logger.debug('New job for profile %s was added.', profile.name)
+                else:
+                    repo_id = -1
+                self.add_job(
+                    func=self.enqueue_create_backup,
+                    args=[profile.id, repo_id, self.vorta_queue],
+                    trigger=trigger,
+                    id=job_id,
+                    misfire_grace_time=180
+                )
+                logger.debug('New job for profile %s was added.', profile.name)
             elif self.get_job(job_id) is not None and trigger is None:
                 self.remove_job(job_id)
                 logger.debug('Job for profile %s was removed.', profile.name)
@@ -160,6 +162,7 @@ class Job(QObject):
 class FuncJob(Job):
     # This is an exemple to add a task to the vorta queue.
     # func must return an object of type BorgThread
+
     def __init__(self, func, params: list = [], site=0):
         super().__init__()
         self.func = func
@@ -304,13 +307,15 @@ class _Queue(QRunnable):
     represents a repository since only one task can run on this repository.
     """
 
-    def __init__(self, site_id):
+    def __init__(self, site_id, nb_workers_running: QtCore.QSemaphore):
         super().__init__()
+        self.setAutoDelete(False)
         self.__p_queue = queue.Queue()  # queues are thread-safe and reentrant in python
-        self.worker_is_running = True
+        self.worker_is_running = False
         self.site_id = site_id
         self.timeout = 2
         self.current_job = None
+        self.nb_workers_running = nb_workers_running
 
     def add_job(self, task: Job):
         self.__p_queue.put(task)
@@ -345,20 +350,23 @@ class _Queue(QRunnable):
         the site waits until a job comes. If no jobs come, a timeout ends the loop.
         Since the loop is not launched in a thread, it is up to the calling function to do so.
         """
+        self.worker_is_running = True
         while self.worker_is_running:
             if DEBUG:
                 print("WAIT FOR A JOB")
             try:
-                vorta_job = self.get_job(self.timeout)  # Wait for 2 seconds
-                self.current_job = vorta_job
-                if vorta_job.get_status() == JobStatus.OK:
+                job = self.get_job(self.timeout)  # Wait for 2 seconds
+                self.nb_workers_running.release()
+                self.current_job = job
+                if job.get_status() == JobStatus.OK:
                     if DEBUG:
-                        print("Run Job on repo : ", vorta_job.get_site_id())
-                    vorta_job.run()
+                        print("Run Job on repo : ", job.get_site_id())
+                    job.run()
                     if DEBUG:
-                        print("End job on repo: ", vorta_job.get_site_id())
+                        print("End job on repo: ", job.get_site_id())
+                self.nb_workers_running.acquire()
                 # TODO this job can be remove from the database now
-                # self.remove_in_db(vorta_job)
+                # self.remove_in_db(job)
             except queue.Empty:
                 if DEBUG:
                     print("Timeout on site: ", self.site_id)
@@ -375,6 +383,19 @@ class JobsManager:
     as a singleton.
     """
 
+    nb_workers_running = QtCore.QSemaphore()
+
+    @classmethod
+    def is_worker_running(cls):
+        # The user can't start a backup if a job is running. The scheduler can.
+        nb_workers = cls.nb_workers_running.available()
+        return True if nb_workers > 0 else False
+
+    @classmethod
+    def reset_nb_workers(cls):
+        del cls.nb_workers_running
+        cls.nb_workers_running = QtCore.QSemaphore()
+
     def __init__(self):
         self.__queues = {}
         # load job from db
@@ -383,8 +404,20 @@ class JobsManager:
         self.threadpool = QThreadPool()
         self.lock_add_site = QtCore.QMutex()
 
-    def get_value(self, key):
-        return self.__queues.get(key)
+    def test_get_site(self, site):
+        return self.__queues.get(site)
+
+    def get_site(self, site):
+        self.lock_add_site.lock()
+        if site not in self.__queues:
+            if DEBUG:
+                print("Create a site ", site)
+            self.__queues[site] = _Queue(site, JobsManager.nb_workers_running)
+        # If the site is dead, run the site again
+        if self.__queues[site].worker_is_running is False:
+            self.threadpool.start(self.__queues[site])
+        self.lock_add_site.unlock()
+        return self.__queues.get(site)
 
     def load_from_db(self):
         # TODO load tasks from db
@@ -392,35 +425,24 @@ class JobsManager:
 
     def add_job(self, job: Job):
         # This function MUST BE thread safe.
-        self.lock_add_site.lock()
         if DEBUG:
             print("Add Job on site ", job.get_site_id(), type(job.get_site_id()))
 
         if type(job.get_site_id()) is not int:
             print("get_site_id must return an integer. A ", type(job.get_site_id()), " has be returned.")
-            self.lock_add_site.unlock()
             return 1
-
-        if job.get_site_id() not in self.__queues or self.__queues[job.get_site_id()].worker_is_running is False:
-            if DEBUG:
-                print("Create a site ", job.get_site_id())
-            self.__queues[job.get_site_id()] = _Queue(job.get_site_id())
-            # run the loop
-            self.threadpool.start(self.__queues[job.get_site_id()])  # start call the run method.
-        self.lock_add_site.unlock()
-        self.__queues[job.get_site_id()].add_job(job)
+        self.get_site(job.get_site_id()).add_job(job)
 
     # Ask to all queues to cancel all jobs. This is what the user expects when he presses the cancel button.
     def cancel_all_jobs(self):
         for id_site, site in self.__queues.items():
             site.cancel_all_jobs()
         self.__queues.clear()
+        # reset the semaphore
+        JobsManager.reset_nb_workers()
         if DEBUG:
             print("End Cancel")
 
     def cancel_job(self, job: Job):
         # call cancel job of the site queue
         self.__queues[job.get_site_id].cancel_job(job)
-
-    def is_running(self):
-        pass

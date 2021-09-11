@@ -19,7 +19,6 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
 temp_mutex = Lock()
-running = False
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
@@ -98,11 +97,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
-
-    @classmethod
-    def is_running(self):
-        # The user can't start a backup if a job is running. The scheduler can.
-        return running
 
     @classmethod
     def prepare(cls, profile):
@@ -278,7 +272,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        running = False
 
     def process_result(self, result):
         pass
