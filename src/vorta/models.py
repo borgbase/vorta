@@ -494,8 +494,9 @@ def init_db(con=None):
         db.create_tables([BackupProfileMixin])
         # keep repo backup in BackupProfileMixin
         for profile in BackupProfileModel.select():
-            prof_x_repo = BackupProfileMixin(profile=profile.id, repo=profile.repo.id)
-            prof_x_repo.save()
+            if profile.repo is not None:
+                prof_x_repo = BackupProfileMixin(profile=profile.id, repo=profile.repo.id)
+                prof_x_repo.save()
         _apply_schema_update(
             current_schema, 18
         )
