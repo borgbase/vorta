@@ -20,7 +20,7 @@ from vorta.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)
-DEBUG = False
+DEBUG = True
 
 
 # TODO: refactor to use QtCore.QTimer directly
@@ -126,7 +126,7 @@ class JobStatus(Enum):
 class Job(QObject):
     """
     To add a job to the vorta queue, you have to create a class which inherits Job. The inherited class
-    must override run, cancel and get_site_id.
+    must override run, cancel and get_site_id. Since Job inherits from QObject, you can use pyqt signal.
     """
 
     def __init__(self):
@@ -307,7 +307,7 @@ class _Queue(QRunnable):
     represents a repository since only one task can run on this repository.
     """
 
-    def __init__(self, site_id, nb_workers_running: QtCore.QSemaphore):
+    def __init__(self, site_id, nb_workers_running: QtCore.QSemaphore, threadpool):
         super().__init__()
         self.setAutoDelete(False)
         self.__p_queue = queue.Queue()  # queues are thread-safe and reentrant in python
@@ -316,9 +316,17 @@ class _Queue(QRunnable):
         self.timeout = 2
         self.current_job = None
         self.nb_workers_running = nb_workers_running
+        self.threadpool = threadpool
+        self.start_site = QtCore.QMutex()
 
     def add_job(self, task: Job):
         self.__p_queue.put(task)
+        # If the site is dead, run the site again
+        self.start_site.lock()
+        if self.worker_is_running is False:
+            self.threadpool.start(self)
+            self.worker_is_running = True
+        self.start_site.unlock()
         # TODO This function must add the job to the database
         # self.add_to_db(job)
 
@@ -326,17 +334,19 @@ class _Queue(QRunnable):
         return self.__p_queue.get(timeout=timeout)
 
     def cancel_all_jobs(self):
-        if DEBUG:
-            print("Cancel job")
-        # end process_jobs
+        end_job = Job()
+        end_job.set_status(JobStatus.CANCEL)
+
+        self.start_site.lock()
+        # Stop the loop
         self.worker_is_running = False
+        # if the site is waiting for a Job, send a cancel Job
+        self.__p_queue.put(end_job)
         # cancel the current job
         if self.current_job is not None:
             self.current_job.cancel()
-        end_job = Job()
-        end_job.set_status(JobStatus.CANCEL)
-        # if job is waiting for a Job, send a cancel Job
-        self.add_job(end_job)
+
+        self.start_site.unlock()
 
     def cancel_job(self, job: Job):
         # Dequeue the job
@@ -350,7 +360,6 @@ class _Queue(QRunnable):
         the site waits until a job comes. If no jobs come, a timeout ends the loop.
         Since the loop is not launched in a thread, it is up to the calling function to do so.
         """
-        self.worker_is_running = True
         while self.worker_is_running:
             if DEBUG:
                 print("WAIT FOR A JOB")
@@ -402,21 +411,18 @@ class JobsManager:
         self.load_from_db()
         # use a threadpool -> This could be changed in the future
         self.threadpool = QThreadPool()
-        self.lock_add_site = QtCore.QMutex()
+        self.lock_queues = QtCore.QMutex()
 
     def test_get_site(self, site):
         return self.__queues.get(site)
 
     def get_site(self, site):
-        self.lock_add_site.lock()
+        self.lock_queues.lock()
         if site not in self.__queues:
             if DEBUG:
                 print("Create a site ", site)
-            self.__queues[site] = _Queue(site, JobsManager.nb_workers_running)
-        # If the site is dead, run the site again
-        if self.__queues[site].worker_is_running is False:
-            self.threadpool.start(self.__queues[site])
-        self.lock_add_site.unlock()
+            self.__queues[site] = _Queue(site, JobsManager.nb_workers_running, self.threadpool)
+        self.lock_queues.unlock()
         return self.__queues.get(site)
 
     def load_from_db(self):
@@ -435,6 +441,8 @@ class JobsManager:
 
     # Ask to all queues to cancel all jobs. This is what the user expects when he presses the cancel button.
     def cancel_all_jobs(self):
+        # Lock dict to avoid someone else adding a new site during cancel operation
+        self.lock_queues.lock()
         for id_site, site in self.__queues.items():
             site.cancel_all_jobs()
         self.__queues.clear()
@@ -442,6 +450,7 @@ class JobsManager:
         JobsManager.reset_nb_workers()
         if DEBUG:
             print("End Cancel")
+        self.lock_queues.unlock()
 
     def cancel_job(self, job: Job):
         # call cancel job of the site queue
