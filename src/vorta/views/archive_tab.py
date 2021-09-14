@@ -221,7 +221,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 archive_name = archive_cell.text()
                 params['cmd'][-1] += f'::{archive_name}'
 
-        thread = BorgCheckThread(params['cmd'], params, parent=self.app)
+        thread = BorgCheckThread(params['cmd'], params)
         thread.updated.connect(self._set_status)
         thread.result.connect(self.check_result)
         self._toggle_all_buttons(False)
@@ -240,7 +240,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def prune_action(self):
         params = BorgPruneThread.prepare(self.profile())
         if params['ok']:
-            thread = BorgPruneThread(params['cmd'], params, parent=self.app)
+            thread = BorgPruneThread(params['cmd'], params)
             thread.updated.connect(self._set_status)
             thread.result.connect(self.prune_result)
             self._toggle_all_buttons(False)
@@ -264,7 +264,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def list_action(self):
         params = BorgListRepoThread.prepare(self.profile())
         if params['ok']:
-            thread = BorgListRepoThread(params['cmd'], params, parent=self.app)
+            thread = BorgListRepoThread(params['cmd'], params)
             thread.updated.connect(self._set_status)
             thread.result.connect(self.list_result)
             self._toggle_all_buttons(False)
@@ -289,7 +289,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if archive_name is not None:
             params = BorgInfoArchiveThread.prepare(self.profile(), archive_name)
             if params['ok']:
-                thread = BorgInfoArchiveThread(params['cmd'], params, parent=self.app)
+                thread = BorgInfoArchiveThread(params['cmd'], params)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.refresh_archive_result)
                 self._toggle_all_buttons(False)
@@ -331,7 +331,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.mount_points[params['current_archive']] = mount_point[0]
                 if params['ok']:
                     self._toggle_all_buttons(False)
-                    thread = BorgMountThread(params['cmd'], params, parent=self.app)
+                    thread = BorgMountThread(params['cmd'], params)
                     thread.updated.connect(self.mountErrors.setText)
                     thread.result.connect(self.mount_result)
                     thread.start()
@@ -375,7 +375,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             if os.path.normpath(mount_point) in params['active_mount_points']:
                 params['cmd'].append(mount_point)
-                thread = BorgUmountThread(params['cmd'], params, parent=self.app)
+                thread = BorgUmountThread(params['cmd'], params)
                 thread.updated.connect(self.mountErrors.setText)
                 thread.result.connect(self.umount_result)
                 thread.start()
@@ -424,7 +424,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status('')
                 self._toggle_all_buttons(False)
 
-                thread = BorgListArchiveThread(params['cmd'], params, parent=self.app)
+                thread = BorgListArchiveThread(params['cmd'], params)
                 thread.updated.connect(self.mountErrors.setText)
                 thread.result.connect(self.list_archive_result)
                 thread.start()
@@ -443,7 +443,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             self.profile(), archive.name, window.selected, extraction_folder[0])
                         if params['ok']:
                             self._toggle_all_buttons(False)
-                            thread = BorgExtractThread(params['cmd'], params, parent=self.app)
+                            thread = BorgExtractThread(params['cmd'], params)
                             thread.updated.connect(self.mountErrors.setText)
                             thread.result.connect(self.extract_archive_result)
                             thread.start()
@@ -551,10 +551,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 if params['ok']:
                     self._toggle_all_buttons(False)
-                    thread = BorgDiffThread(params['cmd'], params, parent=self.app)
+                    thread = BorgDiffThread(params['cmd'], params)
                     thread.updated.connect(self.mountErrors.setText)
                     thread.result.connect(self.list_diff_result)
                     thread.start()
+                    return thread
                 else:
                     self._set_status(params['message'])
 
