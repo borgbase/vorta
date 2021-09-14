@@ -8,6 +8,6 @@ def test_scheduler_create_backup(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
-    qapp.scheduler.enqueue_create_backup(1, 1, qapp.scheduler.vorta_queue)
+    qapp.scheduler.enqueue_create_backup(1, 1, qapp.scheduler.jobs_manager)
 
     qtbot.waitUntil(lambda: vorta.models.EventLogModel.select().count() == 2, **pytest._wait_defaults)

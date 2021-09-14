@@ -59,11 +59,11 @@ class TrayMenu(QSystemTrayIcon):
                 profile_menu = menu.addMenu(self.tr('Backup Now'))
                 for profile in profiles:
                     new_item = profile_menu.addAction(profile.name)
-                    new_item.triggered.connect(lambda state, i=profile.id: self.app.enq_create_backup_action(i))
+                    new_item.triggered.connect(lambda state, i=profile.id: self.app.job_create_backup_action(i))
             else:
                 profile = profiles.first()
                 profile_menu = menu.addAction(self.tr('Backup Now'))
-                profile_menu.triggered.connect(lambda state, i=profile.id: self.app.enq_create_backup_action(i))
+                profile_menu.triggered.connect(lambda state, i=profile.id: self.app.job_create_backup_action(i))
 
         menu.addSeparator()
 

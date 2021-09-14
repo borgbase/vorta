@@ -29,7 +29,7 @@ class VortaScheduler(QtScheduler):
         super().__init__()
         self.app = parent
         self.start()
-        self.vorta_queue = JobsManager()
+        self.jobs_manager = JobsManager()
         self.reload()
 
         # Set timer to make sure background tasks are scheduled
@@ -41,7 +41,7 @@ class VortaScheduler(QtScheduler):
     def cancel_all_jobs(self):
         if DEBUG:
             print("Cancel all Jobs on Vorta Queue")
-        self.vorta_queue.cancel_all_jobs()
+        self.jobs_manager.cancel_all_jobs()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -80,7 +80,7 @@ class VortaScheduler(QtScheduler):
                     repo_id = -1
                 self.add_job(
                     func=self.enqueue_create_backup,
-                    args=[profile.id, repo_id, self.vorta_queue],
+                    args=[profile.id, repo_id, self.jobs_manager],
                     trigger=trigger,
                     id=job_id,
                     misfire_grace_time=180

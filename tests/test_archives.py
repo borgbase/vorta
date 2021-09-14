@@ -38,7 +38,7 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
 
     main.tabWidget.setCurrentIndex(3)
-    tab.enq_list_action()
+    tab.job_list_action()
     qtbot.waitUntil(lambda: not tab.checkButton.isEnabled(), **pytest._wait_defaults)
 
     assert not tab.checkButton.isEnabled()
@@ -104,7 +104,7 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
     tab.mount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.enq_umount_action()
+    tab.job_umount_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
@@ -120,7 +120,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
-    tab.enq_list_archive_action()
+    tab.job_list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
     # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
@@ -164,7 +164,7 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.enq_rename_action()
+    tab.job_rename_action()
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
@@ -173,5 +173,5 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     # Duplicate name case
     exp_text = 'An archive with this name already exists.'
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.enq_rename_action()
+    tab.job_rename_action()
     qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)

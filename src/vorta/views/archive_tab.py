@@ -66,9 +66,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
 
-        self.listButton.clicked.connect(self.enq_list_action)
-        self.pruneButton.clicked.connect(self.enq_prune_action)
-        self.checkButton.clicked.connect(self.enq_check_action)
+        self.listButton.clicked.connect(self.job_list_action)
+        self.pruneButton.clicked.connect(self.job_prune_action)
+        self.checkButton.clicked.connect(self.job_check_action)
         self.diffButton.clicked.connect(self.diff_action)
 
         self.archiveActionMenu = QMenu(parent=self)
@@ -120,15 +120,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return menu
 
         if archive_name in self.mount_points:
-            unmountAction = menu.addAction("Unmount", self.enq_umount_action)
+            unmountAction = menu.addAction("Unmount", self.job_umount_action)
             unmountAction.setIcon(get_colored_icon('eject'))
         else:
             mountAction = menu.addAction("Mount", self.mount_action)
             mountAction.setIcon(get_colored_icon('folder-open'))
 
-        extractAction = menu.addAction("Extract", self.enq_list_archive_action)
+        extractAction = menu.addAction("Extract", self.job_list_archive_action)
         refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
-        renameAction = menu.addAction("Rename", self.enq_rename_action)
+        renameAction = menu.addAction("Rename", self.job_rename_action)
         deleteAction = menu.addAction("Delete", self.delete_action)
 
         extractAction.setIcon(get_colored_icon('cloud-download'))
@@ -203,9 +203,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.prunePrefixPreview.setText(preview)
 
-    def enq_check_action(self):
+    def job_check_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(self.check_action, site=profile.repo.id))
+        QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(self.check_action, site=profile.repo.id))
 
     def check_action(self):
         params = BorgCheckThread.prepare(self.profile())
@@ -232,9 +232,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if result['returncode'] == 0:
             self._toggle_all_buttons(True)
 
-    def enq_prune_action(self):
+    def job_prune_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(
+        QApplication.instance().scheduler.jobs_manager.add_job(
             FuncJob(self.prune_action, site=profile.repo.id))
 
     def prune_action(self):
@@ -252,13 +252,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def prune_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Pruning finished.'))
-            self.enq_list_action()
+            self.job_list_action()
         else:
             self._toggle_all_buttons(True)
 
-    def enq_list_action(self):
+    def job_list_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(
+        QApplication.instance().scheduler.jobs_manager.add_job(
             FuncJob(self.list_action, site=profile.repo.id))
 
     def list_action(self):
@@ -279,9 +279,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
-    def enq_refresh_archive_action(self):
+    def job_refresh_archive_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(
+        QApplication.instance().scheduler.jobs_manager.add_job(
             FuncJob(self.refresh_archive_action, site=profile.repo.id))
 
     def refresh_archive_action(self):
@@ -337,13 +337,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     thread.start()
                     return thread
 
-        def enq_receive():
+        def job_receive():
             profile = self.profile()
-            QApplication.instance().scheduler.vorta_queue.add_job(
+            QApplication.instance().scheduler.jobs_manager.add_job(
                 FuncJob(receive, site=profile.repo.id))
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.open(enq_receive)
+        dialog.open(job_receive)
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)
@@ -355,9 +355,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
 
-    def enq_umount_action(self):
+    def job_umount_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(
+        QApplication.instance().scheduler.jobs_manager.add_job(
             FuncJob(self.umount_action, site=profile.repo.id))
 
     def umount_action(self):
@@ -404,9 +404,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
 
-    def enq_list_archive_action(self):
+    def job_list_archive_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(self.list_archive_action, site=profile.repo.id))
+        QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(self.list_archive_action, site=profile.repo.id))
 
     def list_archive_action(self):
         profile = self.profile()
@@ -451,13 +451,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                         else:
                             self._set_status(params['message'])
 
-                def enq_receive():
+                def job_receive():
                     profile = self.profile()
-                    QApplication.instance().scheduler.vorta_queue.add_job(
+                    QApplication.instance().scheduler.jobs_manager.add_job(
                         FuncJob(receive, site=profile.repo.id))
 
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
-                dialog.open(enq_receive)
+                dialog.open(job_receive)
 
             archive = ArchiveModel.get(name=result['params']['archive_name'])
             window = ExtractDialog(result['data'], archive)
@@ -499,9 +499,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
 
-        def enq_delete_action():
+        def job_delete_action():
             profile = self.profile()
-            QApplication.instance().scheduler.vorta_queue.add_job(FuncJob(delete_action, site=profile.repo.id))
+            QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(delete_action, site=profile.repo.id))
 
         def delete_action():
             thread = BorgDeleteThread(params['cmd'], params)
@@ -522,7 +522,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                                        trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
                 return
             params['cmd'][-1] += f'::{self.archive_name}'
-            enq_delete_action()
+            job_delete_action()
 
         else:
             self._set_status(self.tr("No archive selected"))
@@ -559,9 +559,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 else:
                     self._set_status(params['message'])
 
-        def enq_process_result():
+        def job_process_result():
             profile = self.profile()
-            QApplication.instance().scheduler.vorta_queue.add_job(
+            QApplication.instance().scheduler.jobs_manager.add_job(
                 FuncJob(process_result, site=profile.repo.id))
 
         profile = self.profile()
@@ -571,7 +571,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         window.setParent(self, QtCore.Qt.Sheet)
         self._window = window  # for testing
         window.show()
-        window.accepted.connect(enq_process_result)
+        window.accepted.connect(job_process_result)
 
     def list_diff_result(self, result):
         self._set_status('')
@@ -584,9 +584,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._resultwindow = window  # for testing
             window.show()
 
-    def enq_rename_action(self):
+    def job_rename_action(self):
         profile = self.profile()
-        QApplication.instance().scheduler.vorta_queue.add_job(
+        QApplication.instance().scheduler.jobs_manager.add_job(
             FuncJob(self.rename_action, site=profile.repo.id))
 
     def rename_action(self):
