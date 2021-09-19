@@ -328,8 +328,10 @@ class _Queue(QRunnable):
         # If the site is dead, run the site again
         self.mut_start_site.lock()
         if self.worker_is_running is False:
-            self.threadpool.start(self)
+            if DEBUG:
+                print("Restart Site ", task.get_site_id())
             self.worker_is_running = True
+            self.threadpool.start(self)
         self.mut_start_site.unlock()
         # TODO This function must add the job to the database
         # self.add_to_db(job)
@@ -364,6 +366,8 @@ class _Queue(QRunnable):
         the site waits until a job comes. If no jobs come, a timeout ends the loop.
         Since the loop is not launched in a thread, it is up to the calling function to do so.
         """
+        if DEBUG:
+            print("Enter Process jobs")
         while self.worker_is_running:
             if DEBUG:
                 print("WAIT FOR A JOB")

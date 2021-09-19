@@ -244,8 +244,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_log('')
 
     def backup_finished_event(self):
-        self._toggle_buttons(create_enabled=True)
-        self.archiveTab._toggle_all_buttons(enabled=True)
+        if not JobsManager.is_worker_running():
+            self._toggle_buttons(create_enabled=True)
+            self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
