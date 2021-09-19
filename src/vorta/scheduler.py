@@ -2,6 +2,7 @@ import logging
 import os
 import queue
 import signal
+from abc import abstractmethod
 from datetime import date, timedelta
 from enum import Enum
 from subprocess import TimeoutExpired
@@ -142,6 +143,7 @@ class Job(QObject):
         return self.__status
 
     # Must return the site id. In borg case, it is the id of the repository.
+    @abstractmethod
     def get_site_id(self):
         pass
 
@@ -151,10 +153,12 @@ class Job(QObject):
         The cancel mehod of JobsManager calls the cancel method on the running jobs only. Others jobs are dequeued.
     """
 
+    @abstractmethod
     def cancel(self):
         pass
 
     # Put the code which must be run for a repo here. The code must be reentrant.
+    @abstractmethod
     def run(self):
         pass
 
@@ -412,9 +416,6 @@ class JobsManager:
         # use a threadpool -> This could be changed in the future
         self.threadpool = QThreadPool()
         self.mut_queues = QtCore.QMutex()
-
-    def test_get_site(self, site):
-        return self.__queues.get(site)
 
     def get_site(self, site):
         self.mut_queues.lock()

@@ -127,8 +127,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             mountAction.setIcon(get_colored_icon('folder-open'))
 
         extractAction = menu.addAction("Extract", self.job_list_archive_action)
-        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
-        renameAction = menu.addAction("Rename", self.job_rename_action)
+        refreshAction = menu.addAction("Refresh", self.job_refresh_archive_action)
+        renameAction = menu.addAction("Rename", self.rename_action)
         deleteAction = menu.addAction("Delete", self.delete_action)
 
         extractAction.setIcon(get_colored_icon('cloud-download'))
@@ -584,12 +584,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._resultwindow = window  # for testing
             window.show()
 
-    def job_rename_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(
-            FuncJob(self.rename_action, site=profile.repo.id))
-
     def rename_action(self):
+
+        def rename():
+            thread = BorgRenameThread(params['cmd'], params)
+            thread.updated.connect(self._set_status)
+            thread.result.connect(self.rename_result)
+            self._toggle_all_buttons(False)
+            thread.start()
+            return thread
+
+        def job_rename():
+            QApplication.instance().scheduler.jobs_manager.add_job(
+                FuncJob(rename, site=profile.repo.id))
+
         profile = self.profile()
         params = BorgRenameThread.prepare(profile)
         if not params['ok']:
@@ -618,13 +626,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             params['cmd'][-1] += f'::{archive_name}'
             params['cmd'].append(new_name)
-
-            thread = BorgRenameThread(params['cmd'], params)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.rename_result)
-            self._toggle_all_buttons(False)
-            thread.start()
-            return thread
+            job_rename()
         else:
             self._set_status(self.tr("No archive selected"))
 
