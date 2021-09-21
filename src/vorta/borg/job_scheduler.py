@@ -1,9 +1,6 @@
-import os
 import queue
-import signal
 from abc import abstractmethod
 from enum import Enum
-from subprocess import TimeoutExpired
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool
@@ -54,43 +51,6 @@ class Job(QObject):
     @abstractmethod
     def run(self):
         pass
-
-
-class FuncJob(Job):
-    # This is an exemple to add a task to the vorta queue.
-    # func must return an object of type BorgThread
-
-    def __init__(self, func, params: list = [], site=0):
-        super().__init__()
-        self.func = func
-        self.params = params
-        self.site_id = site
-        self.thread = None
-
-    def get_repo_id(self):
-        return self.site_id
-
-    def cancel(self):
-        if DEBUG:
-            print("Cancel curent Job on site: ", self.site_id)
-        self.set_status(JobStatus.CANCEL)
-        if self.thread is not None:
-            if DEBUG:
-                print("Thread Not None")
-            self.thread.process.send_signal(signal.SIGINT)
-            try:
-                self.thread.process.wait(timeout=3)
-            except TimeoutExpired:
-                os.killpg(os.getpgid(self.thread.process.pid), signal.SIGTERM)
-            self.thread.quit()
-            self.thread.wait()
-
-    #  We suppose that the function return an object of type BorgThread.
-    def run(self):
-        thread = self.func(*self.params)
-        if thread is not None:
-            self.thread = thread
-            thread.wait()
 
 
 class _Queue(QRunnable):
@@ -228,8 +188,9 @@ class JobsManager:
         if DEBUG:
             print("Add Job on site ", job.get_repo_id(), type(job.get_repo_id()))
 
-        if type(job.get_repo_id()) is not (int or str):
-            print("get_site_id must return an integer. A ", type(job.get_repo_id()), " has be returned.")
+        if not isinstance(job.get_repo_id(), (int, str)):
+            print("get_site_id must return an integer or str . A ", type(job.get_repo_id()), " has be returned : ",
+                  job.get_repo_id())
             return 1
         self.get_site(job.get_repo_id()).add_job(job)
 

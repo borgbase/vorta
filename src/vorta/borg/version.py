@@ -1,8 +1,8 @@
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 from vorta.i18n import trans_late
 
 
-class BorgVersionThread(BorgThread):
+class BorgVersionJob(BorgJob):
     """
     Gets the path of the borg binary to be used and the borg version.
 

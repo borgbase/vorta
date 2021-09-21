@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import QLineEdit, QAction
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords
 from vorta.keyring.abc import VortaKeyring
-from vorta.borg.init import BorgInitThread
-from vorta.borg.info_repo import BorgInfoRepoThread
+from vorta.borg.init import BorgInitJob
+from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 from vorta.models import RepoModel
@@ -115,14 +115,14 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     # No need to add this function to JobsManager because repo is set for the first time
     def run(self):
         if self.validate() and self.password_listener():
-            params = BorgInitThread.prepare(self.values)
+            params = BorgInitJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInitThread(params['cmd'], params, parent=self)
+                thread = BorgInitJob(params['cmd'], params, parent=self)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
-                self.thread.start()
+                self.thread.run()
             else:
                 self._set_status(params['message'])
 
@@ -212,13 +212,13 @@ class ExistingRepoWindow(AddRepoWindow):
 
     def run(self):
         if self.validate():
-            params = BorgInfoRepoThread.prepare(self.values)
+            params = BorgInfoRepoJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoRepoThread(params['cmd'], params, parent=self)
+                thread = BorgInfoRepoJob(params['cmd'], params, parent=self)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
-                self.thread.start()
+                self.thread.run()
             else:
                 self._set_status(params['message'])

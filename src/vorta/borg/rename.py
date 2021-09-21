@@ -1,8 +1,8 @@
 from vorta.models import ArchiveModel, RepoModel
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 
 
-class BorgRenameThread(BorgThread):
+class BorgRenameJob(BorgJob):
 
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)

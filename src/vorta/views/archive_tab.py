@@ -8,20 +8,19 @@ from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
                              QTableWidgetItem, QInputDialog, QMenu,
                              QToolButton, QApplication)
 
-from vorta.borg.check import BorgCheckThread
-from vorta.borg.delete import BorgDeleteThread
-from vorta.borg.diff import BorgDiffThread
-from vorta.borg.extract import BorgExtractThread
-from vorta.borg.list_archive import BorgListArchiveThread
-from vorta.borg.list_repo import BorgListRepoThread
-from vorta.borg.info_archive import BorgInfoArchiveThread
-from vorta.borg.mount import BorgMountThread
-from vorta.borg.prune import BorgPruneThread
-from vorta.borg.umount import BorgUmountThread
-from vorta.borg.rename import BorgRenameThread
+from vorta.borg.check import BorgCheckJob
+from vorta.borg.delete import BorgDeleteJob
+from vorta.borg.diff import BorgDiffJob
+from vorta.borg.extract import BorgExtractJob
+from vorta.borg.list_archive import BorgListArchiveJob
+from vorta.borg.list_repo import BorgListRepoJob
+from vorta.borg.info_archive import BorgInfoArchiveJob
+from vorta.borg.mount import BorgMountJob
+from vorta.borg.prune import BorgPruneJob
+from vorta.borg.umount import BorgUmountJob
+from vorta.borg.rename import BorgRenameJob
 from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
-from vorta.borg.job_scheduler import FuncJob
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
 from vorta.views.source_tab import SizeItem
@@ -66,9 +65,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
 
-        self.listButton.clicked.connect(self.job_list_action)
-        self.pruneButton.clicked.connect(self.job_prune_action)
-        self.checkButton.clicked.connect(self.job_check_action)
+        self.listButton.clicked.connect(self.list_action)
+        self.pruneButton.clicked.connect(self.prune_action)
+        self.checkButton.clicked.connect(self.check_action)
         self.diffButton.clicked.connect(self.diff_action)
 
         self.archiveActionMenu = QMenu(parent=self)
@@ -126,8 +125,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             mountAction = menu.addAction("Mount", self.mount_action)
             mountAction.setIcon(get_colored_icon('folder-open'))
 
-        extractAction = menu.addAction("Extract", self.job_list_archive_action)
-        refreshAction = menu.addAction("Refresh", self.job_refresh_archive_action)
+        extractAction = menu.addAction("Extract", self.list_archive_action)
+        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
         renameAction = menu.addAction("Rename", self.rename_action)
         deleteAction = menu.addAction("Delete", self.delete_action)
 
@@ -203,12 +202,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.prunePrefixPreview.setText(preview)
 
-    def job_check_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(self.check_action, site=profile.repo.id))
-
     def check_action(self):
-        params = BorgCheckThread.prepare(self.profile())
+        params = BorgCheckJob.prepare(self.profile())
         if not params['ok']:
             self._set_status(params['message'])
             return
@@ -221,55 +216,42 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 archive_name = archive_cell.text()
                 params['cmd'][-1] += f'::{archive_name}'
 
-        thread = BorgCheckThread(params['cmd'], params)
-        thread.updated.connect(self._set_status)
-        thread.result.connect(self.check_result)
+        job = BorgCheckJob(params['cmd'], params, self.profile().repo.id)
+        job.updated.connect(self._set_status)
+        job.result.connect(self.check_result)
         self._toggle_all_buttons(False)
-        thread.start()
-        return thread
+        QApplication.instance().scheduler.jobs_manager.add_job(job)
 
     def check_result(self, result):
         if result['returncode'] == 0:
             self._toggle_all_buttons(True)
 
-    def job_prune_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(
-            FuncJob(self.prune_action, site=profile.repo.id))
-
     def prune_action(self):
-        params = BorgPruneThread.prepare(self.profile())
+        params = BorgPruneJob.prepare(self.profile())
         if params['ok']:
-            thread = BorgPruneThread(params['cmd'], params)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.prune_result)
+            job = BorgPruneJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.prune_result)
             self._toggle_all_buttons(False)
-            thread.start()
-            return thread
+            QApplication.instance().scheduler.jobs_manager.add_job(job)
         else:
             self._set_status(params['message'])
 
     def prune_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Pruning finished.'))
-            self.job_list_action()
+            self.list_action()
         else:
             self._toggle_all_buttons(True)
 
-    def job_list_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(
-            FuncJob(self.list_action, site=profile.repo.id))
-
     def list_action(self):
-        params = BorgListRepoThread.prepare(self.profile())
+        params = BorgListRepoJob.prepare(self.profile())
         if params['ok']:
-            thread = BorgListRepoThread(params['cmd'], params)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.list_result)
+            job = BorgListRepoJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.list_result)
             self._toggle_all_buttons(False)
-            thread.start()
-            return thread
+            QApplication.instance().scheduler.jobs_manager.add_job(job)
         else:
             self._set_status(params['message'])
 
@@ -279,22 +261,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
-    def job_refresh_archive_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(
-            FuncJob(self.refresh_archive_action, site=profile.repo.id))
-
     def refresh_archive_action(self):
         archive_name = self.selected_archive_name()
         if archive_name is not None:
-            params = BorgInfoArchiveThread.prepare(self.profile(), archive_name)
+            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
             if params['ok']:
-                thread = BorgInfoArchiveThread(params['cmd'], params)
-                thread.updated.connect(self._set_status)
-                thread.result.connect(self.refresh_archive_result)
+                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
+                job.updated.connect(self._set_status)
+                job.result.connect(self.refresh_archive_result)
                 self._toggle_all_buttons(False)
-                thread.start()
-                return thread
+                QApplication.instance().scheduler.jobs_manager.add_job(job)
 
     def refresh_archive_result(self, result):
         self._toggle_all_buttons(True)
@@ -312,7 +288,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def mount_action(self):
         profile = self.profile()
-        params = BorgMountThread.prepare(profile)
+        params = BorgMountJob.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return
@@ -331,19 +307,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.mount_points[params['current_archive']] = mount_point[0]
                 if params['ok']:
                     self._toggle_all_buttons(False)
-                    thread = BorgMountThread(params['cmd'], params)
-                    thread.updated.connect(self.mountErrors.setText)
-                    thread.result.connect(self.mount_result)
-                    thread.start()
-                    return thread
-
-        def job_receive():
-            profile = self.profile()
-            QApplication.instance().scheduler.jobs_manager.add_job(
-                FuncJob(receive, site=profile.repo.id))
+                    job = BorgMountJob(params['cmd'], params, self.profile().repo.id)
+                    job.updated.connect(self.mountErrors.setText)
+                    job.result.connect(self.mount_result)
+                    QApplication.instance().scheduler.jobs_manager.add_job(job)
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.open(job_receive)
+        dialog.open(receive)
 
     def mount_result(self, result):
         self._toggle_all_buttons(True)
@@ -355,18 +325,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
 
-    def job_umount_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(
-            FuncJob(self.umount_action, site=profile.repo.id))
-
     def umount_action(self):
         archive_name = self.selected_archive_name()
         mount_point = self.mount_points.get(archive_name)
 
         if mount_point is not None:
             profile = self.profile()
-            params = BorgUmountThread.prepare(profile)
+            params = BorgUmountJob.prepare(profile)
             if not params['ok']:
                 self._set_status(params['message'])
                 return
@@ -375,11 +340,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             if os.path.normpath(mount_point) in params['active_mount_points']:
                 params['cmd'].append(mount_point)
-                thread = BorgUmountThread(params['cmd'], params)
-                thread.updated.connect(self.mountErrors.setText)
-                thread.result.connect(self.umount_result)
-                thread.start()
-                return thread
+                job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
+                job.updated.connect(self.mountErrors.setText)
+                job.result.connect(self.umount_result)
+                QApplication.instance().scheduler.jobs_manager.add_job(job)
             else:
                 self._set_status(self.tr('Mount point not active.'))
                 return
@@ -404,10 +368,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
 
-    def job_list_archive_action(self):
-        profile = self.profile()
-        QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(self.list_archive_action, site=profile.repo.id))
-
     def list_archive_action(self):
         profile = self.profile()
 
@@ -416,7 +376,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if archive_cell:
                 archive_name = archive_cell.text()
-                params = BorgListArchiveThread.prepare(profile, archive_name)
+                params = BorgListArchiveJob.prepare(profile, archive_name)
 
                 if not params['ok']:
                     self._set_status(params['message'])
@@ -424,11 +384,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status('')
                 self._toggle_all_buttons(False)
 
-                thread = BorgListArchiveThread(params['cmd'], params)
-                thread.updated.connect(self.mountErrors.setText)
-                thread.result.connect(self.list_archive_result)
-                thread.start()
-                return thread
+                job = BorgListArchiveJob(params['cmd'], params, self.profile().repo.id)
+                job.updated.connect(self.mountErrors.setText)
+                job.result.connect(self.list_archive_result)
+                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                return job
         else:
             self._set_status(self.tr('Select an archive to restore first.'))
 
@@ -439,25 +399,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 def receive():
                     extraction_folder = dialog.selectedFiles()
                     if extraction_folder:
-                        params = BorgExtractThread.prepare(
+                        params = BorgExtractJob.prepare(
                             self.profile(), archive.name, window.selected, extraction_folder[0])
                         if params['ok']:
                             self._toggle_all_buttons(False)
-                            thread = BorgExtractThread(params['cmd'], params)
-                            thread.updated.connect(self.mountErrors.setText)
-                            thread.result.connect(self.extract_archive_result)
-                            thread.start()
-                            return thread
+                            job = BorgExtractJob(params['cmd'], params, self.profile().repo.id)
+                            job.updated.connect(self.mountErrors.setText)
+                            job.result.connect(self.extract_archive_result)
+                            QApplication.instance().scheduler.jobs_manager.add_job(job)
                         else:
                             self._set_status(params['message'])
 
-                def job_receive():
-                    profile = self.profile()
-                    QApplication.instance().scheduler.jobs_manager.add_job(
-                        FuncJob(receive, site=profile.repo.id))
-
                 dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
-                dialog.open(job_receive)
+                dialog.open(receive)
 
             archive = ArchiveModel.get(name=result['params']['archive_name'])
             window = ExtractDialog(result['data'], archive)
@@ -499,19 +453,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
 
-        def job_delete_action():
-            profile = self.profile()
-            QApplication.instance().scheduler.jobs_manager.add_job(FuncJob(delete_action, site=profile.repo.id))
-
-        def delete_action():
-            thread = BorgDeleteThread(params['cmd'], params)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.delete_result)
-            self._toggle_all_buttons(False)
-            thread.start()
-            return thread
-
-        params = BorgDeleteThread.prepare(self.profile())
+        params = BorgDeleteJob.prepare(self.profile())
         if not params['ok']:
             self._set_status(params['message'])
             return
@@ -522,7 +464,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                                        trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
                 return
             params['cmd'][-1] += f'::{self.archive_name}'
-            job_delete_action()
+            job = BorgDeleteJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.delete_result)
+            self._toggle_all_buttons(False)
+            QApplication.instance().scheduler.jobs_manager.add_job(job)
 
         else:
             self._set_status(self.tr("No archive selected"))
@@ -547,22 +493,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 archive_name_newer = archive_cell_newer.text()
                 archive_name_older = archive_cell_older.text()
 
-                params = BorgDiffThread.prepare(profile, archive_name_older, archive_name_newer)
+                params = BorgDiffJob.prepare(profile, archive_name_older, archive_name_newer)
 
                 if params['ok']:
                     self._toggle_all_buttons(False)
-                    thread = BorgDiffThread(params['cmd'], params)
-                    thread.updated.connect(self.mountErrors.setText)
-                    thread.result.connect(self.list_diff_result)
-                    thread.start()
-                    return thread
+                    job = BorgDiffJob(params['cmd'], params, self.profile().repo.id)
+                    job.updated.connect(self.mountErrors.setText)
+                    job.result.connect(self.list_diff_result)
+                    QApplication.instance().scheduler.jobs_manager.add_job(job)
                 else:
                     self._set_status(params['message'])
-
-        def job_process_result():
-            profile = self.profile()
-            QApplication.instance().scheduler.jobs_manager.add_job(
-                FuncJob(process_result, site=profile.repo.id))
 
         profile = self.profile()
 
@@ -571,7 +511,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         window.setParent(self, QtCore.Qt.Sheet)
         self._window = window  # for testing
         window.show()
-        window.accepted.connect(job_process_result)
+        window.accepted.connect(process_result)
 
     def list_diff_result(self, result):
         self._set_status('')
@@ -586,20 +526,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def rename_action(self):
 
-        def rename():
-            thread = BorgRenameThread(params['cmd'], params)
-            thread.updated.connect(self._set_status)
-            thread.result.connect(self.rename_result)
-            self._toggle_all_buttons(False)
-            thread.start()
-            return thread
-
-        def job_rename():
-            QApplication.instance().scheduler.jobs_manager.add_job(
-                FuncJob(rename, site=profile.repo.id))
-
         profile = self.profile()
-        params = BorgRenameThread.prepare(profile)
+        params = BorgRenameJob.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return
@@ -626,7 +554,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             params['cmd'][-1] += f'::{archive_name}'
             params['cmd'].append(new_name)
-            job_rename()
+            job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.rename_result)
+            self._toggle_all_buttons(False)
+            QApplication.instance().scheduler.jobs_manager.add_job(job)
         else:
             self._set_status(self.tr("No archive selected"))
 

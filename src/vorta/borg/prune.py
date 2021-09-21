@@ -1,8 +1,8 @@
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 from vorta.utils import format_archive_name
 
 
-class BorgPruneThread(BorgThread):
+class BorgPruneJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()

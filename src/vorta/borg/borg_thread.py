@@ -1,5 +1,6 @@
 import json
 import os
+import signal
 import sys
 import shutil
 import shlex
@@ -10,8 +11,9 @@ from collections import namedtuple
 from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 
+from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
@@ -33,17 +35,17 @@ temporary mutex.
 """
 
 
-class BorgThread(QtCore.QThread, BackupProfileMixin):
+class BorgJob(Job, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
-    it should subclass `BorgThread`.
+    it should subclass `BorgJob`.
     """
 
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd, params, parent=None):
+    def __init__(self, cmd, params, site="default", parent=None):
         """
         Thread to run Borg operations in.
 
@@ -53,14 +55,15 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         :param parent: Parent window. Needs `thread.wait()` if none. (scheduler)
         """
 
-        super().__init__(parent)
+        super().__init__()
+        self.site_id = site
         self.app = QApplication.instance()
 
         # Declare labels here for translation
-        self.category_label = {"files": trans_late("BorgThread", "Files"),
-                               "original": trans_late("BorgThread", "Original"),
-                               "deduplicated": trans_late("BorgThread", "Deduplicated"),
-                               "compressed": trans_late("BorgThread", "Compressed"), }
+        self.category_label = {"files": trans_late("BorgJob", "Files"),
+                               "original": trans_late("BorgJob", "Original"),
+                               "deduplicated": trans_late("BorgJob", "Deduplicated"),
+                               "compressed": trans_late("BorgJob", "Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
@@ -97,6 +100,22 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
+
+    def get_repo_id(self):
+        return self.site_id
+
+    def cancel(self):
+        if DEBUG:
+            print("Cancel curent Job on site: ", self.site_id)
+        self.set_status(JobStatus.CANCEL)
+        if self.process is not None:
+            if DEBUG:
+                print("Thread Not None")
+            self.process.send_signal(signal.SIGINT)
+            try:
+                self.process.wait(timeout=3)
+            except TimeoutExpired:
+                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
 
     @classmethod
     def prepare(cls, profile):
@@ -237,10 +256,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

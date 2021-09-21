@@ -1,9 +1,9 @@
 from dateutil import parser
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 from vorta.models import ArchiveModel, RepoModel
 
 
-class BorgListRepoThread(BorgThread):
+class BorgListRepoJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()

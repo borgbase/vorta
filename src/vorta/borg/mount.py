@@ -1,9 +1,9 @@
 import os
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 from vorta.models import SettingsModel
 
 
-class BorgMountThread(BorgThread):
+class BorgMountJob(BorgJob):
 
     def started_event(self):
         self.updated.emit(self.tr('Mounting archive into folder...'))

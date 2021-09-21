@@ -6,10 +6,10 @@ import subprocess
 from vorta.i18n import trans_late
 from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
 from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
-from .borg_thread import BorgThread
+from .borg_thread import BorgJob
 
 
-class BorgCreateThread(BorgThread):
+class BorgCreateJob(BorgJob):
     def process_result(self, result):
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_archive, created = ArchiveModel.get_or_create(

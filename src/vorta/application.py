@@ -5,15 +5,15 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
-from vorta.borg.create import BorgCreateThread
-from vorta.borg.version import BorgVersionThread
-from vorta.borg.break_lock import BorgBreakThread
+from vorta.borg.create import BorgCreateJob
+from vorta.borg.version import BorgVersionJob
+from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
-from vorta.borg.job_scheduler import FuncJob, JobsManager
+from vorta.borg.job_scheduler import JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
@@ -29,7 +29,7 @@ class VortaApp(QtSingleApplication):
     """
     All windows and QWidgets are children of this app.
 
-    When running Borg-commands, the class `BorgThread` will emit events
+    When running Borg-commands, the class `BorgJob` will emit events
     via the `VortaApp` class to which other windows will subscribe to.
     """
 
@@ -113,27 +113,15 @@ class VortaApp(QtSingleApplication):
         del self.tray
         cleanup_db()
 
-    def job_create_backup_action(self, profile_id=None):
-        if not profile_id:
-            profile_id = self.main_window.current_profile.id
-        profile = BackupProfileModel.get_or_none(id=profile_id)
-        if profile.repo is not None:
-            self.scheduler.jobs_manager.add_job(FuncJob(self.create_backup_action, [profile_id], site=profile.repo.id))
-        else:
-            # -1 is an not existing repo
-            self.scheduler.jobs_manager.add_job(FuncJob(self.create_backup_action, [profile_id], site=-1))
-
     def create_backup_action(self, profile_id=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
         profile = BackupProfileModel.get(id=profile_id)
-        msg = BorgCreateThread.prepare(profile)
+        msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
-            thread = BorgCreateThread(msg['cmd'], msg)
-            thread.start()
-            # Don't wait. This function is added to the vorta queue which take the returned thread.
-            return thread
+            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
+            self.scheduler.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
@@ -172,17 +160,17 @@ class VortaApp(QtSingleApplication):
 
     # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
-        params = BorgVersionThread.prepare()
+        params = BorgVersionJob.prepare()
         if not params['ok']:
             self._alert_missing_borg()
             return
-        thread = BorgVersionThread(params['cmd'], params, parent=self)
-        thread.result.connect(self.set_borg_details_result)
-        thread.start()
+        job = BorgVersionJob(params['cmd'], params, parent=self)
+        job.result.connect(self.set_borg_details_result)
+        self.scheduler.jobs_manager.add_job(job)
 
     def set_borg_details_result(self, result):
         """
-        Receive result from BorgVersionThread.
+        Receive result from BorgVersionJob.
         If no valid version was found, display an error.
         """
         if 'version' in result['data']:
@@ -254,14 +242,13 @@ class VortaApp(QtSingleApplication):
             self._msg = msg
             msg.show()
 
-    # Don't add break_lock to the JobsManager
     def break_lock(self, profile):
-        params = BorgBreakThread.prepare(profile)
+        params = BorgBreakJob.prepare(profile)
         if not params['ok']:
             self.backup_progress_event.emit(params['message'])
             return
-        thread = BorgBreakThread(params['cmd'], params, parent=self)
-        thread.start()
+        job = BorgBreakJob(params['cmd'], params, parent=self)
+        self.scheduler.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
         """
