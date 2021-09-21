@@ -12,7 +12,8 @@ from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
-from vorta.scheduler import VortaScheduler, FuncJob, JobsManager
+from vorta.scheduler import VortaScheduler
+from vorta.borg.job_scheduler import FuncJob, JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow

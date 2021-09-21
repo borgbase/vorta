@@ -21,7 +21,7 @@ from vorta.borg.umount import BorgUmountThread
 from vorta.borg.rename import BorgRenameThread
 from vorta.i18n import trans_late
 from vorta.models import ArchiveModel, BackupProfileMixin
-from vorta.scheduler import FuncJob
+from vorta.borg.job_scheduler import FuncJob
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
 from vorta.views.source_tab import SizeItem
