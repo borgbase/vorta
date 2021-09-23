@@ -143,7 +143,8 @@ class VortaApp(QtSingleApplication):
         self.tray.set_tray_icon(active=True)
 
     def backup_finished_event_response(self):
-        self.tray.set_tray_icon()
+        if not JobsManager.is_worker_running():
+            self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
         self.tray.set_tray_icon()

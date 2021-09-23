@@ -205,8 +205,6 @@ class BorgJob(Job, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        global running
-        running = True
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
