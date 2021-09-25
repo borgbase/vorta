@@ -207,7 +207,7 @@ class JobsManager:
             site.cancel_all_jobs()
         self.__queues.clear()
         # reset the semaphore
-        JobsManager.reset_nb_workers()
+        # JobsManager.reset_nb_workers()
         if DEBUG:
             print("End Cancel")
         self.mut_queues.unlock()
