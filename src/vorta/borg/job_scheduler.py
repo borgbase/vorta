@@ -151,6 +151,14 @@ class JobsManager:
 
     nb_workers_running = QtCore.QSemaphore()
 
+    def __init__(self):
+        self.__queues = {}
+        # load job from db
+        self.load_from_db()
+        # use a threadpool -> This could be changed in the future
+        self.threadpool = QThreadPool()
+        self.mut_queues = QtCore.QMutex()
+
     @classmethod
     def is_worker_running(cls):
         # The user can't start a backup if a job is running. The scheduler can.
@@ -161,14 +169,6 @@ class JobsManager:
     def reset_nb_workers(cls):
         del cls.nb_workers_running
         cls.nb_workers_running = QtCore.QSemaphore()
-
-    def __init__(self):
-        self.__queues = {}
-        # load job from db
-        self.load_from_db()
-        # use a threadpool -> This could be changed in the future
-        self.threadpool = QThreadPool()
-        self.mut_queues = QtCore.QMutex()
 
     def get_site(self, site):
         self.mut_queues.lock()
@@ -206,10 +206,9 @@ class JobsManager:
             # don't use get_site since mut_queue is already locked
             site.cancel_all_jobs()
         self.__queues.clear()
-        # reset the semaphore
-        # JobsManager.reset_nb_workers()
         if DEBUG:
             print("End Cancel")
+        self.threadpool.waitForDone()
         self.mut_queues.unlock()
 
     def cancel_job(self, job: Job):
