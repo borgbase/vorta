@@ -101,7 +101,7 @@ class BorgJob(Job, BackupProfileMixin):
         self.params = params
         self.process = None
 
-    def get_repo_id(self):
+    def repo_id(self):
         return self.site_id
 
     def cancel(self):

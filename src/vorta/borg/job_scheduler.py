@@ -34,7 +34,7 @@ class Job(QObject):
 
     # Must return the site id. In borg case, it is the id of the repository.
     @abstractmethod
-    def get_repo_id(self):
+    def repo_id(self):
         pass
 
     """
@@ -78,7 +78,7 @@ class _Queue(QRunnable):
         self.mut_start_site.lock()
         if self.worker_is_running is False:
             if DEBUG:
-                print("Restart Site ", task.get_repo_id())
+                print("Restart Site ", task.repo_id())
             self.worker_is_running = True
             self.threadpool.start(self)
         self.mut_start_site.unlock()
@@ -126,10 +126,10 @@ class _Queue(QRunnable):
                 self.current_job = job
                 if job.get_status() == JobStatus.OK:
                     if DEBUG:
-                        print("Run Job on repo : ", job.get_repo_id())
+                        print("Run Job on repo : ", job.repo_id())
                     job.run()
                     if DEBUG:
-                        print("End job on repo: ", job.get_repo_id())
+                        print("End job on repo: ", job.repo_id())
                 self.nb_workers_running.acquire()
                 # TODO this job can be remove from the database now
                 # self.remove_in_db(job)
@@ -186,13 +186,13 @@ class JobsManager:
     def add_job(self, job: Job):
         # This function MUST BE thread safe.
         if DEBUG:
-            print("Add Job on site ", job.get_repo_id(), type(job.get_repo_id()))
+            print("Add Job on site ", job.repo_id(), type(job.repo_id()))
 
-        if not isinstance(job.get_repo_id(), (int, str)):
-            print("get_site_id must return an integer or str . A ", type(job.get_repo_id()), " has be returned : ",
-                  job.get_repo_id())
+        if not isinstance(job.repo_id(), (int, str)):
+            print("get_site_id must return an integer or str . A ", type(job.repo_id()), " has be returned : ",
+                  job.repo_id())
             return 1
-        self.get_site(job.get_repo_id()).add_job(job)
+        self.get_site(job.repo_id()).add_job(job)
 
     """
     Ask to all queues to cancel all jobs.
@@ -213,4 +213,4 @@ class JobsManager:
 
     def cancel_job(self, job: Job):
         # call cancel job of the site queue
-        self.__queues[job.get_repo_id].cancel_job(job)
+        self.__queues[job.repo_id].cancel_job(job)
