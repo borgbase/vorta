@@ -1,5 +1,5 @@
 from vorta.models import ArchiveModel, RepoModel
-from .borg_thread import BorgJob
+from .borg_job import BorgJob
 
 
 class BorgRenameJob(BorgJob):

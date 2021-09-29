@@ -16,7 +16,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
 
     stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     tab.diff_action()
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)

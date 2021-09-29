@@ -1,5 +1,5 @@
 from dateutil import parser
-from .borg_thread import BorgJob
+from .borg_job import BorgJob
 from vorta.models import ArchiveModel, RepoModel
 
 

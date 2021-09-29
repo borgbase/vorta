@@ -6,7 +6,7 @@ import subprocess
 from vorta.i18n import trans_late
 from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
 from vorta.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
-from .borg_thread import BorgJob
+from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):

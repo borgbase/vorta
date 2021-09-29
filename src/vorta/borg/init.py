@@ -1,4 +1,4 @@
-from .borg_thread import BorgJob, FakeProfile, FakeRepo
+from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.models import RepoModel
 
 

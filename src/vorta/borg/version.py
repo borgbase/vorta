@@ -1,4 +1,4 @@
-from .borg_thread import BorgJob
+from .borg_job import BorgJob
 from vorta.i18n import trans_late
 
 
