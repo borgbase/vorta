@@ -5,7 +5,7 @@ from enum import Enum
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool
 
-DEBUG = True
+DEBUG = False
 
 
 class JobStatus(Enum):

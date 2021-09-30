@@ -1,6 +1,6 @@
 import re
 from PyQt5 import uic, QtCore
-from PyQt5.QtWidgets import QLineEdit, QAction
+from PyQt5.QtWidgets import QLineEdit, QAction, QApplication
 
 from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
     borg_compat, validate_passwords
@@ -118,11 +118,12 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             params = BorgInitJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInitJob(params['cmd'], params, parent=self)
-                thread.updated.connect(self._set_status)
-                thread.result.connect(self.run_result)
-                self.thread = thread  # Needs to be connected to self for tests to work.
-                self.thread.run()
+                job = BorgInitJob(params['cmd'], params)
+                job.updated.connect(self._set_status)
+                job.result.connect(self.run_result)
+                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                # self.thread = thread  # Needs to be connected to self for tests to work.
+                # what does it mean ?
             else:
                 self._set_status(params['message'])
 
