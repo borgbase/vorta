@@ -315,4 +315,3 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.listWidget.setCurrentRow(-1)
         # The second list widget always selects the last tab
         self.tabWidget.setCurrentIndex(self.listWidget.count())
-
