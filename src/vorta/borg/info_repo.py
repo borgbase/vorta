@@ -1,9 +1,9 @@
-from .borg_thread import BorgThread, FakeProfile, FakeRepo
+from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.i18n import trans_late
 from vorta.models import RepoModel
 
 
-class BorgInfoRepoThread(BorgThread):
+class BorgInfoRepoJob(BorgJob):
 
     def started_event(self):
         self.updated.emit(self.tr('Validating existing repo...'))

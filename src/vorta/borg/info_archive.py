@@ -1,8 +1,8 @@
-from .borg_thread import BorgThread
+from .borg_job import BorgJob
 from vorta.models import ArchiveModel, RepoModel
 
 
-class BorgInfoArchiveThread(BorgThread):
+class BorgInfoArchiveJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()
@@ -31,7 +31,7 @@ class BorgInfoArchiveThread(BorgThread):
         if result['returncode'] == 0:
             remote_archives = result['data'].get('archives', [])
 
-            # get info stored during BorgThread.prepare()
+            # get info stored during BorgJob.prepare()
             # repo_id = self.params['repo_id']
             repo_id = result['params']['repo_id']
 

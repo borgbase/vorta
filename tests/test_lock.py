@@ -1,6 +1,6 @@
 import pytest
 from PyQt5 import QtCore
-import vorta.borg.borg_thread
+import vorta.borg.borg_job
 import vorta.application
 
 
@@ -10,7 +10,7 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
 
     stdout, stderr = borg_json_output('create_perm')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
 
@@ -26,7 +26,7 @@ def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     # Trigger locked repo
     stdout, stderr = borg_json_output('create_lock')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
 
@@ -36,7 +36,7 @@ def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     # Break locked repo
     stdout, stderr = borg_json_output('create_break')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)  # Prevent thread collision
     qapp._msg.accept()

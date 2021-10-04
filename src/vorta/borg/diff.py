@@ -1,8 +1,8 @@
-from .borg_thread import BorgThread
+from .borg_job import BorgJob
 from vorta.utils import borg_compat
 
 
-class BorgDiffThread(BorgThread):
+class BorgDiffJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()

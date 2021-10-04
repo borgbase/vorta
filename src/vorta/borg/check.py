@@ -1,7 +1,7 @@
-from .borg_thread import BorgThread
+from .borg_job import BorgJob
 
 
-class BorgCheckThread(BorgThread):
+class BorgCheckJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()
