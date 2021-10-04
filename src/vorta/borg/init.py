@@ -1,8 +1,8 @@
-from .borg_thread import BorgThread, FakeProfile, FakeRepo
+from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.models import RepoModel
 
 
-class BorgInitThread(BorgThread):
+class BorgInitJob(BorgJob):
 
     def started_event(self):
         self.updated.emit(self.tr('Setting up new repo...'))

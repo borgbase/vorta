@@ -1,9 +1,9 @@
 import json
 import os
+import signal
 import sys
 import shutil
 import shlex
-import signal
 import select
 import time
 import logging
@@ -13,30 +13,39 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
+from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
-mutex = Lock()
+temp_mutex = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
 
+"""
+All methods in this class must be thread safe. Particularly,
+I strongly unadvised global variable and class variables.
+Sqlite access are thread-safe because peewee is thread-safe.
+The method prepare is not thread-safe because of keyring and I don't know why. That's why I added a
+temporary mutex.
+"""
 
-class BorgThread(QtCore.QThread, BackupProfileMixin):
+
+class BorgJob(Job, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
-    it should subclass `BorgThread`.
+    it should subclass `BorgJob`.
     """
 
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd, params, parent=None):
+    def __init__(self, cmd, params, site="default", parent=None):
         """
         Thread to run Borg operations in.
 
@@ -46,15 +55,15 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         :param parent: Parent window. Needs `thread.wait()` if none. (scheduler)
         """
 
-        super().__init__(parent)
+        super().__init__()
+        self.site_id = site
         self.app = QApplication.instance()
-        self.app.backup_cancelled_event.connect(self.cancel)
 
         # Declare labels here for translation
-        self.category_label = {"files": trans_late("BorgThread", "Files"),
-                               "original": trans_late("BorgThread", "Original"),
-                               "deduplicated": trans_late("BorgThread", "Deduplicated"),
-                               "compressed": trans_late("BorgThread", "Compressed"), }
+        self.category_label = {"files": trans_late("BorgJob", "Files"),
+                               "original": trans_late("BorgJob", "Original"),
+                               "deduplicated": trans_late("BorgJob", "Deduplicated"),
+                               "compressed": trans_late("BorgJob", "Compressed"), }
 
         cmd[0] = self.prepare_bin()
 
@@ -92,9 +101,21 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         self.params = params
         self.process = None
 
-    @classmethod
-    def is_running(cls):
-        return mutex.locked()
+    def repo_id(self):
+        return self.site_id
+
+    def cancel(self):
+        if DEBUG:
+            print("Cancel curent Job on site: ", self.site_id)
+        self.set_status(JobStatus.CANCEL)
+        if self.process is not None:
+            if DEBUG:
+                print("Thread Not None")
+            self.process.send_signal(signal.SIGINT)
+            try:
+                self.process.wait(timeout=3)
+            except TimeoutExpired:
+                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
 
     @classmethod
     def prepare(cls, profile):
@@ -112,11 +133,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
         """
         ret = {'ok': False}
 
-        # Do checks to see if running Borg is possible.
-        if cls.is_running():
-            ret['message'] = trans_late('messages', 'Backup is already in progress.')
-            return ret
-
         if cls.prepare_bin() is None:
             ret['message'] = trans_late('messages', 'Borg binary was not found.')
             return ret
@@ -130,6 +146,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             return ret
 
         # Try to get password from chosen keyring backend.
+        temp_mutex.acquire()
         cls.keyring = VortaKeyring.get_keyring()
         logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
         ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
@@ -149,6 +166,7 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
             if ret['password'] is not None:
                 logger.warning('Found password in database, but secure storage was available. '
                                'Consider re-adding the repo to use it.')
+        temp_mutex.release()
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
@@ -187,7 +205,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        mutex.acquire()
         log_entry = EventLogModel(category='borg-run',
                                   subcommand=self.cmd[1],
                                   profile=self.params.get('profile_name', None)
@@ -237,10 +254,10 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
@@ -272,23 +289,6 @@ class BorgThread(QtCore.QThread, BackupProfileMixin):
 
         self.process_result(result)
         self.finished_event(result)
-        mutex.release()
-
-    def cancel(self):
-        """
-        First try to terminate the running Borg process with SIGINT (Ctrl-C),
-        if this fails, use SIGTERM.
-        """
-        if self.isRunning():
-            self.process.send_signal(signal.SIGINT)
-            try:
-                self.process.wait(timeout=3)
-            except TimeoutExpired:
-                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
-            self.quit()
-            self.wait()
-            if mutex.locked():
-                mutex.release()
 
     def process_result(self, result):
         pass

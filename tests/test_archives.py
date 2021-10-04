@@ -35,7 +35,7 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
 
     stdout, stderr = borg_json_output('list')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     main.tabWidget.setCurrentIndex(3)
     tab.list_action()
@@ -56,7 +56,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     tab.populate_from_profile()
     stdout, stderr = borg_json_output('prune')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.pruneButton, QtCore.Qt.LeftButton)
 
@@ -71,7 +71,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
 
     stdout, stderr = borg_json_output('check')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.checkButton, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
@@ -95,7 +95,7 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
 
     stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     monkeypatch.setattr(
         vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
@@ -119,7 +119,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     tab.list_archive_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
@@ -141,7 +141,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('delete')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     tab.delete_action()
 
@@ -162,7 +162,7 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     new_archive_name = 'idf89d8f9d8fd98'
     stdout, stderr = borg_json_output('rename')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
     tab.rename_action()
 

@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 import vorta
 import vorta.application
+import vorta.borg.job_scheduler
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
                           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
 from vorta.views.main_window import MainWindow
@@ -72,7 +73,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
 
     yield
     qapp.backup_cancelled_event.emit()
-    qtbot.waitUntil(lambda: not vorta.borg.borg_thread.BorgThread.is_running())
+    qtbot.waitUntil(lambda: not vorta.borg.job_scheduler.JobsManager.is_worker_running())
     mock_db.close()
 
 

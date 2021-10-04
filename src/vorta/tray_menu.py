@@ -2,8 +2,8 @@ import os
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
-from vorta.borg.borg_thread import BorgThread
 from vorta.models import BackupProfileModel
+from vorta.borg.job_scheduler import JobsManager
 from vorta.utils import get_asset
 
 
@@ -48,7 +48,7 @@ class TrayMenu(QSystemTrayIcon):
         status = menu.addAction(self.app.scheduler.next_job)
         status.setEnabled(False)
 
-        if BorgThread.is_running():
+        if JobsManager.is_worker_running():
             status.setText(self.tr('Backup in Progress'))
             cancel_action = menu.addAction(self.tr('Cancel Backup'))
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)

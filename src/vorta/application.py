@@ -1,20 +1,19 @@
 import logging
 import os
 import sys
-import time
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
-from vorta.borg.borg_thread import BorgThread
-from vorta.borg.create import BorgCreateThread
-from vorta.borg.version import BorgVersionThread
-from vorta.borg.break_lock import BorgBreakThread
+from vorta.borg.create import BorgCreateJob
+from vorta.borg.version import BorgVersionJob
+from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
+from vorta.borg.job_scheduler import JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
@@ -30,7 +29,7 @@ class VortaApp(QtSingleApplication):
     """
     All windows and QWidgets are children of this app.
 
-    When running Borg-commands, the class `BorgThread` will emit events
+    When running Borg-commands, the class `BorgJob` will emit events
     via the `VortaApp` class to which other windows will subscribe to.
     """
 
@@ -59,6 +58,7 @@ class VortaApp(QtSingleApplication):
 
         self.setQuitOnLastWindowClosed(False)
         self.scheduler = VortaScheduler(self)
+
         self.setApplicationName("Vorta")
 
         # Import profile from ~/.vorta-init.json or add empty "Default" profile.
@@ -73,6 +73,7 @@ class VortaApp(QtSingleApplication):
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
+        self.backup_cancelled_event.connect(self.scheduler.cancel_all_jobs)
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
@@ -90,10 +91,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            # Wait a bit in case something is running
-            while BorgThread.is_running():
-                time.sleep(0.1)
-            self.create_backup_action(profile_id=profile.id)
+            self.job_create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 
@@ -120,14 +118,15 @@ class VortaApp(QtSingleApplication):
             profile_id = self.main_window.current_profile.id
 
         profile = BackupProfileModel.get(id=profile_id)
-        msg = BorgCreateThread.prepare(profile)
+        msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
-            thread = BorgCreateThread(msg['cmd'], msg, parent=self)
-            thread.start()
+            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
+            self.scheduler.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
             self.backup_progress_event.emit(translate('messages', msg['message']))
+            return None
 
     def open_main_window_action(self):
         self.main_window.show()
@@ -144,7 +143,8 @@ class VortaApp(QtSingleApplication):
         self.tray.set_tray_icon(active=True)
 
     def backup_finished_event_response(self):
-        self.tray.set_tray_icon()
+        if not JobsManager.is_worker_running():
+            self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
         self.tray.set_tray_icon()
@@ -154,23 +154,24 @@ class VortaApp(QtSingleApplication):
             self.open_main_window_action()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
-            if BorgThread.is_running():
+            if JobsManager.is_worker_running():
                 logger.warning("Cannot run while backups are already running")
             else:
                 self.create_backups_cmdline(message)
 
+    # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
-        params = BorgVersionThread.prepare()
+        params = BorgVersionJob.prepare()
         if not params['ok']:
             self._alert_missing_borg()
             return
-        thread = BorgVersionThread(params['cmd'], params, parent=self)
-        thread.result.connect(self.set_borg_details_result)
-        thread.start()
+        job = BorgVersionJob(params['cmd'], params, parent=self)
+        job.result.connect(self.set_borg_details_result)
+        self.scheduler.jobs_manager.add_job(job)
 
     def set_borg_details_result(self, result):
         """
-        Receive result from BorgVersionThread.
+        Receive result from BorgVersionJob.
         If no valid version was found, display an error.
         """
         if 'version' in result['data']:
@@ -243,12 +244,12 @@ class VortaApp(QtSingleApplication):
             msg.show()
 
     def break_lock(self, profile):
-        params = BorgBreakThread.prepare(profile)
+        params = BorgBreakJob.prepare(profile)
         if not params['ok']:
             self.backup_progress_event.emit(params['message'])
             return
-        thread = BorgBreakThread(params['cmd'], params, parent=self)
-        thread.start()
+        job = BorgBreakJob(params['cmd'], params, parent=self)
+        self.scheduler.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
         """

@@ -3,7 +3,7 @@ import uuid
 import pytest
 from PyQt5 import QtCore
 
-import vorta.borg.borg_thread
+import vorta.borg.borg_job
 import vorta.models
 from vorta.keyring.abc import VortaKeyring
 from vorta.models import EventLogModel, RepoModel, ArchiveModel
@@ -58,6 +58,9 @@ def test_repo_unlink(qapp, qtbot):
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    # -1 is the repo id in this test
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Add a backup repository first.'),
+                    **pytest._wait_defaults)
     assert main.progressText.text() == 'Add a backup repository first.'
 
 
@@ -89,7 +92,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     add_repo_window.run()
     qtbot.waitUntil(lambda: EventLogModel.select().count() == 2, **pytest._wait_defaults)
@@ -130,7 +133,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
     stdout, stderr = borg_json_output('create')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_thread, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: main.progressText.text().startswith('Backup finished.'), **pytest._wait_defaults)
