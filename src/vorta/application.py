@@ -114,29 +114,23 @@ class VortaApp(QtSingleApplication):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
-        def aux(query, cpt):
-            if cpt < len(query):
-                profile = BackupProfileModel.get(id=profile_id)
-                repo = query[cpt].repo
-                cpt += 1
-                msg = BorgCreateJob.prepare(profile, repo)
-                if msg['ok']:
-                    job = BorgCreateJob(msg['cmd'], msg, parent=self)
-                    job.result.connect(lambda: aux(query, cpt))
-                    self.scheduler.jobs_manager.add_job(job)
-                else:
-                    notifier = VortaNotifications.pick()
-                    notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-                    self.backup_progress_event.emit(translate('messages', msg['message']))
-
         query = BackupProfileMixin.get_repos(self.main_window.current_profile.id)
         if len(query) == 0:
             msg = trans_late('messages', 'Add a backup repository first.')
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg), level='error')
             self.backup_progress_event.emit(translate('messages', msg))
-        else:
-            aux(query, 0)
+
+        for prof_x_repo in query:
+            profile = BackupProfileModel.get(id=profile_id)
+            msg = BorgCreateJob.prepare(profile, prof_x_repo.repo)
+            if msg['ok']:
+                job = BorgCreateJob(msg['cmd'], msg)
+                self.scheduler.jobs_manager.add_job(job)
+            else:
+                notifier = VortaNotifications.pick()
+                notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+                self.backup_progress_event.emit(translate('messages', msg['message']))
 
     def open_main_window_action(self):
         self.main_window.show()
@@ -242,7 +236,8 @@ class VortaApp(QtSingleApplication):
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(self.tr("Only break the lock if you are certain no other Borg process "
                                            "on any machine is accessing the repository. Abort or break the lock?"))
-            msg.accepted.connect(lambda: self.break_lock(profile))
+            repo = BackupProfileMixin.get_repo(profile.id, repo_url)
+            msg.accepted.connect(lambda: self.break_lock(profile, repo))
             self._msg = msg
             msg.show()
         elif msgid == 'LockFailed':
@@ -255,12 +250,12 @@ class VortaApp(QtSingleApplication):
             self._msg = msg
             msg.show()
 
-    def break_lock(self, profile):
-        params = BorgBreakJob.prepare(profile)
+    def break_lock(self, profile, repo):
+        params = BorgBreakJob.prepare(profile, repo)
         if not params['ok']:
             self.backup_progress_event.emit(params['message'])
             return
-        job = BorgBreakJob(params['cmd'], params, parent=self)
+        job = BorgBreakJob(params['cmd'], params, repo.id)
         self.scheduler.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):

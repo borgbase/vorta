@@ -11,10 +11,10 @@ def test_borg_prune(qapp, qtbot, mocker, borg_json_output):
 
     prof_x_repos = vorta.models.BackupProfileMixin.get_repos(vorta.models.BackupProfileModel.select().first())
     params = BorgPruneJob.prepare(prof_x_repos[0].profile, prof_x_repos[0].repo)
-    thread = BorgPruneJob(params['cmd'], params, qapp)
+    job = BorgPruneJob(params['cmd'], params, qapp)
 
-    with qtbot.waitSignal(thread.result, **pytest._wait_defaults) as blocker:
-        blocker.connect(thread.updated)
-        thread.run()
+    with qtbot.waitSignal(job.result, **pytest._wait_defaults) as blocker:
+        blocker.connect(job.updated)
+        job.run()
 
     assert blocker.args[0]['returncode'] == 0
