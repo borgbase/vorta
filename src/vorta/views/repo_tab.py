@@ -67,15 +67,20 @@ class RepoTab(RepoBase, RepoUI):
     def set_repos(self):
         profile = BackupProfileModel.get(id=self.window().current_profile.id)
         count = self.repoSelector.count()
+        set_index = False
+        first_repo = 0
         for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
             self.repoSelector.removeItem(4)
-        for repo in RepoModel.select():
+        for index, repo in enumerate(RepoModel.select()):
             if BackupProfileMixin.get_repo(profile.id, repo.url) is None:
                 icon = get_colored_icon('times-solid')
             else:
+                if set_index is False:
+                    first_repo = index
+                    set_index = True
                 icon = get_colored_icon('check-circle')
             self.repoSelector.addItem(icon, repo.url, repo.id)
-        self.repoSelector.setCurrentIndex(0)
+        self.repoSelector.setCurrentIndex(first_repo + 4)
 
     def populate_repositories(self):
         try:
