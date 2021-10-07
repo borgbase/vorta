@@ -164,13 +164,12 @@ class VortaApp(QtSingleApplication):
             else:
                 self.create_backups_cmdline(message)
 
-    # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
         params = BorgVersionJob.prepare()
         if not params['ok']:
             self._alert_missing_borg()
             return
-        job = BorgVersionJob(params['cmd'], params, parent=self)
+        job = BorgVersionJob(params['cmd'], params)
         job.result.connect(self.set_borg_details_result)
         self.scheduler.jobs_manager.add_job(job)
 

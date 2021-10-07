@@ -276,7 +276,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI):
         repo = BackupProfileMixin.get_repo(profile.id, self.comboBox.currentText())
         params = BorgListRepoJob.prepare(profile, repo)
         if params['ok']:
-            job = BorgListRepoJob(params['cmd'], params)
+            job = BorgListRepoJob(params['cmd'], params, repo.id)
             job.updated.connect(self._set_status)
             job.result.connect(self.list_result)
             self._toggle_all_buttons(False)
