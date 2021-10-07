@@ -16,7 +16,7 @@ from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
 from vorta.i18n import trans_late, translate
-from vorta.models import EventLogModel, BackupProfileMixin, BackupProfileModel
+from vorta.models import EventLogModel
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
@@ -137,12 +137,6 @@ class BorgJob(Job):
             ret['message'] = trans_late('messages', 'Borg binary was not found.')
             return ret
 
-        if type(profile) is BackupProfileModel:
-            query = BackupProfileMixin.get_repos(profile)
-            if len(query) == 0:
-                ret['message'] = trans_late('messages', 'Add a backup repository first.')
-                return ret
-
         if not borg_compat.check('JSON_LOG'):
             ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
@@ -257,10 +251,10 @@ class BorgJob(Job):
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
                             msg = (
-                                f"{translate('BorgThread','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgThread','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgThread','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgThread','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
+                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

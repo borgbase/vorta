@@ -125,7 +125,7 @@ class VortaApp(QtSingleApplication):
             profile = BackupProfileModel.get(id=profile_id)
             msg = BorgCreateJob.prepare(profile, prof_x_repo.repo)
             if msg['ok']:
-                job = BorgCreateJob(msg['cmd'], msg)
+                job = BorgCreateJob(msg['cmd'], msg, prof_x_repo.repo.id)
                 self.scheduler.jobs_manager.add_job(job)
             else:
                 notifier = VortaNotifications.pick()

@@ -264,10 +264,10 @@ def pretty_bytes(size, metric=True, sign=False, precision=1):
         unit = units[n]
         pretty = f'{prefix}{round(size, precision)} {unit}B'
         fix_len = 12
-        return pretty + ' '*(fix_len-len(pretty))
+        return pretty + ' ' * (fix_len - len(pretty))
     except KeyError as e:
         logger.error(e)
-        return "NaN" + ' '*(fix_len - len('NaN'))
+        return "NaN" + ' ' * (fix_len - len('NaN'))
 
 
 def get_asset(path):

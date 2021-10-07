@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from ..models import SourceFileModel, BackupProfileMixin, SettingsModel, BackupProfileModel
+from ..models import SourceFileModel, SettingsModel, BackupProfileModel
 from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo
