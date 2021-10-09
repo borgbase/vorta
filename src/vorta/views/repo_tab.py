@@ -104,12 +104,8 @@ class RepoTab(RepoBase, RepoUI):
         unique_size = ''
         total_size = ''
         encryption = ''
-
-        query = BackupProfileMixin.get_repos(profile)
-
-        for prof_x_repos in query:
-            repo = prof_x_repos.repo
-            if repo is not None:
+        for repo in RepoModel.select():
+            if BackupProfileMixin.get_repo(profile, repo.url) is not None:
                 unique_csize += pretty_bytes(repo.unique_csize)
                 unique_size += pretty_bytes(repo.unique_size)
                 total_size += pretty_bytes(repo.total_size)

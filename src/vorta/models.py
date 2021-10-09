@@ -197,9 +197,10 @@ class BackupProfileMixin(pw.Model):
         database = db
 
     @classmethod
-    def get_repo(cls, profile_id, repo_url):
+    def get_repo(cls, profile_id: int, repo_url: str):
         """
-        Return the repo associated with current profile. repo_url is a string.
+        Return the repo associated with current profile or None if the repo doesn't exist.
+        If the profile doesn't exist, None is returned too.
         """
         query = cls \
             .select(cls, RepoModel).join(RepoModel) \
