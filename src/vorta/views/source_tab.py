@@ -112,8 +112,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         index_row = self.sourceFilesWidget.rowCount()
         self.sourceFilesWidget.insertRow(index_row)
-        # Insert all items on current row
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, QTableWidgetItem(source.dir))
+        # Insert all items on current row, add tooltip containg the path name
+        new_item = QTableWidgetItem(source.dir)
+        new_item.setToolTip(source.dir)
+        self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, new_item)
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
