@@ -31,7 +31,7 @@ _network_status_monitor = None
 
 
 # copied from https://github.com/borgbackup/borg/blob/master/src/borg/shellpattern.py
-def translate(pat, match_end=r"\Z"):
+def pattern_to_regex(pat, match_end=r"\Z"):
     """Translate a shell-style pattern to a regular expression.
     The pattern may include ``**<sep>`` (<sep> stands for the platform-specific path separator; "/" on POSIX systems) for
     matching zero or more directory levels and "*" for matching zero or more arbitrary characters with the exception of
@@ -99,8 +99,9 @@ class FilePathInfoAsync(QThread):
             str.strip,
             exclude_patterns.splitlines()
         ))
+        # translate exclude patterns to regular expressions
         self.exclude_patterns_re = [
-            translate(pattern, '')
+            pattern_to_regex(pattern, '')
             for pattern in self.exclude_patterns
         ]
 
