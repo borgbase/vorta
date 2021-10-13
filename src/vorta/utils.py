@@ -33,10 +33,10 @@ _network_status_monitor = None
 # copied from https://github.com/borgbackup/borg/blob/master/src/borg/shellpattern.py
 def pattern_to_regex(pat, match_end=r"\Z"):
     """Translate a shell-style pattern to a regular expression.
-    The pattern may include ``**<sep>`` (<sep> stands for the platform-specific path separator; "/" on POSIX systems) for
-    matching zero or more directory levels and "*" for matching zero or more arbitrary characters with the exception of
-    any path separator. Wrap meta-characters in brackets for a literal match (i.e. "[?]" to match the literal character
-    "?").
+    The pattern may include ``**<sep>`` (<sep> stands for the platform-specific path separator; "/" on POSIX systems)
+    for matching zero or more directory levels and "*" for matching zero or more arbitrary characters with the exception
+    of any path separator. Wrap meta-characters in brackets for a literal match (i.e. "[?]" to match the literal
+    character "?").
     Using match_end=regex one can give a regular expression that is used to match after the regex that is generated from
     the pattern. The default is to match the end of the string.
     This function is derived from the "fnmatch" module distributed with the Python standard library.
