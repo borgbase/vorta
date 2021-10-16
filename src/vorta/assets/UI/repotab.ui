@@ -46,6 +46,12 @@
      <property name="labelAlignment">
       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
      </property>
+     <property name="formAlignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
      <property name="topMargin">
       <number>0</number>
      </property>

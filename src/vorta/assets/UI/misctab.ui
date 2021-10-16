@@ -17,6 +17,9 @@
    <property name="spacing">
     <number>0</number>
    </property>
+   <property name="leftMargin">
+    <number>12</number>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="checkboxLayout">
      <property name="topMargin">

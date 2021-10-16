@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
-    <number>0</number>
+    <number>12</number>
    </property>
    <property name="topMargin">
     <number>0</number>
@@ -41,7 +41,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="page_1">
       <property name="statusTip">
@@ -56,6 +56,9 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
         <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>16</number>
@@ -362,6 +365,9 @@
        <string>Networks</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
         <number>16</number>
        </property>
@@ -418,6 +424,9 @@
        <string>Log</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
         <number>16</number>
        </property>
@@ -473,6 +482,9 @@
        <string>Shell Command</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
         <number>16</number>
        </property>
