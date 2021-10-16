@@ -91,14 +91,15 @@ def pattern_to_regex(pat, match_end=r"\Z"):
 class FilePathInfoAsync(QThread):
     signal = pyqtSignal(str, str, str)
 
-    def __init__(self, path, exclude_patterns):
+    def __init__(self, path, exclude_patterns_str):
         self.path = path
         QThread.__init__(self)
         self.exiting = False
-        self.exclude_patterns = list(map(
-            str.strip,
-            exclude_patterns.splitlines()
-        ))
+        self.exclude_patterns = []
+        for _line in (exclude_patterns_str or '').splitlines():
+            line = _line.strip()
+            if line != '':
+                self.exclude_patterns.append(line)
         # translate exclude patterns to regular expressions
         self.exclude_patterns_re = [
             pattern_to_regex(pattern, '')
