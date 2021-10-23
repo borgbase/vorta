@@ -90,7 +90,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 profile.save()
 
         self.app.scheduler.set_timer_for_profile(profile.id)
-        self._draw_next_scheduled_backup()
+        self.draw_next_scheduled_backup()
 
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
@@ -134,9 +134,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.populate_wifi()
         self.populate_logs()
-        self._draw_next_scheduled_backup()
+        self.draw_next_scheduled_backup()
 
-    def _draw_next_scheduled_backup(self):
+    def draw_next_scheduled_backup(self):
         self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
         self.nextBackupDateTimeLabel.repaint()
 

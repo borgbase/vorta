@@ -21,10 +21,11 @@ class VortaScheduler(QtCore.QObject):
         self.timers = dict()  # keep mapping of profiles to timers
         self.reload_all_timers()
 
-        # Set additional timer to make sure background tasks stay scheduled
+        # Set additional timer to make sure background tasks stay scheduled.
+        # E.g. after hibernation
         self.qt_timer = QtCore.QTimer()
         self.qt_timer.timeout.connect(self.reload_all_timers)
-        self.qt_timer.setInterval(45 * 60 * 1000)
+        self.qt_timer.setInterval(15 * 60 * 1000)
         self.qt_timer.start()
 
     def cancel_all_jobs(self):
@@ -79,7 +80,7 @@ class VortaScheduler(QtCore.QObject):
                 and last_run_log is not None \
                 and last_run_log.start_time + timedelta(**interval) < dt.now():
             logger.debug('Catching up by running job for %s', profile.name)
-            self.create_backup(profile.id, profile.repo.id)
+            self.create_backup(profile.id)
 
         # If the job never ran, use midnight as random starting point
         if last_run_log is None:
@@ -174,6 +175,7 @@ class VortaScheduler(QtCore.QObject):
         else:
             notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
             logger.error('Error during backup creation.')
+            self.set_timer_for_profile(profile_id)
 
     def post_backup_tasks(self, profile_id):
         """
@@ -209,4 +211,5 @@ class VortaScheduler(QtCore.QObject):
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
                 self.jobs_manager.add_job(job)
 
+        self.set_timer_for_profile(profile_id)
         logger.info('Finished background task for profile %s', profile.name)
