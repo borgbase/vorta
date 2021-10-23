@@ -175,7 +175,8 @@ class VortaScheduler(QtCore.QObject):
         else:
             notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
             logger.error('Error during backup creation.')
-            self.set_timer_for_profile(profile_id)
+
+        self.set_timer_for_profile(profile_id)
 
     def post_backup_tasks(self, profile_id):
         """
@@ -211,5 +212,4 @@ class VortaScheduler(QtCore.QObject):
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
                 self.jobs_manager.add_job(job)
 
-        self.set_timer_for_profile(profile_id)
         logger.info('Finished background task for profile %s', profile.name)

@@ -24,7 +24,7 @@ temp_mutex = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
-FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
+FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 """
 All methods in this class must be thread safe. Particularly,
