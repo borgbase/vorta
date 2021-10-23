@@ -134,7 +134,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.populate_wifi()
         self.populate_logs()
-        self.draw_next_scheduled_backup()
 
     def draw_next_scheduled_backup(self):
         self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))

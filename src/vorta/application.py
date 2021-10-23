@@ -177,6 +177,7 @@ class VortaApp(QtSingleApplication):
             borg_compat.set_version(result['data']['version'], result['data']['path'])
             self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
             self.main_window.repoTab.toggle_available_compression()
+            self.scheduler.reload_all_timers()  # Start timer after Borg version is set.
         else:
             self._alert_missing_borg()
 

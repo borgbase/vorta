@@ -20,7 +20,6 @@ class VortaScheduler(QtCore.QObject):
         self.jobs_manager = JobsManager()  # push scheduled jobs to JobManager for execution
         self.timers = dict()  # keep mapping of profiles to timers
         self.parent = parent
-        self.reload_all_timers()
 
         # Set additional timer to make sure background tasks stay scheduled.
         # E.g. after hibernation
@@ -81,6 +80,7 @@ class VortaScheduler(QtCore.QObject):
                 and last_run_log.start_time + timedelta(**interval) < dt.now():
             logger.debug('Catching up by running job for %s', profile.name)
             self.create_backup(profile.id)
+            return
 
         # If the job never ran, use midnight as random starting point
         if last_run_log is None:
