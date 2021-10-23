@@ -101,7 +101,7 @@ class VortaScheduler(QtCore.QObject):
         timer_ms = (next_run - dt.now()).total_seconds() * 1000
         timer = QtCore.QTimer()
         timer.setSingleShot(True)
-        timer.setInterval(timer_ms)
+        timer.setInterval(int(timer_ms))
         timer.timeout.connect(lambda: self.create_backup(profile_id))
         timer.start()
         self.timers[profile_id] = {'qtt': timer, 'dt': next_run}
