@@ -107,7 +107,6 @@ class VortaApp(QtSingleApplication):
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
-        self.scheduler.shutdown()
         del self.main_window
         self.tray.deleteLater()
         del self.tray

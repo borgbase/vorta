@@ -180,6 +180,7 @@ class BorgJob(Job, BackupProfileMixin):
         ret['repo_url'] = profile.repo.url
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
+        ret['profile_id'] = profile.id
 
         ret['ok'] = True
 
@@ -205,9 +206,9 @@ class BorgJob(Job, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        log_entry = EventLogModel(category='borg-run',
+        log_entry = EventLogModel(category=self.params.get('category', 'user'),
                                   subcommand=self.cmd[1],
-                                  profile=self.params.get('profile_name', None)
+                                  profile=self.params.get('profile_id', None)
                                   )
         log_entry.save()
         logger.info('Running command %s', ' '.join(self.cmd))

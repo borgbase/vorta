@@ -1,9 +1,7 @@
 import logging
-from datetime import date, timedelta
+from datetime import datetime as dt, date, timedelta
 
 from PyQt5 import QtCore
-from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import cron
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.job_scheduler import DEBUG, JobsManager
@@ -17,18 +15,15 @@ from vorta.notifications import VortaNotifications
 logger = logging.getLogger(__name__)
 
 
-# TODO: refactor to use QtCore.QTimer directly
-class VortaScheduler(QtScheduler):
+class VortaScheduler(QtCore.QObject):
     def __init__(self, parent):
-        super().__init__()
-        self.app = parent
-        self.start()
-        self.jobs_manager = JobsManager()
-        self.reload()
+        self.jobs_manager = JobsManager()  # push scheduled jobs to JobManager for execution
+        self.timers = dict()  # keep mapping of profiles to timers
+        self.reload_all_timers()
 
-        # Set timer to make sure background tasks are scheduled
+        # Set additional timer to make sure background tasks stay scheduled
         self.qt_timer = QtCore.QTimer()
-        self.qt_timer.timeout.connect(self.reload)
+        self.qt_timer.timeout.connect(self.reload_all_timers)
         self.qt_timer.setInterval(45 * 60 * 1000)
         self.qt_timer.start()
 
@@ -41,77 +36,110 @@ class VortaScheduler(QtScheduler):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
-    def reload(self):
+    def set_timer_for_profile(self, profile_id):
+        """
+        Set a timer for next scheduled backup run of this profile.
+
+        Does nothing if set to manual backups or no repo is assigned.
+
+        Else will look for previous scheduled backups and catch up if
+        schedule_make_up_missed is enabled.
+
+        Or, if catch-up is not enabled, will add interval to last run to find
+        next suitable backup time.
+        """
+
+        # Stop and remove any existing timer for this profile
+        if profile_id in self.timers:
+            self.timers[profile_id]['qtt'].stop()
+            del self.timers[profile_id]
+
+        profile = BackupProfileModel.get_or_none(id=profile_id)
+        if profile is None \
+                or profile.repo is None \
+                or profile.schedule_mode == 'off':
+            return
+
+        logger.info('Setting timer for profile %s', profile_id)
+
+        last_run_log = EventLogModel.select().where(
+            EventLogModel.subcommand == 'create',
+            EventLogModel.category == 'scheduled',
+            EventLogModel.profile == profile.id,
+        ).order_by(EventLogModel.start_time.desc()).first()
+
+        # Desired interval between scheduled backups. Uses datetime.timedelta() units.
+        if profile.schedule_mode == 'interval':
+            interval = {profile.schedule_interval_unit: profile.schedule_interval_count}
+        elif profile.schedule_mode == 'fixed':
+            interval = {'days': 1}
+
+        # If last run was too long ago and catch-up is enabled, run now
+        if profile.schedule_make_up_missed \
+                and last_run_log is not None \
+                and last_run_log.start_time + timedelta(**interval) < dt.now():
+            logger.debug('Catching up by running job for %s', profile.name)
+            self.create_backup(profile.id, profile.repo.id)
+
+        # If the job never ran, use midnight as random starting point
+        if last_run_log is None:
+            last_run = dt.now().replace(hour=0, minute=0)
+        else:
+            last_run = last_run_log.start_time
+
+        # Fixed time is a special case of days=1 interval
+        if profile.schedule_mode == 'fixed':
+            last_run = last_run.replace(hour=profile.schedule_fixed_hour, minute=profile.schedule_fixed_minute)
+
+        # Add interval to last run time to arrive at next run.
+        next_run = last_run
+        while next_run < dt.now():
+            next_run += timedelta(**interval)
+
+        logger.debug('Scheduling next run for %s', next_run)
+        timer_ms = (next_run - dt.now()).total_seconds() * 1000
+        timer = QtCore.QTimer()
+        timer.setSingleShot(True)
+        timer.setInterval(timer_ms)
+        timer.timeout.connect(lambda: self.create_backup(profile_id))
+        timer.start()
+        self.timers[profile_id] = {'qtt': timer, 'dt': next_run}
+
+    def reload_all_timers(self):
+        logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
-            trigger = None
-            job_id = f'{profile.id}'
-            if profile.schedule_mode == 'interval':
-                if profile.schedule_interval_hours >= 24:
-                    days = profile.schedule_interval_hours // 24
-                    leftover_hours = profile.schedule_interval_hours % 24
-
-                    if leftover_hours == 0:
-                        cron_hours = '1'
-                    else:
-                        cron_hours = f'*/{leftover_hours}'
-
-                    trigger = cron.CronTrigger(day=f'*/{days}',
-                                               hour=cron_hours,
-                                               minute=profile.schedule_interval_minutes)
-                else:
-                    trigger = cron.CronTrigger(hour=f'*/{profile.schedule_interval_hours}',
-                                               minute=profile.schedule_interval_minutes)
-            elif profile.schedule_mode == 'fixed':
-                trigger = cron.CronTrigger(hour=profile.schedule_fixed_hour,
-                                           minute=profile.schedule_fixed_minute)
-            if self.get_job(job_id) is not None and trigger is not None:
-                self.reschedule_job(job_id, trigger=trigger)
-                logger.debug('Job for profile %s was rescheduled.', profile.name)
-            elif trigger is not None:
-                if profile.repo is not None:
-                    repo_id = profile.repo.id
-                else:
-                    repo_id = -1
-                self.add_job(
-                    func=self.create_backup,
-                    args=[profile.id, repo_id],
-                    trigger=trigger,
-                    id=job_id,
-                    misfire_grace_time=180
-                )
-                logger.debug('New job for profile %s was added.', profile.name)
-            elif self.get_job(job_id) is not None and trigger is None:
-                self.remove_job(job_id)
-                logger.debug('Job for profile %s was removed.', profile.name)
+            self.set_timer_for_profile(profile.id)
 
     @property
     def next_job(self):
-        self.wakeup()
-        self._process_jobs()
-        jobs = []
-        for job in self.get_jobs():
-            jobs.append((job.next_run_time, job.id))
+        next_job = dt.now()
+        next_profile = None
+        for profile_id, timer in self.timers.items():
+            if timer['dt'] > next_job and timer['qtt'].isActive():
+                next_job = timer['dt']
+                next_profile = profile_id
 
-        if jobs:
-            jobs.sort(key=lambda job: job[0])
-            profile = BackupProfileModel.get(id=int(jobs[0][1]))
-            return f"{jobs[0][0].strftime('%H:%M')} ({profile.name})"
+        if next_profile is not None:
+            profile = BackupProfileModel.get_or_none(id=next_profile)
+            return f"{next_job.strftime('%H:%M')} ({profile.name})"
         else:
             return self.tr('None scheduled')
 
     def next_job_for_profile(self, profile_id):
-        self.wakeup()
-        job = self.get_job(str(profile_id))
+        job = self.timers.get(profile_id)
         if job is None:
             return self.tr('None scheduled')
         else:
-            return job.next_run_time.strftime('%Y-%m-%d %H:%M')
+            return job['dt'].strftime('%Y-%m-%d %H:%M')
 
-    def create_backup(self, profile_id, repo_id):
-        if DEBUG:
-            print("start backup for profile ", profile_id)
+    def create_backup(self, profile_id):
+        logger.debug('Start scheduled backup for profile %s', profile_id)
         notifier = VortaNotifications.pick()
-        profile = BackupProfileModel.get(id=profile_id)
+        profile = BackupProfileModel.get_or_none(id=profile_id)
+
+        if profile is None:
+            logger.info('Profile not found. Maybe deleted?')
+            return
 
         logger.info('Starting background backup for %s', profile.name)
         notifier.deliver(self.tr('Vorta Backup'),
@@ -120,7 +148,8 @@ class VortaScheduler(QtScheduler):
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
             logger.info('Preparation for backup successful.')
-            job = BorgCreateJob(msg['cmd'], msg, repo_id)
+            msg['category'] = 'scheduled'
+            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             job.result.connect(self.notify)
             self.jobs_manager.add_job(job)
 

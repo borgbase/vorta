@@ -16,7 +16,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 17
+SCHEMA_VERSION = 18
 
 db = pw.Proxy()
 
@@ -75,10 +75,11 @@ class BackupProfileModel(pw.Model):
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
-    schedule_interval_hours = pw.IntegerField(default=3)
-    schedule_interval_minutes = pw.IntegerField(default=42)
+    schedule_interval_count = pw.IntegerField(default=3)
+    schedule_interval_unit = pw.CharField(default='hours')
     schedule_fixed_hour = pw.IntegerField(default=3)
     schedule_fixed_minute = pw.IntegerField(default=42)
+    schedule_make_up_missed = pw.BooleanField(default=True)
     validation_on = pw.BooleanField(default=True)
     validation_weeks = pw.IntegerField(default=3)
     prune_on = pw.BooleanField(default=False)
@@ -412,6 +413,17 @@ def init_db(con=None):
             current_schema, 17,
             migrator.add_column(RepoModel._meta.table_name,
                                 'create_backup_cmd', pw.CharField(default=''))
+        )
+
+    if current_schema.version < 18:
+        _apply_schema_update(
+            current_schema, 18,
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_interval_unit', pw.CharField(default='hours')),
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_interval_count', pw.IntegerField(default=3)),
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_make_up_missed', pw.BooleanField(default=False))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.
