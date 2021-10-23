@@ -73,7 +73,6 @@ class VortaApp(QtSingleApplication):
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        self.backup_cancelled_event.connect(self.scheduler.cancel_all_jobs)
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
@@ -146,6 +145,7 @@ class VortaApp(QtSingleApplication):
             self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
+        self.scheduler.cancel_all_jobs()
         self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):

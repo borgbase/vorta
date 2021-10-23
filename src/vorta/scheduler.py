@@ -29,8 +29,7 @@ class VortaScheduler(QtCore.QObject):
         self.qt_timer.start()
 
     def cancel_all_jobs(self):
-        if DEBUG:
-            print("Cancel all Jobs on Vorta Queue")
+        logger.debug('Cancelling all jobs on job queue')
         self.jobs_manager.cancel_all_jobs()
 
     def tr(self, *args, **kwargs):

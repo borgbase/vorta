@@ -249,7 +249,7 @@
            <item>
             <widget class="QCheckBox" name="missedBackupsCheckBox">
              <property name="text">
-              <string>Run missed backups right after startup or wakeup. </string>
+              <string>Run missed backups right after startup or wakeup</string>
              </property>
             </widget>
            </item>
