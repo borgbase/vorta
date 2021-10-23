@@ -8,7 +8,6 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta as rd
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
@@ -433,5 +432,5 @@ def init_db(con=None):
         s.save()
 
     # Delete old log entries after 3 months.
-    three_months_ago = datetime.now() - rd(months=3)
+    three_months_ago = datetime.now() - timedelta(days=3)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago).execute()
