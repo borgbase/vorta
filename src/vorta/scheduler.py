@@ -16,15 +16,14 @@ logger = logging.getLogger(__name__)
 
 
 class VortaScheduler(QtCore.QObject):
-    def __init__(self, parent):
+    def __init__(self):
         super().__init__()
         self.jobs_manager = JobsManager()  # push scheduled jobs to JobManager for execution
         self.timers = dict()  # keep mapping of profiles to timers
-        self.parent = parent
 
         # Set additional timer to make sure background tasks stay scheduled.
         # E.g. after hibernation
-        self.qt_timer = QtCore.QTimer(self.parent)
+        self.qt_timer = QtCore.QTimer()
         self.qt_timer.timeout.connect(self.reload_all_timers)
         self.qt_timer.setInterval(15 * 60 * 1000)
         self.qt_timer.start()
@@ -89,6 +88,9 @@ class VortaScheduler(QtCore.QObject):
         else:
             last_run = last_run_log.start_time
 
+        # Round up to next full minute
+        last_run = last_run.replace(second=0, microsecond=0) + timedelta(minutes=1)
+
         # Fixed time is a special case of days=1 interval
         if profile.schedule_mode == 'fixed':
             last_run = last_run.replace(hour=profile.schedule_fixed_hour, minute=profile.schedule_fixed_minute)
@@ -100,7 +102,7 @@ class VortaScheduler(QtCore.QObject):
 
         logger.debug('Scheduling next run for %s', next_run)
         timer_ms = (next_run - dt.now()).total_seconds() * 1000
-        timer = QtCore.QTimer(self.parent)
+        timer = QtCore.QTimer()
         timer.setSingleShot(True)
         timer.setInterval(int(timer_ms))
         timer.timeout.connect(lambda: self.create_backup(profile_id))
