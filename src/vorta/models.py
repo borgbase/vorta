@@ -78,6 +78,8 @@ class BackupProfileModel(pw.Model):
     schedule_interval_unit = pw.CharField(default='hours')
     schedule_fixed_hour = pw.IntegerField(default=3)
     schedule_fixed_minute = pw.IntegerField(default=42)
+    schedule_interval_hours = pw.IntegerField(default=3)  # no longer used
+    schedule_interval_minutes = pw.IntegerField(default=42)  # no longer used
     schedule_make_up_missed = pw.BooleanField(default=True)
     validation_on = pw.BooleanField(default=True)
     validation_weeks = pw.IntegerField(default=3)

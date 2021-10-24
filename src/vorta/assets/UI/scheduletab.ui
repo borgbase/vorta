@@ -195,7 +195,7 @@
            <item>
             <widget class="QLabel" name="nextBackupDateTimeLabel">
              <property name="text">
-              <string>Off</string>
+              <string>-</string>
              </property>
             </widget>
            </item>
@@ -337,8 +337,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>282</width>
+        <height>146</height>
        </rect>
       </property>
       <attribute name="label">
@@ -398,8 +398,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>98</width>
+        <height>86</height>
        </rect>
       </property>
       <attribute name="label">
@@ -460,8 +460,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>494</width>
+        <height>288</height>
        </rect>
       </property>
       <attribute name="label">
