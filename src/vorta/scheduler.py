@@ -66,7 +66,7 @@ class VortaScheduler(QtCore.QObject):
             EventLogModel.subcommand == 'create',
             EventLogModel.category == 'scheduled',
             EventLogModel.profile == profile.id,
-        ).order_by(EventLogModel.start_time.desc()).first()
+        ).order_by(EventLogModel.end_time.desc()).first()
 
         # Desired interval between scheduled backups. Uses datetime.timedelta() units.
         if profile.schedule_mode == 'interval':
@@ -77,7 +77,7 @@ class VortaScheduler(QtCore.QObject):
         # If last run was too long ago and catch-up is enabled, run now
         if profile.schedule_make_up_missed \
                 and last_run_log is not None \
-                and last_run_log.start_time + timedelta(**interval) < dt.now():
+                and last_run_log.end_time + timedelta(**interval) < dt.now():
             logger.debug('Catching up by running job for %s', profile.name)
             self.create_backup(profile.id)
             return
@@ -86,7 +86,7 @@ class VortaScheduler(QtCore.QObject):
         if last_run_log is None:
             last_run = dt.now().replace(hour=0, minute=0)
         else:
-            last_run = last_run_log.start_time
+            last_run = last_run_log.end_time
 
         # Squash seconds to get nice starting time
         last_run = last_run.replace(second=0, microsecond=0)

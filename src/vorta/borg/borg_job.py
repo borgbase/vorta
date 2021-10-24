@@ -7,6 +7,7 @@ import shlex
 import select
 import time
 import logging
+from datetime import datetime as dt
 from collections import namedtuple
 from threading import Lock
 from PyQt5 import QtCore
@@ -286,6 +287,7 @@ class BorgJob(Job, BackupProfileMixin):
 
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
+        log_entry.end_time = dt.now()
         log_entry.save()
 
         self.process_result(result)

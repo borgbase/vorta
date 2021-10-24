@@ -150,6 +150,7 @@ class WifiSettingModel(pw.Model):
 class EventLogModel(pw.Model):
     """Keep a log of background jobs."""
     start_time = pw.DateTimeField(default=datetime.now)
+    end_time = pw.DateTimeField(default=datetime.now)
     category = pw.CharField()
     subcommand = pw.CharField(null=True)
     message = pw.CharField(null=True)
@@ -424,7 +425,9 @@ def init_db(con=None):
             migrator.add_column(BackupProfileModel._meta.table_name,
                                 'schedule_interval_count', pw.IntegerField(default=3)),
             migrator.add_column(BackupProfileModel._meta.table_name,
-                                'schedule_make_up_missed', pw.BooleanField(default=False))
+                                'schedule_make_up_missed', pw.BooleanField(default=False)),
+            migrator.add_column(EventLogModel._meta.table_name,
+                                'end_time', pw.DateTimeField(default=datetime.now))
         )
 
     # Create missing settings and update labels. Leave setting values untouched.
