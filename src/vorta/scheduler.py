@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class VortaScheduler(QtCore.QObject):
     def __init__(self, parent):
+        super().__init__()
         self.jobs_manager = JobsManager()  # push scheduled jobs to JobManager for execution
         self.timers = dict()  # keep mapping of profiles to timers
         self.parent = parent
