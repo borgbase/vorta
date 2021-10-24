@@ -88,8 +88,8 @@ class VortaScheduler(QtCore.QObject):
         else:
             last_run = last_run_log.start_time
 
-        # Round up to next full minute
-        last_run = last_run.replace(second=0, microsecond=0) + timedelta(minutes=1)
+        # Squash seconds to get nice starting time
+        last_run = last_run.replace(second=0, microsecond=0)
 
         # Fixed time is a special case of days=1 interval
         if profile.schedule_mode == 'fixed':
@@ -97,7 +97,8 @@ class VortaScheduler(QtCore.QObject):
 
         # Add interval to last run time to arrive at next run.
         next_run = last_run
-        while next_run < dt.now():
+        now = dt.now()
+        while next_run < now:
             next_run += timedelta(**interval)
 
         logger.debug('Scheduling next run for %s', next_run)
