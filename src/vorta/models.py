@@ -8,7 +8,6 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta as rd
 
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
@@ -16,7 +15,7 @@ from playhouse.migrate import SqliteMigrator, migrate
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
-SCHEMA_VERSION = 17
+SCHEMA_VERSION = 18
 
 db = pw.Proxy()
 
@@ -75,10 +74,13 @@ class BackupProfileModel(pw.Model):
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
-    schedule_interval_hours = pw.IntegerField(default=3)
-    schedule_interval_minutes = pw.IntegerField(default=42)
+    schedule_interval_count = pw.IntegerField(default=3)
+    schedule_interval_unit = pw.CharField(default='hours')
     schedule_fixed_hour = pw.IntegerField(default=3)
     schedule_fixed_minute = pw.IntegerField(default=42)
+    schedule_interval_hours = pw.IntegerField(default=3)  # no longer used
+    schedule_interval_minutes = pw.IntegerField(default=42)  # no longer used
+    schedule_make_up_missed = pw.BooleanField(default=True)
     validation_on = pw.BooleanField(default=True)
     validation_weeks = pw.IntegerField(default=3)
     prune_on = pw.BooleanField(default=False)
@@ -148,6 +150,7 @@ class WifiSettingModel(pw.Model):
 class EventLogModel(pw.Model):
     """Keep a log of background jobs."""
     start_time = pw.DateTimeField(default=datetime.now)
+    end_time = pw.DateTimeField(default=datetime.now)
     category = pw.CharField()
     subcommand = pw.CharField(null=True)
     message = pw.CharField(null=True)
@@ -414,6 +417,19 @@ def init_db(con=None):
                                 'create_backup_cmd', pw.CharField(default=''))
         )
 
+    if current_schema.version < 18:
+        _apply_schema_update(
+            current_schema, 18,
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_interval_unit', pw.CharField(default='hours')),
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_interval_count', pw.IntegerField(default=3)),
+            migrator.add_column(BackupProfileModel._meta.table_name,
+                                'schedule_make_up_missed', pw.BooleanField(default=False)),
+            migrator.add_column(EventLogModel._meta.table_name,
+                                'end_time', pw.DateTimeField(default=datetime.now))
+        )
+
     # Create missing settings and update labels. Leave setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
@@ -421,5 +437,5 @@ def init_db(con=None):
         s.save()
 
     # Delete old log entries after 3 months.
-    three_months_ago = datetime.now() - rd(months=3)
+    three_months_ago = datetime.now() - timedelta(days=3)
     EventLogModel.delete().where(EventLogModel.start_time < three_months_ago).execute()

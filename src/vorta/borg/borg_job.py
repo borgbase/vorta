@@ -7,6 +7,7 @@ import shlex
 import select
 import time
 import logging
+from datetime import datetime as dt
 from collections import namedtuple
 from threading import Lock
 from PyQt5 import QtCore
@@ -24,7 +25,7 @@ temp_mutex = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
-FakeProfile = namedtuple('FakeProfile', ['repo', 'name', 'ssh_key'])
+FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 """
 All methods in this class must be thread safe. Particularly,
@@ -180,6 +181,7 @@ class BorgJob(Job, BackupProfileMixin):
         ret['repo_url'] = profile.repo.url
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
+        ret['profile_id'] = profile.id
 
         ret['ok'] = True
 
@@ -205,9 +207,9 @@ class BorgJob(Job, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        log_entry = EventLogModel(category='borg-run',
+        log_entry = EventLogModel(category=self.params.get('category', 'user'),
                                   subcommand=self.cmd[1],
-                                  profile=self.params.get('profile_name', None)
+                                  profile=self.params.get('profile_id', None)
                                   )
         log_entry.save()
         logger.info('Running command %s', ' '.join(self.cmd))
@@ -285,6 +287,7 @@ class BorgJob(Job, BackupProfileMixin):
 
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
+        log_entry.end_time = dt.now()
         log_entry.save()
 
         self.process_result(result)

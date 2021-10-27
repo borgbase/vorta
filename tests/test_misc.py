@@ -19,7 +19,7 @@ def test_autostart(qapp, qtbot):
             if checkbox.text().startswith("Automatically"):
                 # Have to use pos to click checkbox correctly
                 # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
-                qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton, pos=QtCore.QPoint(2, checkbox.height() / 2))
+                qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2)))
                 break
 
     click_autostart()
