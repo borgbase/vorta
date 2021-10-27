@@ -39,13 +39,27 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
 
+        # Scheduler intervals we know
+        self.scheduleIntervalUnit.addItem(self.tr('Minutes'), 'minutes')
+        self.scheduleIntervalUnit.addItem(self.tr('Hours'), 'hours')
+        self.scheduleIntervalUnit.addItem(self.tr('Days'), 'days')
+        self.scheduleIntervalUnit.addItem(self.tr('Weeks'), 'weeks')
+
         # Populate with data
         self.populate_from_profile()
         self.set_icons()
 
         # Connect events
-        self.scheduleApplyButton.clicked.connect(self.on_scheduler_apply)
         self.app.backup_finished_event.connect(self.populate_logs)
+
+        # Scheduler events
+        for label, obj in self.schedulerRadioMapping.items():
+            obj.clicked.connect(self.on_scheduler_change)
+        self.scheduleIntervalCount.valueChanged.connect(self.on_scheduler_change)
+        self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
+        self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
+
+        # Network and shell commands events
         self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
             lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, new_val))
         self.postBackupCmdLineEdit.textEdited.connect(
@@ -54,6 +68,29 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val))
         self.createCmdLineEdit.textEdited.connect(
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val))
+        self.missedBackupsCheckBox.stateChanged.connect(
+            lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val))
+        self.pruneCheckBox.stateChanged.connect(
+            lambda new_val, attr='prune_on': self.save_profile_attr(attr, new_val))
+        self.validationCheckBox.stateChanged.connect(
+            lambda new_val, attr='validation_on': self.save_profile_attr(attr, new_val))
+        self.validationWeeksCount.valueChanged.connect(
+            lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val))
+
+    def on_scheduler_change(self, _):
+        profile = self.profile()
+        # Save scheduler settings, apply new scheduler and display next task for profile.
+        for label, obj in self.schedulerRadioMapping.items():
+            if obj.isChecked():
+                profile.schedule_mode = label
+                profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
+                profile.schedule_interval_count = self.scheduleIntervalCount.value()
+                qtime = self.scheduleFixedTime.time()
+                profile.schedule_fixed_hour, profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
+                profile.save()
+
+        self.app.scheduler.set_timer_for_profile(profile.id)
+        self.draw_next_scheduled_backup()
 
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
@@ -66,20 +103,26 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         profile = self.profile()
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
 
-        self.scheduleIntervalHours.setValue(profile.schedule_interval_hours)
-        self.scheduleIntervalMinutes.setValue(profile.schedule_interval_minutes)
+        # Set interval scheduler options
+        self.scheduleIntervalUnit.setCurrentIndex(
+            self.scheduleIntervalUnit.findData(profile.schedule_interval_unit))
+        self.scheduleIntervalCount.setValue(profile.schedule_interval_count)
+
+        # Set fixed daily time scheduler options
         self.scheduleFixedTime.setTime(
             QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
 
-        # Set checking options
-        self.validationCheckBox.setCheckState(profile.validation_on)
-        self.validationSpinBox.setValue(profile.validation_weeks)
+        # Set borg-check options
+        self.validationCheckBox.setCheckState(QtCore.Qt.Checked if profile.validation_on else QtCore.Qt.Unchecked)
+        self.validationWeeksCount.setValue(profile.validation_weeks)
 
-        self.pruneCheckBox.setCheckState(profile.prune_on)
-        self.validationCheckBox.setTristate(False)
-        self.pruneCheckBox.setTristate(False)
-
-        self.dontRunOnMeteredNetworksCheckBox.setChecked(profile.dont_run_on_metered_networks)
+        # Other checkbox options
+        self.pruneCheckBox.setCheckState(
+            QtCore.Qt.Checked if profile.prune_on else QtCore.Qt.Unchecked)
+        self.missedBackupsCheckBox.setCheckState(
+            QtCore.Qt.Checked if profile.schedule_make_up_missed else QtCore.Qt.Unchecked)
+        self.dontRunOnMeteredNetworksCheckBox.setChecked(
+            QtCore.Qt.Checked if profile.dont_run_on_metered_networks else QtCore.Qt.Unchecked)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
@@ -89,9 +132,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         else:
             self.createCmdLineEdit.setEnabled(False)
 
-        self._draw_next_scheduled_backup()
         self.populate_wifi()
         self.populate_logs()
+
+    def draw_next_scheduled_backup(self):
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
+        self.nextBackupDateTimeLabel.repaint()
 
     def populate_wifi(self):
         self.wifiListWidget.clear()
@@ -135,27 +181,3 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             self.logTableWidget.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
             self.logTableWidget.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
         self.logTableWidget.setSortingEnabled(sorting)      # restore sorting now that modifications are done
-
-    def _draw_next_scheduled_backup(self):
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
-        self.nextBackupDateTimeLabel.repaint()
-
-    def on_scheduler_apply(self):
-        profile = self.profile()
-
-        # Save checking options
-        profile.validation_weeks = self.validationSpinBox.value()
-        profile.validation_on = self.validationCheckBox.isChecked()
-        profile.prune_on = self.pruneCheckBox.isChecked()
-
-        # Save scheduler timing and activate if needed.
-        for label, obj in self.schedulerRadioMapping.items():
-            if obj.isChecked():
-                profile.schedule_mode = label
-                profile.schedule_interval_hours = self.scheduleIntervalHours.value()
-                profile.schedule_interval_minutes = self.scheduleIntervalMinutes.value()
-                qtime = self.scheduleFixedTime.time()
-                profile.schedule_fixed_hour, profile.schedule_fixed_minute = qtime.hour(), qtime.minute()
-                profile.save()
-                self.app.scheduler.reload()
-                self._draw_next_scheduled_backup()

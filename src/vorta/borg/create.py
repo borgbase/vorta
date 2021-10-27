@@ -1,7 +1,7 @@
 import os
 import tempfile
-from dateutil import parser
 import subprocess
+from datetime import datetime as dt
 
 from vorta.i18n import trans_late
 from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
@@ -16,7 +16,7 @@ class BorgCreateJob(BorgJob):
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
                     'name': result['data']['archive']['name'],
-                    'time': parser.parse(result['data']['archive']['start']),
+                    'time': dt.fromisoformat(result['data']['archive']['start']),
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size']

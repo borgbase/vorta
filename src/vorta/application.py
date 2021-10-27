@@ -57,7 +57,7 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
-        self.scheduler = VortaScheduler(self)
+        self.scheduler = VortaScheduler()
 
         self.setApplicationName("Vorta")
 
@@ -73,7 +73,6 @@ class VortaApp(QtSingleApplication):
         elif SettingsModel.get(key='foreground').value:
             self.open_main_window_action()
 
-        self.backup_cancelled_event.connect(self.scheduler.cancel_all_jobs)
         self.backup_started_event.connect(self.backup_started_event_response)
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
@@ -107,7 +106,6 @@ class VortaApp(QtSingleApplication):
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
-        self.scheduler.shutdown()
         del self.main_window
         self.tray.deleteLater()
         del self.tray
@@ -147,6 +145,7 @@ class VortaApp(QtSingleApplication):
             self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
+        self.scheduler.cancel_all_jobs()
         self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):
@@ -178,6 +177,7 @@ class VortaApp(QtSingleApplication):
             borg_compat.set_version(result['data']['version'], result['data']['path'])
             self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
             self.main_window.repoTab.toggle_available_compression()
+            self.scheduler.reload_all_timers()  # Start timer after Borg version is set.
         else:
             self._alert_missing_borg()
 

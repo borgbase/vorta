@@ -36,12 +36,9 @@
         "dependencies/python3-borgbackup.json",
         "dependencies/python3-llfuse.json",
         "dependencies/python3-appdirs.json",
-        "dependencies/python3-apscheduler.json",
         "dependencies/python3-paramiko.json",
         "dependencies/python3-peewee.json",
         "dependencies/python3-psutil.json",
-        "dependencies/python3-python-dateutil.json",
-        "dependencies/python3-qdarkstyle.json",
         "dependencies/python3-secretstorage.json",
         "dependencies/python3-pytest-runner.json",
         {

@@ -72,7 +72,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
     yield
-    qapp.backup_cancelled_event.emit()
+    # qapp.backup_cancelled_event.emit()
     qtbot.waitUntil(lambda: not vorta.borg.job_scheduler.JobsManager.is_worker_running())
     mock_db.close()
 

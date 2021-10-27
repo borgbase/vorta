@@ -16,6 +16,7 @@ class BorgInfoRepoJob(BorgJob):
 
         # Build fake profile because we don't have it in the DB yet. Assume unencrypted.
         profile = FakeProfile(
+            999,
             FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'),
             'New Repo',
             params['ssh_key']

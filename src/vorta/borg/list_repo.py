@@ -1,4 +1,4 @@
-from dateutil import parser
+from datetime import datetime as dt
 from .borg_job import BorgJob
 from vorta.models import ArchiveModel, RepoModel
 
@@ -49,7 +49,7 @@ class BorgListRepoJob(BorgJob):
                     repo=repo.id,
                     defaults={
                         'name': archive['name'],
-                        'time': parser.parse(archive['time'])
+                        'time': dt.fromisoformat(archive['time'])
                     }
                 )
                 new_archive.save()
