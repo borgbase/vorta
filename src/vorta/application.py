@@ -90,7 +90,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            self.job_create_backup_action(profile_id=profile.id)
+            self.create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 

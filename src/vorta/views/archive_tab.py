@@ -119,7 +119,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return menu
 
         if archive_name in self.mount_points:
-            unmountAction = menu.addAction("Unmount", self.job_umount_action)
+            unmountAction = menu.addAction("Unmount", self.umount_action)
             unmountAction.setIcon(get_colored_icon('eject'))
         else:
             mountAction = menu.addAction("Mount", self.mount_action)
