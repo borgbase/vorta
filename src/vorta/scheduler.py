@@ -150,18 +150,27 @@ class VortaScheduler(QtCore.QObject):
         notifier.deliver(self.tr('Vorta Backup'),
                          self.tr('Starting background backup for %s.') % profile.name,
                          level='info')
-        msg = BorgCreateJob.prepare(profile)
-        if msg['ok']:
-            logger.info('Preparation for backup successful.')
-            msg['category'] = 'scheduled'
-            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
-            job.result.connect(self.notify)
-            self.jobs_manager.add_job(job)
 
-        else:
-            logger.error('Conditions for backup not met. Aborting.')
-            logger.error(msg['message'])
-            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+        query = BackupProfileMixin.get_repos(profile.id)
+        if len(query) == 0:
+            msg = self.tr('messages', 'Add a backup repository first.')
+            notifier = VortaNotifications.pick()
+            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg), level='error')
+            self.backup_progress_event.emit(translate('messages', msg))
+
+        for prof_x_repo in query:
+            msg = BorgCreateJob.prepare(profile, prof_x_repo.repo)
+            if msg['ok']:
+                logger.info('Preparation for backup successful.')
+                msg['category'] = 'scheduled'
+                job = BorgCreateJob(msg['cmd'], msg, prof_x_repo.repo.id)
+                job.result.connect(self.notify)
+                self.jobs_manager.add_job(job)
+
+            else:
+                logger.error('Conditions for backup not met. Aborting.')
+                logger.error(msg['message'])
+                notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
         if DEBUG:
             print("End backup for profile ", profile_id)
 
@@ -169,35 +178,37 @@ class VortaScheduler(QtCore.QObject):
         notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
         profile_id = result['params']['profile']
+        repo_url = result['params']['repo_url']
+        repo = BackupProfileMixin.get_repo(profile_id, repo_url)
 
         if result['returncode'] in [0, 1]:
             notifier.deliver(self.tr('Vorta Backup'),
                              self.tr('Backup successful for %s.') % profile_name,
                              level='info')
             logger.info('Backup creation successful.')
-            self.post_backup_tasks(profile_id)
+            self.post_backup_tasks(profile_id, repo)
         else:
             notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
             logger.error('Error during backup creation.')
 
         self.set_timer_for_profile(profile_id)
 
-    def post_backup_tasks(self, profile_id):
+    def post_backup_tasks(self, profile_id, repo):
         """
         Pruning and checking after successful backup.
         """
         profile = BackupProfileModel.get(id=profile_id)
         logger.info('Doing post-backup jobs for %s', profile.name)
         if profile.prune_on:
-            msg = BorgPruneJob.prepare(profile)
+            msg = BorgPruneJob.prepare(profile, repo)
             if msg['ok']:
-                job = BorgPruneJob(msg['cmd'], msg, profile.repo.id)
+                job = BorgPruneJob(msg['cmd'], msg, repo.id)
                 self.jobs_manager.add_job(job)
 
                 # Refresh archives
-                msg = BorgListRepoJob.prepare(profile)
+                msg = BorgListRepoJob.prepare(profile, repo)
                 if msg['ok']:
-                    job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
+                    job = BorgListRepoJob(msg['cmd'], msg, repo.id)
                     self.jobs_manager.add_job(job)
 
         validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
@@ -211,9 +222,9 @@ class VortaScheduler(QtCore.QObject):
             )
         ).count()
         if profile.validation_on and recent_validations == 0:
-            msg = BorgCheckJob.prepare(profile)
+            msg = BorgCheckJob.prepare(profile, repo)
             if msg['ok']:
-                job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
+                job = BorgCheckJob(msg['cmd'], msg, repo.id)
                 self.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)

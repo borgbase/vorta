@@ -79,7 +79,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
             lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val))
 
     def on_scheduler_change(self, _):
-        profile = self.profile()
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
         # Save scheduler settings, apply new scheduler and display next task for profile.
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
@@ -138,7 +138,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI):
         self.populate_logs()
 
     def draw_next_scheduled_backup(self):
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
+        profile = BackupProfileModel.get(id=self.window().current_profile.id)
+        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(profile.id))
         self.nextBackupDateTimeLabel.repaint()
 
     def populate_wifi(self):
