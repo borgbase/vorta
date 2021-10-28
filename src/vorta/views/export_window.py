@@ -32,7 +32,7 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
 
         self.keyring = VortaKeyring.get_keyring()
         profile = self.profile
-        prof_x_repos = BackupProfileMixin.get_repos(profile)
+        prof_x_repos = BackupProfileMixin.get_repos(profile.id)
         no_password = True
         for prof_x_repo in prof_x_repos:
             if self.keyring.get_password('vorta-repo', prof_x_repo.repo.url) is not None:

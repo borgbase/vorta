@@ -62,7 +62,7 @@ class ProfileExport:
                 repo,
                 recurse=True,
                 exclude=[BackupProfileMixin.id, BackupProfileMixin.repo.id])
-            for repo in BackupProfileMixin.get_repos(profile)]
+            for repo in BackupProfileMixin.get_repos(profile.id)]
 
         keyring = VortaKeyring.get_keyring()
         if store_password:

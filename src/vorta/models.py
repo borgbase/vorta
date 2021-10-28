@@ -219,16 +219,20 @@ class BackupProfileMixin(pw.Model):
         To test if query contains no row, test the assertion len(query) == 0
         """
 
-        if type(profile == str):
+        query = None
+
+        if type(profile) == str:
             query = cls\
                 .select(cls, RepoModel).join(RepoModel)\
                 .where(cls.profile.name == profile)
 
-        if type(profile == int):
+        elif type(profile) == int:
             query = cls\
                 .select(cls, RepoModel)\
                 .join(RepoModel)\
                 .where(cls.profile == profile)
+        else:
+            print("You must provide an int or a str and not a ", type(profile))
 
         return query
 
