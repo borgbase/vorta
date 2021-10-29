@@ -8,8 +8,6 @@ import json
 import os
 import sys
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta as rd
-
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
 
