@@ -503,7 +503,7 @@ def init_db(con=None):
                 prof_x_repo = BackupProfileMixin(profile=profile.id, repo=profile.repo.id)
                 prof_x_repo.save()
         _apply_schema_update(
-            current_schema, 18
+            current_schema, 19
         )
         # repo_id must be removed in the next update. peewee doesn't support deleting field in model and use
         # it after even if it exists in the db
