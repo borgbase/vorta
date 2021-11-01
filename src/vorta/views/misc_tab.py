@@ -2,7 +2,6 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
 
 from vorta._version import __version__
-from vorta.autostart import open_app_at_startup
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings

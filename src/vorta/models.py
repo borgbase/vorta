@@ -41,6 +41,7 @@ class JSONField(pw.TextField):
 class BaseModel(signals.Model):
     """Common model superclass."""
 
+
 class RepoModel(BaseModel):
     """A single remote repo with unique URL."""
     url = pw.CharField(unique=True)
