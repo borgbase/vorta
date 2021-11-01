@@ -45,9 +45,6 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         setting.value = bool(new_value)
         setting.save()
 
-        if key == 'autostart':
-            open_app_at_startup(new_value)
-
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
         self.borgPath.setText(path)
