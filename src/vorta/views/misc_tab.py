@@ -2,7 +2,6 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QCheckBox
 
 from vorta._version import __version__
-from vorta.autostart import open_app_at_startup
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
 from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
@@ -44,9 +43,6 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         setting = SettingsModel.get(key=key)
         setting.value = bool(new_value)
         setting.save()
-
-        if key == 'autostart':
-            open_app_at_startup(new_value)
 
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)

@@ -10,8 +10,10 @@ import sys
 from datetime import datetime, timedelta
 
 import peewee as pw
+from playhouse import signals
 from playhouse.migrate import SqliteMigrator, migrate
 
+from vorta.autostart import open_app_at_startup
 from vorta.i18n import trans_late
 from vorta.utils import slugify
 
@@ -36,7 +38,11 @@ class JSONField(pw.TextField):
         return value if value is None else json.loads(value)
 
 
-class RepoModel(pw.Model):
+class BaseModel(signals.Model):
+    """Common model superclass."""
+
+
+class RepoModel(BaseModel):
     """A single remote repo with unique URL."""
     url = pw.CharField(unique=True)
     added_at = pw.DateTimeField(default=datetime.now)
@@ -55,7 +61,7 @@ class RepoModel(pw.Model):
         database = db
 
 
-class RepoPassword(pw.Model):
+class RepoPassword(BaseModel):
     """Fallback to save repo passwords. Only used if no Keyring available."""
     url = pw.CharField(unique=True)
     password = pw.CharField()
@@ -64,7 +70,7 @@ class RepoPassword(pw.Model):
         database = db
 
 
-class BackupProfileModel(pw.Model):
+class BackupProfileModel(BaseModel):
     """Allows the user to switch between different configurations."""
     name = pw.CharField()
     added_at = pw.DateTimeField(default=datetime.now)
@@ -106,7 +112,7 @@ class BackupProfileModel(pw.Model):
         database = db
 
 
-class SourceFileModel(pw.Model):
+class SourceFileModel(BaseModel):
     """A folder to be backed up, related to a Backup Configuration."""
     dir = pw.CharField()
     dir_size = pw.BigIntegerField(default=-1)
@@ -120,7 +126,7 @@ class SourceFileModel(pw.Model):
         table_name = 'sourcedirmodel'
 
 
-class ArchiveModel(pw.Model):
+class ArchiveModel(BaseModel):
     """An archive in a remote repository."""
     snapshot_id = pw.CharField()
     name = pw.CharField()
@@ -136,7 +142,7 @@ class ArchiveModel(pw.Model):
         database = db
 
 
-class WifiSettingModel(pw.Model):
+class WifiSettingModel(BaseModel):
     """Save Wifi Settings"""
     ssid = pw.CharField()
     last_connected = pw.DateTimeField(null=True)
@@ -147,7 +153,7 @@ class WifiSettingModel(pw.Model):
         database = db
 
 
-class EventLogModel(pw.Model):
+class EventLogModel(BaseModel):
     """Keep a log of background jobs."""
     start_time = pw.DateTimeField(default=datetime.now)
     end_time = pw.DateTimeField(default=datetime.now)
@@ -163,7 +169,7 @@ class EventLogModel(pw.Model):
         database = db
 
 
-class SchemaVersion(pw.Model):
+class SchemaVersion(BaseModel):
     """Keep DB version to apply the correct migrations."""
     version = pw.IntegerField()
     changed_at = pw.DateTimeField(default=datetime.now)
@@ -172,7 +178,7 @@ class SchemaVersion(pw.Model):
         database = db
 
 
-class SettingsModel(pw.Model):
+class SettingsModel(BaseModel):
     """App settings unrelated to a single profile or repo"""
     key = pw.CharField(unique=True)
     value = pw.BooleanField(default=False)
@@ -277,6 +283,12 @@ def get_misc_settings():
             }
         ]
     return settings
+
+
+@signals.post_save(sender=SettingsModel)
+def setup_autostart(model_class, instance, created):
+    if instance.key == 'autostart':
+        open_app_at_startup(instance.value)
 
 
 def cleanup_db():
