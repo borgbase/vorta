@@ -165,7 +165,7 @@ class VortaApp(QtSingleApplication):
         if not params['ok']:
             self._alert_missing_borg()
             return
-        job = BorgVersionJob(params['cmd'], params, parent=self)
+        job = BorgVersionJob(params['cmd'], params)
         job.result.connect(self.set_borg_details_result)
         self.jobs_manager.add_job(job)
 

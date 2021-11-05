@@ -13,52 +13,12 @@ class JobStatus(Enum):
     OK = 1
     CANCEL = 2
 
-
-class Job(QObject):
-    """
-    To add a job to the vorta queue, you have to create a class which inherits Job. The inherited class
-    must override run, cancel and get_site_id. Since Job inherits from QObject, you can use pyqt signal.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.__status = JobStatus.OK  # the job can be launched. If False, the job is not run.
-
-    # Keep default
-    def set_status(self, status):
-        self.__status = status
-
-    # Keep default
-    def get_status(self):
-        return self.__status
-
-    # Must return the site id. In borg case, it is the id of the repository.
-    @abstractmethod
-    def repo_id(self):
-        pass
-
-    """
-        Cancel can be called when the job is not started. It is the responsability of FuncJob to not cancel job if
-        no job is running.
-        The cancel mehod of JobsManager calls the cancel method on the running jobs only. Others jobs are dequeued.
-    """
-
-    @abstractmethod
-    def cancel(self):
-        pass
-
-    # Put the code which must be run for a repo here. The code must be reentrant.
-    @abstractmethod
-    def run(self):
-        pass
-
-
 class SiteWorker(threading.Thread):
     """
-    Runs jobs for a single profile in sequence. Used by JobsManager Each site handles its
-    own queue and processes the tasks. If no job are in the queue, the site waits until a
-    job comes. If no jobs come, a timeout ends the loop. Since the loop is not launched in
-    a thread, it is up to the calling function to do so.
+    Runs jobs for a single site (mostly a single repo) in sequence. Used by JobsManager. Each
+    site handles its own queue and processes the tasks. If no jobs are in the queue, the site
+    waits until a job comes. If no jobs come, a timeout ends the loop. Since the loop is not
+    launched in a thread, it is up to the calling function to do so.
     """
 
     def __init__(self, jobs):
@@ -82,7 +42,7 @@ class SiteWorker(threading.Thread):
 
 class JobsManager:
     """
-    This class is a complete scheduler. Only use this class and not ProfileQueue.
+    This class is a complete scheduler. Only use this class and not SiteWorker.
     This class MUST BE use as a singleton.
 
     Inspired by https://stackoverflow.com/a/50265824/3983708
@@ -123,17 +83,16 @@ class JobsManager:
 
     def cancel_all_jobs(self):
         """
-        Ask to all workers to cancel all jobs and remove pending jobs.
+        Remove pending jobs and ask to all workers to cancel their current jobs.
         """
-        for site, worker in self.workers.items():
+        for site_id, worker in self.workers.items():
             if worker.is_alive():
-                while not self.jobs[site].empty():
+                while not self.jobs[site_id].empty():
                     try:
-                        self.jobs[site].get(False)
+                        self.jobs[site_id].get(False)
                     except queue.Empty:
                         continue
-                    self.jobs[site].task_done()
-
+                    self.jobs[site_id].task_done()
             worker.current_job.cancel()
 
         logger.info("Finished cancelling all jobs")
