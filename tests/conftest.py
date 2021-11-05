@@ -73,7 +73,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
 
     yield
     # qapp.backup_cancelled_event.emit()
-    qtbot.waitUntil(lambda: not vorta.borg.job_scheduler.JobsManager.is_worker_running())
+    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
     mock_db.close()
 
 

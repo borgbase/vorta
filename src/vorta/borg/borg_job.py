@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.borg.job_scheduler import Job, DEBUG, JobStatus
+from vorta.borg.job_scheduler import Job, JobStatus
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
@@ -53,7 +53,8 @@ class BorgJob(Job, BackupProfileMixin):
         :param cmd: Borg command line
         :param params: Pass options that were used to build cmd and may be needed to
                        process the result.
-        :param parent: Parent window. Needs `thread.wait()` if none. (scheduler)
+        :param site: For scheduler. Only one job can run per site at one time. Site is
+                     usually the repository ID, or 'default' for misc Borg commands.
         """
 
         super().__init__()
@@ -102,16 +103,10 @@ class BorgJob(Job, BackupProfileMixin):
         self.params = params
         self.process = None
 
-    def repo_id(self):
-        return self.site_id
-
     def cancel(self):
-        if DEBUG:
-            print("Cancel curent Job on site: ", self.site_id)
+        logger.debug("Cancel current Job on site %s", self.site_id)
         self.set_status(JobStatus.CANCEL)
         if self.process is not None:
-            if DEBUG:
-                print("Thread Not None")
             self.process.send_signal(signal.SIGINT)
             try:
                 self.process.wait(timeout=3)

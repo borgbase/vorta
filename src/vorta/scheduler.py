@@ -5,7 +5,6 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
-from vorta.borg.job_scheduler import DEBUG, JobsManager
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
@@ -28,10 +27,6 @@ class VortaScheduler(QtCore.QObject):
         self.qt_timer.timeout.connect(self.reload_all_timers)
         self.qt_timer.setInterval(15 * 60 * 1000)
         self.qt_timer.start()
-
-    def cancel_all_jobs(self):
-        logger.debug('Cancelling all jobs on job queue')
-        app.jobs_manager.cancel_all_jobs()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -157,14 +152,13 @@ class VortaScheduler(QtCore.QObject):
             msg['category'] = 'scheduled'
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             job.result.connect(self.notify)
-            app.jobs_manager.add_job(job)
+            self.app.jobs_manager.add_job(job)
 
         else:
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-        if DEBUG:
-            print("End backup for profile ", profile_id)
+        logger.debug("End backup for profile ", profile_id)
 
     def notify(self, result):
         notifier = VortaNotifications.pick()
@@ -193,13 +187,13 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgPruneJob.prepare(profile)
             if msg['ok']:
                 job = BorgPruneJob(msg['cmd'], msg, profile.repo.id)
-                app.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
 
                 # Refresh archives
                 msg = BorgListRepoJob.prepare(profile)
                 if msg['ok']:
                     job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
-                    app.jobs_manager.add_job(job)
+                    self.app.jobs_manager.add_job(job)
 
         validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
@@ -215,6 +209,6 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
-                app.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)

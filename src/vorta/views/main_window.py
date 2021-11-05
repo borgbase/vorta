@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
@@ -20,6 +21,7 @@ from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 from ..borg.job_scheduler import JobsManager
 
+logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
@@ -92,7 +94,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
-        if JobsManager.is_worker_running():
+        if self.app.jobs_manager.is_worker_running():
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
@@ -243,7 +245,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_log('')
 
     def backup_finished_event(self):
-        if not JobsManager.is_worker_running():
+        if not self.app.jobs_manager.is_worker_running():
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()

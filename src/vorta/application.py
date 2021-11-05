@@ -142,11 +142,11 @@ class VortaApp(QtSingleApplication):
         self.tray.set_tray_icon(active=True)
 
     def backup_finished_event_response(self):
-        if not JobsManager.is_worker_running():
+        if not self.jobs_manager.is_worker_running():
             self.tray.set_tray_icon()
 
     def backup_cancelled_event_response(self):
-        self.scheduler.cancel_all_jobs()
+        self.jobs_manager.cancel_all_jobs()
         self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):
@@ -154,7 +154,7 @@ class VortaApp(QtSingleApplication):
             self.open_main_window_action()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
-            if JobsManager.is_worker_running():
+            if self.jobs_manager.is_worker_running():
                 logger.warning("Cannot run while backups are already running")
             else:
                 self.create_backups_cmdline(message)
@@ -167,7 +167,7 @@ class VortaApp(QtSingleApplication):
             return
         job = BorgVersionJob(params['cmd'], params, parent=self)
         job.result.connect(self.set_borg_details_result)
-        # self.scheduler.jobs_manager.add_job(job)
+        self.jobs_manager.add_job(job)
 
     def set_borg_details_result(self, result):
         """

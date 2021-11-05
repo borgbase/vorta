@@ -48,7 +48,7 @@ class TrayMenu(QSystemTrayIcon):
         status = menu.addAction(self.app.scheduler.next_job)
         status.setEnabled(False)
 
-        if JobsManager.is_worker_running():
+        if self.app.jobs_manager.is_worker_running():
             status.setText(self.tr('Backup in Progress'))
             cancel_action = menu.addAction(self.tr('Cancel Backup'))
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
