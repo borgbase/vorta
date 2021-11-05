@@ -72,7 +72,8 @@ def init_db(qapp, qtbot, tmpdir_factory):
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
     yield
-    # qapp.backup_cancelled_event.emit()
+
+    qapp.jobs_manager.cancel_all_jobs()
     qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
     mock_db.close()
 
