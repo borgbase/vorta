@@ -2,6 +2,8 @@ import queue
 from enum import Enum
 import logging
 import threading
+from abc import abstractmethod
+from PyQt5.QtCore import QObject
 
 logger = logging.getLogger(__name__)
 
@@ -10,6 +12,44 @@ class JobStatus(Enum):
     # dont add and option to put the item at the end of the queue.
     OK = 1
     CANCEL = 2
+
+
+class JobInterface(QObject):
+    """
+    To add a job to the vorta queue, you have to create a class which inherits Job. The inherited class
+    must override run, cancel and get_site_id. Since Job inherits from QObject, you can use pyqt signal.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.__status = JobStatus.OK  # the job can be launched. If False, the job is not run.
+
+    # Keep default
+    def set_status(self, status):
+        self.__status = status
+
+    # Keep default
+    def get_status(self):
+        return self.__status
+
+    # Must return the site id. In borg case, it is the id of the repository.
+    @abstractmethod
+    def repo_id(self):
+        pass
+
+    @abstractmethod
+    def cancel(self):
+        """
+        Cancel can be called when the job is not started. It is the responsability of FuncJob to not cancel job if
+        no job is running.
+        The cancel mehod of JobsManager calls the cancel method on the running jobs only. Other jobs are dequeued.
+        """
+        pass
+
+    # Put the code which must be run for a repo here. The code must be reentrant.
+    @abstractmethod
+    def run(self):
+        pass
 
 
 class SiteWorker(threading.Thread):
@@ -47,14 +87,22 @@ class JobsManager:
     Inspired by https://stackoverflow.com/a/50265824/3983708
     """
     def __init__(self):
-        self.jobs = {}  # jobs by site > queue
-        self.workers = {}  # threads by site
+        self.jobs = dict()  # jobs by site > queue
+        self.workers = dict()  # threads by site
+        self.jobs_lock = threading.Lock()  # for atomic queue operations, like cancelling
 
-    def is_worker_running(self):
+    def is_worker_running(self, site=None):
         """
         See if there are any active jobs. The user can't start a backup if a job is
         running. The scheduler can.
         """
+        # Check status for specific site (repo)
+        if site in self.workers:
+            return self.workers[site].is_alive()
+        else:
+            return False
+
+        # Check if *any* worker is active
         for _, worker in self.workers.items():
             if worker.is_alive():
                 return True
@@ -68,9 +116,10 @@ class JobsManager:
             return 1
 
         # Ensure a job queue exists for site/repo
-        if job.site_id not in self.jobs:
-            self.jobs[job.site_id] = queue.Queue()
-        self.jobs[job.site_id].put(job)
+        with self.jobs_lock:
+            if job.site_id not in self.jobs:
+                self.jobs[job.site_id] = queue.Queue()
+            self.jobs[job.site_id].put(job)
 
         # If there is an existing thread for this site, do nothing. It will just
         # take the next job from the queue. If not, start a new thread.
@@ -82,16 +131,17 @@ class JobsManager:
 
     def cancel_all_jobs(self):
         """
-        Remove pending jobs and ask to all workers to cancel their current jobs.
+        Remove pending jobs and ask all workers to cancel their current jobs.
         """
-        for site_id, worker in self.workers.items():
-            if worker.is_alive():
-                while not self.jobs[site_id].empty():
-                    try:
-                        self.jobs[site_id].get(False)
-                    except queue.Empty:
-                        continue
-                    self.jobs[site_id].task_done()
-            worker.current_job.cancel()
+        with self.jobs_lock:
+            for site_id, worker in self.workers.items():
+                if worker.is_alive():  # if a worker is active, first empty the queue
+                    while not self.jobs[site_id].empty():
+                        try:
+                            self.jobs[site_id].get(False)
+                        except queue.Empty:
+                            continue
+                        self.jobs[site_id].task_done()
+                worker.current_job.cancel()
 
         logger.info("Finished cancelling all jobs")

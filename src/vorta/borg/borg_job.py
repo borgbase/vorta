@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.borg.jobs_manager import JobStatus
+from vorta.borg.jobs_manager import JobStatus, JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
@@ -36,7 +36,7 @@ temporary mutex.
 """
 
 
-class BorgJob(QtCore.QObject, BackupProfileMixin):
+class BorgJob(JobInterface, BackupProfileMixin):
     """
     Base class to run `borg` command line jobs. If a command needs more pre- or post-processing
     it should subclass `BorgJob`.
@@ -46,7 +46,7 @@ class BorgJob(QtCore.QObject, BackupProfileMixin):
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd, params, site="default", parent=None):
+    def __init__(self, cmd, params, site="default"):
         """
         Thread to run Borg operations in.
 
@@ -59,7 +59,6 @@ class BorgJob(QtCore.QObject, BackupProfileMixin):
 
         super().__init__()
         self.site_id = site
-        self.__status = JobStatus.OK  # the job can be launched. If False, the job is not run.
         self.app = QApplication.instance()
 
         # Declare labels here for translation
@@ -103,12 +102,6 @@ class BorgJob(QtCore.QObject, BackupProfileMixin):
         self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
-
-    def set_status(self, status):
-        self.__status = status
-
-    def get_status(self):
-        return self.__status
 
     def cancel(self):
         logger.debug("Cancel job on site %s", self.site_id)

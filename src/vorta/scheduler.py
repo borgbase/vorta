@@ -1,4 +1,5 @@
 import logging
+import threading
 from datetime import datetime as dt, date, timedelta
 
 from PyQt5 import QtCore
@@ -20,6 +21,7 @@ class VortaScheduler(QtCore.QObject):
         super().__init__()
         self.timers = dict()  # keep mapping of profiles to timers
         self.app = QApplication.instance()
+        self.lock = threading.Lock()
 
         # Set additional timer to make sure background tasks stay scheduled.
         # E.g. after hibernation
@@ -44,19 +46,19 @@ class VortaScheduler(QtCore.QObject):
         Or, if catch-up is not enabled, will add interval to last run to find
         next suitable backup time.
         """
-
-        # Stop and remove any existing timer for this profile
-        if profile_id in self.timers:
-            self.timers[profile_id]['qtt'].stop()
-            del self.timers[profile_id]
-
         profile = BackupProfileModel.get_or_none(id=profile_id)
         if profile is None \
                 or profile.repo is None \
                 or profile.schedule_mode == 'off':
             return
 
-        logger.info('Setting timer for profile %s', profile_id)
+        logger.info('Setting new timer for profile %s', profile_id)
+        self.lock.acquire()
+
+        # Stop and remove any existing timer for this profile
+        if profile_id in self.timers:
+            self.timers[profile_id]['qtt'].stop()
+            del self.timers[profile_id]
 
         last_run_log = EventLogModel.select().where(
             EventLogModel.subcommand == 'create',
@@ -75,6 +77,7 @@ class VortaScheduler(QtCore.QObject):
                 and last_run_log is not None \
                 and last_run_log.end_time + timedelta(**interval) < dt.now():
             logger.debug('Catching up by running job for %s', profile.name)
+            self.lock.release()
             self.create_backup(profile.id)
             return
 
@@ -106,6 +109,8 @@ class VortaScheduler(QtCore.QObject):
         timer.start()
         self.timers[profile_id] = {'qtt': timer, 'dt': next_run}
 
+        self.lock.release()
+
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
@@ -134,7 +139,6 @@ class VortaScheduler(QtCore.QObject):
             return job['dt'].strftime('%Y-%m-%d %H:%M')
 
     def create_backup(self, profile_id):
-        logger.debug('Start scheduled backup for profile %s', profile_id)
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
@@ -142,6 +146,12 @@ class VortaScheduler(QtCore.QObject):
             logger.info('Profile not found. Maybe deleted?')
             return
 
+        # Skip if a job for this profile (repo) is already in progress
+        if self.app.jobs_manager.is_worker_running(site=profile.repo.id):
+            logger.debug('A job for repo %s is already active.', profile.repo.id)
+            return
+
+        self.lock.acquire()
         logger.info('Starting background backup for %s', profile.name)
         notifier.deliver(self.tr('Vorta Backup'),
                          self.tr('Starting background backup for %s.') % profile.name,
@@ -153,12 +163,11 @@ class VortaScheduler(QtCore.QObject):
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             job.result.connect(self.notify)
             self.app.jobs_manager.add_job(job)
-
         else:
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-        logger.debug("End backup for profile %s", profile_id)
+        self.lock.release()
 
     def notify(self, result):
         notifier = VortaNotifications.pick()

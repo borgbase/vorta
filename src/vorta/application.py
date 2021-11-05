@@ -249,7 +249,7 @@ class VortaApp(QtSingleApplication):
         if not params['ok']:
             self.backup_progress_event.emit(params['message'])
             return
-        job = BorgBreakJob(params['cmd'], params, parent=self)
+        job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
