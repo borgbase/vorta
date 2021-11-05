@@ -19,7 +19,6 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
-from ..borg.jobs_manager import JobsManager
 
 logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')
@@ -248,11 +247,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
-        
+
         if not self.app.jobs_manager.is_worker_running():
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
-
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)

@@ -6,7 +6,7 @@ from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
                              QTableWidgetItem, QInputDialog, QMenu,
-                             QToolButton, QApplication)
+                             QToolButton)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.delete import BorgDeleteJob

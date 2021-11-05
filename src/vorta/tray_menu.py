@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
 from vorta.models import BackupProfileModel
-from vorta.borg.jobs_manager import JobsManager
 from vorta.utils import get_asset
 
 
