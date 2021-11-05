@@ -104,7 +104,7 @@ class BorgJob(Job, BackupProfileMixin):
         self.process = None
 
     def cancel(self):
-        logger.debug("Cancel current Job on site %s", self.site_id)
+        logger.debug("Cancel job on site %s", self.site_id)
         self.set_status(JobStatus.CANCEL)
         if self.process is not None:
             self.process.send_signal(signal.SIGINT)

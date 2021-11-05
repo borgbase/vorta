@@ -136,4 +136,4 @@ class JobsManager:
 
             worker.current_job.cancel()
 
-        logger.error("Finished cancelling all jobs")
+        logger.info("Finished cancelling all jobs")

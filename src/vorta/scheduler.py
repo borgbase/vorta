@@ -158,7 +158,7 @@ class VortaScheduler(QtCore.QObject):
             logger.error('Conditions for backup not met. Aborting.')
             logger.error(msg['message'])
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
-        logger.debug("End backup for profile ", profile_id)
+        logger.debug("End backup for profile %s", profile_id)
 
     def notify(self, result):
         notifier = VortaNotifications.pick()
