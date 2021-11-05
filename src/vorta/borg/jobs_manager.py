@@ -1,9 +1,7 @@
 import queue
-from abc import abstractmethod
 from enum import Enum
 import logging
 import threading
-from PyQt5.QtCore import QObject
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +10,7 @@ class JobStatus(Enum):
     # dont add and option to put the item at the end of the queue.
     OK = 1
     CANCEL = 2
+
 
 class SiteWorker(threading.Thread):
     """
