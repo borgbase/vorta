@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.borg.job_scheduler import Job, JobStatus
+from vorta.borg.jobs_manager import Job, JobStatus
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes

@@ -19,7 +19,7 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
-from ..borg.job_scheduler import JobsManager
+from ..borg.jobs_manager import JobsManager
 
 logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')

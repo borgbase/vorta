@@ -13,7 +13,7 @@ from vorta.i18n import init_translations, translate
 from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
-from vorta.borg.job_scheduler import JobsManager
+from vorta.borg.jobs_manager import JobsManager
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
