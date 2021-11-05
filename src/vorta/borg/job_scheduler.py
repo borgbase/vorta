@@ -5,7 +5,7 @@ from enum import Enum
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool
 
-DEBUG = False
+DEBUG = True
 
 
 class JobStatus(Enum):
@@ -62,7 +62,7 @@ class _Queue(QRunnable):
 
     def __init__(self, site_id, nb_workers_running: QtCore.QSemaphore, threadpool):
         super().__init__()
-        self.setAutoDelete(False)
+        # self.setAutoDelete(False)
         self.__p_queue = queue.Queue()  # queues are thread-safe and reentrant in python
         self.worker_is_running = False
         self.site_id = site_id
@@ -141,6 +141,7 @@ class _Queue(QRunnable):
     def run(self):
         # QRunnable inherited objects has to implement run method
         self.process_jobs()
+        print('done processing')
 
 
 class JobsManager:

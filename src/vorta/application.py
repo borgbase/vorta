@@ -57,6 +57,7 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
+        self.jobs_manager = JobsManager()
         self.scheduler = VortaScheduler()
 
         self.setApplicationName("Vorta")
@@ -119,7 +120,7 @@ class VortaApp(QtSingleApplication):
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
-            self.scheduler.jobs_manager.add_job(job)
+            self.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
             notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
@@ -166,7 +167,7 @@ class VortaApp(QtSingleApplication):
             return
         job = BorgVersionJob(params['cmd'], params, parent=self)
         job.result.connect(self.set_borg_details_result)
-        self.scheduler.jobs_manager.add_job(job)
+        # self.scheduler.jobs_manager.add_job(job)
 
     def set_borg_details_result(self, result):
         """
@@ -249,7 +250,7 @@ class VortaApp(QtSingleApplication):
             self.backup_progress_event.emit(params['message'])
             return
         job = BorgBreakJob(params['cmd'], params, parent=self)
-        self.scheduler.jobs_manager.add_job(job)
+        self.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
         """

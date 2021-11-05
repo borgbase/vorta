@@ -121,7 +121,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 job = BorgInitJob(params['cmd'], params)
                 job.updated.connect(self._set_status)
                 job.result.connect(self.run_result)
-                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
                 # self.thread = thread  # Needs to be connected to self for tests to work.
                 # what does it mean ?
             else:
