@@ -108,11 +108,12 @@ class JobsManager:
 
         # If there is an existing thread for this site, do nothing. It will just
         # take the next job from the queue. If not, start a new thread.
-        if job.repo_id() in self.workers and self.workers[job.repo_id()].is_alive():
-            return
-        else:
-            self.workers[job.repo_id()] = SiteWorker(jobs=self.jobs[job.repo_id()])
-            self.workers[job.repo_id()].start()
+        with self.jobs_lock:
+            if job.repo_id() in self.workers and self.workers[job.repo_id()].is_alive():
+                return
+            else:
+                self.workers[job.repo_id()] = SiteWorker(jobs=self.jobs[job.repo_id()])
+                self.workers[job.repo_id()].start()
 
     def cancel_all_jobs(self):
         """
