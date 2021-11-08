@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
-from vorta.borg.jobs_manager import JobStatus, JobInterface
+from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
@@ -103,9 +103,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
         self.params = params
         self.process = None
 
+    def repo_id(self):
+        return self.site_id
+
     def cancel(self):
         logger.debug("Cancel job on site %s", self.site_id)
-        self.set_status(JobStatus.CANCEL)
         if self.process is not None:
             self.process.send_signal(signal.SIGINT)
             try:

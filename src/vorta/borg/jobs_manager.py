@@ -8,29 +8,14 @@ from PyQt5.QtCore import QObject
 logger = logging.getLogger(__name__)
 
 
-class JobStatus(Enum):
-    # dont add and option to put the item at the end of the queue.
-    OK = 1
-    CANCEL = 2
-
-
 class JobInterface(QObject):
     """
     To add a job to the vorta queue, you have to create a class which inherits Job. The inherited class
-    must override run, cancel and get_site_id. Since Job inherits from QObject, you can use pyqt signal.
+    must override run, cancel and repo_id. Since JobInterface inherits from QObject, you can use pyqt signal.
     """
 
     def __init__(self):
         super().__init__()
-        self.__status = JobStatus.OK  # the job can be launched. If False, the job is not run.
-
-    # Keep default
-    def set_status(self, status):
-        self.__status = status
-
-    # Keep default
-    def get_status(self):
-        return self.__status
 
     # Must return the site id. In borg case, it is the id of the repository.
     @abstractmethod
@@ -55,8 +40,7 @@ class JobInterface(QObject):
 class SiteWorker(threading.Thread):
     """
     Runs jobs for a single site (mostly a single repo) in sequence. Used by JobsManager. Each
-    site handles its own queue and processes the tasks. If no jobs are in the queue, the site
-    waits until a job comes. If no jobs come, a timeout ends the loop. Since the loop is not
+    site handles its own queue and processes the tasks. Since the loop is not
     launched in a thread, it is up to the calling function to do so.
     """
 
@@ -70,12 +54,11 @@ class SiteWorker(threading.Thread):
             try:
                 job = self.jobs.get(False)
                 self.current_job = job
-                if job.get_status() == JobStatus.OK:
-                    logger.debug("Start job on site: %s", job.site_id)
-                    job.run()
-                    logger.debug("Finish job for site: %s", job.site_id)
+                logger.debug("Start job on site: %s", job.repo_id())
+                job.run()
+                logger.debug("Finish job for site: %s", job.repo_id())
             except queue.Empty:
-                logger.debug("No more jobs for site: %s", job.site_id)
+                logger.debug("No more jobs for site: %s", job.repo_id())
                 return
 
 
@@ -86,6 +69,7 @@ class JobsManager:
 
     Inspired by https://stackoverflow.com/a/50265824/3983708
     """
+
     def __init__(self):
         self.jobs = dict()  # jobs by site > queue
         self.workers = dict()  # threads by site
@@ -109,25 +93,26 @@ class JobsManager:
         return False
 
     def add_job(self, job):
-        logger.debug("Add job for site %s", job.site_id)
+        logger.debug("Add job for site %s", job.repo_id())
 
-        if not isinstance(job.site_id, (int, str)):
-            logger.error("site_id must be an int or str. Got %s", type(job.repo_id()))
+        if not isinstance(job.repo_id(), (int, str)):
+            logger.error("repo_id( must be an int or str. Got %s", type(job.repo_id()))
             return 1
 
         # Ensure a job queue exists for site/repo
         with self.jobs_lock:
-            if job.site_id not in self.jobs:
-                self.jobs[job.site_id] = queue.Queue()
-            self.jobs[job.site_id].put(job)
+            if job.repo_id() not in self.jobs:
+                self.jobs[job.repo_id()] = queue.Queue()
+        # Don't need lock when adding a job
+        self.jobs[job.repo_id()].put(job)
 
         # If there is an existing thread for this site, do nothing. It will just
         # take the next job from the queue. If not, start a new thread.
-        if job.site_id in self.workers and self.workers[job.site_id].is_alive():
+        if job.repo_id() in self.workers and self.workers[job.repo_id()].is_alive():
             return
         else:
-            self.workers[job.site_id] = SiteWorker(jobs=self.jobs[job.site_id])
-            self.workers[job.site_id].start()
+            self.workers[job.repo_id()] = SiteWorker(jobs=self.jobs[job.repo_id()])
+            self.workers[job.repo_id()].start()
 
     def cancel_all_jobs(self):
         """

@@ -214,7 +214,7 @@ class ExistingRepoWindow(AddRepoWindow):
             params = BorgInfoRepoJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoRepoJob(params['cmd'], params, parent=self)
+                thread = BorgInfoRepoJob(params['cmd'], params)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.
