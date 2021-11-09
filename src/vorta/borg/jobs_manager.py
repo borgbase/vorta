@@ -1,5 +1,4 @@
 import queue
-from enum import Enum
 import logging
 import threading
 from abc import abstractmethod
