@@ -118,10 +118,13 @@ class VortaScheduler(QtCore.QObject):
 
     @property
     def next_job(self):
-        next_job = dt.now()
+        next_job = now = dt.now()
         next_profile = None
         for profile_id, timer in self.timers.items():
-            if timer['dt'] > next_job and timer['qtt'].isActive():
+            if next_job == now and timer['dt'] > next_job and timer['qtt'].isActive():
+                next_job = timer['dt']
+                next_profile = profile_id
+            elif next_job > now and timer['dt'] < next_job and timer['qtt'].isActive():
                 next_job = timer['dt']
                 next_profile = profile_id
 
