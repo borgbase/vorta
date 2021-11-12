@@ -6,7 +6,7 @@ from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
                              QTableWidgetItem, QInputDialog, QMenu,
-                             QToolButton, QApplication)
+                             QToolButton)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.delete import BorgDeleteJob
@@ -220,7 +220,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         job.updated.connect(self._set_status)
         job.result.connect(self.check_result)
         self._toggle_all_buttons(False)
-        QApplication.instance().scheduler.jobs_manager.add_job(job)
+        self.app.jobs_manager.add_job(job)
 
     def check_result(self, result):
         if result['returncode'] == 0:
@@ -233,7 +233,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             job.updated.connect(self._set_status)
             job.result.connect(self.prune_result)
             self._toggle_all_buttons(False)
-            QApplication.instance().scheduler.jobs_manager.add_job(job)
+            self.app.jobs_manager.add_job(job)
         else:
             self._set_status(params['message'])
 
@@ -251,7 +251,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             job.updated.connect(self._set_status)
             job.result.connect(self.list_result)
             self._toggle_all_buttons(False)
-            QApplication.instance().scheduler.jobs_manager.add_job(job)
+            self.app.jobs_manager.add_job(job)
         else:
             self._set_status(params['message'])
 
@@ -270,7 +270,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 job.updated.connect(self._set_status)
                 job.result.connect(self.refresh_archive_result)
                 self._toggle_all_buttons(False)
-                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
 
     def refresh_archive_result(self, result):
         self._toggle_all_buttons(True)
@@ -310,7 +310,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     job = BorgMountJob(params['cmd'], params, self.profile().repo.id)
                     job.updated.connect(self.mountErrors.setText)
                     job.result.connect(self.mount_result)
-                    QApplication.instance().scheduler.jobs_manager.add_job(job)
+                    self.app.jobs_manager.add_job(job)
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
         dialog.open(receive)
@@ -343,7 +343,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
                 job.updated.connect(self.mountErrors.setText)
                 job.result.connect(self.umount_result)
-                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
             else:
                 self._set_status(self.tr('Mount point not active.'))
                 return
@@ -387,7 +387,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 job = BorgListArchiveJob(params['cmd'], params, self.profile().repo.id)
                 job.updated.connect(self.mountErrors.setText)
                 job.result.connect(self.list_archive_result)
-                QApplication.instance().scheduler.jobs_manager.add_job(job)
+                self.app.jobs_manager.add_job(job)
                 return job
         else:
             self._set_status(self.tr('Select an archive to restore first.'))
@@ -406,7 +406,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                             job = BorgExtractJob(params['cmd'], params, self.profile().repo.id)
                             job.updated.connect(self.mountErrors.setText)
                             job.result.connect(self.extract_archive_result)
-                            QApplication.instance().scheduler.jobs_manager.add_job(job)
+                            self.app.jobs_manager.add_job(job)
                         else:
                             self._set_status(params['message'])
 
@@ -468,7 +468,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             job.updated.connect(self._set_status)
             job.result.connect(self.delete_result)
             self._toggle_all_buttons(False)
-            QApplication.instance().scheduler.jobs_manager.add_job(job)
+            self.app.jobs_manager.add_job(job)
 
         else:
             self._set_status(self.tr("No archive selected"))
@@ -500,7 +500,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     job = BorgDiffJob(params['cmd'], params, self.profile().repo.id)
                     job.updated.connect(self.mountErrors.setText)
                     job.result.connect(self.list_diff_result)
-                    QApplication.instance().scheduler.jobs_manager.add_job(job)
+                    self.app.jobs_manager.add_job(job)
                 else:
                     self._set_status(params['message'])
 
@@ -558,7 +558,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             job.updated.connect(self._set_status)
             job.result.connect(self.rename_result)
             self._toggle_all_buttons(False)
-            QApplication.instance().scheduler.jobs_manager.add_job(job)
+            self.app.jobs_manager.add_job(job)
         else:
             self._set_status(self.tr("No archive selected"))
 
