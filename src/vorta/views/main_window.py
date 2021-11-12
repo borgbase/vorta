@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
@@ -18,8 +19,8 @@ from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
-from ..borg.job_scheduler import JobsManager
 
+logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
@@ -92,7 +93,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.scheduleTab.toolBox.removeItem(1)
 
         # Connect to existing thread.
-        if JobsManager.is_worker_running():
+        if self.app.jobs_manager.is_worker_running():
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
@@ -158,15 +159,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if self.profileSelector.count() > 1:
             to_delete = BackupProfileModel.get(id=self.profileSelector.currentData())
 
-            # Remove pending background jobs
-            to_delete_id = str(to_delete.id)
+            # TODO: Remove pending background jobs
             msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
             reply = QMessageBox.question(self, self.tr("Confirm deletion"),
                                          msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                if self.app.scheduler.get_job(to_delete_id):
-                    self.app.scheduler.remove_job(to_delete_id)
                 to_delete.delete_instance(recursive=True)
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
                 self.profile_select_action(0)
@@ -243,12 +241,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_log('')
 
     def backup_finished_event(self):
-        if not JobsManager.is_worker_running():
-            self._toggle_buttons(create_enabled=True)
-            self.archiveTab._toggle_all_buttons(enabled=True)
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
+
+        if not self.app.jobs_manager.is_worker_running():
+            self._toggle_buttons(create_enabled=True)
+            self.archiveTab._toggle_all_buttons(enabled=True)
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)

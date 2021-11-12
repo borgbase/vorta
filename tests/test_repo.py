@@ -95,7 +95,9 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     add_repo_window.run()
-    qtbot.waitUntil(lambda: EventLogModel.select().count() == 2, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: EventLogModel.select()
+                                         .where(EventLogModel.returncode == 0).count() == 2,
+                    **pytest._wait_defaults)
 
     assert RepoModel.get(id=2).url == test_repo_url
 
