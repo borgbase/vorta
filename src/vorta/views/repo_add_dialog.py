@@ -121,9 +121,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 job = BorgInitJob(params['cmd'], params)
                 job.updated.connect(self._set_status)
                 job.result.connect(self.run_result)
-                QApplication.instance().scheduler.jobs_manager.add_job(job)
-                # self.thread = thread  # Needs to be connected to self for tests to work.
-                # what does it mean ?
+                QApplication.instance().jobs_manager.add_job(job)
             else:
                 self._set_status(params['message'])
 
@@ -216,7 +214,7 @@ class ExistingRepoWindow(AddRepoWindow):
             params = BorgInfoRepoJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoRepoJob(params['cmd'], params, parent=self)
+                thread = BorgInfoRepoJob(params['cmd'], params)
                 thread.updated.connect(self._set_status)
                 thread.result.connect(self.run_result)
                 self.thread = thread  # Needs to be connected to self for tests to work.

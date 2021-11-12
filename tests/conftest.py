@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 
 import vorta
 import vorta.application
-import vorta.borg.job_scheduler
+import vorta.borg.jobs_manager
 from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
                           SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
 from vorta.views.main_window import MainWindow
@@ -72,8 +72,9 @@ def init_db(qapp, qtbot, tmpdir_factory):
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
     yield
-    # qapp.backup_cancelled_event.emit()
-    qtbot.waitUntil(lambda: not vorta.borg.job_scheduler.JobsManager.is_worker_running())
+
+    qapp.jobs_manager.cancel_all_jobs()
+    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
     mock_db.close()
 
 
