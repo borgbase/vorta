@@ -38,7 +38,7 @@ class VortaScheduler(QtCore.QObject):
         """
         Set a timer for next scheduled backup run of this profile.
 
-        Does nothing if set to manual backups or no repo is assigned.
+        Removes existing jobs if set to manual only or no repo is assigned.
 
         Else will look for previous scheduled backups and catch up if
         schedule_make_up_missed is enabled.
@@ -47,15 +47,21 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        if profile is None \
-                or profile.repo is None \
-                or profile.schedule_mode == 'off':
+        if profile is None:  # profile doesn't exist any more.
             return
 
-        logger.info('Setting new timer for profile %s', profile_id)
+        # If no repo is set or only manual backups, remove any existing job.
         self.lock.acquire()
+        if profile.repo is None or profile.schedule_mode == 'off':
+            logger.debug('Removing jobs for inactive profile %s', profile_id)
+            if profile_id in self.timers:
+                self.timers[profile_id]['qtt'].stop()
+                del self.timers[profile_id]
+            self.lock.release()
+            return
 
-        # Stop and remove any existing timer for this profile
+        # First stop and remove any existing timer for this profile
+        logger.info('Setting new timer for profile %s', profile_id)
         if profile_id in self.timers:
             self.timers[profile_id]['qtt'].stop()
             del self.timers[profile_id]
