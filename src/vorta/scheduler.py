@@ -50,21 +50,20 @@ class VortaScheduler(QtCore.QObject):
         if profile is None:  # profile doesn't exist any more.
             return
 
-        # If no repo is set or only manual backups, remove any existing job.
-        self.lock.acquire()
-        if profile.repo is None or profile.schedule_mode == 'off':
-            logger.debug('Removing jobs for inactive profile %s', profile_id)
-            if profile_id in self.timers:
-                self.timers[profile_id]['qtt'].stop()
-                del self.timers[profile_id]
-            self.lock.release()
-            return
-
         # First stop and remove any existing timer for this profile
-        logger.info('Setting new timer for profile %s', profile_id)
+        self.lock.acquire()
         if profile_id in self.timers:
             self.timers[profile_id]['qtt'].stop()
             del self.timers[profile_id]
+
+        # If no repo is set or only manual backups, just return without
+        # replacing the job we removed above.
+        if profile.repo is None or profile.schedule_mode == 'off':
+            logger.debug('Scheduler for profile %s is disabled.', profile_id)
+            self.lock.release()
+            return
+
+        logger.info('Setting timer for profile %s', profile_id)
 
         last_run_log = EventLogModel.select().where(
             EventLogModel.subcommand == 'create',
