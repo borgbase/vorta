@@ -115,7 +115,6 @@ class VortaScheduler(QtCore.QObject):
         for profile in BackupProfileModel.select():
             self.set_timer_for_profile(profile.id)
 
-    @property
     def next_job(self):
         next_job = now = dt.now()
         next_profile = None
@@ -174,7 +173,7 @@ class VortaScheduler(QtCore.QObject):
     def notify(self, result):
         notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
-        profile_id = result['params']['profile']
+        profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
             notifier.deliver(self.tr('Vorta Backup'),
