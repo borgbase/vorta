@@ -164,7 +164,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 # Give warning and continue if password is found there.
                 if ret['password'] is not None:
                     logger.warning('Found password in database, but secure storage was available. '
-                                'Consider re-adding the repo to use it.')
+                                   'Consider re-adding the repo to use it.')
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
@@ -206,9 +206,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
         self.started_event()
         with db_lock:
             log_entry = EventLogModel(category=self.params.get('category', 'user'),
-                                    subcommand=self.cmd[1],
-                                    profile=self.params.get('profile_id', None)
-                                    )
+                                      subcommand=self.cmd[1],
+                                      profile=self.params.get('profile_id', None)
+                                      )
             log_entry.save()
             logger.info('Running command %s', ' '.join(self.cmd))
 
