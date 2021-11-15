@@ -2,7 +2,7 @@ import os
 import signal
 import sys
 
-import peewee
+from peewee.playhouse.sqliteq import SqliteQueueDatabase
 from vorta._version import __version__
 from vorta.i18n import trans_late, translate
 from vorta.config import SETTINGS_DIR
@@ -50,7 +50,7 @@ def main():
     init_logger(background=want_background)
 
     # Init database
-    sqlite_db = peewee.SqliteDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
+    sqlite_db = SqliteQueueDatabase(os.path.join(SETTINGS_DIR, 'settings.db'), pragmas={'journal_mode': 'wal', })
     init_db(sqlite_db)
 
     # Init app after database is available
