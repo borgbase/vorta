@@ -17,7 +17,6 @@ logger = logging.getLogger()
 def init_logger(background=False):
     logger.setLevel(logging.DEBUG)
     logging.getLogger('peewee').setLevel(logging.INFO)
-    logging.getLogger('apscheduler').setLevel(logging.INFO)
     logging.getLogger('PyQt5').setLevel(logging.INFO)
 
     # create logging format

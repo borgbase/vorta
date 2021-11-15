@@ -157,15 +157,16 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
-            to_delete = BackupProfileModel.get(id=self.profileSelector.currentData())
+            to_delete_id = self.profileSelector.currentData()
+            to_delete = BackupProfileModel.get(id=to_delete_id)
 
-            # TODO: Remove pending background jobs
             msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
             reply = QMessageBox.question(self, self.tr("Confirm deletion"),
                                          msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
                 to_delete.delete_instance(recursive=True)
+                self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
                 self.profile_select_action(0)
 

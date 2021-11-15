@@ -53,8 +53,7 @@ class VortaScheduler(QtCore.QObject):
         # First stop and remove any existing timer for this profile
         self.lock.acquire()
         if profile_id in self.timers:
-            self.timers[profile_id]['qtt'].stop()
-            del self.timers[profile_id]
+            self.remove_job(profile_id)
 
         # If no repo is set or only manual backups, just return without
         # replacing the job we removed above.
@@ -121,7 +120,6 @@ class VortaScheduler(QtCore.QObject):
         for profile in BackupProfileModel.select():
             self.set_timer_for_profile(profile.id)
 
-    @property
     def next_job(self):
         next_job = now = dt.now()
         next_profile = None
@@ -180,7 +178,7 @@ class VortaScheduler(QtCore.QObject):
     def notify(self, result):
         notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
-        profile_id = result['params']['profile']
+        profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
             notifier.deliver(self.tr('Vorta Backup'),
@@ -229,3 +227,7 @@ class VortaScheduler(QtCore.QObject):
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)
+
+    def remove_job(self, profile_id):
+        self.timers[profile_id]['qtt'].stop()
+        del self.timers[profile_id]
