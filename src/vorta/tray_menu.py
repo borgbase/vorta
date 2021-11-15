@@ -44,7 +44,8 @@ class TrayMenu(QSystemTrayIcon):
 
         menu.addSeparator()
 
-        status = menu.addAction(self.app.scheduler.next_job)
+        next_task_time = self.app.scheduler.next_job()
+        status = menu.addAction(next_task_time)
         status.setEnabled(False)
 
         if self.app.jobs_manager.is_worker_running():
@@ -52,7 +53,7 @@ class TrayMenu(QSystemTrayIcon):
             cancel_action = menu.addAction(self.tr('Cancel Backup'))
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
-            status.setText(self.tr('Next Task: %s') % self.app.scheduler.next_job)
+            status.setText(self.tr('Next Task: %s') % next_task_time)
             profiles = BackupProfileModel.select()
             if profiles.count() > 1:
                 profile_menu = menu.addMenu(self.tr('Backup Now'))
