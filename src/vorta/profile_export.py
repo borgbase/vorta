@@ -5,8 +5,9 @@ from json import JSONDecodeError
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.models import RepoModel, SourceFileModel, WifiSettingModel, SchemaVersion, \
-    SettingsModel, BackupProfileModel, db, SCHEMA_VERSION, init_db
+from vorta.db.models import RepoModel, SourceFileModel, WifiSettingModel, \
+    SchemaVersion, SettingsModel, BackupProfileModel
+from vorta.db.connection import DB, SCHEMA_VERSION, init_db
 
 
 class ProfileExport:
@@ -114,8 +115,8 @@ class ProfileExport:
 
         # Delete and recreate the tables to clear them
         if overwrite_settings:
-            db.drop_tables([SettingsModel, WifiSettingModel])
-            db.create_tables([SettingsModel, WifiSettingModel])
+            DB.drop_tables([SettingsModel, WifiSettingModel])
+            DB.create_tables([SettingsModel, WifiSettingModel])
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
 

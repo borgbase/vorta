@@ -3,7 +3,7 @@ import os
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from vorta.models import RepoModel, ArchiveModel, BackupProfileMixin
+from vorta.db.models import RepoModel, ArchiveModel, BackupProfileMixin
 from vorta.utils import pretty_bytes, get_private_keys, get_asset, borg_compat
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow

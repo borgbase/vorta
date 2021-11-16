@@ -1,5 +1,5 @@
 from .borg_job import BorgJob, FakeProfile, FakeRepo
-from vorta.models import RepoModel
+from vorta.db.models import RepoModel
 
 
 class BorgInitJob(BorgJob):

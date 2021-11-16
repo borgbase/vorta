@@ -20,7 +20,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.i18n import trans_late
-from vorta.models import ArchiveModel, BackupProfileMixin
+from vorta.db.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
 from vorta.views.source_tab import SizeItem

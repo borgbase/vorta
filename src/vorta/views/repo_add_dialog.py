@@ -9,7 +9,7 @@ from vorta.borg.init import BorgInitJob
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
-from vorta.models import RepoModel
+from vorta.db.models import RepoModel
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)

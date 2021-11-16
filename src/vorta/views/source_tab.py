@@ -1,6 +1,6 @@
 from PyQt5 import uic
-from ..models import SourceFileModel, BackupProfileMixin, SettingsModel
-from ..utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
+from vorta.db.models import SourceFileModel, BackupProfileMixin, SettingsModel
+from vorta.utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo
 from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView

@@ -7,7 +7,7 @@ from vorta._version import __version__
 from vorta.i18n import trans_late, translate
 from vorta.config import SETTINGS_DIR
 from vorta.log import init_logger, logger
-from vorta.models import init_db
+from vorta.db.connection import init_db
 from vorta.updater import get_updater
 from vorta.utils import parse_args
 

@@ -1,6 +1,6 @@
 from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.i18n import trans_late
-from vorta.models import RepoModel
+from vorta.db.models import RepoModel
 
 
 class BorgInfoRepoJob(BorgJob):

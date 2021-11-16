@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QCheckBox
 from vorta._version import __version__
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
-from vorta.models import SettingsModel, BackupProfileMixin, get_misc_settings
+from vorta.db.settings import get_misc_settings
+from vorta.db.models import SettingsModel, BackupProfileMixin
 from vorta.utils import get_asset
 
 uifile = get_asset('UI/misctab.ui')
@@ -31,7 +32,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         # dynamically add widgets for settings
         for setting in SettingsModel.select().where(SettingsModel.type == 'checkbox'):
             x = filter(lambda s: s['key'] == setting.key, get_misc_settings())
-            if not list(x):  # Skip settings that aren't specified in vorta.models.
+            if not list(x):  # Skip settings that aren't specified in vorta.db.models.
                 continue
             b = QCheckBox(translate('settings', setting.label))
             b.setCheckState(setting.value)

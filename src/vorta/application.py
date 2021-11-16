@@ -10,7 +10,8 @@ from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
 from vorta.i18n import init_translations, translate
-from vorta.models import BackupProfileModel, SettingsModel, cleanup_db
+from vorta.db.models import BackupProfileModel, SettingsModel
+from vorta.db.connection import cleanup_db
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
 from vorta.borg.jobs_manager import JobsManager

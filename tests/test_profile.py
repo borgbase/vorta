@@ -1,7 +1,7 @@
 import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
-from vorta.models import BackupProfileModel
+from vorta.db.models import BackupProfileModel
 
 
 def test_profile_add(qapp, qtbot):

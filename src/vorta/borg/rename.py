@@ -1,4 +1,4 @@
-from vorta.models import ArchiveModel, RepoModel
+from vorta.db.models import ArchiveModel, RepoModel
 from .borg_job import BorgJob
 
 

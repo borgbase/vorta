@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from vorta.models import (RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
-                          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
+from vorta.db.models import RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, \
+                            SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion
 from vorta.views.main_window import MainWindow
 
 models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
@@ -27,7 +27,7 @@ def qapp(tmpdir_factory):
     # DB is required to init QApplication. New DB used for every test.
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(str(tmp_db))
-    vorta.models.init_db(mock_db)
+    vorta.db.connection.init_db(mock_db)
 
     from vorta.application import VortaApp
     VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
@@ -44,7 +44,7 @@ def qapp(tmpdir_factory):
 def init_db(qapp, qtbot, tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
-    vorta.models.init_db(mock_db)
+    vorta.db.connection.init_db(mock_db)
 
     default_profile = BackupProfileModel(name='Default')
     default_profile.save()
