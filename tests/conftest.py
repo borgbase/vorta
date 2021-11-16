@@ -9,7 +9,7 @@ import vorta
 import vorta.application
 import vorta.borg.jobs_manager
 from vorta.store.models import RepoModel, RepoPassword, BackupProfileModel, SourceFileModel, \
-                            SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion
+    SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion
 from vorta.views.main_window import MainWindow
 
 models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
