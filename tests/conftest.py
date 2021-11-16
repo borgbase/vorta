@@ -1,5 +1,5 @@
 import os
-import peewee
+from peewee import SqliteDatabase
 import pytest
 import sys
 from datetime import datetime as dt
@@ -26,7 +26,7 @@ def pytest_configure(config):
 def qapp(tmpdir_factory):
     # DB is required to init QApplication. New DB used for every test.
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db))
+    mock_db = SqliteDatabase(str(tmp_db))
     vorta.models.init_db(mock_db)
 
     from vorta.application import VortaApp
@@ -43,7 +43,7 @@ def qapp(tmpdir_factory):
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
-    mock_db = peewee.SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
+    mock_db = SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
     vorta.models.init_db(mock_db)
 
     default_profile = BackupProfileModel(name='Default')
