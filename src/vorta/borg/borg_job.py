@@ -256,8 +256,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
                                 f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:
