@@ -21,7 +21,8 @@ from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 
-temp_mutex = Lock()
+keyring_lock = Lock()
+db_lock = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
@@ -144,27 +145,26 @@ class BorgJob(JobInterface, BackupProfileMixin):
             return ret
 
         # Try to get password from chosen keyring backend.
-        temp_mutex.acquire()
-        cls.keyring = VortaKeyring.get_keyring()
-        logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
-        ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
+        with keyring_lock:
+            cls.keyring = VortaKeyring.get_keyring()
+            logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
+            ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
 
-        # Check if keyring is locked
-        if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-            ret['message'] = trans_late('messages',
-                                        'Please unlock your system password manager or disable it under Misc')
-            return ret
+            # Check if keyring is locked
+            if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
+                ret['message'] = trans_late('messages',
+                                            'Please unlock your system password manager or disable it under Misc')
+                return ret
 
-        # Try to fall back to DB Keyring, if we use the system keychain.
-        if ret['password'] is None and cls.keyring.is_system:
-            logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
-            ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
+            # Try to fall back to DB Keyring, if we use the system keychain.
+            if ret['password'] is None and cls.keyring.is_system:
+                logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
+                ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
 
-            # Give warning and continue if password is found there.
-            if ret['password'] is not None:
-                logger.warning('Found password in database, but secure storage was available. '
-                               'Consider re-adding the repo to use it.')
-        temp_mutex.release()
+                # Give warning and continue if password is found there.
+                if ret['password'] is not None:
+                    logger.warning('Found password in database, but secure storage was available. '
+                                   'Consider re-adding the repo to use it.')
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
@@ -204,12 +204,13 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
     def run(self):
         self.started_event()
-        log_entry = EventLogModel(category=self.params.get('category', 'user'),
-                                  subcommand=self.cmd[1],
-                                  profile=self.params.get('profile_id', None)
-                                  )
-        log_entry.save()
-        logger.info('Running command %s', ' '.join(self.cmd))
+        with db_lock:
+            log_entry = EventLogModel(category=self.params.get('category', 'user'),
+                                      subcommand=self.cmd[1],
+                                      profile=self.params.get('profile_id', None)
+                                      )
+            log_entry.save()
+            logger.info('Running command %s', ' '.join(self.cmd))
 
         p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
                   env=self.env, cwd=self.cwd, start_new_session=True)
@@ -285,9 +286,10 @@ class BorgJob(JobInterface, BackupProfileMixin):
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.end_time = dt.now()
-        log_entry.save()
+        with db_lock:
+            log_entry.save()
+            self.process_result(result)
 
-        self.process_result(result)
         self.finished_event(result)
 
     def process_result(self, result):
