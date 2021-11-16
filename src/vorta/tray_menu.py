@@ -2,7 +2,7 @@ import os
 from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
 from PyQt5.QtGui import QIcon
 
-from vorta.db.models import BackupProfileModel
+from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
 

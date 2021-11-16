@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 from .borg_job import BorgJob
-from vorta.db.models import ArchiveModel, RepoModel
+from vorta.store.models import ArchiveModel, RepoModel
 
 
 class BorgListRepoJob(BorgJob):

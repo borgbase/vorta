@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
-from vorta.db.models import EventLogModel, RepoModel, ArchiveModel
+from vorta.store.models import EventLogModel, RepoModel, ArchiveModel
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'

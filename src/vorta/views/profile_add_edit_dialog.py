@@ -2,7 +2,7 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
 from vorta.i18n import translate, trans_late
 from vorta.utils import get_asset
-from vorta.db.models import BackupProfileModel
+from vorta.store.models import BackupProfileModel
 
 uifile = get_asset('UI/profileadd.ui')
 AddProfileUI, AddProfileBase = uic.loadUiType(uifile)

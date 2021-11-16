@@ -1,6 +1,6 @@
 import pytest
 import vorta.borg
-from vorta.db.models import EventLogModel
+from vorta.store.models import EventLogModel
 
 
 def test_scheduler_create_backup(qapp, qtbot, mocker, borg_json_output):

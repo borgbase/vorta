@@ -5,7 +5,7 @@ import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox, QMessageBox
 
-from vorta.db.models import BackupProfileModel, SourceFileModel
+from vorta.store.models import BackupProfileModel, SourceFileModel
 from vorta.views.import_window import ImportWindow
 
 VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'

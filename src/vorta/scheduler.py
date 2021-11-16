@@ -10,7 +10,7 @@ from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 
-from vorta.db.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
 
 logger = logging.getLogger(__name__)

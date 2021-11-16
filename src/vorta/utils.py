@@ -284,7 +284,7 @@ def get_sorted_wifis(profile):
     merge with networks from other profiles. Update last connected time.
     """
 
-    from vorta.db.models import WifiSettingModel
+    from vorta.store.models import WifiSettingModel
 
     # Pull networks known to OS and all other backup profiles
     system_wifis = get_network_status_monitor().get_known_wifis()

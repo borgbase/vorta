@@ -16,7 +16,7 @@ from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
-from vorta.db.models import EventLogModel, BackupProfileMixin
+from vorta.store.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring

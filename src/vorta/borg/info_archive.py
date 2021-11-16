@@ -1,5 +1,5 @@
 from .borg_job import BorgJob
-from vorta.db.models import ArchiveModel, RepoModel
+from vorta.store.models import ArchiveModel, RepoModel
 
 
 class BorgInfoArchiveJob(BorgJob):

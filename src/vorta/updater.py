@@ -1,6 +1,6 @@
 import sys
 import os
-from vorta.db.models import SettingsModel
+from vorta.store.models import SettingsModel
 
 
 def get_updater():

@@ -5,9 +5,9 @@ from json import JSONDecodeError
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.db.models import RepoModel, SourceFileModel, WifiSettingModel, \
+from vorta.store.models import RepoModel, SourceFileModel, WifiSettingModel, \
     SchemaVersion, SettingsModel, BackupProfileModel
-from vorta.db.connection import DB, SCHEMA_VERSION, init_db
+from vorta.store.connection import DB, SCHEMA_VERSION, init_db
 
 
 class ProfileExport:
