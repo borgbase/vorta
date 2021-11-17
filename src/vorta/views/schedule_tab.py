@@ -1,7 +1,7 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
 from vorta.utils import get_asset, get_sorted_wifis
-from vorta.models import EventLogModel, WifiSettingModel, BackupProfileMixin
+from vorta.store.models import EventLogModel, WifiSettingModel, BackupProfileMixin
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')

@@ -3,7 +3,6 @@ import pytest
 from PyQt5 import QtDBus
 
 import vorta.borg
-import vorta.models
 import vorta.notifications
 
 
