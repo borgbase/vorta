@@ -40,17 +40,17 @@
         <translation>URL репозитория:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="140"/>
+        <location filename="../../views/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Не удалось добавить репозиторий.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Введите правильный URL репозитория или локальный путь.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Этот репозиторий уже добавлен.</translation>
     </message>
@@ -312,8 +312,13 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="13"/>
+        <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="14"/>
+        <source>Repo check failed. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -406,27 +411,27 @@
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="64"/>
+        <location filename="../../borg/borg_job.py" line="66"/>
         <source>Files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="65"/>
+        <location filename="../../borg/borg_job.py" line="67"/>
         <source>Original</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="66"/>
+        <location filename="../../borg/borg_job.py" line="68"/>
         <source>Deduplicated</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="67"/>
+        <location filename="../../borg/borg_job.py" line="69"/>
         <source>Compressed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="300"/>
+        <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
         <translation type="unfinished"/>
     </message>
@@ -670,17 +675,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Подключение к существующему репозиторию</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="212"/>
+        <location filename="../../views/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Показать мой пароль</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="209"/>
+        <location filename="../../views/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Скрыть мой пароль</translation>
     </message>
@@ -1179,32 +1184,32 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Импортировать профиль</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Пароль был загружен из файла экспорта</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Пароль был загружен из вашей связки ключей</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="49"/>
+        <location filename="../../views/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Профиль с именем {} не существует. Перезаписывать нечего.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="60"/>
+        <location filename="../../views/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Ошибка при импорте</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="76"/>
+        <location filename="../../views/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1213,17 +1218,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="79"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Новые файлы экспорта profile_export не могут быть использованы в более старых версиях.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="81"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Невозможно прочитать файл экспорта profile_export из-за ошибки прав доступа.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Не найден файл экспорта профиля.</translation>
     </message>
@@ -1286,7 +1291,7 @@
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="35"/>
+        <location filename="../../views/main_window.py" line="36"/>
         <source>Start Backup</source>
         <translation>Начать архивацию</translation>
     </message>
@@ -1331,32 +1336,32 @@
         <translation>Не показывать снова</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="82"/>
+        <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
         <translation>Импорт из файла...</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="175"/>
+        <location filename="../../views/main_window.py" line="174"/>
         <source>Can&apos;t delete the last profile.</source>
         <translation>Невозможно удалить последний профиль.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile import successful!</source>
         <translation>Профиль успешно импортирован!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile {} imported.</source>
         <translation>Профиль {} импортирован.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Load profile</source>
         <translation>Импорт профиля</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Все файлы (*)</translation>
     </message>
@@ -1366,7 +1371,7 @@
         <translation>Экспортировать профиль</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="221"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
         <translation>Ошибка импорта профиля</translation>
     </message>
@@ -1561,14 +1566,9 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="43"/>
+        <location filename="../../tray_menu.py" line="42"/>
         <source>Vorta for Borg Backup</source>
         <translation>Архиватор Vorta для Borg</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Backup in Progress</source>
-        <translation>Выполняется архивация</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="53"/>
@@ -1590,119 +1590,139 @@
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
+    <message>
+        <location filename="../../tray_menu.py" line="52"/>
+        <source>Task in progress</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="125"/>
+        <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
         <translation>Архиватор Vorta</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
         <translation>Исполняемый файл Borg не найден</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Не удалось найти подходящий исполняемый файл Borg Backup.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225"/>
+        <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
         <translation>Используемый репозиторий</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="227"/>
+        <location filename="../../application.py" line="231"/>
         <source>Abort</source>
         <translation>Прервать</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="228"/>
+        <location filename="../../application.py" line="232"/>
         <source>Continue</source>
         <translation>Продолжить</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230"/>
+        <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Репозиторий {repo_url} может использоваться в другом месте.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="235"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Снимайте блокировку, только если вы уверены, что никакой другой процесс Borg на любой машине не имеет доступа к репозиторию. Прервать операцию или снять блокировку?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="239"/>
+        <location filename="../../application.py" line="243"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>У вас нет прав на доступ к репозиторию {repo_url}. Получите недостающие права и попробуйте ещё раз.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="242"/>
+        <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
         <translation>Недостаточно прав</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="210"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta требуются Full Disk Access права для завершения архивирования</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="207"/>
+        <location filename="../../application.py" line="211"/>
         <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>Без этого некоторые файлы будут недоступны, и архивирование может быть завершено не полностью. Пожалуйста, выдайте&lt;b&gt;Full Disk Access&lt;/b&gt; права для Vorta в &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile import successful!</source>
         <translation>Профиль успешно импортирован!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile {} imported.</source>
         <translation>Профиль {} импортирован.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
         <translation>Ошибка импорта профиля</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
         <translation>Ошибка импорта профиля из {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Рассмотрите возможность удаления или восстановления данного файла для того, чтобы избежать этого сообщения.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="295"/>
+        <source>Repo Check Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="296"/>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="297"/>
+        <source>Repair or recreate the repository soon to avoid missing data.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="136"/>
+        <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
         <translation>Не запланировано</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
         <translation>Архиватор Vorta</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="150"/>
+        <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
         <translation>Запуск фоновой архивации для %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="174"/>
+        <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
         <translation>Успешная архивация для %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Error during backup creation.</source>
         <translation>Ошибка при создании архива.</translation>
     </message>
@@ -1732,7 +1752,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Исполняемый файл Borg не найден.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="142"/>
+        <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Сначала добавьте репозиторий.</translation>
     </message>
@@ -1767,7 +1787,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Нет активных точек монтирования Borg.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="146"/>
+        <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Ваша версия Borg устарела. Требуется &gt;=1.1.0.</translation>
     </message>
@@ -1787,68 +1807,15 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Пожалуйста, разблокируйте свой менеджер паролей.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="174"/>
+        <location filename="../../borg/borg_job.py" line="171"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Пароль вашего репозитория был сохранён в менеджере паролей, который больше не доступен. Попробуйте отвязать и переподключить ваш репозиторий.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="157"/>
+        <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Разное</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../models.py" line="214"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Уведомлять о сбоях фоновых задач</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="219"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Уведомлять об успешных фоновых задачах</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="224"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Автоматически запускать Vorta при входе в систему</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="264"/>
-        <source>Check for updates on startup</source>
-        <translation>Проверять обновления при запуске</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="269"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Учитывать предварительные версии при проверке обновлений</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="229"/>
-        <source>Open main window on startup</source>
-        <translation>Показывать основное окно при запуске</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="234"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Автоматически получать статистику для добавляемых источников</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="277"/>
-        <source>Display background exit dialog</source>
-        <translation>Предлагать продолжить работу в фоне при закрытии</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="244"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Пытаться заменить существующие разрешения при монтировании архива</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="239"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Хранить пароли репозиториев в системном хранилище ключей, если оно доступно</translation>
     </message>
 </context>
 <context>

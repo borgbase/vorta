@@ -40,17 +40,17 @@
         <translation>URL adresa repozitáře:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="140"/>
+        <location filename="../../views/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Vámi zadaný repozitář se nedaří přidat.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Zadejte platnou URL adresu repozitáře nebo vyberte popis umístění v tomto stroji.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Tento repozitář už byl přidán.</translation>
     </message>
@@ -312,8 +312,13 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="13"/>
+        <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="14"/>
+        <source>Repo check failed. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -406,27 +411,27 @@
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="64"/>
+        <location filename="../../borg/borg_job.py" line="66"/>
         <source>Files</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="65"/>
+        <location filename="../../borg/borg_job.py" line="67"/>
         <source>Original</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="66"/>
+        <location filename="../../borg/borg_job.py" line="68"/>
         <source>Deduplicated</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="67"/>
+        <location filename="../../borg/borg_job.py" line="69"/>
         <source>Compressed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="300"/>
+        <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
         <translation type="unfinished"/>
     </message>
@@ -670,17 +675,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Připojit se k existujícímu repozitáři</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="212"/>
+        <location filename="../../views/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Zobrazit moje heslo</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="209"/>
+        <location filename="../../views/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Skrýt moje heslo</translation>
     </message>
@@ -1179,32 +1184,32 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importovat profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Heslová fráze byla načtena ze souboru s exportem</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Heslová fráze byla načtena z vaší klíčenky</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="49"/>
+        <location filename="../../views/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Profil s názvem {} neexistuje. Není co přepsat.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="60"/>
+        <location filename="../../views/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Chyba při importu</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="76"/>
+        <location filename="../../views/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1213,17 +1218,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="79"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Soubory exportu profile_export, vytvořené novější verzí aplikace, nemohou být použity ve starší.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="81"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Z důvodu problémů s přístupovými oprávněními není možné číst soubor exportu profile_export.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Soubor s exportem profilu nenalezen.</translation>
     </message>
@@ -1286,7 +1291,7 @@
         <translation>Storno</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="35"/>
+        <location filename="../../views/main_window.py" line="36"/>
         <source>Start Backup</source>
         <translation>Spustit zálohu</translation>
     </message>
@@ -1331,32 +1336,32 @@
         <translation>Příště už nezobrazovat</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="82"/>
+        <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
         <translation>Importovat ze souboru</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="175"/>
+        <location filename="../../views/main_window.py" line="174"/>
         <source>Can&apos;t delete the last profile.</source>
         <translation>Není možné smazat poslední zbývající profil.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile import successful!</source>
         <translation>Profil úspěšně naimportován!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} naimportován.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Load profile</source>
         <translation>Načíst profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Všechny soubory (*)</translation>
     </message>
@@ -1366,7 +1371,7 @@
         <translation>Exportovat profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="221"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
         <translation>Profil se nepodařilo naimportovat</translation>
     </message>
@@ -1561,14 +1566,9 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="43"/>
+        <location filename="../../tray_menu.py" line="42"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta pro Borg Backup</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Backup in Progress</source>
-        <translation>Záloha probíhá</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="53"/>
@@ -1590,119 +1590,139 @@
         <source>Quit</source>
         <translation>Ukončit</translation>
     </message>
+    <message>
+        <location filename="../../tray_menu.py" line="52"/>
+        <source>Task in progress</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="125"/>
+        <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
         <translation>Nenalezen žádný spustitelný soubor s nástrojem Borg</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta se nepodařilo nalézt použitelný spustitelný soubor s nástrojem Borg Backup.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225"/>
+        <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
         <translation>Repozitář je používán něčím jiným</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="227"/>
+        <location filename="../../application.py" line="231"/>
         <source>Abort</source>
         <translation>Přerušit</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="228"/>
+        <location filename="../../application.py" line="232"/>
         <source>Continue</source>
         <translation>Pokračovat</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230"/>
+        <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Může být, že repozitář na {repo_url} je právě používán odjinud.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="235"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Zámek rušte pouze pokud jste si naprosto jistí, že žádný další proces nástroje Borg na žádném stroji k repozitáři nepřistupuje. Přerušit nebo pokračovat zrušením zámku?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="239"/>
+        <location filename="../../application.py" line="243"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Nemáte oprávnění pro přístup k repozitáři na {repo_url}. Získejte přístup a zkuste to znovu.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="242"/>
+        <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
         <translation>Žádná oprávnění k repozitáři</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="210"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Pro dokončení záloh potřebuje Vorta úplný přístup k disku</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="207"/>
+        <location filename="../../application.py" line="211"/>
         <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>Bez toho některé soubory nebudou přístupné a může to skončit neúplnou zálohou. Nastavte pro Vorta &lt;b&gt;Úplný přístup k disku&lt;/b&gt; v &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Předvolby systému &gt; Zabezpečení a soukromí&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile import successful!</source>
         <translation>Profil úspěšně naimportován!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} naimportován.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
         <translation>Nepodařilo se naimportovat profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
         <translation>Nepodařilo se naimportovat profil z {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Zvažte odebrání nebo opravení tohoto souboru, abyste se zbavili tohoto hlášení.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="295"/>
+        <source>Repo Check Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="296"/>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="297"/>
+        <source>Repair or recreate the repository soon to avoid missing data.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="136"/>
+        <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
         <translation>Žádné naplánovano</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="150"/>
+        <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
         <translation>Spouštění zálohy na pozadí pro %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="174"/>
+        <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
         <translation>Záloha %s úspěšná.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Error during backup creation.</source>
         <translation>Chyba při vytváření zálohy.</translation>
     </message>
@@ -1732,7 +1752,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Spustitelný soubor s nástrojem Borg nenalezen.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="142"/>
+        <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Nejprve přidejte repozitář pro zálohy.</translation>
     </message>
@@ -1767,7 +1787,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Nebyly nalezeny žádné aktivní Borg připojení (mount).</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="146"/>
+        <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Vámi používaná verze Borg je příliš stará. Je zapotřebí verze 1.1.0 a novější.</translation>
     </message>
@@ -1787,69 +1807,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Odemkněte svého správce hesel.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="174"/>
+        <location filename="../../borg/borg_job.py" line="171"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Heslo k vámi využívanému repozitáři bylo uloženo ve správci hesel, který už není k dispozici.
 Zkuste repozitář odpojit a znovu přidat.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="157"/>
+        <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Odemkněte správce hesel systému, nebo vypněte jeho používání aplikací v sekci Různé</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../models.py" line="214"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Při nezdaru v úloze na pozadí zobrazit upozornění</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="219"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Upozorňovat také na úspěšně provedené úlohy na pozadí</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="224"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Spouštět Vorta automaticky při přihlášení se do systému</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="264"/>
-        <source>Check for updates on startup</source>
-        <translation>Při spouště zjistit dostupnost případných aktualizací</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="269"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Při zjišťování dostupnosti případných aktualizací brát v potaz také ještě nevydané vývojové verze</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="229"/>
-        <source>Open main window on startup</source>
-        <translation>Při spuštění otevřít hlavní okno</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="234"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Při přidání získat statistiky souboru/složky</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="277"/>
-        <source>Display background exit dialog</source>
-        <translation>Zobrazit dialog ukončení na pozadí</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="244"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Při připojování archivu se pokusit nahradit stávající oprávnění.</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="239"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Ukládat hesla k repozitářům do systémové klíčenky, pokud je k dispozici.</translation>
     </message>
 </context>
 <context>

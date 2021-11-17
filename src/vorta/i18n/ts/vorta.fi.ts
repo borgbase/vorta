@@ -40,17 +40,17 @@
         <translation>Tietovaraston osoite:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="140"/>
+        <location filename="../../views/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Tietovaraston lisääminen ei onnistunut.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Anna kelvollinen tietovaraston osoite tai valitse paikallinen polku.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Tämä tietovarasto on jo lisätty.</translation>
     </message>
@@ -296,12 +296,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation type="unfinished"/>
+        <translation>Murretaan tietovaraston lukko...</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished"/>
+        <translation>Tietovaraston lukitus murrettu. Tee uudelleen viimeisin toimenpide.</translation>
     </message>
 </context>
 <context>
@@ -309,11 +309,16 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation type="unfinished"/>
+        <translation>Käynnistetään yhdenmukaisuuden tarkistus...</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="13"/>
+        <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
+        <translation>Tarkistus valmistui.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="14"/>
+        <source>Repo check failed. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -322,17 +327,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopiointi valmistui varoituksin. Katso lokista lisätietoja.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopiointi valmistui.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopiointi käynnistetty.</translation>
     </message>
 </context>
 <context>
@@ -340,12 +345,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Poistetaan arkisto...</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Arkisto poistettu.</translation>
     </message>
 </context>
 <context>
@@ -353,12 +358,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Pyydetään eroavaisuuksia arkistojen välillä...</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Saatiin arkistojen väliset eroavaisuudet.</translation>
     </message>
 </context>
 <context>
@@ -366,12 +371,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation type="unfinished"/>
+        <translation>Ladataan tiedostoja arkistosta...</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation type="unfinished"/>
+        <translation>Palautettiin tiedostot arkistosta.</translation>
     </message>
 </context>
 <context>
@@ -379,12 +384,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation type="unfinished"/>
+        <translation>Päivitetään arkistoa...</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation type="unfinished"/>
+        <translation>Arkiston päivittäminen onnistui.</translation>
     </message>
 </context>
 <context>
@@ -392,7 +397,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation type="unfinished"/>
+        <translation>Vahvistetaan olemassa olevaa tietovarastoa...</translation>
     </message>
 </context>
 <context>
@@ -400,35 +405,35 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation type="unfinished"/>
+        <translation>Asetetaan uusi tietovarasto...</translation>
     </message>
 </context>
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="64"/>
-        <source>Files</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="65"/>
-        <source>Original</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../borg/borg_job.py" line="66"/>
+        <source>Files</source>
+        <translation>Tiedostot</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="67"/>
+        <source>Original</source>
+        <translation>Alkuperäinen</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="68"/>
         <source>Deduplicated</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="67"/>
+        <location filename="../../borg/borg_job.py" line="69"/>
         <source>Compressed</source>
-        <translation type="unfinished"/>
+        <translation>Pakattu</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="300"/>
+        <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation type="unfinished"/>
+        <translation>Tehtävä käynnistetty</translation>
     </message>
 </context>
 <context>
@@ -436,12 +441,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation type="unfinished"/>
+        <translation>Noudetaan arkiston sisältöä...</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation type="unfinished"/>
+        <translation>Saatiin arkiston sisältö.</translation>
     </message>
 </context>
 <context>
@@ -449,12 +454,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation type="unfinished"/>
+        <translation>Päivitetään arkistoja...</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation type="unfinished"/>
+        <translation>Arkistojen päivittäminen valmistui.</translation>
     </message>
 </context>
 <context>
@@ -462,7 +467,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation type="unfinished"/>
+        <translation>Liitetään arkisto kansioon...</translation>
     </message>
 </context>
 <context>
@@ -470,12 +475,12 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation type="unfinished"/>
+        <translation>Karsitaan vanhoja arkistoja...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
         <source>Pruning done.</source>
-        <translation type="unfinished"/>
+        <translation>Karsiminen valmistui.</translation>
     </message>
 </context>
 <context>
@@ -483,7 +488,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Irrotetaan arkiston liitosta...</translation>
     </message>
 </context>
 <context>
@@ -670,17 +675,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Yhdistä olemassa olevaan tietovarastoon</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="212"/>
+        <location filename="../../views/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Näytä salasana</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="209"/>
+        <location filename="../../views/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Piilota salasana</translation>
     </message>
@@ -1179,32 +1184,32 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Tuo profiili</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Tunnuslause on ladattu vientitiedostosta</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Tunnuslause on ladattu avainrenkaasta</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="49"/>
+        <location filename="../../views/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Profiilia nimellä {} ei ole ennestään joten sitä ei korvata.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="60"/>
+        <location filename="../../views/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Tuontivirhe</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="76"/>
+        <location filename="../../views/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1213,17 +1218,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="79"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Uudempia profile_export vientitiedostoja ei voida käyttää vanhemmilla versioilla.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="81"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>profile_export-vientitiedostoa ei voitu lukea käyttöoikeusvirheen vuoksi.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Profiilin vientitiedostoa ei löytynyt.</translation>
     </message>
@@ -1286,7 +1291,7 @@
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="35"/>
+        <location filename="../../views/main_window.py" line="36"/>
         <source>Start Backup</source>
         <translation>Käynnistä varmuuskopiointi</translation>
     </message>
@@ -1331,32 +1336,32 @@
         <translation>Älä näytä uudelleen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="82"/>
+        <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
         <translation>Tuo tiedostosta...</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="175"/>
+        <location filename="../../views/main_window.py" line="174"/>
         <source>Can&apos;t delete the last profile.</source>
         <translation>Viimeistä profiilia ei voida poistaa.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile import successful!</source>
         <translation>Profiilin tuonti onnistui!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile {} imported.</source>
         <translation>Profiili {} tuotu.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Load profile</source>
         <translation>Lataa profiili</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Kaikki tiedostot (*)</translation>
     </message>
@@ -1366,7 +1371,7 @@
         <translation>Vie profiili</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="221"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
         <translation>Profiilin tuonti epäonnistui</translation>
     </message>
@@ -1507,22 +1512,22 @@
     <message>
         <location filename="../../views/schedule_tab.py" line="43"/>
         <source>Minutes</source>
-        <translation type="unfinished"/>
+        <translation>Minuutit</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="44"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Tunnit</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="45"/>
         <source>Days</source>
-        <translation type="unfinished"/>
+        <translation>Päivät</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Weeks</source>
-        <translation type="unfinished"/>
+        <translation>Viikot</translation>
     </message>
 </context>
 <context>
@@ -1561,14 +1566,9 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="43"/>
+        <location filename="../../tray_menu.py" line="42"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta Borg-varmuuskopiointi</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Backup in Progress</source>
-        <translation>Varmuuskopiointi käynnissä</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="53"/>
@@ -1590,119 +1590,139 @@
         <source>Quit</source>
         <translation>Lopeta</translation>
     </message>
+    <message>
+        <location filename="../../tray_menu.py" line="52"/>
+        <source>Task in progress</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="125"/>
+        <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
         <translation>Vorta-varmuuskopiointi</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
         <translation>Borg-binääriä ei löytynyt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta ei kyennyt paikallistamaan Borg-varmuuskopioinnin binääritiedostoa.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225"/>
+        <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
         <translation>Tietovarasto käytössä</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="227"/>
+        <location filename="../../application.py" line="231"/>
         <source>Abort</source>
         <translation>Keskeytä</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="228"/>
+        <location filename="../../application.py" line="232"/>
         <source>Continue</source>
         <translation>Jatka</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230"/>
+        <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Tietovarasto osoitteessa {repo_url} saattaa olla käytössä jossain muualla.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="235"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Pura lukitus vain, jos olet varma että mikään muu Borg-prosessi ei käytä tietovarastoa. Perutaanko vai puretaanko lukitus?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="239"/>
+        <location filename="../../application.py" line="243"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Sinulla ei ole käyttöoikeutta tietovaraston {repo_url} käyttämiseksi. Hanki käyttöoikeudet ja yritä uudelleen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="242"/>
+        <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
         <translation>Ei tietovaraston käyttöoikeuksia</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="210"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta tarvitsee koko levyn käytön täydellisiin varmuuskopioihin</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="207"/>
+        <location filename="../../application.py" line="211"/>
         <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>Ilman tätä jotkin tiedostot eivät ole käytettävissä ja varmuuskopio saattaa jäädä vajaaksi. Anna Vortalle lupa &lt;b&gt;koko levyn käyttöön&lt;/b&gt; avaamalla &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Järjestelmäasetukset &gt; Suojaus ja yksityisyys&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile import successful!</source>
         <translation>Profiilin tuonti onnistui!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile {} imported.</source>
         <translation>Profiili {} tuotu.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
         <translation>Profiilin tuonti epäonnistui</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
         <translation>Profiilin tuonti epäonnistui kohteesta {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Harkitse tämän tiedoston poistamista tai korjaamista välttääksesi tämän viestin.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="295"/>
+        <source>Repo Check Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="296"/>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="297"/>
+        <source>Repair or recreate the repository soon to avoid missing data.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="136"/>
+        <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
         <translation>Ei mitään aikataulutettu</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
         <translation>Vorta-varmuuskopiointi</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="150"/>
+        <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
         <translation>Aloitetaan profiilin %s varmuuskopiointia taustalla.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="174"/>
+        <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
         <translation>Profiilin %s varmuuskopiointi onnistui.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Error during backup creation.</source>
         <translation>Virhe varmuuskopiota luotaessa.</translation>
     </message>
@@ -1732,7 +1752,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Borg-binääritiedostoa ei löytynyt.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="142"/>
+        <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Lisää ensin tietovarasto varmuuskopiointia varten.</translation>
     </message>
@@ -1767,7 +1787,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Aktiivisia Borg-liitoksia ei löytynyt.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="146"/>
+        <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Käyttämäsi Borg-versio on liian vanha. &gt;=1.1.0 vaaditaan.</translation>
     </message>
@@ -1787,69 +1807,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Avaa salasanahallintasovelluksesi lukitus.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="174"/>
+        <location filename="../../borg/borg_job.py" line="171"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Tietovaraston salasana oli tallennettuna salasanahallintaan, joka ei ole enää saatavilla.
 Poista tietovaraston linkitys ja lisää se uudelleen.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="157"/>
+        <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Avaa järjestelmän salasananhallinnan lukitus tai ota se pois käytöstä sekalaisista asetuksista</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../models.py" line="214"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Näytä ilmoitukset jos taustatehtävät epäonnistuvat</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="219"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Ilmoita myös onnistuneista taustatehtävistä</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="224"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Käynnistä Vorta automaattisesti sisäänkirjauduttaessa</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="264"/>
-        <source>Check for updates on startup</source>
-        <translation>Tarkista päivitykset käynnistyksen yhteydessä</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="269"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Sisällytä esijulkaisuversiot päivityksiä tarkistettaessa</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="229"/>
-        <source>Open main window on startup</source>
-        <translation>Avaa pääikkuna käynnistymisen yhteydessä</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="234"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Hae lisätyn tiedoston/kansion tiedot taulukkoon</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="277"/>
-        <source>Display background exit dialog</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../models.py" line="244"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Yritä korvata olemassaolevat käyttöoikeudet, kun arkisto otetaan käyttöön</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="239"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Talleta tietovarastojen salasanat järjestelmän avainnippuun, jos saatavilla</translation>
     </message>
 </context>
 <context>

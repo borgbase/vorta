@@ -40,17 +40,17 @@
         <translation>Förrådets URL:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="140"/>
+        <location filename="../../views/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Kunde inte lägga till ditt förråd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Detta förråd har redan lagts till.</translation>
     </message>
@@ -296,12 +296,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation type="unfinished"/>
+        <translation>Bryter förrådslås...</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished"/>
+        <translation>Förrådslås uppbrutet. Upprepa senaste åtgärden.</translation>
     </message>
 </context>
 <context>
@@ -309,11 +309,16 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation type="unfinished"/>
+        <translation>Startar konsekvenskontroll...</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="13"/>
+        <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
+        <translation>Kontroll slutförd.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="14"/>
+        <source>Repo check failed. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -322,17 +327,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Säkerhetskopiering slutfördes med varningar. Se loggar för detaljerad info.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation type="unfinished"/>
+        <translation>Säkerhetskopiering slutförd.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation type="unfinished"/>
+        <translation>Säkerhetskopiering startad.</translation>
     </message>
 </context>
 <context>
@@ -340,12 +345,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Tar bort arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Arkiv borttaget.</translation>
     </message>
 </context>
 <context>
@@ -353,12 +358,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Begär olikheter mellan arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Mottog olikheter mellan arkiv.</translation>
     </message>
 </context>
 <context>
@@ -366,12 +371,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation type="unfinished"/>
+        <translation>Laddar ner filer från arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation type="unfinished"/>
+        <translation>Återställde filer från arkiv.</translation>
     </message>
 </context>
 <context>
@@ -379,12 +384,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation type="unfinished"/>
+        <translation>Uppdaterar arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation type="unfinished"/>
+        <translation>Arkiv uppdaterade.</translation>
     </message>
 </context>
 <context>
@@ -392,7 +397,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation type="unfinished"/>
+        <translation>Validerar befintligt förråd...</translation>
     </message>
 </context>
 <context>
@@ -400,35 +405,35 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation type="unfinished"/>
+        <translation>Skapar nytt förråd...</translation>
     </message>
 </context>
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="64"/>
-        <source>Files</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="65"/>
-        <source>Original</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../borg/borg_job.py" line="66"/>
-        <source>Deduplicated</source>
-        <translation type="unfinished"/>
+        <source>Files</source>
+        <translation>Filer</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="67"/>
-        <source>Compressed</source>
-        <translation type="unfinished"/>
+        <source>Original</source>
+        <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="300"/>
+        <location filename="../../borg/borg_job.py" line="68"/>
+        <source>Deduplicated</source>
+        <translation>Deduplicerat</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="69"/>
+        <source>Compressed</source>
+        <translation>Komprimerat</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation type="unfinished"/>
+        <translation>Åtgärd startad</translation>
     </message>
 </context>
 <context>
@@ -436,12 +441,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation type="unfinished"/>
+        <translation>Hämtar arkivinnehåll...</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation type="unfinished"/>
+        <translation>Arkivinnehåll hämtat.</translation>
     </message>
 </context>
 <context>
@@ -449,12 +454,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation type="unfinished"/>
+        <translation>Uppdaterar arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation type="unfinished"/>
+        <translation>Arkiv uppdaterade.</translation>
     </message>
 </context>
 <context>
@@ -462,7 +467,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation type="unfinished"/>
+        <translation>Monterar arkiv i mapp...</translation>
     </message>
 </context>
 <context>
@@ -470,12 +475,12 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation type="unfinished"/>
+        <translation>Beskär gamla arkiv...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
         <source>Pruning done.</source>
-        <translation type="unfinished"/>
+        <translation>Beskärning slutförd.</translation>
     </message>
 </context>
 <context>
@@ -483,7 +488,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Avmonterar arkiv...</translation>
     </message>
 </context>
 <context>
@@ -670,17 +675,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Anslut till befintligt förråd</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="212"/>
+        <location filename="../../views/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Visa mitt lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="209"/>
+        <location filename="../../views/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Dölj mitt lösenord</translation>
     </message>
@@ -1168,43 +1173,43 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="198"/>
         <source>-</source>
-        <translation type="unfinished"/>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Kör saknade säkerhetskopieringar direkt efter uppstart eller väckning</translation>
     </message>
 </context>
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importera profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Lösenfrasen har lästs in från exportfilen</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Lösenfrasen har lästs in från din nyckelring</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="49"/>
+        <location filename="../../views/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Det finns ingen profil med namnet {}. Det finns inget att skriva över.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="60"/>
+        <location filename="../../views/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Fel vid import</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="76"/>
+        <location filename="../../views/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1213,17 +1218,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="79"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Nyare profile_export exportfiler kan inte användas i äldre versioner.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="81"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Kan inte läsa profile_export exportfil på grund av behörighetsfel.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Profilexportfil hittades inte</translation>
     </message>
@@ -1286,7 +1291,7 @@
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="35"/>
+        <location filename="../../views/main_window.py" line="36"/>
         <source>Start Backup</source>
         <translation>Starta säkerhetskopiering</translation>
     </message>
@@ -1331,32 +1336,32 @@
         <translation>Visa inte detta igen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="82"/>
+        <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
         <translation>Importera från fil...</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="175"/>
+        <location filename="../../views/main_window.py" line="174"/>
         <source>Can&apos;t delete the last profile.</source>
         <translation>Kan inte ta bort senaste profilen.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile import successful!</source>
         <translation>Profilimport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} importerad.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Load profile</source>
         <translation>Läs in profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Alla filer (*)</translation>
     </message>
@@ -1366,7 +1371,7 @@
         <translation>Exportera profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="221"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
         <translation>Kunde inte importera profil</translation>
     </message>
@@ -1507,22 +1512,22 @@
     <message>
         <location filename="../../views/schedule_tab.py" line="43"/>
         <source>Minutes</source>
-        <translation type="unfinished"/>
+        <translation>Minuter</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="44"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Timmar</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="45"/>
         <source>Days</source>
-        <translation type="unfinished"/>
+        <translation>Dagar</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Weeks</source>
-        <translation type="unfinished"/>
+        <translation>Veckor</translation>
     </message>
 </context>
 <context>
@@ -1561,14 +1566,9 @@
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="43"/>
+        <location filename="../../tray_menu.py" line="42"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta för Borg Backup</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Backup in Progress</source>
-        <translation>Säkerhetskopiering pågår</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="53"/>
@@ -1590,119 +1590,139 @@
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
+    <message>
+        <location filename="../../tray_menu.py" line="52"/>
+        <source>Task in progress</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="125"/>
+        <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
         <translation>Vorta säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
         <translation>Ingen Borg-binär hittades</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta kunde inte hitta någon användbar Borg Backup-binär.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225"/>
+        <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
         <translation>Förråd som används</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="227"/>
+        <location filename="../../application.py" line="231"/>
         <source>Abort</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="228"/>
+        <location filename="../../application.py" line="232"/>
         <source>Continue</source>
         <translation>Fortsätt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230"/>
+        <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Förrådet på {repo_url} kanske används någon annan stans.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="235"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Bryt bara låset om du är säker på att ingen annan Borg-process, på någon maskin, använder förrådet. Vill du avbryta eller bryta låset?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="239"/>
+        <location filename="../../application.py" line="243"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Du har inte behörighet att komma åt förrådet på {repo_url}. Skaffa åtkomst och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="242"/>
+        <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
         <translation>Inga förrådsrättigheter</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="210"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta behöver fullständig diskåtkomst för fullständiga säkerhetskopior</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="207"/>
+        <location filename="../../application.py" line="211"/>
         <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>Utan detta kommer vissa filer inte att vara tillgängliga och det kan sluta med en ofullständig säkerhetskopia.  Ange &lt;b&gt;fullständig diskåtkomstbehörighet&lt;/b&gt; för Vorta i &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systeminställningar &gt; Säkerhet &amp; sekretess&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile import successful!</source>
         <translation>Profilimport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} importerad.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
         <translation>Kunde inte importera profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
         <translation>Kunde inte importera en profil från {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Överväg att ta bort eller reparera denna fil, för att få bort detta meddelande.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="295"/>
+        <source>Repo Check Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="296"/>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="297"/>
+        <source>Repair or recreate the repository soon to avoid missing data.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="136"/>
+        <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
         <translation>Ej schemalagd</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
         <translation>Vorta säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="150"/>
+        <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
         <translation>Starta säkerhetskopiering i bakgrunden för %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="174"/>
+        <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
         <translation>Säkerhetskopiering slutförd för %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Error during backup creation.</source>
         <translation>Fel vid skapande av säkerhetskopia.</translation>
     </message>
@@ -1732,7 +1752,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Borg-binär hittades inte.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="142"/>
+        <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Lägg först till ett säkerhetskopieringsförråd.</translation>
     </message>
@@ -1767,7 +1787,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Inga aktiva Borg-monteringar hittades.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="146"/>
+        <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Din Borg-version är för gammal. &gt;=1.1.0 är obligatoriskt.</translation>
     </message>
@@ -1787,69 +1807,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Lås upp din lösenordshanterare.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="174"/>
+        <location filename="../../borg/borg_job.py" line="171"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
 Försök avlänka och återansluta ditt förråd.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="157"/>
+        <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Lås upp din lösenordshanterare eller avaktivera den under Diverse</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../models.py" line="214"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Visa meddelanden när bakgrundsaktiviteter misslyckas</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="219"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Visa meddelanden också  för lyckade bakgrundsaktiviteter</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="224"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Starta Vorta automatiskt vid inloggning</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="264"/>
-        <source>Check for updates on startup</source>
-        <translation>Sök efter uppdateringar vid programstart</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="269"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Inkludera förhandsversioner vid sökning efter uppdateringar</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="229"/>
-        <source>Open main window on startup</source>
-        <translation>Öppna huvudfönstret vid programstart</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="234"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Hämta statistik för fil/mapp när den läggs till</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="277"/>
-        <source>Display background exit dialog</source>
-        <translation>Visa dialog när bakgrundsaktiviteter avslutas</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="244"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Försök att ersätta befintliga behörigheter när arkiv monteras.</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="239"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Lagra förrådslösenord i systemets nyckelkedja, om tillgänglig.</translation>
     </message>
 </context>
 <context>

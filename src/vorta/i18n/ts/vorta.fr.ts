@@ -40,17 +40,17 @@
         <translation>URL du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="140"/>
+        <location filename="../../views/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Impossible d&apos;ajouter le dépôt.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Saisissez un chemin d&apos;accès URL valide ou sélectionnez un répertoire local</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Ce dépôt a déjà été ajouté.</translation>
     </message>
@@ -296,12 +296,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation type="unfinished"/>
+        <translation>Cassage du verrou du dépôt... </translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished"/>
+        <translation>Verrou du dépôt cassé. Veuillez répéter votre dernière action.</translation>
     </message>
 </context>
 <context>
@@ -309,11 +309,16 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation type="unfinished"/>
+        <translation>Début du contrôle d&apos;intégrité…</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="13"/>
+        <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
+        <translation>Vérification complétée.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="14"/>
+        <source>Repo check failed. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -322,17 +327,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>La sauvegarde s&apos;est terminé avec des avertissements. Consultez les logs pour plus de détails.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation type="unfinished"/>
+        <translation>Sauvegarde terminée.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation type="unfinished"/>
+        <translation>Début de la sauvegarde.</translation>
     </message>
 </context>
 <context>
@@ -340,12 +345,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Suppression de l&apos;archive…</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Archive supprimée.</translation>
     </message>
 </context>
 <context>
@@ -353,12 +358,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Récupère des différences entre les archives…</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Différences entre les archives récupérées.</translation>
     </message>
 </context>
 <context>
@@ -366,12 +371,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation type="unfinished"/>
+        <translation>Téléchargement des fichiers depuis l&apos;archive…</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation type="unfinished"/>
+        <translation>Fichiers restaurés depuis l&apos;archive.</translation>
     </message>
 </context>
 <context>
@@ -379,12 +384,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation type="unfinished"/>
+        <translation>Rafraîchissement des archives…</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation type="unfinished"/>
+        <translation>Rafraîchissement des archives terminé.</translation>
     </message>
 </context>
 <context>
@@ -392,7 +397,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation type="unfinished"/>
+        <translation>Validation du dépôt existant...</translation>
     </message>
 </context>
 <context>
@@ -400,35 +405,35 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation type="unfinished"/>
+        <translation>Configurer un nouveau dépôt...</translation>
     </message>
 </context>
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="64"/>
-        <source>Files</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="65"/>
-        <source>Original</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../borg/borg_job.py" line="66"/>
-        <source>Deduplicated</source>
-        <translation type="unfinished"/>
+        <source>Files</source>
+        <translation>Fichiers</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="67"/>
-        <source>Compressed</source>
-        <translation type="unfinished"/>
+        <source>Original</source>
+        <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="300"/>
+        <location filename="../../borg/borg_job.py" line="68"/>
+        <source>Deduplicated</source>
+        <translation>Dédupliqué</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="69"/>
+        <source>Compressed</source>
+        <translation>Compressé</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation type="unfinished"/>
+        <translation>Tâche débutée</translation>
     </message>
 </context>
 <context>
@@ -436,12 +441,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation type="unfinished"/>
+        <translation>Obtention du contenu de l&apos;archive…</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation type="unfinished"/>
+        <translation>Contenu de l&apos;archive obtenu. </translation>
     </message>
 </context>
 <context>
@@ -449,12 +454,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation type="unfinished"/>
+        <translation>Rafraîchissement des archives…</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation type="unfinished"/>
+        <translation>Rafraîchissement des archives terminé.</translation>
     </message>
 </context>
 <context>
@@ -462,7 +467,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation type="unfinished"/>
+        <translation>Montage de l&apos;archive dans un répertoire...</translation>
     </message>
 </context>
 <context>
@@ -470,12 +475,12 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation type="unfinished"/>
+        <translation>Élagage des anciennes archives...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
         <source>Pruning done.</source>
-        <translation type="unfinished"/>
+        <translation>Élagage terminé. </translation>
     </message>
 </context>
 <context>
@@ -483,7 +488,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Démontage de l&apos;archive</translation>
     </message>
 </context>
 <context>
@@ -670,17 +675,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Connexion à un dépôt existant</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="212"/>
+        <location filename="../../views/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Afficher mon mot de passe</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="209"/>
+        <location filename="../../views/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Cacher mon mot de passe</translation>
     </message>
@@ -1169,43 +1174,43 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="198"/>
         <source>-</source>
-        <translation type="unfinished"/>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Lancer la sauvegarde dès le lancement ou le réveil.</translation>
     </message>
 </context>
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importer le Profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Le mot de passe a été chargé depuis le fichier d&apos;export</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Le mot de passe a été chargé depuis votre trousseau de clés.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="49"/>
+        <location filename="../../views/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Il n&apos;y a pas de profil correspondant au nom {}. Rien à remplacer.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="60"/>
+        <location filename="../../views/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Erreur pendant l&apos;importation</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="76"/>
+        <location filename="../../views/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1214,17 +1219,17 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
 {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="79"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Les nouveaux fichiers d&apos;export de profil ne peuvent être importés dans les anciennes versions.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="81"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Erreur de permission: impossible de lire le fichier d&apos;export de profil </translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Fichier de profil exporté non trouvé.</translation>
     </message>
@@ -1287,7 +1292,7 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="35"/>
+        <location filename="../../views/main_window.py" line="36"/>
         <source>Start Backup</source>
         <translation>Commencer la sauvegarde</translation>
     </message>
@@ -1332,32 +1337,32 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
         <translation>Ne plus afficher</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="82"/>
+        <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
         <translation>Importer d&apos;un fichier...</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="175"/>
+        <location filename="../../views/main_window.py" line="174"/>
         <source>Can&apos;t delete the last profile.</source>
         <translation>Impossible de supprimer le dernier profil.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile import successful!</source>
         <translation>Profil importé avec succès !</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="203"/>
+        <location filename="../../views/main_window.py" line="202"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} importé.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Load profile</source>
         <translation>Charger le profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="212"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Tous les fichiers (*)</translation>
     </message>
@@ -1367,9 +1372,9 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
         <translation>Exporter le Profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="221"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
-        <translation type="unfinished"/>
+        <translation>Échec de l&apos;importation du profil</translation>
     </message>
 </context>
 <context>
@@ -1508,22 +1513,22 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
     <message>
         <location filename="../../views/schedule_tab.py" line="43"/>
         <source>Minutes</source>
-        <translation type="unfinished"/>
+        <translation>Minutes</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="44"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Heures</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="45"/>
         <source>Days</source>
-        <translation type="unfinished"/>
+        <translation>Jours</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Weeks</source>
-        <translation type="unfinished"/>
+        <translation>Semaines</translation>
     </message>
 </context>
 <context>
@@ -1562,14 +1567,9 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
 <context>
     <name>TrayMenu</name>
     <message>
-        <location filename="../../tray_menu.py" line="43"/>
+        <location filename="../../tray_menu.py" line="42"/>
         <source>Vorta for Borg Backup</source>
         <translation>Vorta pour BorgBackup</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Backup in Progress</source>
-        <translation>Sauvegarde en cours</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="53"/>
@@ -1591,119 +1591,139 @@ BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatio
         <source>Quit</source>
         <translation>Fermer</translation>
     </message>
+    <message>
+        <location filename="../../tray_menu.py" line="52"/>
+        <source>Task in progress</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="125"/>
+        <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
         <translation>Sauvegarde Vorta</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
         <translation>Aucun binaire de Borg n&apos;a été trouvé</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="188"/>
+        <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta n&apos;a pas pu localiser un binaire de Borg Backup utilisable.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225"/>
+        <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
         <translation>Dépôt en cours d&apos;utilisation</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="227"/>
+        <location filename="../../application.py" line="231"/>
         <source>Abort</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="228"/>
+        <location filename="../../application.py" line="232"/>
         <source>Continue</source>
         <translation>Continuer</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230"/>
+        <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Le dépôt {repu_url} est susceptible d&apos;être utilisé autre part.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="235"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Ne brisez le verrou que si vous êtes certain qu&apos;aucun autre processus Borg sur aucune machine n&apos;accède au dépôt. Abandonner ou casser le verrou ?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="239"/>
+        <location filename="../../application.py" line="243"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Vous n&apos;avez pas la permission d&apos;accéder au dépôt {repo_url}. Récupérez le droit d&apos;accès et essayez à nouveau.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="242"/>
+        <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
         <translation>Pas de permissions sur ce dépôt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="206"/>
+        <location filename="../../application.py" line="210"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta a besoin de l&apos;Accès complet au disque pour effectuer les sauvegardes</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="207"/>
+        <location filename="../../application.py" line="211"/>
         <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>Sans cela, certains fichiers ne seront pas accessibles et vous risquez de vous retrouver avec une sauvegarde incomplète.  Veuillez activer la permission d&apos;&lt;b&gt;Accès complet au disque&lt;/b&gt; pour Vorta, dans les &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Préférences Système &gt; Sécurité &amp; confidentialité&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile import successful!</source>
         <translation>Profil importé avec succès !</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="279"/>
+        <location filename="../../application.py" line="283"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} importé</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
-        <translation type="unfinished"/>
+        <translation>Échec de l&apos;importation du profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
+        <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
+        <translation>Échec de l&apos;import d&apos;un profil depuis {};</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="270"/>
+        <source>Consider removing or repairing this file to get rid of this message.</source>
+        <translation>Veuillez retirer ou réparer ce fichier pour masquer ce message.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="295"/>
+        <source>Repo Check Failed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../application.py" line="266"/>
-        <source>Consider removing or repairing this file to get rid of this message.</source>
+        <location filename="../../application.py" line="296"/>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="297"/>
+        <source>Repair or recreate the repository soon to avoid missing data.</source>
         <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="136"/>
+        <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
         <translation>Aucune planifiée</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="150"/>
+        <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
         <translation>Début de la sauvegarde en arrière-plan pour %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="174"/>
+        <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
         <translation>Sauvegarde réussie pour %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="180"/>
+        <location filename="../../scheduler.py" line="190"/>
         <source>Error during backup creation.</source>
         <translation>Erreur durant la création de la sauvegarde. </translation>
     </message>
@@ -1733,7 +1753,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Le binaire Borg est introuvable.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="142"/>
+        <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>D&apos;abord, ajoutez un dépôt de sauvegarde.</translation>
     </message>
@@ -1768,7 +1788,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Aucun point de montage Borg actif n&apos;a été trouvé. </translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="146"/>
+        <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Votre version de Borg est trop ancienne. Une version &gt;=1.1.0 est requise.</translation>
     </message>
@@ -1788,69 +1808,16 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Veuillez déverrouiller votre gestionnaire de mot de passe.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="174"/>
+        <location filename="../../borg/borg_job.py" line="171"/>
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Le mot de passe du dépôt a été enregistré dans un gestionnaire de mot de passe qui n&apos;est plus disponible.
 Essayez de dissocier et d&apos;ajouter le dépôt à nouveau.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="157"/>
+        <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Veuillez déverrouiller votre gestionnaire de mot de passe système ou le désactiver dans l&apos;onglet Divers.</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../models.py" line="214"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Afficher une notifications lorsqu&apos;une tâche en arrière-plan échoue.</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="219"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Informer également du succès de l&apos;exécution des tâches en arrière-plan</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="224"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Lancer automatiquement Vorta à l&apos;ouverture de session</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="264"/>
-        <source>Check for updates on startup</source>
-        <translation>Vérifier les mises à jour au démarrage</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="269"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Rechercher également les versions bêta lors de la vérification des mises à jour</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="229"/>
-        <source>Open main window on startup</source>
-        <translation>Ouvrir la fenêtre principale au démarrage</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="234"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Obtenir des statistiques sur les fichiers/dossiers lors de l&apos;ajout</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="277"/>
-        <source>Display background exit dialog</source>
-        <translation>Afficher le dialogue de tâche d&apos;arrière-plan à la sortie</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="244"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Essayer de remplacer les permissions existantes lors du montage d&apos;une archive.</translation>
-    </message>
-    <message>
-        <location filename="../../models.py" line="239"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Stocker les mots de passe du dépôt dans le trousseau de clés du système, si disponible</translation>
     </message>
 </context>
 <context>
