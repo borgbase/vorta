@@ -1,6 +1,6 @@
 import os
 from .borg_job import BorgJob
-from vorta.models import SettingsModel
+from vorta.store.models import SettingsModel
 
 
 class BorgMountJob(BorgJob):

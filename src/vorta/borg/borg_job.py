@@ -16,7 +16,7 @@ from subprocess import Popen, PIPE, TimeoutExpired
 
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
-from vorta.models import EventLogModel, BackupProfileMixin
+from vorta.store.models import EventLogModel, BackupProfileMixin
 from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
@@ -256,8 +256,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
                                 f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}, "  # noqa: E501
-                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}"
+                                f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(msg)
                     except json.decoder.JSONDecodeError:

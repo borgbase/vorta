@@ -1,7 +1,7 @@
 import sys
 import logging
 from PyQt5 import QtCore, QtDBus
-from vorta.models import SettingsModel
+from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
 

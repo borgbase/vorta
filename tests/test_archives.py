@@ -2,7 +2,7 @@ import psutil
 from collections import namedtuple
 import pytest
 from PyQt5 import QtCore
-from vorta.models import BackupProfileModel, ArchiveModel
+from vorta.store.models import BackupProfileModel, ArchiveModel
 import vorta.borg
 import vorta.views.archive_tab
 import vorta.utils
