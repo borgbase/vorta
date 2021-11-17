@@ -39,6 +39,7 @@ class VortaApp(QtSingleApplication):
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
+    check_failed_event = QtCore.pyqtSignal(str)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(APP_ID, args_raw)
@@ -79,6 +80,7 @@ class VortaApp(QtSingleApplication):
         self.backup_finished_event.connect(self.backup_finished_event_response)
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
+        self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
@@ -285,3 +287,12 @@ class VortaApp(QtSingleApplication):
         if BackupProfileModel.select().count() == 0:
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
+
+    def check_failed_response(self, repo_url):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setWindowTitle(self.tr('Repo Check Failed'))
+        msg.setText(self.tr('Repository data check for repo %s failed') % repo_url)
+        msg.setInformativeText(self.tr('Repair or recreate the repository soon to avoid missing data.'))
+        msg.exec()
