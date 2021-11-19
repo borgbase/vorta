@@ -229,5 +229,6 @@ class VortaScheduler(QtCore.QObject):
         logger.info('Finished background task for profile %s', profile.name)
 
     def remove_job(self, profile_id):
-        self.timers[profile_id]['qtt'].stop()
-        del self.timers[profile_id]
+        if profile_id in self.timers:
+            self.timers[profile_id]['qtt'].stop()
+            del self.timers[profile_id]

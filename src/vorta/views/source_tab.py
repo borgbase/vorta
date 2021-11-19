@@ -75,7 +75,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         files_count = int(files_count)
 
         for item in items:
-            db_item = SourceFileModel.get(dir=path)
+            db_item = SourceFileModel.get(dir=path, profile=self.profile())
             if QFileInfo(path).isDir():
                 self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText(self.tr("Folder"))
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
