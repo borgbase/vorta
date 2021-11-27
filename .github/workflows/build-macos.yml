@@ -26,7 +26,7 @@ jobs:
         python-version: 3.9
     - name: Install system dependencies
       run: |
-        brew upgrade openssl readline xz
+        brew install openssl readline xz
     - name: Install build dependencies
       run: |
         brew install --cask sparkle
