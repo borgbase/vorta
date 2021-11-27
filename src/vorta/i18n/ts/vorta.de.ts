@@ -319,7 +319,7 @@
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Überprüfung des Repositorys fehlgeschlagen. Details dazu im Log.</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1593,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Vorgang läuft</translation>
     </message>
 </context>
 <context>
@@ -1686,17 +1686,17 @@
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Überprüfung des Repositorys fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>Überprüfung des Repositorys %s fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
         <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>Repository sollte zeitnah repariert oder neu erstellt werden, um Datenverlust zu verhindern.</translation>
     </message>
 </context>
 <context>

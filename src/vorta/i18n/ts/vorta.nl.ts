@@ -319,7 +319,7 @@
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>De repocontrole is mislukt. Bekijk voor meer informatie het logboek.</translation>
     </message>
 </context>
 <context>
@@ -1594,7 +1594,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Er is een lopende taak</translation>
     </message>
 </context>
 <context>
@@ -1687,17 +1687,17 @@
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Repocontrole mislukt</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>De repogegevenscontrole op %s is mislukt</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
         <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>Repareer de repo of maak deze opnieuw aan om gegevensverlies te voorkomen.</translation>
     </message>
 </context>
 <context>
