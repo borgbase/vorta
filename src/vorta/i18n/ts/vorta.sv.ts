@@ -319,7 +319,7 @@
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Förrådskontroll misslyckades, Se logg för detaljerad info.</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1593,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Åtgärd pågår</translation>
     </message>
 </context>
 <context>
@@ -1686,17 +1686,17 @@
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Förrådskontroll misslyckades</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>Datakontroll för förrådet %s misslyckades</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
         <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>Reparera eller omskapa förrådet snart, för att undvika att data saknas.</translation>
     </message>
 </context>
 <context>
