@@ -6,7 +6,8 @@ def get_colored_icon(icon_name):
     """
     Return SVG icon in the correct color.
     """
-    svg_str = open(get_asset(f"icons/{icon_name}.svg"), 'rb').read()
+    with open(get_asset(f"icons/{icon_name}.svg"), 'rb') as svg_file:
+        svg_str = svg_file.read()
     if uses_dark_mode():
         svg_str = svg_str.replace(b'#000000', b'#ffffff')
     # Reduce image size to 128 height
