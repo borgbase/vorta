@@ -3,9 +3,9 @@ import os
 import re
 
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtCore import QModelIndex, QSortFilterProxyModel, Qt, QVariant
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QHeaderView
+from PyQt5.QtWidgets import QHeaderView, QTreeView
 
 from vorta.utils import (get_asset, get_dict_from_list, nested_dict, uses_dark_mode)
 
@@ -33,10 +33,11 @@ class DiffResult(DiffResultBase, DiffResultUI):
             if json_lines else parse_diff_lines(lines)
         model = DiffTree(files_with_attributes, nested_file_list)
 
-        view = self.treeView
+        view: QTreeView = self.treeView
         view.setAlternatingRowColors(True)
         view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-        view.setModel(model)
+        view.setModel(SortProxyModel(model))
+        view.setSortingEnabled(True)
         header = view.header()
         header.setStretchLastSection(False)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -202,6 +203,19 @@ class DiffTree(TreeModel):
 
         item = index.internalPointer()
 
+        if role == Qt.UserRole:
+            result = {
+                "name": item.itemData[0],
+                "modified": item.itemData[1],
+            }
+
+            try:
+                result["bytes"] = item.itemData[2]
+            except IndexError:
+                pass
+
+            return result
+
         if role == Qt.ForegroundRole:
             if item.itemData[1] == 'removed':
                 return self.red
@@ -219,3 +233,49 @@ class DiffTree(TreeModel):
         if not index.isValid():
             return Qt.NoItemFlags
         return Qt.ItemIsEnabled
+
+
+class SortProxyModel(QSortFilterProxyModel):
+    def __init__(self, model):
+        super().__init__()
+        self.setSourceModel(model)
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex):
+        left_data = left.data(Qt.UserRole)
+        right_data = right.data(Qt.UserRole)
+        sort_order = self.sortOrder()
+        sort_column = self.sortColumn()
+        left_total_bytes = 0
+        right_total_bytes = 0
+
+        if sort_column == 0:
+            left_is_folder = not "bytes" in left_data
+            right_is_folder = not "bytes" in right_data
+            left_value = left_data["name"].upper()
+            right_value = right_data["name"].upper()
+
+            # Keep folders at the top and continue to sort by name
+            if left_is_folder and not right_is_folder:
+                if sort_order == Qt.SortOrder.AscendingOrder:
+                    left_value = "!" + left_value
+                else:
+                    right_value = "!" + right_value
+            if right_is_folder and not left_is_folder:
+                if sort_order == Qt.SortOrder.AscendingOrder:
+                    right_value = "!" + right_value
+                else:
+                    left_value = "!" + left_value
+        elif sort_column == 1:
+            left_value = left_data["modified"]
+            right_value = right_data["modified"]
+        elif sort_column == 2:
+            try:
+                left_value = left_data["bytes"]
+            except KeyError:
+                left_value = left_total_bytes
+            try:
+                right_value = right_data["bytes"]
+            except KeyError:
+                right_value = right_total_bytes
+
+        return left_value < right_value
