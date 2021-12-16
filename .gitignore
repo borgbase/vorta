@@ -15,7 +15,10 @@ vorta.egg-info
 .vagrant
 *.log
 htmlcov
+# Avoid adding translations of source language
+# Files are still used by Transifex
 src/vorta/i18n/ts/vorta.en.ts
+src/vorta/i18n/ts/vorta.en_US.ts
 flatpak/app/
 flatpak/.flatpak-builder/
 
