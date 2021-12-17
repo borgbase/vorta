@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="de">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -1816,6 +1816,59 @@ Try unlinking and re-adding your repo.</source>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Bitte Passwortmanager entsperren oder unter Diverses deaktivieren.</translation>
+    </message>
+</context>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="10"/>
+        <source>Display notifications when background tasks fail</source>
+        <translation>Benachrichtigungen anzeigen, falls Hintergrund-Aufgaben fehlschlagen</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="15"/>
+        <source>Also notify about successful background tasks</source>
+        <translation>Auch über erfolgreiche Hintergrund-Aufgaben benachrichtigen</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Vorta automatisch bei der Anmeldung starten</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25"/>
+        <source>Open main window on startup</source>
+        <translation>Hauptfenster beim Starten öffnen</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="30"/>
+        <source>Get statistics of file/folder when added</source>
+        <translation>Größe berechnen, wenn neue Dateien oder Ordner hinzugefügt werden</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="35"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Repository-Passwörter im Schlüsselbund des Betriebssystems speichern, falls verfügbar.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="40"/>
+        <source>Try to replace existing permissions when mounting an archive.</source>
+        <translation>Versuchen, bestehende Berechtigungen zu ersetzen, wenn ein Archiv eingehängt wird.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60"/>
+        <source>Check for updates on startup</source>
+        <translation>Prüfe beim Start auf Aktualisierungen</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="65"/>
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Auch Vorab-Versionen bei der Prüfung auf Aktualisierungen miteinbeziehen</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="73"/>
+        <source>Display background exit dialog</source>
+        <translation>Dialog zum Beenden im Hintergrund anzeigen</translation>
     </message>
 </context>
 <context>

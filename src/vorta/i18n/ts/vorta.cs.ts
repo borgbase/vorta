@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="cs">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -868,7 +868,7 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="136"/>
         <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
-        <translation>Odpojit repozitář (toto nesmaže žádná data. Vždy můžete repozitář zase přidat nazpět.)</translation>
+        <translation>Odpojit repozitář (toto nesmaže žádná data. Vždy můžete repozitář zase přidat nazpět).</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="164"/>
@@ -1817,6 +1817,59 @@ Zkuste repozitář odpojit a znovu přidat.</translation>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Odemkněte správce hesel systému, nebo vypněte jeho používání aplikací v sekci Různé</translation>
+    </message>
+</context>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="10"/>
+        <source>Display notifications when background tasks fail</source>
+        <translation>Při nezdaru v úloze na pozadí zobrazit upozornění</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="15"/>
+        <source>Also notify about successful background tasks</source>
+        <translation>Upozorňovat také na úspěšně provedené úlohy na pozadí</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Spouštět Vorta automaticky při přihlášení se do systému</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25"/>
+        <source>Open main window on startup</source>
+        <translation>Při spuštění otevřít hlavní okno</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="30"/>
+        <source>Get statistics of file/folder when added</source>
+        <translation>Při přidání získat statistiky souboru/složky</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="35"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Ukládat hesla k repozitářům do systémové klíčenky, pokud je k dispozici.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="40"/>
+        <source>Try to replace existing permissions when mounting an archive.</source>
+        <translation>Při připojování archivu se pokusit nahradit stávající oprávnění.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60"/>
+        <source>Check for updates on startup</source>
+        <translation>Při spouště zjistit dostupnost případných aktualizací</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="65"/>
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Při zjišťování dostupnosti případných aktualizací brát v potaz také ještě nevydané vývojové verze</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="73"/>
+        <source>Display background exit dialog</source>
+        <translation>Zobrazit dialog ukončení na pozadí</translation>
     </message>
 </context>
 <context>
