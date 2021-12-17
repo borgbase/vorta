@@ -40,7 +40,6 @@
         "dependencies/python3-peewee.json",
         "dependencies/python3-psutil.json",
         "dependencies/python3-secretstorage.json",
-        "dependencies/python3-pytest-runner.json",
         {
             "name": "vorta",
             "buildsystem": "simple",
