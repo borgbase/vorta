@@ -1,7 +1,7 @@
 {
     "app-id": "com.borgbase.Vorta",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.14",
+    "runtime-version": "5.15",
     "sdk": "org.kde.Sdk",
     "command": "vorta",
     "branch": "devel",
