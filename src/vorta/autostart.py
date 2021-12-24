@@ -46,7 +46,7 @@ def open_app_at_startup(enabled=True):
             autostart_path = Path(user_config_dir("autostart"))
 
         if not autostart_path.exists():
-            autostart_path.mkdir()
+            autostart_path.mkdir(parents=True, exist_ok=True)
 
         autostart_file_path = autostart_path / 'vorta.desktop'
 
