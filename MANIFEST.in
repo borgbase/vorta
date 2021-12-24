@@ -5,3 +5,5 @@ recursive-include src/vorta/i18n/qm *.qm
 exclude src/vorta/i18n/qm/vorta.en.qm
 
 recursive-exclude tests *
+global-exclude *.DS_Store
+global-exclude *.egg-info
