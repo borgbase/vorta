@@ -55,6 +55,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
 
     default_profile.repo = new_repo.id
     default_profile.dont_run_on_metered_networks = False
+    default_profile.validation_on = False
     default_profile.save()
 
     test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
