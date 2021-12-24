@@ -117,14 +117,15 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
     ssh_dialog.generate_key()
 
-    qtbot.waitUntil(lambda: key_tmpfile.check(file=1), **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: pub_tmpfile.check(file=1), **pytest._wait_defaults)
-
-    key_tmpfile_content = key_tmpfile.read()
-    pub_tmpfile_content = pub_tmpfile.read()
-    assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
-    assert pub_tmpfile_content.startswith('ssh-ed25519')
+    # Ensure new key files exist
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
+    assert len(ssh_dir.listdir()) == 2
+
+    # Ensure valid keys were created
+    key_tmpfile_content = key_tmpfile.read()
+    assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
+    pub_tmpfile_content = pub_tmpfile.read()
+    assert pub_tmpfile_content.startswith('ssh-ed25519')
 
     ssh_dialog.generate_key()
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'), **pytest._wait_defaults)
