@@ -5,17 +5,18 @@ The following authors made major code contributions to Vorta source code:
 
 ### [Manuel Riel](https://github.com/m3nu)
 - Original author
-- Maintainer
 
 ### [Thomas Waldmann](https://github.com/ThomasWaldmann)
 - Major contributions to implement translations
 - Clean up style and formatting
-- Maintainer
 
 ### [Julian Hofer](https://github.com/Hofer-Julian)
 - Flatpak packaging for Linux
 - Numerous incremental features
-- Maintainer
+
+### [Bastien](https://github.com/bastiencyr)
+- Queuing system for Borg jobs
+- Numerous incremental fixes
 
 ### Others
 For other contributors, see [here](https://github.com/borgbase/vorta/graphs/contributors).
