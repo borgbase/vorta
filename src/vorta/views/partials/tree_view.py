@@ -20,6 +20,7 @@ class FolderItem:
         self.parentItem = parent
         self.path = path
         self.itemData = [name, modified]
+        self.contained_size = 0
         self.childItems = []
         self.checkedState = False
         self.files_with_attributes = files_with_attributes
@@ -30,9 +31,18 @@ class FolderItem:
         self._filtered_children = []
         search_path = os.path.join(self.path, name)
         if parent is None:  # Find path for root folder
+            self.contained_size = sum(f[0] for f in self.files_with_attributes)
             for root_folder in nested_file_list.keys():
                 self._filtered_children.append((0, "", root_folder, "", 'd',))
         else:
+            # Each folder contains the size of all children.
+            # Note that string compare is used here for performance.
+            self.contained_size = 0
+            search_path_with_trailing_sep = os.path.join(search_path, '')
+            for f in self.files_with_attributes:
+                if f[3] == search_path or f[3].startswith(search_path_with_trailing_sep):
+                    self.contained_size += f[0]
+
             self.checkedState = (
                 parent.checkedState
             )  # If there is a parent, use its checked-status.
@@ -127,8 +137,8 @@ class FolderItem:
     def data(self, column):
         if column <= 1:
             return self.itemData[column]
-        else:
-            return None
+        elif column == 2:
+            return pretty_bytes(self.contained_size)
 
     def parent(self):
         return self.parentItem
