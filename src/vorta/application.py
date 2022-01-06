@@ -293,21 +293,55 @@ class VortaApp(QtSingleApplication):
         """
         Process the signal that a repo consistency check failed.
 
-        Displays a `QMessageBox` with an error message.
+        Displays a `QMessageBox` with an error message depending on the
+        return code of the `BorgJob`.
 
         Parameters
         ----------
         repo_url : str
             The url of the repo of concern
         """
-        # extract repourl from the params for the borg job
+        # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
+        returncode = result['returncode']
 
-        # Create and display QMessageBox
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setWindowTitle(self.tr('Repo Check Failed'))
-        msg.setText(self.tr('Repository data check for repo %s failed') % repo_url)
-        msg.setInformativeText(self.tr('Repair or recreate the repository soon to avoid missing data.'))
-        msg.exec()
+        # Switch over returncodes
+        if returncode == 0:
+            # No fail
+            logger.warning(
+                'VortaApp.check_failed_response was called with returncode 0')
+        elif returncode == 130:
+            # Keyboard interupt
+            pass
+        else: # Real error
+            # Create QMessageBox
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Critical) # changed for warning
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setWindowTitle(self.tr('Repo Check Failed'))
+
+            if returncode == 1:
+                # warning
+                msg.setIcon(QMessageBox.Icon.Warning)
+                text = self.tr('Borg exited with a warning message. See logs for details.')
+                infotext = ""
+            elif returncode > 128:
+                # 128+N - killed by signal N (e.g. 137 == kill -9)
+                signal = returncode - 128
+                text = (
+                    self.tr('Repository data check for repo was killed by signal %s.')
+                    % (signal)
+                )
+                infotext = self.tr('The process running the check job got a kill signal. Try again.')
+            else:
+                # Real error
+                text = (
+                    self.tr('Repository data check for repo %s failed. Error code %s')
+                    % (repo_url, returncode)
+                )
+                infotext = self.tr('Repair or recreate the repository soon to avoid missing data.')
+
+            msg.setText(text)
+            msg.setInformativeText(infotext)
+            # Display messagebox
+            msg.exec()
