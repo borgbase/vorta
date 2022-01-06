@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, List, Tuple
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -304,6 +304,8 @@ class VortaApp(QtSingleApplication):
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
         returncode = result['returncode']
+        errors: List[Tuple[int, str]] = result['errors']
+        error_message = errors[-1][1] if errors else ''
 
         # Switch over returncodes
         if returncode == 0:
@@ -313,10 +315,10 @@ class VortaApp(QtSingleApplication):
         elif returncode == 130:
             # Keyboard interupt
             pass
-        else: # Real error
+        else:  # Real error
             # Create QMessageBox
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Icon.Critical) # changed for warning
+            msg.setIcon(QMessageBox.Icon.Critical)  # changed for warning
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setWindowTitle(self.tr('Repo Check Failed'))
 
@@ -324,7 +326,7 @@ class VortaApp(QtSingleApplication):
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
                 text = self.tr('Borg exited with a warning message. See logs for details.')
-                infotext = ""
+                infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
@@ -339,7 +341,8 @@ class VortaApp(QtSingleApplication):
                     self.tr('Repository data check for repo %s failed. Error code %s')
                     % (repo_url, returncode)
                 )
-                infotext = self.tr('Repair or recreate the repository soon to avoid missing data.')
+                infotext = error_message + '\n'
+                infotext += self.tr('Consider repairing or recreating the repository soon to avoid missing data.')
 
             msg.setText(text)
             msg.setInformativeText(infotext)
