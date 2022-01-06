@@ -169,7 +169,20 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
 
-    def update_path_info(self, index_row):
+    def update_path_info(self, index_row: int):
+        """
+        Update the information for the source in the given table row.
+
+        This displays `Calculating...` in the updated rows and creates a
+        `FilePathInfoAsync` instance to get the new information.
+        The method `set_path_info` will update the row with the information
+        provided by this instance.
+
+        Parameters
+        ----------
+        index_row : int
+            The index of the row to update.
+        """
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
         self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
         self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
@@ -235,6 +248,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
     def sources_update(self):
+        """
+        Update each row in the sources table.
+
+        Calls `update_path_info` for each row. to do the job.
+        """
         for row in range(0, self.sourceFilesWidget.rowCount()):
             self.update_path_info(row)  # Update data for each entry
 
