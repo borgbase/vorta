@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from typing import Any, Dict
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -39,7 +40,7 @@ class VortaApp(QtSingleApplication):
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
-    check_failed_event = QtCore.pyqtSignal(str)
+    check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(APP_ID, args_raw)
@@ -288,7 +289,7 @@ class VortaApp(QtSingleApplication):
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
 
-    def check_failed_response(self, repo_url: str):
+    def check_failed_response(self, result: Dict[str, Any]):
         """
         Process the signal that a repo consistency check failed.
 
@@ -299,6 +300,10 @@ class VortaApp(QtSingleApplication):
         repo_url : str
             The url of the repo of concern
         """
+        # extract repourl from the params for the borg job
+        repo_url = result['params']['repo_url']
+
+        # Create and display QMessageBox
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setStandardButtons(QMessageBox.Ok)

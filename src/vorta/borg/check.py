@@ -12,7 +12,7 @@ class BorgCheckJob(BorgJob):
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(self.tr('Repo check failed. See logs for details.'))
-            self.app.check_failed_event.emit(self.params['repo_url'])
+            self.app.check_failed_event.emit(result)
         else:
             self.app.backup_progress_event.emit(self.tr('Check completed.'))
 
