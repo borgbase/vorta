@@ -20,7 +20,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         out, err = process.communicate()
         process.wait()
-        for line in out.decode("utf-8").split('\n'):
+        for line in out.decode(errors='ignore').split('\n'):
             split_line = line.strip().split(':')
             if split_line[0] == 'SSID':
                 return split_line[1].strip()
