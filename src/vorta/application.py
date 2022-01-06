@@ -5,21 +5,21 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
-from vorta.borg.create import BorgCreateJob
-from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
-from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
+from vorta.borg.create import BorgCreateJob
+from vorta.borg.jobs_manager import JobsManager
+from vorta.borg.version import BorgVersionJob
+from vorta.config import PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
-from vorta.store.models import BackupProfileModel, SettingsModel
-from vorta.store.connection import cleanup_db
+from vorta.notifications import VortaNotifications
+from vorta.profile_export import ProfileExport
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
-from vorta.borg.jobs_manager import JobsManager
+from vorta.store.connection import cleanup_db
+from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
-from vorta.notifications import VortaNotifications
-from vorta.profile_export import ProfileExport
 
 logger = logging.getLogger(__name__)
 
@@ -288,7 +288,17 @@ class VortaApp(QtSingleApplication):
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
 
-    def check_failed_response(self, repo_url):
+    def check_failed_response(self, repo_url: str):
+        """
+        Process the signal that a repo consistency check failed.
+
+        Displays a `QMessageBox` with an error message.
+
+        Parameters
+        ----------
+        repo_url : str
+            The url of the repo of concern
+        """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setStandardButtons(QMessageBox.Ok)
