@@ -305,7 +305,7 @@ class VortaApp(QtSingleApplication):
         repo_url = result['params']['repo_url']
         returncode = result['returncode']
         errors: List[Tuple[int, str]] = result['errors']
-        error_message = errors[0][1] if errors else ''
+        error_message = errors[-1][1] if errors else ''
 
         # Switch over returncodes
         if returncode == 0:
