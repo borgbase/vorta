@@ -1,25 +1,26 @@
 import logging
 import os
 import sys
+from typing import Any, Dict, List, Tuple
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
 
-from vorta.borg.create import BorgCreateJob
-from vorta.borg.version import BorgVersionJob
 from vorta.borg.break_lock import BorgBreakJob
-from vorta.config import TEMP_DIR, PROFILE_BOOTSTRAP_FILE
+from vorta.borg.create import BorgCreateJob
+from vorta.borg.jobs_manager import JobsManager
+from vorta.borg.version import BorgVersionJob
+from vorta.config import PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
-from vorta.store.models import BackupProfileModel, SettingsModel
-from vorta.store.connection import cleanup_db
+from vorta.notifications import VortaNotifications
+from vorta.profile_export import ProfileExport
 from vorta.qt_single_application import QtSingleApplication
 from vorta.scheduler import VortaScheduler
-from vorta.borg.jobs_manager import JobsManager
+from vorta.store.connection import cleanup_db
+from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
-from vorta.notifications import VortaNotifications
-from vorta.profile_export import ProfileExport
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class VortaApp(QtSingleApplication):
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
-    check_failed_event = QtCore.pyqtSignal(str)
+    check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(APP_ID, args_raw)
@@ -288,11 +289,62 @@ class VortaApp(QtSingleApplication):
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
 
-    def check_failed_response(self, repo_url):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setWindowTitle(self.tr('Repo Check Failed'))
-        msg.setText(self.tr('Repository data check for repo %s failed') % repo_url)
-        msg.setInformativeText(self.tr('Repair or recreate the repository soon to avoid missing data.'))
-        msg.exec()
+    def check_failed_response(self, result: Dict[str, Any]):
+        """
+        Process the signal that a repo consistency check failed.
+
+        Displays a `QMessageBox` with an error message depending on the
+        return code of the `BorgJob`.
+
+        Parameters
+        ----------
+        repo_url : str
+            The url of the repo of concern
+        """
+        # extract data from the params for the borg job
+        repo_url = result['params']['repo_url']
+        returncode = result['returncode']
+        errors: List[Tuple[int, str]] = result['errors']
+        error_message = errors[0][1] if errors else ''
+
+        # Switch over returncodes
+        if returncode == 0:
+            # No fail
+            logger.warning(
+                'VortaApp.check_failed_response was called with returncode 0')
+        elif returncode == 130:
+            # Keyboard interupt
+            pass
+        else:  # Real error
+            # Create QMessageBox
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Critical)  # changed for warning
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setWindowTitle(self.tr('Repo Check Failed'))
+
+            if returncode == 1:
+                # warning
+                msg.setIcon(QMessageBox.Icon.Warning)
+                text = self.tr('Borg exited with a warning message. See logs for details.')
+                infotext = error_message
+            elif returncode > 128:
+                # 128+N - killed by signal N (e.g. 137 == kill -9)
+                signal = returncode - 128
+                text = (
+                    self.tr('Repository data check for repo was killed by signal %s.')
+                    % (signal)
+                )
+                infotext = self.tr('The process running the check job got a kill signal. Try again.')
+            else:
+                # Real error
+                text = (
+                    self.tr('Repository data check for repo %s failed. Error code %s')
+                    % (repo_url, returncode)
+                )
+                infotext = error_message + '\n'
+                infotext += self.tr('Consider repairing or recreating the repository soon to avoid missing data.')
+
+            msg.setText(text)
+            msg.setInformativeText(infotext)
+            # Display messagebox
+            msg.exec()
