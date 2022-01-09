@@ -214,6 +214,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
         p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
                   env=self.env, cwd=self.cwd, start_new_session=True)
+        error_messages = []  # List of error messages included in the result
 
         self.process = p
 
@@ -250,6 +251,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 f'{parsed["levelname"]}: {parsed["message"]}', context)
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
+
+                            if level_int >= logging.WARNING:
+                                # Append log to list of error messages
+                                error_messages.append((level_int, parsed["message"]))
+
                         elif parsed['type'] == 'file_status':
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
                         elif parsed['type'] == 'archive_progress':
@@ -275,6 +281,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
             'params': self.params,
             'returncode': self.process.returncode,
             'cmd': self.cmd,
+            'errors': error_messages,
         }
         stdout = ''.join(stdout)
 

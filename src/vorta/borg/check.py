@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from .borg_job import BorgJob
 
 
@@ -7,12 +9,20 @@ class BorgCheckJob(BorgJob):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Starting consistency check...'))
 
-    def finished_event(self, result):
+    def finished_event(self, result: Dict[str, Any]):
+        """
+        Process that the job terminated with the given results.
+
+        Parameters
+        ----------
+        result : Dict[str, Any]
+            The (json-like) dictionary containing the job results.
+        """
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(self.tr('Repo check failed. See logs for details.'))
-            self.app.check_failed_event.emit(self.params['repo_url'])
+            self.app.check_failed_event.emit(result)
         else:
             self.app.backup_progress_event.emit(self.tr('Check completed.'))
 
