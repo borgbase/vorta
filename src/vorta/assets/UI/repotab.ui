@@ -133,7 +133,7 @@
        <item row="0" column="2">
         <widget class="QToolButton" name="repoRemoveToolbutton">
          <property name="toolTip">
-          <string>Unlink repository (This does not delete any data. You can always readd a repo later.)</string>
+          <string>Unlink repository without deleting it from the disk.</string>
          </property>
          <property name="autoRaise">
           <bool>false</bool>
