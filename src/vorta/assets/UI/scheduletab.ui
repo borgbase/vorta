@@ -21,6 +21,7 @@
     <widget class="QToolBox" name="toolBox">
      <property name="font">
       <font>
+       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -32,12 +33,13 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>663</width>
-        <height>354</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <property name="font">
        <font>
+        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -184,6 +186,7 @@
             <widget class="QLabel" name="label_3">
              <property name="font">
               <font>
+               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -222,7 +225,7 @@
            <item>
             <widget class="QCheckBox" name="pruneCheckBox">
              <property name="text">
-              <string>Prune old Archives after each backup</string>
+              <string>Prune old archives after each backup</string>
              </property>
             </widget>
            </item>
@@ -337,8 +340,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>282</width>
-        <height>146</height>
+        <width>291</width>
+        <height>151</height>
        </rect>
       </property>
       <attribute name="label">
@@ -398,8 +401,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>86</height>
+        <width>99</width>
+        <height>93</height>
        </rect>
       </property>
       <attribute name="label">
@@ -414,6 +417,7 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -460,8 +464,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>494</width>
-        <height>288</height>
+        <width>648</width>
+        <height>266</height>
        </rect>
       </property>
       <attribute name="label">
@@ -512,6 +516,7 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
+           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
