@@ -364,7 +364,7 @@
        <item row="0" column="0">
         <widget class="QCheckBox" name="dontRunOnMeteredNetworksCheckBox">
          <property name="text">
-          <string>Don't run backup over metered networks</string>
+          <string>Do not run backups over metered networks</string>
          </property>
          <property name="tristate">
           <bool>false</bool>

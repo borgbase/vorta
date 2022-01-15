@@ -210,7 +210,7 @@ class VortaApp(QtSingleApplication):
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
             msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
             msg.setInformativeText(self.tr(
-                "Without this, some files won't be accessible and you may end up with an incomplete "
+                "Without this, some files will not be accessible and you may end up with an incomplete "
                 "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
                 "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
                 "System Preferences > Security & Privacy</a>."

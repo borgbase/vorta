@@ -1,16 +1,19 @@
-from pathlib import Path
 import logging
+from pathlib import Path
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QToolTip, QFileDialog
+from PyQt5.QtWidgets import (QCheckBox, QFileDialog, QMenu, QMessageBox,
+                             QShortcut, QToolTip)
 
+from vorta.profile_export import ImportFailedException, ProfileExport
 from vorta.store.models import BackupProfileModel, SettingsModel
-from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
+from vorta.utils import (borg_compat, get_asset, get_network_status_monitor,
+                         is_system_tray_available)
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
-from vorta.profile_export import ProfileExport, ImportFailedException
+
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -171,7 +174,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.profile_select_action(0)
 
         else:
-            warn = self.tr("Can't delete the last profile.")
+            warn = self.tr("Can not delete the last profile.")
             point = QPoint(0, self.profileDeleteButton.size().height() / 2)
             QToolTip.showText(self.profileDeleteButton.mapToGlobal(point), warn)
 

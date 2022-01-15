@@ -116,7 +116,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Don't change this if you want SSH to automatically find the key.</string>
+          <string>Do not change this if you want SSH to automatically find the key.</string>
          </property>
         </widget>
        </item>
