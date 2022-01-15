@@ -93,7 +93,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Profile Name</string>
+         <string>Profile Name:</string>
         </property>
         <property name="buddy">
          <cstring>profileNameField</cstring>
