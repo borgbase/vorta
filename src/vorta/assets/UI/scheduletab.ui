@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>675</width>
-        <height>368</height>
+        <width>733</width>
+        <height>347</height>
        </rect>
       </property>
       <property name="font">
@@ -105,11 +105,11 @@
           </layout>
          </item>
          <item row="2" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QRadioButton" name="scheduleFixedRadio">
              <property name="text">
-              <string>Backup daily at</string>
+              <string>Backup daily at:</string>
              </property>
             </widget>
            </item>
@@ -142,7 +142,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Backup every </string>
+              <string>Backup periodically. Interval:</string>
              </property>
             </widget>
            </item>
@@ -340,8 +340,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
-        <height>151</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -401,8 +401,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>99</width>
-        <height>93</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
@@ -464,8 +464,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>648</width>
-        <height>266</height>
+        <width>675</width>
+        <height>368</height>
        </rect>
       </property>
       <attribute name="label">
