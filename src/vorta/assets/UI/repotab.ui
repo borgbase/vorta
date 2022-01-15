@@ -133,7 +133,7 @@
        <item row="0" column="2">
         <widget class="QToolButton" name="repoRemoveToolbutton">
          <property name="toolTip">
-          <string>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</string>
+          <string>Unlink repository (This doesn't delete any data. You can always add a repo again later.)</string>
          </property>
          <property name="autoRaise">
           <bool>false</bool>
@@ -182,7 +182,7 @@
        <item row="0" column="2">
         <widget class="QToolButton" name="sshKeyToClipboardButton">
          <property name="toolTip">
-          <string>Copy public SSH key to clipboard.</string>
+          <string>Copy public SSH key to clipboard</string>
          </property>
          <property name="statusTip">
           <string/>

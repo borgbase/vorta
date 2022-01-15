@@ -65,7 +65,7 @@
       <item>
        <widget class="QToolButton" name="profileAddButton">
         <property name="toolTip">
-         <string>Add Profile</string>
+         <string>Create a new profile</string>
         </property>
         <property name="iconSize">
          <size>
@@ -81,7 +81,7 @@
       <item>
        <widget class="QToolButton" name="profileRenameButton">
         <property name="toolTip">
-         <string>Rename Profile</string>
+         <string>Rename current profile</string>
         </property>
         <property name="iconSize">
          <size>
@@ -94,7 +94,7 @@
       <item>
        <widget class="QToolButton" name="profileExportButton">
         <property name="toolTip">
-         <string>Export Profile</string>
+         <string>Export current profile</string>
         </property>
         <property name="text">
          <string/>
@@ -104,7 +104,7 @@
       <item>
        <widget class="QToolButton" name="profileDeleteButton">
         <property name="toolTip">
-         <string>Delete Profile</string>
+         <string>Delete current profile</string>
         </property>
         <property name="text">
          <string/>

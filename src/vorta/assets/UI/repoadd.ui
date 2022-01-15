@@ -86,7 +86,7 @@
          <item>
           <widget class="QToolButton" name="chooseLocalFolderButton">
            <property name="toolTip">
-            <string>Choose a local path as repository.</string>
+            <string>Choose a local path to a repository.</string>
            </property>
            <property name="text">
             <string>...</string>

@@ -1,10 +1,14 @@
-from PyQt5 import uic
-from vorta.store.models import SourceFileModel, BackupProfileMixin, SettingsModel
-from vorta.utils import get_asset, choose_file_dialog, pretty_bytes, sort_sizes, FilePathInfoAsync
-from PyQt5 import QtCore
-from PyQt5.QtCore import QFileInfo
-from PyQt5.QtWidgets import QApplication, QMessageBox, QTableWidgetItem, QHeaderView
 import os
+
+from PyQt5 import QtCore, uic
+from PyQt5.QtCore import QFileInfo
+from PyQt5.QtWidgets import (QApplication, QHeaderView, QMessageBox,
+                             QTableWidgetItem)
+
+from vorta.store.models import (BackupProfileMixin, SettingsModel,
+                                SourceFileModel)
+from vorta.utils import (FilePathInfoAsync, choose_file_dialog, get_asset,
+                         pretty_bytes, sort_sizes)
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -112,7 +116,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         index_row = self.sourceFilesWidget.rowCount()
         self.sourceFilesWidget.insertRow(index_row)
-        # Insert all items on current row, add tooltip containg the path name
+        # Insert all items on current row, add tooltip containing the path name
         new_item = QTableWidgetItem(source.dir)
         new_item.setToolTip(source.dir)
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, new_item)
