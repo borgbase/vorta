@@ -1,4 +1,5 @@
 import sys
+
 from vorta.i18n import trans_late
 
 
@@ -33,12 +34,12 @@ def get_misc_settings():
         {
             'key': 'use_system_keyring', 'value': True, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Store repository passwords in system keychain, if available.')
+                                'Store repository passwords in system keychain, if available')
         },
         {
             'key': 'override_mount_permissions', 'value': False, 'type': 'checkbox',
             'label': trans_late('settings',
-                                'Try to replace existing permissions when mounting an archive.')
+                                'Try to replace existing permissions when mounting an archive')
         },
         {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',
