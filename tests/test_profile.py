@@ -1,4 +1,3 @@
-import pytest
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDialogButtonBox
 from vorta.store.models import BackupProfileModel
