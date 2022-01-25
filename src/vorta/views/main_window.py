@@ -83,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
         profile_add_menu = QMenu()
-        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_import_action)
+        profile_add_menu.addAction(self.tr('Import from file…'), self.profile_import_action)
         self.profileAddButton.setMenu(profile_add_menu)
         self.profileAddButton.clicked.connect(self.profile_add_action)
 

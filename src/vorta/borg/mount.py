@@ -6,7 +6,7 @@ from vorta.store.models import SettingsModel
 class BorgMountJob(BorgJob):
 
     def started_event(self):
-        self.updated.emit(self.tr('Mounting archive into folder...'))
+        self.updated.emit(self.tr('Mounting archive into folder…'))
 
     @classmethod
     def prepare(cls, profile):

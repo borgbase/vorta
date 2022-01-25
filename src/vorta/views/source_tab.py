@@ -101,9 +101,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def update_path_info(self, index_row):
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
-        self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("Calculating..."))
-        self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating..."))
-        self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating..."))
+        self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("Calculating…"))
+        self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
+        self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
         getDir = FilePathInfoAsync(path, self.profile().exclude_patterns)
         getDir.signal.connect(self.set_path_info)
         getDir.setObjectName(path)
