@@ -174,7 +174,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.profile_select_action(0)
 
         else:
-            warn = self.tr("Can not delete the last profile.")
+            warn = self.tr("Cannot delete the last profile.")
             point = QPoint(0, self.profileDeleteButton.size().height() / 2)
             QToolTip.showText(self.profileDeleteButton.mapToGlobal(point), warn)
 

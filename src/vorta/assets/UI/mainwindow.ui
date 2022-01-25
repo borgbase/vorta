@@ -65,7 +65,7 @@
       <item>
        <widget class="QToolButton" name="profileAddButton">
         <property name="toolTip">
-         <string>Create a new profile</string>
+        <string>Add a new profile (Dropdown: Import from file)</string>
         </property>
         <property name="iconSize">
          <size>

@@ -30,14 +30,14 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
         if profile_export.repo_password:
             self.repoPassword.setText(profile_export.repo_password)
             self.repoPassword.setDisabled(True)
-            self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from the export file.'))
+            self.repoPassword.setToolTip(self.tr('Enter passphrase (already loaded from the export file)'))
         elif profile_export.repo_url:
             keyring = VortaKeyring.get_keyring()
             repo_password = keyring.get_password('vorta-repo', profile_export.repo_url)
             if repo_password:
                 self.repoPassword.setText(repo_password)
                 self.repoPassword.setDisabled(True)
-                self.repoPassword.setToolTip(self.tr('The passphrase has been loaded from your keyring.'))
+                self.repoPassword.setToolTip(self.tr('Enter passphrase (already loaded from your keyring)'))
 
     def init_overwrite_profile_checkbox(self):
         """Disable the overwrite profile checkbox if no profile with that name currently exists."""
@@ -48,9 +48,7 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
             self.overwriteExistingProfile.setChecked(False)
             self.overwriteExistingProfile.setEnabled(False)
             self.overwriteExistingProfile.setToolTip(
-                self.tr(
-                    'A profile with the name {} does not exist. Nothing to overwrite.'.format(self.profile_export.name)
-                )
+                self.tr('(Name is not used yet)')
             )
 
     def on_repo_password_changed(self, password):

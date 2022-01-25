@@ -36,7 +36,7 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
         if profile.repo is None or self.keyring.get_password('vorta-repo', profile.repo.url) is None:
             self.storePassword.setCheckState(False)
             self.storePassword.setDisabled(True)
-            self.storePassword.setToolTip(self.tr('The current profile_export has no password.'))
+            self.storePassword.setToolTip(self.tr('Disclose your borg passphrase (No passphrase set)'))
 
     def get_file(self):
         """ Get targeted save file with custom extension """

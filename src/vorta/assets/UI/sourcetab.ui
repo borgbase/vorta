@@ -112,10 +112,10 @@
        <item>
         <widget class="QPushButton" name="paste">
          <property name="toolTip">
-          <string>Paste one folder or file per line</string>
+          <string>Paste files or folders (one path per line)</string>
          </property>
          <property name="text">
-          <string>Paste Folders/Files</string>
+          <string>Paste</string>
          </property>
         </widget>
        </item>
