@@ -10,4 +10,5 @@ pytest-mock
 pytest-qt
 tox
 transifex-client
+twine
 wheel
