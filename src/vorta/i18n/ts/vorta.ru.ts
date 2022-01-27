@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="ru">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -296,12 +296,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation type="unfinished"/>
+        <translation>Снятие блокировки репозитория...</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished"/>
+        <translation>Блокировка репозитория снята. Пожалуйста, повторите своё последнее действие.</translation>
     </message>
 </context>
 <context>
@@ -309,17 +309,17 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation type="unfinished"/>
+        <translation>Проверка целостности...</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
-        <translation type="unfinished"/>
+        <translation>Проверка завершена.</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка при проверке репозитория. Подробнее см. в журналах.</translation>
     </message>
 </context>
 <context>
@@ -327,17 +327,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Архивация завершена с предупреждениями. Подробности см. в журналах.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation type="unfinished"/>
+        <translation>Архивация завершена.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation type="unfinished"/>
+        <translation>Архивация запущена.</translation>
     </message>
 </context>
 <context>
@@ -345,12 +345,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Удаление архива...</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Архив удален.</translation>
     </message>
 </context>
 <context>
@@ -358,12 +358,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Запрос различий между архивами...</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Различия между архивами получены.</translation>
     </message>
 </context>
 <context>
@@ -371,12 +371,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation type="unfinished"/>
+        <translation>Загрузка файлов из архива...</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation type="unfinished"/>
+        <translation>Файлы из архива восстановлены.</translation>
     </message>
 </context>
 <context>
@@ -384,12 +384,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation type="unfinished"/>
+        <translation>Обновление архива...</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation type="unfinished"/>
+        <translation>Архив обновлён.</translation>
     </message>
 </context>
 <context>
@@ -397,7 +397,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation type="unfinished"/>
+        <translation>Проверка существующего репозитория...</translation>
     </message>
 </context>
 <context>
@@ -405,7 +405,7 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation type="unfinished"/>
+        <translation>Создание репозитория...</translation>
     </message>
 </context>
 <context>
@@ -413,27 +413,27 @@
     <message>
         <location filename="../../borg/borg_job.py" line="66"/>
         <source>Files</source>
-        <translation type="unfinished"/>
+        <translation>Файлы</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="67"/>
         <source>Original</source>
-        <translation type="unfinished"/>
+        <translation>Исходный размер</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="68"/>
         <source>Deduplicated</source>
-        <translation type="unfinished"/>
+        <translation>После дедупликации</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="69"/>
         <source>Compressed</source>
-        <translation type="unfinished"/>
+        <translation>После сжатия</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation type="unfinished"/>
+        <translation>Задача запущена</translation>
     </message>
 </context>
 <context>
@@ -441,12 +441,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation type="unfinished"/>
+        <translation>Получение содержимого архива...</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation type="unfinished"/>
+        <translation>Содержимое архива получено.</translation>
     </message>
 </context>
 <context>
@@ -454,12 +454,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation type="unfinished"/>
+        <translation>Обновление списка архивов...</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation type="unfinished"/>
+        <translation>Список архивов обновлён.</translation>
     </message>
 </context>
 <context>
@@ -467,7 +467,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation type="unfinished"/>
+        <translation>Монтирование архива...</translation>
     </message>
 </context>
 <context>
@@ -475,12 +475,12 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation type="unfinished"/>
+        <translation>Очистка от старых архивов...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
         <source>Pruning done.</source>
-        <translation type="unfinished"/>
+        <translation>Очистка завершена.</translation>
     </message>
 </context>
 <context>
@@ -488,7 +488,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Размонтирование архива...</translation>
     </message>
 </context>
 <context>
@@ -1178,7 +1178,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Запускать пропущенные архивации сразу после запуска Vorta или выхода из сна</translation>
     </message>
 </context>
 <context>
@@ -1512,22 +1512,22 @@
     <message>
         <location filename="../../views/schedule_tab.py" line="43"/>
         <source>Minutes</source>
-        <translation type="unfinished"/>
+        <translation>Минут</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="44"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Часов</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="45"/>
         <source>Days</source>
-        <translation type="unfinished"/>
+        <translation>Дней</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Weeks</source>
-        <translation type="unfinished"/>
+        <translation>Недель</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1593,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Выполняется задача</translation>
     </message>
 </context>
 <context>
@@ -1686,12 +1686,12 @@
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Проверка репозитория не удалась</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>Проверка данных в репозитории %s не удалась</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
@@ -1816,6 +1816,59 @@ Try unlinking and re-adding your repo.</source>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Разное</translation>
+    </message>
+</context>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="10"/>
+        <source>Display notifications when background tasks fail</source>
+        <translation>Уведомлять о сбоях фоновых задач</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="15"/>
+        <source>Also notify about successful background tasks</source>
+        <translation>Уведомлять об успешных фоновых задачах</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Автоматически запускать Vorta при входе в систему</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25"/>
+        <source>Open main window on startup</source>
+        <translation>Показывать основное окно при запуске</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="30"/>
+        <source>Get statistics of file/folder when added</source>
+        <translation>Автоматически получать статистику для добавляемых источников</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="35"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Хранить пароли репозиториев в системном хранилище ключей, если оно доступно.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="40"/>
+        <source>Try to replace existing permissions when mounting an archive.</source>
+        <translation>Пытаться заменить существующие разрешения при монтировании архива.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60"/>
+        <source>Check for updates on startup</source>
+        <translation>Проверять обновления при запуске</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="65"/>
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Учитывать предварительные версии при проверке обновлений</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="73"/>
+        <source>Display background exit dialog</source>
+        <translation>Предлагать продолжить работу в фоне при закрытии</translation>
     </message>
 </context>
 <context>

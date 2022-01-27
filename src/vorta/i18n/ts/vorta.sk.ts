@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sk" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="sk">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -296,12 +296,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation type="unfinished"/>
+        <translation>Ruším zámok repozitára...</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished"/>
+        <translation>Zámok repozitára bol zrušený. Prosím, zopakujte poslednú operáciu.</translation>
     </message>
 </context>
 <context>
@@ -309,17 +309,17 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation type="unfinished"/>
+        <translation>Spúšťam test konzistencie...</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="17"/>
         <source>Check completed.</source>
-        <translation type="unfinished"/>
+        <translation>Kontrola bola dokončená.</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Kontrola repozitára skončila s chybou. Podrobnosti nájdete v záznamoch.</translation>
     </message>
 </context>
 <context>
@@ -327,17 +327,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Záloha skončila s varovaniami. Podrobnosti nájdete v záznamoch.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation type="unfinished"/>
+        <translation>Záloha dokončená.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation type="unfinished"/>
+        <translation>Záloha spustená.</translation>
     </message>
 </context>
 <context>
@@ -345,12 +345,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Odstraňujem archív...</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation type="unfinished"/>
+        <translation>Archív bol odstránený.</translation>
     </message>
 </context>
 <context>
@@ -358,12 +358,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation type="unfinished"/>
+        <translation>Zisťujem rozdiely medzi archívmi...</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished"/>
+        <translation>Zistené rozdiely medzi archívmi.</translation>
     </message>
 </context>
 <context>
@@ -371,12 +371,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation type="unfinished"/>
+        <translation>Sťahujem súbory z archívu...</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation type="unfinished"/>
+        <translation>Súbory obnovené z archívu.</translation>
     </message>
 </context>
 <context>
@@ -384,12 +384,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation type="unfinished"/>
+        <translation>Obnovujem archív...</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation type="unfinished"/>
+        <translation>Obnova archívu bola dokončená.</translation>
     </message>
 </context>
 <context>
@@ -397,7 +397,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation type="unfinished"/>
+        <translation>Kontrolujem existujúci repozitár...</translation>
     </message>
 </context>
 <context>
@@ -405,7 +405,7 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation type="unfinished"/>
+        <translation>Nastavujem nový repozitár..</translation>
     </message>
 </context>
 <context>
@@ -413,27 +413,27 @@
     <message>
         <location filename="../../borg/borg_job.py" line="66"/>
         <source>Files</source>
-        <translation type="unfinished"/>
+        <translation>Súbory</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="67"/>
         <source>Original</source>
-        <translation type="unfinished"/>
+        <translation>Pôvodné</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="68"/>
         <source>Deduplicated</source>
-        <translation type="unfinished"/>
+        <translation>Po deduplikácii</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="69"/>
         <source>Compressed</source>
-        <translation type="unfinished"/>
+        <translation>Po kompresii</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation type="unfinished"/>
+        <translation>Úloha spustená</translation>
     </message>
 </context>
 <context>
@@ -441,12 +441,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation type="unfinished"/>
+        <translation>Získavam obsah archívu..</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation type="unfinished"/>
+        <translation>Získaný obsah archívu.</translation>
     </message>
 </context>
 <context>
@@ -454,12 +454,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation type="unfinished"/>
+        <translation>Obnovujem archívy...</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation type="unfinished"/>
+        <translation>Obnova archívov skončená.</translation>
     </message>
 </context>
 <context>
@@ -467,7 +467,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation type="unfinished"/>
+        <translation>Pripájam (mount) archív do priečinka..</translation>
     </message>
 </context>
 <context>
@@ -475,12 +475,12 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation type="unfinished"/>
+        <translation>Čistím staré archívy...</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
         <source>Pruning done.</source>
-        <translation type="unfinished"/>
+        <translation>Čistenie dokončené.</translation>
     </message>
 </context>
 <context>
@@ -488,7 +488,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation type="unfinished"/>
+        <translation>Odpájam (unmount) archív..</translation>
     </message>
 </context>
 <context>
@@ -1173,12 +1173,12 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="198"/>
         <source>-</source>
-        <translation type="unfinished"/>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Spustiť zmeškané zálohy hneď po spustení alebo prebudení sa</translation>
     </message>
 </context>
 <context>
@@ -1373,7 +1373,7 @@
     <message>
         <location filename="../../views/main_window.py" line="220"/>
         <source>Failed to import profile</source>
-        <translation type="unfinished"/>
+        <translation>Chyba pri importe profilu</translation>
     </message>
 </context>
 <context>
@@ -1512,22 +1512,22 @@
     <message>
         <location filename="../../views/schedule_tab.py" line="43"/>
         <source>Minutes</source>
-        <translation type="unfinished"/>
+        <translation>MInúty</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="44"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>Hodin</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="45"/>
         <source>Days</source>
-        <translation type="unfinished"/>
+        <translation>Dn</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Weeks</source>
-        <translation type="unfinished"/>
+        <translation>Týždne</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1593,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Úloha prebieha</translation>
     </message>
 </context>
 <context>
@@ -1671,32 +1671,32 @@
     <message>
         <location filename="../../application.py" line="270"/>
         <source>Failed to import profile</source>
-        <translation type="unfinished"/>
+        <translation>Chyba pri importe profilu</translation>
     </message>
     <message>
         <location filename="../../application.py" line="270"/>
         <source>Failed to import a profile from {}:</source>
-        <translation type="unfinished"/>
+        <translation>Chyba pri importe profilu z {}:</translation>
     </message>
     <message>
         <location filename="../../application.py" line="270"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
-        <translation type="unfinished"/>
+        <translation>Ak sa chcete zbaviť tejto hlášky, odstráňte alebo opravte tento súbor.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Kontrola repozitára skončila s chybou</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>Kontrola údajov v repozitári %s sa skončila neúspechom</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
         <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>V krátkom čase opravte alebo opätovne vytvorte repozitár a vyhnite sa tak možnej strate dát.</translation>
     </message>
 </context>
 <context>
@@ -1779,7 +1779,7 @@ na  https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/create.py" line="165"/>
         <source>Starting backup...</source>
-        <translation>Spúšťa sa záloha...</translation>
+        <translation>Spúšťam zálohovanie...</translation>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="27"/>
@@ -1817,6 +1817,59 @@ Skúste tento repozitár odpojiť a opäť pridať.</translation>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Prosím, odomknite prístup do Správcu hesiel alebo ho vypnite v Rôzne</translation>
+    </message>
+</context>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="10"/>
+        <source>Display notifications when background tasks fail</source>
+        <translation>Zobraziť upozornenie, ak počas operácie spustenej na pozadí nastane chyba</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="15"/>
+        <source>Also notify about successful background tasks</source>
+        <translation>Upozorňovať tiež na úspešne dokončené úlohy na pozadí</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Spúšťať Vorta automaticky po prihlásení</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25"/>
+        <source>Open main window on startup</source>
+        <translation>Po spustení otvoriť hlavné okno</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="30"/>
+        <source>Get statistics of file/folder when added</source>
+        <translation>Pri pridávaní súboru/priečinka získať štatistiky</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="35"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Uložiť heslá k repozitáru do systémovej kľúčenky, ak je dostupná.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="40"/>
+        <source>Try to replace existing permissions when mounting an archive.</source>
+        <translation>Pokúsiť sa nahradiť existujúce práva pri pripájaní (mount) archívu.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60"/>
+        <source>Check for updates on startup</source>
+        <translation>Pri spustení zisťovať dostupnosť aktualizácií</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="65"/>
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Pri zisťovaní dostupnosti prípadných aktualizácií brať do úvahy aj zatiaľ nevydané vývojové verzie</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="73"/>
+        <source>Display background exit dialog</source>
+        <translation>Zobraziť dialógové okno pri ukončení behu na pozadí</translation>
     </message>
 </context>
 <context>
