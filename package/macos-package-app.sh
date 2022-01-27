@@ -12,7 +12,7 @@ APP_BUNDLE="Vorta"
 
 # Sign app bundle, Sparkle and Borg
 codesign --verbose --force --sign "$CERTIFICATE_NAME" --timestamp --deep --options runtime \
-    $APP_BUNDLE.app/Contents/Frameworks/Sparkle.framework/Resources/Autoupdate.app
+    $APP_BUNDLE.app/Contents/Frameworks/Sparkle.framework
 
 find $APP_BUNDLE.app/Contents/Resources/borg-dir \
     -type f \( -name \*.so -or -name \*.dylib -or -name borg.exe -or -name Python \) \
