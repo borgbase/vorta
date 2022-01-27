@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="fi">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -319,7 +319,7 @@
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Tietovaraston tarkistus epäonnistui. Katso lisätietoja lokitiedostoista.</translation>
     </message>
 </context>
 <context>
@@ -1173,12 +1173,12 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="198"/>
         <source>-</source>
-        <translation type="unfinished"/>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Suorita tekemättä jääneet varmuuskopiot heti käynnistyksen tai heräämisen jälkeen</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1593,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation type="unfinished"/>
+        <translation>Tehtävä käynnissä</translation>
     </message>
 </context>
 <context>
@@ -1686,17 +1686,17 @@
     <message>
         <location filename="../../application.py" line="295"/>
         <source>Repo Check Failed</source>
-        <translation type="unfinished"/>
+        <translation>Tietovarastun tarkistus epäonnistui</translation>
     </message>
     <message>
         <location filename="../../application.py" line="296"/>
         <source>Repository data check for repo %s failed</source>
-        <translation type="unfinished"/>
+        <translation>Tietovaraston %s tietojen tarkistus epäonnistui</translation>
     </message>
     <message>
         <location filename="../../application.py" line="297"/>
         <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>Korjaa tietovarasto tai luo se uudelleen pian välttääksesi tietojen menetyksen.</translation>
     </message>
 </context>
 <context>
@@ -1817,6 +1817,59 @@ Poista tietovaraston linkitys ja lisää se uudelleen.</translation>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Avaa järjestelmän salasananhallinnan lukitus tai ota se pois käytöstä sekalaisista asetuksista</translation>
+    </message>
+</context>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="10"/>
+        <source>Display notifications when background tasks fail</source>
+        <translation>Näytä ilmoitukset epäonnistuneista taustatehtävistä</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="15"/>
+        <source>Also notify about successful background tasks</source>
+        <translation>Ilmoita myös onnistuneista taustatehtävistä</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Automatically start Vorta at login</source>
+        <translation>Käynnistä Vorta automaattisesti kirjautumisen yhteydessä</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25"/>
+        <source>Open main window on startup</source>
+        <translation>Avaa pääikkuna sovelluksen käynnistyessä</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="30"/>
+        <source>Get statistics of file/folder when added</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="35"/>
+        <source>Store repository passwords in system keychain, if available.</source>
+        <translation>Talleta tietovarastojen salasanat järjestelmän avainnippuun, jos saatavilla.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="40"/>
+        <source>Try to replace existing permissions when mounting an archive.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60"/>
+        <source>Check for updates on startup</source>
+        <translation>Tarkista päivitykset sovelluksen käynnistyessä</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="65"/>
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Sisällytä esijulkaisuversiot päivityksiä tarkistettaessa</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="73"/>
+        <source>Display background exit dialog</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
