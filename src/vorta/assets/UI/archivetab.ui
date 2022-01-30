@@ -320,6 +320,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="prune_week">
+              <property name="toolTip">
+               <string>Use -1 for unlimited</string>
+              </property>
               <property name="minimum">
                <number>-1</number>
               </property>
@@ -347,6 +350,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="prune_month">
+              <property name="toolTip">
+               <string>Use -1 for unlimited</string>
+              </property>
               <property name="minimum">
                <number>-1</number>
               </property>
@@ -377,6 +383,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="prune_year">
+              <property name="toolTip">
+               <string>Use -1 for unlimited</string>
+              </property>
               <property name="minimum">
                <number>-1</number>
               </property>
@@ -408,6 +417,9 @@
             </item>
             <item>
              <widget class="QLineEdit" name="prune_keep_within">
+              <property name="toolTip">
+               <string>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</string>
+              </property>
               <property name="text">
                <string/>
               </property>
