@@ -26,7 +26,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="schedule">
       <property name="geometry">
@@ -362,9 +362,9 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QCheckBox" name="dontRunOnMeteredNetworksCheckBox">
+        <widget class="QCheckBox" name="meteredNetworksCheckBox">
          <property name="text">
-          <string>Do not run backups over metered networks</string>
+          <string>Run backups over metered networks</string>
          </property>
          <property name="tristate">
           <bool>false</bool>

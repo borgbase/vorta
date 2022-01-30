@@ -1,7 +1,10 @@
-from PyQt5 import uic, QtCore
-from PyQt5.QtWidgets import QListWidgetItem, QApplication, QTableView, QHeaderView, QTableWidgetItem
+from PyQt5 import QtCore, uic
+from PyQt5.QtWidgets import (QApplication, QHeaderView, QListWidgetItem,
+                             QTableView, QTableWidgetItem)
+
+from vorta.store.models import (BackupProfileMixin, EventLogModel,
+                                WifiSettingModel)
 from vorta.utils import get_asset, get_sorted_wifis
-from vorta.store.models import EventLogModel, WifiSettingModel, BackupProfileMixin
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -60,8 +63,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
         # Network and shell commands events
-        self.dontRunOnMeteredNetworksCheckBox.stateChanged.connect(
-            lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, new_val))
+        self.meteredNetworksCheckBox.stateChanged.connect(
+            lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, not new_val))
         self.postBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val))
         self.preBackupCmdLineEdit.textEdited.connect(
@@ -124,8 +127,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             QtCore.Qt.Checked if profile.prune_on else QtCore.Qt.Unchecked)
         self.missedBackupsCheckBox.setCheckState(
             QtCore.Qt.Checked if profile.schedule_make_up_missed else QtCore.Qt.Unchecked)
-        self.dontRunOnMeteredNetworksCheckBox.setChecked(
-            QtCore.Qt.Checked if profile.dont_run_on_metered_networks else QtCore.Qt.Unchecked)
+        self.meteredNetworksCheckBox.setChecked(
+            QtCore.Qt.Unchecked if profile.dont_run_on_metered_networks else QtCore.Qt.Checked)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
