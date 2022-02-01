@@ -14,11 +14,17 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
    <property name="topMargin">
-    <number>5</number>
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item>
     <widget class="QToolBox" name="toolBox">
@@ -29,30 +35,21 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="archivesToolBox">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>769</width>
-        <height>378</height>
+        <width>781</width>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Archives</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
        <item>
         <widget class="QTableWidget" name="archiveTable">
          <attribute name="horizontalHeaderVisible">
@@ -194,8 +191,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>769</width>
-        <height>378</height>
+        <width>781</width>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">
@@ -203,7 +200,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
-        <number>26</number>
+        <number>12</number>
        </property>
        <item>
         <widget class="QGroupBox" name="groupBox">
@@ -445,9 +442,6 @@
           </item>
           <item>
            <layout class="QFormLayout" name="formLayout">
-            <property name="verticalSpacing">
-             <number>3</number>
-            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_4">
               <property name="text">
@@ -465,7 +459,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <widget class="QLabel" name="prunePrefixPreview">
               <property name="font">
                <font>
@@ -490,9 +484,6 @@
        <item>
         <widget class="QFrame" name="frame_name_options">
          <layout class="QFormLayout" name="formLayout_2">
-          <property name="verticalSpacing">
-           <number>3</number>
-          </property>
           <item row="2" column="1">
            <widget class="QLineEdit" name="archiveNameTemplate">
             <property name="toolTip">

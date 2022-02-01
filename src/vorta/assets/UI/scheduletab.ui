@@ -14,8 +14,11 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="topMargin">
-    <number>5</number>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
    </property>
    <item row="0" column="0">
     <widget class="QToolBox" name="toolBox">
@@ -31,7 +34,7 @@
         <x>0</x>
         <y>0</y>
         <width>733</width>
-        <height>347</height>
+        <height>346</height>
        </rect>
       </property>
       <property name="font">
@@ -45,10 +48,10 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
-        <number>2</number>
+        <number>6</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>6</number>
        </property>
        <item>
         <widget class="Line" name="line">
@@ -59,19 +62,10 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_6">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>10</number>
-         </property>
          <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <property name="sizeConstraint">
             <enum>QLayout::SetFixedSize</enum>
-           </property>
-           <property name="bottomMargin">
-            <number>7</number>
            </property>
            <item>
             <widget class="QRadioButton" name="scheduleOffRadio">
@@ -173,12 +167,6 @@
          </item>
          <item row="3" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
            <item>
             <widget class="QLabel" name="label_3">
              <property name="font">
@@ -216,9 +204,6 @@
          </item>
          <item row="1" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_8">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
            <item>
             <widget class="QCheckBox" name="pruneCheckBox">
              <property name="text">
@@ -243,9 +228,6 @@
          </item>
          <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_9">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
            <item>
             <widget class="QCheckBox" name="missedBackupsCheckBox">
              <property name="text">
@@ -270,9 +252,6 @@
          </item>
          <item row="2" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_6">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
            <item>
             <widget class="QCheckBox" name="validationCheckBox">
              <property name="text">
@@ -337,17 +316,14 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>675</width>
-        <height>368</height>
+        <width>264</width>
+        <height>157</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Networks</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <property name="topMargin">
-        <number>0</number>
-       </property>
        <item row="1" column="0">
         <widget class="QLabel" name="wifiListLabel">
          <property name="enabled">
@@ -398,17 +374,14 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>675</width>
-        <height>368</height>
+        <width>99</width>
+        <height>99</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Log</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="topMargin">
-        <number>0</number>
-       </property>
        <item row="0" column="0">
         <widget class="QTableWidget" name="logTableWidget">
          <property name="font">
@@ -461,8 +434,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>675</width>
-        <height>368</height>
+        <width>145</width>
+        <height>643</height>
        </rect>
       </property>
       <attribute name="label">
