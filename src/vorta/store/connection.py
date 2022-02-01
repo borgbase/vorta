@@ -1,13 +1,17 @@
 import os
 from datetime import datetime, timedelta
+
 from playhouse import signals
+
 from vorta.autostart import open_app_at_startup
-from .models import (DB, RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
-                     SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion)
+
 from .migrations import run_migrations
+from .models import (DB, ArchiveModel, BackupProfileModel, EventLogModel,
+                     RepoModel, RepoPassword, SchemaVersion, SettingsModel,
+                     SourceFileModel, WifiSettingModel)
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 18
+SCHEMA_VERSION = 19
 
 
 @signals.post_save(sender=SettingsModel)
@@ -42,10 +46,16 @@ def init_db(con=None):
     else:
         run_migrations(current_schema, con)
 
-    # Create missing settings and update labels. Leave setting values untouched.
+    # Create missing settings and update labels.
+    # Leave only setting values untouched.
     for setting in get_misc_settings():
         s, created = SettingsModel.get_or_create(key=setting['key'], defaults=setting)
         s.label = setting['label']
+        s.type = setting['type']
+
+        if 'group' in setting:
+            s.group = setting['group']
+
         s.save()
 
     # Delete old log entries after 3 months.

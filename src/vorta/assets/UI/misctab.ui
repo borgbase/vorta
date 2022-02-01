@@ -13,16 +13,19 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="checkboxLayout">
-     <property name="topMargin">
-      <number>10</number>
+    <widget class="QFrame" name="frameSettings">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
-    </layout>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
