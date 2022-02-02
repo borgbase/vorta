@@ -1,4 +1,5 @@
 import pytest
+
 import vorta.views
 
 
@@ -10,7 +11,7 @@ def test_add_folder(qapp, qtbot, mocker, monkeypatch, choose_file_dialog):
     main.tabWidget.setCurrentIndex(1)
     tab = main.sourceTab
 
-    tab.sourceAddFolder.click()
+    tab.source_add(want_folder=True)
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
 
     # Test paste button with mocked clipboard
