@@ -2,13 +2,14 @@ import os
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QFileInfo
-from PyQt5.QtWidgets import (QApplication, QHeaderView, QMessageBox,
-                             QTableWidgetItem)
+from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QMessageBox,
+                             QTableWidgetItem, QToolButton)
 
 from vorta.store.models import (BackupProfileMixin, SettingsModel,
                                 SourceFileModel)
 from vorta.utils import (FilePathInfoAsync, choose_file_dialog, get_asset,
                          pretty_bytes, sort_sizes)
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -52,8 +53,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
 
+        # Prepare source files view
         header = self.sourceFilesWidget.horizontalHeader()
-
         header.setVisible(True)
         header.setSortIndicatorShown(1)
 
@@ -63,14 +64,33 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
 
         self.sourceFilesWidget.setSortingEnabled(True)
-        self.sourceAddFolder.clicked.connect(lambda: self.source_add(want_folder=True))
-        self.sourceAddFile.clicked.connect(lambda: self.source_add(want_folder=False))
-        self.sourceRemove.clicked.connect(self.source_remove)
-        self.sourcesUpdate.clicked.connect(self.sources_update)
-        self.paste.clicked.connect(self.paste_text)
+
+        # Prepare add button
+        self.addMenu = QMenu(self.addButton)
+        self.addMenu.addAction(self.tr("Files"),
+                               lambda: self.source_add(want_folder=False))
+        self.addMenu.addAction(self.tr("Folders"),
+                               lambda: self.source_add(want_folder=True))
+        self.addMenu.addAction(self.tr("Paste"), self.paste_text)
+
+        self.addButton.setMenu(self.addMenu)
+        self.addButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+
+        # Connect signals
+        self.removeButton.clicked.connect(self.source_remove)
+        self.updateButton.clicked.connect(self.sources_update)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+
+        # Populate
         self.populate_from_profile()
+        self.set_icons()
+
+    def set_icons(self):
+        "Used when changing between light- and dark mode"
+        self.addButton.setIcon(get_colored_icon('plus'))
+        self.removeButton.setIcon(get_colored_icon('minus'))
+        self.updateButton.setIcon(get_colored_icon('refresh'))
 
     def set_path_info(self, path, data_size, files_count):
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)

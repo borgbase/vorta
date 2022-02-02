@@ -105,6 +105,7 @@ class VortaApp(QtSingleApplication):
             self.main_window.repoTab.set_icons()
             self.main_window.archiveTab.set_icons()
             self.main_window.scheduleTab.set_icons()
+            self.main_window.sourceTab.set_icons()
         if event.type() == QtCore.QEvent.ApplicationPaletteChange and source == self.tray.contextMenu():
             self.tray.set_tray_icon()
         return False
