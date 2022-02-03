@@ -1,36 +1,38 @@
+import logging
 import os.path
 import sys
 from datetime import timedelta
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
-                             QTableWidgetItem, QInputDialog, QMenu,
-                             QToolButton)
+from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QMessageBox,
+                             QTableView, QTableWidgetItem)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.diff import BorgDiffJob
 from vorta.borg.extract import BorgExtractJob
+from vorta.borg.info_archive import BorgInfoArchiveJob
 from vorta.borg.list_archive import BorgListArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
-from vorta.borg.info_archive import BorgInfoArchiveJob
 from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
-from vorta.borg.umount import BorgUmountJob
 from vorta.borg.rename import BorgRenameJob
+from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import trans_late
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.source_tab import SizeItem
 from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
+from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
+
+logger = logging.getLogger(__name__)
 
 
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
@@ -65,15 +67,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
 
-        self.listButton.clicked.connect(self.list_action)
-        self.pruneButton.clicked.connect(self.prune_action)
-        self.checkButton.clicked.connect(self.check_action)
-        self.diffButton.clicked.connect(self.diff_action)
+        self.bList.clicked.connect(self.refresh_archive_list)
+        self.bPrune.clicked.connect(self.prune_action)
+        self.bCheck.clicked.connect(self.check_action)
+        self.bDiff.clicked.connect(self.diff_action)
 
-        self.archiveActionMenu = QMenu(parent=self)
-        self.archiveActionMenu.aboutToShow.connect(self.showArchiveActionMenu)
-        self.archiveActionButton.setMenu(self.archiveActionMenu)
-        self.archiveActionButton.setPopupMode(QToolButton.InstantPopup)
+        # TODO connect archive actions
+        self.bMount.clicked.connect(self.bmount_clicked)
+        self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
+        self.bRename.clicked.connect(self.rename_action)
+        self.bDelete.clicked.connect(self.delete_action)
+        self.bExtract.clicked.connect(self.extract_action)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -86,13 +90,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
-        self.checkButton.setIcon(get_colored_icon('check-circle'))
-        self.diffButton.setIcon(get_colored_icon('stream-solid'))
-        self.pruneButton.setIcon(get_colored_icon('cut'))
-        self.listButton.setIcon(get_colored_icon('refresh'))
+        self.bCheck.setIcon(get_colored_icon('check-circle'))
+        self.bDiff.setIcon(get_colored_icon('stream-solid'))
+        self.bPrune.setIcon(get_colored_icon('cut'))
+        self.bList.setIcon(get_colored_icon('refresh'))
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
-        self.archiveActionButton.setIcon(get_colored_icon('ellipsis-v'))
+        self.bRefreshArchive.setIcon(get_colored_icon('refresh'))
+        self.bRename.setIcon(get_colored_icon('edit'))
+        self.bDelete.setIcon(get_colored_icon('trash'))
+        self.bExtract.setIcon(get_colored_icon('cloud-download'))
+
+        self.bmount_refresh()
 
     def cancel_action(self):
         self._set_status(self.tr("Action cancelled."))
@@ -103,38 +112,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
-        for button in [self.checkButton, self.listButton, self.pruneButton,
-                       self.diffButton, self.archiveActionButton]:
+        for button in [self.bCheck, self.bList, self.bPrune,
+                       self.bDiff, self.bMount, self.bRefreshArchive,
+                       self.bExtract, self.bDelete, self.bRename]:
             button.setEnabled(enabled)
             button.repaint()
-
-    def showArchiveActionMenu(self):
-        archive_name = self.selected_archive_name()
-        menu = self.archiveActionMenu
-        menu.clear()
-
-        if not archive_name:
-            action = menu.addAction(self.tr("Select an archive first."))
-            action.setEnabled(False)
-            return menu
-
-        if archive_name in self.mount_points:
-            unmountAction = menu.addAction("Unmount", self.umount_action)
-            unmountAction.setIcon(get_colored_icon('eject'))
-        else:
-            mountAction = menu.addAction("Mount", self.mount_action)
-            mountAction.setIcon(get_colored_icon('folder-open'))
-
-        extractAction = menu.addAction("Extract", self.list_archive_action)
-        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
-        renameAction = menu.addAction("Rename", self.rename_action)
-        deleteAction = menu.addAction("Delete", self.delete_action)
-
-        extractAction.setIcon(get_colored_icon('cloud-download'))
-        refreshAction.setIcon(get_colored_icon('refresh'))
-        renameAction.setIcon(get_colored_icon('edit'))
-        deleteAction.setIcon(get_colored_icon('trash'))
-        return menu
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
@@ -240,11 +222,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def prune_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Pruning finished.'))
-            self.list_action()
+            self.refresh_archive_list()
         else:
             self._toggle_all_buttons(True)
 
-    def list_action(self):
+    def refresh_archive_list(self):
         params = BorgListRepoJob.prepare(self.profile())
         if params['ok']:
             job = BorgListRepoJob(params['cmd'], params, self.profile().repo.id)
@@ -261,18 +243,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
-    def refresh_archive_action(self):
+    def refresh_archive_info(self):
         archive_name = self.selected_archive_name()
         if archive_name is not None:
             params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
             if params['ok']:
                 job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
                 job.updated.connect(self._set_status)
-                job.result.connect(self.refresh_archive_result)
+                job.result.connect(self.info_result)
                 self._toggle_all_buttons(False)
                 self.app.jobs_manager.add_job(job)
 
-    def refresh_archive_result(self, result):
+    def info_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Refreshed archive.'))
@@ -286,6 +268,36 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 return archive_cell.text()
         return None
 
+    def bmount_clicked(self):
+        archive_name = self.selected_archive_name()
+
+        if not archive_name:
+            logger.warning("Archive name of selection is empty.")
+            return
+
+        if archive_name in self.mount_points:
+            self.umount_action()
+        else:
+            self.mount_action()
+
+    def bmount_refresh(self):
+        archive_name = self.selected_archive_name()
+
+        if not archive_name:
+            self.bMount.setEnabled(False)
+            self.bMount.setToolTip(self.tr("(Select a single archive)"))
+            return
+        else:
+            self.bMount.setEnabled(True)
+            self.bMount.setToolTip("")
+
+        if archive_name in self.mount_points:
+            self.bMount.setText(self.tr("Unmount"))
+            self.bMount.setIcon(get_colored_icon('eject'))
+        else:
+            self.bMount.setText(self.tr("Mount"))
+            self.bMount.setIcon(get_colored_icon('folder-open'))
+
     def mount_action(self):
         profile = self.profile()
         params = BorgMountJob.prepare(profile)
@@ -293,11 +305,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        # Conditions are met (borg binary available, etc)
         archive_name = self.selected_archive_name()
-        if archive_name:
-            params['cmd'][-1] += f'::{archive_name}'
-            params['current_archive'] = archive_name
+
+        if not archive_name:
+            # Conditions aren't met (borg binary available, etc)
+            logger.debug('Archive name empty.')
+            return
+
+        params['cmd'][-1] += f'::{archive_name}'
+        params['current_archive'] = archive_name
 
         def receive():
             mount_point = dialog.selectedFiles()
@@ -316,7 +332,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         dialog.open(receive)
 
     def mount_result(self, result):
-        self._toggle_all_buttons(True)
         if result['returncode'] == 0:
             self._set_status(self.tr('Mounted successfully.'))
             if result['params'].get('current_archive'):
@@ -324,6 +339,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 row = self.row_of_archive(archive_name)
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
+
+            # update button
+            self.bmount_refresh()
+
+        self._toggle_all_buttons(True)
 
     def umount_action(self):
         archive_name = self.selected_archive_name()
@@ -357,9 +377,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             row = self.row_of_archive(archive_name)
             item = QTableWidgetItem('')
             self.archiveTable.setItem(row, 3, item)
+
+            # update button
+            self.bmount_refresh()
         else:
-            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(
-                self.mount_points.get(archive_name)))
+            self._set_status(
+                self.tr('Unmounting failed. Make sure no programs are using {}')
+                .format(self.mount_points.get(archive_name)))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
@@ -368,7 +392,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
 
-    def list_archive_action(self):
+    def extract_action(self):
         profile = self.profile()
 
         row_selected = self.archiveTable.selectionModel().selectedRows()
@@ -386,13 +410,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 job = BorgListArchiveJob(params['cmd'], params, self.profile().repo.id)
                 job.updated.connect(self.mountErrors.setText)
-                job.result.connect(self.list_archive_result)
+                job.result.connect(self.extract_list_result)
                 self.app.jobs_manager.add_job(job)
                 return job
         else:
             self._set_status(self.tr('Select an archive to restore first.'))
 
-    def list_archive_result(self, result):
+    def extract_list_result(self, result):
         self._set_status('')
         if result['returncode'] == 0:
             def process_result():
@@ -525,7 +549,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             window.show()
 
     def rename_action(self):
-
         profile = self.profile()
         params = BorgRenameJob.prepare(profile)
         if not params['ok']:

@@ -23,9 +23,10 @@ from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
-logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
+
+logger = logging.getLogger(__name__)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
@@ -62,7 +63,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
-        self.repoTab.repo_added.connect(self.archiveTab.list_action)
+        self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
 
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)

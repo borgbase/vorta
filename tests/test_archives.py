@@ -1,11 +1,13 @@
-import psutil
 from collections import namedtuple
+
+import psutil
 import pytest
 from PyQt5 import QtCore
-from vorta.store.models import BackupProfileModel, ArchiveModel
+
 import vorta.borg
-import vorta.views.archive_tab
 import vorta.utils
+import vorta.views.archive_tab
+from vorta.store.models import ArchiveModel, BackupProfileModel
 
 
 class MockFileDialog:
@@ -38,15 +40,15 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     main.tabWidget.setCurrentIndex(3)
-    tab.list_action()
-    qtbot.waitUntil(lambda: not tab.checkButton.isEnabled(), **pytest._wait_defaults)
+    tab.refresh_archive_list()
+    qtbot.waitUntil(lambda: not tab.bCheck.isEnabled(), **pytest._wait_defaults)
 
-    assert not tab.checkButton.isEnabled()
+    assert not tab.bCheck.isEnabled()
 
     qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 6
     assert main.progressText.text() == 'Refreshing archives done.'
-    assert tab.checkButton.isEnabled()
+    assert tab.bCheck.isEnabled()
 
 
 def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
@@ -58,7 +60,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.pruneButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.bPrune, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), **pytest._wait_defaults)
 
@@ -73,7 +75,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.checkButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.bCheck, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
     qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
 
@@ -120,7 +122,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    tab.list_archive_action()
+    tab.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
     # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
