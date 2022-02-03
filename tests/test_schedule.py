@@ -23,6 +23,13 @@ def test_schedule_tab(qapp, qtbot):
     assert "None" not in tab.nextBackupDateTimeLabel.text()
 
     tab.scheduleFixedTime.setTime(QtCore.QTime(23, 59))
-    qtbot.mouseClick(tab.scheduleFixedRadio, QtCore.Qt.LeftButton)
+
+    # Clicking currently broken for this button on github.com only
+    # qtbot.mouseClick(tab.scheduleFixedRadio, QtCore.Qt.LeftButton)
+
+    # Workaround for github
+    tab.scheduleFixedRadio.setChecked(True)
+    tab.scheduleFixedRadio.clicked.emit()
+
     next_backup = dt.combine(date.today(), time(23, 59))
     assert tab.nextBackupDateTimeLabel.text() == next_backup.strftime('%Y-%m-%d %H:%M')
