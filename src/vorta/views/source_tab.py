@@ -67,10 +67,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         # Prepare add button
         self.addMenu = QMenu(self.addButton)
-        self.addMenu.addAction(self.tr("Files"),
-                               lambda: self.source_add(want_folder=False))
-        self.addMenu.addAction(self.tr("Folders"),
-                               lambda: self.source_add(want_folder=True))
+        self.addFilesAction = self.addMenu.addAction(self.tr("Files"),
+                                                     lambda: self.source_add(want_folder=False))
+        self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"),
+                                                       lambda: self.source_add(want_folder=True))
         self.pasteAction = self.addMenu.addAction(self.tr("Paste"),
                                                   self.paste_text)
 
@@ -92,6 +92,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
+        self.addFilesAction.setIcon(get_colored_icon('file'))
+        self.addFoldersAction.setIcon(get_colored_icon('folder'))
         self.pasteAction.setIcon(get_colored_icon('paste'))
 
     def set_path_info(self, path, data_size, files_count):
