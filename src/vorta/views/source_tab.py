@@ -71,7 +71,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                                lambda: self.source_add(want_folder=False))
         self.addMenu.addAction(self.tr("Folders"),
                                lambda: self.source_add(want_folder=True))
-        self.addMenu.addAction(self.tr("Paste"), self.paste_text)
+        self.pasteAction = self.addMenu.addAction(self.tr("Paste"),
+                                                  self.paste_text)
 
         self.addButton.setMenu(self.addMenu)
         self.addButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
@@ -91,6 +92,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
+        self.pasteAction.setIcon(get_colored_icon('paste'))
 
     def set_path_info(self, path, data_size, files_count):
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
