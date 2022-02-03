@@ -4,6 +4,7 @@ import sys
 from datetime import timedelta
 
 from PyQt5 import QtCore, uic
+from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QMessageBox,
                              QTableView, QTableWidgetItem)
@@ -39,6 +40,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
     def __init__(self, parent=None, app=None):
+        """Init."""
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}
@@ -72,12 +74,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bCheck.clicked.connect(self.check_action)
         self.bDiff.clicked.connect(self.diff_action)
 
-        # TODO connect archive actions
+        # connect archive actions
         self.bMount.clicked.connect(self.bmount_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
+
+        self.archiveTable.itemSelectionChanged.connect(self.on_selection_change)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
@@ -112,11 +116,21 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.mountErrors.repaint()
 
     def _toggle_all_buttons(self, enabled=True):
+        """
+        Set all the buttons in the archive panel to the given state.
+
+        Parameters
+        ----------
+        enabled : bool, optional
+            The enabled state, by default True
+        """
         for button in [self.bCheck, self.bList, self.bPrune,
-                       self.bDiff, self.bMount, self.bRefreshArchive,
-                       self.bExtract, self.bDelete, self.bRename]:
+                       self.bDiff, self.fArchiveActions]:
             button.setEnabled(enabled)
             button.repaint()
+
+        # Restore states
+        self.on_selection_change()
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
@@ -152,6 +166,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.setSortingEnabled(sorting)
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
+
+            self.archiveTable.selectionModel().clearSelection()
             self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
@@ -169,6 +185,30 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.setText(profile.prune_keep_within)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+
+    @pyqtSlot()
+    def on_selection_change(self):
+        """
+        React to a change of the selection of the archiveTableView.
+
+        Parameters
+        ----------
+        selected : QItemSelection
+            The new selection.
+        deselected : QItemSelection
+            The previous selection.
+        """
+        indexes = self.archiveTable.selectionModel().selectedRows()
+
+        if len(indexes) == 1:
+            # Enable archive actions
+            self.fArchiveActions.setEnabled(True)
+            self.fArchiveActions.setToolTip("")
+        else:
+            # too few or too many selected.
+            self.fArchiveActions.setEnabled(False)
+            self.fArchiveActions.setToolTip(
+                self.tr("(Select exactly one archive)"))
 
     def save_archive_template(self, tpl, key):
         profile = self.profile()
@@ -269,6 +309,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         return None
 
     def bmount_clicked(self):
+        """
+        Handle `bMount` being clicked.
+
+        Mount or umount the current archive depending on its current state.
+        """
         archive_name = self.selected_archive_name()
 
         if not archive_name:
@@ -281,15 +326,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.mount_action()
 
     def bmount_refresh(self):
-        archive_name = self.selected_archive_name()
+        """
+        Update tooltip and state of `bMount`.
 
-        if not archive_name:
-            self.bMount.setEnabled(False)
-            self.bMount.setToolTip(self.tr("(Select a single archive)"))
-            return
-        else:
-            self.bMount.setEnabled(True)
-            self.bMount.setToolTip("")
+        The new state depends on the mount status of the current archive.
+        This also updates the icon of the button.
+        """
+        archive_name = self.selected_archive_name()
 
         if archive_name in self.mount_points:
             self.bMount.setText(self.tr("Unmount"))
