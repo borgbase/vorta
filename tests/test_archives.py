@@ -173,6 +173,7 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     assert ArchiveModel.select().filter(name=new_archive_name).count() == 1
 
     # Duplicate name case
+    tab.archiveTable.selectRow(0)
     exp_text = 'An archive with this name already exists.'
     mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
     tab.rename_action()
