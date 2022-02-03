@@ -48,7 +48,16 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleIntervalUnit.addItem(self.tr('Days'), 'days')
         self.scheduleIntervalUnit.addItem(self.tr('Weeks'), 'weeks')
 
-        # Populate with data
+        # Enable/Disable entries on button state changed
+        self.framePeriodic.setEnabled(False)
+        self.frameDaily.setEnabled(False)
+        self.frameValidation.setEnabled(False)
+
+        self.scheduleIntervalRadio.toggled.connect(self.framePeriodic.setEnabled)
+        self.scheduleFixedRadio.toggled.connect(self.frameDaily.setEnabled)
+        self.validationCheckBox.toggled.connect(self.frameValidation.setEnabled)
+
+        # POPULATE with data
         self.populate_from_profile()
         self.set_icons()
 
