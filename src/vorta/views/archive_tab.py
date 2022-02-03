@@ -338,7 +338,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bMount.setText(self.tr("Unmount"))
             self.bMount.setIcon(get_colored_icon('eject'))
         else:
-            self.bMount.setText(self.tr("Mount"))
+            self.bMount.setText(self.tr("Mount…"))
             self.bMount.setIcon(get_colored_icon('folder-open'))
 
     def mount_action(self):

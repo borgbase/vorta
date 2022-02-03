@@ -58,7 +58,11 @@
          <item row="1" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QToolButton" name="bList"/>
+            <widget class="QToolButton" name="bList">
+             <property name="toolTip">
+              <string>Refresh archive list</string>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer">
@@ -81,6 +85,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Check the consistancy of the repository</string>
+             </property>
              <property name="text">
               <string>Check</string>
              </property>
@@ -91,6 +98,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="bPrune">
+             <property name="toolTip">
+              <string>Prune the archives in this repository</string>
+             </property>
              <property name="text">
               <string>Prune</string>
              </property>
@@ -179,6 +189,9 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string>Refresh selected archive</string>
+                </property>
                 <property name="text">
                  <string>Refresh</string>
                 </property>
@@ -196,7 +209,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>Mount</string>
+                 <string notr="true">bMount</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -211,8 +224,11 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string>Extract selected archive</string>
+                </property>
                 <property name="text">
-                 <string>Extract</string>
+                 <string>Extract…</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -227,8 +243,11 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string>Rename selected archive</string>
+                </property>
                 <property name="text">
-                 <string>Rename</string>
+                 <string>Rename…</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -242,6 +261,9 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Delete selected archive</string>
                 </property>
                 <property name="text">
                  <string>Delete</string>
@@ -275,8 +297,11 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Compare two archives</string>
+             </property>
              <property name="text">
-              <string>Diff</string>
+              <string>Diff…</string>
              </property>
              <property name="toolButtonStyle">
               <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -313,8 +338,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>544</width>
-        <height>356</height>
+        <width>781</width>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">
