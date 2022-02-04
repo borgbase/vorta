@@ -84,6 +84,14 @@ class VortaScheduler(QtCore.QObject):
                 0 <= EventLogModel.returncode <= 1,
             ).order_by(EventLogModel.end_time.desc()).first()
 
+            if last_run_log is None:
+                # look for non scheduled (manual) backup runs
+                last_run_log = EventLogModel.select().where(
+                    EventLogModel.subcommand == 'create',
+                    EventLogModel.profile == profile.id,
+                    0 <= EventLogModel.returncode <= 1,
+                ).order_by(EventLogModel.end_time.desc()).first()
+
             # calculate next scheduled time
             if profile.schedule_mode == 'interval':
                 if last_run_log is None:
