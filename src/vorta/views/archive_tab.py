@@ -2,12 +2,13 @@ import logging
 import os.path
 import sys
 from datetime import timedelta
+from typing import Dict
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QMessageBox,
-                             QTableView, QTableWidgetItem)
+from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QLayout, QMessageBox,
+                             QTableView, QTableWidgetItem, QWidget)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.delete import BorgDeleteJob
@@ -47,6 +48,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
+
+        #: Tooltip dict to save the tooltips set in the designer
+        self.tooltip_dict: Dict[QWidget, str] = {}
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -203,12 +207,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if len(indexes) == 1:
             # Enable archive actions
             self.fArchiveActions.setEnabled(True)
-            self.fArchiveActions.setToolTip("")
+
+            layout: QLayout = self.fArchiveActions.layout()
+            for index in range(layout.count()):
+                widget = layout.itemAt(index).widget()
+                widget.setToolTip(self.tooltip_dict.get(widget, ""))
         else:
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
-            self.fArchiveActions.setToolTip(
-                self.tr("(Select exactly one archive)"))
+
+            layout: QLayout = self.fArchiveActions.layout()
+            for index in range(layout.count()):
+                widget = layout.itemAt(index).widget()
+                tooltip = widget.toolTip()
+
+                tooltip = self.tooltip_dict.setdefault(widget, tooltip)
+                widget.setToolTip(
+                    tooltip + " " + self.tr("(Select exactly one archive)"))
 
     def save_archive_template(self, tpl, key):
         profile = self.profile()
