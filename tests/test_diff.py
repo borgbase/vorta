@@ -111,7 +111,7 @@ def test_archive_diff_parser(line, expected):
             'changes': [{
                 'type': 'changed link'
             }]
-        }, ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0,0,
+        }, ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0,
             None, None, None)),
         ({
             'path': 'some/changed/file',
