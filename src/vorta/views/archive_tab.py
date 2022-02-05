@@ -118,6 +118,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.selected_archives = None
         self.set_icons()
 
+        # Connect to palette change
+        self.app.paletteChanged.connect(lambda p: self.set_icons())
+
     def set_icons(self):
         "Used when changing between light- and dark mode"
         self.bCheck.setIcon(get_colored_icon('check-circle'))

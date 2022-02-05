@@ -3,9 +3,10 @@ import signal
 import sys
 
 from peewee import SqliteDatabase
+
 from vorta._version import __version__
-from vorta.i18n import trans_late, translate
 from vorta.config import SETTINGS_DIR
+from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
@@ -15,6 +16,7 @@ from vorta.utils import parse_args
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
+
         from PyQt5.QtWidgets import QMessageBox
         logger.critical("Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
                         exc_info=(type, value, tb))

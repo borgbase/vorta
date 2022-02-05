@@ -68,6 +68,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.populate_from_profile()
         self.set_icons()
 
+        # Connect to palette change
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
         self.bAddRepo.setIcon(get_colored_icon("plus"))

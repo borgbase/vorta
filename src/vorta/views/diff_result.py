@@ -7,14 +7,16 @@ from pathlib import PurePath
 from typing import List, Optional, Tuple
 
 from PyQt5 import uic
-from PyQt5.QtCore import QModelIndex, Qt
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QHeaderView, QTreeView
+from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QUrl
+from PyQt5.QtGui import QColor, QKeySequence
+from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QShortcut,
+                             QTreeView)
 
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.treemodel import (FileSystemItem, FileTreeModel,
                                             FileTreeSortProxyModel,
                                             path_to_str, relative_path)
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
@@ -50,10 +52,21 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
             parse_diff_lines(lines, self.model)
 
         self.treeView: QTreeView
-        self.treeView.setUniformRowHeights(True)  # Allows for scrolling optimizations.
+        self.treeView.setUniformRowHeights(
+            True)  # Allows for scrolling optimizations.
         self.treeView.setAlternatingRowColors(True)
         self.treeView.setTextElideMode(
             Qt.TextElideMode.ElideMiddle)  # to better see name of paths
+
+        # custom context menu
+        self.treeView.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu)
+        self.treeView.customContextMenuRequested.connect(
+            self.treeview_context_menu)
+
+        # shortcuts
+        shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
+        shortcut_copy.activated.connect(self.diff_item_copy)
 
         # add sort proxy model
         self.sortproxy = DiffSortProxyModel(self)
@@ -63,15 +76,100 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
 
         self.treeView.setSortingEnabled(True)
 
+        # header
         header = self.treeView.header()
         header.setStretchLastSection(False)  # stretch only first section
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
+        # signals
+
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
-        self.okButton.clicked.connect(self.accept)
+
+        self.comboBoxDisplayMode.currentIndexChanged.connect(
+            self.change_display_mode)
+        self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
+        self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.set_icons()
+
+        # Connect to palette change
+        QApplication.instance().paletteChanged.connect(
+            lambda p: self.set_icons())
+
+    def set_icons(self):
+        """Set or update the icons in the right color scheme."""
+        self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+
+    def treeview_context_menu(self, pos: QPoint):
+        """Display a context menu for `treeView`."""
+        index = self.treeView.indexAt(pos)
+        if not index.isValid():
+            # popup only for items
+            return
+
+        menu = QMenu(self.treeView)
+
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
+                       lambda: self.diff_item_copy(index))
+
+        if self.model.getMode() != self.model.DisplayMode.FLAT:
+            menu.addSeparator()
+            menu.addAction(get_colored_icon('angle-down-solid'),
+                           self.tr("Expand recursively"),
+                           lambda: self.treeView.expandRecursively(index))
+
+        menu.popup(self.treeView.viewport().mapToGlobal(pos))
+
+    def diff_item_copy(self, index: QModelIndex = None):
+        """
+        Copy a diff item path to the clipboard.
+
+        Copies the first selected item if no index is specified.
+        """
+        if index is None or (not index.isValid()):
+            indexes = self.treeView.selectionModel().selectedRows()
+
+            if not indexes:
+                return
+
+            index = indexes[0]
+
+        index = self.sortproxy.mapToSource(index)
+        item: DiffItem = index.internalPointer()
+        path = PurePath('/', *item.path)
+
+        data = QMimeData()
+        data.setUrls([QUrl(path.as_uri())])
+        data.setText(str(path))
+
+        QApplication.clipboard().setMimeData(data)
+
+    def change_display_mode(self, selection: int):
+        """
+        Change the display mode of the tree view
+
+        The `selection` parameter specifies the index of the selected mode in
+        `comboBoxDisplayMode`.
+
+        """
+        if selection == 0:
+            mode = FileTreeModel.DisplayMode.TREE
+        elif selection == 1:
+            mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
+        elif selection == 2:
+            mode = FileTreeModel.DisplayMode.FLAT
+        else:
+            raise Exception(
+                "Unknown item in comboBoxDisplayMode with index {}".format(
+                    selection))
+
+        self.model.setMode(mode)
 
     def slot_sorted(self, column, order):
         """React the tree view being sorted."""
@@ -138,6 +236,7 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                     change_type = ChangeType.ADDED
                 else:
                     change_type = ChangeType.REMOVED
+                    size = -size
 
                 changed_size = size
 
@@ -176,13 +275,13 @@ pattern_owner = r'\[(?P<old_user>[\w ]+):(?P<old_group>[\w ]+) -> (?P<new_user>[
 pattern_path = r'(?P<path>.*)'
 pattern_changed_file = (
     r'(({ar} )|((?P<cl>{cl} )|' +
-    r'((?P<modified>{modified}\s+)?)(?P<owner>{owner}\s+)?(?P<mode>{mode}\s+)?))' +
-    r'{path}').format(ar=pattern_ar,
-                      cl=pattern_cl,
-                      modified=pattern_modified,
-                      mode=pattern_mode,
-                      owner=pattern_owner,
-                      path=pattern_path)
+    r'((?P<modified>{modified}\s+)?)(?P<owner>{owner}\s+)?(?P<mode>{mode}\s+)?))'
+    + r'{path}').format(ar=pattern_ar,
+                        cl=pattern_cl,
+                        modified=pattern_modified,
+                        mode=pattern_mode,
+                        owner=pattern_owner,
+                        path=pattern_path)
 re_changed_file = re.compile(pattern_changed_file)
 
 
@@ -519,7 +618,7 @@ class DiffTree(FileTreeModel[DiffData]):
             size = child.data.size
             changed_size = child.data.changed_size
 
-            def add_size(parent: DiffItem):
+            def add_size(parent):
                 if parent is self.root:
                     return
 
