@@ -5,7 +5,7 @@ from datetime import timedelta
 from typing import Dict, Optional
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QMimeData, QPoint, Qt, pyqtSlot
+from PyQt5.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt5.QtGui import QDesktopServices, QKeySequence
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QInputDialog, QLayout,
                              QMenu, QMessageBox, QShortcut, QTableView,
@@ -27,7 +27,6 @@ from vorta.i18n import trans_late
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.diff_dialog import DiffDialog
 from vorta.views.diff_result import DiffResult
 from vorta.views.extract_dialog import ExtractDialog
 from vorta.views.source_tab import SizeItem
@@ -47,7 +46,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}  # mount points of archives
-        self.repo_mount_point: Optional[str] = None  # mount point of whole repo
+        self.repo_mount_point: Optional[
+            str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
@@ -55,6 +55,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
+        self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -69,7 +70,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status('')  # Set platform-specific hints.
 
         self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
-        self.archiveTable.setSelectionMode(QTableView.SingleSelection)
         self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
         self.archiveTable.setWordWrap(False)
         self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
@@ -86,6 +86,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                                   self.archiveTable)
         shortcut_copy.activated.connect(self.archive_copy)
 
+        # single and double selection feature
+        self.archiveTable.setSelectionMode(
+            QTableView.SelectionMode.ExtendedSelection)
+        self.archiveTable.selectionModel().selectionChanged.connect(
+            self.on_selection_change)
+
         # connect archive actions
         self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
@@ -101,12 +107,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bDiff.clicked.connect(self.diff_action)
         self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
 
-        self.archiveTable.itemSelectionChanged.connect(self.on_selection_change)
-
         self.archiveNameTemplate.textChanged.connect(
-            lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key))
+            lambda tpl, key='new_archive_name': self.save_archive_template(
+                tpl, key))
         self.prunePrefixTemplate.textChanged.connect(
-            lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key))
+            lambda tpl, key='prune_prefix': self.save_archive_template(
+                tpl, key))
 
         self.populate_from_profile()
         self.selected_archives = None
@@ -136,24 +142,39 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not index.isValid():
             return  # popup only for items
 
-        menu = QMenu(self.archiveTable)
-        menu.setEnabled(self.repoactions_enabled)
+        selected_rows = self.archiveTable.selectionModel().selectedRows(
+            index.column())
 
+        if selected_rows and index not in selected_rows:
+            return  # popup only for selected items
+
+        menu = QMenu(self.archiveTable)
         menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
                        lambda: self.archive_copy(index=index))
         menu.addSeparator()
 
-        menu.addAction(self.bRefreshArchive.icon(),
-                       self.bRefreshArchive.text(),
-                       self.refresh_archive_info)
-        menu.addAction(self.bMountArchive.icon(), self.bMountArchive.text(),
-                       self.bmountarchive_clicked)
-        menu.addAction(self.bExtract.icon(), self.bExtract.text(),
-                       self.extract_action)
-        menu.addAction(self.bRename.icon(), self.bRename.text(),
-                       self.rename_action)
-        menu.addAction(self.bDelete.icon(), self.bDelete.text(),
-                       self.delete_action)
+        # archive actions
+        archive_actions = []
+        archive_actions.append(
+            menu.addAction(self.bRefreshArchive.icon(),
+                           self.bRefreshArchive.text(),
+                           self.refresh_archive_info))
+        archive_actions.append(
+            menu.addAction(self.bMount.icon(), self.bMount.text(),
+                           self.bmount_clicked))
+        archive_actions.append(
+            menu.addAction(self.bExtract.icon(), self.bExtract.text(),
+                           self.extract_action))
+        archive_actions.append(
+            menu.addAction(self.bRename.icon(), self.bRename.text(),
+                           self.rename_action))
+        archive_actions.append(
+            menu.addAction(self.bDelete.icon(), self.bDelete.text(),
+                           self.delete_action))
+
+        if not (self.repoactions_enabled and len(selected_rows) <= 1):
+            for action in archive_actions:
+                action.setEnabled(False)
 
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
@@ -242,25 +263,52 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.prune_keep_within.setText(profile.prune_keep_within)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
-    @pyqtSlot()
-    def on_selection_change(self):
+    def on_selection_change(self, selected=None, deselected=None):
         """
         React to a change of the selection of the archiveTableView.
 
+        Enables or disables archive actions and the diff button.
+        Makes sure at maximum 2 rows are selected.
+
         Parameters
         ----------
-        selected : QItemSelection
+        selected : QItemSelection, optional
             The new selection.
-        deselected : QItemSelection
+        deselected : QItemSelection, optional
             The previous selection.
         """
-        indexes = self.archiveTable.selectionModel().selectedRows()
+        # handle selection of more than 2 rows
+        selectionModel: QItemSelectionModel = self.archiveTable.selectionModel(
+        )
+        indexes = selectionModel.selectedRows()
+
+        # Toggle archive actions frame
+        layout: QLayout = self.fArchiveActions.layout()
+
+        # Make sure at maximum 2 rows are selected.
+        if len(indexes) > 2:
+            selectionModel.select(
+                indexes[0], QItemSelectionModel.SelectionFlag.Deselect
+                | QItemSelectionModel.SelectionFlag.Rows)
+            indexes = selectionModel.selectedRows()
+
+        # Toggle diff button
+        if len(indexes) >= 2:
+            # Enable diff button
+            self.bDiff.setEnabled(True)
+            self.bDiff.setToolTip(self.tooltip_dict.get(self.bDiff, ""))
+        else:
+            # disable diff button
+            self.bDiff.setEnabled(False)
+
+            tooltip = self.tooltip_dict[self.bDiff]
+            self.bDiff.setToolTip(tooltip + " " +
+                                  self.tr("(Select two archives)"))
 
         if len(indexes) == 1:
             # Enable archive actions
             self.fArchiveActions.setEnabled(True)
 
-            layout: QLayout = self.fArchiveActions.layout()
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
                 widget.setToolTip(self.tooltip_dict.get(widget, ""))
@@ -271,14 +319,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
 
-            layout: QLayout = self.fArchiveActions.layout()
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
                 tooltip = widget.toolTip()
 
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
-                widget.setToolTip(
-                    tooltip + " " + self.tr("(Select exactly one archive)"))
+                widget.setToolTip(tooltip + " " +
+                                  self.tr("(Select exactly one archive)"))
 
     def archive_copy(self, index=None):
         """
@@ -736,41 +783,57 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._toggle_all_buttons(True)
 
     def diff_action(self):
-        def process_result():
-            if window.selected_archives:
-                self.selected_archives = window.selected_archives
-            archive_cell_newer = self.archiveTable.item(self.selected_archives[0], 4)
-            archive_cell_older = self.archiveTable.item(self.selected_archives[1], 4)
-            if archive_cell_older and archive_cell_newer:
-                archive_name_newer = archive_cell_newer.text()
-                archive_name_older = archive_cell_older.text()
+        """
+        Handle the diff button being clicked.
 
-                params = BorgDiffJob.prepare(profile, archive_name_older, archive_name_newer)
-
-                if params['ok']:
-                    self._toggle_all_buttons(False)
-                    job = BorgDiffJob(params['cmd'], params, self.profile().repo.id)
-                    job.updated.connect(self.mountErrors.setText)
-                    job.result.connect(self.list_diff_result)
-                    self.app.jobs_manager.add_job(job)
-                else:
-                    self._set_status(params['message'])
-
+        Exactly two archives must be selected in `archiveTable`. This is
+        usually enforced by `on_selection_change`.
+        """
+        selected_archives = self.archiveTable.selectionModel().selectedRows()
         profile = self.profile()
 
-        window = DiffDialog(self.archiveTable)
-        self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.Sheet)
-        self._window = window  # for testing
-        window.show()
-        window.accepted.connect(process_result)
+        name1 = self.archiveTable.item(selected_archives[0].row(), 4).text()
+        name2 = self.archiveTable.item(selected_archives[1].row(), 4).text()
+
+        archive1, archive2 = (profile.repo.archives.select().where(
+            (ArchiveModel.name == name1)
+            | (ArchiveModel.name == name2)).order_by(ArchiveModel.time.desc()))
+
+        archive_name_newer = archive1.name
+        archive_name_older = archive2.name
+
+        # Start diff job
+        params = BorgDiffJob.prepare(profile, archive_name_older,
+                                     archive_name_newer)
+
+        if params['ok']:
+            self._toggle_all_buttons(False)
+            job = BorgDiffJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self.mountErrors.setText)
+            job.result.connect(self.list_diff_result)
+            self.app.jobs_manager.add_job(job)
+        else:
+            self._set_status(params['message'])
 
     def list_diff_result(self, result):
+        """
+        Process the result of the `BorgDiffJob`.
+
+        The `BorgDiffJob` was initiated by `diff_action`.
+
+        Parameters
+        ----------
+        result : dict
+            The BorgJob result.
+        """
         self._set_status('')
         if result['returncode'] == 0:
-            archive_newer = ArchiveModel.get(name=result['params']['archive_name_newer'])
-            archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
-            window = DiffResult(result['data'], archive_newer, archive_older, result['params']['json_lines'])
+            archive_newer = ArchiveModel.get(
+                name=result['params']['archive_name_newer'])
+            archive_older = ArchiveModel.get(
+                name=result['params']['archive_name_older'])
+            window = DiffResult(result['data'], archive_newer, archive_older,
+                                result['params']['json_lines'])
             self._toggle_all_buttons(True)
             window.setParent(self, QtCore.Qt.Sheet)
             self._resultwindow = window  # for testing
