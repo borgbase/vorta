@@ -1,17 +1,19 @@
 import logging
 import threading
-from datetime import datetime as dt, date, timedelta
+from datetime import date
+from datetime import datetime as dt
+from datetime import timedelta
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
+
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
-
-from vorta.store.models import BackupProfileModel, EventLogModel
 from vorta.notifications import VortaNotifications
+from vorta.store.models import BackupProfileModel, EventLogModel
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +70,7 @@ class VortaScheduler(QtCore.QObject):
             EventLogModel.subcommand == 'create',
             EventLogModel.category == 'scheduled',
             EventLogModel.profile == profile.id,
+            0 <= EventLogModel.returncode <= 1,
         ).order_by(EventLogModel.end_time.desc()).first()
 
         # Desired interval between scheduled backups. Uses datetime.timedelta() units.

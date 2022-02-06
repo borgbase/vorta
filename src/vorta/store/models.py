@@ -6,8 +6,10 @@ At the bottom there is a simple schema migration system.
 
 import json
 from datetime import datetime
+
 import peewee as pw
 from playhouse import signals
+
 from vorta.utils import slugify
 
 DB = pw.Proxy()
@@ -151,7 +153,7 @@ class EventLogModel(BaseModel):
     category = pw.CharField()
     subcommand = pw.CharField(null=True)
     message = pw.CharField(null=True)
-    returncode = pw.IntegerField(default=1)
+    returncode = pw.IntegerField(default=-1)
     params = JSONField(null=True)
     profile = pw.CharField(null=True)
     repo_url = pw.CharField(null=True)
