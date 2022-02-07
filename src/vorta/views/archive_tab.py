@@ -26,8 +26,9 @@ from vorta.borg.umount import BorgUmountJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.diff_result import DiffResult
-from vorta.views.extract_dialog import ExtractDialog
+from vorta.views import diff_result, extract_dialog
+from vorta.views.diff_result import DiffResultDialog, DiffTree
+from vorta.views.extract_dialog import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
