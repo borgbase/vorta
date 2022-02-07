@@ -83,7 +83,7 @@ def run_migrations(current_schema, db_connection):
         tables = DB.get_tables()
         if ArchiveModel.select().count() == 0 and 'snapshotmodel' in tables:
             cursor = DB.execute_sql('select * from snapshotmodel;')
-            fields = [ArchiveModel.id, ArchiveModel.snapshot_id, ArchiveModel.name, ArchiveModel.repo,
+            fields = [ArchiveModel.id, ArchiveModel.name, ArchiveModel.repo,
                       ArchiveModel.time, ArchiveModel.duration, ArchiveModel.size]
             data = [row for row in cursor.fetchall()]
             with DB.atomic():
@@ -135,6 +135,12 @@ def run_migrations(current_schema, db_connection):
                                 'schedule_make_up_missed', pw.BooleanField(default=False)),
             migrator.add_column(EventLogModel._meta.table_name,
                                 'end_time', pw.DateTimeField(default=datetime.now))
+        )
+
+    if current_schema.version < 19:
+        _apply_schema_update(
+            current_schema, 19,
+            migrator.drop_column(ArchiveModel._meta.table_name, 'snapshot_id'),
         )
 
 

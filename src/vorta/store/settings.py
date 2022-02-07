@@ -52,6 +52,10 @@ def get_misc_settings():
             'key': 'previous_window_height', 'str_value': '600', 'type': 'internal',
             'label': 'Previous window height'
         },
+        {
+            'key': 'get_stats_after_create', 'value': False, 'type': 'checkbox',
+            'label': 'Get archive statistics after each backup (can be slow when using Borg 1.1 repo with Borg 1.2)'
+        },
     ]
     if sys.platform == 'darwin':
         settings += [

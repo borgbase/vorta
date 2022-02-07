@@ -121,7 +121,6 @@ class SourceFileModel(BaseModel):
 
 class ArchiveModel(BaseModel):
     """An archive in a remote repository."""
-    snapshot_id = pw.CharField()
     name = pw.CharField()
     repo = pw.ForeignKeyField(RepoModel, backref='archives')
     time = pw.DateTimeField()

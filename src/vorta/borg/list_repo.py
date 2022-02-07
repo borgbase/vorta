@@ -22,7 +22,7 @@ class BorgListRepoJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'list', '--info', '--log-json', '--json']
+        cmd = ['borg', 'list', '--info', '--log-json', '--json', '--format', '{id}{name}{start}{end}{NL}']
         cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
@@ -39,17 +39,24 @@ class BorgListRepoJob(BorgJob):
 
             # Delete archives that don't exist on the remote side
             for archive in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
-                if not list(filter(lambda s: s['id'] == archive.snapshot_id, remote_archives)):
+                if not list(filter(lambda s: s['name'] == archive.name, remote_archives)):
                     archive.delete_instance()
 
-            # Add remote archives we don't have locally.
-            for archive in result['data'].get('archives', []):
-                new_archive, _ = ArchiveModel.get_or_create(
-                    snapshot_id=archive['id'],
-                    repo=repo.id,
-                    defaults={
-                        'name': archive['name'],
-                        'time': dt.fromisoformat(archive['time'])
-                    }
+            # Add or update remote archives we don't have locally.
+            for a in result['data'].get('archives', []):
+                existing_archives = ArchiveModel.select().where(
+                    ArchiveModel.repo == repo.id,
+                    ArchiveModel.name == a['name']
                 )
-                new_archive.save()
+                if existing_archives.count() == 1:
+                    archive = existing_archives.get()
+                else:
+                    archive = ArchiveModel(
+                        name=a['name'],
+                        repo=repo.id,
+                        time=dt.fromisoformat(a['start'])
+                    )
+                archive.duration = (
+                    dt.fromisoformat(a['end']) - dt.fromisoformat(a['start'])
+                ).total_seconds()
+                archive.save()

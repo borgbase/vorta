@@ -38,10 +38,8 @@ class BorgInfoArchiveJob(BorgJob):
             # Update remote archives.
             for remote_archive in remote_archives:
                 archive = ArchiveModel.get_or_none(
-                    snapshot_id=remote_archive['id'],
+                    name=remote_archive['name'],
                     repo=repo_id)
-                archive.name = remote_archive['name']   # incase name changed
-                # archive.time = parser.parse(remote_archive['time'])
                 archive.duration = remote_archive['duration']
                 archive.size = remote_archive['stats']['deduplicated_size']
 

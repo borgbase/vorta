@@ -58,10 +58,10 @@ def init_db(qapp, qtbot, tmpdir_factory):
     default_profile.validation_on = False
     default_profile.save()
 
-    test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
+    test_archive = ArchiveModel(name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive.save()
 
-    test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
+    test_archive1 = ArchiveModel(name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive1.save()
 
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18,

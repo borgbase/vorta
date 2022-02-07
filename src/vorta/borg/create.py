@@ -5,25 +5,29 @@ from datetime import datetime as dt
 
 from vorta.i18n import trans_late
 from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
-from vorta.store.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
+from vorta.store.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel, SettingsModel
 from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
     def process_result(self, result):
-        if result['returncode'] in [0, 1] and 'archive' in result['data']:
-            new_archive, created = ArchiveModel.get_or_create(
-                snapshot_id=result['data']['archive']['id'],
-                defaults={
-                    'name': result['data']['archive']['name'],
-                    'time': dt.fromisoformat(result['data']['archive']['start']),
-                    'repo': result['params']['repo_id'],
-                    'duration': result['data']['archive']['duration'],
-                    'size': result['data']['archive']['stats']['deduplicated_size']
-                }
+        if result['returncode'] in [0, 1]:
+            # Add local archive entry with the minimum details we have.
+            new_archive = ArchiveModel(
+                name=result['params']['new_archive_name'],
+                repo=result['params']['repo_id'],
+                time=dt.now()
             )
-            new_archive.save()
-            if 'cache' in result['data'] and created:
+
+            # If the --stats option was enabled, add that data too
+            if 'archive' in result['data']:
+                new_archive.time = dt.fromisoformat(result['data']['archive']['start'])
+                new_archive.duration = result['data']['archive']['duration']
+                new_archive.size = result['data']['archive']['stats']['deduplicated_size']
+                new_archive.save()
+
+            # If there are new repo details, save those too.
+            if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
@@ -32,10 +36,13 @@ class BorgCreateJob(BorgJob):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
-            else:
-                self.app.backup_progress_event.emit(self.tr('Backup finished.'))
+        # Update logs depending on result
+        if result['returncode'] == 1:
+            self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
+        elif result['returncode'] == 0:
+            self.app.backup_progress_event.emit(self.tr('Backup finished.'))
+        else:
+            self.app.backup_progress_event.emit(self.tr('Backup finished with errors.'))
 
     def progress_event(self, fmt):
         self.app.backup_progress_event.emit(fmt)
@@ -126,11 +133,13 @@ class BorgCreateJob(BorgJob):
             '--progress',
             '--info',
             '--log-json',
-            '--json',
             '--filter=AM',
             '-C',
             profile.compression,
         ]
+
+        if SettingsModel.get(key='get_stats_after_create').value:
+            cmd.append('--json')
 
         if profile.repo.create_backup_cmd:
             cmd.extend(profile.repo.create_backup_cmd.split(' '))
@@ -156,8 +165,8 @@ class BorgCreateJob(BorgJob):
                     cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
-        new_archive_name = format_archive_name(profile, profile.new_archive_name)
-        cmd.append(f"{profile.repo.url}::{new_archive_name}")
+        ret['new_archive_name'] = format_archive_name(profile, profile.new_archive_name)
+        cmd.append(f"{profile.repo.url}::{ret['new_archive_name']}")
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)

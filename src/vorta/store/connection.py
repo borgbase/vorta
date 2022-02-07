@@ -7,7 +7,7 @@ from .models import (DB, RepoModel, RepoPassword, BackupProfileModel, SourceFile
 from .migrations import run_migrations
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 18
+SCHEMA_VERSION = 19
 
 
 @signals.post_save(sender=SettingsModel)
