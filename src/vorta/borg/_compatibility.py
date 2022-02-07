@@ -5,7 +5,6 @@ MIN_BORG_FOR_FEATURE = {
     'ZSTD': parse_version('1.1.4'),
     'JSON_LOG': parse_version('1.1.0'),
     'DIFF_JSON_LINES': parse_version('1.1.16'),
-    'SLOW_CREATE_STATS': parse_version('1.2.0a1')
     # add new version-checks here.
 }
 
