@@ -19,6 +19,10 @@ logger = logging.getLogger(__name__)
 
 
 class VortaScheduler(QtCore.QObject):
+
+    #: The schedule for the profile with the given id changed.
+    schedule_changed = QtCore.pyqtSignal(int)
+
     def __init__(self):
         super().__init__()
         self.timers = dict()  # keep mapping of profiles to timers
@@ -117,6 +121,9 @@ class VortaScheduler(QtCore.QObject):
         self.timers[profile_id] = {'qtt': timer, 'dt': next_run}
 
         self.lock.release()
+
+        # Emit signal so that e.g. the GUI can react to the new schedule
+        self.schedule_changed.emit(profile_id)
 
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
