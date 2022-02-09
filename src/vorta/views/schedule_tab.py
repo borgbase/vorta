@@ -77,6 +77,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.validationWeeksCount.valueChanged.connect(
             lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val))
 
+        # Connect to schedule update
+        self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
+
     def on_scheduler_change(self, _):
         profile = self.profile()
         # Save scheduler settings, apply new scheduler and display next task for profile.

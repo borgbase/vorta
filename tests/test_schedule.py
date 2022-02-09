@@ -1,10 +1,20 @@
-from datetime import datetime as dt, date, time
+from datetime import date
+from datetime import datetime as dt
+from datetime import time
+
 from PyQt5 import QtCore
 
 
 def test_schedule_tab(qapp, qtbot):
     main = qapp.main_window
     tab = main.scheduleTab
+
+    # Work around
+    # because already 'deleted' scheduletabs are still connected to the signal
+    qapp.scheduler.schedule_changed.disconnect()
+    qapp.scheduler.schedule_changed.connect(lambda *args: tab.draw_next_scheduled_backup())
+
+    # Test
     qtbot.mouseClick(tab.scheduleOffRadio, QtCore.Qt.LeftButton)
     assert tab.nextBackupDateTimeLabel.text() == 'None scheduled'
 
