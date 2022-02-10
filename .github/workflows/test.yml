@@ -92,6 +92,6 @@ jobs:
         pip install .
         pip install -r requirements.d/dev.txt
     - name: Run Flake8
-      run: flake8
+      run: flake8 --ignore=E121,E123,E126,E226,E24,E704,W503,W504
     # - name: Run PyLint (info only)
     #   run: pylint --rcfile=setup.cfg src --exit-zero
