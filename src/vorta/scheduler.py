@@ -1,6 +1,5 @@
 import logging
 import threading
-from datetime import date
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, Union
@@ -140,12 +139,12 @@ class VortaScheduler(QtCore.QObject):
                     next_time += timedelta(**interval)
 
                 elif profile.schedule_mode == 'fixed':
-                    if next_time.date() == dt.today().date():
+                    if next_time.date() == dt.now().date():
                         # time for today has passed, schedule for tomorrow
                         next_time += timedelta(days=1)
                     else:
                         # schedule for today
-                        next_time = dt.today().replace(
+                        next_time = dt.now().replace(
                             hour=profile.schedule_fixed_hour,
                             minute=profile.schedule_fixed_minute)
 
@@ -260,7 +259,7 @@ class VortaScheduler(QtCore.QObject):
                     job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
                     self.app.jobs_manager.add_job(job)
 
-        validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
+        validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
             (
                 EventLogModel.subcommand == 'check'
