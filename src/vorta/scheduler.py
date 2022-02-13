@@ -117,7 +117,7 @@ class VortaScheduler(QtCore.QObject):
                     "Unknown schedule mode '{}'".format(profile.schedule_mode))
 
             # handle missing of a scheduled time
-            if next_time < dt.now():
+            if next_time <= dt.now():
 
                 if profile.schedule_make_up_missed:
                     self.lock.release()
