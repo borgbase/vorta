@@ -18,9 +18,8 @@ SourceUI, SourceBase = uic.loadUiType(uifile)
 
 class SourceColumn:
     Path = 0
-    Type = 1
-    Size = 2
-    FilesCount = 3
+    Size = 1
+    FilesCount = 2
 
 
 class SizeItem(QTableWidgetItem):
@@ -60,7 +59,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSortIndicatorShown(1)
 
         header.setSectionResizeMode(SourceColumn.Path, QHeaderView.Stretch)
-        header.setSectionResizeMode(SourceColumn.Type, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
 
@@ -101,6 +99,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addFoldersAction.setIcon(get_colored_icon('folder'))
         self.pasteAction.setIcon(get_colored_icon('paste'))
 
+        for row in range(self.sourceFilesWidget.rowCount()):
+            path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
+            db_item = SourceFileModel.get(dir=path_item.text(),
+                                          profile=self.profile())
+
+            if db_item.path_isdir:
+                path_item.setIcon(get_colored_icon('folder'))
+            else:
+                path_item.setIcon(get_colored_icon('file'))
+
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):
         """Show a context menu for the source item at `pos`."""
@@ -127,14 +135,19 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for item in items:
             db_item = SourceFileModel.get(dir=path, profile=self.profile())
             if QFileInfo(path).isDir():
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText(self.tr("Folder"))
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
+                self.sourceFilesWidget.item(
+                    item.row(), SourceColumn.Path).setIcon(
+                        get_colored_icon('folder'))
             else:
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Type).setText(self.tr("File"))
                 # No files count, if entry itself is a file
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText("")
                 db_item.path_isdir = False
+                self.sourceFilesWidget.item(
+                    item.row(), SourceColumn.Path).setIcon(
+                        get_colored_icon('file'))
+
             self.sourceFilesWidget.item(item.row(), SourceColumn.Size).setText(pretty_bytes(data_size))
 
             db_item.dir_size = data_size
@@ -147,7 +160,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def update_path_info(self, index_row):
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
-        self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("Calculating…"))
         self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
         self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
         getDir = FilePathInfoAsync(path, self.profile().exclude_patterns)
@@ -166,7 +178,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         new_item = QTableWidgetItem(source.dir)
         new_item.setToolTip(source.dir)
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, new_item)
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Type, QTableWidgetItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
 
@@ -177,11 +188,15 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
 
                 if source.path_isdir:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("Folder"))
                     self.sourceFilesWidget.item(index_row,
                                                 SourceColumn.FilesCount).setText(format(source.dir_files_count))
+                    self.sourceFilesWidget.item(
+                        index_row, SourceColumn.Path).setIcon(
+                            get_colored_icon('folder'))
                 else:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Type).setText(self.tr("File"))
+                    self.sourceFilesWidget.item(
+                        index_row, SourceColumn.Path).setIcon(
+                            get_colored_icon('file'))
 
     def populate_from_profile(self):
         profile = self.profile()
