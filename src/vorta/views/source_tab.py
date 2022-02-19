@@ -1,7 +1,8 @@
 import os
+from pathlib import PurePath
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QFileInfo
+from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QMessageBox,
                              QTableWidgetItem, QToolButton)
 
@@ -64,6 +65,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
 
         self.sourceFilesWidget.setSortingEnabled(True)
+        self.sourceFilesWidget.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu)
+        self.sourceFilesWidget.customContextMenuRequested.connect(
+            self.sourceitem_contextmenu)
 
         # Prepare add button
         self.addMenu = QMenu(self.addButton)
@@ -95,6 +100,23 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addFilesAction.setIcon(get_colored_icon('file'))
         self.addFoldersAction.setIcon(get_colored_icon('folder'))
         self.pasteAction.setIcon(get_colored_icon('paste'))
+
+    @pyqtSlot(QPoint)
+    def sourceitem_contextmenu(self, pos: QPoint):
+        """Show a context menu for the source item at `pos`."""
+        # index under cursor
+        index = self.sourceFilesWidget.indexAt(pos)
+        if not index.isValid():
+            return  # popup only for items
+
+        menu = QMenu(self.sourceFilesWidget)
+
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
+                       lambda: self.source_copy(index=index))
+        menu.addAction(get_colored_icon('minus'), self.tr("Remove"),
+                       self.source_remove)
+
+        menu.popup(self.sourceFilesWidget.viewport().mapToGlobal(pos))
 
     def set_path_info(self, path, data_size, files_count):
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
@@ -201,6 +223,29 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
         dialog = choose_file_dialog(self, msg, want_folder=want_folder)
         dialog.open(receive)
+
+    def source_copy(self, index=None):
+        """
+        Copy a source path to the clipboard.
+
+        Copies the first selected source if no index is specified.
+        """
+        if index is None:
+            indexes = self.sourceFilesWidget.selectionModel().selectedRows()
+
+            if not indexes:
+                return
+
+            index = indexes[0]
+
+        path = PurePath(self.sourceFilesWidget.item(index.row(),
+                                                    SourceColumn.Path).text())
+
+        data = QMimeData()
+        data.setUrls([QUrl(path.as_uri())])
+        data.setText(str(path))
+
+        QApplication.clipboard().setMimeData(data)
 
     def source_remove(self):
         indexes = self.sourceFilesWidget.selectionModel().selectedRows()
