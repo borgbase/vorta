@@ -5,10 +5,11 @@ from datetime import timedelta
 from typing import Dict
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import QPoint, Qt, pyqtSlot
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QLayout, QMessageBox,
-                             QTableView, QTableWidgetItem, QWidget)
+from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QLayout, QMenu,
+                             QMessageBox, QTableView, QTableWidgetItem,
+                             QWidget)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.delete import BorgDeleteJob
@@ -48,6 +49,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
+        self.repoactions_enabled = True
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -72,6 +74,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
+        self.archiveTable.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu)
+        self.archiveTable.customContextMenuRequested.connect(
+            self.archiveitem_contextmenu)
 
         self.bList.clicked.connect(self.refresh_archive_list)
         self.bPrune.clicked.connect(self.prune_action)
@@ -111,6 +117,30 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.bmount_refresh()
 
+    @pyqtSlot(QPoint)
+    def archiveitem_contextmenu(self, pos: QPoint):
+        # index under cursor
+        index = self.archiveTable.indexAt(pos)
+        if not index.isValid():
+            return  # popup only for items
+
+        menu = QMenu(self.archiveTable)
+        menu.setEnabled(self.repoactions_enabled)
+
+        menu.addAction(self.bRefreshArchive.icon(),
+                       self.bRefreshArchive.text(),
+                       self.refresh_archive_info)
+        menu.addAction(self.bMount.icon(), self.bMount.text(),
+                       self.bmount_clicked)
+        menu.addAction(self.bExtract.icon(), self.bExtract.text(),
+                       self.extract_action)
+        menu.addAction(self.bRename.icon(), self.bRename.text(),
+                       self.rename_action)
+        menu.addAction(self.bDelete.icon(), self.bDelete.text(),
+                       self.delete_action)
+
+        menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
+
     def cancel_action(self):
         self._set_status(self.tr("Action cancelled."))
         self._toggle_all_buttons(True)
@@ -128,6 +158,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         enabled : bool, optional
             The enabled state, by default True
         """
+        self.repoactions_enabled = enabled
+
         for button in [self.bCheck, self.bList, self.bPrune,
                        self.bDiff, self.fArchiveActions]:
             button.setEnabled(enabled)
