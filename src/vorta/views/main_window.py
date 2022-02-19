@@ -3,7 +3,7 @@ from pathlib import Path
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QFontMetrics, QKeySequence
 from PyQt5.QtWidgets import (QCheckBox, QFileDialog, QMenu, QMessageBox,
                              QShortcut, QToolTip)
 
@@ -40,6 +40,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
+
+        # set log label height to two lines
+        fontmetrics: QFontMetrics = self.logText.fontMetrics()
+        self.logText.setMinimumHeight(
+            fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
 
         # Use previous window state
         previous_window_width = SettingsModel.get(key='previous_window_width')
