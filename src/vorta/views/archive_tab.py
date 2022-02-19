@@ -7,9 +7,9 @@ from typing import Dict, Optional
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt5.QtGui import QDesktopServices, QKeySequence
-from PyQt5.QtWidgets import (QApplication, QHeaderView, QInputDialog, QLayout,
-                             QMenu, QMessageBox, QShortcut, QTableView,
-                             QTableWidgetItem, QWidget)
+from PyQt5.QtWidgets import (QAction, QApplication, QHeaderView, QInputDialog,
+                             QLayout, QMenu, QMessageBox, QShortcut,
+                             QTableView, QTableWidgetItem, QWidget)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
@@ -175,6 +175,17 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not (self.repoactions_enabled and len(selected_rows) <= 1):
             for action in archive_actions:
                 action.setEnabled(False)
+
+        # diff action
+        menu.addSeparator()
+        diff_action = QAction(self.bDiff.icon(), self.bDiff.text(), menu)
+        diff_action.triggered.connect(self.diff_action)
+        menu.addAction(diff_action)
+
+        selected_rows = self.archiveTable.selectionModel().selectedRows(
+            index.column())
+        diff_action.setEnabled(self.repoactions_enabled
+                               and len(selected_rows) > 1)
 
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
