@@ -127,6 +127,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         menu.popup(self.sourceFilesWidget.viewport().mapToGlobal(pos))
 
     def set_path_info(self, path, data_size, files_count):
+        # disable sorting temporarily
+        sorting = self.sourceFilesWidget.isSortingEnabled()
+        self.sourceFilesWidget.setSortingEnabled(False)
+
         items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
         # Conversion int->str->int needed because QT limits int to 32-bit
         data_size = int(data_size)
@@ -158,6 +162,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             if thrd.objectName() == path:
                 self.updateThreads.remove(thrd)
 
+        # enable sorting again
+        self.sourceFilesWidget.setSortingEnabled(sorting)
+
     def update_path_info(self, index_row):
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
         self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
@@ -169,11 +176,15 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         getDir.start()
 
     def add_source_to_table(self, source, update_data=None):
+        # disable sorting temporarily
+        sorting = self.sourceFilesWidget.isSortingEnabled()
+        self.sourceFilesWidget.setSortingEnabled(False)
+
         if update_data is None:
             update_data = SettingsModel.get(key="get_srcpath_datasize").value
 
         index_row = self.sourceFilesWidget.rowCount()
-        self.sourceFilesWidget.insertRow(index_row)
+        self.sourceFilesWidget.setRowCount(self.sourceFilesWidget.rowCount()+1)
         # Insert all items on current row, add tooltip containing the path name
         new_item = QTableWidgetItem(source.dir)
         new_item.setToolTip(source.dir)
@@ -197,6 +208,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.sourceFilesWidget.item(
                         index_row, SourceColumn.Path).setIcon(
                             get_colored_icon('file'))
+
+        # enable sorting again
+        self.sourceFilesWidget.setSortingEnabled(sorting)
 
     def populate_from_profile(self):
         profile = self.profile()
