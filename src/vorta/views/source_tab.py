@@ -210,7 +210,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             self.add_source_to_table(source, False)
 
         # Initially, sort entries by path name in ascending order
-        self.sourceFilesWidget.model().sort(SourceColumn.Path, QtCore.Qt.AscendingOrder)
+        self.sourceFilesWidget.sortItems(SourceColumn.Path, QtCore.Qt.AscendingOrder)
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
