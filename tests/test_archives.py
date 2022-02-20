@@ -63,6 +63,23 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), **pytest._wait_defaults)
 
 
+def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+    tab.populate_from_profile()
+    stdout, stderr = borg_json_output('compact')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    qtbot.mouseClick(tab.compactButton, QtCore.Qt.LeftButton)
+
+    qtbot.waitUntil(
+        lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(),
+        **pytest._wait_defaults
+    )
+
+
 def test_check(qapp, mocker, borg_json_output, qtbot):
     main = qapp.main_window
     tab = main.archiveTab
