@@ -1,8 +1,8 @@
 import logging
 import threading
-from datetime import date
 from datetime import datetime as dt
 from datetime import timedelta
+from typing import Dict, Union
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -25,7 +25,10 @@ class VortaScheduler(QtCore.QObject):
 
     def __init__(self):
         super().__init__()
-        self.timers = dict()  # keep mapping of profiles to timers
+
+        #: mapping of profiles to timers
+        self.timers: Dict[int, Dict[str, Union[QtCore.QTimer, dt]]] = dict()
+
         self.app = QApplication.instance()
         self.lock = threading.Lock()
 
@@ -40,7 +43,7 @@ class VortaScheduler(QtCore.QObject):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
-    def set_timer_for_profile(self, profile_id):
+    def set_timer_for_profile(self, profile_id: int):
         """
         Set a timer for next scheduled backup run of this profile.
 
@@ -56,71 +59,107 @@ class VortaScheduler(QtCore.QObject):
         if profile is None:  # profile doesn't exist any more.
             return
 
-        # First stop and remove any existing timer for this profile
-        self.lock.acquire()
-        if profile_id in self.timers:
-            self.remove_job(profile_id)
+        with self.lock:  # Acquire lock
 
-        # If no repo is set or only manual backups, just return without
-        # replacing the job we removed above.
-        if profile.repo is None or profile.schedule_mode == 'off':
-            logger.debug('Scheduler for profile %s is disabled.', profile_id)
-            self.lock.release()
-            return
+            if profile_id in self.timers:
+                self.remove_job(profile_id)  # reset schedule
 
-        logger.info('Setting timer for profile %s', profile_id)
+            if profile.repo is None:  # No backups without repo set
+                logger.debug(
+                    'Nothing scheduled for profile %s because of unset repo.',
+                    profile_id)
 
-        last_run_log = EventLogModel.select().where(
-            EventLogModel.subcommand == 'create',
-            EventLogModel.category == 'scheduled',
-            EventLogModel.profile == profile.id,
-            0 <= EventLogModel.returncode <= 1,
-        ).order_by(EventLogModel.end_time.desc()).first()
+            if profile.schedule_mode == 'off':
+                logger.debug('Scheduler for profile %s is disabled.', profile_id)
+                return
 
-        # Desired interval between scheduled backups. Uses datetime.timedelta() units.
-        if profile.schedule_mode == 'interval':
-            interval = {profile.schedule_interval_unit: profile.schedule_interval_count}
-        elif profile.schedule_mode == 'fixed':
-            interval = {'days': 1}
+            logger.info('Setting timer for profile %s', profile_id)
 
-        # If last run was too long ago and catch-up is enabled, run now
-        if profile.schedule_make_up_missed \
-                and last_run_log is not None \
-                and last_run_log.end_time + timedelta(**interval) < dt.now():
-            logger.debug('Catching up by running job for %s', profile.name)
-            self.lock.release()
-            self.create_backup(profile.id)
-            return
+            # determine last backup time
+            last_run_log = EventLogModel.select().where(
+                EventLogModel.subcommand == 'create',
+                EventLogModel.category == 'scheduled',
+                EventLogModel.profile == profile.id,
+                0 <= EventLogModel.returncode <= 1,
+            ).order_by(EventLogModel.end_time.desc()).first()
 
-        # If the job never ran, use midnight as random starting point
-        if last_run_log is None:
-            last_run = dt.now().replace(hour=0, minute=0)
-        else:
-            last_run = last_run_log.end_time
+            if last_run_log is None:
+                # look for non scheduled (manual) backup runs
+                last_run_log = EventLogModel.select().where(
+                    EventLogModel.subcommand == 'create',
+                    EventLogModel.profile == profile.id,
+                    0 <= EventLogModel.returncode <= 1,
+                ).order_by(EventLogModel.end_time.desc()).first()
 
-        # Squash seconds to get nice starting time
-        last_run = last_run.replace(second=0, microsecond=0)
+            # calculate next scheduled time
+            if profile.schedule_mode == 'interval':
+                if last_run_log is None:
+                    last_time = dt.now()
+                else:
+                    last_time = last_run_log.end_time
 
-        # Fixed time is a special case of days=1 interval
-        if profile.schedule_mode == 'fixed':
-            last_run = last_run.replace(hour=profile.schedule_fixed_hour, minute=profile.schedule_fixed_minute)
+                interval = {profile.schedule_interval_unit: profile.schedule_interval_count}
+                next_time = last_time + timedelta(**interval)
 
-        # Add interval to last run time to arrive at next run.
-        next_run = last_run
-        now = dt.now()
-        while next_run < now:
-            next_run += timedelta(**interval)
+            elif profile.schedule_mode == 'fixed':
+                if last_run_log is None:
+                    last_time = dt.now()
+                else:
+                    last_time = last_run_log.end_time + timedelta(days=1)
 
-        logger.debug('Scheduling next run for %s', next_run)
-        timer_ms = (next_run - dt.now()).total_seconds() * 1000
-        timer = QtCore.QTimer()
-        timer.setSingleShot(True)
-        timer.setInterval(int(timer_ms))
-        timer.timeout.connect(lambda: self.create_backup(profile_id))
-        timer.start()
-        self.timers[profile_id] = {'qtt': timer, 'dt': next_run}
+                next_time = last_time.replace(
+                    hour=profile.schedule_fixed_hour,
+                    minute=profile.schedule_fixed_minute)
 
-        self.lock.release()
+            else:
+                # unknown schedule mode
+                raise ValueError(
+                    "Unknown schedule mode '{}'".format(profile.schedule_mode))
+
+            # handle missing of a scheduled time
+            if next_time <= dt.now():
+
+                if profile.schedule_make_up_missed:
+                    self.lock.release()
+                    try:
+                        logger.debug('Catching up by running job for %s (%s)',
+                                     profile.name, profile_id)
+                        self.create_backup(profile_id)
+                    finally:
+                        self.lock.acquire()  # with-statement will try to release
+
+                    return  # create_backup will lead to a call to this method
+
+                # calculate next time from now
+                if profile.schedule_mode == 'interval':
+                    # next_time % interval should be 0
+                    # while next_time > now
+                    delta = dt.now() - last_time
+                    next_time = dt.now() - delta % timedelta(**interval)
+                    next_time += timedelta(**interval)
+
+                elif profile.schedule_mode == 'fixed':
+                    if next_time.date() == dt.now().date():
+                        # time for today has passed, schedule for tomorrow
+                        next_time += timedelta(days=1)
+                    else:
+                        # schedule for today
+                        next_time = dt.now().replace(
+                            hour=profile.schedule_fixed_hour,
+                            minute=profile.schedule_fixed_minute)
+
+            # start QTimer
+            logger.debug('Scheduling next run for %s', next_time)
+
+            timer_ms = (next_time - dt.now()).total_seconds() * 1000
+
+            timer = QtCore.QTimer()
+            timer.setSingleShot(True)
+            timer.setInterval(int(timer_ms))
+            timer.timeout.connect(lambda: self.create_backup(profile_id))
+            timer.start()
+
+            self.timers[profile_id] = {'qtt': timer, 'dt': next_time}
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit(profile_id)
@@ -220,7 +259,7 @@ class VortaScheduler(QtCore.QObject):
                     job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
                     self.app.jobs_manager.add_job(job)
 
-        validation_cutoff = date.today() - timedelta(days=7 * profile.validation_weeks)
+        validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = EventLogModel.select().where(
             (
                 EventLogModel.subcommand == 'check'
