@@ -1,0 +1,1 @@
+{"type": "log_message", "time": 1645335268.9396632, "message": "compaction freed about 56.00 kB repository space.", "levelname": "INFO", "name": "borg.repository"}

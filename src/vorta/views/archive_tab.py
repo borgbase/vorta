@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (QHeaderView, QMessageBox, QTableView,
                              QToolButton)
 
 from vorta.borg.check import BorgCheckJob
+from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.diff import BorgDiffJob
 from vorta.borg.extract import BorgExtractJob
@@ -68,6 +69,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.listButton.clicked.connect(self.list_action)
         self.pruneButton.clicked.connect(self.prune_action)
         self.checkButton.clicked.connect(self.check_action)
+        self.compactButton.clicked.connect(self.compact_action)
         self.diffButton.clicked.connect(self.diff_action)
 
         self.archiveActionMenu = QMenu(parent=self)
@@ -87,6 +89,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def set_icons(self):
         "Used when changing between light- and dark mode"
         self.checkButton.setIcon(get_colored_icon('check-circle'))
+        self.compactButton.setIcon(get_colored_icon('broom-solid'))
         self.diffButton.setIcon(get_colored_icon('stream-solid'))
         self.pruneButton.setIcon(get_colored_icon('cut'))
         self.listButton.setIcon(get_colored_icon('refresh'))
@@ -225,6 +228,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def check_result(self, result):
         if result['returncode'] == 0:
             self._toggle_all_buttons(True)
+
+    def compact_action(self):
+        params = BorgCompactJob.prepare(self.profile())
+        if params['ok']:
+            job = BorgCompactJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.compact_result)
+            self._toggle_all_buttons(False)
+            self.app.jobs_manager.add_job(job)
+        else:
+            self._set_status(params['message'])
+
+    def compact_result(self, result):
+        self._toggle_all_buttons(True)
 
     def prune_action(self):
         params = BorgPruneJob.prepare(self.profile())

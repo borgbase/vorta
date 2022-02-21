@@ -24,7 +24,6 @@
     <widget class="QToolBox" name="toolBox">
      <property name="font">
       <font>
-       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -130,9 +129,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="diffButton">
+          <widget class="QToolButton" name="pruneButton">
            <property name="text">
-            <string>Diff</string>
+            <string>Prune</string>
            </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -140,9 +139,19 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="pruneButton">
+          <widget class="QToolButton" name="compactButton">
            <property name="text">
-            <string>Prune</string>
+            <string>Compact</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="diffButton">
+           <property name="text">
+            <string>Diff</string>
            </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -175,7 +184,6 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -194,8 +202,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>541</width>
-        <height>299</height>
+        <width>757</width>
+        <height>374</height>
        </rect>
       </property>
       <attribute name="label">
@@ -410,7 +418,6 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
-             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -447,7 +454,6 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
-             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
