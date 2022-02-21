@@ -66,6 +66,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.archiveTab
+    vorta.utils.borg_compat.version = '1.2.0'
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
     stdout, stderr = borg_json_output('compact')
@@ -78,6 +79,7 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
         lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(),
         **pytest._wait_defaults
     )
+    vorta.utils.borg_compat.version = '1.1.0'
 
 
 def test_check(qapp, mocker, borg_json_output, qtbot):
