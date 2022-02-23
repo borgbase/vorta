@@ -126,7 +126,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QToolButton" name="addButton">
+         <widget class="QPushButton" name="addButton">
           <property name="toolTip">
            <string>Add sources</string>
           </property>

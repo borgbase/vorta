@@ -78,7 +78,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                                                   self.paste_text)
 
         self.addButton.setMenu(self.addMenu)
-        self.addButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         # Connect signals
         self.removeButton.clicked.connect(self.source_remove)
