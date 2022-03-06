@@ -4,7 +4,7 @@ from pathlib import PurePath
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QMessageBox,
-                             QTableWidgetItem, QToolButton)
+                             QTableWidgetItem)
 
 from vorta.store.models import (BackupProfileMixin, SettingsModel,
                                 SourceFileModel)
