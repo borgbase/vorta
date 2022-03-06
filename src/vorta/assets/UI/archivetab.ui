@@ -28,15 +28,6 @@
    </property>
    <item>
     <widget class="QToolBox" name="toolBox">
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="archivesToolBox">
       <property name="geometry">
        <rect>
@@ -79,12 +70,6 @@
            </item>
            <item>
             <widget class="QPushButton" name="bCheck">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
              <property name="toolTip">
               <string>Check the consistancy of the repository</string>
              </property>
@@ -100,6 +85,13 @@
              </property>
              <property name="text">
               <string>Prune</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="compactButton">
+             <property name="text">
+              <string>Compact</string>
              </property>
             </widget>
            </item>
@@ -318,7 +310,7 @@
         <x>0</x>
         <y>0</y>
         <width>544</width>
-        <height>356</height>
+        <height>352</height>
        </rect>
       </property>
       <attribute name="label">
@@ -587,18 +579,8 @@
             </item>
             <item row="1" column="1">
              <widget class="QLabel" name="prunePrefixPreview">
-              <property name="font">
-               <font>
-                <pointsize>11</pointsize>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
               <property name="styleSheet">
                <string notr="true">color: grey</string>
-              </property>
-              <property name="margin">
-               <number>1</number>
               </property>
              </widget>
             </item>
