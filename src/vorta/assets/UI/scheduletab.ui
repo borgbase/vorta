@@ -509,7 +509,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>367</height>
+        <height>389</height>
        </rect>
       </property>
       <attribute name="label">
@@ -564,7 +564,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>367</height>
+        <height>389</height>
        </rect>
       </property>
       <attribute name="label">
@@ -624,7 +624,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>367</height>
+        <height>389</height>
        </rect>
       </property>
       <attribute name="label">
@@ -726,7 +726,7 @@
           <item>
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
