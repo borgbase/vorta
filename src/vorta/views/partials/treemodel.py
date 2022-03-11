@@ -11,7 +11,8 @@ from pathlib import PurePath
 from typing import (Generic, List, Optional, Sequence, Tuple, TypeVar, Union,
                     overload)
 
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QObject, Qt
+from PyQt5.QtCore import (QAbstractItemModel, QModelIndex, QObject,
+                          QSortFilterProxyModel, Qt, pyqtSignal)
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -890,3 +891,95 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
             The data for the specified header section.
         """
         return super().headerData(section, orientation, role)
+
+
+class FileTreeSortProxyModel(QSortFilterProxyModel):
+    """
+    Sort a FileTreeModel.
+    """
+    sorted = pyqtSignal(int, Qt.SortOrder)
+
+    def __init__(self, parent=None) -> None:
+        """Init."""
+        super().__init__(parent)
+        self.folders_on_top = False
+
+    def keepFoldersOnTop(self, value: bool = None) -> bool:
+        """
+        Set or get whether folders are kept on top when sorting.
+
+        Parameters
+        ----------
+        value : bool, optional
+            The new value, by default None
+
+        Returns
+        -------
+        bool
+            The value of the attribute.
+        """
+        if value is not None and value != self.folders_on_top:
+            self.folders_on_top = value
+            # resort
+            self.setDynamicSortFilter(False)
+            self.sort(self.sortColumn(), self.sortOrder())
+            self.setDynamicSortFilter(True)
+
+        return self.folders_on_top
+
+    def extract_path(self, index: QModelIndex):
+        """Get the path to compare for a given index."""
+        item: FileSystemItem = index.internalPointer()
+        model: FileTreeModel = self.sourceModel()
+
+        # name
+        if model.mode == FileTreeModel.DisplayMode.FLAT:
+            return path_to_str(item.path)
+
+        if model.mode == FileTreeModel.DisplayMode.SIMPLIFIED_TREE:
+            parent = index.parent()
+            if parent == QModelIndex():
+                path = relative_path(model.root.path, item.path)
+            else:
+                path = relative_path(parent.internalPointer().path,
+                                     item.path)
+
+            return path[0] if path else ''
+
+        # standard tree mode
+        return item.subpath
+
+    def choose_data(self, index: QModelIndex):
+        """Choose the data of index used for comparison."""
+        raise NotImplementedError("Method `choose_data` of " +
+                                  "FileTreeSortProxyModel" +
+                                  " must be implemented by subclasses.")
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
+        """
+        Return whether the item of `left` is lower than the one of `right`.
+        Parameters
+        ----------
+        left : QModelIndex
+            The index left of the `<`.
+        right : QModelIndex
+            The index right of the `<`.
+        Returns
+        -------
+        bool
+            Whether left is lower than right.
+        """
+        if self.folders_on_top:
+            item1 = left.internalPointer()
+            item2 = right.internalPointer()
+            ch1 = bool(len(item1.children))
+            ch2 = bool(len(item2.children))
+
+            if ch1 ^ ch2:
+                if self.sortOrder() == Qt.SortOrder.AscendingOrder:
+                    return ch1
+                return ch2
+
+        data1 = self.choose_data(left)
+        data2 = self.choose_data(right)
+        return data1 < data2

@@ -1,9 +1,13 @@
+from pathlib import PurePath
+
 import pytest
 from PyQt5.QtCore import QItemSelectionModel
 
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
+from vorta.views.diff_result import (ChangeType, DiffData, DiffTree, FileType,
+                                     parse_diff_json, parse_diff_lines)
 
 
 @pytest.mark.parametrize('json_mock_file,folder_root', [
@@ -20,6 +24,14 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
+    compat = vorta.utils.borg_compat
+
+    def check(feature_name):
+        if feature_name == 'DIFF_JSON_LINES':
+            return False
+        return vorta.utils.BorgCompatibility.check(compat, feature_name)
+    mocker.patch.object(vorta.utils.borg_compat, 'check', check)
+
     selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
     model = tab.archiveTable.model()
 
@@ -33,78 +45,181 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
 
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
 
-    assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == folder_root
-    tab._resultwindow.treeView.model().rootItem.childItems[0].load_children()
+    model = tab._resultwindow.treeView.model().sourceModel()
+    assert model.root.children[0].subpath == folder_root
 
     assert tab._resultwindow.archiveNameLabel_1.text() == 'test-archive'
     tab._resultwindow.accept()
 
 
-@pytest.mark.parametrize('line, expected', [
-    ('changed link        some/changed/link',
-     (0, 'changed', 'link', 'some/changed', '-')),
-    (' +77.8 kB  -77.8 kB some/changed/file',
-     (77800, 'modified', 'file', 'some/changed', '-')),
-    (' +77.8 kB  -77.8 kB [-rw-rw-rw- -> -rw-r--r--] some/changed/file',
-     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed', '-')),
-    ('[-rw-rw-rw- -> -rw-r--r--] some/changed/file',
-     (0, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed', '-')),
+@pytest.mark.parametrize(
+    'line, expected',
+    [
+        ('changed link        some/changed/link',
+         ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0,
+          None, None, None)),
+        (' +77.8 kB  -77.8 kB some/changed/file',
+         ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800,
+          0, None, None,
+          (77800, 77800))),
+        (' +77.8 kB  -77.8 kB [-rw-rw-rw- -> -rw-r--r--] some/changed/file',
+         ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0,
+          ('-rw-rw-rw-', '-rw-r--r--'), None, (77800, 77800))),
+        ('[-rw-rw-rw- -> -rw-r--r--] some/changed/file',
+         ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0,
+          ('-rw-rw-rw-', '-rw-r--r--'), None, None)),
+        ('added directory    some/changed/dir',
+         ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None,
+          None, None)),
+        ('removed directory  some/changed/dir',
+         ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0,
+          None, None, None)),
 
-    ('added directory    some/changed/dir',
-     (0, 'added', 'dir', 'some/changed', 'd')),
-    ('removed directory  some/changed/dir',
-     (0, 'removed', 'dir', 'some/changed', 'd')),
+        # Example from https://github.com/borgbase/vorta/issues/521
+        ('[user:user -> nfsnobody:nfsnobody] home/user/arrays/test.txt',
+         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
+          None, ('user', 'user', 'nfsnobody', 'nfsnobody'), None)),
 
-    # Example from https://github.com/borgbase/vorta/issues/521
-    ('[user:user -> nfsnobody:nfsnobody] home/user/arrays/test.txt',
-     (0, 'modified', 'test.txt', 'home/user/arrays', '-')),
+        # Very short owner change, to check stripping whitespace from file path
+        ('[a:a -> b:b]       home/user/arrays/test.txt',
+         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
+          None, ('a', 'a', 'b', 'b'), None)),
 
-    # Very short owner change, to check stripping whitespace from file path
-    ('[a:a -> b:b]       home/user/arrays/test.txt',
-     (0, 'modified', 'test.txt', 'home/user/arrays', '-')),
-
-    # All file-related changes in one test
-    (' +77.8 kB  -77.8 kB [user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--] home/user/arrays/test.txt',
-     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'test.txt', 'home/user/arrays', '-')),
-])
+        # All file-related changes in one test
+        (' +77.8 kB  -800 B [user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--] home/user/arrays/test.txt',
+         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER,
+          77800 + 800, 77000, ('-rw-rw-rw-', '-rw-r--r--'),
+          ('user', 'user', 'nfsnobody', 'nfsnobody'), (77800, 800))),
+    ])
 def test_archive_diff_parser(line, expected):
-    files_with_attributes, nested_file_list = vorta.views.diff_result.parse_diff_lines([line])
-    assert files_with_attributes == [expected]
+    model = DiffTree()
+    model.setMode(model.DisplayMode.FLAT)
+    parse_diff_lines([line], model)
+
+    assert model.rowCount() == 1
+    item = model.index(0, 0).internalPointer()
+
+    assert item.path == PurePath(expected[0]).parts
+    assert item.data == DiffData(*expected[1:])
 
 
-@pytest.mark.parametrize('line, expected', [
-    ({'path': 'some/changed/link', 'changes': [{'type': 'changed link'}]},
-     (0, 'changed', 'link', 'some/changed', '-')),
-    ({'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800}]},
-     (77800, 'modified', 'file', 'some/changed', '-')),
-    ({'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800},
-                                               {'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}]},
-     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed', '-')),
-    ({'path': 'some/changed/file', 'changes': [{'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}]},
-     (0, '[-rw-rw-rw- -> -rw-r--r--]', 'file', 'some/changed', '-')),
-    ({'path': 'some/changed/dir', 'changes': [{'type': 'added directory'}]},
-     (0, 'added', 'dir', 'some/changed', 'd')),
-    ({'path': 'some/changed/dir', 'changes': [{'type': 'removed directory'}]},
-     (0, 'removed', 'dir', 'some/changed', 'd')),
+@pytest.mark.parametrize(
+    'line, expected',
+    [
+        ({
+            'path': 'some/changed/link',
+            'changes': [{
+                'type': 'changed link'
+            }]
+        }, ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0,0,
+            None, None, None)),
+        ({
+            'path': 'some/changed/file',
+            'changes': [{
+                'type': 'modified',
+                'added': 77800,
+                'removed': 77800
+            }]
+        }, ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800,
+            0, None, None, (77800, 77800))),
+        ({
+            'path':
+            'some/changed/file',
+            'changes': [{
+                'type': 'modified',
+                'added': 77800,
+                'removed': 800
+            }, {
+                'type': 'mode',
+                'old_mode': '-rw-rw-rw-',
+                'new_mode': '-rw-r--r--'
+            }]
+        }, ('some/changed/file', FileType.FILE, ChangeType.MODIFIED,
+            77800 + 800, 77000, ('-rw-rw-rw-', '-rw-r--r--'), None,
+            (77800, 800))),
+        ({
+            'path':
+            'some/changed/file',
+            'changes': [{
+                'type': 'mode',
+                'old_mode': '-rw-rw-rw-',
+                'new_mode': '-rw-r--r--'
+            }]
+        }, ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0,
+            ('-rw-rw-rw-', '-rw-r--r--'), None, None)),
+        ({
+            'path': 'some/changed/dir',
+            'changes': [{
+                'type': 'added directory'
+            }]
+        }, ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0,
+            None, None, None)),
+        ({
+            'path': 'some/changed/dir',
+            'changes': [{
+                'type': 'removed directory'
+            }]
+        }, ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0,
+            0, None, None, None)),
 
-    # Example from https://github.com/borgbase/vorta/issues/521
-    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'owner', 'old_user': 'user', 'new_user': 'nfsnobody',
-                                                        'old_group': 'user', 'new_group': 'nfsnobody'}]},
-     (0, 'modified', 'test.txt', 'home/user/arrays', '-')),
+        # Example from https://github.com/borgbase/vorta/issues/521
+        ({
+            'path':
+            'home/user/arrays/test.txt',
+            'changes': [{
+                'type': 'owner',
+                'old_user': 'user',
+                'new_user': 'nfsnobody',
+                'old_group': 'user',
+                'new_group': 'nfsnobody'
+            }]
+        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
+            None, ('user', 'user', 'nfsnobody', 'nfsnobody'), None)),
 
-    # Very short owner change, to check stripping whitespace from file path
-    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'owner', 'old_user': 'a', 'new_user': 'b',
-                                                        'old_group': 'a', 'new_group': 'b'}]},
-     (0, 'modified', 'test.txt', 'home/user/arrays', '-')),
+        # Very short owner change, to check stripping whitespace from file path
+        ({
+            'path':
+            'home/user/arrays/test.txt',
+            'changes': [{
+                'type': 'owner',
+                'old_user': 'a',
+                'new_user': 'b',
+                'old_group': 'a',
+                'new_group': 'b'
+            }]
+        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
+            None, ('a', 'a', 'b', 'b'), None)),
 
-    # All file-related changes in one test
-    ({'path': 'home/user/arrays/test.txt', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800},
-                                                       {'type': 'mode', 'old_mode': '-rw-rw-rw-',
-                                                        'new_mode': '-rw-r--r--'},
-                                                       {'type': 'owner', 'old_user': 'user', 'new_user': 'nfsnobody',
-                                                        'old_group': 'user', 'new_group': 'nfsnobody'}]},
-     (77800, '[-rw-rw-rw- -> -rw-r--r--]', 'test.txt', 'home/user/arrays', '-')),
-])
+        # All file-related changes in one test
+        ({
+            'path':
+            'home/user/arrays/test.txt',
+            'changes': [{
+                'type': 'modified',
+                'added': 77800,
+                'removed': 77800
+            }, {
+                'type': 'mode',
+                'old_mode': '-rw-rw-rw-',
+                'new_mode': '-rw-r--r--'
+            }, {
+                'type': 'owner',
+                'old_user': 'user',
+                'new_user': 'nfsnobody',
+                'old_group': 'user',
+                'new_group': 'nfsnobody'
+            }]
+        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER,
+            2 * 77800, 0, ('-rw-rw-rw-', '-rw-r--r--'),
+            ('user', 'user', 'nfsnobody', 'nfsnobody'), (77800, 77800))),
+    ])
 def test_archive_diff_json_parser(line, expected):
-    files_with_attributes, _nested_file_list = vorta.views.diff_result.parse_diff_json_lines([line])
-    assert files_with_attributes == [expected]
+    model = DiffTree()
+    model.setMode(model.DisplayMode.FLAT)
+    parse_diff_json([line], model)
+
+    assert model.rowCount() == 1
+    item = model.index(0, 0).internalPointer()
+
+    assert item.path == PurePath(expected[0]).parts
+    assert item.data == DiffData(*expected[1:])
