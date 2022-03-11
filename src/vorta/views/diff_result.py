@@ -1,16 +1,20 @@
+import enum
 import json
 import logging
-import os
 import re
+from dataclasses import dataclass
+from pathlib import PurePath
+from typing import List, Optional, Tuple
 
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtCore import QModelIndex, Qt
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QHeaderView
+from PyQt5.QtWidgets import QHeaderView, QTreeView
 
-from vorta.utils import (get_asset, get_dict_from_list, nested_dict,
-                         uses_dark_mode)
-from vorta.views.partials.tree_view import TreeModel
+from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
+from vorta.views.partials.treemodel import (FileSystemItem, FileTreeModel,
+                                            FileTreeSortProxyModel,
+                                            path_to_str, relative_path)
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
@@ -18,182 +22,284 @@ DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class DiffResult(DiffResultBase, DiffResultUI):
+class DiffResultDialog(DiffResultBase, DiffResultUI):
+    """Display the results of `borg diff`."""
+
     def __init__(self, fs_data, archive_newer, archive_older, json_lines):
+        """Init."""
         super().__init__()
         self.setupUi(self)
 
+        self.model = DiffTree(self)
+
+        # Older version do not support json output
         if json_lines:
             # If fs_data is already a dict, then there was just a single json-line
             # and the default handler already parsed into json dict, otherwise
             # fs_data is a str, and needs to be split and parsed into json dicts
-            lines = [fs_data] if isinstance(fs_data, dict) else \
-                    [json.loads(line) for line in fs_data.split('\n') if line]
+            if isinstance(fs_data, dict):
+                lines = [fs_data]
+            else:
+                lines = [
+                    json.loads(line) for line in fs_data.split('\n') if line
+                ]
+
+            parse_diff_json(lines, self.model)
         else:
             lines = [line for line in fs_data.split('\n') if line]
+            parse_diff_lines(lines, self.model)
 
-        files_with_attributes, nested_file_list = parse_diff_json_lines(lines) \
-            if json_lines else parse_diff_lines(lines)
-        model = DiffTree(files_with_attributes, nested_file_list)
+        self.treeView: QTreeView
+        self.treeView.setUniformRowHeights(True)  # Allows for scrolling optimizations.
+        self.treeView.setAlternatingRowColors(True)
+        self.treeView.setTextElideMode(
+            Qt.TextElideMode.ElideMiddle)  # to better see name of paths
 
-        view = self.treeView
-        view.setAlternatingRowColors(True)
-        view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-        view.setModel(model)
-        header = view.header()
-        header.setStretchLastSection(False)
+        # add sort proxy model
+        self.sortproxy = DiffSortProxyModel(self)
+        self.sortproxy.setSourceModel(self.model)
+        self.treeView.setModel(self.sortproxy)
+        self.sortproxy.sorted.connect(self.slot_sorted)
+
+        self.treeView.setSortingEnabled(True)
+
+        header = self.treeView.header()
+        header.setStretchLastSection(False)  # stretch only first section
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
 
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
         self.okButton.clicked.connect(self.accept)
 
+    def slot_sorted(self, column, order):
+        """React the tree view being sorted."""
+        # reveal selection
+        selectedRows = self.treeView.selectionModel().selectedRows()
+        if selectedRows:
+            self.treeView.scrollTo(selectedRows[0])
 
-SPECIAL_FILE_TYPES = ['directory', 'link', 'fifo', 'blkdev', 'chrdev']
+
+# ---- Output parsing --------------------------------------------------------
 
 
-def parse_diff_json_lines(diffs):
-    # helpers
-    valid_change_types = ['added', 'removed']
-    for file_type in SPECIAL_FILE_TYPES:
-        valid_change_types.append('added ' + file_type)
-        valid_change_types.append('removed ' + file_type)
-
-    # parsing
-    files_with_attributes = []
-    nested_file_list = nested_dict()
-
+def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
+    """Parse the json output from `borg diff`."""
     for item in diffs:
-        dirpath, name = os.path.split(item['path'])
-
-        # add to nested dict of folders to find nested dirs.
-        d = get_dict_from_list(nested_file_list, dirpath.split('/'))
-        if name not in d:
-            d[name] = {}
+        path = PurePath(item['path'])
+        file_type = FileType.FILE
+        changed_size = 0
+        size = 0
+        change_type: ChangeType = None
+        mode_change: Optional[Tuple[str, str]] = None
+        owner_change: Optional[Tuple[str, str, str, str]] = None
+        modified: Optional[Tuple[int, int]] = None
 
         # added link, removed link, changed link
         # modified (added, removed), added (size), removed (size)
         # added directory, removed directory
         # owner (old_user, new_user, old_group, new_group))
         # mode (old_mode, new_mode)
-        size = 0
-        change_type = None
-        change_type_priority = 0
-        file_type = '-'
         for change in item['changes']:
             # if more than one type of change has happened for this file/dir/link, then report the most important
             # (higher priority)
             if {'type': 'modified'} == change:
-                # modified, but can't compare ids
-                if change_type_priority < 3:
-                    change_type = 'modified'
-                    change_type_priority = 3
+                # modified, but can't compare ids -> no added, removed
+                change_type = ChangeType.MODIFIED
             elif change['type'] == 'modified':
-                # only reveal 'added' to match what happens in non-json parsing - maybe update dialog to show more info.
-                # size = change['added'] - change['removed']
-                size = change['added']
-                if change_type_priority < 3:
-                    # non-json-lines mode only reports owner changes as 'modified' in the tree - maybe update dialog to
-                    # show more info.
-                    # change_type = '{:>9} {:>9}'.format(pretty_bytes(change['added'], precision=1, sign=True),
-                    #                                    pretty_bytes(-change['removed'], precision=1, sign=True))
-                    change_type = 'modified'
-                    change_type_priority = 3
-            elif (change['type'] in valid_change_types
-                  or change['type'] == 'changed link'):
-                if change['type'] in ['added directory', 'removed directory']:
-                    file_type = 'd'
+                # modified with added, removed
+                change_type = ChangeType.MODIFIED
+                size = change['added'] - change['removed']
+                modified = (change['added'], change['removed'])
+                changed_size = sum(modified)
+
+            elif change['type'] == 'changed link':
+                change_type = ChangeType.CHANGED_LINK
+                file_type = FileType.LINK
+
+            elif change['type'].startswith(('added', 'removed')):
+                if 'directory' in change['type']:
+                    file_type = FileType.DIRECTORY
+                elif 'link' in change['type']:
+                    file_type = FileType.LINK
+                elif 'chrdev' in change['type']:
+                    file_type = FileType.CHRDEV
+                elif 'blkdev' in change['type']:
+                    file_type = FileType.BLKDEV
+                elif 'fifo' in change['type']:
+                    file_type = FileType.FIFO
+                # else default FileType.FILE
+
                 size = change.get('size', 0)
-                if change_type_priority < 2:
-                    change_type = change['type'].split()[0]     # 'added', 'removed' or 'changed'
-                    change_type_priority = 2
+
+                a_r = change['type'].split()[0]  # 'added' or 'removed'
+                if a_r == 'added':
+                    change_type = ChangeType.ADDED
+                else:
+                    change_type = ChangeType.REMOVED
+
+                changed_size = size
+
             elif change['type'] == 'mode':
-                # mode change can occur along with previous changes - don't override
-                if change_type_priority < 4:
-                    change_type = '[{} -> {}]'.format(change['old_mode'], change['new_mode'])
-                    change_type_priority = 4
+                # mode change can occur along with previous changes
+                change_type = ChangeType.MODIFIED
+                mode_change = (change['old_mode'], change['new_mode'])
+
             elif change['type'] == 'owner':
-                # owner change can occur along with previous changes - don't override
-                if change_type_priority < 1:
-                    # non-json-lines mode only reports owner changes as 'modified' in the tree - matbe update dialog to
-                    # show more info.
-                    # change_type = '{}:{} -> {}:{}'.format(change['old_user'], change['old_group'],
-                    #                                       change['new_user'], change['new_group'])
-                    change_type = 'modified'
-                    change_type_priority = 1
+                # owner change can occur along with previous changes
+                change_type = ChangeType.MODIFIED
 
-        if not change_type:
-            # either no changes, or unrecognized change(s)
-            logger.error(f"Error parsing diff line {json.dumps(item)}")
-            raise ValueError(f"Unknown change type {change['type']}")
-
-        files_with_attributes.append((size, change_type, name, dirpath, file_type))
-
-    return (files_with_attributes, nested_file_list)
-
-
-def parse_diff_lines(diff_lines):
-    nested_file_list = nested_dict()
-
-    def parse_line(line):
-        line_split = line.split()
-        file_type = '-'
-        if line_split[0] in {'added', 'removed', 'changed'}:
-            change_type = line_split[0]
-            if line_split[1] in SPECIAL_FILE_TYPES:
-                if line_split[1] in ['directory']:
-                    file_type = 'd'
-                size = 0
-                full_path = re.search(r'^\w+ \w+ +(.*)', line).group(1)
+                owner_change = (change['old_user'], change['old_group'],
+                                change['new_user'], change['new_group'])
             else:
-                significand = line_split[1]
-                unit = line_split[2]
-                size = calc_size(significand, unit)
-                full_path = re.search(r'^\w+ +\S+ \w?B (.*)', line).group(1)
+                raise Exception('Unknown change type: {}'.format(
+                    change['type']))
+
+        model.addItem((path,
+                       DiffData(file_type=file_type,
+                                change_type=change_type,
+                                changed_size=changed_size,
+                                size=size,
+                                mode_change=mode_change,
+                                owner_change=owner_change,
+                                modified=modified)))
+
+
+# re pattern
+pattern_otypes = r'directory|link|fifo|chrdev|blkdev'
+pattern_ar = r'(?P<a_r>added|removed) ((?P<ar_type>' + pattern_otypes + r')|\s+(?P<size>[\d.]+) (?P<size_unit>\w+))\s*'
+pattern_cl = r'changed link\s*'
+pattern_modified = r'\s*\+?(?P<added>[\d.]+) (?P<added_unit>\w+)\s*-?(?P<removed>[\d.]+) (?P<removed_unit>\w+)'
+pattern_mode = r'\[(?P<old_mode>[\w-]{10}) -> (?P<new_mode>[\w-]{10})\]'
+pattern_owner = r'\[(?P<old_user>[\w ]+):(?P<old_group>[\w ]+) -> (?P<new_user>[\w ]+):(?P<new_group>[\w ]+)\]'
+pattern_path = r'(?P<path>.*)'
+pattern_changed_file = (
+    r'(({ar} )|((?P<cl>{cl} )|' +
+    r'((?P<modified>{modified}\s+)?)(?P<owner>{owner}\s+)?(?P<mode>{mode}\s+)?))' +
+    r'{path}').format(ar=pattern_ar,
+                      cl=pattern_cl,
+                      modified=pattern_modified,
+                      mode=pattern_mode,
+                      owner=pattern_owner,
+                      path=pattern_path)
+re_changed_file = re.compile(pattern_changed_file)
+
+
+def parse_diff_lines(lines: List[str], model: 'DiffTree'):
+    """
+    Parse non-json diff output from borg.
+
+    ::
+
+        [-rw-rw-r-- -> lrwxrwxrwx] home/theuser/Documents/testdir/file2
+        [-rw-rw-r-- -> drwxr-xr-x] home/theuser/Documents/testdir/file3
+            +32 B     -36 B [-r--rw---- -> -rwxrwx--x] home/theuser/Documents/testfile.txt
+        [drwxrwxr-x -> lrwxrwxrwx] home/theuser/Documents/testlink
+        added directory     home/theuser/Documents/newfolder
+        removed         0 B home/theuser/Documents/testdir/file1
+        added          20 B home/theuser/Documents/testdir/file4
+        changed link        home/theuser/Documents/testlink
+        changed link [theuser:dip -> theuser:theuser] home/theuser/Documents/testlink
+
+    Notes
+    -----
+    This method can't handle changes of type `modified` that do not provide
+    the amount of `added` and `removed` bytes.
+
+    """
+    for line in lines:
+        if not line:
+            continue
+
+        parsed_line = re_changed_file.fullmatch(line)
+
+        if not parsed_line:
+            raise Exception("Couldn't parse diff output `{}`".format(line))
+            continue
+
+        path = PurePath(parsed_line['path'])
+        file_type = FileType.FILE
+        size = 0
+        changed_size = 0
+        change_type: ChangeType = None
+        mode_change: Optional[Tuple[str, str]] = None
+        owner_change: Optional[Tuple[str, str, str, str]] = None
+        modified: Optional[Tuple[int, int]] = None
+
+        if parsed_line['a_r']:
+            # added or removed
+            if parsed_line['ar_type']:
+                if parsed_line['ar_type'] == 'directory':
+                    file_type = FileType.DIRECTORY
+                elif parsed_line['ar_type'] == 'link':
+                    file_type = FileType.LINK
+                elif parsed_line['ar_type'] == 'chrdev':
+                    file_type = FileType.CHRDEV
+                elif parsed_line['ar_type'] == 'blkdev':
+                    file_type = FileType.BLKDEV
+                elif parsed_line['ar_type'] == 'fifo':
+                    file_type = FileType.FIFO
+                else:
+                    raise ValueError(f"Unknown file type `{parsed_line['ar_type']}`")
+            else:
+                # normal file
+                size = size_to_byte(parsed_line['size'],
+                                    parsed_line['size_unit'])
+
+            if parsed_line['a_r'] == 'added':
+                change_type = ChangeType.ADDED
+            elif parsed_line['a_r'] == 'removed':
+                change_type = ChangeType.REMOVED
+                size = -size
+
+            changed_size = size
         else:
-            size_change = re.search(r' *[\+-]?(\d+\.*\d*) (\w?B) +[\+-]?.+\w?B ', line)
-            if size_change:
-                significand = size_change.group(1)
-                unit = size_change.group(2)
-                size = calc_size(significand, unit)
-                rest_of_line = line[size_change.end(0):]
+            change_type = ChangeType.MODIFIED
+
+            if parsed_line['owner']:
+                # owner changed
+                owner_change = (parsed_line['old_user'],
+                                parsed_line['old_group'],
+                                parsed_line['new_user'],
+                                parsed_line['new_group'])
+
+            if parsed_line['cl']:
+                # link changed
+                # links can't have changed permissions
+                change_type = ChangeType.CHANGED_LINK
+                file_type = FileType.LINK
             else:
-                size = 0
-                rest_of_line = line
+                # modified contents or mode
+                if parsed_line['modified']:
+                    modified = (size_to_byte(parsed_line['added'],
+                                             parsed_line['added_unit']),
+                                size_to_byte(parsed_line['removed'],
+                                             parsed_line['removed_unit']))
 
-            owner_change = re.search(r' *(\[[^:]+:[^\]]+ -> [^:]+:[^\]]+\]) ', rest_of_line)
-            if owner_change:
-                rest_of_line = rest_of_line[owner_change.end(0):]
+                    size = modified[0] - modified[1]
+                    changed_size = sum(modified)
 
-            permission_change = re.search(r' *(\[.{24}\]) ', rest_of_line)
-            if permission_change:
-                change_type = permission_change.group(1)
-                rest_of_line = rest_of_line[permission_change.end(0):]
-            else:
-                change_type = "modified"
+                if parsed_line['mode']:
+                    mode_change = (parsed_line['old_mode'],
+                                   parsed_line['new_mode'])
 
-            full_path = rest_of_line.lstrip(' ')
-
-        dir, name = os.path.split(full_path)
-
-        # add to nested dict of folders to find nested dirs.
-        d = get_dict_from_list(nested_file_list, dir.split('/'))
-        if name not in d:
-            d[name] = {}
-
-        return size, change_type, name, dir, file_type
-
-    files_with_attributes = [parse_line(line) for line in diff_lines if line]
-
-    return files_with_attributes, nested_file_list
+        # add change to model
+        model.addItem((path,
+                       DiffData(file_type=file_type,
+                                change_type=change_type,
+                                changed_size=changed_size,
+                                size=size,
+                                mode_change=mode_change,
+                                owner_change=owner_change,
+                                modified=modified)))
 
 
-def calc_size(significand, unit):
+def size_to_byte(significand: str, unit: str) -> int:
+    """Convert a size with a unit identifier from borg into a number of bytes."""
     if unit == 'B':
         return int(significand)
-    elif unit == 'kB':
+    elif unit == 'kB' or unit == 'KB':
         return int(float(significand) * 10**3)
     elif unit == 'MB':
         return int(float(significand) * 10**6)
@@ -201,38 +307,423 @@ def calc_size(significand, unit):
         return int(float(significand) * 10**9)
     elif unit == 'TB':
         return int(float(significand) * 10**12)
+    else:
+        # unknown identifier
+        raise Exception("Unknown unit `{}`".format(unit))
 
 
-class DiffTree(TreeModel):
-    def __init__(self, files_with_attributes, nested_file_list, parent=None,):
-        super().__init__(
-            files_with_attributes, nested_file_list, parent=parent
-        )
-        dark_mode = uses_dark_mode()
-        self.red = QVariant(QColor(Qt.red)) if dark_mode else QVariant(QColor(Qt.darkRed))
-        self.green = QVariant(QColor(Qt.green)) if dark_mode else QVariant(QColor(Qt.darkGreen))
-        self.yellow = QVariant(QColor(Qt.yellow)) if dark_mode else QVariant(QColor(Qt.darkYellow))
+# ---- Sorting ---------------------------------------------------------------
 
-    def data(self, index, role):
-        if not index.isValid():
-            return None
 
-        item = index.internalPointer()
+class DiffSortProxyModel(FileTreeSortProxyModel):
+    """
+    Sort a DiffTree model.
+    """
 
-        if role == Qt.ForegroundRole:
-            if item.itemData[1] == 'removed':
-                return self.red
-            elif item.itemData[1] == 'added':
-                return self.green
-            elif item.itemData[1] == 'modified' or item.itemData[1].startswith('['):
-                return self.yellow
+    def choose_data(self, index: QModelIndex):
+        """Choose the data of index used for comparison."""
+        item: DiffItem = index.internalPointer()
+        column = index.column()
 
-        if role == Qt.DisplayRole:
-            return item.data(index.column())
+        if column == 0:
+            return self.extract_path(index)
+        elif column == 1:
+            # change type
+            ct = item.data.change_type
+            if ct == ChangeType.NONE:
+                return ChangeType.MODIFIED
+            return ct
         else:
+            if column == 2 and item.data.modified:
+                return sum(item.data.modified)
+            # size
+            return item.data.size
+
+
+# ---- DiffTree --------------------------------------------------------------
+
+
+class ChangeType(enum.Enum):
+    """
+    The possible types of changes from `borg diff`.
+
+    modified - file contents changed.
+    added - the file was added.
+    removed - the file was removed.
+    added directory - the directory was added.
+    removed directory - the directory was removed.
+    added link - the symlink was added.
+    removed link - the symlink was removed.
+    changed link - the symlink target was changed.
+    mode - the file/directory/link mode was changed.
+            Note: this could indicate a change from a file/directory/link
+                    type to a different type (file/directory/link),
+                    such as - a file is deleted and replaced with
+                    a directory of the same name.
+    owner - user and/or group ownership changed.
+
+    size:
+        If type == `added` or `removed`,
+        then size provides the size of the added or removed file.
+    added:
+        If type == `modified` and chunk ids can be compared,
+        then added and removed indicate the amount of
+        data `added` and `removed`. If chunk ids can not be compared,
+        then added and removed properties are not provided and
+        the only information available is that the file contents were modified.
+    removed:
+        See added property.
+    old_mode:
+        If type == `mode`, then old_mode and new_mode provide the mode
+        and permissions changes.
+    new_mode:
+        See old_mode property.
+    old_user:
+        If type == `owner`, then old_user, new_user, old_group
+        and new_group provide the user and group ownership changes.
+    old_group:
+        See old_user property.
+    new_user:
+        See old_user property.
+    new_group:
+        See old_user property.
+    """
+    NONE = 0  # no change
+    MODIFIED = 2  # int for sorting
+    ADDED = 1
+    REMOVED = 3
+    ADDED_DIR = ADDED
+    REMOVED_DIR = REMOVED
+    ADDED_LINK = ADDED
+    REMOVED_LINK = REMOVED
+    CHANGED_LINK = MODIFIED
+    MODE = MODIFIED  # changed permissions
+    OWNER = MODIFIED
+
+    def short(self):
+        """Get a short identifier for the change type."""
+        if self == self.ADDED:
+            return 'A'
+        if self == self.REMOVED:
+            return 'D'
+        if self == self.MODIFIED:
+            return 'M'
+        return ''
+
+    def __ge__(self, other):
+        """Greater than or equal for enums."""
+        if self.__class__ is other.__class__:
+            return other >= self
+        return NotImplemented
+
+    def __gt__(self, other):
+        """Greater than for enums."""
+        if self.__class__ is other.__class__:
+            return other < self
+        return NotImplemented
+
+    def __le__(self, other):
+        """Lower than or equal for enums."""
+        if self.__class__ is other.__class__:
+            return self.value == other.value or self < other
+        return NotImplemented
+
+    def __lt__(self, other):
+        """Lower than for enums."""
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
+
+
+class FileType(enum.Enum):
+    """The possible file types of changed file."""
+    FILE = enum.auto()
+    DIRECTORY = enum.auto()
+    LINK = enum.auto()
+    CHRDEV = enum.auto()
+    BLKDEV = enum.auto()
+    FIFO = enum.auto()
+
+
+@dataclass
+class DiffData:
+    """The data linked to a diff item."""
+    file_type: FileType
+    change_type: ChangeType
+    changed_size: int
+    size: int
+    mode_change: Optional[Tuple[str, str]] = None
+    owner_change: Optional[Tuple[str, str, str, str]] = None
+    modified: Optional[Tuple[int, int]] = None
+
+
+DiffItem = FileSystemItem[DiffData]
+
+
+class DiffTree(FileTreeModel[DiffData]):
+    """The file tree model for diff results."""
+
+    def _make_filesystemitem(self, path, data):
+        return super()._make_filesystemitem(path, data)
+
+    def _merge_data(self, item, data):
+        if data:
+            logger.debug('Overriding data for {}'.format(path_to_str(
+                item.path)))
+        return super()._merge_data(item, data)
+
+    def _flat_filter(self, item):
+        """
+        Return whether an item is part of the flat model representation.
+
+        The item's data might have not been set yet.
+        """
+        return item.data and item.data.change_type != ChangeType.NONE
+
+    def _simplify_filter(self, item: DiffItem) -> bool:
+        """
+        Return whether an item may be merged in simplified mode.
+
+        Allows simplification only for unchanged items.
+        """
+        for child in item.children:
+            if child.data.change_type != ChangeType.NONE:
+                return False
+
+        if item.data.change_type == ChangeType.NONE:
+            return True
+
+        return False  # otherwise the change is not displayed
+
+    def _process_child(self, child):
+        """
+        Process a new child.
+
+        This can make some changes to the child's data like
+        setting a default value if the child's data is None.
+        This can also update the data of the parent.
+        This must emit `dataChanged` if data is changed.
+
+        Parameters
+        ----------
+        child : FileSystemItem
+            The child that was added.
+        """
+        parent = child._parent
+
+        if not child.data:
+            child.data = DiffData(FileType.DIRECTORY, ChangeType.NONE, 0, 0)
+
+        if child.data.size != 0 or child.data.changed_size != 0:
+            # update size
+            size = child.data.size
+            changed_size = child.data.changed_size
+
+            def add_size(parent: DiffItem):
+                if parent is self.root:
+                    return
+
+                if parent.data is None:
+                    raise Exception("Item {} without data".format(
+                        path_to_str(parent.path)))
+                else:
+                    parent.data.size += size
+                    parent.data.changed_size += changed_size
+
+                # update parent
+                parent = parent._parent
+                if parent:
+                    add_size(parent)
+
+            add_size(parent)
+
+    def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
+        """
+        Returns the number of columns for the children of the given parent.
+
+        This corresponds to the number of data (column) entries shown
+        for each item in the tree view.
+
+        Parameters
+        ----------
+        parent : QModelIndex, optional
+            The index of the parent, by default QModelIndex()
+
+        Returns
+        -------
+        int
+            The number of rows.
+        """
+        # name, change_type, changed bytes, size balance
+        return 4
+
+    def headerData(self,
+                   section: int,
+                   orientation: Qt.Orientation,
+                   role: int = Qt.ItemDataRole.DisplayRole):
+        """
+        Get the data for the given role and section in the given header.
+
+        The header is identified by its orientation.
+        For horizontal headers, the section number corresponds to
+        the column number. Similarly, for vertical headers,
+        the section number corresponds to the row number.
+
+        Parameters
+        ----------
+        section : int
+            The row or column number.
+        orientation : Qt.Orientation
+            The orientation of the header.
+        role : int, optional
+            The data role, by default Qt.ItemDataRole.DisplayRole
+
+        Returns
+        -------Improve
+        Any
+            The data for the specified header section.
+        """
+        if (orientation == Qt.Orientation.Horizontal
+                and role == Qt.ItemDataRole.DisplayRole):
+            if section == 0:
+                return self.tr("Name")
+            elif section == 1:
+                return self.tr("Change")
+            elif section == 2:
+                return self.tr("Size")
+            elif section == 3:
+                return self.tr("Balance")
+
+        return None
+
+    def data(self,
+             index: QModelIndex,
+             role: int = Qt.ItemDataRole.DisplayRole):
+        """
+        Get the data for the given role and index.
+
+        The indexes internal pointer references the corresponding
+        `FileSystemItem`.
+
+        Parameters
+        ----------
+        index : QModelIndex
+            The index of the item.
+        role : int, optional
+            The data role, by default Qt.ItemDataRole.DisplayRole
+
+        Returns
+        -------
+        Any
+            The data, return None if no data is available for the role.
+        """
+        if not index.isValid():
             return None
 
-    def flags(self, index):
-        if not index.isValid():
-            return Qt.NoItemFlags
-        return Qt.ItemIsEnabled
+        item: DiffItem = index.internalPointer()
+        column = index.column()
+
+        if role == Qt.ItemDataRole.DisplayRole:
+            if column == 0:
+                # name
+                if self.mode == self.DisplayMode.FLAT:
+                    return path_to_str(item.path)
+
+                if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
+                    parent = index.parent()
+                    if parent == QModelIndex():
+                        return path_to_str(
+                            relative_path(self.root.path, item.path))
+
+                    return path_to_str(
+                        relative_path(parent.internalPointer().path,
+                                      item.path))
+
+                # standard tree mode
+                return item.subpath
+            elif column == 1:
+                # change type
+                return item.data.change_type.short()
+            elif column == 2:
+                return pretty_bytes(item.data.changed_size)
+            else:
+                # size
+                return pretty_bytes(item.data.size)
+
+        if role == Qt.ItemDataRole.ForegroundRole:
+            # colour
+            if item.data.change_type == ChangeType.ADDED:
+                return (QColor(Qt.green)
+                        if uses_dark_mode() else QColor(Qt.darkGreen))
+            if item.data.change_type == ChangeType.MODIFIED:
+                return (QColor(Qt.yellow)
+                        if uses_dark_mode() else QColor(Qt.darkYellow))
+            if item.data.change_type == ChangeType.REMOVED:
+                return (QColor(Qt.red)
+                        if uses_dark_mode() else QColor(Qt.darkRed))
+            return None  # no change
+
+        if role == Qt.ItemDataRole.ToolTipRole:
+            if column == 0:
+                # name column -> display fullpath
+                return path_to_str(item.path)
+
+            # info/data tooltip -> no real size limitation
+            tooltip_template = \
+                "{name}\n" + \
+                "\n" + \
+                "{filetype} {changetype}"
+
+            modified_template = self.tr("Added {}, deleted {}")
+            owner_template = "{: <10} -> {: >10}"
+            permission_template = "{} -> {}"
+
+            # format
+            if item.data.file_type == FileType.FILE:
+                filetype = self.tr("File")
+            elif item.data.file_type == FileType.DIRECTORY:
+                filetype = self.tr("Directory")
+            elif item.data.file_type == FileType.LINK:
+                filetype = self.tr("Link")
+            elif item.data.file_type == FileType.BLKDEV:
+                filetype = self.tr("Block device file")
+            elif item.data.file_type == FileType.CHRDEV:
+                filetype = self.tr("Character device file")
+            else:
+                raise Exception("Unknown filetype {}".format(
+                    item.data.file_type))
+
+            if item.data.change_type == ChangeType.NONE:
+                changetype = self.tr("unchanged")
+            elif item.data.change_type == ChangeType.MODIFIED:
+                changetype = self.tr("modified")
+            elif item.data.change_type == ChangeType.REMOVED:
+                changetype = self.tr("removed")
+            elif item.data.change_type == ChangeType.ADDED:
+                changetype = self.tr("added")
+            else:
+                raise Exception("Unknown changetype {}".format(
+                    item.data.change_type))
+
+            tooltip = tooltip_template.format(name=item.path[-1],
+                                              filetype=filetype,
+                                              changetype=changetype)
+            if item.data.modified:
+                tooltip += '\n'
+                tooltip += modified_template.format(
+                    pretty_bytes(item.data.modified[0]),
+                    pretty_bytes(item.data.modified[1]))
+
+            if item.data.mode_change:
+                tooltip += '\n'
+                tooltip += permission_template.format(*item.data.mode_change)
+
+            if item.data.owner_change:
+                tooltip += '\n'
+                tooltip += owner_template.format(
+                    '{}:{}'.format(item.data.owner_change[0],
+                                   item.data.owner_change[1]),
+                    "{}:{}".format(item.data.owner_change[2],
+                                   item.data.owner_change[3]))
+
+            return tooltip
