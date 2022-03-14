@@ -73,7 +73,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0" columnminimumwidth="1,0,0">
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0" columnminimumwidth="1,0,0,0">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -83,6 +83,20 @@
         <property name="verticalSpacing">
          <number>1</number>
         </property>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QToolButton" name="copyURLbutton">
+          <property name="toolTip">
+           <string>Copy to clipboard</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QComboBox" name="repoSelector">
           <property name="sizePolicy">
@@ -101,24 +115,20 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
+        <item row="0" column="2">
          <widget class="QToolButton" name="repoRemoveToolbutton">
           <property name="toolTip">
            <string>Unlink repository without deleting it.</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QToolButton" name="copyURLbutton">
-          <property name="toolTip">
-           <string>Copy to clipboard</string>
+        <item row="0" column="1">
+         <widget class="QToolButton" name="bAddRepo">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
           </property>
          </widget>
         </item>
@@ -203,6 +213,13 @@
              </property>
              <property name="sizeAdjustPolicy">
               <enum>QComboBox::AdjustToContents</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="bAddSSHKey">
+             <property name="text">
+              <string/>
              </property>
             </widget>
            </item>

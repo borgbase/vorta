@@ -1,11 +1,12 @@
 import os
 import uuid
+
 import pytest
 from PyQt5 import QtCore
 
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import EventLogModel, RepoModel, ArchiveModel
+from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
@@ -14,7 +15,7 @@ SHORT_PASSWORD = 'hunter2'
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
-    main.repoTab.repoSelector.setCurrentIndex(1)
+    main.repoTab.new_repo()
     add_repo_window = main.repoTab._window
     qtbot.addWidget(add_repo_window)
 
@@ -53,7 +54,7 @@ def test_repo_unlink(qapp, qtbot):
 
     main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 4, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 0, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
@@ -65,7 +66,7 @@ def test_repo_unlink(qapp, qtbot):
 
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
-    main.repoTab.repoSelector.setCurrentIndex(1)
+    main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
@@ -81,7 +82,7 @@ def test_password_autofill(qapp, qtbot):
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
-    main.repoTab.repoSelector.setCurrentIndex(1)
+    main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
@@ -107,7 +108,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
     main = qapp.main_window
-    main.repoTab.sshComboBox.setCurrentIndex(1)
+    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.LeftButton)
     ssh_dialog = main.repoTab._window
 
     ssh_dir = tmpdir

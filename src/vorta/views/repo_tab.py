@@ -1,7 +1,7 @@
 import os
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMenu, QMessageBox
 
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
@@ -23,13 +23,19 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.setupUi(parent)
 
         # Populate dropdowns
-        self.repoSelector.model().item(0).setEnabled(False)
-        self.repoSelector.addItem(self.tr('+ Initialize New Repository'), 'new')
-        self.repoSelector.addItem(self.tr('+ Add Existing Repository'), 'existing')
-        self.repoSelector.insertSeparator(3)
         self.populate_repositories()
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
+
+        # init repo add button
+        self.menuAddRepo = QMenu(self.bAddRepo)
+
+        self.menuAddRepo.addAction(self.tr("New Repository…"),
+                                   self.new_repo)
+        self.menuAddRepo.addAction(self.tr("Existing Repository…"),
+                                   self.add_existing_repo)
+
+        self.bAddRepo.setMenu(self.menuAddRepo)
 
         # note: it is hard to describe these algorithms with attributes like low/medium/high
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
@@ -55,20 +61,21 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.init_ssh()
         self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
         self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
+        self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.init_repo_stats()
         self.populate_from_profile()
         self.set_icons()
 
     def set_icons(self):
+        self.bAddSSHKey.setIcon(get_colored_icon("plus"))
+        self.bAddRepo.setIcon(get_colored_icon("plus"))
         self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
 
     def set_repos(self):
-        count = self.repoSelector.count()
-        for _ in range(4, count):  # Repositories are listed after 4th entry in repoSelector
-            self.repoSelector.removeItem(4)
+        self.repoSelector.clear()
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
@@ -110,7 +117,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         keys = get_private_keys()
         self.sshComboBox.clear()
         self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
-        self.sshComboBox.addItem(self.tr('Create New Key'), 'new')
         for key in keys:
             self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
 
@@ -121,17 +127,18 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoCompression.model().item(ix).setEnabled(use_zstd)
 
     def ssh_select_action(self, index):
-        if index == 1:
-            ssh_add_window = SSHAddWindow()
-            self._window = ssh_add_window  # For tests
-            ssh_add_window.setParent(self, QtCore.Qt.Sheet)
-            ssh_add_window.show()
-            ssh_add_window.accepted.connect(self.init_ssh)
-            ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
-        else:
-            profile = self.profile()
-            profile.ssh_key = self.sshComboBox.itemData(index)
-            profile.save()
+        profile = self.profile()
+        profile.ssh_key = self.sshComboBox.itemData(index)
+        profile.save()
+
+    def create_ssh_key(self):
+        """Open a dialog to create an ssh key."""
+        ssh_add_window = SSHAddWindow()
+        self._window = ssh_add_window  # For tests
+        ssh_add_window.setParent(self, QtCore.Qt.Sheet)
+        ssh_add_window.accepted.connect(self.init_ssh)
+        # ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
+        ssh_add_window.open()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()
@@ -163,25 +170,32 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         profile.compression = self.repoCompression.currentData()
         profile.save()
 
+    def new_repo(self):
+        """Open a dialog to create a new repo and add it to vorta."""
+        window = AddRepoWindow()
+        self._window = window  # For tests
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.added_repo.connect(self.process_new_repo)
+        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
+        window.open()
+
+    def add_existing_repo(self):
+        """Open a dialog to add a existing repo to vorta."""
+        window = ExistingRepoWindow()
+        self._window = window  # For tests
+        window.setParent(self, QtCore.Qt.Sheet)
+        window.added_repo.connect(self.process_new_repo)
+        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
+        window.open()
+
     def repo_select_action(self, index):
-        item_data = self.repoSelector.itemData(index)
         if index == 0:
             return
-        elif item_data in ['new', 'existing']:
-            if item_data == 'new':
-                window = AddRepoWindow()
-            else:
-                window = ExistingRepoWindow()
-            self._window = window  # For tests
-            window.setParent(self, QtCore.Qt.Sheet)
-            window.show()
-            window.added_repo.connect(self.process_new_repo)
-            window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
-        else:
-            profile = self.profile()
-            profile.repo = self.repoSelector.currentData()
-            profile.save()
-            self.init_repo_stats()
+
+        profile = self.profile()
+        profile.repo = self.repoSelector.currentData()
+        profile.save()
+        self.init_repo_stats()
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
@@ -198,25 +212,29 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def repo_unlink_action(self):
         profile = self.profile()
         self.init_repo_stats()
+
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.Ok)
         msg.setParent(self, QtCore.Qt.Sheet)
+
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
-        if selected_repo_index > 2:
-            repo = RepoModel.get(id=selected_repo_id)
-            ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
-            profile.repo = None
-            profile.save()
-            repo.delete_instance(recursive=True)  # This also deletes archives.
-            self.repoSelector.setCurrentIndex(0)
-            self.repoSelector.removeItem(selected_repo_index)
-            msg.setWindowTitle(self.tr('Repository was Unlinked'))
-            msg.setText(self.tr('You can always connect it again later.'))
-            msg.show()
 
-            self.repo_changed.emit()
-            self.init_repo_stats()
+        repo = RepoModel.get(id=selected_repo_id)
+        ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
+        profile.repo = None
+        profile.save()
+
+        repo.delete_instance(recursive=True)  # This also deletes archives.
+        self.repoSelector.setCurrentIndex(0)
+        self.repoSelector.removeItem(selected_repo_index)
+
+        msg.setWindowTitle(self.tr('Repository was Unlinked'))
+        msg.setText(self.tr('You can always connect it again later.'))
+        msg.show()
+
+        self.repo_changed.emit()
+        self.init_repo_stats()
 
     def copy_URL_action(self):
         if self.repoSelector.currentIndex() > 2:
