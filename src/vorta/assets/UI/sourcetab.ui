@@ -106,7 +106,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="updateButton">
+         <widget class="QToolButton" name="updateButton">
           <property name="toolTip">
            <string>Recalculate source size and file count</string>
           </property>
@@ -126,14 +126,17 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="addButton">
+         <widget class="QToolButton" name="addButton">
           <property name="toolTip">
            <string>Add sources</string>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="removeButton">
+         <widget class="QToolButton" name="removeButton">
           <property name="toolTip">
            <string>Remove the selected source</string>
           </property>

@@ -49,7 +49,7 @@
          <item row="1" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QPushButton" name="bList">
+            <widget class="QToolButton" name="bList">
              <property name="toolTip">
               <string>Refresh archive list</string>
              </property>
@@ -69,29 +69,38 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="bCheck">
+            <widget class="QToolButton" name="bCheck">
              <property name="toolTip">
               <string>Check the consistancy of the repository</string>
              </property>
              <property name="text">
               <string>Check</string>
              </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="bPrune">
+            <widget class="QToolButton" name="bPrune">
              <property name="toolTip">
               <string>Prune the archives in this repository</string>
              </property>
              <property name="text">
               <string>Prune</string>
              </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="compactButton">
+            <widget class="QToolButton" name="compactButton">
              <property name="text">
               <string>Compact</string>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
              </property>
             </widget>
            </item>
@@ -168,7 +177,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="bRefreshArchive">
+               <widget class="QToolButton" name="bRefreshArchive">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -181,10 +190,13 @@
                 <property name="text">
                  <string>Refresh</string>
                 </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="bMount">
+               <widget class="QToolButton" name="bMount">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -194,10 +206,13 @@
                 <property name="text">
                  <string notr="true">bMount</string>
                 </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="bExtract">
+               <widget class="QToolButton" name="bExtract">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -210,10 +225,13 @@
                 <property name="text">
                  <string>Extract…</string>
                 </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="bRename">
+               <widget class="QToolButton" name="bRename">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -226,10 +244,13 @@
                 <property name="text">
                  <string>Rename…</string>
                 </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="bDelete">
+               <widget class="QToolButton" name="bDelete">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -241,6 +262,9 @@
                 </property>
                 <property name="text">
                  <string>Delete</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
                 </property>
                </widget>
               </item>
@@ -309,8 +333,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>544</width>
-        <height>352</height>
+        <width>781</width>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">

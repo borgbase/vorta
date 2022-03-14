@@ -109,14 +109,14 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QPushButton" name="repoRemoveToolbutton">
+         <widget class="QToolButton" name="repoRemoveToolbutton">
           <property name="toolTip">
            <string>Unlink repository without deleting it.</string>
           </property>
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="copyURLbutton">
+         <widget class="QToolButton" name="copyURLbutton">
           <property name="toolTip">
            <string>Copy to clipboard</string>
           </property>
@@ -207,7 +207,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sshKeyToClipboardButton">
+            <widget class="QToolButton" name="sshKeyToClipboardButton">
              <property name="toolTip">
               <string>Copy to clipboard</string>
              </property>

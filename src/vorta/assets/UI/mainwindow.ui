@@ -134,9 +134,6 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="currentIndex">
-       <number>2</number>
-      </property>
       <property name="documentMode">
        <bool>false</bool>
       </property>
