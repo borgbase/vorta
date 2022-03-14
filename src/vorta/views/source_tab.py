@@ -1,10 +1,10 @@
 import os
 from pathlib import PurePath
 
-from PyQt5 import QtCore, uic
+from PyQt5 import QtCore, QtGui, uic
 from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QMessageBox,
-                             QTableWidgetItem)
+                             QShortcut, QTableWidgetItem)
 
 from vorta.store.models import (BackupProfileMixin, SettingsModel,
                                 SourceFileModel)
@@ -78,6 +78,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                                                   self.paste_text)
 
         self.addButton.setMenu(self.addMenu)
+
+        # shortcuts
+        shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy,
+                                  self.sourceFilesWidget)
+        shortcut_copy.activated.connect(self.source_copy)
 
         # Connect signals
         self.removeButton.clicked.connect(self.source_remove)

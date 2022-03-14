@@ -5,11 +5,11 @@ from datetime import timedelta
 from typing import Dict
 
 from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QPoint, Qt, pyqtSlot
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import (QHeaderView, QInputDialog, QLayout, QMenu,
-                             QMessageBox, QTableView, QTableWidgetItem,
-                             QWidget)
+from PyQt5.QtCore import QMimeData, QPoint, Qt, pyqtSlot
+from PyQt5.QtGui import QDesktopServices, QKeySequence
+from PyQt5.QtWidgets import (QApplication, QHeaderView, QInputDialog, QLayout,
+                             QMenu, QMessageBox, QShortcut, QTableView,
+                             QTableWidgetItem, QWidget)
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
@@ -80,10 +80,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.customContextMenuRequested.connect(
             self.archiveitem_contextmenu)
 
-        self.bList.clicked.connect(self.refresh_archive_list)
-        self.bPrune.clicked.connect(self.prune_action)
-        self.bCheck.clicked.connect(self.check_action)
-        self.bDiff.clicked.connect(self.diff_action)
+        # shortcuts
+        shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy,
+                                  self.archiveTable)
+        shortcut_copy.activated.connect(self.archive_copy)
 
         # connect archive actions
         self.bMount.clicked.connect(self.bmount_clicked)
@@ -92,6 +92,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
+
+        # other signals
+        self.bList.clicked.connect(self.refresh_archive_list)
+        self.bPrune.clicked.connect(self.prune_action)
+        self.bCheck.clicked.connect(self.check_action)
+        self.bDiff.clicked.connect(self.diff_action)
 
         self.archiveTable.itemSelectionChanged.connect(self.on_selection_change)
 
@@ -129,6 +135,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         menu = QMenu(self.archiveTable)
         menu.setEnabled(self.repoactions_enabled)
+
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
+                       lambda: self.archive_copy(index=index))
+        menu.addSeparator()
 
         menu.addAction(self.bRefreshArchive.icon(),
                        self.bRefreshArchive.text(),
@@ -259,6 +269,27 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
                 widget.setToolTip(
                     tooltip + " " + self.tr("(Select exactly one archive)"))
+
+    def archive_copy(self, index=None):
+        """
+        Copy an archive name to the clipboard.
+
+        Copies the first selected archive if no index is specified.
+        """
+        if index is None:
+            indexes = self.archiveTable.selectionModel().selectedRows()
+
+            if not indexes:
+                return
+
+            index = indexes[0]
+
+        archive_name = self.archiveTable.item(index.row(), 4).text()
+
+        data = QMimeData()
+        data.setText(archive_name)
+
+        QApplication.clipboard().setMimeData(data)
 
     def save_archive_template(self, tpl, key):
         profile = self.profile()
