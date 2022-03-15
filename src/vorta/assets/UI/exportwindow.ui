@@ -20,7 +20,7 @@
    <item>
     <widget class="QCheckBox" name="storePassword">
      <property name="toolTip">
-      <string>Disclose your borg passphrase. Use with caution!</string>
+      <string>Include Borg passphrase in export. Use with caution!</string>
      </property>
      <property name="text">
       <string>Include borg passphrase in export</string>
