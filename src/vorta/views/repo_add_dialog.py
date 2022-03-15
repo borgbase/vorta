@@ -1,15 +1,16 @@
 import re
-from PyQt5 import uic, QtCore
-from PyQt5.QtWidgets import QLineEdit, QAction, QApplication
 
-from vorta.utils import get_private_keys, get_asset, choose_file_dialog, \
-    borg_compat, validate_passwords
-from vorta.keyring.abc import VortaKeyring
-from vorta.borg.init import BorgInitJob
+from PyQt5 import QtCore, uic
+from PyQt5.QtWidgets import QAction, QApplication, QDialogButtonBox, QLineEdit
+
 from vorta.borg.info_repo import BorgInfoRepoJob
+from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
-from vorta.views.utils import get_colored_icon
+from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
+from vorta.utils import (borg_compat, choose_file_dialog, get_asset,
+                         get_private_keys, validate_passwords)
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
@@ -25,8 +26,13 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.result = None
         self.is_remote_repo = True
 
-        self.closeButton.clicked.connect(self.close)
-        self.saveButton.clicked.connect(self.run)
+        # dialogButtonBox
+        self.saveButton = self.buttonBox.button(
+            QDialogButtonBox.StandardButton.Ok)
+        self.saveButton.setText(self.tr("AddRepoWindowDialog", "Add"))
+
+        self.buttonBox.rejected.connect(self.close)
+        self.buttonBox.accepted.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
         self.repoURL.textChanged.connect(self.set_password)
@@ -47,6 +53,14 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.init_ssh_key()
         self.set_icons()
         self.display_backend_warning()
+
+    def retranslateUi(self, dialog):
+        """Retranslate strings in ui."""
+        super().retranslateUi(dialog)
+
+        # setupUi calls retranslateUi
+        if hasattr(self, 'saveButton'):
+            self.saveButton.setText(self.tr("AdRepoWindowDialog", "Add"))
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))

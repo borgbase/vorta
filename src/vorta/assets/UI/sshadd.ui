@@ -98,15 +98,15 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="outputFileTextBox"/>
-       </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Output File:</string>
          </property>
         </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="outputFileTextBox"/>
        </item>
        <item row="4" column="1">
         <widget class="QLabel" name="label_6">
@@ -121,30 +121,6 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QPushButton" name="closeButton">
-           <property name="text">
-            <string>Close</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="generateButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>2</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Generate and copy to Clipboard</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="6" column="1">
         <widget class="QLabel" name="errors">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -174,6 +150,13 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

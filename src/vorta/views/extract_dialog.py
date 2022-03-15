@@ -4,7 +4,7 @@ from datetime import datetime
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHeaderView
+from PyQt5.QtWidgets import QDialogButtonBox, QHeaderView, QPushButton
 
 from vorta.utils import get_asset, get_dict_from_list, nested_dict
 from vorta.views.partials.tree_view import TreeModel
@@ -55,9 +55,25 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
 
+        # add extract button to button box
+        self.extractButton = QPushButton(self)
+        self.extractButton.setObjectName("extractButton")
+        self.extractButton.setText(self.tr("ExtractDialog", "Extract"))
+
+        self.buttonBox.addButton(self.extractButton,
+                                 QDialogButtonBox.ButtonRole.AcceptRole)
+
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
-        self.cancelButton.clicked.connect(self.close)
-        self.extractButton.clicked.connect(self.accept)
+        self.buttonBox.rejected.connect(self.close)
+        self.buttonBox.accepted.connect(self.accept)
+
+    def retranslateUi(self, dialog):
+        """Retranslate strings in ui."""
+        super().retranslateUi(dialog)
+
+        # setupUi calls retranslateUi
+        if hasattr(self, 'extractButton'):
+            self.extractButton.setText(self.tr("ExtractDialog", "Extract"))
 
 
 class ExtractTree(TreeModel):

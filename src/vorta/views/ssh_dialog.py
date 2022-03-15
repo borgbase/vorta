@@ -1,11 +1,11 @@
 import os
-from PyQt5 import uic
-from PyQt5.QtCore import QProcess, Qt
-from PyQt5.QtWidgets import QApplication
 
-from paramiko.rsakey import RSAKey
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
+from paramiko.rsakey import RSAKey
+from PyQt5 import uic
+from PyQt5.QtCore import QProcess, Qt
+from PyQt5.QtWidgets import QApplication, QDialogButtonBox
 
 from ..utils import get_asset
 
@@ -25,11 +25,28 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
-        self.closeButton.clicked.connect(self.accept)
-        self.generateButton.clicked.connect(self.generate_key)
+        # dialogButtonBox
+        self.generateButton = self.buttonBox.button(
+            QDialogButtonBox.StandardButton.Ok)
+
+        self.generateButton.setText(
+            self.tr("SSHAddWindow", "Generate and copy to clipboard"))
+
+        # signals
+        self.buttonBox.rejected.connect(self.reject)
+        self.buttonBox.accepted.connect(self.generate_key)
 
         self.init_format()
         self.init_length()
+
+    def retranslateUi(self, dialog):
+        """Retranslate strings in ui."""
+        super().retranslateUi(dialog)
+
+        # setupUi calls retranslateUi
+        if hasattr(self, 'generateButton'):
+            self.generateButton.setText(
+                self.tr("SSHAddWindow", "Generate and copy to clipboard"))
 
     def init_format(self):
         self.formatSelect.addItem(self.tr('ED25519 (Recommended)'), 'ed25519')
