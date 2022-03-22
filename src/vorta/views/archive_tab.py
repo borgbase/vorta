@@ -122,16 +122,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return menu
 
         if archive_name in self.mount_points:
-            unmountAction = menu.addAction("Unmount", self.umount_action)
+            unmountAction = menu.addAction(self.tr("Unmount"), self.umount_action)
             unmountAction.setIcon(get_colored_icon('eject'))
         else:
-            mountAction = menu.addAction("Mount", self.mount_action)
+            mountAction = menu.addAction(self.tr("Mount"), self.mount_action)
             mountAction.setIcon(get_colored_icon('folder-open'))
 
-        extractAction = menu.addAction("Extract", self.list_archive_action)
-        refreshAction = menu.addAction("Refresh", self.refresh_archive_action)
-        renameAction = menu.addAction("Rename", self.rename_action)
-        deleteAction = menu.addAction("Delete", self.delete_action)
+        extractAction = menu.addAction(self.tr("Extract"), self.list_archive_action)
+        refreshAction = menu.addAction(self.tr("Refresh"), self.refresh_archive_action)
+        renameAction = menu.addAction(self.tr("Rename"), self.rename_action)
+        deleteAction = menu.addAction(self.tr("Delete"), self.delete_action)
 
         extractAction.setIcon(get_colored_icon('cloud-download'))
         refreshAction.setIcon(get_colored_icon('refresh'))
