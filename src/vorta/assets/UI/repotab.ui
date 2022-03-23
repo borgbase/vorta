@@ -120,6 +120,9 @@
           <property name="styleSheet">
            <string notr="true"/>
           </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
           <item>
            <property name="text">
             <string>Select Backup Destination</string>
