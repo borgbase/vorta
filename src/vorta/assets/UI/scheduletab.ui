@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>687</width>
-    <height>489</height>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <property name="rightMargin">
     <number>0</number>
    </property>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QToolBox" name="toolBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -30,7 +30,6 @@
      </property>
      <property name="font">
       <font>
-       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -39,13 +38,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>815</width>
-        <height>328</height>
+        <width>687</width>
+        <height>384</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -290,8 +288,14 @@
            </item>
            <item row="6" column="1">
             <widget class="QCheckBox" name="missedBackupsCheckBox">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
-              <string>Run missed backups right after startup or wakeup</string>
+              <string>Run missed backups on startup or wakeup</string>
              </property>
             </widget>
            </item>
@@ -325,7 +329,7 @@
            <item row="0" column="1">
             <widget class="QCheckBox" name="pruneCheckBox">
              <property name="text">
-              <string>Prune old archives after each backup</string>
+              <string>Prune after each backup</string>
              </property>
             </widget>
            </item>
@@ -478,7 +482,6 @@
           <widget class="QLabel" name="label_14">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -517,7 +520,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>349</height>
+        <height>384</height>
        </rect>
       </property>
       <attribute name="label">
@@ -572,7 +575,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>349</height>
+        <height>384</height>
        </rect>
       </property>
       <attribute name="label">
@@ -584,7 +587,6 @@
          <property name="font">
           <font>
            <pointsize>11</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -632,7 +634,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>349</height>
+        <height>384</height>
        </rect>
       </property>
       <attribute name="label">
@@ -654,7 +656,7 @@
           <item>
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).&lt;/p&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:'Courier';&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:'Courier';&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -665,59 +667,91 @@
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Pre-backup:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="preBackupCmdLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-family:'Courier';</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string>echo &quot;Before backup of $repo_url&quot;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QFormLayout" name="formLayout">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Pre-backup:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="preBackupCmdLineEdit">
-               <property name="styleSheet">
-                <string notr="true">font-family:'Courier';</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="placeholderText">
-                <string>echo &quot;Before backup of $repo_url&quot;</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>Post-backup:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="postBackupCmdLineEdit">
-               <property name="styleSheet">
-                <string notr="true">font-family:'Courier';</string>
-               </property>
-               <property name="placeholderText">
-                <string>echo &quot;Backup of $repo_url ended with $returncode.&quot;</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Post-backup:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="postBackupCmdLineEdit">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-family:'Courier';</string>
+              </property>
+              <property name="placeholderText">
+               <string>echo &quot;Backup of $repo_url ended with $returncode.&quot;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -756,7 +790,7 @@
              <string notr="true">font-family:'Courier';</string>
             </property>
             <property name="placeholderText">
-             <string>--dry-run -x</string>
+             <string>--dry-run --noflags</string>
             </property>
            </widget>
           </item>

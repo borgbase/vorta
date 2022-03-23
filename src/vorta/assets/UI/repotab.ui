@@ -49,6 +49,12 @@
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -73,7 +79,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0" columnminimumwidth="1,0,0,0">
+       <layout class="QGridLayout" name="gridLayout_2" columnminimumwidth="1,0,0,0">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -104,6 +110,12 @@
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
