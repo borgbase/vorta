@@ -149,17 +149,24 @@ class VortaScheduler(QtCore.QObject):
                             minute=profile.schedule_fixed_minute)
 
             # start QTimer
-            logger.debug('Scheduling next run for %s', next_time)
-
             timer_ms = (next_time - dt.now()).total_seconds() * 1000
 
-            timer = QtCore.QTimer()
-            timer.setSingleShot(True)
-            timer.setInterval(int(timer_ms))
-            timer.timeout.connect(lambda: self.create_backup(profile_id))
-            timer.start()
+            if timer_ms < 2**31 - 1:
+                logger.debug('Scheduling next run for %s', next_time)
 
-            self.timers[profile_id] = {'qtt': timer, 'dt': next_time}
+                timer = QtCore.QTimer()
+                timer.setSingleShot(True)
+                timer.setInterval(int(timer_ms))
+                timer.timeout.connect(lambda: self.create_backup(profile_id))
+                timer.start()
+
+                self.timers[profile_id] = {'qtt': timer, 'dt': next_time}
+            else:
+                # int to big to pass it to qt which expects a c++ int
+                # wait 15 min for regular reschedule
+                logger.debug(
+                    f"Couldn't schedule for {next_time} because" +
+                    f"timer value {timer_ms} too large.")
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit(profile_id)
