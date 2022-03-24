@@ -5,7 +5,7 @@ from vorta.store.models import RepoModel
 class BorgInitJob(BorgJob):
 
     def started_event(self):
-        self.updated.emit(self.tr('Setting up new repo...'))
+        self.updated.emit(self.tr('Setting up new repo…'))
 
     @classmethod
     def prepare(cls, params):

@@ -162,7 +162,7 @@ class BorgCreateJob(BorgJob):
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
 
-        ret['message'] = trans_late('messages', 'Starting backup...')
+        ret['message'] = trans_late('messages', 'Starting backup…')
         ret['ok'] = True
         ret['cmd'] = cmd
 

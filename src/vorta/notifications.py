@@ -1,6 +1,8 @@
-import sys
 import logging
+import sys
+
 from PyQt5 import QtCore, QtDBus
+
 from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
@@ -24,7 +26,7 @@ class VortaNotifications:
             return cls()
 
     def deliver(self, title, text, level='info'):
-        """Dummy notifier if we're not on macOS or Linux notifier isn't available."""
+        """Dummy notifier if we're not on macOS or Linux notifier is not available."""
         pass
 
     def notifications_suppressed(self, level):

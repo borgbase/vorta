@@ -1,16 +1,19 @@
-from pathlib import Path
 import logging
+from pathlib import Path
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut, QMessageBox, QCheckBox, QMenu, QToolTip, QFileDialog
+from PyQt5.QtGui import QFontMetrics, QKeySequence
+from PyQt5.QtWidgets import (QCheckBox, QFileDialog, QMenu, QMessageBox,
+                             QShortcut, QToolTip)
 
+from vorta.profile_export import ImportFailedException, ProfileExport
 from vorta.store.models import BackupProfileModel, SettingsModel
-from vorta.utils import borg_compat, get_asset, is_system_tray_available, get_network_status_monitor
+from vorta.utils import (borg_compat, get_asset, get_network_status_monitor,
+                         is_system_tray_available)
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
-from vorta.profile_export import ProfileExport, ImportFailedException
+
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -20,9 +23,10 @@ from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
-logger = logging.getLogger(__name__)
 uifile = get_asset('UI/mainwindow.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
+
+logger = logging.getLogger(__name__)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
@@ -36,6 +40,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
+
+        # set log label height to two lines
+        fontmetrics: QFontMetrics = self.logText.fontMetrics()
+        self.logText.setMinimumHeight(
+            fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
 
         # Use previous window state
         previous_window_width = SettingsModel.get(key='previous_window_width')
@@ -59,7 +68,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
         self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
-        self.repoTab.repo_added.connect(self.archiveTab.list_action)
+        self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
 
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
@@ -80,7 +89,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
         profile_add_menu = QMenu()
-        profile_add_menu.addAction(self.tr('Import from file...'), self.profile_import_action)
+        profile_add_menu.addAction(self.tr('Import from file…'), self.profile_import_action)
         self.profileAddButton.setMenu(profile_add_menu)
         self.profileAddButton.clicked.connect(self.profile_add_action)
 
@@ -171,7 +180,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.profile_select_action(0)
 
         else:
-            warn = self.tr("Can't delete the last profile.")
+            warn = self.tr("Cannot delete the last profile.")
             point = QPoint(0, self.profileDeleteButton.size().height() / 2)
             QToolTip.showText(self.profileDeleteButton.mapToGlobal(point), warn)
 
