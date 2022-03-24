@@ -30,7 +30,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             QDialogButtonBox.StandardButton.Ok)
 
         self.generateButton.setText(
-            self.tr("SSHAddWindow", "Generate and copy to clipboard"))
+            self.tr( "Generate and copy to clipboard"))
 
         # signals
         self.buttonBox.rejected.connect(self.reject)
@@ -46,7 +46,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         # setupUi calls retranslateUi
         if hasattr(self, 'generateButton'):
             self.generateButton.setText(
-                self.tr("SSHAddWindow", "Generate and copy to clipboard"))
+                self.tr("Generate and copy to clipboard"))
 
     def init_format(self):
         self.formatSelect.addItem(self.tr('ED25519 (Recommended)'), 'ed25519')

@@ -29,7 +29,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         # dialogButtonBox
         self.saveButton = self.buttonBox.button(
             QDialogButtonBox.StandardButton.Ok)
-        self.saveButton.setText(self.tr("AddRepoWindowDialog", "Add"))
+        self.saveButton.setText(self.tr("Add"))
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
