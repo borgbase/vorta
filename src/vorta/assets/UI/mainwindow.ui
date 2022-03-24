@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -60,12 +60,15 @@
           <height>0</height>
          </size>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="profileAddButton">
         <property name="toolTip">
-         <string>Add Profile</string>
+         <string>Add a new profile (Dropdown: Import from file)</string>
         </property>
         <property name="iconSize">
          <size>
@@ -81,7 +84,7 @@
       <item>
        <widget class="QToolButton" name="profileRenameButton">
         <property name="toolTip">
-         <string>Rename Profile</string>
+         <string>Rename current profile</string>
         </property>
         <property name="iconSize">
          <size>
@@ -94,7 +97,7 @@
       <item>
        <widget class="QToolButton" name="profileExportButton">
         <property name="toolTip">
-         <string>Export Profile</string>
+         <string>Export current profile</string>
         </property>
         <property name="text">
          <string/>
@@ -104,7 +107,7 @@
       <item>
        <widget class="QToolButton" name="profileDeleteButton">
         <property name="toolTip">
-         <string>Delete Profile</string>
+         <string>Delete current profile</string>
         </property>
         <property name="text">
          <string/>
@@ -128,8 +131,11 @@
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>2</number>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -207,19 +213,10 @@
       <item row="1" column="1" alignment="Qt::AlignTop">
        <widget class="QLabel" name="logText">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>55</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -233,7 +230,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLatest">
    <property name="text">
     <string>Latest</string>

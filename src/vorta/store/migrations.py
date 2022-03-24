@@ -1,8 +1,11 @@
 from datetime import datetime
+
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
-from .models import (DB, RepoModel, BackupProfileModel, SourceFileModel,
-                     SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel)
+
+from .models import (DB, ArchiveModel, BackupProfileModel, EventLogModel,
+                     RepoModel, SettingsModel, SourceFileModel,
+                     WifiSettingModel)
 
 
 def run_migrations(current_schema, db_connection):
@@ -135,6 +138,13 @@ def run_migrations(current_schema, db_connection):
                                 'schedule_make_up_missed', pw.BooleanField(default=False)),
             migrator.add_column(EventLogModel._meta.table_name,
                                 'end_time', pw.DateTimeField(default=datetime.now))
+        )
+
+    if current_schema.version < 19:
+        _apply_schema_update(
+            current_schema, 19,
+            migrator.add_column(SettingsModel._meta.table_name,
+                                'group', pw.CharField(default='')),
         )
 
 

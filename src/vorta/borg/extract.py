@@ -5,7 +5,7 @@ class BorgExtractJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Downloading files from archive...'))
+        self.app.backup_progress_event.emit(self.tr('Downloading files from archive…'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)

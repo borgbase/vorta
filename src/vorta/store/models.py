@@ -177,6 +177,7 @@ class SettingsModel(BaseModel):
     value = pw.BooleanField(default=False)
     str_value = pw.CharField(default='')
     label = pw.CharField()
+    group = pw.CharField(default='')  # Settings group name and label
     type = pw.CharField()
 
     class Meta:

@@ -8,6 +8,7 @@ import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
+from typing import Any, Callable, Iterable, Tuple
 
 import psutil
 from paramiko import SSHException
@@ -416,3 +417,34 @@ def validate_passwords(first_pass, second_pass):
         return trans_late('utils', "Passwords must be greater than 8 characters long.")
 
     return ""
+
+
+def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
+    """
+    Search for a key in an iterable.
+
+    Before comparing an item with the key `func` is called on the item.
+
+    Parameters
+    ----------
+    key : Any
+        The key to search for.
+    iterable : Iterable
+        The iterable to search in.
+    func : Callable, optional
+        The function to apply, by default None
+
+    Returns
+    -------
+    Tuple[int, Any] or None
+        The index and the item in case of a match else `None`.
+    """
+    if not func:
+        def func(x):
+            return x
+
+    for i, item in enumerate(iterable):
+        if func(item) == key:
+            return i, item
+
+    return None

@@ -7,7 +7,7 @@ from ..i18n import trans_late
 class BorgUmountJob(BorgJob):
 
     def started_event(self):
-        self.updated.emit(self.tr('Unmounting archive...'))
+        self.updated.emit(self.tr('Unmounting archive…'))
 
     @classmethod
     def prepare(cls, profile):

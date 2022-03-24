@@ -1,9 +1,10 @@
 import os
 import sys
+from pathlib import Path
+
 import pytest
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QCheckBox
-from pathlib import Path
+from PyQt5.QtWidgets import QCheckBox, QFormLayout
 
 
 def test_autostart(qapp, qtbot):
@@ -14,7 +15,11 @@ def test_autostart(qapp, qtbot):
 
     def click_autostart():
         for x in range(0, tab.checkboxLayout.count()):
-            checkbox = tab.checkboxLayout.itemAt(x).widget()
+            item = tab.checkboxLayout.itemAt(x,
+                                             QFormLayout.ItemRole.FieldRole)
+            if not item:
+                continue
+            checkbox = item.widget()
             checkbox.__class__ = QCheckBox
             if checkbox.text().startswith("Automatically"):
                 # Have to use pos to click checkbox correctly

@@ -6,7 +6,7 @@ from vorta.store.models import RepoModel
 class BorgInfoRepoJob(BorgJob):
 
     def started_event(self):
-        self.updated.emit(self.tr('Validating existing repo...'))
+        self.updated.emit(self.tr('Validating existing repo…'))
 
     @classmethod
     def prepare(cls, params):

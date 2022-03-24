@@ -1,44 +1,67 @@
 import sys
+from typing import Dict, List
+
 from vorta.i18n import trans_late
 
 
-def get_misc_settings():
+def get_misc_settings() -> List[Dict[str, str]]:
+    """
+    Get the settings structure with default values.
+
+    Returns
+    -------
+    List[Dict[str, str]]
+        The settings in a json-like way.
+    """
+    # groups
+    notifications = trans_late('settings', 'Notifications')
+    startup = trans_late('settings', 'Startup')
+    information = trans_late('settings', 'Information')
+    security = trans_late('settings', 'Security')
+
     # Default settings for all platforms.
     settings = [
         {
             'key': 'enable_notifications', 'value': True, 'type': 'checkbox',
+            'group': notifications,
             'label': trans_late('settings',
                                 'Display notifications when background tasks fail')
         },
         {
             'key': 'enable_notifications_success', 'value': False, 'type': 'checkbox',
+            'group': notifications,
             'label': trans_late('settings',
                                 'Also notify about successful background tasks')
         },
         {
             'key': 'autostart', 'value': False, 'type': 'checkbox',
+            'group': startup,
             'label': trans_late('settings',
                                 'Automatically start Vorta at login')
         },
         {
             'key': 'foreground', 'value': True, 'type': 'checkbox',
+            'group': startup,
             'label': trans_late('settings',
                                 'Open main window on startup')
         },
         {
             'key': 'get_srcpath_datasize', 'value': True, 'type': 'checkbox',
+            'group': information,
             'label': trans_late('settings',
                                 'Get statistics of file/folder when added')
         },
         {
             'key': 'use_system_keyring', 'value': True, 'type': 'checkbox',
+            'group': security,
             'label': trans_late('settings',
-                                'Store repository passwords in system keychain, if available.')
+                                'Store repository passwords in system keychain, if available')
         },
         {
             'key': 'override_mount_permissions', 'value': False, 'type': 'checkbox',
+            'group': security,
             'label': trans_late('settings',
-                                'Try to replace existing permissions when mounting an archive.')
+                                'Try to replace existing permissions when mounting an archive')
         },
         {
             'key': 'previous_profile_id', 'str_value': '1', 'type': 'internal',

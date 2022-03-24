@@ -5,7 +5,7 @@ class BorgListArchiveJob(BorgJob):
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Getting archive content...'))
+        self.app.backup_progress_event.emit(self.tr('Getting archive content…'))
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
