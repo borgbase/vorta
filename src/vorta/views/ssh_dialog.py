@@ -30,7 +30,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             QDialogButtonBox.StandardButton.Ok)
 
         self.generateButton.setText(
-            self.tr( "Generate and copy to clipboard"))
+            self.tr("Generate and copy to clipboard"))
 
         # signals
         self.buttonBox.rejected.connect(self.reject)

@@ -188,7 +188,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             update_data = SettingsModel.get(key="get_srcpath_datasize").value
 
         index_row = self.sourceFilesWidget.rowCount()
-        self.sourceFilesWidget.setRowCount(self.sourceFilesWidget.rowCount()+1)
+        self.sourceFilesWidget.setRowCount(self.sourceFilesWidget.rowCount() + 1)
         # Insert all items on current row, add tooltip containing the path name
         new_item = QTableWidgetItem(source.dir)
         new_item.setToolTip(source.dir)

@@ -165,7 +165,7 @@ class VortaScheduler(QtCore.QObject):
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
                 logger.debug(
-                    f"Couldn't schedule for {next_time} because" +
+                    f"Couldn't schedule for {next_time} because "
                     f"timer value {timer_ms} too large.")
 
         # Emit signal so that e.g. the GUI can react to the new schedule
