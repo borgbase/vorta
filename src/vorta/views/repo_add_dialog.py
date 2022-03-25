@@ -60,7 +60,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         # setupUi calls retranslateUi
         if hasattr(self, 'saveButton'):
-            self.saveButton.setText(self.tr("AdRepoWindowDialog", "Add"))
+            self.saveButton.setText(self.tr("Add"))
 
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
@@ -153,15 +153,15 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def init_encryption(self):
         encryption_algos = [
-            ['Repokey-Blake2 (Recommended, key stored in repository)', 'repokey-blake2'],
-            ['Repokey', 'repokey'],
-            ['Keyfile-Blake2 (Key stored in home directory)', 'keyfile-blake2'],
-            ['Keyfile', 'keyfile'],
-            ['None (not recommended)', 'none']
+            [self.tr('Repokey-Blake2 (Recommended, key stored in repository)'), 'repokey-blake2'],
+            [self.tr('Repokey'), 'repokey'],
+            [self.tr('Keyfile-Blake2 (Key stored in home directory)'), 'keyfile-blake2'],
+            [self.tr('Keyfile'), 'keyfile'],
+            [self.tr('None (not recommended)'), 'none']
         ]
 
         for desc, name in encryption_algos:
-            self.encryptionComboBox.addItem(self.tr(desc), name)
+            self.encryptionComboBox.addItem(desc, name)
 
         if not borg_compat.check('BLAKE2'):
             self.encryptionComboBox.model().item(0).setEnabled(False)

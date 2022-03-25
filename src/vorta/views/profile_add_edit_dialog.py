@@ -1,8 +1,9 @@
-from PyQt5 import uic, QtCore
+from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QDialogButtonBox
-from vorta.i18n import translate, trans_late
-from vorta.utils import get_asset
+
+from vorta.i18n import trans_late, translate
 from vorta.store.models import BackupProfileModel
+from vorta.utils import get_asset
 
 uifile = get_asset('UI/profileadd.ui')
 AddProfileUI, AddProfileBase = uic.loadUiType(uifile)
@@ -55,7 +56,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
             self._set_status(translate('AddProfileWindow', self.name_exists))
             return False
 
-        self._set_status(self.tr(''))
+        self._set_status('')
         return True
 
 
