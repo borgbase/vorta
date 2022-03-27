@@ -321,5 +321,5 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         if len(invalidSources) != 0:  # Check if any invalid paths
             msg = QMessageBox()
-            msg.setText("Some of your sources are invalid:" + invalidSources)
+            msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
             msg.exec()
