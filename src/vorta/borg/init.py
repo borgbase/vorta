@@ -28,7 +28,7 @@ class BorgInitJob(BorgJob):
         cmd.append(params['repo_url'])
 
         ret['additional_env'] = {
-            'BORG_RSH': 'ssh -oStrictHostKeyChecking=no'
+            'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new'
         }
 
         ret['encryption'] = params['encryption']

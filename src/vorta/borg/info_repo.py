@@ -33,7 +33,7 @@ class BorgInfoRepoJob(BorgJob):
 
         ret['additional_env'] = {
             'BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK': "yes",
-            'BORG_RSH': 'ssh -oStrictHostKeyChecking=no'
+            'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new'
         }
 
         ret['password'] = params['password']  # Empty password is '', which disables prompt
