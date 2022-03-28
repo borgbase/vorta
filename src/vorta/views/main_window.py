@@ -228,7 +228,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             except ImportFailedException as exception:
                 QMessageBox.critical(None,
                                      self.tr('Failed to import profile'),
-                                     self.tr(str(exception)))
+                                     str(exception))
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
