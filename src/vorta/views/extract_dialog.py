@@ -58,7 +58,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         # add extract button to button box
         self.extractButton = QPushButton(self)
         self.extractButton.setObjectName("extractButton")
-        self.extractButton.setText(self.tr("ExtractDialog", "Extract"))
+        self.extractButton.setText(self.tr("Extract"))
 
         self.buttonBox.addButton(self.extractButton,
                                  QDialogButtonBox.ButtonRole.AcceptRole)
@@ -73,7 +73,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
         # setupUi calls retranslateUi
         if hasattr(self, 'extractButton'):
-            self.extractButton.setText(self.tr("ExtractDialog", "Extract"))
+            self.extractButton.setText(self.tr("Extract"))
 
 
 class ExtractTree(TreeModel):
