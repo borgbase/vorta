@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Diff: Choose archives for diff</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
