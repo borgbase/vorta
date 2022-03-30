@@ -87,6 +87,7 @@ class ExtractTree(TreeModel):
         super().__init__(
             files_with_attributes, nested_file_list, selected_files_folders, parent
         )
+        self.column_names = [self.tr("Name"), self.tr("Modified"), self.tr("Size")]
 
     def data(self, index, role):
         if not index.isValid():
