@@ -63,7 +63,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
-        self.init_repo_stats()
         self.populate_from_profile()
         self.set_icons()
 
@@ -100,17 +99,50 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.init_repo_stats()
 
     def init_repo_stats(self):
-        repo = self.profile().repo
+        """Set the strings of the repo stats labels."""
+        # prepare translations
+        na = self.tr('N/A', "Not available.")
+        no_repo_selected = self.tr("Select a repository first.")
+        refresh = self.tr("Try refreshing the metadata of any archive.")
+
+        # set labels
+        repo: RepoModel = self.profile().repo
         if repo is not None:
-            self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
-            self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
-            self.sizeOriginal.setText(pretty_bytes(repo.total_size))
+            if repo.unique_csize is not None:
+                self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
+                self.sizeCompressed.setToolTip('')
+            else:
+                self.sizeCompressed.setText(na)
+                self.sizeCompressed.setToolTip(refresh)
+
+            if repo.unique_size is not None:
+                self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
+                self.sizeDeduplicated.setToolTip('')
+            else:
+                self.sizeDeduplicated.setText(na)
+                self.sizeDeduplicated.setToolTip(refresh)
+
+            if repo.total_size is not None:
+                self.sizeOriginal.setText(pretty_bytes(repo.total_size))
+                self.sizeOriginal.setToolTip('')
+            else:
+                self.sizeOriginal.setText(na)
+                self.sizeOriginal.setToolTip(refresh)
+
             self.repoEncryption.setText(str(repo.encryption))
         else:
-            self.sizeCompressed.setText('')
-            self.sizeDeduplicated.setText('')
-            self.sizeOriginal.setText('')
-            self.repoEncryption.setText('')
+            self.sizeCompressed.setText(na)
+            self.sizeCompressed.setToolTip(no_repo_selected)
+
+            self.sizeDeduplicated.setText(na)
+            self.sizeDeduplicated.setToolTip(no_repo_selected)
+
+            self.sizeOriginal.setText(na)
+            self.sizeOriginal.setToolTip(no_repo_selected)
+
+            self.repoEncryption.setText(na)
+            self.repoEncryption.setToolTip(no_repo_selected)
+
         self.repo_changed.emit()
 
     def init_ssh(self):
