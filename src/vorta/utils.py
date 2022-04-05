@@ -1,5 +1,6 @@
 import argparse
 import errno
+import fnmatch
 import getpass
 import os
 import platform
@@ -31,64 +32,6 @@ borg_compat = BorgCompatibility()
 _network_status_monitor = None
 
 
-# copied from https://github.com/borgbackup/borg/blob/master/src/borg/shellpattern.py
-def pattern_to_regex(pat, match_end=r"\Z"):
-    """Translate a shell-style pattern to a regular expression.
-    The pattern may include ``**<sep>`` (<sep> stands for the platform-specific path separator; "/" on POSIX systems)
-    for matching zero or more directory levels and "*" for matching zero or more arbitrary characters with the exception
-    of any path separator. Wrap meta-characters in brackets for a literal match (i.e. "[?]" to match the literal
-    character "?").
-    Using match_end=regex one can give a regular expression that is used to match after the regex that is generated from
-    the pattern. The default is to match the end of the string.
-    This function is derived from the "fnmatch" module distributed with the Python standard library.
-    Copyright (C) 2001-2016 Python Software Foundation. All rights reserved.
-    TODO: support {alt1,alt2} shell-style alternatives
-    """
-    sep = os.path.sep
-    n = len(pat)
-    i = 0
-    res = ""
-
-    while i < n:
-        c = pat[i]
-        i += 1
-
-        if c == "*":
-            if i + 1 < n and pat[i] == "*" and pat[i + 1] == sep:
-                # **/ == wildcard for 0+ full (relative) directory names with trailing slashes; the forward slash stands
-                # for the platform-specific path separator
-                res += r"(?:[^\%s]*\%s)*" % (sep, sep)
-                i += 2
-            else:
-                # * == wildcard for name parts (does not cross path separator)
-                res += r"[^\%s]*" % sep
-        elif c == "?":
-            # ? == any single character excluding path separator
-            res += r"[^\%s]" % sep
-        elif c == "[":
-            j = i
-            if j < n and pat[j] == "!":
-                j += 1
-            if j < n and pat[j] == "]":
-                j += 1
-            while j < n and pat[j] != "]":
-                j += 1
-            if j >= n:
-                res += "\\["
-            else:
-                stuff = pat[i:j].replace("\\", "\\\\")
-                i = j + 1
-                if stuff[0] == "!":
-                    stuff = "^" + stuff[1:]
-                elif stuff[0] == "^":
-                    stuff = "\\" + stuff
-                res += "[%s]" % stuff
-        else:
-            res += re.escape(c)
-
-    return "(?ms)" + res + match_end
-
-
 class FilePathInfoAsync(QThread):
     signal = pyqtSignal(str, str, str)
 
@@ -101,24 +44,51 @@ class FilePathInfoAsync(QThread):
             line = _line.strip()
             if line != '':
                 self.exclude_patterns.append(line)
-        # translate exclude patterns to regular expressions
-        self.exclude_patterns_re = [
-            pattern_to_regex(pattern, '')
-            for pattern in self.exclude_patterns
-        ]
 
     def run(self):
         # logger.info("running thread to get path=%s...", self.path)
         self.size, self.files_count = get_path_datasize(
             self.path,
-            self.exclude_patterns_re
+            self.exclude_patterns
         )
         self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
-def get_directory_size(dir_path, exclude_patterns_re):
+def normalize_path(path):
+    """normalize paths for MacOS (but do nothing on other platforms)"""
+    # HFS+ converts paths to a canonical form, so users shouldn't be required to enter an exact match.
+    # Windows and Unix filesystems allow different forms, so users always have to enter an exact match.
+    return unicodedata.normalize('NFD', path) if sys.platform == 'darwin' else path
+
+
+# prepare patterns as borg does
+# see `FnmatchPattern._prepare` at
+# https://github.com/borgbackup/borg/blob/master//src/borg/patterns.py
+def prepare_pattern(pattern):
+    """Prepare and process fnmatch patterns as borg does"""
+    if pattern.endswith(os.path.sep):
+        # trailing sep indicates that the contents should be excluded
+        # but not the directory it self.
+        pattern = os.path.normpath(pattern).rstrip(os.path.sep)
+        pattern += os.path.sep + '*' + os.path.sep
+    else:
+        pattern = os.path.normpath(pattern) + os.path.sep + '*'
+
+    pattern = pattern.lstrip(os.path.sep)  # sep at beginning is removed
+    return re.compile(fnmatch.translate(pattern))
+
+
+def match(pattern: re.Pattern, path: str):
+    """Check whether a path matches the given pattern."""
+    path = path.lstrip(os.path.sep) + os.path.sep
+    return pattern.match(path) is not None
+
+
+def get_directory_size(dir_path, exclude_patterns):
     ''' Get number of files only and total size in bytes from a path.
         Based off https://stackoverflow.com/a/17936789 '''
+    exclude_patterns = [prepare_pattern(p) for p in exclude_patterns]
+
     data_size_filtered = 0
     seen = set()
     seen_filtered = set()
@@ -132,8 +102,8 @@ def get_directory_size(dir_path, exclude_patterns_re):
                 continue
 
             is_excluded = False
-            for pattern in exclude_patterns_re:
-                if re.match(pattern, file_path) is not None:
+            for pattern in exclude_patterns:
+                if match(pattern, file_path):
                     is_excluded = True
                     break
 
@@ -160,14 +130,14 @@ def get_network_status_monitor():
     return _network_status_monitor
 
 
-def get_path_datasize(path, exclude_patterns_re):
+def get_path_datasize(path, exclude_patterns):
     file_info = QFileInfo(path)
     data_size = 0
 
     if file_info.isDir():
         data_size, files_count = get_directory_size(
             file_info.absoluteFilePath(),
-            exclude_patterns_re
+            exclude_patterns
         )
         # logger.info("path (folder) %s %u elements size now=%u (%s)",
         #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
