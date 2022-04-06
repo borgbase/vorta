@@ -93,9 +93,19 @@ def get_directory_size(dir_path, exclude_patterns):
     seen = set()
     seen_filtered = set()
 
-    for curr_path, _, file_names in os.walk(dir_path):
+    for dir_path, subdirectories, file_names in os.walk(dir_path, topdown=True):
+        is_excluded = False
+        for pattern in exclude_patterns:
+            if match(pattern, dir_path):
+                is_excluded = True
+                break
+
+        if is_excluded:
+            subdirectories.clear()  # so that os.walk won't walk them
+            continue
+
         for file_name in file_names:
-            file_path = os.path.join(curr_path, file_name)
+            file_path = os.path.join(dir_path, file_name)
 
             # Ignore symbolic links, since borg doesn't follow them
             if os.path.islink(file_path):
@@ -110,6 +120,7 @@ def get_directory_size(dir_path, exclude_patterns):
             try:
                 stat = os.stat(file_path)
                 if stat.st_ino not in seen:  # Visit each file only once
+                    # this won't add the size of a hardlinked file
                     seen.add(stat.st_ino)
                     if not is_excluded:
                         data_size_filtered += stat.st_size
