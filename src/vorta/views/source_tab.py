@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import PurePath
 
@@ -14,6 +15,8 @@ from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
+
+logger = logging.getLogger(__name__)
 
 
 class SourceColumn:
@@ -169,7 +172,22 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
 
-    def update_path_info(self, index_row):
+    def update_path_info(self, index_row: int):
+        """
+        Update the information for the source in the given table row.
+
+        This displays `Calculating...` in the updated rows and creates a
+        `FilePathInfoAsync` instance to get the new information.
+        The method `set_path_info` will update the row with the information
+        provided by this instance.
+
+        Parameters
+        ----------
+        index_row : int
+            The index of the row to update.
+        """
+        logger.debug(f"Updating source in row {index_row}.")  # Debug #1080
+
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
         self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
         self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
@@ -196,8 +214,15 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
 
+        logger.debug(f"Added item number {index_row}"
+                     + f" from {self.sourceFilesWidget.rowCount()}")
+
         if update_data:
             self.update_path_info(index_row)
+
+            # Debug #1080
+            logger.debug("Updated info for previously added item.")
+
         else:  # Use cached data from DB
             if source.dir_size > -1:
                 self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
@@ -235,7 +260,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
     def sources_update(self):
-        for row in range(0, self.sourceFilesWidget.rowCount()):
+        """
+        Update each row in the sources table.
+
+        Calls `update_path_info` for each row. to do the job.
+        """
+        row_count = self.sourceFilesWidget.rowCount()
+
+        logger.debug(f"Updating sources ({row_count})")  # Debug #1080
+
+        for row in range(0, row_count):
             self.update_path_info(row)  # Update data for each entry
 
     def source_add(self, want_folder):
@@ -293,6 +327,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             )
             db_item.delete_instance()
             self.sourceFilesWidget.removeRow(index.row())
+
+            logger.debug(f"Removed source in row {index.row()}")
 
     def save_exclude_patterns(self):
         profile = self.profile()
