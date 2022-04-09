@@ -51,7 +51,10 @@ class VortaSecretStorageKeyring(VortaKeyring):
             items = list(collection.search_items(attributes))
             logger.debug('Found %i passwords matching repo URL.', len(items))
             if len(items) > 0:
-                return items[0].get_secret().decode("utf-8")
+                item = items[0]
+                if item.is_locked():  # Some providers lock items until the user manually approves it
+                    item.unlock()
+                return item.get_secret().decode("utf-8")
         return None
 
     @property
