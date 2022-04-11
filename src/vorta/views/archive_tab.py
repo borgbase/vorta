@@ -2,7 +2,7 @@ import logging
 import os.path
 import sys
 from datetime import timedelta
-from typing import Dict
+from typing import Dict, Optional
 
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QMimeData, QPoint, Qt, pyqtSlot
@@ -46,7 +46,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
-        self.mount_points = {}
+        self.mount_points = {}  # mount points of archives
+        self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
@@ -86,7 +87,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         shortcut_copy.activated.connect(self.archive_copy)
 
         # connect archive actions
-        self.bMount.clicked.connect(self.bmount_clicked)
+        self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
@@ -98,6 +99,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bPrune.clicked.connect(self.prune_action)
         self.bCheck.clicked.connect(self.check_action)
         self.bDiff.clicked.connect(self.diff_action)
+        self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
 
         self.archiveTable.itemSelectionChanged.connect(self.on_selection_change)
 
@@ -124,7 +126,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
 
-        self.bmount_refresh()
+        self.bmountarchive_refresh()
+        self.bmountrepo_refresh()
 
     @pyqtSlot(QPoint)
     def archiveitem_contextmenu(self, pos: QPoint):
@@ -143,8 +146,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         menu.addAction(self.bRefreshArchive.icon(),
                        self.bRefreshArchive.text(),
                        self.refresh_archive_info)
-        menu.addAction(self.bMount.icon(), self.bMount.text(),
-                       self.bmount_clicked)
+        menu.addAction(self.bMountArchive.icon(), self.bMountArchive.text(),
+                       self.bmountarchive_clicked)
         menu.addAction(self.bExtract.icon(), self.bExtract.text(),
                        self.extract_action)
         menu.addAction(self.bRename.icon(), self.bRename.text(),
@@ -174,7 +177,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.repoactions_enabled = enabled
 
         for button in [self.bCheck, self.bList, self.bPrune,
-                       self.bDiff, self.fArchiveActions]:
+                       self.bDiff, self.fArchiveActions, self.bMountRepo]:
             button.setEnabled(enabled)
             button.repaint()
 
@@ -185,7 +188,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Populate archive list and prune settings from profile."""
         profile = self.profile()
         if profile.repo is not None:
-            self.mount_points = get_mount_points(profile.repo.url)
+            # get mount points
+            self.mount_points, repo_mount_points = get_mount_points(profile.repo.url)
+            if repo_mount_points:
+                self.repo_mount_point = repo_mount_points[0]
+
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
@@ -257,6 +264,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
                 widget.setToolTip(self.tooltip_dict.get(widget, ""))
+
+            # refresh bMount for the selected archive
+            self.bmountarchive_refresh()
         else:
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
@@ -403,9 +413,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 return archive_cell.text()
         return None
 
-    def bmount_clicked(self):
+    def bmountarchive_clicked(self):
         """
-        Handle `bMount` being clicked.
+        Handle `bMountArchive` being clicked.
 
         Mount or umount the current archive depending on its current state.
         """
@@ -416,13 +426,24 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return
 
         if archive_name in self.mount_points:
-            self.umount_action()
+            self.unmount_action(archive_name=archive_name)
+        else:
+            self.mount_action(archive_name=archive_name)
+
+    def bmountrepo_clicked(self):
+        """
+        Handle `bMountRepo` being clicked.
+
+        Mount or umount the repository depending on its current state.
+        """
+        if self.repo_mount_point:
+            self.unmount_action()
         else:
             self.mount_action()
 
-    def bmount_refresh(self):
+    def bmountarchive_refresh(self):
         """
-        Update tooltip and state of `bMount`.
+        Update label, tooltip and state of `bMount`.
 
         The new state depends on the mount status of the current archive.
         This also updates the icon of the button.
@@ -430,35 +451,65 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         archive_name = self.selected_archive_name()
 
         if archive_name in self.mount_points:
-            self.bMount.setText(self.tr("Unmount"))
-            self.bMount.setIcon(get_colored_icon('eject'))
+            self.bMountArchive.setText(self.tr("Unmount"))
+            self.bMountArchive.setIcon(get_colored_icon('eject'))
+            self.bMountArchive.setToolTip(
+                self.tr('Unmount the selected archive from the file system.'))
         else:
-            self.bMount.setText(self.tr("Mount…"))
-            self.bMount.setIcon(get_colored_icon('folder-open'))
+            self.bMountArchive.setText(self.tr("Mount…"))
+            self.bMountArchive.setIcon(get_colored_icon('folder-open'))
+            self.bMountRepo.setToolTip(
+                self.tr("Mount the selected archive " +
+                        "as a folder in the file system."))
 
-    def mount_action(self):
+    def bmountrepo_refresh(self):
+        """
+        Update label, tooltip and state of `bMount`.
+
+        The new state depends on the mount status of the current archive.
+        This also updates the icon of the button.
+        """
+        if self.repo_mount_point:
+            self.bMountRepo.setText(self.tr("Unmount"))
+            self.bMountRepo.setToolTip(
+                self.tr('Unmount the repository from the file system.'))
+            self.bMountRepo.setIcon(get_colored_icon('eject'))
+        else:
+            self.bMountRepo.setText(self.tr("Mount…"))
+            self.bMountRepo.setIcon(get_colored_icon('folder-open'))
+            self.bMountRepo.setToolTip(
+                self.tr("Mount the repository as a folder in the file system."))
+
+    def mount_action(self, archive_name=None):
+        """
+        Mount an archive or the whole repository.
+
+        Opens a file chooser to let the user choose a mount point and starts
+        the borg job for mounting afterwards.
+
+        Parameters
+        ----------
+        archive_name : str, optional
+            The archive to mount or None, by default None
+        """
         profile = self.profile()
         params = BorgMountJob.prepare(profile)
         if not params['ok']:
             self._set_status(params['message'])
             return
 
-        archive_name = self.selected_archive_name()
-
-        if not archive_name:
-            # Conditions aren't met (borg binary available, etc)
-            logger.debug('Archive name empty.')
-            return
-
-        params['cmd'][-1] += f'::{archive_name}'
-        params['current_archive'] = archive_name
+        if archive_name:
+            # mount archive
+            params['cmd'][-1] += f'::{archive_name}'
+            params['current_archive'] = archive_name
+        # else mount complete repo
 
         def receive():
             mount_point = dialog.selectedFiles()
             if mount_point:
                 params['cmd'].append(mount_point[0])
-                if params.get('current_archive', False):
-                    self.mount_points[params['current_archive']] = mount_point[0]
+                params['mount_point'] = mount_point[0]
+
                 if params['ok']:
                     self._toggle_all_buttons(False)
                     job = BorgMountJob(params['cmd'], params, self.profile().repo.id)
@@ -472,20 +523,46 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def mount_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Mounted successfully.'))
+
+            mount_point = result['params']['mount_point']
+
             if result['params'].get('current_archive'):
+                # archive was mounted
+                archive_name = result['params']['current_archive']
+                self.mount_points[archive_name] = mount_point
+
+                # update column in table
                 archive_name = result['params']['current_archive']
                 row = self.row_of_archive(archive_name)
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
 
-            # update button
-            self.bmount_refresh()
+                # update button
+                self.bmountarchive_refresh()
+            else:
+                # whole repo was mounted
+                self.repo_mount_point = mount_point
+                self.bmountrepo_refresh()
 
         self._toggle_all_buttons(True)
 
-    def umount_action(self):
-        archive_name = self.selected_archive_name()
-        mount_point = self.mount_points.get(archive_name)
+    def unmount_action(self, archive_name=None):
+        """
+        Unmount a (mounted) repository or archive.
+
+        If the target isn't mounted nothing happens.
+
+        Parameters
+        ----------
+        archive_name : str, optional
+            The archive to unmount, by default None
+        """
+        if archive_name:
+            # unmount a single archive
+            mount_point = self.mount_points.get(archive_name)
+        else:
+            # unmount the whole repository
+            mount_point = self.repo_mount_point
 
         if mount_point is not None:
             profile = self.profile()
@@ -494,10 +571,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status(params['message'])
                 return
 
-            params['current_archive'] = archive_name
+            if archive_name:
+                params['current_archive'] = archive_name
+            params['mount_point'] = mount_point
 
             if os.path.normpath(mount_point) in params['active_mount_points']:
                 params['cmd'].append(mount_point)
+
                 job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
                 job.updated.connect(self.mountErrors.setText)
                 job.result.connect(self.umount_result)
@@ -508,20 +588,30 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
-        archive_name = result['params']['current_archive']
+        archive_name = result['params'].get('current_archive')
+        mount_point = result['params']['mount_point']
+
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
-            del self.mount_points[archive_name]
-            row = self.row_of_archive(archive_name)
-            item = QTableWidgetItem('')
-            self.archiveTable.setItem(row, 3, item)
 
-            # update button
-            self.bmount_refresh()
+            if archive_name:
+                # unmount single archive
+                del self.mount_points[archive_name]
+                row = self.row_of_archive(archive_name)
+                item = QTableWidgetItem('')
+                self.archiveTable.setItem(row, 3, item)
+
+                # update button
+                self.bmountarchive_refresh()
+            else:
+                # unmount repo
+                self.repo_mount_point = None
+
+                self.bmountrepo_refresh()
         else:
             self._set_status(
                 self.tr('Unmounting failed. Make sure no programs are using {}')
-                .format(self.mount_points.get(archive_name)))
+                .format(mount_point))
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
