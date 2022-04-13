@@ -53,7 +53,6 @@ flatpak-install: translations-to-qm
 	pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} --no-build-isolation .
 	install -D ${APPSTREAM_METADATA} ${FLATPAK_DEST}/share/metainfo/com.borgbase.Vorta.appdata.xml
 	install -D src/vorta/assets/icons/icon.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/com.borgbase.Vorta.svg
-	install -D package/icon-symbolic.svg ${FLATPAK_DEST}/share/icons/hicolor/symbolic/apps/com.borgbase.Vorta-symbolic.svg
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop ${FLATPAK_DEST}/share/applications/com.borgbase.Vorta.desktop
 
 help:
