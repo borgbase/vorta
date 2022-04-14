@@ -1,9 +1,11 @@
 import logging
+import os
 import sys
 
 from PyQt5 import QtCore, QtDBus
 
 from vorta.store.models import SettingsModel
+from vorta.utils import get_asset
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +82,8 @@ class DBusNotifications(VortaNotifications):
         v = QtCore.QVariant(12321)  # random int to identify all notifications
         if v.convert(QtCore.QVariant.UInt):
             id_replace = v
-        icon = "com.borgbase.Vorta-symbolic"
+        icon = get_asset(os.path.join("icons", "logo-monochrome.svg"))
+        logger.debug("Icon: " + icon)
         title = header
         text = msg
         actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
