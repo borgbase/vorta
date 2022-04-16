@@ -97,8 +97,8 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'type': 'checkbox',
                 'label': trans_late('settings',
                                     "If the system tray isn't available, "
-                                    "ask whether to continue in the background"
-                                    " on exit.")
+                                    "ask whether to continue in the background "
+                                    "on exit")
             },
             {
                 'key': 'disable_background_state', 'value': False, 'type': 'internal',
