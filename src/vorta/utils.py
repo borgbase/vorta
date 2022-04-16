@@ -345,6 +345,7 @@ def format_archive_name(profile, archive_name_tpl):
 
 def get_mount_points(repo_url):
     mount_points = {}
+    repo_mounts = []
     for proc in psutil.process_iter():
         try:
             name = proc.name()
@@ -353,22 +354,30 @@ def get_mount_points(repo_url):
                     continue
 
                 for idx, parameter in enumerate(proc.cmdline()):
-                    if parameter.startswith(repo_url + '::'):
-                        archive_name = parameter[len(repo_url) + 2:]
+                    if parameter.startswith(repo_url):
+                        # mount from this repo
 
                         # The borg mount command specifies that the mount_point
                         # parameter comes after the archive name
                         if len(proc.cmdline()) > idx + 1:
                             mount_point = proc.cmdline()[idx + 1]
-                            mount_points[archive_name] = mount_point
-                        break
+
+                            # archive or full mount?
+                            if parameter[len(repo_url):].startswith('::'):
+                                archive_name = parameter[len(repo_url) + 2:]
+                                mount_points[archive_name] = mount_point
+                                break
+                            else:
+                                # repo mount point
+                                repo_mounts.append(mount_point)
+
         except (psutil.ZombieProcess, psutil.AccessDenied, psutil.NoSuchProcess):
             # Getting process details may fail (e.g. zombie process on macOS)
             # or because the process is owned by another user.
             # Also see https://github.com/giampaolo/psutil/issues/783
             continue
 
-    return mount_points
+    return mount_points, repo_mounts
 
 
 def is_system_tray_available():
