@@ -29,7 +29,9 @@ class VortaKeyring:
 
         for keyring, _ in sorted(available_keyrings, key=lambda k: k[1], reverse=True):
             try:
-                return keyring()
+                instance = keyring()
+                logger.debug(f"Using {keyring.__name__}")
+                return instance
             except Exception as e:
                 logger.debug(e)
                 continue

@@ -1,10 +1,12 @@
 import asyncio
+import logging
 import os
 
 import secretstorage
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.log import logger
+
+logger = logging.getLogger(__name__)
 
 LABEL_TEMPLATE = "Vorta Backup Repo {repo_url}"
 
@@ -39,6 +41,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
                                         attributes,
                                         password,
                                         replace=True)
+            logger.debug(f"Saved password for repo {repo_url}")
 
     def get_password(self, service, repo_url):
         """
@@ -53,6 +56,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
                 item = items[0]
                 if item.is_locked() and item.unlock():
                     return None
+                logger.debug(f"Retrieved password for repo {repo_url}")
                 return item.get_secret().decode("utf-8")
         return None
 
