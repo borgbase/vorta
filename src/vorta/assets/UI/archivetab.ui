@@ -104,6 +104,22 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QToolButton" name="bMountRepo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string notr="true">bMountRepo</string>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item row="0" column="0">
@@ -196,7 +212,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QToolButton" name="bMount">
+               <widget class="QToolButton" name="bMountArchive">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -204,7 +220,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">bMount</string>
+                 <string notr="true">bMountArchive</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>

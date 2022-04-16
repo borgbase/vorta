@@ -99,7 +99,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
 
 
-def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
+def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', '/tmp')]
@@ -122,10 +122,16 @@ def test_archive_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choos
         vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
     )
 
-    tab.mount_action()
+    tab.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.umount_action()
+    tab.bmountarchive_clicked()
+    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
+
+    tab.bmountrepo_clicked()
+    qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
+
+    tab.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
