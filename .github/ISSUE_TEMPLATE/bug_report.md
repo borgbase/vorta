@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug Report
+about: Report a bug or a similiar issue - the classic way
 title: ''
 labels: ''
 assignees: ''
@@ -15,22 +15,39 @@ If you want to suggest a feature or have any other question, please use our
 [Discussions](https://github.com/borgbase/vorta/discussions) instead.
 -->
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+#### Description
 
-**To Reproduce**
+<!-- Description
+Please decribe your issue and its context in a clear and concise way.
+Please try to reproduce the issue and provide the steps to reproduce it.
+-->
+
+I _was_/_wasn't_ able to reproduce the issue.
+
+<!-- E.g.
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
+-->
 
-**Environment (please complete the following information):**
+#### Environment
+
 - OS:
 - Vorta version:
 - Installed from:
+- Borg version:
 
-Vorta and Borg versions can be found in Main Window > Misc Tab.
+<!-- Vorta and Borg versions can be found in Main Window > Misc Tab. -->
 
-**Additional context**
-If appropriate include logs. Can be found in Main Window > Misc Tab > Log.
+#### Logs
+
+<!-- Logs are very important for most issues. Please paste them down below.
+They can be found in Main Window > Misc Tab > Log.
+Logs are more helpful if you include (exactly) the logs that were produced during the steps you described above.
+-->
+
+```
+*paste logs here*
+```
