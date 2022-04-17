@@ -14,11 +14,16 @@ class VortaSecretStorageKeyring(VortaKeyring):
 
     def __init__(self):
         """
-        Test whether DBus and Gnome-Keyring are available.
+        Test whether DBus and a SecretStorage provider are available.
         """
-        self.connection = secretstorage.dbus_init()
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        self.collection = secretstorage.get_default_collection(self.connection)
+        try:
+            self.connection = secretstorage.dbus_init()
+        except secretstorage.exceptions.SecretServiceNotAvailableException as e:
+            logger.debug("SecretStorage provider or DBus daemon is not available.")
+            raise e
+        else:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            self.collection = secretstorage.get_default_collection(self.connection)
 
     def set_password(self, service, repo_url, password):
         """
@@ -54,13 +59,10 @@ class VortaSecretStorageKeyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        try:
-            if self.collection.is_locked():  # Prompt for unlock
-                self.collection.unlock()
-            return not self.collection.is_locked()  # In case of denial
-        except secretstorage.exceptions.SecretServiceNotAvailableException:
-            logger.debug('SecretStorage is not available.')
+        # unlock() will return True if the unlock prompt is dismissed
+        if self.collection.is_locked() and self.collection.unlock():
             return False
+        return True
 
     @classmethod
     def get_priority(cls):
