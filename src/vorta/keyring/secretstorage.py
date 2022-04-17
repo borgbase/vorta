@@ -21,9 +21,8 @@ class VortaSecretStorageKeyring(VortaKeyring):
         except secretstorage.exceptions.SecretServiceNotAvailableException as e:
             logger.debug("SecretStorage provider or DBus daemon is not available.")
             raise e
-        else:
-            asyncio.set_event_loop(asyncio.new_event_loop())
-            self.collection = secretstorage.get_default_collection(self.connection)
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        self.collection = secretstorage.get_default_collection(self.connection)
 
     def set_password(self, service, repo_url, password):
         """
@@ -60,9 +59,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
     @property
     def is_unlocked(self):
         # unlock() will return True if the unlock prompt is dismissed
-        if self.collection.is_locked() and self.collection.unlock():
-            return False
-        return True
+        return not (self.collection.is_locked() and self.collection.unlock())
 
     @classmethod
     def get_priority(cls):
