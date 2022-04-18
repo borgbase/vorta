@@ -31,6 +31,8 @@ from vorta.views.extract_dialog import ExtractDialog
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
+from .diff_result import DiffTree, ParseThread
+
 uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
@@ -865,15 +867,28 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 name=result['params']['archive_name_newer'])
             archive_older = ArchiveModel.get(
                 name=result['params']['archive_name_older'])
-            window = DiffResultDialog(result['data'],
-                                      archive_newer, archive_older,
-                                      result['params']['json_lines'])
-            self._toggle_all_buttons(True)
-            window.setParent(self)
-            window.setWindowFlags(Qt.WindowType.Window)
-            window.setWindowModality(Qt.WindowModality.NonModal)
-            self._resultwindow = window  # for testing
-            window.show()
+            self._set_status(self.tr("Processing diff results."))
+
+            model = DiffTree()
+
+            self._t = ParseThread(result['data'], result['params']['json_lines'],
+                                  model)
+            self._t.finished.connect(lambda: self.show_diff_result(
+                archive_newer, archive_older, model))
+            self._t.start()
+
+    def show_diff_result(self, archive_newer, archive_older, model):
+        self._t = None
+
+        # show dialog
+        self._toggle_all_buttons(True)
+        self._set_status('')
+        window = DiffResultDialog(archive_newer, archive_older, model)
+        window.setParent(self)
+        window.setWindowFlags(Qt.WindowType.Window)
+        window.setWindowModality(Qt.WindowModality.NonModal)
+        self._resultwindow = window  # for testing
+        window.show()
 
     def rename_action(self):
         profile = self.profile()
