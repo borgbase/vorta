@@ -7,7 +7,7 @@ from pathlib import PurePath
 from typing import List, Optional, Tuple
 
 from PyQt5 import uic
-from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QUrl
+from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QShortcut,
                              QTreeView)
@@ -24,32 +24,52 @@ DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class DiffResultDialog(DiffResultBase, DiffResultUI):
-    """Display the results of `borg diff`."""
+class ParseThread(QThread):
+    """A thread parsing diff results."""
 
-    def __init__(self, fs_data, archive_newer, archive_older, json_lines):
+    def __init__(self,
+                 fs_data: str,
+                 json_lines: bool,
+                 model: 'DiffTree',
+                 parent=None):
         """Init."""
-        super().__init__()
-        self.setupUi(self)
+        super().__init__(parent)
+        self.model = model
+        self.fs_data = fs_data
+        self.json_lines = json_lines
 
-        self.model = DiffTree(self)
-
+    def run(self) -> None:
+        """Do the work"""
         # Older version do not support json output
-        if json_lines:
+        if self.json_lines:
             # If fs_data is already a dict, then there was just a single json-line
             # and the default handler already parsed into json dict, otherwise
             # fs_data is a str, and needs to be split and parsed into json dicts
-            if isinstance(fs_data, dict):
-                lines = [fs_data]
+            if isinstance(self.fs_data, dict):
+                lines = [self.fs_data]
             else:
                 lines = [
-                    json.loads(line) for line in fs_data.split('\n') if line
+                    json.loads(line) for line in self.fs_data.split('\n')
+                    if line
                 ]
 
             parse_diff_json(lines, self.model)
         else:
-            lines = [line for line in fs_data.split('\n') if line]
+            lines = [line for line in self.fs_data.split('\n') if line]
             parse_diff_lines(lines, self.model)
+
+
+class DiffResultDialog(DiffResultBase, DiffResultUI):
+    """Display the results of `borg diff`."""
+
+    def __init__(self, archive_newer: str, archive_older: str,
+                 model: 'DiffTree'):
+        """Init."""
+        super().__init__()
+        self.setupUi(self)
+
+        self.model = model
+        self.model.setParent(self)
 
         self.treeView: QTreeView
         self.treeView.setUniformRowHeights(
