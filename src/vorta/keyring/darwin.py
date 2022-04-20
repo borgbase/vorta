@@ -7,8 +7,12 @@ objc modules.
 
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
+import logging
 import sys
+
 from .abc import VortaKeyring
+
+logger = logging.getLogger(__name__)
 
 
 class VortaDarwinKeyring(VortaKeyring):
@@ -50,12 +54,14 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        SecKeychainAddGenericPassword(
-            self.login_keychain,
-            len(service.encode()), service.encode(),
-            len(repo_url.encode()), repo_url.encode(),
-            len(password.encode()), password.encode(),
-            None)
+        SecKeychainAddGenericPassword(self.login_keychain,
+                                      len(service.encode()), service.encode(),
+                                      len(repo_url.encode()),
+                                      repo_url.encode(),
+                                      len(password.encode()),
+                                      password.encode(), None)
+
+        logger.debug(f"Saved password for repo {repo_url}")
 
     def get_password(self, service, repo_url):
         if not self.login_keychain:
@@ -67,6 +73,7 @@ class VortaDarwinKeyring(VortaKeyring):
         if (result == 0) and (password_length != 0):
             # We apparently were able to find a password
             password = _resolve_password(password_length, password_buffer)
+        logger.debug(f"Retrieved password for repo {repo_url}")
         return password
 
     @property

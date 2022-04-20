@@ -1,6 +1,12 @@
+import logging
+
 import peewee
-from .abc import VortaKeyring
+
 from vorta.store.models import SettingsModel
+
+from .abc import VortaKeyring
+
+logger = logging.getLogger(__name__)
 
 
 class VortaDBKeyring(VortaKeyring):
@@ -19,11 +25,15 @@ class VortaDBKeyring(VortaKeyring):
         keyring_entry.password = password
         keyring_entry.save()
 
+        logger.debug(f"Saved password for repo {repo_url}")
+
     def get_password(self, service, repo_url):
         from vorta.store.models import RepoPassword
         try:
             keyring_entry = RepoPassword.get(url=repo_url)
-            return keyring_entry.password
+            password = keyring_entry.password
+            logger.debug(f"Retrieved password for repo {repo_url}")
+            return password
         except peewee.DoesNotExist:
             return None
 
