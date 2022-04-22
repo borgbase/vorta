@@ -14,10 +14,6 @@ The following authors made major code contributions to Vorta source code:
 - Flatpak packaging for Linux
 - Numerous incremental features
 
-### [Bastien](https://github.com/bastiencyr)
-- Queuing system for Borg jobs
-- Numerous incremental fixes
-
 ### Others
 For other contributors, see [here](https://github.com/borgbase/vorta/graphs/contributors).
 
