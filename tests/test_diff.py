@@ -1,7 +1,9 @@
 import pytest
+from PyQt5.QtCore import QItemSelectionModel
+
 import vorta.borg
-import vorta.views.archive_tab
 import vorta.utils
+import vorta.views.archive_tab
 
 
 @pytest.mark.parametrize('json_mock_file,folder_root', [
@@ -18,12 +20,17 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    tab.diff_action()
-    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
+    model = tab.archiveTable.model()
 
-    tab._window.archiveTable.selectRow(0)
-    tab._window.archiveTable.selectRow(1)
-    tab._window.diff_action()
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+
+    selection_model.select(model.index(0, 0), flags)
+    selection_model.select(model.index(1, 0), flags)
+
+    tab.diff_action()
+
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
 
     assert tab._resultwindow.treeView.model().rootItem.childItems[0].data(0) == folder_root
