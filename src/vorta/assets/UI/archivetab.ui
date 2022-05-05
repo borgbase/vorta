@@ -312,7 +312,7 @@
               <string>Compare two archives</string>
              </property>
              <property name="text">
-              <string>Diff…</string>
+              <string>Diff</string>
              </property>
              <property name="toolButtonStyle">
               <enum>Qt::ToolButtonTextBesideIcon</enum>
