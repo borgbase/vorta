@@ -7,8 +7,8 @@ from PyQt5.QtCore import Qt, QVariant
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QHeaderView
 
-from vorta.utils import (get_asset, get_dict_from_list, nested_dict, uses_dark_mode)
-
+from vorta.utils import (get_asset, get_dict_from_list, nested_dict,
+                         uses_dark_mode)
 from vorta.views.partials.tree_view import TreeModel
 
 uifile = get_asset('UI/diffresult.ui')
@@ -48,7 +48,17 @@ class DiffResult(DiffResultBase, DiffResultUI):
         self.okButton.clicked.connect(self.accept)
 
 
+SPECIAL_FILE_TYPES = ['directory', 'link', 'fifo', 'blkdev', 'chrdev']
+
+
 def parse_diff_json_lines(diffs):
+    # helpers
+    valid_change_types = ['added', 'removed']
+    for file_type in SPECIAL_FILE_TYPES:
+        valid_change_types.append('added ' + file_type)
+        valid_change_types.append('removed ' + file_type)
+
+    # parsing
     files_with_attributes = []
     nested_file_list = nested_dict()
 
@@ -88,8 +98,8 @@ def parse_diff_json_lines(diffs):
                     #                                    pretty_bytes(-change['removed'], precision=1, sign=True))
                     change_type = 'modified'
                     change_type_priority = 3
-            elif change['type'] in ['added', 'removed', 'added link', 'removed link', 'changed link',
-                                    'added directory', 'removed directory']:
+            elif (change['type'] in valid_change_types
+                  or change['type'] == 'changed link'):
                 if change['type'] in ['added directory', 'removed directory']:
                     file_type = 'd'
                 size = change.get('size', 0)
@@ -125,7 +135,7 @@ def parse_diff_lines(diff_lines):
         file_type = '-'
         if line_split[0] in {'added', 'removed', 'changed'}:
             change_type = line_split[0]
-            if line_split[1] in ['directory', 'link']:
+            if line_split[1] in SPECIAL_FILE_TYPES:
                 if line_split[1] in ['directory']:
                     file_type = 'd'
                 size = 0
