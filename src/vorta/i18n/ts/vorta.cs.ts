@@ -1,23 +1,23 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="cs">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Zadejte název pro profil.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
         <source>A profile with this name already exists.</source>
-        <translation>Takto nazvaný profil už v systému existuje.</translation>
+        <translation>Takto nazvaný profil už v aplikaci existuje.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="24"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
         <source>Cancel</source>
         <translation>Storno</translation>
     </message>
@@ -25,301 +25,384 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/repo_add_dialog.py" line="94"/>
         <source>Repository Path:</source>
         <translation>Popis umístění repozitáře:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/repo_add_dialog.py" line="97"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Zvolte umístění Borg repozitáře</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="112"/>
+        <location filename="../../views/repo_add_dialog.py" line="126"/>
         <source>Repository URL:</source>
         <translation>URL adresa repozitáře:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="138"/>
+        <location filename="../../views/repo_add_dialog.py" line="152"/>
         <source>Unable to add your repository.</source>
         <translation>Vámi zadaný repozitář se nedaří přidat.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="165"/>
+        <location filename="../../views/repo_add_dialog.py" line="179"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Zadejte platnou URL adresu repozitáře nebo vyberte popis umístění v tomto stroji.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="169"/>
+        <location filename="../../views/repo_add_dialog.py" line="183"/>
         <source>This repo has already been added.</source>
         <translation>Tento repozitář už byl přidán.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="105"/>
+        <location filename="../../views/repo_add_dialog.py" line="119"/>
         <source>Show my passwords</source>
         <translation>Zobrazit moje hesla</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="90"/>
+        <location filename="../../views/repo_add_dialog.py" line="104"/>
         <source>Autofilled password from password manager.</source>
         <translation>Automaticky vyplněné heslo ze správce hesel.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/repo_add_dialog.py" line="116"/>
         <source>Hide my passwords</source>
-        <translation>Skrýt má hesla</translation>
+        <translation>Skrýt moje hesla</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="63"/>
+        <source>Add</source>
+        <translation>Přidat</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
+        <translation>Repokey-Blake2 (doporučeno, klíč uložen v repozitáři)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="157"/>
+        <source>Repokey</source>
+        <translation>Klíč k repozitáři</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="158"/>
+        <source>Keyfile-Blake2 (Key stored in home directory)</source>
+        <translation>Keyfile-Blake2 (klíč uložen v domovské složce)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="159"/>
+        <source>Keyfile</source>
+        <translation>Soubor s klíčem</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="160"/>
+        <source>None (not recommended)</source>
+        <translation>Žádný (nedoporučeno)</translation>
     </message>
 </context>
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="60"/>
+        <location filename="../../assets/UI/repoadd.ui" line="96"/>
         <source>Initialize New Backup Repository</source>
         <translation>Inicializovat nový repozitář pro zálohy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="67"/>
+        <location filename="../../assets/UI/repoadd.ui" line="103"/>
         <source>Repository URL:</source>
         <translation>URL adresa repozitáře:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="82"/>
+        <location filename="../../assets/UI/repoadd.ui" line="118"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="89"/>
-        <source>Choose a local path as repository.</source>
-        <translation>Vybrat jako repozitář umístění nacházející se na tomto stroji.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repoadd.ui" line="103"/>
+        <location filename="../../assets/UI/repoadd.ui" line="142"/>
         <source>...</source>
-        <translation>…</translation>
+        <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="201"/>
+        <location filename="../../assets/UI/repoadd.ui" line="240"/>
         <source>Encryption:</source>
         <translation>Šifrování:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="179"/>
+        <location filename="../../assets/UI/repoadd.ui" line="218"/>
         <source>SSH Key:</source>
         <translation>SSH klíč:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="193"/>
+        <location filename="../../assets/UI/repoadd.ui" line="232"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Zvolit SSH klíč automaticky (výchozí)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="247"/>
-        <source>Add</source>
-        <translation>Přidat</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repoadd.ui" line="254"/>
-        <source>Cancel</source>
-        <translation>Storno</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repoadd.ui" line="33"/>
+        <location filename="../../assets/UI/repoadd.ui" line="69"/>
         <source>General</source>
         <translation>Obecné</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="158"/>
+        <location filename="../../assets/UI/repoadd.ui" line="197"/>
         <source>Advanced</source>
         <translation>Pokročilé</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="218"/>
+        <location filename="../../assets/UI/repoadd.ui" line="257"/>
         <source>Extra Borg Arguments:</source>
-        <translation>Další argumenty pro borg:</translation>
+        <translation>Další argumenty pro Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="116"/>
+        <location filename="../../assets/UI/repoadd.ui" line="155"/>
         <source>Borg passphrase:</source>
-        <translation>Heslová fráze pro borg:</translation>
+        <translation>Heslová fráze pro Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="143"/>
+        <location filename="../../assets/UI/repoadd.ui" line="182"/>
         <source>Confirm passphrase:</source>
-        <translation>Potvrďte zadání heslové fráze:</translation>
+        <translation>Zopakujte zadání heslové fráze:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="150"/>
+        <location filename="../../assets/UI/repoadd.ui" line="189"/>
         <source>TextLabel</source>
         <translation>Textový štítek</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repoadd.ui" line="125"/>
+        <source>Choose a local folder</source>
+        <translation>Zvolte složku, nacházející se na tomto stroji</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repoadd.ui" line="139"/>
+        <source>Choose a remote repository</source>
+        <translation>Zvolte složku, nacházející se na vzdáleném umístění</translation>
     </message>
 </context>
 <context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="144"/>
+        <location filename="../../views/archive_tab.py" line="228"/>
         <source>Archives for %s</source>
         <translation>Archivy pro %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="177"/>
+        <location filename="../../views/archive_tab.py" line="263"/>
         <source>Archives</source>
         <translation>Archivy</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="194"/>
+        <location filename="../../views/archive_tab.py" line="365"/>
         <source>Preview: %s</source>
         <translation>Náhled: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="198"/>
+        <location filename="../../views/archive_tab.py" line="369"/>
         <source>Error in archive name template.</source>
         <translation>Chyba v šabloně názvu archivu.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="242"/>
+        <location filename="../../views/archive_tab.py" line="427"/>
         <source>Pruning finished.</source>
         <translation>Prořezání starších záloh dokončeno.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="261"/>
+        <location filename="../../views/archive_tab.py" line="446"/>
         <source>Refreshed archives.</source>
-        <translation>Znovunačtené archivy.</translation>
+        <translation>Archivy znovu načteny.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="315"/>
+        <location filename="../../views/archive_tab.py" line="578"/>
         <source>Choose Mount Point</source>
         <translation>Zvolte přípojný bod</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="321"/>
+        <location filename="../../views/archive_tab.py" line="583"/>
         <source>Mounted successfully.</source>
         <translation>Úspěšně připojeno (mount).</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="348"/>
+        <location filename="../../views/archive_tab.py" line="644"/>
         <source>Mount point not active.</source>
         <translation>Přípojný bod není aktivní.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="355"/>
+        <location filename="../../views/archive_tab.py" line="653"/>
         <source>Un-mounted successfully.</source>
         <translation>Úspěšně odpojeno (unmount).</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="393"/>
+        <location filename="../../views/archive_tab.py" line="703"/>
         <source>Select an archive to restore first.</source>
         <translation>Nejprve je třeba vybrat archiv, ze kterého obnovit.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="413"/>
+        <location filename="../../views/archive_tab.py" line="723"/>
         <source>Choose Extraction Point</source>
         <translation>Zvolte bod, do kterého rozbalit</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="478"/>
+        <location filename="../../views/archive_tab.py" line="788"/>
         <source>Archive deleted.</source>
         <translation>Archiv smazán.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="463"/>
+        <location filename="../../views/archive_tab.py" line="773"/>
         <source>Confirm deletion</source>
         <translation>Potvrďte smazání</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="563"/>
+        <location filename="../../views/archive_tab.py" line="888"/>
         <source>No archive selected</source>
         <translation>Nevybrán žádný archiv</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="463"/>
+        <location filename="../../views/archive_tab.py" line="773"/>
         <source>Are you sure you want to delete the archive?</source>
         <translation>Opravdu chcete tento archiv smazat?</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="449"/>
+        <location filename="../../views/archive_tab.py" line="759"/>
         <source>Yes</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="450"/>
+        <location filename="../../views/archive_tab.py" line="760"/>
         <source>Cancel</source>
         <translation>Storno</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="98"/>
+        <location filename="../../views/archive_tab.py" line="193"/>
         <source>Action cancelled.</source>
         <translation>Akce zrušena.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="361"/>
+        <location filename="../../views/archive_tab.py" line="670"/>
         <source>Unmounting failed. Make sure no programs are using {}</source>
         <translation>Odpojení se nezdařilo. Ověřte, že {} není využíváno jinými programy</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="117"/>
-        <source>Select an archive first.</source>
-        <translation>Nejprve vyberte archiv.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="537"/>
+        <location filename="../../views/archive_tab.py" line="862"/>
         <source>Change name</source>
         <translation>Změnit název</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="537"/>
+        <location filename="../../views/archive_tab.py" line="862"/>
         <source>New archive name:</source>
         <translation>Nový název archivu:</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="547"/>
+        <location filename="../../views/archive_tab.py" line="872"/>
         <source>Archive name cannot be blank.</source>
         <translation>Název archivu nemůže zůstat nevyplněný.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="552"/>
+        <location filename="../../views/archive_tab.py" line="877"/>
         <source>An archive with this name already exists.</source>
         <translation>Takto nazvaný archiv už existuje.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="567"/>
+        <location filename="../../views/archive_tab.py" line="892"/>
         <source>Archive renamed.</source>
         <translation>Archiv přejmenován.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="278"/>
+        <location filename="../../views/archive_tab.py" line="463"/>
         <source>Refreshed archive.</source>
         <translation>Archiv znovu načten.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="152"/>
+        <source>Copy</source>
+        <translation>Zkopírovat</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="338"/>
+        <source>(Select exactly one archive)</source>
+        <translation>(Vyberte právě jeden archiv)</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="531"/>
+        <source>Unmount</source>
+        <translation>Odpojit (unmount)</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="536"/>
+        <source>Mount…</source>
+        <translation>Připojit (mount)…</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="316"/>
+        <source>(Select two archives)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="514"/>
+        <source>Unmount the selected archive from the file system.</source>
+        <translation>Odpojit označený archiv ze souborového systému.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="519"/>
+        <source>Mount the selected archive as a folder in the file system.</source>
+        <translation>Připojit označený archiv jako složku v souborovém systému.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="532"/>
+        <source>Unmount the repository from the file system.</source>
+        <translation>Odpojit repozitář ze souborového systému.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="538"/>
+        <source>Mount the repository as a folder in the file system.</source>
+        <translation>Připojit repozitář jako složku v souborovém systému.</translation>
     </message>
 </context>
 <context>
     <name>BorgBreakJob</name>
     <message>
-        <location filename="../../borg/break_lock.py" line="8"/>
-        <source>Breaking repository lock...</source>
-        <translation>Odstraňování zámku repozitáře</translation>
-    </message>
-    <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
         <translation>Zámek repozitáře odstraněn. Zopakujte svou poslední akci.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/break_lock.py" line="8"/>
+        <source>Breaking repository lock…</source>
+        <translation>Odstraňování zámku repozitáře…</translation>
     </message>
 </context>
 <context>
     <name>BorgCheckJob</name>
     <message>
-        <location filename="../../borg/check.py" line="8"/>
-        <source>Starting consistency check...</source>
-        <translation>Spouštění kontroly celistvosti…</translation>
-    </message>
-    <message>
-        <location filename="../../borg/check.py" line="17"/>
+        <location filename="../../borg/check.py" line="27"/>
         <source>Check completed.</source>
         <translation>Kontrola dokončena.</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="14"/>
+        <location filename="../../borg/check.py" line="24"/>
         <source>Repo check failed. See logs for details.</source>
         <translation>Kontrola repozitáře se nezdařila. Podrobnosti naleznete v záznamech událostí.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/check.py" line="10"/>
+        <source>Starting consistency check…</source>
+        <translation>Spouštění kontroly celistvosti…</translation>
+    </message>
+</context>
+<context>
+    <name>BorgCompactJob</name>
+    <message>
+        <location filename="../../borg/compact.py" line="11"/>
+        <source>Starting repository compaction...</source>
+        <translation>Spouštění uvolňování prostoru po už smazaných archivech v repozitáři…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/compact.py" line="25"/>
+        <source>Errors during compaction. See logs for details.</source>
+        <translation>Chyba při uvolňování prostoru po už smazaných archivech. Podrobnosti viz záznamy událostí.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/compact.py" line="27"/>
+        <source>Compaction completed.</source>
+        <translation>Uvolňování prostoru pro už smazaných archivech dokončeno.</translation>
     </message>
 </context>
 <context>
@@ -343,60 +426,60 @@
 <context>
     <name>BorgDeleteJob</name>
     <message>
-        <location filename="../../borg/delete.py" line="8"/>
-        <source>Deleting archive...</source>
-        <translation>Mazání archivu…</translation>
-    </message>
-    <message>
-        <location filename="../../borg/delete.py" line="13"/>
+        <location filename="../../borg/delete.py" line="23"/>
         <source>Archive deleted.</source>
         <translation>Archiv smazán.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/delete.py" line="10"/>
+        <source>Deleting archive…</source>
+        <translation>Mazání archivu…</translation>
     </message>
 </context>
 <context>
     <name>BorgDiffJob</name>
     <message>
-        <location filename="../../borg/diff.py" line="9"/>
-        <source>Requesting differences between archives...</source>
-        <translation>Žádá se o rozdíly mezi archivy…</translation>
-    </message>
-    <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
         <translation>Obdrženy rozdíly mezi archivy.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/diff.py" line="9"/>
+        <source>Requesting differences between archives…</source>
+        <translation>Žádá se o rozdíly mezi archivy…</translation>
     </message>
 </context>
 <context>
     <name>BorgExtractJob</name>
     <message>
-        <location filename="../../borg/extract.py" line="8"/>
-        <source>Downloading files from archive...</source>
-        <translation>Stahování souborů z archivu…</translation>
-    </message>
-    <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
         <translation>Soubory obnoveny z archivu.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/extract.py" line="8"/>
+        <source>Downloading files from archive…</source>
+        <translation>Stahování souborů z archivu…</translation>
     </message>
 </context>
 <context>
     <name>BorgInfoArchiveJob</name>
     <message>
-        <location filename="../../borg/info_archive.py" line="9"/>
-        <source>Refreshing archive...</source>
-        <translation>Znovunačítání archivu</translation>
-    </message>
-    <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
         <translation>Znovunačtení archivu dokončeno.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/info_archive.py" line="9"/>
+        <source>Refreshing archive…</source>
+        <translation>Znovunačítání archivu…</translation>
     </message>
 </context>
 <context>
     <name>BorgInfoRepoJob</name>
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
-        <source>Validating existing repo...</source>
+        <source>Validating existing repo…</source>
         <translation>Ověřování existujícího repozitáře…</translation>
     </message>
 </context>
@@ -404,7 +487,7 @@
     <name>BorgInitJob</name>
     <message>
         <location filename="../../borg/init.py" line="8"/>
-        <source>Setting up new repo...</source>
+        <source>Setting up new repo…</source>
         <translation>Nastavování nového repozitáře…</translation>
     </message>
 </context>
@@ -431,7 +514,7 @@
         <translation>Komprimováno</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="299"/>
+        <location filename="../../borg/borg_job.py" line="306"/>
         <source>Task started</source>
         <translation>Úloha spuštěna</translation>
     </message>
@@ -439,65 +522,60 @@
 <context>
     <name>BorgListArchiveJob</name>
     <message>
-        <location filename="../../borg/list_archive.py" line="8"/>
-        <source>Getting archive content...</source>
-        <translation>Získávání obsahu archivu…</translation>
-    </message>
-    <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
         <translation>Obsah archivu získán.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_archive.py" line="8"/>
+        <source>Getting archive content…</source>
+        <translation>Získávání obsahu archivu…</translation>
     </message>
 </context>
 <context>
     <name>BorgListRepoJob</name>
     <message>
-        <location filename="../../borg/list_repo.py" line="10"/>
-        <source>Refreshing archives...</source>
-        <translation>Znovunačítání archivů…</translation>
-    </message>
-    <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
         <translation>Znovunačtení archivů dokončeno.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_repo.py" line="10"/>
+        <source>Refreshing archives…</source>
+        <translation>Znovunačítání archivů…</translation>
     </message>
 </context>
 <context>
     <name>BorgMountJob</name>
     <message>
         <location filename="../../borg/mount.py" line="9"/>
-        <source>Mounting archive into folder...</source>
+        <source>Mounting archive into folder…</source>
         <translation>Připojování (mount) archivu do složky…</translation>
     </message>
 </context>
 <context>
     <name>BorgPruneJob</name>
     <message>
-        <location filename="../../borg/prune.py" line="9"/>
-        <source>Pruning old archives...</source>
-        <translation>Prořezávání starších archivů…</translation>
-    </message>
-    <message>
-        <location filename="../../borg/prune.py" line="14"/>
+        <location filename="../../borg/prune.py" line="24"/>
         <source>Pruning done.</source>
         <translation>Prořezávání dokončeno.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/prune.py" line="11"/>
+        <source>Pruning old archives…</source>
+        <translation>Prořezávání starších archivů…</translation>
     </message>
 </context>
 <context>
     <name>BorgUmountJob</name>
     <message>
         <location filename="../../borg/umount.py" line="10"/>
-        <source>Unmounting archive...</source>
+        <source>Unmounting archive…</source>
         <translation>Odpojování (unmount) archivu…</translation>
     </message>
 </context>
 <context>
     <name>Dialog</name>
-    <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="25"/>
         <source>Archive:</source>
@@ -506,7 +584,7 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation>nyx2.local-2018-11-16T09:49:58 z 16. listopadu 2018</translation>
+        <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="63"/>
@@ -514,14 +592,9 @@
         <translation>Pozn.: Pokud vyberete složku na vrcholu stromu, pak i když zrušíte výběr jejích podsložek, budou tyto i tak obnoveny.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="88"/>
+        <location filename="../../assets/UI/diffdialog.ui" line="106"/>
         <source>Cancel</source>
         <translation>Storno</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="95"/>
-        <source>Extract</source>
-        <translation>Rozbalit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="35"/>
@@ -529,54 +602,29 @@
         <translation>Přidat profil zálohování</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="56"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Profily zálohování umožňují jemně členit zálohy z různých zdrojů na různá cílová umsítění. Například je možné zálohovat nejdůležitější dokumenty do vzdáleného repozitáře přes Wifi, zatímco úplné zálohy na zařízení v rámci stroje.&lt;/p&gt;&lt;p&gt;Repozitáře a SSH klíče jsou sdílené napříč profily. Zdrojové složky, aktivní cílové repozitáře, sítě, ze kterých je umožněno, prořezávání starších záloh, ověřování a plánování jsou pro každý z profilů zvlášť.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/profileadd.ui" line="84"/>
-        <source>Profile Name</source>
-        <translation>Název profilu</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sshadd.ui" line="43"/>
+        <location filename="../../assets/UI/sshadd.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>Vytvořit SSH klíč</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="55"/>
+        <location filename="../../assets/UI/sshadd.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Formát klíče:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="72"/>
+        <location filename="../../assets/UI/sshadd.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Délka klíče:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="94"/>
+        <location filename="../../assets/UI/sshadd.ui" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 nebo 4096 pro RSA, 384 nebo 521 pro ECDSA. Pevné pro Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Více viz&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="107"/>
+        <location filename="../../assets/UI/sshadd.ui" line="106"/>
         <source>Output File:</source>
         <translation>Výstupní soubor:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sshadd.ui" line="119"/>
-        <source>Don&apos;t change this if you want SSH to automatically find the key.</source>
-        <translation>Pokud chcete, aby SSH klíč našlo automaticky, pak toto neměňte.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sshadd.ui" line="128"/>
-        <source>Close</source>
-        <translation>Zavřít</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sshadd.ui" line="141"/>
-        <source>Generate and copy to Clipboard</source>
-        <translation>Vytvořit a zkopírovat do schránky</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="25"/>
@@ -639,35 +687,81 @@
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exportwindow.ui" line="23"/>
-        <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
-        <translation>Pokud je nastaveno, sdílení tohoto souboru s ostatními odkryje vaší heslovou frázi pro borg. Použijte obezřetně!</translation>
-    </message>
-    <message>
         <location filename="../../assets/UI/exportwindow.ui" line="26"/>
         <source>Include borg passphrase in export</source>
-        <translation>Do exportu zahrnout i heslovou frázi k borg</translation>
+        <translation>Do exportu zahrnout i heslovou frázi k Borg</translation>
     </message>
     <message>
         <location filename="../../assets/UI/importwindow.ui" line="25"/>
         <source>Borg passphrase:</source>
-        <translation>Heslová fráze pro borg:</translation>
+        <translation>Heslová fráze pro Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="53"/>
+        <location filename="../../assets/UI/importwindow.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Přepsat existující profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="60"/>
+        <location filename="../../assets/UI/importwindow.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Přepsat existující nastavení</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/exportwindow.ui" line="23"/>
+        <source>Include Borg passphrase in export. Use with caution!</source>
+        <translation>Do exportu zahrnout i heslovou frázi k Borg. Používejte opatrně (hrozí vyzrazení)!</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/importwindow.ui" line="32"/>
+        <source>Enter passphrase</source>
+        <translation>Zadejte heslovou frázi</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/profileadd.ui" line="12"/>
+        <source>Add Profile</source>
+        <translation>Přidat profil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/profileadd.ui" line="56"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
+&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p&gt;Profily umožňují přednastavení různých nastavení záloh a repozitářů, včetně různých plánů.&lt;/p&gt;
+&lt;p&gt;Veškeré profily budou moci přistupovat ke stejným repozitářům, stejně tak ke stejným &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; klíčům. Celková nastavení aplikace v &lt;span style=&quot; font-style:italic;&quot;&gt;Různé&lt;/span&gt; jsou sdílená napříč profily.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/profileadd.ui" line="87"/>
+        <source>Profile Name:</source>
+        <translation>Název profilu:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/sshadd.ui" line="121"/>
+        <source>Do not change this if you want SSH to automatically find the key.</source>
+        <translation>Pokud chcete, aby SSH klíč našlo automaticky, pak toto neměňte.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/diffdialog.ui" line="14"/>
+        <source>Choose archives for diff</source>
+        <translation>Zvolte archivy které porovnat</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/diffresult.ui" line="14"/>
+        <source>Diff Result</source>
+        <translation>Výsledek porovnání</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/extractdialog.ui" line="14"/>
+        <source>Choose files to extract</source>
+        <translation>Zvolte soubory, které rozbalit</translation>
     </message>
 </context>
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="68"/>
+        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Přejmenovat profil</translation>
     </message>
@@ -675,17 +769,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="192"/>
+        <location filename="../../views/repo_add_dialog.py" line="206"/>
         <source>Connect to existing Repository</source>
         <translation>Připojit se k existujícímu repozitáři</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="210"/>
+        <location filename="../../views/repo_add_dialog.py" line="224"/>
         <source>Show my password</source>
         <translation>Zobrazit moje heslo</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/repo_add_dialog.py" line="221"/>
         <source>Hide my password</source>
         <translation>Skrýt moje heslo</translation>
     </message>
@@ -693,39 +787,47 @@
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="29"/>
+        <location filename="../../views/export_window.py" line="30"/>
         <source>Export Profile</source>
         <translation>Exportovat profil</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="38"/>
-        <source>The current profile_export has no password</source>
-        <translation>Stávající profile_export nemá heslo</translation>
-    </message>
-    <message>
-        <location filename="../../views/export_window.py" line="43"/>
+        <location filename="../../views/export_window.py" line="44"/>
         <source>Save profile_export</source>
         <translation>Uložit profile_export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="55"/>
+        <location filename="../../views/export_window.py" line="56"/>
         <source>Error while exporting</source>
         <translation>Chyba při exportování</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="71"/>
+        <location filename="../../views/export_window.py" line="72"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Soubor {} se nedaří vytvořit. Zvolte jiné umístění.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/export_window.py" line="79"/>
         <source>Profile export successful!</source>
         <translation>Profil úspěšně exportován!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/export_window.py" line="79"/>
         <source>Profile export written to {}.</source>
         <translation>Export profilu zapsán do {}.</translation>
+    </message>
+    <message>
+        <location filename="../../views/export_window.py" line="39"/>
+        <source>Disclose your borg passphrase (No passphrase set)</source>
+        <translation>Zobrazit vaši heslovou frázi do Borg (zatím není žádná nastavena)</translation>
+    </message>
+</context>
+<context>
+    <name>ExtractDialog</name>
+    <message>
+        <location filename="../../views/extract_dialog.py" line="76"/>
+        <source>Extract</source>
+        <translation>Rozbalit</translation>
     </message>
 </context>
 <context>
@@ -736,449 +838,509 @@
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="44"/>
+        <location filename="../../assets/UI/archivetab.ui" line="41"/>
         <source>Archives</source>
         <translation>Archivy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="72"/>
+        <location filename="../../assets/UI/archivetab.ui" line="147"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="79"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="96"/>
         <source>Size</source>
         <translation>Velikost</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="82"/>
+        <location filename="../../assets/UI/archivetab.ui" line="157"/>
         <source>Duration</source>
         <translation>Délka trvání</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="87"/>
+        <location filename="../../assets/UI/archivetab.ui" line="162"/>
         <source>Mount Point</source>
         <translation>Přípojný bod</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="92"/>
+        <location filename="../../assets/UI/archivetab.ui" line="167"/>
         <source>Name</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="125"/>
+        <location filename="../../assets/UI/archivetab.ui" line="77"/>
         <source>Check</source>
         <translation>Zkontrolovat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="145"/>
+        <location filename="../../assets/UI/archivetab.ui" line="90"/>
         <source>Prune</source>
         <translation>Prořezat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="155"/>
+        <location filename="../../assets/UI/archivetab.ui" line="207"/>
         <source>Refresh</source>
         <translation>Načíst znovu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="202"/>
+        <location filename="../../assets/UI/archivetab.ui" line="357"/>
         <source>Prune Options and Archive Naming</source>
         <translation>Předvolby prořezávání záloh a pro názvy archivů</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="229"/>
-        <source>Keep</source>
-        <translation>Ponechat</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="256"/>
-        <source>Use -1 for unlimited.</source>
-        <translation>Pro neomezeně použijte -1 (mínus jedna)</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="249"/>
-        <source> hourly, </source>
-        <translation>každou hodinu,</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="269"/>
-        <source> daily, </source>
-        <translation>každý den,</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="283"/>
-        <source> weekly, </source>
-        <translation>každý týden,</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="297"/>
-        <source> monthly and</source>
-        <translation>každý měsíc a</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="311"/>
-        <source> annual archives</source>
-        <translation>archivy z každého roku</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="338"/>
+        <location filename="../../assets/UI/archivetab.ui" line="569"/>
         <source>No matter what, keep all archives of the last:</source>
         <translation>Lhostejno jaké, ponechat veškeré archivy za uplynulých:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="348"/>
+        <location filename="../../assets/UI/archivetab.ui" line="582"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
         <translation>24h, 1d, 52t, 12m, 1r</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="388"/>
+        <location filename="../../assets/UI/archivetab.ui" line="648"/>
         <source>Archive Name:</source>
         <translation>Název archivu:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="431"/>
+        <location filename="../../assets/UI/archivetab.ui" line="638"/>
         <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
         <translation>Proměnné k dispozici: hostname, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="398"/>
+        <location filename="../../assets/UI/archivetab.ui" line="616"/>
         <source>{hostname}-{profile_slug}-</source>
         <translation>{nazev_stroje}-{slug_profilu}-</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="441"/>
+        <location filename="../../assets/UI/archivetab.ui" line="606"/>
         <source>Prune Prefix:</source>
         <translation>Předpona prořezávání:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="71"/>
+        <location filename="../../assets/UI/misctab.ui" line="77"/>
         <source>0.0</source>
         <translation>0.0</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="55"/>
+        <location filename="../../assets/UI/repotab.ui" line="65"/>
         <source>Repository:</source>
         <translation>Repozitář:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="128"/>
+        <location filename="../../assets/UI/repotab.ui" line="131"/>
         <source>Select Backup Destination</source>
         <translation>Vyberte umístění zálohy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="136"/>
-        <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
-        <translation>Odpojit repozitář (toto nesmaže žádná data. Vždy můžete repozitář zase přidat nazpět).</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repotab.ui" line="164"/>
+        <location filename="../../assets/UI/repotab.ui" line="206"/>
         <source>SSH Key:</source>
         <translation>SSH klíč:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="185"/>
-        <source>Copy public SSH key to clipboard.</source>
-        <translation>Zkopírovat veřejnou část SSH klíče do schránky.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repotab.ui" line="222"/>
-        <source>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</source>
-        <translation>Pro zabezpečený přístup do vzdálených repozitářů. Pro využití všech vašich už existujících klíčů ponechte výchozí. Nebo vytvořte nový klíč.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repotab.ui" line="246"/>
+        <location filename="../../assets/UI/repotab.ui" line="268"/>
         <source>Compression:</source>
         <translation>Komprese:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="347"/>
+        <location filename="../../assets/UI/repotab.ui" line="368"/>
         <source>Encryption:</source>
         <translation>Šifrování:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="387"/>
+        <location filename="../../assets/UI/repotab.ui" line="398"/>
         <source>Original Size:</source>
         <translation>Původní velikost:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="401"/>
+        <location filename="../../assets/UI/repotab.ui" line="412"/>
         <source>Deduplicated Size:</source>
         <translation>Velikost po sloučení duplicit:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="408"/>
+        <location filename="../../assets/UI/repotab.ui" line="426"/>
         <source>Compressed Size:</source>
         <translation>Velikost po komprimaci:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="45"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="51"/>
         <source>Schedule</source>
         <translation>Naplánovat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="86"/>
-        <source>Backup manually</source>
-        <translation>Zálohovat ručně</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="143"/>
-        <source>Backup every </source>
-        <translation>Zálohovat každých</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="110"/>
-        <source>Backup daily at</source>
-        <translation>Zálohovat každý den v</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="279"/>
-        <source>Validate repository data every</source>
-        <translation>Ověřit použitelnost dat v repozitáři každých</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="299"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="437"/>
         <source>weeks</source>
         <translation>týdnů</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="225"/>
-        <source>Prune old Archives after each backup</source>
-        <translation>Po každé záloze prořezat starší archivy</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="191"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="489"/>
         <source>Next Backup:</source>
         <translation>Příští záloha:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="345"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="527"/>
         <source>Networks</source>
         <translation>Sítě</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="357"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="544"/>
         <source>Allowed Networks:</source>
         <translation>Sítě, ze kterých umožněno:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="406"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="582"/>
         <source>Log</source>
         <translation>Záznam událostí</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="431"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="604"/>
         <source>Time</source>
         <translation>Čas</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="436"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="609"/>
         <source>Category</source>
         <translation>Kategorie</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="441"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="614"/>
         <source>Subcommand</source>
         <translation>Dílčí příkaz</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="446"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="619"/>
         <source>Repository</source>
         <translation>Repozitář</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="451"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="624"/>
         <source>Returncode</source>
         <translation>Návratový kód</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="468"/>
+        <location filename="../../assets/UI/scheduletab.ui" line="641"/>
         <source>Shell Commands</source>
         <translation>Příkazy shellu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="477"/>
-        <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).</source>
-        <translation>Spouštět příkazy shellu před a po provedení každé zálohy. Záloha jako taková a příkazy, prováděné po záloze budou spuštěné pouze tehdy, pokud příkaz pro provedení před zálohou skončí bez chyb (návratový kód 0).</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="496"/>
-        <source>Pre-backup command to run BEFORE backups</source>
-        <translation>Příkazy které spouštět PŘED provedením zálohy</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="506"/>
-        <source>Post-backup command to run AFTER backups</source>
-        <translation>Příkazy, které spouštět PO provedení zálohy</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="519"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Proměnné prostředí k dispozici: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="20"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="56"/>
         <source>Source Folders and Files to Back Up:</source>
         <translation>Zdrojové složky a soubory, které zálohovat:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="94"/>
-        <source>Add Folder</source>
-        <translation>Přidat složku</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="108"/>
-        <source>Remove</source>
-        <translation>Odebrat</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="164"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="168"/>
         <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Pokud jsou přítomny, vynechat (vynechat složky, které obsahují tyto soubory):</translation>
+        <translation>Pokud jsou přítomny, vynechat (složky, které obsahují tyto soubory):</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="135"/>
-        <source>Diff</source>
-        <translation>Rozdíl</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="183"/>
+        <location filename="../../assets/UI/archivetab.ui" line="338"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pro připojování archivů, nejprve nainstalujte „FUSE pro macOS“ &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;odsud&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="208"/>
+        <location filename="../../assets/UI/archivetab.ui" line="372"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prořezání probere starší archivy. Je možné zvolit počet archivů za jednotlivé hodiny, dny, atd, které zachovat. Obvykle se ponechává více novějších a méně starších archivů. Přečtěte si &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="64"/>
+        <location filename="../../assets/UI/misctab.ui" line="70"/>
         <source>Vorta Version:</source>
-        <translation>Verze vorta:</translation>
+        <translation>Verze Vorta:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="81"/>
+        <location filename="../../assets/UI/misctab.ui" line="87"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Nahlásit&lt;/span&gt;&lt;/a&gt; chybu |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="91"/>
+        <location filename="../../assets/UI/misctab.ui" line="97"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Záznam událostí (log)&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="127"/>
+        <location filename="../../assets/UI/misctab.ui" line="133"/>
         <source>Borg Version:</source>
-        <translation>Verze borg:</translation>
+        <translation>Verze Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="134"/>
+        <location filename="../../assets/UI/misctab.ui" line="140"/>
         <source>1.1.8</source>
         <translation>1.1.8</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="141"/>
+        <location filename="../../assets/UI/misctab.ui" line="147"/>
         <source>/usr/bin/borg</source>
         <translation>/usr/bin/borg</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="96"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Repozitář pro zálohy na tomto nebo vzdáleném stroji. Pro jednoduché a zabezpečené hostování zálohy vyzkoušejte &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repotab.ui" line="288"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprese je uplatňována na nová data. Je možné změnit a neovlivńuje slučování duplicit. Přečtěte si &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="154"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="158"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vzory pro vynechání (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;více&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="180"/>
-        <source>E.g. **/.cache</source>
-        <translation>Např. **/.cache</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="193"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="203"/>
         <source>E.g. .nobackup</source>
         <translation>Např. .nobackup</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="146"/>
-        <source>Copy repo URL to clipboard</source>
-        <translation>Zkopírovat URL adresu repozitáře do schránky</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="364"/>
-        <source>Don&apos;t run backup over metered networks</source>
-        <translation>Nespouštět zálohování přes sítě s placenými daty</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="101"/>
-        <source>Add File(s)</source>
-        <translation>Přidat soubor(y)</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="115"/>
-        <source>One folder or file per line</source>
-        <translation>Každá složka nebo soubor na zvlášť řádek</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="118"/>
-        <source>Paste Folders/Files</source>
-        <translation>Vložit složky/soubory</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archivetab.ui" line="434"/>
+        <location filename="../../assets/UI/archivetab.ui" line="641"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
         <translation>{nazev_stroje}-{slug_profilu}-{nyní:%R-%m-%d-%H%M%S}</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="69"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="91"/>
         <source>Path</source>
         <translation>Popis umístění</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="74"/>
-        <source>Type</source>
-        <translation>Typ</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="84"/>
+        <location filename="../../assets/UI/sourcetab.ui" line="101"/>
         <source>File Count</source>
         <translation>Počet souborů</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="125"/>
-        <source>Recalculate sizes</source>
-        <translation>Přepočítat velikosti</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="54"/>
+        <source>Refresh archive list</source>
+        <translation>Znovu načíst seznam archivů</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="102"/>
-        <source>Selected Archive</source>
-        <translation>Vybraný archiv</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="74"/>
+        <source>Check the consistancy of the repository</source>
+        <translation>Zkontrolovat nepoškozenost repozitáře</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="542"/>
-        <source>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
-        <translation>Při vytváření zálohy přidat tyto argumenty. Podrobnosti naleznete v &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;dokumentaci&lt;/span&gt;&lt;/a&gt;.</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="87"/>
+        <source>Prune the archives in this repository</source>
+        <translation>Prořezat archivy v tomto repozitáři</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="558"/>
-        <source>Arguments to add. E.g. --dry-run</source>
-        <translation>Argumenty, které přidat. Např. --dry-run</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="100"/>
+        <source>Compact</source>
+        <translation>Uvolnit prostor po smazaném</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="198"/>
-        <source>-</source>
-        <translation>–</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="204"/>
+        <source>Refresh selected archive</source>
+        <translation>Znovu načíst zvolený archiv</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="252"/>
-        <source>Run missed backups right after startup or wakeup</source>
-        <translation>Spustit neuskutečněné zálohy hned po spuštění nebo probuzení</translation>
+        <location filename="../../assets/UI/archivetab.ui" line="239"/>
+        <source>Extract selected archive</source>
+        <translation>Rozbalit zvolený archiv</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="242"/>
+        <source>Extract…</source>
+        <translation>Rozbalit…</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="258"/>
+        <source>Rename selected archive</source>
+        <translation>Přejmenovat zvolený archiv</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="261"/>
+        <source>Rename…</source>
+        <translation>Přejmenovat…</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="277"/>
+        <source>Delete selected archive</source>
+        <translation>Smazat zvolený archiv</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="280"/>
+        <source>Delete</source>
+        <translation>Smazat</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="312"/>
+        <source>Compare two archives</source>
+        <translation>Porovnat dva archivy</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="406"/>
+        <source>Hourly:</source>
+        <translation>Hodinově:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="542"/>
+        <source>Use -1 for unlimited</source>
+        <translation>Pro neomezeně použijte -1 (mínus jedna)</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="439"/>
+        <source>Daily:</source>
+        <translation>Denně:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="472"/>
+        <source>Weekly:</source>
+        <translation>Týdně:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="532"/>
+        <source>Annual:</source>
+        <translation>Ročně:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repotab.ui" line="95"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pokud chcete jednoduché a bezpečné hostování záloh, vyzkoušejte &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repotab.ui" line="247"/>
+        <source>Copy to clipboard</source>
+        <translation>Zkopírovat do schránky</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repotab.ui" line="139"/>
+        <source>Unlink repository without deleting it.</source>
+        <translation>Odpojit repozitář ale nemazat ho.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repotab.ui" line="311"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Nápověda k typům komprese&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="76"/>
+        <source>Backup schedule:</source>
+        <translation>Plán zálohování:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="83"/>
+        <source>Manual only</source>
+        <translation>Pouze ruční</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="98"/>
+        <source>Backup periodically</source>
+        <translation>Zálohovat pravidelně</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="401"/>
+        <source>Interval:</source>
+        <translation>Interval:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="191"/>
+        <source>Backup daily</source>
+        <translation>Zálohovat každý den</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="238"/>
+        <source>Time:</source>
+        <translation>Čas:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="285"/>
+        <source>Missed backups:</source>
+        <translation>Zálohy, které neproběhly:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="298"/>
+        <source>Run missed backups on startup or wakeup</source>
+        <translation>Při probuzení či zapnutí spustit zálohy, které neproběhly</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="325"/>
+        <source>Autopruning:</source>
+        <translation>Automatické prořezávání:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="332"/>
+        <source>Prune after each backup</source>
+        <translation>Prořezat po každé záloze</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="339"/>
+        <source>Validation:</source>
+        <translation>Ověřování správnosti:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="354"/>
+        <source>Validate repository data</source>
+        <translation>Ověřit data v repozitáři</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="496"/>
+        <source>None scheduled</source>
+        <translation>Žádné nenaplánováno</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="563"/>
+        <source>Run backups over metered networks</source>
+        <translation>Spouštět zálohy i přes sítě s účtovanými daty</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="659"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Před a po každém provedením zálohy spustit uživatelsky určené příkazy shellu. Záloha a příkazy po ní budou spuštěny pouze pokud příkaz před zálohou skončí bez chyb (návratový kód 0). Proměnné k dispozici: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="683"/>
+        <source>Pre-backup:</source>
+        <translation>Před zálohou:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="711"/>
+        <source>echo &quot;Before backup of $repo_url&quot;</source>
+        <translation>echo &quot;Před zálohou $repo_url&quot;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="731"/>
+        <source>Post-backup:</source>
+        <translation>Po záloze:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="750"/>
+        <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
+        <translation>echo &quot;Záloha $repo_url dokončena se stavem $returncode.&quot;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="771"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Další argumenty pro &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Možné volby jsou uvedeny v &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;dokumentaci k nástroji borg&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/scheduletab.ui" line="793"/>
+        <source>--dry-run --noflags</source>
+        <translation>--dry-run --noflags</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/sourcetab.ui" line="111"/>
+        <source>Recalculate source size and file count</source>
+        <translation>Přepočítat velikost zdroje a počet souborů</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/sourcetab.ui" line="131"/>
+        <source>Add sources</source>
+        <translation>Přidat zdroje</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/sourcetab.ui" line="141"/>
+        <source>Remove the selected source</source>
+        <translation>Odebrat označený zdroj</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="315"/>
+        <source>Diff</source>
+        <translation>Rozdíl</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="502"/>
+        <source>Monthly:</source>
+        <translation>Měsíčně:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/sourcetab.ui" line="187"/>
+        <source>E.g. */.cache</source>
+        <translation>Např. */.cache</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archivetab.ui" line="576"/>
+        <source>“&amp;lt;int&amp;gt;&amp;lt;char&amp;gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
+        <translation>“&amp;lt;int&amp;gt;&amp;lt;char&amp;gt;”, kde znak je “H”, “d”, “w”, “m”, “y”</translation>
     </message>
 </context>
 <context>
@@ -1189,27 +1351,12 @@
         <translation>Importovat profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
-        <source>The passphrase has been loaded from the export file</source>
-        <translation>Heslová fráze byla načtena ze souboru s exportem</translation>
-    </message>
-    <message>
-        <location filename="../../views/import_window.py" line="40"/>
-        <source>The passphrase has been loaded from your keyring</source>
-        <translation>Heslová fráze byla načtena z vaší klíčenky</translation>
-    </message>
-    <message>
-        <location filename="../../views/import_window.py" line="50"/>
-        <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
-        <translation>Profil s názvem {} neexistuje. Není co přepsat.</translation>
-    </message>
-    <message>
-        <location filename="../../views/import_window.py" line="61"/>
+        <location filename="../../views/import_window.py" line="59"/>
         <source>Error while importing</source>
         <translation>Chyba při importu</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="77"/>
+        <location filename="../../views/import_window.py" line="75"/>
         <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
  {0} 
  {1}</source>
@@ -1218,25 +1365,40 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="80"/>
+        <location filename="../../views/import_window.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Soubory exportu profile_export, vytvořené novější verzí aplikace, nemohou být použity ve starší.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="82"/>
+        <location filename="../../views/import_window.py" line="80"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Z důvodu problémů s přístupovými oprávněními není možné číst soubor exportu profile_export.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="84"/>
+        <location filename="../../views/import_window.py" line="82"/>
         <source>Profile export file not found.</source>
         <translation>Soubor s exportem profilu nenalezen.</translation>
+    </message>
+    <message>
+        <location filename="../../views/import_window.py" line="33"/>
+        <source>Enter passphrase (already loaded from the export file)</source>
+        <translation>Zadejte heslovou frázi (už načtená z exportního souboru)</translation>
+    </message>
+    <message>
+        <location filename="../../views/import_window.py" line="40"/>
+        <source>Enter passphrase (already loaded from your keyring)</source>
+        <translation>Zadejte heslovou frázi (už načtená z vaší klíčenky)</translation>
+    </message>
+    <message>
+        <location filename="../../views/import_window.py" line="50"/>
+        <source>(Name is not used yet)</source>
+        <translation>(Název zatím není použit)</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="255"/>
+        <location filename="../../views/main_window.py" line="264"/>
         <source>Task cancelled</source>
         <translation>Úloha zrušena</translation>
     </message>
@@ -1251,281 +1413,297 @@
         <translation>Stávající profil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="84"/>
-        <source>Rename Profile</source>
-        <translation>Přejmenovat profil</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="107"/>
-        <source>Delete Profile</source>
-        <translation>Smazat profil</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="148"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="154"/>
         <source>Repository</source>
         <translation>Repozitář</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="153"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="159"/>
         <source>Sources</source>
         <translation>Zdroje</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="158"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="164"/>
         <source>Schedule</source>
         <translation>Plán</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="163"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="169"/>
         <source>Archives</source>
         <translation>Archivy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="168"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="174"/>
         <source>Misc</source>
         <translation>Různé</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="190"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="196"/>
         <source>Cancel</source>
         <translation>Storno</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="36"/>
+        <location filename="../../views/main_window.py" line="40"/>
         <source>Start Backup</source>
         <translation>Spustit zálohu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="239"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="235"/>
         <source>Latest</source>
         <translation>Nejnovější</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="244"/>
+        <location filename="../../assets/UI/mainwindow.ui" line="240"/>
         <source>Reset App</source>
         <translation>Restartovat aplikaci</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="68"/>
-        <source>Add Profile</source>
-        <translation>Přidat profil</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="163"/>
+        <location filename="../../views/main_window.py" line="172"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
         <translation>Opravdu chcete profil „{}“ smazat?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="164"/>
+        <location filename="../../views/main_window.py" line="173"/>
         <source>Confirm deletion</source>
         <translation>Potvrďte smazání</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="272"/>
+        <location filename="../../views/main_window.py" line="281"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>Má Vorta pokračovat v chodu na pozadí?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="277"/>
+        <location filename="../../views/main_window.py" line="286"/>
         <source>Quit</source>
         <translation>Ukončit</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278"/>
+        <location filename="../../views/main_window.py" line="287"/>
         <source>Don&apos;t show this again</source>
         <translation>Příště už nezobrazovat</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="83"/>
-        <source>Import from file...</source>
-        <translation>Importovat ze souboru</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="174"/>
-        <source>Can&apos;t delete the last profile.</source>
-        <translation>Není možné smazat poslední zbývající profil.</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="202"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Profile import successful!</source>
         <translation>Profil úspěšně naimportován!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="202"/>
+        <location filename="../../views/main_window.py" line="211"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} naimportován.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="211"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>Load profile</source>
         <translation>Načíst profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="211"/>
+        <location filename="../../views/main_window.py" line="220"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Všechny soubory (*)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="97"/>
-        <source>Export Profile</source>
-        <translation>Exportovat profil</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="220"/>
+        <location filename="../../views/main_window.py" line="229"/>
         <source>Failed to import profile</source>
         <translation>Profil se nepodařilo naimportovat</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="92"/>
+        <source>Import from file…</source>
+        <translation>Naimportovat ze souboru…</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="183"/>
+        <source>Cannot delete the last profile.</source>
+        <translation>Není možné smazat poslední zbývající profil.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="71"/>
+        <source>Add a new profile (Dropdown: Import from file)</source>
+        <translation>Přidat nový profil (rozbalovací nabídka: importovat ze souboru)</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="87"/>
+        <source>Rename current profile</source>
+        <translation>Přejmenovat stávající profil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="100"/>
+        <source>Export current profile</source>
+        <translation>Exportovat stávající profil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/mainwindow.ui" line="110"/>
+        <source>Delete current profile</source>
+        <translation>Smazat stávající profil</translation>
     </message>
 </context>
 <context>
     <name>RepoTab</name>
     <message>
-        <location filename="../../views/repo_tab.py" line="26"/>
-        <source>+ Initialize New Repository</source>
-        <translation>+ inicializovat nový repozitář</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="27"/>
-        <source>+ Add Existing Repository</source>
-        <translation>+ Přidat existující repozitář</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="48"/>
+        <location filename="../../views/repo_tab.py" line="55"/>
         <source>No Compression</source>
         <translation>Nekomprimovat</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="111"/>
+        <location filename="../../views/repo_tab.py" line="151"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Zvolit SSH klíč automaticky (výchozí)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="112"/>
-        <source>Create New Key</source>
-        <translation>Vytvořit nový klíč</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="149"/>
+        <location filename="../../views/repo_tab.py" line="189"/>
         <source>Public Key Copied to Clipboard</source>
         <translation>Veřejná část klíče zkopírována do schránky</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="150"/>
+        <location filename="../../views/repo_tab.py" line="190"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
         <translation>Označená veřejná část SSH klíče byla zkopírována do schránky. Použijte ji pro nastavení oprávnění v repozitáři na protějšku.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="155"/>
-        <source>Couldn&apos;t find public key.</source>
-        <translation>Veřejnou část klíče se nedaří najít.</translation>
-    </message>
-    <message>
-        <location filename="../../views/repo_tab.py" line="157"/>
+        <location filename="../../views/repo_tab.py" line="197"/>
         <source>Select a public key from the dropdown first.</source>
         <translation>Vyberte veřejnou část klíče z rozbalovací nabídky.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="213"/>
+        <location filename="../../views/repo_tab.py" line="264"/>
         <source>Repository was Unlinked</source>
         <translation>Popojení repozitáře bylo zrušeno</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="214"/>
+        <location filename="../../views/repo_tab.py" line="265"/>
         <source>You can always connect it again later.</source>
         <translation>Vždy ho ale můžete znovu připojit nazpět.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="38"/>
+        <location filename="../../views/repo_tab.py" line="45"/>
         <source>LZ4 (modern, default)</source>
         <translation>LZ4 (moderní, výchozí)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="39"/>
+        <location filename="../../views/repo_tab.py" line="46"/>
         <source>Zstandard Level 3 (modern)</source>
         <translation>Zstandard Level 3 (moderní)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="40"/>
+        <location filename="../../views/repo_tab.py" line="47"/>
         <source>Zstandard Level 8 (modern)</source>
         <translation>Zstandard Level 8 (moderní)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="46"/>
+        <location filename="../../views/repo_tab.py" line="53"/>
         <source>ZLIB Level 6 (auto, legacy)</source>
         <translation>ZLIB Level 6 (auto, zastaralé)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="47"/>
+        <location filename="../../views/repo_tab.py" line="54"/>
         <source>LZMA Level 6 (auto, legacy)</source>
         <translation>LZMA Level 6 (auto, zastaralé)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="228"/>
+        <location filename="../../views/repo_tab.py" line="279"/>
         <source>Select a repository from the dropdown first.</source>
         <translation>Nejprve z rozbalovací nabídky vyberte repozitář.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="33"/>
+        <source>New Repository…</source>
+        <translation>Nový repozitář…</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="35"/>
+        <source>Existing Repository…</source>
+        <translation>Existující repozitář…</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="195"/>
+        <source>Could not find public key.</source>
+        <translation>Veřejnou část klíče se nedaří najít.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="104"/>
+        <source>N/A</source>
+        <comment>Not available.</comment>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="105"/>
+        <source>Select a repository first.</source>
+        <translation>Nejprve přidejte repozitář.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="106"/>
+        <source>Try refreshing the metadata of any archive.</source>
+        <translation>Vyzkoušejte znovu načíst metadata libovolného archivu.</translation>
     </message>
 </context>
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="35"/>
+        <location filename="../../views/ssh_dialog.py" line="52"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (doporučeno)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="36"/>
+        <location filename="../../views/ssh_dialog.py" line="53"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (zastaralé)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="37"/>
+        <location filename="../../views/ssh_dialog.py" line="54"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="46"/>
+        <location filename="../../views/ssh_dialog.py" line="63"/>
         <source>High (Recommended)</source>
         <translation>Vysoké (doporučeno)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="47"/>
+        <location filename="../../views/ssh_dialog.py" line="64"/>
         <source>Medium</source>
         <translation>Střední</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="60"/>
+        <location filename="../../views/ssh_dialog.py" line="77"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Soubor s klíčem už existuje. Nebude přepsán.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="72"/>
+        <location filename="../../views/ssh_dialog.py" line="89"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Nový klíč byl zkopírován do schránky a zapsán do %s.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="74"/>
+        <location filename="../../views/ssh_dialog.py" line="91"/>
         <source>Error during key generation.</source>
         <translation>Chyba při vytváření klíče.</translation>
+    </message>
+    <message>
+        <location filename="../../views/ssh_dialog.py" line="48"/>
+        <source>Generate and copy to clipboard</source>
+        <translation>Vytvořit a zkopírovat do schránky</translation>
     </message>
 </context>
 <context>
     <name>ScheduleTab</name>
     <message>
-        <location filename="../../views/schedule_tab.py" line="43"/>
+        <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Minutes</source>
         <translation>Minut</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_tab.py" line="44"/>
+        <location filename="../../views/schedule_tab.py" line="47"/>
         <source>Hours</source>
         <translation>Hodin</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_tab.py" line="45"/>
+        <location filename="../../views/schedule_tab.py" line="48"/>
         <source>Days</source>
         <translation>Dnů</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_tab.py" line="46"/>
+        <location filename="../../views/schedule_tab.py" line="49"/>
         <source>Weeks</source>
         <translation>Týdnů</translation>
     </message>
@@ -1533,34 +1711,54 @@
 <context>
     <name>SourceTab</name>
     <message>
-        <location filename="../../views/source_tab.py" line="173"/>
+        <location filename="../../views/source_tab.py" line="290"/>
         <source>Choose directory to back up</source>
         <translation>Zvolte složku, kterou zálohovat</translation>
     </message>
     <message>
-        <location filename="../../views/source_tab.py" line="173"/>
+        <location filename="../../views/source_tab.py" line="290"/>
         <source>Choose file(s) to back up</source>
         <translation>Zvolte soubor(y), které zálohovat</translation>
     </message>
     <message>
-        <location filename="../../views/source_tab.py" line="130"/>
-        <source>Folder</source>
-        <translation>Složka</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="134"/>
-        <source>File</source>
-        <translation>Soubor</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="102"/>
-        <source>Calculating...</source>
-        <translation>Výpočet</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="164"/>
+        <location filename="../../views/source_tab.py" line="281"/>
         <source>You don&apos;t have read access to {dir}.</source>
         <translation>Nemáte přístup pro čtení {dir}.</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="76"/>
+        <source>Files</source>
+        <translation>Soubory</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="78"/>
+        <source>Folders</source>
+        <translation>Složky</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="80"/>
+        <source>Paste</source>
+        <translation>Vložit</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="129"/>
+        <source>Copy</source>
+        <translation>Zkopírovat</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="131"/>
+        <source>Remove</source>
+        <translation>Odebrat</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="193"/>
+        <source>Calculating…</source>
+        <translation>Výpočet…</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="360"/>
+        <source>Some of your sources are invalid:</source>
+        <translation>Některé z vašich zdrojů nejsou platné:</translation>
     </message>
 </context>
 <context>
@@ -1599,130 +1797,145 @@
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="129"/>
+        <location filename="../../application.py" line="131"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="191"/>
+        <location filename="../../application.py" line="193"/>
         <source>No Borg Binary Found</source>
         <translation>Nenalezen žádný spustitelný soubor s nástrojem Borg</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="192"/>
+        <location filename="../../application.py" line="194"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta se nepodařilo nalézt použitelný spustitelný soubor s nástrojem Borg Backup.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="229"/>
+        <location filename="../../application.py" line="231"/>
         <source>Repository In Use</source>
         <translation>Repozitář je používán něčím jiným</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231"/>
+        <location filename="../../application.py" line="233"/>
         <source>Abort</source>
         <translation>Přerušit</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="232"/>
+        <location filename="../../application.py" line="234"/>
         <source>Continue</source>
         <translation>Pokračovat</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="234"/>
+        <location filename="../../application.py" line="236"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>Může být, že repozitář na {repo_url} je právě používán odjinud.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="235"/>
+        <location filename="../../application.py" line="237"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>Zámek rušte pouze pokud jste si naprosto jistí, že žádný další proces nástroje Borg na žádném stroji k repozitáři nepřistupuje. Přerušit nebo pokračovat zrušením zámku?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="243"/>
+        <location filename="../../application.py" line="245"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>Nemáte oprávnění pro přístup k repozitáři na {repo_url}. Získejte přístup a zkuste to znovu.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="246"/>
+        <location filename="../../application.py" line="248"/>
         <source>No Repository Permissions</source>
         <translation>Žádná oprávnění k repozitáři</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="210"/>
+        <location filename="../../application.py" line="212"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Pro dokončení záloh potřebuje Vorta úplný přístup k disku</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="211"/>
-        <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Bez toho některé soubory nebudou přístupné a může to skončit neúplnou zálohou. Nastavte pro Vorta &lt;b&gt;Úplný přístup k disku&lt;/b&gt; v &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Předvolby systému &gt; Zabezpečení a soukromí&lt;/a&gt;.</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="283"/>
+        <location filename="../../application.py" line="285"/>
         <source>Profile import successful!</source>
         <translation>Profil úspěšně naimportován!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
+        <location filename="../../application.py" line="285"/>
         <source>Profile {} imported.</source>
         <translation>Profil {} naimportován.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
+        <location filename="../../application.py" line="272"/>
         <source>Failed to import profile</source>
         <translation>Nepodařilo se naimportovat profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
+        <location filename="../../application.py" line="272"/>
         <source>Failed to import a profile from {}:</source>
         <translation>Nepodařilo se naimportovat profil z {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
+        <location filename="../../application.py" line="272"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Zvažte odebrání nebo opravení tohoto souboru, abyste se zbavili tohoto hlášení.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="295"/>
+        <location filename="../../application.py" line="324"/>
         <source>Repo Check Failed</source>
         <translation>Kontrola repozitáře se nezdařila</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="296"/>
-        <source>Repository data check for repo %s failed</source>
-        <translation>Kontrola dat repozitáře se v případě repozitáře %s nezdařila</translation>
+        <location filename="../../application.py" line="213"/>
+        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
+        <translation>Bez toho některé soubory nebudou přístupné a může to skončit neúplnou zálohou. Nastavte pro Vorta &lt;b&gt;Úplný přístup k disku&lt;/b&gt; v &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Předvolby systému &gt; Zabezpečení a soukromí&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="297"/>
-        <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation>Opravte nebo znovuvytvořte tento repozitář co nejdříve a vyhněte se tak tomu, že budou chybět data.</translation>
+        <location filename="../../application.py" line="329"/>
+        <source>Borg exited with a warning message. See logs for details.</source>
+        <translation>Nástroj Borg skončil s varováním. Podrobnosti naleznete v záznamech událostí.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="334"/>
+        <source>Repository data check for repo was killed by signal %s.</source>
+        <translation>Kontrola dat repozitáře byla vynuceně ukončena signálem %s.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="338"/>
+        <source>The process running the check job got a kill signal. Try again.</source>
+        <translation>Proces spouštějící úlohu kontroly byl vynuceně ukončen (kill). Zkuste to znovu.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="341"/>
+        <source>Repository data check for repo %s failed. Error code %s</source>
+        <translation>Kontrola dat repozitáře se v případě repozitáře %s nezdařila. Kód chyby %s</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="346"/>
+        <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
+        <translation>Zvažte opravu opravu nebo znovuvytvoření tohoto repozitáře co nejdříve a vyhněte se tak tomu, že budou chybět data.</translation>
     </message>
 </context>
 <context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="143"/>
+        <location filename="../../scheduler.py" line="199"/>
         <source>None scheduled</source>
         <translation>Žádné naplánovano</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="190"/>
+        <location filename="../../scheduler.py" line="246"/>
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="162"/>
+        <location filename="../../scheduler.py" line="218"/>
         <source>Starting background backup for %s.</source>
         <translation>Spouštění zálohy na pozadí pro %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="184"/>
+        <location filename="../../scheduler.py" line="240"/>
         <source>Backup successful for %s.</source>
         <translation>Záloha %s úspěšná.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="190"/>
+        <location filename="../../scheduler.py" line="246"/>
         <source>Error during backup creation.</source>
         <translation>Chyba při vytváření zálohy.</translation>
     </message>
@@ -1764,7 +1977,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/create.py" line="98"/>
         <source>Current Wifi is not allowed.</source>
-        <translation>Fungování na stávající WiFi síti není v nastavení umožněno.</translation>
+        <translation>Použití stávající WiFi sítě není v nastavení umožněno.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="115"/>
@@ -1777,14 +1990,9 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Příkaz pro provedení před zálohováním vrátil nenulový ukončovací kód (něco se nezdařilo).</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="165"/>
-        <source>Starting backup...</source>
-        <translation>Spouštění zálohy…</translation>
-    </message>
-    <message>
         <location filename="../../borg/umount.py" line="27"/>
         <source>No active Borg mounts found.</source>
-        <translation>Nebyly nalezeny žádné aktivní Borg připojení (mount).</translation>
+        <translation>Nebyla nalezena žádná aktivní Borg připojení (mount).</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="144"/>
@@ -1818,74 +2026,104 @@ Zkuste repozitář odpojit a znovu přidat.</translation>
         <source>Please unlock your system password manager or disable it under Misc</source>
         <translation>Odemkněte správce hesel systému, nebo vypněte jeho používání aplikací v sekci Různé</translation>
     </message>
+    <message>
+        <location filename="../../borg/compact.py" line="39"/>
+        <source>This feature needs Borg 1.2.0 or higher.</source>
+        <translation>Tato funkce vyžaduje nástroj Borg ve verzi 1.2.0 a novější.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="165"/>
+        <source>Starting backup…</source>
+        <translation>Spouštění zálohy…</translation>
+    </message>
 </context>
 <context>
     <name>settings</name>
     <message>
-        <location filename="../../store/settings.py" line="10"/>
+        <location filename="../../store/settings.py" line="27"/>
         <source>Display notifications when background tasks fail</source>
         <translation>Při nezdaru v úloze na pozadí zobrazit upozornění</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="15"/>
+        <location filename="../../store/settings.py" line="33"/>
         <source>Also notify about successful background tasks</source>
         <translation>Upozorňovat také na úspěšně provedené úlohy na pozadí</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="20"/>
+        <location filename="../../store/settings.py" line="39"/>
         <source>Automatically start Vorta at login</source>
         <translation>Spouštět Vorta automaticky při přihlášení se do systému</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="25"/>
+        <location filename="../../store/settings.py" line="45"/>
         <source>Open main window on startup</source>
         <translation>Při spuštění otevřít hlavní okno</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="30"/>
+        <location filename="../../store/settings.py" line="51"/>
         <source>Get statistics of file/folder when added</source>
         <translation>Při přidání získat statistiky souboru/složky</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="35"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Ukládat hesla k repozitářům do systémové klíčenky, pokud je k dispozici.</translation>
-    </message>
-    <message>
-        <location filename="../../store/settings.py" line="40"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Při připojování archivu se pokusit nahradit stávající oprávnění.</translation>
-    </message>
-    <message>
-        <location filename="../../store/settings.py" line="60"/>
+        <location filename="../../store/settings.py" line="83"/>
         <source>Check for updates on startup</source>
         <translation>Při spouště zjistit dostupnost případných aktualizací</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="65"/>
+        <location filename="../../store/settings.py" line="88"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>Při zjišťování dostupnosti případných aktualizací brát v potaz také ještě nevydané vývojové verze</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="73"/>
-        <source>Display background exit dialog</source>
-        <translation>Zobrazit dialog ukončení na pozadí</translation>
+        <location filename="../../store/settings.py" line="17"/>
+        <source>Notifications</source>
+        <translation>Upozornění</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="18"/>
+        <source>Startup</source>
+        <translation>Spuštění</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="19"/>
+        <source>Information</source>
+        <translation>Pro informaci</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="20"/>
+        <source>Security</source>
+        <translation>Zabezpečení</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="57"/>
+        <source>Store repository passwords in system keychain, if available</source>
+        <translation>Ukládat hesla k repozitářům do systémové klíčenky, pokud je k dispozici</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="63"/>
+        <source>Try to replace existing permissions when mounting an archive</source>
+        <translation>Při připojování archivu se pokusit nahradit stávající oprávnění</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="98"/>
+        <source>If the system tray isn&apos;t available, ask whether to continue in the background on exit</source>
+        <translation>Pokud oznamovací oblast systémového panelu není k dispozici, zeptat se při ukončování zda pokračovat v chodu na pozadí</translation>
     </message>
 </context>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../../utils.py" line="412"/>
+        <location filename="../../utils.py" line="403"/>
         <source>Passwords must be identical and greater than 8 characters long.</source>
         <translation>Je třeba, aby zadání hesla byla identická a delší, než 8 znaků.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="414"/>
+        <location filename="../../utils.py" line="405"/>
         <source>Passwords must be identical.</source>
         <translation>Je třeba, aby zadání hesla byla identická.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="416"/>
+        <location filename="../../utils.py" line="407"/>
         <source>Passwords must be greater than 8 characters long.</source>
         <translation>Je třeba, aby heslo bylo delší než 8 znaků.</translation>
     </message>
