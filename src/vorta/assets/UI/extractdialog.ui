@@ -55,7 +55,11 @@
     </layout>
    </item>
    <item>
-    <widget class="QTreeView" name="treeView"/>
+    <widget class="QTreeView" name="treeView">
+     <attribute name="headerMinimumSectionSize">
+      <number>10</number>
+     </attribute>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="label">

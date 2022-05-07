@@ -26,12 +26,11 @@ from vorta.borg.umount import BorgUmountJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
-from vorta.views.diff_result import DiffResultDialog
-from vorta.views.extract_dialog import ExtractDialog
+from vorta.views import diff_result, extract_dialog
+from vorta.views.diff_result import DiffResultDialog, DiffTree
+from vorta.views.extract_dialog import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
-
-from .diff_result import DiffTree, ParseThread
 
 uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
@@ -687,6 +686,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile.save()
 
     def extract_action(self):
+        """
+        Open a dialog for choosing what to extract from the selected archive.
+        """
         profile = self.profile()
 
         row_selected = self.archiveTable.selectionModel().selectedRows()
@@ -711,35 +713,54 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('Select an archive to restore first.'))
 
     def extract_list_result(self, result):
+        """Process the contents of the archive to extract."""
         self._set_status('')
         if result['returncode'] == 0:
-            def process_result():
-                def receive():
-                    extraction_folder = dialog.selectedFiles()
-                    if extraction_folder:
-                        params = BorgExtractJob.prepare(
-                            self.profile(), archive.name, window.selected, extraction_folder[0])
-                        if params['ok']:
-                            self._toggle_all_buttons(False)
-                            job = BorgExtractJob(params['cmd'], params, self.profile().repo.id)
-                            job.updated.connect(self.mountErrors.setText)
-                            job.result.connect(self.extract_archive_result)
-                            self.app.jobs_manager.add_job(job)
-                        else:
-                            self._set_status(params['message'])
-
-                dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
-                dialog.open(receive)
-
             archive = ArchiveModel.get(name=result['params']['archive_name'])
-            window = ExtractDialog(result['data'], archive)
-            self._toggle_all_buttons(True)
-            window.setParent(self, QtCore.Qt.Sheet)
-            self._window = window  # for testing
-            window.show()
-            window.accepted.connect(process_result)
+            model = ExtractTree()
+            self._set_status(self.tr("Processing archive contents"))
+            self._t = extract_dialog.ParseThread(result['data'],
+                                                 model)
+            self._t.finished.connect(lambda: self.extract_show_dialog(archive,
+                                                                      model))
+            self._t.start()
+
+    def extract_show_dialog(self, archive, model):
+        """Show the dialog for choosing the archive contents to extract."""
+        self._set_status('')
+
+        def process_result():
+            def receive():
+                extraction_folder = dialog.selectedFiles()
+                if extraction_folder:
+                    params = BorgExtractJob.prepare(self.profile(),
+                                                    archive.name,
+                                                    model,
+                                                    extraction_folder[0])
+                    if params['ok']:
+                        self._toggle_all_buttons(False)
+                        job = BorgExtractJob(params['cmd'], params,
+                                             self.profile().repo.id)
+                        job.updated.connect(self.mountErrors.setText)
+                        job.result.connect(self.extract_archive_result)
+                        self.app.jobs_manager.add_job(job)
+                    else:
+                        self._set_status(params['message'])
+
+            dialog = choose_file_dialog(self,
+                                        self.tr("Choose Extraction Point"),
+                                        want_folder=True)
+            dialog.open(receive)
+
+        window = ExtractDialog(archive, model)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.Sheet)
+        self._window = window  # for testing
+        window.show()
+        window.accepted.connect(process_result)
 
     def extract_archive_result(self, result):
+        """Finished extraction."""
         self._toggle_all_buttons(True)
 
     def cell_double_clicked(self, row, column):
@@ -871,8 +892,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             model = DiffTree()
 
-            self._t = ParseThread(result['data'], result['params']['json_lines'],
-                                  model)
+            self._t = diff_result.ParseThread(result['data'],
+                                              result['params']['json_lines'],
+                                              model)
             self._t.finished.connect(lambda: self.show_diff_result(
                 archive_newer, archive_older, model))
             self._t.start()

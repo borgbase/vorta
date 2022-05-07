@@ -1,58 +1,69 @@
+import enum
 import json
-import os
+import logging
+from dataclasses import dataclass
 from datetime import datetime
+from pathlib import PurePath
+from typing import Optional
 
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QDateTime, QLocale, QModelIndex, Qt, QThread
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QDialogButtonBox, QHeaderView, QPushButton
 
-from vorta.utils import get_asset, get_dict_from_list, nested_dict
-from vorta.views.partials.tree_view import TreeModel
+from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
+
+from .partials.treemodel import (FileSystemItem, FileTreeModel, path_to_str,
+                                 relative_path)
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 
+logger = logging.getLogger(__name__)
+
+
+class ParseThread(QThread):
+    """A thread parsing diff results."""
+
+    def __init__(self, fs_data: str, model, parent=None):
+        """Init."""
+        super().__init__(parent)
+        self.model = model
+        self.fs_data = fs_data
+
+    def run(self) -> None:
+        """Do the work"""
+        # handle case of a single line of result, which will already be a dict
+        if isinstance(self.fs_data, dict):
+            lines = [self.fs_data]
+        else:
+            lines = [json.loads(line) for line in self.fs_data.split("\n") if line]
+
+        parse_json_lines(lines, self.model)
+
 
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
-    def __init__(self, fs_data, archive):
+    """
+    Show the contents of an archive and allow choosing what to extract.
+    """
+
+    def __init__(self, archive, model):
+        """Init."""
         super().__init__()
         self.setupUi(self)
 
-        nested_file_list = nested_dict()
-        self.selected = set()
-
-        def parse_json_line(data):
-            size = data["size"]
-            # python >= 3.7
-            # modified = datetime.fromisoformat(data["mtime"]).ctime()
-            # python < 3.7
-            try:
-                modified = datetime.strptime(data["mtime"], "%Y-%m-%dT%H:%M:%S.%f").ctime()
-            except ValueError:
-                modified = datetime.strptime(data["mtime"], "%Y-%m-%dT%H:%M:%S").ctime()
-            dirpath, name = os.path.split(data["path"])
-            # add to nested dict of folders to find nested dirs.
-            d = get_dict_from_list(nested_file_list, dirpath.split("/"))
-            if name not in d:
-                d[name] = {}
-            return size, modified, name, dirpath, data["type"]
-
-        # handle case of a single line of result, which will already be a dict
-        lines = [fs_data] if isinstance(fs_data, dict) else \
-            [json.loads(line) for line in fs_data.split('\n') if line]
-
-        files_with_attributes = [parse_json_line(line) for line in lines]
-
-        model = ExtractTree(files_with_attributes, nested_file_list, self.selected)
+        self.model = model
+        self.model.setParent(self)
 
         view = self.treeView
         view.setAlternatingRowColors(True)
         view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-        view.setModel(model)
+        view.setModel(self.model)
         header = view.header()
         header.setStretchLastSection(False)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
 
         # add extract button to button box
@@ -60,10 +71,13 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.extractButton.setObjectName("extractButton")
         self.extractButton.setText(self.tr("Extract"))
 
-        self.buttonBox.addButton(self.extractButton,
-                                 QDialogButtonBox.ButtonRole.AcceptRole)
+        self.buttonBox.addButton(
+            self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole
+        )
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
+
+        # connect signals
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.accept)
 
@@ -72,37 +86,462 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         super().retranslateUi(dialog)
 
         # setupUi calls retranslateUi
-        if hasattr(self, 'extractButton'):
+        if hasattr(self, "extractButton"):
             self.extractButton.setText(self.tr("Extract"))
 
 
-class ExtractTree(TreeModel):
-    def __init__(
-        self,
-        files_with_attributes,
-        nested_file_list,
-        selected_files_folders,
-        parent=None,
-    ):
-        super().__init__(
-            files_with_attributes, nested_file_list, selected_files_folders, parent
+def parse_json_lines(lines, model: "ExtractTree"):
+    """Parse json output of `borg list`."""
+    for item in lines:
+        path = PurePath(item["path"])
+
+        size = item["size"]
+        mode = item["mode"]
+        file_type = FileType(mode[0])
+        user = item["user"]
+        group = item["group"]
+        health = item["healthy"]
+        source_path = item["source"] if "source" in item else None
+
+        # For python >= 3.7 this would work
+        # modified = datetime.fromisoformat(item["mtime"]).ctime()
+        # for python == 3.6 this must do the job
+        # try:
+        #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S.%f")
+        # except ValueError:
+        #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S")
+
+        modified = QDateTime.fromString(item["mtime"], Qt.DateFormat.ISODateWithMs)
+
+        model.addItem(
+            (
+                path,
+                FileData(
+                    file_type, size, mode, user, group, health, modified, source_path
+                ),
+            )
         )
 
-    def data(self, index, role):
+
+class FileType(enum.Enum):
+    """File type of an item inside a borg archive."""
+
+    FILE = "-"
+    DIRECTORY = "d"
+    SYMBOLIC_LINK = "l"
+    LINK = SYMBOLIC_LINK
+    HARD_LINK = "h"
+    FIFO = "p"
+    SOCKET = "s"
+    CHRDEV = "c"
+    BLKDEV = "b"
+
+
+@dataclass
+class FileData:
+    """The data linked to a item inside a borg archive."""
+
+    file_type: FileType
+    size: int
+    mode: str
+    user: str
+    group: str
+    health: bool
+    last_modified: QDateTime
+    source_path: Optional[str] = None  # only relevant for links
+
+    checkstate: int = 0  # whether to extract the file (0, 1 or 2)
+    checked_children: int = 0  # number of children checked
+
+
+class ExtractTree(FileTreeModel[FileData]):
+    """The file tree model for diff results."""
+
+    def _make_filesystemitem(self, path, data):
+        return super()._make_filesystemitem(path, data)
+
+    def _merge_data(self, item, data):
+        if data:
+            logger.debug("Overriding data for {}".format(path_to_str(item.path)))
+        return super()._merge_data(item, data)
+
+    def _flat_filter(self, item):
+        """
+        Return whether an item is part of the flat model representation.
+
+        The item's data might have not been set yet.
+        """
+        return item.data and not item.children
+
+    def _simplify_filter(self, item: FileSystemItem[FileData]) -> bool:
+        """
+        Return whether an item may be merged in simplified mode.
+
+        Allows simplification for every item.
+        """
+        return True
+
+    def _process_child(self, child):
+        """
+        Process a new child.
+
+        This can make some changes to the child's data like
+        setting a default value if the child's data is None.
+        This can also update the data of the parent.
+        This must emit `dataChanged` if data is changed.
+
+        Parameters
+        ----------
+        child : FileSystemItem
+            The child that was added.
+        """
+        parent = child._parent
+
+        if not child.data:
+            child.data = FileData(
+                FileType.DIRECTORY, 0, "", "", "", True, datetime.now()
+            )
+
+        if child.data.size != 0:
+            # update size
+            size = child.data.size
+
+            def add_size(parent):
+                if parent is self.root:
+                    return
+
+                if parent.data is None:
+                    raise Exception(
+                        "Item {} without data".format(path_to_str(parent.path))
+                    )
+                else:
+                    parent.data.size += size
+
+                # update parent
+                parent = parent._parent
+                if parent:
+                    add_size(parent)
+
+            add_size(parent)
+
+    def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
+        """
+        Returns the number of columns for the children of the given parent.
+
+        This corresponds to the number of data (column) entries shown
+        for each item in the tree view.
+
+        Parameters
+        ----------
+        parent : QModelIndex, optional
+            The index of the parent, by default QModelIndex()
+
+        Returns
+        -------
+        int
+            The number of rows.
+        """
+        # name, last modified, size, health
+        return 4
+
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: int = Qt.ItemDataRole.DisplayRole,
+    ):
+        """
+        Get the data for the given role and section in the given header.
+
+        The header is identified by its orientation.
+        For horizontal headers, the section number corresponds to
+        the column number. Similarly, for vertical headers,
+        the section number corresponds to the row number.
+
+        Parameters
+        ----------
+        section : int
+            The row or column number.
+        orientation : Qt.Orientation
+            The orientation of the header.
+        role : int, optional
+            The data role, by default Qt.ItemDataRole.DisplayRole
+
+        Returns
+        -------Improve
+        Any
+            The data for the specified header section.
+        """
+        if (
+            orientation == Qt.Orientation.Horizontal
+            and role == Qt.ItemDataRole.DisplayRole
+        ):
+            if section == 0:
+                return self.tr("Name")
+            elif section == 1:
+                return self.tr("Last Modified")
+            elif section == 2:
+                return self.tr("Size")
+            elif section == 3:
+                return self.tr("Health")
+
+        return None
+
+    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
+        """
+        Get the data for the given role and index.
+
+        The indexes internal pointer references the corresponding
+        `FileSystemItem`.
+
+        Parameters
+        ----------
+        index : QModelIndex
+            The index of the item.
+        role : int, optional
+            The data role, by default Qt.ItemDataRole.DisplayRole
+
+        Returns
+        -------
+        Any
+            The data, return None if no data is available for the role.
+        """
         if not index.isValid():
             return None
+
+        item: FileSystemItem[FileData] = index.internalPointer()
+        column = index.column()
+
+        if role == Qt.ItemDataRole.DisplayRole:
+            if column == 0:
+                # name
+                if self.mode == self.DisplayMode.FLAT:
+                    return path_to_str(item.path)
+
+                if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
+                    parent = index.parent()
+                    if parent == QModelIndex():
+                        return path_to_str(relative_path(self.root.path, item.path))
+
+                    return path_to_str(
+                        relative_path(parent.internalPointer().path, item.path)
+                    )
+
+                # standard tree mode
+                return item.subpath
+            elif column == 1:
+                # last modified
+                return QLocale.system().toString(
+                    item.data.last_modified, QLocale.FormatType.ShortFormat
+                )
+            elif column == 2:
+                # size
+                return pretty_bytes(item.data.size)
+            else:
+                # health
+                return
+
+        if role == Qt.ItemDataRole.BackgroundRole and column == 3:
+            # health indicator
+            if item.data.health:
+                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+            else:
+                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+
+        if role == Qt.ItemDataRole.ToolTipRole:
+            if column == 0:
+                # name column -> display fullpath
+                return path_to_str(item.path)
+
+            # info/data tooltip -> no real size limitation
+            tooltip_template = (
+                "{name}\n"
+                + "\n"
+                + "{filetype}\n"
+                + "{permissions}\n"
+                + "{user} {group}\n"
+                + "Modified: {last_modified}\n"
+                + "Health: {health}\n"
+            )
+
+            # format
+            if item.data.file_type == FileType.FILE:
+                filetype = self.tr("File")
+            elif item.data.file_type == FileType.DIRECTORY:
+                filetype = self.tr("Directory")
+            elif item.data.file_type == FileType.LINK:
+                filetype = self.tr("Symbolic link")
+            elif item.data.file_type == FileType.FIFO:
+                filetype = self.tr("FIFO pipe")
+            elif item.data.file_type == FileType.HARD_LINK:
+                filetype = self.tr("Hard link")
+            elif item.data.file_type == FileType.SOCKET:
+                filetype = self.tr("Socket")
+            elif item.data.file_type == FileType.BLKDEV:
+                filetype = self.tr("Block special file")
+            elif item.data.file_type == FileType.CHRDEV:
+                filetype = self.tr("Character special file")
+            else:
+                raise Exception("Unknown filetype {}".format(item.data.file_type))
+
+            modified = QLocale.system().toString(item.data.last_modified)
+
+            if item.data.health:
+                health = self.tr("healthy")
+            else:
+                health = self.tr("broken")
+
+            tooltip = tooltip_template.format(
+                name=item.path[-1],
+                filetype=filetype,
+                permissions=item.data.mode,
+                user=item.data.user,
+                group=item.data.group,
+                last_modified=modified,
+                health=health,
+            )
+
+            if item.data.source_path:
+                tooltip += self.tr("Linked to: {}").format(item.data.source_path)
+
+            return tooltip
+
+        if role == Qt.ItemDataRole.CheckStateRole and column == 0:
+            return item.data.checkstate
+
+    def setData(
+        self, index: QModelIndex, value, role: int = Qt.ItemDataRole.DisplayRole
+    ) -> bool:
+        """
+        Sets the role data for the item at index to value.
+
+        Returns true if successful; otherwise returns false.
+        The dataChanged() signal should be emitted if the data was
+        successfully set.
+        """
+        if role != Qt.ItemDataRole.CheckStateRole:
+            return False
+
+        item: FileSystemItem[FileData] = index.internalPointer()
+
+        if value == item.data.checkstate:
+            return True
+
+        super_index = index.parent()
+        if super_index == QModelIndex():
+            super_item = self.root
+        else:
+            super_item: ExtractFileItem = super_index.internalPointer()
+
+        parent = item._parent
+        while parent != super_item:
+            if value == Qt.CheckState.Unchecked:
+                # must have been one of the others previously
+                parent.data.checked_children -= 1
+            elif item.data.checkstate == Qt.CheckState.Unchecked:  # old value
+                # change from partially checked to checked
+                # or the other way around does not change this count
+                parent.data.checked_children += 1
+
+            if parent.data.checked_children:
+                parent.data.checkstate = Qt.CheckState.PartiallyChecked
+            else:
+                parent.data.checkstate = Qt.CheckState.Unchecked
+
+            parent = parent._parent
+
+        if super_index != QModelIndex():
+            if value == Qt.CheckState.Unchecked:
+                # must have been one of the others previously
+                super_item.data.checked_children -= 1
+            elif item.data.checkstate == Qt.CheckState.Unchecked:
+                # change from partially checked to checked
+                # or the other way around does not change this count
+                super_item.data.checked_children += 1
+
+            # update parent's state and possibly the parent's parent's state
+            if parent.data.checked_children:
+                self.setData(index.parent(), Qt.CheckState.PartiallyChecked, role)
+            else:
+                self.setData(index.parent(), Qt.CheckState.Unchecked, role)
+
+        # update state of the children without changing their parents' states
+        if value != Qt.CheckState.PartiallyChecked:
+            self.set_checkstate_recursively(index, value)
+
+        # update this item's state
+        item.data.checkstate = value
+        self.dataChanged.emit(index, index, (role,))
+
+        return True
+
+    def set_checkstate_recursively(self, index: QModelIndex, value: Qt.CheckState):
+        """
+        Set the checkstate of the children of an index recursively.
+
+        Parameters
+        ----------
+        index : QModelIndex
+            The parent index to start with.
+        value : Qt.CheckState
+            The state to set.
+        """
+
+        number_children = self.rowCount(index)
+        if not number_children:
+            return
+
+        index.internalPointer().data.checked_children = (
+            0 if value == Qt.CheckState.Unchecked else number_children
+        )
 
         item = index.internalPointer()
+        for i in range(number_children):
+            child = index.child(i, 0)
+            child_item: ExtractFileItem = child.internalPointer()
+            child_item.data.checkstate = value
 
-        if role == Qt.DisplayRole:
-            return item.data(index.column())
-        elif role == Qt.CheckStateRole and index.column() == 0:
-            return item.getCheckedState()
-        else:
-            return None
+            # set state of hidden items
+            parent = child_item._parent
+            while parent != item:
+                # hidden parent must have 1 child
+                parent.data.checked_children = (
+                    0 if value == Qt.CheckState.Unchecked
+                    else self.rowCount(child)
+                )
+                parent.data.checkstate = value
 
-    def flags(self, index):
-        if not index.isValid():
-            return Qt.NoItemFlags
+                parent = parent._parent
 
-        return Qt.ItemIsEnabled | Qt.ItemIsUserCheckable
+            # set state of this child's children
+            self.set_checkstate_recursively(child, value)
+
+        self.dataChanged.emit(
+            index.child(0, 0),
+            index.child(0, number_children - 1),
+            (Qt.ItemDataRole.CheckStateRole,),
+        )
+
+    def flags(self, index: QModelIndex):
+        """
+        Returns the item flags for the given index.
+
+        The base class implementation returns a combination of flags
+        that enables the item (ItemIsEnabled) and
+        allows it to be selected (ItemIsSelectable).
+
+        Parameters
+        ----------
+        index : QModelIndex
+            The index.
+
+        Returns
+        -------
+        Qt.ItemFlags
+            The flags.
+        """
+        flags = super().flags(index)
+        if index.column() == 0:
+            flags |= Qt.ItemFlag.ItemIsUserCheckable
+
+        return flags

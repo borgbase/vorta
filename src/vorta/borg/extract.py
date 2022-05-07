@@ -1,3 +1,5 @@
+from vorta.views.extract_dialog import ExtractTree
+
 from .borg_job import BorgJob
 
 
@@ -13,7 +15,7 @@ class BorgExtractJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Restored files from archive.'))
 
     @classmethod
-    def prepare(cls, profile, archive_name, selected_files, destination_folder):
+    def prepare(cls, profile, archive_name, selected_files: ExtractTree, destination_folder):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -22,7 +24,8 @@ class BorgExtractJob(BorgJob):
 
         cmd = ['borg', 'extract', '--list', '--info', '--log-json']
         cmd.append(f'{profile.repo.url}::{archive_name}')
-        for s in selected_files:
+
+        for s in selected_files: # TODO
             cmd.append(s)
 
         ret['ok'] = True

@@ -152,8 +152,8 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
     # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
-    assert tab._window.treeView.model().rootItem.childItems[0].data(0) == 'Users'
-    tab._window.treeView.model().rootItem.childItems[0].load_children()
+    model = tab._window.model
+    assert model.root.children[0].subpath == 'home'
     assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
 
 
