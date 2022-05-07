@@ -160,7 +160,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                            self.bRefreshArchive.text(),
                            self.refresh_archive_info))
         archive_actions.append(
-            menu.addAction(self.bMount.icon(), self.bMount.text(),
+            menu.addAction(self.bMountArchive.icon(), self.bMountArchive.text(),
                            self.bmount_clicked))
         archive_actions.append(
             menu.addAction(self.bExtract.icon(), self.bExtract.text(),
@@ -324,7 +324,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 widget = layout.itemAt(index).widget()
                 widget.setToolTip(self.tooltip_dict.get(widget, ""))
 
-            # refresh bMount for the selected archive
+            # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
         else:
             # too few or too many selected.
@@ -501,7 +501,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def bmountarchive_refresh(self):
         """
-        Update label, tooltip and state of `bMount`.
+        Update label, tooltip and state of `bMountArchive`.
 
         The new state depends on the mount status of the current archive.
         This also updates the icon of the button.
@@ -522,7 +522,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def bmountrepo_refresh(self):
         """
-        Update label, tooltip and state of `bMount`.
+        Update label, tooltip and state of `bMountRepo`.
 
         The new state depends on the mount status of the current archive.
         This also updates the icon of the button.
