@@ -62,7 +62,7 @@ class ParseThread(QThread):
 class DiffResultDialog(DiffResultBase, DiffResultUI):
     """Display the results of `borg diff`."""
 
-    def __init__(self, archive_newer: str, archive_older: str,
+    def __init__(self, archive_newer, archive_older,
                  model: 'DiffTree'):
         """Init."""
         super().__init__()
