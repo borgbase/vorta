@@ -68,6 +68,7 @@ class VortaScheduler(QtCore.QObject):
                 logger.debug(
                     'Nothing scheduled for profile %s because of unset repo.',
                     profile_id)
+                return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
