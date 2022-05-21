@@ -1,12 +1,15 @@
+import enum
 import logging
 import threading
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, NamedTuple, Optional, Tuple, Union
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 
+from vorta import application
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
@@ -18,6 +21,18 @@ from vorta.store.models import BackupProfileModel, EventLogModel
 logger = logging.getLogger(__name__)
 
 
+class ScheduleStatusType(enum.Enum):
+    SCHEDULED = enum.auto()  # date provided
+    UNSCHEDULED = enum.auto()  # Unknown
+    TOO_FAR_AHEAD = enum.auto()  # QTimer range exceeded, date provided
+    NO_PREVIOUS_BACKUP = enum.auto()  # run a manual backup first
+
+
+class ScheduleStatus(NamedTuple):
+    type: ScheduleStatusType
+    time: Optional[dt] = None
+
+
 class VortaScheduler(QtCore.QObject):
 
     #: The schedule for the profile with the given id changed.
@@ -27,9 +42,10 @@ class VortaScheduler(QtCore.QObject):
         super().__init__()
 
         #: mapping of profiles to timers
-        self.timers: Dict[int, Dict[str, Union[QtCore.QTimer, dt]]] = dict()
+        self.timers: Dict[int, Dict[str, Union[
+            Optional[QTimer], Optional[dt], ScheduleStatusType]]] = dict()
 
-        self.app = QApplication.instance()
+        self.app: application.VortaApp = QApplication.instance()
         self.lock = threading.Lock()
 
         # pausing will prevent scheduling for a specified time
@@ -37,10 +53,14 @@ class VortaScheduler(QtCore.QObject):
 
         # Set additional timer to make sure background tasks stay scheduled.
         # E.g. after hibernation
-        self.qt_timer = QtCore.QTimer()
+        self.qt_timer = QTimer()
         self.qt_timer.timeout.connect(self.reload_all_timers)
         self.qt_timer.setInterval(15 * 60 * 1000)
         self.qt_timer.start()
+
+        # connect signals
+        self.app.backup_finished_event.connect(
+            lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -166,8 +186,7 @@ class VortaScheduler(QtCore.QObject):
 
         with self.lock:  # Acquire lock
 
-            if profile_id in self.timers:
-                self.remove_job(profile_id)  # reset schedule
+            self.remove_job(profile_id)  # reset schedule
 
             pause = self.pauses.get(profile_id)
             if pause is not None:
@@ -186,10 +205,14 @@ class VortaScheduler(QtCore.QObject):
                 logger.debug(
                     'Nothing scheduled for profile %s because of unset repo.',
                     profile_id)
+                # Emit signal so that e.g. the GUI can react to the new schedule
+                self.schedule_changed.emit(profile_id)
                 return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
+                # Emit signal so that e.g. the GUI can react to the new schedule
+                self.schedule_changed.emit(profile_id)
                 return
 
             logger.info('Setting timer for profile %s', profile_id)
@@ -210,21 +233,26 @@ class VortaScheduler(QtCore.QObject):
                     0 <= EventLogModel.returncode <= 1,
                 ).order_by(EventLogModel.end_time.desc()).first()
 
+            if last_run_log is None:
+                logger.info(f"Nothing scheduled for profile {profile_id} " +
+                            "because it would be the first backup " +
+                            "for this profile.")
+                self.timers[profile_id] = {
+                    'type': ScheduleStatusType.NO_PREVIOUS_BACKUP
+                }
+                # Emit signal so that e.g. the GUI can react to the new schedule
+                self.schedule_changed.emit(profile_id)
+                return
+
             # calculate next scheduled time
             if profile.schedule_mode == 'interval':
-                if last_run_log is None:
-                    last_time = dt.now()
-                else:
-                    last_time = last_run_log.end_time
+                last_time = last_run_log.end_time
 
                 interval = {profile.schedule_interval_unit: profile.schedule_interval_count}
                 next_time = last_time + timedelta(**interval)
 
             elif profile.schedule_mode == 'fixed':
-                if last_run_log is None:
-                    last_time = dt.now()
-                else:
-                    last_time = last_run_log.end_time + timedelta(days=1)
+                last_time = last_run_log.end_time + timedelta(days=1)
 
                 next_time = last_time.replace(
                     hour=profile.schedule_fixed_hour,
@@ -273,19 +301,28 @@ class VortaScheduler(QtCore.QObject):
             if timer_ms < 2**31 - 1:
                 logger.debug('Scheduling next run for %s', next_time)
 
-                timer = QtCore.QTimer()
+                timer = QTimer()
                 timer.setSingleShot(True)
                 timer.setInterval(int(timer_ms))
                 timer.timeout.connect(lambda: self.create_backup(profile_id))
                 timer.start()
 
-                self.timers[profile_id] = {'qtt': timer, 'dt': next_time}
+                self.timers[profile_id] = {
+                    'qtt': timer,
+                    'dt': next_time,
+                    'type': ScheduleStatusType.SCHEDULED
+                }
             else:
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
                 logger.debug(
                     f"Couldn't schedule for {next_time} because "
                     f"timer value {timer_ms} too large.")
+
+                self.timers[profile_id] = {
+                    'dt': next_time,
+                    'type': ScheduleStatusType.TOO_FAR_AHEAD
+                }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit(profile_id)
@@ -299,6 +336,9 @@ class VortaScheduler(QtCore.QObject):
         next_job = now = dt.now()
         next_profile = None
         for profile_id, timer in self.timers.items():
+            if timer['type'] != ScheduleStatusType.SCHEDULED:
+                continue
+
             if next_job == now and timer['dt'] > next_job and timer['qtt'].isActive():
                 next_job = timer['dt']
                 next_profile = profile_id
@@ -312,12 +352,11 @@ class VortaScheduler(QtCore.QObject):
         else:
             return self.tr('None scheduled')
 
-    def next_job_for_profile(self, profile_id):
+    def next_job_for_profile(self, profile_id: int) -> ScheduleStatus:
         job = self.timers.get(profile_id)
         if job is None:
-            return self.tr('None scheduled')
-        else:
-            return job['dt'].strftime('%Y-%m-%d %H:%M')
+            return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
+        return ScheduleStatus(job['type'], time=job.get('dt'))
 
     def create_backup(self, profile_id):
         notifier = VortaNotifications.pick()
@@ -415,5 +454,8 @@ class VortaScheduler(QtCore.QObject):
 
     def remove_job(self, profile_id):
         if profile_id in self.timers:
-            self.timers[profile_id]['qtt'].stop()
+            qtimer = self.timers[profile_id].get('qtt')
+            if qtimer is not None:
+                qtimer.stop()
+
             del self.timers[profile_id]

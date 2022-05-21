@@ -1,17 +1,35 @@
-from datetime import date
 from datetime import datetime as dt
-from datetime import time
+from datetime import timedelta
+from unittest.mock import MagicMock
 
+import pytest
 from PyQt5 import QtCore
 
+import vorta.scheduler
+from vorta.application import VortaApp
+from vorta.store.models import BackupProfileModel, EventLogModel
 
-def test_schedule_tab(qapp, qtbot):
+PROFILE_NAME = 'Default'
+
+
+@pytest.fixture
+def clockmock(monkeypatch):
+    datetime_mock = MagicMock(wraps=dt)
+    monkeypatch.setattr(vorta.scheduler, "dt", datetime_mock)
+
+    return datetime_mock
+
+
+def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     main = qapp.main_window
     tab = main.scheduleTab
 
+    # setup
+    time_now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time_now
+
     # Work around
     # because already 'deleted' scheduletabs are still connected to the signal
-    qapp.scheduler.schedule_changed.disconnect()
     qapp.scheduler.schedule_changed.connect(lambda *args: tab.draw_next_scheduled_backup())
 
     # Test
@@ -31,5 +49,24 @@ def test_schedule_tab(qapp, qtbot):
     tab.scheduleFixedRadio.setChecked(True)
     tab.scheduleFixedRadio.clicked.emit()
 
-    next_backup = dt.combine(date.today(), time(23, 59))
-    assert tab.nextBackupDateTimeLabel.text() == next_backup.strftime('%Y-%m-%d %H:%M')
+    assert tab.nextBackupDateTimeLabel.text() == 'Run a manual backup first'
+
+    next_backup = time_now.replace(hour=23, minute=59)
+    last_time = time_now - timedelta(days=2)
+
+    # setup model
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.save()
+    event = EventLogModel(subcommand='create',
+                          profile=profile.id,
+                          returncode=0,
+                          category='scheduled',
+                          start_time=last_time,
+                          end_time=last_time)
+    event.save()
+
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    tab.draw_next_scheduled_backup()
+    assert next_backup.strftime('%B %Y %H:%M:%S') in tab.nextBackupDateTimeLabel.text()
+    qapp.scheduler.remove_job(profile.id)
