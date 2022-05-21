@@ -1,7 +1,11 @@
 from PyQt5 import QtCore, uic
+from PyQt5.QtCore import QDateTime, QLocale
 from PyQt5.QtWidgets import (QApplication, QHeaderView, QListWidgetItem,
                              QTableView, QTableWidgetItem)
 
+from vorta import application
+from vorta.i18n import get_locale
+from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import (BackupProfileMixin, EventLogModel,
                                 WifiSettingModel)
 from vorta.utils import get_asset, get_sorted_wifis
@@ -24,7 +28,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
-        self.app = QApplication.instance()
+        self.app: application.VortaApp = QApplication.instance()
         self.toolBox.setCurrentIndex(0)
 
         self.schedulerRadioMapping = {
@@ -149,9 +153,21 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.populate_wifi()
         self.populate_logs()
+        self.draw_next_scheduled_backup()
 
     def draw_next_scheduled_backup(self):
-        self.nextBackupDateTimeLabel.setText(self.app.scheduler.next_job_for_profile(self.profile().id))
+        status = self.app.scheduler.next_job_for_profile(self.profile().id)
+        if status.type in (ScheduleStatusType.SCHEDULED,
+                           ScheduleStatusType.TOO_FAR_AHEAD):
+            time = QDateTime.fromMSecsSinceEpoch(
+                int(status.time.timestamp() * 1000))
+            text = get_locale().toString(time, QLocale.FormatType.LongFormat)
+        elif status.type == ScheduleStatusType.NO_PREVIOUS_BACKUP:
+            text = self.tr('Run a manual backup first')
+        else:
+            text = self.tr('None scheduled')
+
+        self.nextBackupDateTimeLabel.setText(text)
         self.nextBackupDateTimeLabel.repaint()
 
     def populate_wifi(self):
