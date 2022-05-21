@@ -265,25 +265,6 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QToolButton" name="bDelete">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="toolTip">
-                 <string>Delete selected archive</string>
-                </property>
-                <property name="text">
-                 <string>Delete</string>
-                </property>
-                <property name="toolButtonStyle">
-                 <enum>Qt::ToolButtonTextBesideIcon</enum>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </item>
@@ -313,6 +294,25 @@
              </property>
              <property name="text">
               <string>Diff</string>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="bDelete">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Delete selected archive</string>
+             </property>
+             <property name="text">
+              <string>Delete</string>
              </property>
              <property name="toolButtonStyle">
               <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -349,8 +349,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>781</width>
-        <height>371</height>
+        <width>540</width>
+        <height>352</height>
        </rect>
       </property>
       <attribute name="label">

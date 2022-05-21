@@ -1,3 +1,5 @@
+from typing import List
+
 from vorta.store.models import RepoModel
 
 from .borg_job import BorgJob
@@ -23,17 +25,22 @@ class BorgDeleteJob(BorgJob):
         self.app.backup_progress_event.emit(self.tr('Archive deleted.'))
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, archives: List[str]):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'delete', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}')
+        if len(archives) <= 0:
+            return ret
 
-        ret['ok'] = True
+        cmd = ['borg', 'delete', '--info', '--log-json']
+        cmd.append(f'{profile.repo.url}::{archives[0]}')
+        cmd.extend(archives[1:])
+
+        ret['archives'] = archives
         ret['cmd'] = cmd
+        ret['ok'] = True
 
         return ret
