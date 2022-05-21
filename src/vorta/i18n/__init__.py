@@ -4,7 +4,7 @@ internationalisation (i18n) support code
 import logging
 import os
 
-from PyQt5.QtCore import QTranslator, QLocale
+from PyQt5.QtCore import QLocale, QTranslator
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +67,12 @@ def init_translations(app):
     if succeeded:
         app.installTranslator(translator)
     logger.debug('Loading translation %s for %r.' % ('succeeded' if succeeded else 'failed', ui_langs))
+
+
+def get_locale():
+    """Get the locale used for translation."""
+    global translator
+    return QLocale(translator.language())
 
 
 def translate(*args, **kwargs):
