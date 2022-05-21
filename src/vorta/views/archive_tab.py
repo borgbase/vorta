@@ -23,7 +23,6 @@ from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
-from vorta.i18n import trans_late
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (choose_file_dialog, format_archive_name, get_asset,
                          get_mount_points, pretty_bytes)
@@ -56,6 +55,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
+        self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -168,9 +168,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         archive_actions.append(
             menu.addAction(self.bRename.icon(), self.bRename.text(),
                            self.rename_action))
-        archive_actions.append(
-            menu.addAction(self.bDelete.icon(), self.bDelete.text(),
-                           self.delete_action))
+        # deletion possible with one but also multiple archives
+        menu.addAction(self.bDelete.icon(), self.bDelete.text(),
+                       self.delete_action)
 
         if not (self.repoactions_enabled and len(selected_rows) <= 1):
             for action in archive_actions:
@@ -185,7 +185,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         selected_rows = self.archiveTable.selectionModel().selectedRows(
             index.column())
         diff_action.setEnabled(self.repoactions_enabled
-                               and len(selected_rows) > 1)
+                               and len(selected_rows) == 2)
 
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
@@ -296,15 +296,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
 
-        # Make sure at maximum 2 rows are selected.
-        if len(indexes) > 2:
-            selectionModel.select(
-                indexes[0], QItemSelectionModel.SelectionFlag.Deselect
-                | QItemSelectionModel.SelectionFlag.Rows)
-            indexes = selectionModel.selectedRows()
+        # toggle delete button
+        if len(indexes) > 0:
+            self.bDelete.setEnabled(True)
+            self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
+        else:
+            self.bDelete.setEnabled(False)
+            tooltip = self.tooltip_dict[self.bDelete]
+            self.bDelete.setToolTip(tooltip + " " +
+                                    self.tr("(Select two archives)"))
 
         # Toggle diff button
-        if len(indexes) >= 2:
+        if len(indexes) == 2:
             # Enable diff button
             self.bDiff.setEnabled(True)
             self.bDiff.setToolTip(self.tooltip_dict.get(self.bDiff, ""))
@@ -763,35 +766,51 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
 
-        params = BorgDeleteJob.prepare(self.profile())
+        # determine selected archives
+        archives = []
+        for index in self.archiveTable.selectionModel().selectedRows():
+            archive_cell = self.archiveTable.item(index.row(), 4)
+            if archive_cell:
+                archives.append(archive_cell.text())
+
+        if not archives:
+            self._set_status(self.tr("No archive selected"))
+            return
+
+        params = BorgDeleteJob.prepare(self.profile(), archives)
         if not params['ok']:
             self._set_status(params['message'])
             return
 
-        self.archive_name = self.selected_archive_name()
-        if self.archive_name is not None:
-            if not self.confirm_dialog(trans_late('ArchiveTab', "Confirm deletion"),
-                                       trans_late('ArchiveTab', "Are you sure you want to delete the archive?")):
-                return
-            params['cmd'][-1] += f'::{self.archive_name}'
-            job = BorgDeleteJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self._set_status)
-            job.result.connect(self.delete_result)
-            self._toggle_all_buttons(False)
-            self.app.jobs_manager.add_job(job)
-
+        if len(archives) > 1:
+            body = self.tr("Are you sure you want to delete all the selected archives?")
         else:
-            self._set_status(self.tr("No archive selected"))
+            body = self.tr("Are you sure you want to delete the selected archive?")
+        if not self.confirm_dialog(self.tr("Confirm deletion"), body):
+            return
+
+        job = BorgDeleteJob(params['cmd'], params, self.profile().repo.id)
+        job.updated.connect(self._set_status)
+        job.result.connect(self.delete_result)
+        self._toggle_all_buttons(False)
+        self.app.jobs_manager.add_job(job)
 
     def delete_result(self, result):
+        archives = result['params']['archives']
         if result['returncode'] == 0:
-            self._set_status(self.tr('Archive deleted.'))
-            deleted_row = self.archiveTable.findItems(self.archive_name, QtCore.Qt.MatchExactly)[0].row()
-            self.archiveTable.removeRow(deleted_row)
-            ArchiveModel.get(name=self.archive_name).delete_instance()
-            del self.archive_name
-        else:
-            self._toggle_all_buttons(True)
+            if len(archives) > 1:
+                status = self.tr('Archives deleted.')
+            else:
+                status = self.tr('Archive deleted.')
+            self._set_status(status)
+
+            # remove rows from list and database
+            for archive in archives:
+                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchExactly):
+                    self.archiveTable.removeRow(entry.row())
+                ArchiveModel.get(name=archive).delete_instance()
+
+        self._toggle_all_buttons(True)
 
     def diff_action(self):
         """
