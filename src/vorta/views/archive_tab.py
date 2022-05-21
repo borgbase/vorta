@@ -161,7 +161,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                            self.refresh_archive_info))
         archive_actions.append(
             menu.addAction(self.bMountArchive.icon(), self.bMountArchive.text(),
-                           self.bmount_clicked))
+                           self.bmountarchive_clicked))
         archive_actions.append(
             menu.addAction(self.bExtract.icon(), self.bExtract.text(),
                            self.extract_action))
