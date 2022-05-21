@@ -221,9 +221,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         window.open()
 
     def repo_select_action(self, index):
-        if index == 0:
-            return
-
         profile = self.profile()
         profile.repo = self.repoSelector.currentData()
         profile.save()
