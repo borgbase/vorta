@@ -14,6 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from subprocess import Popen, PIPE, TimeoutExpired
 
+from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.store.models import EventLogModel, BackupProfileMixin
@@ -60,7 +61,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
         super().__init__()
         self.site_id = site
-        self.app = QApplication.instance()
+        self.app: application.VortaApp = QApplication.instance()
 
         # Declare labels here for translation
         self.category_label = {"files": trans_late("BorgJob", "Files"),
