@@ -220,10 +220,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
 
-    def repo_select_action(self, index):
-        if index == 0:
-            return
-
+    def repo_select_action(self):
         profile = self.profile()
         profile.repo = self.repoSelector.currentData()
         profile.save()
