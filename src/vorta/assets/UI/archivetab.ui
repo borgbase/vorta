@@ -662,7 +662,7 @@
              <widget class="QLabel" name="prunePrefixPreview">
               <property name="font">
                <font>
-                <pointsize>11</pointsize>
+                <italic>true</italic>
                </font>
               </property>
               <property name="styleSheet">
@@ -677,7 +677,7 @@
              <widget class="QLabel" name="archiveNamePreview">
               <property name="font">
                <font>
-                <pointsize>11</pointsize>
+                <italic>true</italic>
                </font>
               </property>
               <property name="styleSheet">
