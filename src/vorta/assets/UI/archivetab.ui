@@ -606,22 +606,6 @@
             <property name="verticalSpacing">
              <number>4</number>
             </property>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Archive Name:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QLineEdit" name="prunePrefixTemplate">
               <property name="toolTip">
@@ -648,16 +632,6 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="archiveNameTemplate">
-              <property name="toolTip">
-               <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
-              </property>
-              <property name="placeholderText">
-               <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QLabel" name="prunePrefixPreview">
               <property name="font">
@@ -673,7 +647,49 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <property name="verticalSpacing">
+             <number>4</number>
+            </property>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="archiveNameTemplate">
+              <property name="toolTip">
+               <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+              </property>
+              <property name="placeholderText">
+               <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Archive Name:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
              <widget class="QLabel" name="archiveNamePreview">
               <property name="font">
                <font>
@@ -694,11 +710,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="frame_name_options">
-         <layout class="QFormLayout" name="formLayout_2"/>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -706,7 +717,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>0</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
