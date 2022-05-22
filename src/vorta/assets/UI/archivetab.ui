@@ -34,7 +34,7 @@
         <x>0</x>
         <y>0</y>
         <width>781</width>
-        <height>371</height>
+        <height>367</height>
        </rect>
       </property>
       <attribute name="label">
@@ -349,8 +349,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>540</width>
-        <height>352</height>
+        <width>781</width>
+        <height>367</height>
        </rect>
       </property>
       <attribute name="label">
@@ -599,14 +599,13 @@
            </layout>
           </item>
           <item>
-           <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Prune Prefix:</string>
-              </property>
-             </widget>
-            </item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>4</number>
+            </property>
             <item row="0" column="1">
              <widget class="QLineEdit" name="prunePrefixTemplate">
               <property name="toolTip">
@@ -617,10 +616,34 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Prune Prefix:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QLabel" name="prunePrefixPreview">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
               <property name="styleSheet">
-               <string notr="true">color: grey</string>
+               <string notr="true">color: grey;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
               </property>
              </widget>
             </item>
@@ -630,50 +653,58 @@
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="frame_name_options">
-         <layout class="QFormLayout" name="formLayout_2">
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="archiveNameTemplate">
-            <property name="toolTip">
-             <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+        <widget class="QGroupBox" name="groupBox_2">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="spacing">
+           <number>12</number>
+          </property>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <property name="verticalSpacing">
+             <number>4</number>
             </property>
-            <property name="placeholderText">
-             <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Archive Name:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="archiveNamePreview">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>11</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: grey</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="margin">
-             <number>1</number>
-            </property>
-           </widget>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="archiveNameTemplate">
+              <property name="toolTip">
+               <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+              </property>
+              <property name="placeholderText">
+               <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Archive Name:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="archiveNamePreview">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: grey</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -686,7 +717,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>0</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
