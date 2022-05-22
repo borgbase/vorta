@@ -601,7 +601,10 @@
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
             <property name="topMargin">
-             <number>10</number>
+             <number>0</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>4</number>
             </property>
             <item row="2" column="0">
              <widget class="QLabel" name="label_3">
