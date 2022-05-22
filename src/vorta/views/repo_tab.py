@@ -1,6 +1,8 @@
 import os
+from pathlib import PurePath
 
 from PyQt5 import QtCore, uic
+from PyQt5.QtCore import QMimeData, QUrl
 from PyQt5.QtWidgets import QApplication, QMenu, QMessageBox
 
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
@@ -266,12 +268,21 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.init_repo_stats()
 
     def copy_URL_action(self):
-        if self.repoSelector.currentIndex() > 2:
-            URL = self.repoSelector.currentText()
-            QApplication.clipboard().setText(URL)
+        selected_repo_id = self.repoSelector.currentData()
+        if not selected_repo_id:
+            # QComboBox is empty
+            return
+
+        repo = RepoModel.get(id=selected_repo_id)
+
+        url = repo.url
+        data = QMimeData()
+
+        if not repo.is_remote_repo():
+            path = PurePath(url)
+            data.setUrls([QUrl(path.as_uri())])
+            data.setText(str(path))
         else:
-            msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.setParent(self, QtCore.Qt.Sheet)
-            msg.setText(self.tr("Select a repository from the dropdown first."))
-            msg.show()
+            data.setText(url)
+
+        QApplication.clipboard().setMimeData(data)
