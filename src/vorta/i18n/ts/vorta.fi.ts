@@ -9,7 +9,7 @@
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
         <source>A profile with this name already exists.</source>
-        <translation>Samanniminen profiili on jo olemassa.</translation>
+        <translation>Nimi on jo käytössä.</translation>
     </message>
     <message>
         <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
@@ -77,17 +77,17 @@
     <message>
         <location filename="../../views/repo_add_dialog.py" line="156"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
-        <translation type="unfinished"/>
+        <translation>Repokey-Blake2 (Suositeltu, avain säilötään tietovarastoon)</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="157"/>
         <source>Repokey</source>
-        <translation type="unfinished"/>
+        <translation>Repokey</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="158"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
-        <translation type="unfinished"/>
+        <translation>Keyfile-Blake2 (Avain säilötään kotihakemistoon)</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="159"/>
@@ -333,27 +333,27 @@
     <message>
         <location filename="../../views/archive_tab.py" line="316"/>
         <source>(Select two archives)</source>
-        <translation type="unfinished"/>
+        <translation>(Valitse kaksi arkistoa)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="514"/>
         <source>Unmount the selected archive from the file system.</source>
-        <translation type="unfinished"/>
+        <translation>Pura valitun arkiston liitos tiedostojärjestelmästä.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="519"/>
         <source>Mount the selected archive as a folder in the file system.</source>
-        <translation type="unfinished"/>
+        <translation>Liitä valittu arkisto kansiona tiedostojärjestelmään.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="532"/>
         <source>Unmount the repository from the file system.</source>
-        <translation type="unfinished"/>
+        <translation>Poista tietovaraston liitos tiedostojärjestelmästä.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="538"/>
         <source>Mount the repository as a folder in the file system.</source>
-        <translation type="unfinished"/>
+        <translation>Liitä tietovarasto kansiona tiedostojärjestelmään.</translation>
     </message>
 </context>
 <context>
@@ -392,17 +392,17 @@
     <message>
         <location filename="../../borg/compact.py" line="11"/>
         <source>Starting repository compaction...</source>
-        <translation type="unfinished"/>
+        <translation>Aloitetaan tietovaraston pakkaus...</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="25"/>
         <source>Errors during compaction. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Virheitä pakkauksen aikana. Katso lisätietoja lokeista.</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="27"/>
         <source>Compaction completed.</source>
-        <translation type="unfinished"/>
+        <translation>Pakkaus suoritettu.</translation>
     </message>
 </context>
 <context>
@@ -441,12 +441,12 @@
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation>Saatiin arkistojen väliset eroavaisuudet.</translation>
+        <translation>Arkistojen väliset eroavaisuudet haettu.</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives…</source>
-        <translation>Pyydetään tietoja arkistojen eroista...</translation>
+        <translation>Haetaan tietoja arkistojen eroista...</translation>
     </message>
 </context>
 <context>
@@ -727,7 +727,10 @@
 &lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
 &lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p&gt;Profiilit mahdollistavat eri varmuuskopio- ja tietovarastoasetusten sekä ajastusasetusten tallentamisen.&lt;/p&gt;
+&lt;p&gt;Kaikki profiilit voivat käyttää samoja tietovarastoja sekä &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt;-avaimia. Yleisiä asetuksia &lt;span style=&quot; font-style:italic;&quot;&gt;Sekalaiset-välilehdeltä&lt;/span&gt; sovelletaan kaikkiin profiileihin.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profileadd.ui" line="87"/>
@@ -737,7 +740,7 @@
     <message>
         <location filename="../../assets/UI/sshadd.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
-        <translation type="unfinished"/>
+        <translation>Jotta SSH löytää avaimen automaattisesti, älä muuta tätä.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/diffdialog.ui" line="14"/>
@@ -752,7 +755,7 @@
     <message>
         <location filename="../../assets/UI/extractdialog.ui" line="14"/>
         <source>Choose files to extract</source>
-        <translation type="unfinished"/>
+        <translation>Valitse purettavat tiedostot</translation>
     </message>
 </context>
 <context>
@@ -967,7 +970,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="437"/>
         <source>weeks</source>
-        <translation>viikon välein</translation>
+        <translation>viikkoa</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="489"/>
@@ -1182,7 +1185,7 @@
     <message>
         <location filename="../../assets/UI/repotab.ui" line="95"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kokeile&lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBasea&lt;/span&gt;&lt;/a&gt;, yksinkertaista ja turvallista varmuuskopiointipalvelua.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repotab.ui" line="247"/>
@@ -1207,17 +1210,17 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="83"/>
         <source>Manual only</source>
-        <translation>Vain manuaalinen</translation>
+        <translation>Ei ajastusta</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="98"/>
         <source>Backup periodically</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopioi aikavälein</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="401"/>
         <source>Interval:</source>
-        <translation type="unfinished"/>
+        <translation>Aikaväli:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="191"/>
@@ -1252,57 +1255,57 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="339"/>
         <source>Validation:</source>
-        <translation type="unfinished"/>
+        <translation>Tietojen varmistus:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="354"/>
         <source>Validate repository data</source>
-        <translation type="unfinished"/>
+        <translation>Varmista tietovaraston tiedot</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="496"/>
         <source>None scheduled</source>
-        <translation type="unfinished"/>
+        <translation>Ei ajastuksia</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="563"/>
         <source>Run backups over metered networks</source>
-        <translation type="unfinished"/>
+        <translation>Suorita varmuuskopiot myös verkoissa, joiden käytöstä saatetaan veloittaa käytön mukaan</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="659"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Suorita komentoja ennen ja jälkeen varmuuskopioinnin. Sekä varmuuskopio- että varmuuskopion jälkeiset komennot suoritetaan vain, jos varmuuskopiota edeltävä komento päättyy virheettömänä (paluukoodi 0). Käytössä olevat muuttujat: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="683"/>
         <source>Pre-backup:</source>
-        <translation type="unfinished"/>
+        <translation>Ennen varmuuskopiota:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="711"/>
         <source>echo &quot;Before backup of $repo_url&quot;</source>
-        <translation type="unfinished"/>
+        <translation>echo &quot;Ennen tietovaraston $repo_url varmuuskopiota&quot;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="731"/>
         <source>Post-backup:</source>
-        <translation type="unfinished"/>
+        <translation>Varmuuskopion jälkeen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="750"/>
         <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
-        <translation type="unfinished"/>
+        <translation>echo &quot;Tietovaraston $repo_url varmuuskopio päättyi paluukoodiin $returncode.&quot;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="771"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lisäargumentit &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;-komennolle. Vaihtoehdot löytyvät &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;borg-dokumentaatiosta&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="793"/>
         <source>--dry-run --noflags</source>
-        <translation type="unfinished"/>
+        <translation>--dry-run --noflags</translation>
     </message>
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="111"/>
@@ -1332,7 +1335,7 @@
     <message>
         <location filename="../../assets/UI/sourcetab.ui" line="187"/>
         <source>E.g. */.cache</source>
-        <translation type="unfinished"/>
+        <translation>Esim. */.cache</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="576"/>
@@ -1379,17 +1382,17 @@
     <message>
         <location filename="../../views/import_window.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
-        <translation type="unfinished"/>
+        <translation>Syötä tunnuslause (ladattu jo viedystä tiedostosta)</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
-        <translation type="unfinished"/>
+        <translation>Syötä tunnuslause (ladattu jo avainnipustasi)</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="50"/>
         <source>(Name is not used yet)</source>
-        <translation type="unfinished"/>
+        <translation>(Nimi ei ole vielä käytössä)</translation>
     </message>
 </context>
 <context>
@@ -1517,7 +1520,7 @@
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="71"/>
         <source>Add a new profile (Dropdown: Import from file)</source>
-        <translation type="unfinished"/>
+        <translation>Lisää uusi profiili (pudotusvalikko: tuo tiedostosta)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="87"/>
@@ -1615,23 +1618,23 @@
     <message>
         <location filename="../../views/repo_tab.py" line="195"/>
         <source>Could not find public key.</source>
-        <translation type="unfinished"/>
+        <translation>Julkista avainta ei löytynyt.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="104"/>
         <source>N/A</source>
         <comment>Not available.</comment>
-        <translation type="unfinished"/>
+        <translation>N/A</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="105"/>
         <source>Select a repository first.</source>
-        <translation type="unfinished"/>
+        <translation>Valitse tietovarasto ensin.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="106"/>
         <source>Try refreshing the metadata of any archive.</source>
-        <translation type="unfinished"/>
+        <translation>Yritä päivittää minkä tahansa arkiston metatiedot.</translation>
     </message>
 </context>
 <context>
@@ -1679,7 +1682,7 @@
     <message>
         <location filename="../../views/ssh_dialog.py" line="48"/>
         <source>Generate and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Luo ja kopioi leikepöydälle</translation>
     </message>
 </context>
 <context>
@@ -1687,22 +1690,22 @@
     <message>
         <location filename="../../views/schedule_tab.py" line="46"/>
         <source>Minutes</source>
-        <translation>Minuutit</translation>
+        <translation>minuuttia</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="47"/>
         <source>Hours</source>
-        <translation>Tunnit</translation>
+        <translation>tuntia</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="48"/>
         <source>Days</source>
-        <translation>Päivät</translation>
+        <translation>päivää</translation>
     </message>
     <message>
         <location filename="../../views/schedule_tab.py" line="49"/>
         <source>Weeks</source>
-        <translation>Viikot</translation>
+        <translation>viikkoa</translation>
     </message>
 </context>
 <context>
@@ -1755,7 +1758,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="360"/>
         <source>Some of your sources are invalid:</source>
-        <translation type="unfinished"/>
+        <translation>Jotkin lähteistä eivät ole kelvollisia:</translation>
     </message>
 </context>
 <context>
@@ -1886,7 +1889,7 @@
     <message>
         <location filename="../../application.py" line="329"/>
         <source>Borg exited with a warning message. See logs for details.</source>
-        <translation type="unfinished"/>
+        <translation>Borg päättyi virheilmoitukseen. Katso lisätietoja lokeista.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="334"/>
@@ -1901,12 +1904,12 @@
     <message>
         <location filename="../../application.py" line="341"/>
         <source>Repository data check for repo %s failed. Error code %s</source>
-        <translation type="unfinished"/>
+        <translation>Tietovaraston %s tietojen tarkistus epäonnistui. Virhekoodi %s</translation>
     </message>
     <message>
         <location filename="../../application.py" line="346"/>
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
-        <translation type="unfinished"/>
+        <translation>Harkitse pian tietovaraston korjaamista tai uudelleen luomista, jotta vältytään tietojen katoamiselta.</translation>
     </message>
 </context>
 <context>
@@ -2026,7 +2029,7 @@ Poista tietovaraston linkitys ja lisää se uudelleen.</translation>
     <message>
         <location filename="../../borg/compact.py" line="39"/>
         <source>This feature needs Borg 1.2.0 or higher.</source>
-        <translation type="unfinished"/>
+        <translation>Tämä ominaisuus vaatii Borg-version 1.2.0 tai uudemman.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="165"/>
@@ -2084,7 +2087,7 @@ Poista tietovaraston linkitys ja lisää se uudelleen.</translation>
     <message>
         <location filename="../../store/settings.py" line="19"/>
         <source>Information</source>
-        <translation type="unfinished"/>
+        <translation>Tietoa</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="20"/>
@@ -2094,12 +2097,12 @@ Poista tietovaraston linkitys ja lisää se uudelleen.</translation>
     <message>
         <location filename="../../store/settings.py" line="57"/>
         <source>Store repository passwords in system keychain, if available</source>
-        <translation type="unfinished"/>
+        <translation>Säilö tietovarastojen salasanat järjestelmän avainnipussa, jos käytössä</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="63"/>
         <source>Try to replace existing permissions when mounting an archive</source>
-        <translation type="unfinished"/>
+        <translation>Yritä korvata aiemmat käyttöoikeudet, kun arkisto liitetään</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="98"/>
