@@ -333,7 +333,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="316"/>
         <source>(Select two archives)</source>
-        <translation type="unfinished"/>
+        <translation>(Wähle zwei Archive aus)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="514"/>
@@ -1203,7 +1203,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="76"/>
         <source>Backup schedule:</source>
-        <translation>Sicherungszeitplan</translation>
+        <translation>Sicherungszeitplan:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="83"/>
@@ -1223,7 +1223,7 @@
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="191"/>
         <source>Backup daily</source>
-        <translation>Tägliche Sicherung</translation>
+        <translation>Tägliche Datensicherung</translation>
     </message>
     <message>
         <location filename="../../assets/UI/scheduletab.ui" line="238"/>
