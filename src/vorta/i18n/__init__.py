@@ -71,8 +71,11 @@ def init_translations(app):
 
 def get_locale():
     """Get the locale used for translation."""
-    global translator
-    return QLocale(translator.language())
+    # global translator
+    # QTranslator.language was added with Qt 15.15
+    # return QLocale(translator.language())
+    global locale
+    return locale
 
 
 def translate(*args, **kwargs):
