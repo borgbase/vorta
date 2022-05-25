@@ -68,5 +68,11 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
 
     qapp.scheduler.set_timer_for_profile(profile.id)
     tab.draw_next_scheduled_backup()
-    assert next_backup.strftime('%B %Y %H:%M:%S') in tab.nextBackupDateTimeLabel.text()
+
+    assert tab.nextBackupDateTimeLabel.text() not in [
+        "Run a manual backup first",
+        "None scheduled",
+    ]
+    assert qapp.scheduler.next_job_for_profile(profile.id).time == next_backup
+
     qapp.scheduler.remove_job(profile.id)
