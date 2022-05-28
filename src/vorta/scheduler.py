@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import QTimer, QLocale
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 
 from vorta import application
@@ -14,7 +14,7 @@ from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
-from vorta.i18n import translate, get_locale
+from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
 
@@ -346,15 +346,15 @@ class VortaScheduler(QtCore.QObject):
         if len(scheduled) == 0:
             return self.tr("None scheduled")
 
-        next_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
-        profile_id, timer = next_job
+        closest_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
+        profile_id, timer = closest_job
         time = timer["dt"]
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
-        time_format = time.strftime("%H:%M")
+        time_format = "%H:%M"
         if time - now > timedelta(days=1):
-            time_format = get_locale().toString(time, QLocale.FormatType.NarrowFormat)
-        return f"{time_format} ({profile.name})"
+            time_format = "%b %d, %H:%M"
+        return f"{time.strftime(time_format)} ({profile.name})"
 
     def next_job_for_profile(self, profile_id: int) -> ScheduleStatus:
         job = self.timers.get(profile_id)
