@@ -333,24 +333,28 @@ class VortaScheduler(QtCore.QObject):
             self.set_timer_for_profile(profile.id)
 
     def next_job(self):
-        next_job = now = dt.now()
-        next_profile = None
-        for profile_id, timer in self.timers.items():
-            if timer['type'] != ScheduleStatusType.SCHEDULED:
-                continue
+        now = dt.now()
 
-            if next_job == now and timer['dt'] > next_job and timer['qtt'].isActive():
-                next_job = timer['dt']
-                next_profile = profile_id
-            elif next_job > now and timer['dt'] < next_job and timer['qtt'].isActive():
-                next_job = timer['dt']
-                next_profile = profile_id
+        def is_scheduled(timer):
+            return (
+                timer["type"] == ScheduleStatusType.SCHEDULED
+                and timer["qtt"].isActive()
+                and timer["dt"] >= now
+            )
 
-        if next_profile is not None:
-            profile = BackupProfileModel.get_or_none(id=next_profile)
-            return f"{next_job.strftime('%H:%M')} ({profile.name})"
-        else:
-            return self.tr('None scheduled')
+        scheduled = {profile_id: timer for profile_id, timer in self.timers.items() if is_scheduled(timer)}
+        if len(scheduled) == 0:
+            return self.tr("None scheduled")
+
+        closest_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
+        profile_id, timer = closest_job
+        time = timer["dt"]
+        profile = BackupProfileModel.get_or_none(id=profile_id)
+
+        time_format = "%H:%M"
+        if time - now > timedelta(days=1):
+            time_format = "%b %d, %H:%M"
+        return f"{time.strftime(time_format)} ({profile.name})"
 
     def next_job_for_profile(self, profile_id: int) -> ScheduleStatus:
         job = self.timers.get(profile_id)
