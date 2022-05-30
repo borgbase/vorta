@@ -251,6 +251,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
 
+        if selected_repo_index < 0:
+            # QComboBox is empty
+            return
+
         repo = RepoModel.get(id=selected_repo_id)
         ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
         profile.repo = None
