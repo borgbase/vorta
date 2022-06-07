@@ -120,7 +120,10 @@ def parse_diff_json_lines(diffs):
                     #                                       change['new_user'], change['new_group'])
                     change_type = 'modified'
                     change_type_priority = 1
-        assert change_type  # either no changes, or unrecognized change(s)
+
+        if not change_type:
+            # either no changes, or unrecognized change(s)
+            raise ValueError(f"Unknown change type {change['type']}")
 
         files_with_attributes.append((size, change_type, name, dirpath, file_type))
 
