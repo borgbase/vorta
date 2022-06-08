@@ -259,7 +259,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
                         elif parsed['type'] == 'file_status':
                             self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
-                        elif parsed['type'] == 'archive_progress' and not parsed['finished']:
+                        elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
                                 f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
