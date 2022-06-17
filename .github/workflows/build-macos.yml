@@ -9,7 +9,7 @@ on:
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.2.0'
+        default: '1.2.1'
 
 jobs:
   build:

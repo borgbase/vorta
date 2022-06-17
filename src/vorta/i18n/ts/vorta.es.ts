@@ -333,7 +333,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="316"/>
         <source>(Select two archives)</source>
-        <translation type="unfinished"/>
+        <translation>(Seleccionar dos archivos)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="514"/>
