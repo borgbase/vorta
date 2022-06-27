@@ -246,17 +246,19 @@ class VortaScheduler(QtCore.QObject):
 
             # calculate next scheduled time
             if profile.schedule_mode == 'interval':
-                last_time = last_run_log.end_time
+                last_time: dt = last_run_log.end_time
 
                 interval = {profile.schedule_interval_unit: profile.schedule_interval_count}
                 next_time = last_time + timedelta(**interval)
 
             elif profile.schedule_mode == 'fixed':
-                last_time = last_run_log.end_time + timedelta(days=1)
+                last_time = last_run_log.end_time
 
                 next_time = last_time.replace(
                     hour=profile.schedule_fixed_hour,
-                    minute=profile.schedule_fixed_minute)
+                    minute=profile.schedule_fixed_minute,
+                    second=0,
+                    microsecond=0) + timedelta(days=1)
 
             else:
                 # unknown schedule mode
@@ -286,14 +288,16 @@ class VortaScheduler(QtCore.QObject):
                     next_time += timedelta(**interval)
 
                 elif profile.schedule_mode == 'fixed':
-                    if next_time.date() == dt.now().date():
+                    # schedule for today
+                    next_time = dt.now().replace(
+                        hour=profile.schedule_fixed_hour,
+                        minute=profile.schedule_fixed_minute,
+                        second=0,
+                        microsecond=0)
+
+                    if next_time <= dt.now():
                         # time for today has passed, schedule for tomorrow
                         next_time += timedelta(days=1)
-                    else:
-                        # schedule for today
-                        next_time = dt.now().replace(
-                            hour=profile.schedule_fixed_hour,
-                            minute=profile.schedule_fixed_minute)
 
             # start QTimer
             timer_ms = (next_time - dt.now()).total_seconds() * 1000
