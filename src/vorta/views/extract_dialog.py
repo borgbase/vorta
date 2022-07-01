@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import QDialogButtonBox, QHeaderView, QPushButton
 
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 
-from .partials.treemodel import (FileSystemItem, FileTreeModel, path_to_str,
+from .partials.treemodel import (FileSystemItem, FileTreeModel,
+                                 FileTreeSortProxyModel, path_to_str,
                                  relative_path)
 
 uifile = get_asset("UI/extractdialog.ui")
@@ -58,7 +59,16 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         view = self.treeView
         view.setAlternatingRowColors(True)
         view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-        view.setModel(self.model)
+
+        # add sort proxy model
+        self.sortproxy = ExtractSortProxyModel(self)
+        self.sortproxy.setSourceModel(self.model)
+        view.setModel(self.sortproxy)
+        self.sortproxy.sorted.connect(self.slot_sorted)
+
+        view.setSortingEnabled(True)
+
+        # header
         header = view.header()
         header.setStretchLastSection(False)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -88,6 +98,13 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         # setupUi calls retranslateUi
         if hasattr(self, "extractButton"):
             self.extractButton.setText(self.tr("Extract"))
+
+    def slot_sorted(self, column, order):
+        """React the tree view being sorted."""
+        # reveal selection
+        selectedRows = self.treeView.selectionModel().selectedRows()
+        if selectedRows:
+            self.treeView.scrollTo(selectedRows[0])
 
 
 def parse_json_lines(lines, model: "ExtractTree"):
@@ -121,6 +138,33 @@ def parse_json_lines(lines, model: "ExtractTree"):
                 ),
             )
         )
+
+
+# ---- Sorting ---------------------------------------------------------------
+
+
+class ExtractSortProxyModel(FileTreeSortProxyModel):
+    """
+    Sort a ExtractTree model.
+    """
+
+    def choose_data(self, index: QModelIndex):
+        """Choose the data of index used for comparison."""
+        item: FileSystemItem[FileData] = index.internalPointer()
+        column = index.column()
+
+        if column == 0:
+            # file name
+            return self.extract_path(index)
+        elif column == 1:
+            return item.data.last_modified
+        elif column == 2:
+            return item.data.size
+        else:
+            return item.data.health
+
+
+# ---- ExtractTree -----------------------------------------------------------
 
 
 class FileType(enum.Enum):
