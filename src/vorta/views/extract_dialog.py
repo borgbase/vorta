@@ -7,11 +7,14 @@ from pathlib import PurePath
 from typing import Optional
 
 from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QLocale, QModelIndex, Qt, QThread
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QDialogButtonBox, QHeaderView, QPushButton
+from PyQt5.QtCore import (QDateTime, QLocale, QMimeData, QModelIndex, QPoint,
+                          Qt, QThread, QUrl)
+from PyQt5.QtGui import QColor, QKeySequence
+from PyQt5.QtWidgets import (QApplication, QDialogButtonBox, QHeaderView,
+                             QMenu, QPushButton, QShortcut)
 
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
+from vorta.views.utils import get_colored_icon
 
 from .partials.treemodel import (FileSystemItem, FileTreeModel,
                                  FileTreeSortProxyModel, path_to_str,
@@ -60,6 +63,12 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         view.setAlternatingRowColors(True)
         view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
 
+        # custom context menu
+        self.treeView.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu)
+        self.treeView.customContextMenuRequested.connect(
+            self.treeview_context_menu)
+
         # add sort proxy model
         self.sortproxy = ExtractSortProxyModel(self)
         self.sortproxy.setSourceModel(self.model)
@@ -76,6 +85,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.Stretch)
 
+        # shortcuts
+        shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
+        shortcut_copy.activated.connect(self.copy_item)
+
         # add extract button to button box
         self.extractButton = QPushButton(self)
         self.extractButton.setObjectName("extractButton")
@@ -88,8 +101,19 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
 
         # connect signals
+        self.comboBoxDisplayMode.currentIndexChanged.connect(
+            self.change_display_mode)
+        self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
+        self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
+
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.accept)
+
+        self.set_icons()
+
+        # Connect to palette change
+        QApplication.instance().paletteChanged.connect(
+            lambda p: self.set_icons())
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -99,12 +123,79 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         if hasattr(self, "extractButton"):
             self.extractButton.setText(self.tr("Extract"))
 
+    def set_icons(self):
+        """Set or update the icons in the right color scheme."""
+        self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+
     def slot_sorted(self, column, order):
-        """React the tree view being sorted."""
+        """React to the tree view being sorted."""
         # reveal selection
         selectedRows = self.treeView.selectionModel().selectedRows()
         if selectedRows:
             self.treeView.scrollTo(selectedRows[0])
+
+    def copy_item(self, index: QModelIndex = None):
+        """
+        Copy an item path to the clipboard.
+
+        Copies the first selected item if no index is specified.
+        """
+        if index is None or (not index.isValid()):
+            indexes = self.treeView.selectionModel().selectedRows()
+
+            if not indexes:
+                return
+
+            index = indexes[0]
+
+        index = self.sortproxy.mapToSource(index)
+        item: ExtractFileItem = index.internalPointer()
+        path = PurePath('/', *item.path)
+
+        data = QMimeData()
+        data.setUrls([QUrl(path.as_uri())])
+        data.setText(str(path))
+
+        QApplication.clipboard().setMimeData(data)
+
+    def change_display_mode(self, selection: int):
+        """
+        Change the display mode of the tree view
+
+        The `selection` parameter specifies the index of the selected mode in
+        `comboBoxDisplayMode`.
+
+        """
+        if selection == 0:
+            mode = FileTreeModel.DisplayMode.TREE
+        elif selection == 1:
+            mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
+        else:
+            raise Exception(
+                "Unknown item in comboBoxDisplayMode with index {}".format(
+                    selection))
+
+        self.model.setMode(mode)
+
+    def treeview_context_menu(self, pos: QPoint):
+        """Display a context menu for `treeView`."""
+        index = self.treeView.indexAt(pos)
+        if not index.isValid():
+            # popup only for items
+            return
+
+        menu = QMenu(self.treeView)
+
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
+                       lambda: self.copy_item(index))
+
+        if self.model.getMode() != self.model.DisplayMode.FLAT:
+            menu.addSeparator()
+            menu.addAction(get_colored_icon('angle-down-solid'),
+                           self.tr("Expand recursively"),
+                           lambda: self.treeView.expandRecursively(index))
+
+        menu.popup(self.treeView.viewport().mapToGlobal(pos))
 
 
 def parse_json_lines(lines, model: "ExtractTree"):
@@ -150,7 +241,7 @@ class ExtractSortProxyModel(FileTreeSortProxyModel):
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
-        item: FileSystemItem[FileData] = index.internalPointer()
+        item: ExtractFileItem = index.internalPointer()
         column = index.column()
 
         if column == 0:
@@ -198,6 +289,9 @@ class FileData:
     checked_children: int = 0  # number of children checked
 
 
+ExtractFileItem = FileSystemItem[FileData]
+
+
 class ExtractTree(FileTreeModel[FileData]):
     """The file tree model for diff results."""
 
@@ -217,7 +311,7 @@ class ExtractTree(FileTreeModel[FileData]):
         """
         return item.data and not item.children
 
-    def _simplify_filter(self, item: FileSystemItem[FileData]) -> bool:
+    def _simplify_filter(self, item: ExtractFileItem) -> bool:
         """
         Return whether an item may be merged in simplified mode.
 
@@ -353,7 +447,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if not index.isValid():
             return None
 
-        item: FileSystemItem[FileData] = index.internalPointer()
+        item: ExtractFileItem = index.internalPointer()
         column = index.column()
 
         if role == Qt.ItemDataRole.DisplayRole:
@@ -466,7 +560,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if role != Qt.ItemDataRole.CheckStateRole:
             return False
 
-        item: FileSystemItem[FileData] = index.internalPointer()
+        item: ExtractFileItem = index.internalPointer()
 
         if value == item.data.checkstate:
             return True
@@ -504,10 +598,10 @@ class ExtractTree(FileTreeModel[FileData]):
                 super_item.data.checked_children += 1
 
             # update parent's state and possibly the parent's parent's state
-            if parent.data.checked_children:
-                self.setData(index.parent(), Qt.CheckState.PartiallyChecked, role)
+            if super_item.data.checked_children:
+                self.setData(super_index, Qt.CheckState.PartiallyChecked, role)
             else:
-                self.setData(index.parent(), Qt.CheckState.Unchecked, role)
+                self.setData(super_index, Qt.CheckState.Unchecked, role)
 
         # update state of the children without changing their parents' states
         if value != Qt.CheckState.PartiallyChecked:

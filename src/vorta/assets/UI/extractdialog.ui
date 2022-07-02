@@ -52,6 +52,58 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QToolButton" name="bFoldersOnTop">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Keep folders on top when sorting</string>
+       </property>
+       <property name="text">
+        <string>Folders On Top</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxDisplayMode">
+       <property name="toolTip">
+        <string>Set display mode of diff view</string>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+       <item>
+        <property name="text">
+         <string>Tree</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Tree, simplified</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="bCollapseAll">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Collapse All</string>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -59,13 +111,6 @@
      <attribute name="headerMinimumSectionSize">
       <number>10</number>
      </attribute>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Note: If you select a top-level folder and deselect its children, they will still be restored.</string>
-     </property>
     </widget>
    </item>
    <item>
