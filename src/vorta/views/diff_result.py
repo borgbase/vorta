@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 
@@ -13,6 +14,8 @@ from vorta.views.partials.tree_view import TreeModel
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
+
+logger = logging.getLogger(__name__)
 
 
 class DiffResult(DiffResultBase, DiffResultUI):
@@ -123,6 +126,7 @@ def parse_diff_json_lines(diffs):
 
         if not change_type:
             # either no changes, or unrecognized change(s)
+            logger.error(f"Error parsing diff line {json.dumps(item)}")
             raise ValueError(f"Unknown change type {change['type']}")
 
         files_with_attributes.append((size, change_type, name, dirpath, file_type))
