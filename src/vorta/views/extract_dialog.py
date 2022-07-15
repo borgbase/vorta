@@ -127,6 +127,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         """Set or update the icons in the right color scheme."""
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+        self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
+        self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
 
     def slot_sorted(self, column, order):
         """React to the tree view being sorted."""
