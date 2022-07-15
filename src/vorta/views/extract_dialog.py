@@ -125,6 +125,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
+        self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
 
     def slot_sorted(self, column, order):
