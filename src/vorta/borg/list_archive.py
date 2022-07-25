@@ -21,7 +21,9 @@ class BorgListArchiveJob(BorgJob):
         ret['archive_name'] = archive_name
         ret['cmd'] = [
             'borg', 'list', '--info', '--log-json', '--json-lines',
-            '--format', "{size:8d}{TAB}{mtime}{TAB}{path}{NL}",
+            '--format',
+            # fields to include in json output
+            "{mode}{user}{group}{size}{mtime}{path}{source}{health}{NL}",
             f'{profile.repo.url}::{archive_name}']
         ret['ok'] = True
 

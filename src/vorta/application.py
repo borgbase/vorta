@@ -88,8 +88,6 @@ class VortaApp(QtSingleApplication):
         if sys.platform == 'darwin':
             self.check_darwin_permissions()
 
-        self.installEventFilter(self)
-
     def create_backups_cmdline(self, profile_name):
         profile = BackupProfileModel.get_or_none(name=profile_name)
         if profile is not None:
@@ -98,17 +96,6 @@ class VortaApp(QtSingleApplication):
             self.create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
-
-    def eventFilter(self, source, event):
-        if event.type() == QtCore.QEvent.ApplicationPaletteChange and isinstance(source, MainWindow):
-            self.main_window.set_icons()
-            self.main_window.repoTab.set_icons()
-            self.main_window.archiveTab.set_icons()
-            self.main_window.scheduleTab.set_icons()
-            self.main_window.sourceTab.set_icons()
-        if event.type() == QtCore.QEvent.ApplicationPaletteChange and source == self.tray.contextMenu():
-            self.tray.set_tray_icon()
-        return False
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
