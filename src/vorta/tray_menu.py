@@ -1,13 +1,14 @@
 import os
-from PyQt5.QtWidgets import QMenu, QSystemTrayIcon
+
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
 
 class TrayMenu(QSystemTrayIcon):
-    def __init__(self, parent=None):
+    def __init__(self, parent: QApplication = None):
         QSystemTrayIcon.__init__(self, parent)
         self.app = parent
         self.set_tray_icon()
@@ -19,6 +20,7 @@ class TrayMenu(QSystemTrayIcon):
         self.setContextMenu(menu)
 
         self.activated.connect(self.on_activation)
+        self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
         self.setVisible(True)
         self.show()
 

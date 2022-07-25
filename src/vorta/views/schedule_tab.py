@@ -96,6 +96,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         # Connect to schedule update
         self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
 
+        # Connect to palette change
+        self.app.paletteChanged.connect(lambda p: self.set_icons())
+
     def on_scheduler_change(self, _):
         profile = self.profile()
         # Save scheduler settings, apply new scheduler and display next task for profile.
