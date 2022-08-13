@@ -149,6 +149,7 @@ class BorgCreateJob(BorgJob):
                 pattern_file.write('\n'.join(exclude_dirs))
                 pattern_file.flush()
                 cmd.extend(['--exclude-from', pattern_file.name])
+                ret['cleanup_files'].append(pattern_file.name)
 
         if profile.exclude_if_present is not None:
             for f in profile.exclude_if_present.split('\n'):
