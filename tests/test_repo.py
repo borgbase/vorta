@@ -76,7 +76,7 @@ def test_password_autofill(qapp, qtbot):
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
-    assert(add_repo_window.passwordLineEdit.text() == password)
+    assert (add_repo_window.passwordLineEdit.text() == password)
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
