@@ -37,7 +37,7 @@ def test_autostart(qapp, qtbot):
         with open(autostart_path) as desktop_file:
             desktop_file_text = desktop_file.read()
 
-        assert(desktop_file_text.startswith("[Desktop Entry]"))
+        assert (desktop_file_text.startswith("[Desktop Entry]"))
 
     click_autostart()
     if sys.platform == 'linux':
