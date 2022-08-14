@@ -145,10 +145,11 @@ class BorgCreateJob(BorgJob):
                     exclude_dirs.append(expanded_directory)
 
             if exclude_dirs:
-                pattern_file = tempfile.NamedTemporaryFile('w', delete=False)
+                pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
                 pattern_file.write('\n'.join(exclude_dirs))
                 pattern_file.flush()
                 cmd.extend(['--exclude-from', pattern_file.name])
+                ret['cleanup_files'].append(pattern_file)
 
         if profile.exclude_if_present is not None:
             for f in profile.exclude_if_present.split('\n'):

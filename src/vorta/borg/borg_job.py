@@ -104,6 +104,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         self.cwd = params.get('cwd', None)
         self.params = params
         self.process = None
+        self.cleanup_files = params.get('cleanup_files', [])
 
     def repo_id(self):
         return self.site_id
@@ -182,6 +183,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         ret['profile_id'] = profile.id
 
         ret['ok'] = True
+        ret['cleanup_files'] = []
 
         return ret
 
@@ -299,6 +301,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
             self.process_result(result)
 
         self.finished_event(result)
+        for tmpfile in self.cleanup_files:
+            tmpfile.close()
 
     def process_result(self, result):
         pass
