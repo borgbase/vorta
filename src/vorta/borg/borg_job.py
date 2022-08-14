@@ -301,9 +301,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
             self.process_result(result)
 
         self.finished_event(result)
-        for filename in self.cleanup_files:
-            if os.path.exists(filename):
-                os.remove(filename)
+        for tmpfile in self.cleanup_files:
+            tmpfile.close()
 
     def process_result(self, result):
         pass
