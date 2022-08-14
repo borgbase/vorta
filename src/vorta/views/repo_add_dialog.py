@@ -148,19 +148,28 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
-        encryption_algos = [
-            [
-                self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
-                'repokey-blake2',
-            ],
-            [self.tr('Repokey'), 'repokey'],
-            [
-                self.tr('Keyfile-Blake2 (Key stored in home directory)'),
-                'keyfile-blake2',
-            ],
-            [self.tr('Keyfile'), 'keyfile'],
-            [self.tr('None (not recommended)'), 'none'],
-        ]
+        if borg_compat.check('V2'):
+            encryption_algos = [
+                [
+                    self.tr('Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)'),
+                    'repokey-blake2-chacha20-poly1305',
+                ],
+                [
+                    self.tr('Keyfile-ChaCha20-Poly1305 (Key stored in home directory)'),
+                    'keyfile-blake2-chacha20-poly1305',
+                ],
+                [self.tr('Repokey-AES256-OCB'), 'repokey-blake2-aes-ocb'],
+                [self.tr('Keyfile-AES256-OCB'), 'keyfile-blake2-aes-ocb'],
+                [self.tr('None (not recommended)'), 'none'],
+            ]
+        else:
+            encryption_algos = [
+                [self.tr('Repokey-Blake2 (Recommended, key stored in repository)'), 'repokey-blake2'],
+                [self.tr('Repokey'), 'repokey'],
+                [self.tr('Keyfile-Blake2 (Key stored in home directory)'), 'keyfile-blake2'],
+                [self.tr('Keyfile'), 'keyfile'],
+                [self.tr('None (not recommended)'), 'none'],
+            ]
 
         for desc, name in encryption_algos:
             self.encryptionComboBox.addItem(desc, name)
