@@ -1210,11 +1210,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
-        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Разное со следующим текстом ошибки: 
- {0} 
+        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Разное со следующим текстом ошибки:
+ {0}
  {1}</translation>
     </message>
     <message>

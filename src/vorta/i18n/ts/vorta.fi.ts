@@ -1357,11 +1357,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="75"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
-        <translation>Skeeman päivitys epäonnistui, lähetä virheraportti Sekalaiset-välilehdellä olevasta linkistä. Liitä raporttiin seuraavat tiedot: 
- {0} 
+        <translation>Skeeman päivitys epäonnistui, lähetä virheraportti Sekalaiset-välilehdellä olevasta linkistä. Liitä raporttiin seuraavat tiedot:
+ {0}
  {1}</translation>
     </message>
     <message>

@@ -7,15 +7,14 @@ from PyQt5.QtWidgets import QCheckBox, QFormLayout
 
 
 def test_autostart(qapp, qtbot):
-    ''' Check if file exists only on Linux, otherwise just check it doesn't crash '''
+    '''Check if file exists only on Linux, otherwise just check it doesn't crash'''
     main = qapp.main_window
     main.tabWidget.setCurrentIndex(4)
     tab = main.miscTab
 
     def click_autostart():
         for x in range(0, tab.checkboxLayout.count()):
-            item = tab.checkboxLayout.itemAt(x,
-                                             QFormLayout.ItemRole.FieldRole)
+            item = tab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
             if not item:
                 continue
             checkbox = item.widget()
@@ -29,14 +28,16 @@ def test_autostart(qapp, qtbot):
     click_autostart()
 
     if sys.platform == 'linux':
-        autostart_path = Path(os.environ.get(
-            "XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
+        autostart_path = (
+            Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
+            / "vorta.desktop"
+        )
         qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
 
         with open(autostart_path) as desktop_file:
             desktop_file_text = desktop_file.read()
 
-        assert (desktop_file_text.startswith("[Desktop Entry]"))
+        assert desktop_file_text.startswith("[Desktop Entry]")
 
     click_autostart()
     if sys.platform == 'linux':

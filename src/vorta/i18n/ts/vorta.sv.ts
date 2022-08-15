@@ -1210,8 +1210,8 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
         <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i diversefliken och ange följande fel:
  {0}

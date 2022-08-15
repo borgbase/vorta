@@ -30,8 +30,8 @@ jobs:
         black --check .
     # - name: Run PyLint (info only)
     #   run: pylint --rcfile=setup.cfg src --exit-zero
-    
-    
+
+
   test:
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}

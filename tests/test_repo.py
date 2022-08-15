@@ -57,8 +57,9 @@ def test_repo_unlink(qapp, qtbot):
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     # -1 is the repo id in this test
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Add a backup repository first.'),
-                    **pytest._wait_defaults)
+    qtbot.waitUntil(
+        lambda: main.progressText.text().startswith('Add a backup repository first.'), **pytest._wait_defaults
+    )
     assert main.progressText.text() == 'Add a backup repository first.'
 
 
@@ -74,7 +75,7 @@ def test_password_autofill(qapp, qtbot):
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
-    assert (add_repo_window.passwordLineEdit.text() == password)
+    assert add_repo_window.passwordLineEdit.text() == password
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
@@ -93,9 +94,9 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     add_repo_window.run()
-    qtbot.waitUntil(lambda: EventLogModel.select()
-                                         .where(EventLogModel.returncode == 0).count() == 2,
-                    **pytest._wait_defaults)
+    qtbot.waitUntil(
+        lambda: EventLogModel.select().where(EventLogModel.returncode == 0).count() == 2, **pytest._wait_defaults
+    )
 
     assert RepoModel.get(id=2).url == test_repo_url
 

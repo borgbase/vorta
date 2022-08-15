@@ -20,8 +20,17 @@ from vorta.store.models import (
 )
 from vorta.views.main_window import MainWindow
 
-models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,
-          SettingsModel, ArchiveModel, WifiSettingModel, EventLogModel, SchemaVersion]
+models = [
+    RepoModel,
+    RepoPassword,
+    BackupProfileModel,
+    SourceFileModel,
+    SettingsModel,
+    ArchiveModel,
+    WifiSettingModel,
+    EventLogModel,
+    SchemaVersion,
+]
 
 
 def pytest_configure(config):
@@ -38,6 +47,7 @@ def qapp(tmpdir_factory):
     vorta.store.connection.init_db(mock_db)
 
     from vorta.application import VortaApp
+
     VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
     VortaApp.scheduler = MagicMock()
 
@@ -51,7 +61,12 @@ def qapp(tmpdir_factory):
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
-    mock_db = SqliteDatabase(str(tmp_db), pragmas={'journal_mode': 'wal', })
+    mock_db = SqliteDatabase(
+        str(tmp_db),
+        pragmas={
+            'journal_mode': 'wal',
+        },
+    )
     vorta.store.connection.init_db(mock_db)
 
     default_profile = BackupProfileModel(name='Default')
@@ -72,8 +87,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
     test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive1.save()
 
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18,
-                                 path_isdir=True)
+    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
     qapp.main_window.deleteLater()
@@ -110,6 +124,7 @@ def borg_json_output():
         stdout = open(f'tests/borg_json_output/{subcommand}_stdout.json')
         stderr = open(f'tests/borg_json_output/{subcommand}_stderr.json')
         return stdout, stderr
+
     return _read_json
 
 
