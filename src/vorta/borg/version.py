@@ -1,5 +1,5 @@
-from .borg_job import BorgJob
 from vorta.i18n import trans_late
+from .borg_job import BorgJob
 
 
 class BorgVersionJob(BorgJob):
@@ -28,7 +28,4 @@ class BorgVersionJob(BorgJob):
         if result['returncode'] == 0:
             version = result['data'].strip().split(' ')[1]
             path = self.prepare_bin()
-            result['data'] = {
-                'version': version,
-                'path': path
-            }
+            result['data'] = {'version': version, 'path': path}

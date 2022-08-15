@@ -1,22 +1,16 @@
 import os
-
 from paramiko.ecdsakey import ECDSAKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.rsakey import RSAKey
 from PyQt5 import uic
 from PyQt5.QtCore import QProcess, Qt
 from PyQt5.QtWidgets import QApplication, QDialogButtonBox
-
 from ..utils import get_asset
 
 uifile = get_asset('UI/sshadd.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
-FORMAT_MAPPING = {
-    'ed25519': Ed25519Key,
-    'rsa': RSAKey,
-    'ecdsa': ECDSAKey
-}
+FORMAT_MAPPING = {'ed25519': Ed25519Key, 'rsa': RSAKey, 'ecdsa': ECDSAKey}
 
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
@@ -26,11 +20,9 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         # dialogButtonBox
-        self.generateButton = self.buttonBox.button(
-            QDialogButtonBox.StandardButton.Ok)
+        self.generateButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
 
-        self.generateButton.setText(
-            self.tr("Generate and copy to clipboard"))
+        self.generateButton.setText(self.tr("Generate and copy to clipboard"))
 
         # signals
         self.buttonBox.rejected.connect(self.reject)
@@ -45,8 +37,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
 
         # setupUi calls retranslateUi
         if hasattr(self, 'generateButton'):
-            self.generateButton.setText(
-                self.tr("Generate and copy to clipboard"))
+            self.generateButton.setText(self.tr("Generate and copy to clipboard"))
 
     def init_format(self):
         self.formatSelect.addItem(self.tr('ED25519 (Recommended)'), 'ed25519')
@@ -95,5 +86,5 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             'ssh_key': self.sshComboBox.currentData(),
             'encryption': self.encryptionComboBox.currentData(),
             'repo_url': self.repoURL.text(),
-            'password': self.passwordLineEdit.text()
+            'password': self.passwordLineEdit.text(),
         }

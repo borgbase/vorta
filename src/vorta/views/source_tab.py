@@ -1,16 +1,11 @@
 import logging
 import os
 from pathlib import PurePath
-
 from PyQt5 import QtCore, QtGui, uic
 from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
-from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QMessageBox,
-                             QShortcut, QTableWidgetItem)
-
-from vorta.store.models import (BackupProfileMixin, SettingsModel,
-                                SourceFileModel)
-from vorta.utils import (FilePathInfoAsync, choose_file_dialog, get_asset,
-                         pretty_bytes, sort_sizes)
+from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QMessageBox, QShortcut, QTableWidgetItem
+from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
+from vorta.utils import FilePathInfoAsync, choose_file_dialog, get_asset, pretty_bytes, sort_sizes
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')
@@ -32,7 +27,10 @@ class SizeItem(QTableWidgetItem):
         elif self.text() == '':
             return True
         else:
-            return sort_sizes([self.text(), other.text()]) == [self.text(), other.text()]
+            return sort_sizes([self.text(), other.text()]) == [
+                self.text(),
+                other.text(),
+            ]
 
 
 class FilesCount(QTableWidgetItem):
@@ -66,25 +64,19 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
 
         self.sourceFilesWidget.setSortingEnabled(True)
-        self.sourceFilesWidget.setContextMenuPolicy(
-            Qt.ContextMenuPolicy.CustomContextMenu)
-        self.sourceFilesWidget.customContextMenuRequested.connect(
-            self.sourceitem_contextmenu)
+        self.sourceFilesWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.sourceFilesWidget.customContextMenuRequested.connect(self.sourceitem_contextmenu)
 
         # Prepare add button
         self.addMenu = QMenu(self.addButton)
-        self.addFilesAction = self.addMenu.addAction(self.tr("Files"),
-                                                     lambda: self.source_add(want_folder=False))
-        self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"),
-                                                       lambda: self.source_add(want_folder=True))
-        self.pasteAction = self.addMenu.addAction(self.tr("Paste"),
-                                                  self.paste_text)
+        self.addFilesAction = self.addMenu.addAction(self.tr("Files"), lambda: self.source_add(want_folder=False))
+        self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"), lambda: self.source_add(want_folder=True))
+        self.pasteAction = self.addMenu.addAction(self.tr("Paste"), self.paste_text)
 
         self.addButton.setMenu(self.addMenu)
 
         # shortcuts
-        shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy,
-                                  self.sourceFilesWidget)
+        shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
 
         # Connect signals
@@ -108,8 +100,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         for row in range(self.sourceFilesWidget.rowCount()):
             path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
-            db_item = SourceFileModel.get(dir=path_item.text(),
-                                          profile=self.profile())
+            db_item = SourceFileModel.get(dir=path_item.text(), profile=self.profile())
 
             if db_item.path_isdir:
                 path_item.setIcon(get_colored_icon('folder'))
@@ -126,10 +117,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         menu = QMenu(self.sourceFilesWidget)
 
-        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
-                       lambda: self.source_copy(index=index))
-        menu.addAction(get_colored_icon('minus'), self.tr("Remove"),
-                       self.source_remove)
+        menu.addAction(
+            get_colored_icon('copy'),
+            self.tr("Copy"),
+            lambda: self.source_copy(index=index),
+        )
+        menu.addAction(get_colored_icon('minus'), self.tr("Remove"), self.source_remove)
 
         menu.popup(self.sourceFilesWidget.viewport().mapToGlobal(pos))
 
@@ -148,16 +141,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             if QFileInfo(path).isDir():
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
-                self.sourceFilesWidget.item(
-                    item.row(), SourceColumn.Path).setIcon(
-                        get_colored_icon('folder'))
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Path).setIcon(get_colored_icon('folder'))
             else:
                 # No files count, if entry itself is a file
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText("")
                 db_item.path_isdir = False
-                self.sourceFilesWidget.item(
-                    item.row(), SourceColumn.Path).setIcon(
-                        get_colored_icon('file'))
+                self.sourceFilesWidget.item(item.row(), SourceColumn.Path).setIcon(get_colored_icon('file'))
 
             self.sourceFilesWidget.item(item.row(), SourceColumn.Size).setText(pretty_bytes(data_size))
 
@@ -214,8 +203,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
         self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
 
-        logger.debug(f"Added item number {index_row}"
-                     + f" from {self.sourceFilesWidget.rowCount()}")
+        logger.debug(f"Added item number {index_row}" + f" from {self.sourceFilesWidget.rowCount()}")
 
         if update_data:
             self.update_path_info(index_row)
@@ -228,15 +216,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
 
                 if source.path_isdir:
-                    self.sourceFilesWidget.item(index_row,
-                                                SourceColumn.FilesCount).setText(format(source.dir_files_count))
-                    self.sourceFilesWidget.item(
-                        index_row, SourceColumn.Path).setIcon(
-                            get_colored_icon('folder'))
+                    self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(
+                        format(source.dir_files_count)
+                    )
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Path).setIcon(get_colored_icon('folder'))
                 else:
-                    self.sourceFilesWidget.item(
-                        index_row, SourceColumn.Path).setIcon(
-                            get_colored_icon('file'))
+                    self.sourceFilesWidget.item(index_row, SourceColumn.Path).setIcon(get_colored_icon('file'))
 
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
@@ -305,8 +290,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
             index = indexes[0]
 
-        path = PurePath(self.sourceFilesWidget.item(index.row(),
-                                                    SourceColumn.Path).text())
+        path = PurePath(self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text())
 
         data = QMimeData()
         data.setUrls([QUrl(path.as_uri())])
@@ -323,7 +307,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for index in reversed(indexes):
             db_item = SourceFileModel.get(
                 dir=self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text(),
-                profile=profile
+                profile=profile,
             )
             db_item.delete_instance()
             self.sourceFilesWidget.removeRow(index.row())

@@ -9,7 +9,6 @@ Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 import logging
 import sys
-
 from .abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -26,15 +25,22 @@ class VortaDarwinKeyring(VortaKeyring):
         """
         import objc
         from Foundation import NSBundle
+
         Security = NSBundle.bundleWithIdentifier_('com.apple.security')
 
         # https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
         S_functions = [
             ('SecKeychainGetTypeID', b'I'),
             ('SecKeychainItemGetTypeID', b'I'),
-            ('SecKeychainAddGenericPassword', b'i^{OpaqueSecKeychainRef=}I*I*I*o^^{OpaqueSecKeychainItemRef}'),
+            (
+                'SecKeychainAddGenericPassword',
+                b'i^{OpaqueSecKeychainRef=}I*I*I*o^^{OpaqueSecKeychainItemRef}',
+            ),
             ('SecKeychainOpen', b'i*o^^{OpaqueSecKeychainRef}'),
-            ('SecKeychainFindGenericPassword', b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}'),
+            (
+                'SecKeychainFindGenericPassword',
+                b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}',
+            ),
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
         ]
 
@@ -42,7 +48,10 @@ class VortaDarwinKeyring(VortaKeyring):
 
         SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
         SecKeychainItemRef = objc.registerCFSignature(
-            'SecKeychainItemRef', b'^{OpaqueSecKeychainItemRef=}', SecKeychainItemGetTypeID())
+            'SecKeychainItemRef',
+            b'^{OpaqueSecKeychainItemRef=}',
+            SecKeychainItemGetTypeID(),
+        )
 
         PassBuffRef = objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
 
@@ -54,12 +63,16 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        SecKeychainAddGenericPassword(self.login_keychain,
-                                      len(service.encode()), service.encode(),
-                                      len(repo_url.encode()),
-                                      repo_url.encode(),
-                                      len(password.encode()),
-                                      password.encode(), None)
+        SecKeychainAddGenericPassword(
+            self.login_keychain,
+            len(service.encode()),
+            service.encode(),
+            len(repo_url.encode()),
+            repo_url.encode(),
+            len(password.encode()),
+            password.encode(),
+            None,
+        )
 
         logger.debug(f"Saved password for repo {repo_url}")
 
@@ -67,8 +80,16 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        result, password_length, password_buffer, keychain_item = SecKeychainFindGenericPassword(
-            self.login_keychain, len(service), service.encode(), len(repo_url), repo_url.encode(), None, None, None)
+        (result, password_length, password_buffer, keychain_item,) = SecKeychainFindGenericPassword(
+            self.login_keychain,
+            len(service),
+            service.encode(),
+            len(repo_url),
+            repo_url.encode(),
+            None,
+            None,
+            None,
+        )
         password = None
         if (result == 0) and (password_length != 0):
             # We apparently were able to find a password
@@ -101,6 +122,6 @@ class VortaDarwinKeyring(VortaKeyring):
 
 def _resolve_password(password_length, password_buffer):
     from ctypes import c_char
-    s = (c_char*password_length).from_address(password_buffer.__pointer__)[:]
-    return s.decode()
 
+    s = (c_char * password_length).from_address(password_buffer.__pointer__)[:]
+    return s.decode()

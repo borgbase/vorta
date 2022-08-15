@@ -5,17 +5,18 @@ import re
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
-
 from PyQt5 import uic
 from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
-from PyQt5.QtWidgets import (QApplication, QHeaderView, QMenu, QShortcut,
-                             QTreeView)
-
+from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QShortcut, QTreeView
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
-from vorta.views.partials.treemodel import (FileSystemItem, FileTreeModel,
-                                            FileTreeSortProxyModel,
-                                            path_to_str, relative_path)
+from vorta.views.partials.treemodel import (
+    FileSystemItem,
+    FileTreeModel,
+    FileTreeSortProxyModel,
+    path_to_str,
+    relative_path,
+)
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/diffresult.ui')
@@ -27,11 +28,7 @@ logger = logging.getLogger(__name__)
 class ParseThread(QThread):
     """A thread parsing diff results."""
 
-    def __init__(self,
-                 fs_data: str,
-                 json_lines: bool,
-                 model: 'DiffTree',
-                 parent=None):
+    def __init__(self, fs_data: str, json_lines: bool, model: 'DiffTree', parent=None):
         """Init."""
         super().__init__(parent)
         self.model = model
@@ -48,10 +45,7 @@ class ParseThread(QThread):
             if isinstance(self.fs_data, dict):
                 lines = [self.fs_data]
             else:
-                lines = [
-                    json.loads(line) for line in self.fs_data.split('\n')
-                    if line
-                ]
+                lines = [json.loads(line) for line in self.fs_data.split('\n') if line]
 
             parse_diff_json(lines, self.model)
         else:
@@ -62,8 +56,7 @@ class ParseThread(QThread):
 class DiffResultDialog(DiffResultBase, DiffResultUI):
     """Display the results of `borg diff`."""
 
-    def __init__(self, archive_newer, archive_older,
-                 model: 'DiffTree'):
+    def __init__(self, archive_newer, archive_older, model: 'DiffTree'):
         """Init."""
         super().__init__()
         self.setupUi(self)
@@ -72,17 +65,13 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.model.setParent(self)
 
         self.treeView: QTreeView
-        self.treeView.setUniformRowHeights(
-            True)  # Allows for scrolling optimizations.
+        self.treeView.setUniformRowHeights(True)  # Allows for scrolling optimizations.
         self.treeView.setAlternatingRowColors(True)
-        self.treeView.setTextElideMode(
-            Qt.TextElideMode.ElideMiddle)  # to better see name of paths
+        self.treeView.setTextElideMode(Qt.TextElideMode.ElideMiddle)  # to better see name of paths
 
         # custom context menu
-        self.treeView.setContextMenuPolicy(
-            Qt.ContextMenuPolicy.CustomContextMenu)
-        self.treeView.customContextMenuRequested.connect(
-            self.treeview_context_menu)
+        self.treeView.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.treeView.customContextMenuRequested.connect(self.treeview_context_menu)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
@@ -108,8 +97,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
-        self.comboBoxDisplayMode.currentIndexChanged.connect(
-            self.change_display_mode)
+        self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -119,8 +107,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.set_icons()
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(
-            lambda p: self.set_icons())
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
@@ -139,14 +126,19 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
 
         menu = QMenu(self.treeView)
 
-        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
-                       lambda: self.diff_item_copy(index))
+        menu.addAction(
+            get_colored_icon('copy'),
+            self.tr("Copy"),
+            lambda: self.diff_item_copy(index),
+        )
 
         if self.model.getMode() != self.model.DisplayMode.FLAT:
             menu.addSeparator()
-            menu.addAction(get_colored_icon('angle-down-solid'),
-                           self.tr("Expand recursively"),
-                           lambda: self.treeView.expandRecursively(index))
+            menu.addAction(
+                get_colored_icon('angle-down-solid'),
+                self.tr("Expand recursively"),
+                lambda: self.treeView.expandRecursively(index),
+            )
 
         menu.popup(self.treeView.viewport().mapToGlobal(pos))
 
@@ -189,9 +181,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         elif selection == 2:
             mode = FileTreeModel.DisplayMode.FLAT
         else:
-            raise Exception(
-                "Unknown item in comboBoxDisplayMode with index {}".format(
-                    selection))
+            raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
         self.model.setMode(mode)
 
@@ -273,20 +263,29 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                 # owner change can occur along with previous changes
                 change_type = ChangeType.MODIFIED
 
-                owner_change = (change['old_user'], change['old_group'],
-                                change['new_user'], change['new_group'])
+                owner_change = (
+                    change['old_user'],
+                    change['old_group'],
+                    change['new_user'],
+                    change['new_group'],
+                )
             else:
-                raise Exception('Unknown change type: {}'.format(
-                    change['type']))
+                raise Exception('Unknown change type: {}'.format(change['type']))
 
-        model.addItem((path,
-                       DiffData(file_type=file_type,
-                                change_type=change_type,
-                                changed_size=changed_size,
-                                size=size,
-                                mode_change=mode_change,
-                                owner_change=owner_change,
-                                modified=modified)))
+        model.addItem(
+            (
+                path,
+                DiffData(
+                    file_type=file_type,
+                    change_type=change_type,
+                    changed_size=changed_size,
+                    size=size,
+                    mode_change=mode_change,
+                    owner_change=owner_change,
+                    modified=modified,
+                ),
+            )
+        )
 
 
 # re pattern
@@ -298,14 +297,17 @@ pattern_mode = r'\[(?P<old_mode>[\w-]{10}) -> (?P<new_mode>[\w-]{10})\]'
 pattern_owner = r'\[(?P<old_user>[\w ]+):(?P<old_group>[\w ]+) -> (?P<new_user>[\w ]+):(?P<new_group>[\w ]+)\]'
 pattern_path = r'(?P<path>.*)'
 pattern_changed_file = (
-    r'(({ar} )|((?P<cl>{cl} )|' +
-    r'((?P<modified>{modified}\s+)?)(?P<owner>{owner}\s+)?(?P<mode>{mode}\s+)?))'
-    + r'{path}').format(ar=pattern_ar,
-                        cl=pattern_cl,
-                        modified=pattern_modified,
-                        mode=pattern_mode,
-                        owner=pattern_owner,
-                        path=pattern_path)
+    r'(({ar} )|((?P<cl>{cl} )|'
+    + r'((?P<modified>{modified}\s+)?)(?P<owner>{owner}\s+)?(?P<mode>{mode}\s+)?))'
+    + r'{path}'
+).format(
+    ar=pattern_ar,
+    cl=pattern_cl,
+    modified=pattern_modified,
+    mode=pattern_mode,
+    owner=pattern_owner,
+    path=pattern_path,
+)
 re_changed_file = re.compile(pattern_changed_file)
 
 
@@ -367,8 +369,7 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
                     raise ValueError(f"Unknown file type `{parsed_line['ar_type']}`")
             else:
                 # normal file
-                size = size_to_byte(parsed_line['size'],
-                                    parsed_line['size_unit'])
+                size = size_to_byte(parsed_line['size'], parsed_line['size_unit'])
 
             if parsed_line['a_r'] == 'added':
                 change_type = ChangeType.ADDED
@@ -382,10 +383,12 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
 
             if parsed_line['owner']:
                 # owner changed
-                owner_change = (parsed_line['old_user'],
-                                parsed_line['old_group'],
-                                parsed_line['new_user'],
-                                parsed_line['new_group'])
+                owner_change = (
+                    parsed_line['old_user'],
+                    parsed_line['old_group'],
+                    parsed_line['new_user'],
+                    parsed_line['new_group'],
+                )
 
             if parsed_line['cl']:
                 # link changed
@@ -395,27 +398,32 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
             else:
                 # modified contents or mode
                 if parsed_line['modified']:
-                    modified = (size_to_byte(parsed_line['added'],
-                                             parsed_line['added_unit']),
-                                size_to_byte(parsed_line['removed'],
-                                             parsed_line['removed_unit']))
+                    modified = (
+                        size_to_byte(parsed_line['added'], parsed_line['added_unit']),
+                        size_to_byte(parsed_line['removed'], parsed_line['removed_unit']),
+                    )
 
                     size = modified[0] - modified[1]
                     changed_size = sum(modified)
 
                 if parsed_line['mode']:
-                    mode_change = (parsed_line['old_mode'],
-                                   parsed_line['new_mode'])
+                    mode_change = (parsed_line['old_mode'], parsed_line['new_mode'])
 
         # add change to model
-        model.addItem((path,
-                       DiffData(file_type=file_type,
-                                change_type=change_type,
-                                changed_size=changed_size,
-                                size=size,
-                                mode_change=mode_change,
-                                owner_change=owner_change,
-                                modified=modified)))
+        model.addItem(
+            (
+                path,
+                DiffData(
+                    file_type=file_type,
+                    change_type=change_type,
+                    changed_size=changed_size,
+                    size=size,
+                    mode_change=mode_change,
+                    owner_change=owner_change,
+                    modified=modified,
+                ),
+            )
+        )
 
 
 def size_to_byte(significand: str, unit: str) -> int:
@@ -511,6 +519,7 @@ class ChangeType(enum.Enum):
     new_group:
         See old_user property.
     """
+
     NONE = 0  # no change
     MODIFIED = 2  # int for sorting
     ADDED = 1
@@ -560,6 +569,7 @@ class ChangeType(enum.Enum):
 
 class FileType(enum.Enum):
     """The possible file types of changed file."""
+
     FILE = enum.auto()
     DIRECTORY = enum.auto()
     LINK = enum.auto()
@@ -571,6 +581,7 @@ class FileType(enum.Enum):
 @dataclass
 class DiffData:
     """The data linked to a diff item."""
+
     file_type: FileType
     change_type: ChangeType
     changed_size: int
@@ -591,8 +602,7 @@ class DiffTree(FileTreeModel[DiffData]):
 
     def _merge_data(self, item, data):
         if data:
-            logger.debug('Overriding data for {}'.format(path_to_str(
-                item.path)))
+            logger.debug('Overriding data for {}'.format(path_to_str(item.path)))
         return super()._merge_data(item, data)
 
     def _flat_filter(self, item):
@@ -647,8 +657,7 @@ class DiffTree(FileTreeModel[DiffData]):
                     return
 
                 if parent.data is None:
-                    raise Exception("Item {} without data".format(
-                        path_to_str(parent.path)))
+                    raise Exception("Item {} without data".format(path_to_str(parent.path)))
                 else:
                     parent.data.size += size
                     parent.data.changed_size += changed_size
@@ -680,10 +689,12 @@ class DiffTree(FileTreeModel[DiffData]):
         # name, change_type, changed bytes, size balance
         return 4
 
-    def headerData(self,
-                   section: int,
-                   orientation: Qt.Orientation,
-                   role: int = Qt.ItemDataRole.DisplayRole):
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: int = Qt.ItemDataRole.DisplayRole,
+    ):
         """
         Get the data for the given role and section in the given header.
 
@@ -706,8 +717,7 @@ class DiffTree(FileTreeModel[DiffData]):
         Any
             The data for the specified header section.
         """
-        if (orientation == Qt.Orientation.Horizontal
-                and role == Qt.ItemDataRole.DisplayRole):
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             if section == 0:
                 return self.tr("Name")
             elif section == 1:
@@ -719,9 +729,7 @@ class DiffTree(FileTreeModel[DiffData]):
 
         return None
 
-    def data(self,
-             index: QModelIndex,
-             role: int = Qt.ItemDataRole.DisplayRole):
+    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
         Get the data for the given role and index.
 
@@ -755,12 +763,9 @@ class DiffTree(FileTreeModel[DiffData]):
                 if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
                     parent = index.parent()
                     if parent == QModelIndex():
-                        return path_to_str(
-                            relative_path(self.root.path, item.path))
+                        return path_to_str(relative_path(self.root.path, item.path))
 
-                    return path_to_str(
-                        relative_path(parent.internalPointer().path,
-                                      item.path))
+                    return path_to_str(relative_path(parent.internalPointer().path, item.path))
 
                 # standard tree mode
                 return item.subpath
@@ -776,14 +781,11 @@ class DiffTree(FileTreeModel[DiffData]):
         if role == Qt.ItemDataRole.ForegroundRole:
             # colour
             if item.data.change_type == ChangeType.ADDED:
-                return (QColor(Qt.green)
-                        if uses_dark_mode() else QColor(Qt.darkGreen))
+                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
             if item.data.change_type == ChangeType.MODIFIED:
-                return (QColor(Qt.yellow)
-                        if uses_dark_mode() else QColor(Qt.darkYellow))
+                return QColor(Qt.yellow) if uses_dark_mode() else QColor(Qt.darkYellow)
             if item.data.change_type == ChangeType.REMOVED:
-                return (QColor(Qt.red)
-                        if uses_dark_mode() else QColor(Qt.darkRed))
+                return QColor(Qt.red) if uses_dark_mode() else QColor(Qt.darkRed)
             return None  # no change
 
         if role == Qt.ItemDataRole.ToolTipRole:
@@ -792,10 +794,7 @@ class DiffTree(FileTreeModel[DiffData]):
                 return path_to_str(item.path)
 
             # info/data tooltip -> no real size limitation
-            tooltip_template = \
-                "{name}\n" + \
-                "\n" + \
-                "{filetype} {changetype}"
+            tooltip_template = "{name}\n" + "\n" + "{filetype} {changetype}"
 
             modified_template = self.tr("Added {}, deleted {}")
             owner_template = "{: <10} -> {: >10}"
@@ -813,8 +812,7 @@ class DiffTree(FileTreeModel[DiffData]):
             elif item.data.file_type == FileType.CHRDEV:
                 filetype = self.tr("Character device file")
             else:
-                raise Exception("Unknown filetype {}".format(
-                    item.data.file_type))
+                raise Exception("Unknown filetype {}".format(item.data.file_type))
 
             if item.data.change_type == ChangeType.NONE:
                 changetype = self.tr("unchanged")
@@ -825,17 +823,15 @@ class DiffTree(FileTreeModel[DiffData]):
             elif item.data.change_type == ChangeType.ADDED:
                 changetype = self.tr("added")
             else:
-                raise Exception("Unknown changetype {}".format(
-                    item.data.change_type))
+                raise Exception("Unknown changetype {}".format(item.data.change_type))
 
-            tooltip = tooltip_template.format(name=item.path[-1],
-                                              filetype=filetype,
-                                              changetype=changetype)
+            tooltip = tooltip_template.format(name=item.path[-1], filetype=filetype, changetype=changetype)
             if item.data.modified:
                 tooltip += '\n'
                 tooltip += modified_template.format(
                     pretty_bytes(item.data.modified[0]),
-                    pretty_bytes(item.data.modified[1]))
+                    pretty_bytes(item.data.modified[1]),
+                )
 
             if item.data.mode_change:
                 tooltip += '\n'
@@ -844,9 +840,8 @@ class DiffTree(FileTreeModel[DiffData]):
             if item.data.owner_change:
                 tooltip += '\n'
                 tooltip += owner_template.format(
-                    '{}:{}'.format(item.data.owner_change[0],
-                                   item.data.owner_change[1]),
-                    "{}:{}".format(item.data.owner_change[2],
-                                   item.data.owner_change[3]))
+                    '{}:{}'.format(item.data.owner_change[0], item.data.owner_change[1]),
+                    "{}:{}".format(item.data.owner_change[2], item.data.owner_change[3]),
+                )
 
             return tooltip

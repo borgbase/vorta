@@ -11,28 +11,32 @@ def open_app_at_startup(enabled=True):
     while on Linux it adds a .desktop file at ~/.config/autostart
     """
     if sys.platform == 'darwin':
+        from Cocoa import NSURL, NSBundle
+        from CoreFoundation import kCFAllocatorDefault
         from Foundation import NSDictionary
 
-        from Cocoa import NSBundle, NSURL
-        from CoreFoundation import kCFAllocatorDefault
         # CF = CDLL(find_library('CoreFoundation'))
-        from LaunchServices import (LSSharedFileListCreate, kLSSharedFileListSessionLoginItems,
-                                    LSSharedFileListInsertItemURL, kLSSharedFileListItemHidden,
-                                    kLSSharedFileListItemLast, LSSharedFileListItemRemove)
+        from LaunchServices import (
+            LSSharedFileListCreate,
+            LSSharedFileListInsertItemURL,
+            LSSharedFileListItemRemove,
+            kLSSharedFileListItemHidden,
+            kLSSharedFileListItemLast,
+            kLSSharedFileListSessionLoginItems,
+        )
 
         app_path = NSBundle.mainBundle().bundlePath()
         url = NSURL.alloc().initFileURLWithPath_(app_path)
         login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
         props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
 
-        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast,
-                                                 None, None, url, props, None)
+        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast, None, None, url, props, None)
         if not enabled:
             LSSharedFileListItemRemove(login_items, new_item)
 
     elif sys.platform.startswith('linux'):
-        from appdirs import user_config_dir
         from pathlib import Path
+        from appdirs import user_config_dir
 
         is_flatpak = Path('/.flatpak-info').exists()
 
@@ -53,10 +57,11 @@ def open_app_at_startup(enabled=True):
         if enabled:
             # Replace command for flatpak if appropriate and start in background
             desktop_file_text = desktop_file_text.replace(
-                "Exec=vorta", "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak
-                else "Exec=vorta --daemonize")
+                "Exec=vorta",
+                "Exec=flatpak run com.borgbase.Vorta --daemonize" if is_flatpak else "Exec=vorta --daemonize",
+            )
             # Add autostart delay
-            desktop_file_text += (AUTOSTART_DELAY)
+            desktop_file_text += AUTOSTART_DELAY
 
             autostart_file_path.write_text(desktop_file_text)
         elif autostart_file_path.exists():

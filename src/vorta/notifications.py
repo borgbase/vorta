@@ -1,8 +1,6 @@
 import logging
 import sys
-
 from PyQt5 import QtCore, QtDBus
-
 from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
@@ -15,6 +13,7 @@ class VortaNotifications:
     notifier = Notifications.pick()()
     notifier.deliver('blah', 'blah blah')
     """
+
     @classmethod
     def pick(cls):
         if sys.platform == 'darwin':
@@ -52,6 +51,7 @@ class DarwinNotifications(VortaNotifications):
             return
 
         from Foundation import NSUserNotification, NSUserNotificationCenter
+
         notification = NSUserNotification.alloc().init()
         notification.setTitle_(title)
         notification.setInformativeText_(text)
@@ -85,14 +85,23 @@ class DBusNotifications(VortaNotifications):
         text = msg
         actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
         hint = {'urgency': self.URGENCY[level]}
-        time = 5000   # milliseconds for display timeout
+        time = 5000  # milliseconds for display timeout
 
         bus = QtDBus.QDBusConnection.sessionBus()
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
         if notify.isValid():
-            x = notify.call(QtDBus.QDBus.AutoDetect, "Notify", app_name,
-                            id_replace, icon, title, text,
-                            actions_list, hint, time)
+            x = notify.call(
+                QtDBus.QDBus.AutoDetect,
+                "Notify",
+                app_name,
+                id_replace,
+                icon,
+                title,
+                text,
+                actions_list,
+                hint,
+                time,
+            )
             if x.errorName():
                 logger.warning("Failed to send notification!")
                 logger.warning(x.errorMessage())

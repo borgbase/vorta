@@ -2,7 +2,6 @@ from .borg_job import BorgJob
 
 
 class BorgBreakJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Breaking repository lock…'))

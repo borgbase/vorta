@@ -1,11 +1,9 @@
 from vorta.store.models import RepoModel
 from vorta.utils import format_archive_name
-
 from .borg_job import BorgJob
 
 
 class BorgPruneJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Pruning old archives…'))
@@ -34,11 +32,16 @@ class BorgPruneJob(BorgJob):
         cmd = ['borg', 'prune', '--list', '--info', '--log-json']
 
         pruning_opts = [
-            '--keep-hourly', str(profile.prune_hour),
-            '--keep-daily', str(profile.prune_day),
-            '--keep-weekly', str(profile.prune_week),
-            '--keep-monthly', str(profile.prune_month),
-            '--keep-yearly', str(profile.prune_year),
+            '--keep-hourly',
+            str(profile.prune_hour),
+            '--keep-daily',
+            str(profile.prune_day),
+            '--keep-weekly',
+            str(profile.prune_week),
+            '--keep-monthly',
+            str(profile.prune_month),
+            '--keep-yearly',
+            str(profile.prune_year),
         ]
 
         if profile.prune_prefix:

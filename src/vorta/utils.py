@@ -10,7 +10,6 @@ import unicodedata
 from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, Tuple
-
 import psutil
 from paramiko import SSHException
 from paramiko.ecdsakey import ECDSAKey
@@ -19,7 +18,6 @@ from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
-
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
 from vorta.log import logger
@@ -47,10 +45,7 @@ class FilePathInfoAsync(QThread):
 
     def run(self):
         # logger.info("running thread to get path=%s...", self.path)
-        self.size, self.files_count = get_path_datasize(
-            self.path,
-            self.exclude_patterns
-        )
+        self.size, self.files_count = get_path_datasize(self.path, self.exclude_patterns)
         self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
@@ -85,8 +80,8 @@ def match(pattern: re.Pattern, path: str):
 
 
 def get_directory_size(dir_path, exclude_patterns):
-    ''' Get number of files only and total size in bytes from a path.
-        Based off https://stackoverflow.com/a/17936789 '''
+    '''Get number of files only and total size in bytes from a path.
+    Based off https://stackoverflow.com/a/17936789'''
     exclude_patterns = [prepare_pattern(p) for p in exclude_patterns]
 
     data_size_filtered = 0
@@ -137,7 +132,10 @@ def get_network_status_monitor():
     global _network_status_monitor
     if _network_status_monitor is None:
         _network_status_monitor = NetworkStatusMonitor.get_network_status_monitor()
-        logger.info('Using %s NetworkStatusMonitor implementation.', _network_status_monitor.__class__.__name__)
+        logger.info(
+            'Using %s NetworkStatusMonitor implementation.',
+            _network_status_monitor.__class__.__name__,
+        )
     return _network_status_monitor
 
 
@@ -146,10 +144,7 @@ def get_path_datasize(path, exclude_patterns):
     data_size = 0
 
     if file_info.isDir():
-        data_size, files_count = get_directory_size(
-            file_info.absoluteFilePath(),
-            exclude_patterns
-        )
+        data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
         # logger.info("path (folder) %s %u elements size now=%u (%s)",
         #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
     else:
@@ -202,11 +197,18 @@ def get_private_keys():
                         'filename': key,
                         'format': parsed_key.get_name(),
                         'bits': parsed_key.get_bits(),
-                        'fingerprint': parsed_key.get_fingerprint().hex()
+                        'fingerprint': parsed_key.get_fingerprint().hex(),
                     }
                     available_private_keys.append(key_details)
-                except (SSHException, UnicodeDecodeError, IsADirectoryError, IndexError, ValueError,
-                        PermissionError, NotImplementedError):
+                except (
+                    SSHException,
+                    UnicodeDecodeError,
+                    IsADirectoryError,
+                    IndexError,
+                    ValueError,
+                    PermissionError,
+                    NotImplementedError,
+                ):
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:
@@ -219,11 +221,14 @@ def get_private_keys():
 
 
 def sort_sizes(size_list):
-    """ Sorts sizes with extensions. Assumes that size is already in largest unit possible """
+    """Sorts sizes with extensions. Assumes that size is already in largest unit possible"""
     final_list = []
     for suffix in [" B", " KB", " MB", " GB", " TB"]:
-        sub_list = [float(size[:-len(suffix)])
-                    for size in size_list if size.endswith(suffix) and size[:-len(suffix)][-1].isnumeric()]
+        sub_list = [
+            float(size[: -len(suffix)])
+            for size in size_list
+            if size.endswith(suffix) and size[: -len(suffix)][-1].isnumeric()
+        ]
         sub_list.sort()
         final_list += [(str(size) + suffix) for size in sub_list]
         # Skip additional loops
@@ -236,8 +241,11 @@ def pretty_bytes(size, metric=True, sign=False, precision=1):
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
-    power, units = (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']) if metric else \
-                   (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
+    power, units = (
+        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
+        if metric
+        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
+    )
     n = 0
     while abs(round(size, precision)) >= power and n + 1 < len(units):
         size /= power
@@ -270,14 +278,13 @@ def get_sorted_wifis(profile):
 
     # Pull networks known to OS and all other backup profiles
     system_wifis = get_network_status_monitor().get_known_wifis()
-    from_other_profiles = WifiSettingModel.select() \
-        .where(WifiSettingModel.profile != profile.id).execute()
+    from_other_profiles = WifiSettingModel.select().where(WifiSettingModel.profile != profile.id).execute()
 
     for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
             profile=profile.id,
-            defaults={'last_connected': wifi.last_connected, 'allowed': True}
+            defaults={'last_connected': wifi.last_connected, 'allowed': True},
         )
 
         # Update last connected time
@@ -286,23 +293,28 @@ def get_sorted_wifis(profile):
             db_wifi.save()
 
     # Finally return list of networks and settings for that profile
-    return WifiSettingModel.select() \
-        .where(WifiSettingModel.profile == profile.id).order_by(-WifiSettingModel.last_connected)
+    return (
+        WifiSettingModel.select()
+        .where(WifiSettingModel.profile == profile.id)
+        .order_by(-WifiSettingModel.last_connected)
+    )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Vorta Backup GUI for Borg.')
-    parser.add_argument('--version', '-V',
-                        action='store_true',
-                        help="Show version and exit.")
-    parser.add_argument('--daemonize', '-d',
-                        action='store_true',
-                        help="Fork to background and don't open window on startup.")
+    parser.add_argument('--version', '-V', action='store_true', help="Show version and exit.")
+    parser.add_argument(
+        '--daemonize',
+        '-d',
+        action='store_true',
+        help="Fork to background and don't open window on startup.",
+    )
     parser.add_argument(
         '--create',
         dest='profile',
         help='Create a backup in the background using the given profile. '
-        'Vorta must already be running for this to work.')
+        'Vorta must already be running for this to work.',
+    )
 
     return parser.parse_known_args()[0]
 
@@ -338,7 +350,7 @@ def format_archive_name(profile, archive_name_tpl):
         'profile_slug': profile.slug(),
         'now': dt.now(),
         'utc_now': dt.utcnow(),
-        'user': getpass.getuser()
+        'user': getpass.getuser(),
     }
     return archive_name_tpl.format(**available_vars)
 
@@ -363,8 +375,8 @@ def get_mount_points(repo_url):
                             mount_point = proc.cmdline()[idx + 1]
 
                             # archive or full mount?
-                            if parameter[len(repo_url):].startswith('::'):
-                                archive_name = parameter[len(repo_url) + 2:]
+                            if parameter[len(repo_url) :].startswith('::'):
+                                archive_name = parameter[len(repo_url) + 2 :]
                                 mount_points[archive_name] = mount_point
                                 break
                             else:
@@ -395,7 +407,7 @@ def is_system_tray_available():
 
 
 def validate_passwords(first_pass, second_pass):
-    ''' Validates the password for borg, do not use on single fields '''
+    '''Validates the password for borg, do not use on single fields'''
     pass_equal = first_pass == second_pass
     pass_long = len(first_pass) > 8
 
@@ -430,6 +442,7 @@ def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
         The index and the item in case of a match else `None`.
     """
     if not func:
+
         def func(x):
             return x
 

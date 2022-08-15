@@ -1,15 +1,12 @@
 import re
-
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QAction, QApplication, QDialogButtonBox, QLineEdit
-
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
-from vorta.utils import (borg_compat, choose_file_dialog, get_asset,
-                         get_private_keys, validate_passwords)
+from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')
@@ -27,8 +24,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.is_remote_repo = True
 
         # dialogButtonBox
-        self.saveButton = self.buttonBox.button(
-            QDialogButtonBox.StandardButton.Ok)
+        self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
         self.buttonBox.rejected.connect(self.close)
@@ -73,7 +69,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             ssh_key=self.sshComboBox.currentData(),
             repo_url=self.repoURL.text(),
             password=self.passwordLineEdit.text(),
-            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text()
+            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
         )
         if self.__class__ == AddRepoWindow:
             out['encryption'] = self.encryptionComboBox.currentData()
@@ -98,7 +94,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         dialog.open(receive)
 
     def set_password(self, URL):
-        ''' Autofill password from keyring only if current entry is empty '''
+        '''Autofill password from keyring only if current entry is empty'''
         password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordLineEdit.text() == "":
             self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
@@ -153,11 +149,17 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     def init_encryption(self):
         encryption_algos = [
-            [self.tr('Repokey-Blake2 (Recommended, key stored in repository)'), 'repokey-blake2'],
+            [
+                self.tr('Repokey-Blake2 (Recommended, key stored in repository)'),
+                'repokey-blake2',
+            ],
             [self.tr('Repokey'), 'repokey'],
-            [self.tr('Keyfile-Blake2 (Key stored in home directory)'), 'keyfile-blake2'],
+            [
+                self.tr('Keyfile-Blake2 (Key stored in home directory)'),
+                'keyfile-blake2',
+            ],
             [self.tr('Keyfile'), 'keyfile'],
-            [self.tr('None (not recommended)'), 'none']
+            [self.tr('None (not recommended)'), 'none'],
         ]
 
         for desc, name in encryption_algos:
@@ -171,7 +173,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def init_ssh_key(self):
         keys = get_private_keys()
         for key in keys:
-            self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})', key['filename'])
+            self.sshComboBox.addItem(
+                f'{key["filename"]} ({key["format"]}:{key["fingerprint"]})',
+                key['filename'],
+            )
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
@@ -186,7 +191,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         return True
 
     def password_listener(self):
-        ''' Validates passwords only if its going to be used '''
+        '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
             self.passwordLabel.setText("")
             return True

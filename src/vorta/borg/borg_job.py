@@ -1,26 +1,25 @@
 import json
+import logging
 import os
+import select
+import shlex
+import shutil
 import signal
 import sys
-import shutil
-import shlex
-import select
 import time
-import logging
-from datetime import datetime as dt
 from collections import namedtuple
+from datetime import datetime as dt
+from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from subprocess import Popen, PIPE, TimeoutExpired
-
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
-from vorta.store.models import EventLogModel, BackupProfileMixin
-from vorta.utils import borg_compat, pretty_bytes
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
+from vorta.store.models import BackupProfileMixin, EventLogModel
+from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
 db_lock = Lock()
@@ -64,10 +63,12 @@ class BorgJob(JobInterface, BackupProfileMixin):
         self.app: application.VortaApp = QApplication.instance()
 
         # Declare labels here for translation
-        self.category_label = {"files": trans_late("BorgJob", "Files"),
-                               "original": trans_late("BorgJob", "Original"),
-                               "deduplicated": trans_late("BorgJob", "Deduplicated"),
-                               "compressed": trans_late("BorgJob", "Compressed"), }
+        self.category_label = {
+            "files": trans_late("BorgJob", "Files"),
+            "original": trans_late("BorgJob", "Original"),
+            "deduplicated": trans_late("BorgJob", "Deduplicated"),
+            "compressed": trans_late("BorgJob", "Compressed"),
+        }
 
         cmd[0] = self.prepare_bin()
 
@@ -154,8 +155,10 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
             # Check if keyring is locked
             if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-                ret['message'] = trans_late('messages',
-                                            'Please unlock your system password manager or disable it under Misc')
+                ret['message'] = trans_late(
+                    'messages',
+                    'Please unlock your system password manager or disable it under Misc',
+                )
                 return ret
 
             # Try to fall back to DB Keyring, if we use the system keychain.
@@ -165,14 +168,18 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
                 # Give warning and continue if password is found there.
                 if ret['password'] is not None:
-                    logger.warning('Found password in database, but secure storage was available. '
-                                   'Consider re-adding the repo to use it.')
+                    logger.warning(
+                        'Found password in database, but secure storage was available. '
+                        'Consider re-adding the repo to use it.'
+                    )
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
             ret['message'] = trans_late(
-                'messages', "Your repo passphrase was stored in a password manager which is no longer available.\n"
-                "Try unlinking and re-adding your repo.")
+                'messages',
+                "Your repo passphrase was stored in a password manager which is no longer available.\n"
+                "Try unlinking and re-adding your repo.",
+            )
             return ret
 
         ret['ssh_key'] = profile.ssh_key
@@ -198,6 +205,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         elif sys.platform == 'darwin':
             # macOS: Look in pyinstaller bundle
             from Foundation import NSBundle
+
             mainBundle = NSBundle.mainBundle()
 
             bundled_borg = os.path.join(mainBundle.bundlePath(), 'Contents', 'Resources', 'borg-dir', 'borg.exe')
@@ -208,15 +216,24 @@ class BorgJob(JobInterface, BackupProfileMixin):
     def run(self):
         self.started_event()
         with db_lock:
-            log_entry = EventLogModel(category=self.params.get('category', 'user'),
-                                      subcommand=self.cmd[1],
-                                      profile=self.params.get('profile_id', None)
-                                      )
+            log_entry = EventLogModel(
+                category=self.params.get('category', 'user'),
+                subcommand=self.cmd[1],
+                profile=self.params.get('profile_id', None),
+            )
             log_entry.save()
             logger.info('Running command %s', ' '.join(self.cmd))
 
-        p = Popen(self.cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True,
-                  env=self.env, cwd=self.cwd, start_new_session=True)
+        p = Popen(
+            self.cmd,
+            stdout=PIPE,
+            stderr=PIPE,
+            bufsize=1,
+            universal_newlines=True,
+            env=self.env,
+            cwd=self.cwd,
+            start_new_session=True,
+        )
         error_messages = []  # List of error messages included in the result
 
         self.process = p
@@ -248,10 +265,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 'msgid': parsed.get('msgid'),
                                 'repo_url': self.params['repo_url'],
                                 'profile_name': self.params.get('profile_name'),
-                                'cmd': self.params['cmd'][1]
+                                'cmd': self.params['cmd'][1],
                             }
-                            self.app.backup_log_event.emit(
-                                f'{parsed["levelname"]}: {parsed["message"]}', context)
+                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}', context)
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
 

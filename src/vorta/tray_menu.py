@@ -1,8 +1,6 @@
 import os
-
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMenu, QSystemTrayIcon
-
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
@@ -31,8 +29,10 @@ class TrayMenu(QSystemTrayIcon):
 
         If XDG_CURRENT_DESKTOP isn't set, always open the tray menu (macOS)
         """
-        if reason in [QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick] and \
-                os.environ.get('XDG_CURRENT_DESKTOP'):
+        if reason in [
+            QSystemTrayIcon.Trigger,
+            QSystemTrayIcon.DoubleClick,
+        ] and os.environ.get('XDG_CURRENT_DESKTOP'):
             self.app.toggle_main_window_visibility()
 
     def on_user_click(self):
