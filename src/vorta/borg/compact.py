@@ -39,7 +39,10 @@ class BorgCompactJob(BorgJob):
             return ret
 
         cmd = ['borg', '--info', '--log-json', 'compact', '--cleanup-commits']
-        cmd.append(f'{profile.repo.url}')
+        if borg_compat.check('V2'):
+            cmd = cmd + ["-r", profile.repo.url]
+        else:
+            cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd

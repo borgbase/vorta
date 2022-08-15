@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
+    <width>466</width>
     <height>274</height>
    </rect>
   </property>
@@ -88,7 +88,6 @@
         <widget class="QLabel" name="title">
          <property name="font">
           <font>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -115,7 +114,7 @@
          <item>
           <widget class="QLineEdit" name="repoURL">
            <property name="placeholderText">
-            <string>csvis8xq@csvis8xq.repo.borgbase.com:repo</string>
+            <string>ssh://csvis8xq@csvis8xq.repo.borgbase.com/./repo</string>
            </property>
           </widget>
          </item>

@@ -1,4 +1,5 @@
 from vorta.i18n import trans_late
+from vorta.utils import borg_compat
 from vorta.store.models import RepoModel
 from .borg_job import BorgJob, FakeProfile, FakeRepo
 
@@ -27,7 +28,10 @@ class BorgInfoRepoJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ["borg", "info", "--info", "--json", "--log-json"]
+        if borg_compat.check('V2'):
+            cmd = ["borg", "rinfo", "--info", "--json", "--log-json", "-r"]
+        else:
+            cmd = ["borg", "info", "--info", "--json", "--log-json"]
         cmd.append(profile.repo.url)
 
         ret['additional_env'] = {

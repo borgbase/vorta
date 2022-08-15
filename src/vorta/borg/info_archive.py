@@ -1,4 +1,5 @@
 from vorta.store.models import ArchiveModel, RepoModel
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -23,9 +24,12 @@ class BorgInfoArchiveJob(BorgJob):
             'borg',
             'info',
             '--log-json',
-            '--json',
-            f'{profile.repo.url}::{archive_name}',
+            '--json'
         ]
+        if borg_compat.check('V2'):
+            ret['cmd'].extend(["-r", profile.repo.url, archive_name])
+        else:
+            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
         ret['archive_name'] = archive_name
 
         return ret

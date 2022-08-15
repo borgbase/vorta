@@ -26,7 +26,7 @@ class BorgCreateJob(BorgJob):
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
-                repo.unique_csize = stats['unique_csize']
+                # repo.unique_csize = stats['unique_csize']
                 repo.unique_size = stats['unique_size']
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
@@ -159,7 +159,11 @@ class BorgCreateJob(BorgJob):
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
-        cmd.append(f"{profile.repo.url}::{new_archive_name}")
+
+        if borg_compat.check('V2'):
+            cmd = cmd + ["-r", profile.repo.url, new_archive_name]
+        else:
+            cmd.append(f"{profile.repo.url}::{new_archive_name}")
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
