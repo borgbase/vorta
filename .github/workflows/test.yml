@@ -11,6 +11,27 @@ on:
         default: false
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install Vorta
+      run: |
+        pip install .
+        pip install -r requirements.d/dev.txt
+    - name: Test formatting with Flake8, isort and Black
+      run: |
+        flake8
+        isort --check-only .
+        black --check .
+    # - name: Run PyLint (info only)
+    #   run: pylint --rcfile=setup.cfg src --exit-zero
+    
+    
   test:
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}
@@ -78,23 +99,3 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         env_vars: OS, python
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install Vorta
-      run: |
-        pip install .
-        pip install -r requirements.d/dev.txt
-    - name: Test formatting with Flake8, isort and Black
-      run: |
-        flake8
-        isort --check-only .
-        black --check .
-    # - name: Run PyLint (info only)
-    #   run: pylint --rcfile=setup.cfg src --exit-zero
