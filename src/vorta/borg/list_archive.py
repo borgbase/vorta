@@ -1,4 +1,6 @@
 from .borg_job import BorgJob
+from vorta.utils import borg_compat
+
 
 
 class BorgListArchiveJob(BorgJob):
@@ -27,8 +29,13 @@ class BorgListArchiveJob(BorgJob):
             '--format',
             # fields to include in json output
             "{mode}{user}{group}{size}{mtime}{path}{source}{health}{NL}",
-            f'{profile.repo.url}::{archive_name}',
         ]
+
+        if borg_compat.check('V2'):
+            ret['cmd'].extend(["-r", profile.repo.url, archive_name])
+        else:
+            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
+
         ret['ok'] = True
 
         return ret

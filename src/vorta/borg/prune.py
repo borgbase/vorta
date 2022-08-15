@@ -1,5 +1,5 @@
 from vorta.store.models import RepoModel
-from vorta.utils import format_archive_name
+from vorta.utils import format_archive_name, borg_compat
 from .borg_job import BorgJob
 
 
@@ -51,7 +51,10 @@ class BorgPruneJob(BorgJob):
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
         cmd += pruning_opts
-        cmd.append(f'{profile.repo.url}')
+        if borg_compat.check('V2'):
+            cmd.extend(["-r", profile.repo.url])
+        else:
+            cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd
