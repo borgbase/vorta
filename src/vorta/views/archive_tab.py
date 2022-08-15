@@ -32,7 +32,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin
-from vorta.utils import choose_file_dialog, format_archive_name, get_asset, get_mount_points, pretty_bytes
+from vorta.utils import choose_file_dialog, format_archive_name, get_asset, get_mount_points, pretty_bytes, borg_compat
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
@@ -907,10 +907,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def rename_action(self):
         profile = self.profile()
-        params = BorgRenameJob.prepare(profile)
-        if not params['ok']:
-            self._set_status(params['message'])
-            return
+
 
         archive_name = self.selected_archive_name()
         if archive_name is not None:
@@ -933,8 +930,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self._set_status(self.tr('An archive with this name already exists.'))
                 return
 
-            params['cmd'][-1] += f'::{archive_name}'
-            params['cmd'].append(new_name)
+            params = BorgRenameJob.prepare(profile, archive_name, new_name)
+            if not params['ok']:
+                self._set_status(params['message'])
+
             job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
             job.updated.connect(self._set_status)
             job.result.connect(self.rename_result)
