@@ -142,8 +142,7 @@ class TestFileTreeModel:
         assert item is not None and item.data == 3
 
         # test parent
-        assert (model.parent(model.indexPath(
-            PurePath('test/subtest'))) == model.indexPath(PurePath('test')))
+        assert model.parent(model.indexPath(PurePath('test/subtest'))) == model.indexPath(PurePath('test'))
 
         # test index
         item1 = model.getItem(('test',))

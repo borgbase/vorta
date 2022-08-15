@@ -14,13 +14,12 @@ index 7a18c11..1667db2 100644
 @@ -392,6 +392,9 @@ static int fuse_mount_sys(const char *mnt, struct mount_opts *mo,
  	int fd;
  	int res;
- 
+
 +	/* disable in flatpak */
 +	return -2;
 +
  	if (!mnt) {
  		fprintf(stderr, "fuse: missing mountpoint parameter\n");
  		return -1;
--- 
+--
 2.17.0.rc2
-

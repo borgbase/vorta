@@ -7,8 +7,9 @@ import vorta.views.archive_tab
 from vorta.views.diff_result import ChangeType, DiffData, DiffTree, FileType, parse_diff_json, parse_diff_lines
 
 
-@pytest.mark.parametrize('json_mock_file,folder_root', [
-    ('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')])
+@pytest.mark.parametrize(
+    'json_mock_file,folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
+)
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root):
     main = qapp.main_window
     tab = main.archiveTab
@@ -27,6 +28,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
         if feature_name == 'DIFF_JSON_LINES':
             return False
         return vorta.utils.BorgCompatibility.check(compat, feature_name)
+
     mocker.patch.object(vorta.utils.borg_compat, 'check', check)
 
     selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
@@ -52,42 +54,74 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
 @pytest.mark.parametrize(
     'line, expected',
     [
-        ('changed link        some/changed/link',
-         ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0,
-          None, None, None)),
-        (' +77.8 kB  -77.8 kB some/changed/file',
-         ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800,
-          0, None, None,
-          (77800, 77800))),
-        (' +77.8 kB  -77.8 kB [-rw-rw-rw- -> -rw-r--r--] some/changed/file',
-         ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0,
-          ('-rw-rw-rw-', '-rw-r--r--'), None, (77800, 77800))),
-        ('[-rw-rw-rw- -> -rw-r--r--] some/changed/file',
-         ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0,
-          ('-rw-rw-rw-', '-rw-r--r--'), None, None)),
-        ('added directory    some/changed/dir',
-         ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None,
-          None, None)),
-        ('removed directory  some/changed/dir',
-         ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0,
-          None, None, None)),
-
+        (
+            'changed link        some/changed/link',
+            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None),
+        ),
+        (
+            ' +77.8 kB  -77.8 kB some/changed/file',
+            ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0, None, None, (77800, 77800)),
+        ),
+        (
+            ' +77.8 kB  -77.8 kB [-rw-rw-rw- -> -rw-r--r--] some/changed/file',
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                2 * 77800,
+                0,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                None,
+                (77800, 77800),
+            ),
+        ),
+        (
+            '[-rw-rw-rw- -> -rw-r--r--] some/changed/file',
+            ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0, ('-rw-rw-rw-', '-rw-r--r--'), None, None),
+        ),
+        (
+            'added directory    some/changed/dir',
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None),
+        ),
+        (
+            'removed directory  some/changed/dir',
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None),
+        ),
         # Example from https://github.com/borgbase/vorta/issues/521
-        ('[user:user -> nfsnobody:nfsnobody] home/user/arrays/test.txt',
-         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
-          None, ('user', 'user', 'nfsnobody', 'nfsnobody'), None)),
-
+        (
+            '[user:user -> nfsnobody:nfsnobody] home/user/arrays/test.txt',
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                0,
+                0,
+                None,
+                ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                None,
+            ),
+        ),
         # Very short owner change, to check stripping whitespace from file path
-        ('[a:a -> b:b]       home/user/arrays/test.txt',
-         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
-          None, ('a', 'a', 'b', 'b'), None)),
-
+        (
+            '[a:a -> b:b]       home/user/arrays/test.txt',
+            ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0, None, ('a', 'a', 'b', 'b'), None),
+        ),
         # All file-related changes in one test
-        (' +77.8 kB  -800 B [user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--] home/user/arrays/test.txt',
-         ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER,
-          77800 + 800, 77000, ('-rw-rw-rw-', '-rw-r--r--'),
-          ('user', 'user', 'nfsnobody', 'nfsnobody'), (77800, 800))),
-    ])
+        (
+            ' +77.8 kB  -800 B [user:user -> nfsnobody:nfsnobody] [-rw-rw-rw- -> -rw-r--r--] home/user/arrays/test.txt',
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                77800 + 800,
+                77000,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                (77800, 800),
+            ),
+        ),
+    ],
+)
 def test_archive_diff_parser(line, expected):
     model = DiffTree()
     model.setMode(model.DisplayMode.FLAT)
@@ -103,113 +137,110 @@ def test_archive_diff_parser(line, expected):
 @pytest.mark.parametrize(
     'line, expected',
     [
-        ({
-            'path': 'some/changed/link',
-            'changes': [{
-                'type': 'changed link'
-            }]
-        }, ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0,
-            None, None, None)),
-        ({
-            'path': 'some/changed/file',
-            'changes': [{
-                'type': 'modified',
-                'added': 77800,
-                'removed': 77800
-            }]
-        }, ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800,
-            0, None, None, (77800, 77800))),
-        ({
-            'path':
-            'some/changed/file',
-            'changes': [{
-                'type': 'modified',
-                'added': 77800,
-                'removed': 800
-            }, {
-                'type': 'mode',
-                'old_mode': '-rw-rw-rw-',
-                'new_mode': '-rw-r--r--'
-            }]
-        }, ('some/changed/file', FileType.FILE, ChangeType.MODIFIED,
-            77800 + 800, 77000, ('-rw-rw-rw-', '-rw-r--r--'), None,
-            (77800, 800))),
-        ({
-            'path':
-            'some/changed/file',
-            'changes': [{
-                'type': 'mode',
-                'old_mode': '-rw-rw-rw-',
-                'new_mode': '-rw-r--r--'
-            }]
-        }, ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0,
-            ('-rw-rw-rw-', '-rw-r--r--'), None, None)),
-        ({
-            'path': 'some/changed/dir',
-            'changes': [{
-                'type': 'added directory'
-            }]
-        }, ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0,
-            None, None, None)),
-        ({
-            'path': 'some/changed/dir',
-            'changes': [{
-                'type': 'removed directory'
-            }]
-        }, ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0,
-            0, None, None, None)),
-
+        (
+            {'path': 'some/changed/link', 'changes': [{'type': 'changed link'}]},
+            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None),
+        ),
+        (
+            {'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800}]},
+            ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0, None, None, (77800, 77800)),
+        ),
+        (
+            {
+                'path': 'some/changed/file',
+                'changes': [
+                    {'type': 'modified', 'added': 77800, 'removed': 800},
+                    {'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'},
+                ],
+            },
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                77800 + 800,
+                77000,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                None,
+                (77800, 800),
+            ),
+        ),
+        (
+            {
+                'path': 'some/changed/file',
+                'changes': [{'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}],
+            },
+            ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0, ('-rw-rw-rw-', '-rw-r--r--'), None, None),
+        ),
+        (
+            {'path': 'some/changed/dir', 'changes': [{'type': 'added directory'}]},
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None),
+        ),
+        (
+            {'path': 'some/changed/dir', 'changes': [{'type': 'removed directory'}]},
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None),
+        ),
         # Example from https://github.com/borgbase/vorta/issues/521
-        ({
-            'path':
-            'home/user/arrays/test.txt',
-            'changes': [{
-                'type': 'owner',
-                'old_user': 'user',
-                'new_user': 'nfsnobody',
-                'old_group': 'user',
-                'new_group': 'nfsnobody'
-            }]
-        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
-            None, ('user', 'user', 'nfsnobody', 'nfsnobody'), None)),
-
+        (
+            {
+                'path': 'home/user/arrays/test.txt',
+                'changes': [
+                    {
+                        'type': 'owner',
+                        'old_user': 'user',
+                        'new_user': 'nfsnobody',
+                        'old_group': 'user',
+                        'new_group': 'nfsnobody',
+                    }
+                ],
+            },
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                0,
+                0,
+                None,
+                ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                None,
+            ),
+        ),
         # Very short owner change, to check stripping whitespace from file path
-        ({
-            'path':
-            'home/user/arrays/test.txt',
-            'changes': [{
-                'type': 'owner',
-                'old_user': 'a',
-                'new_user': 'b',
-                'old_group': 'a',
-                'new_group': 'b'
-            }]
-        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0,
-            None, ('a', 'a', 'b', 'b'), None)),
-
+        (
+            {
+                'path': 'home/user/arrays/test.txt',
+                'changes': [{'type': 'owner', 'old_user': 'a', 'new_user': 'b', 'old_group': 'a', 'new_group': 'b'}],
+            },
+            ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0, None, ('a', 'a', 'b', 'b'), None),
+        ),
         # All file-related changes in one test
-        ({
-            'path':
-            'home/user/arrays/test.txt',
-            'changes': [{
-                'type': 'modified',
-                'added': 77800,
-                'removed': 77800
-            }, {
-                'type': 'mode',
-                'old_mode': '-rw-rw-rw-',
-                'new_mode': '-rw-r--r--'
-            }, {
-                'type': 'owner',
-                'old_user': 'user',
-                'new_user': 'nfsnobody',
-                'old_group': 'user',
-                'new_group': 'nfsnobody'
-            }]
-        }, ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER,
-            2 * 77800, 0, ('-rw-rw-rw-', '-rw-r--r--'),
-            ('user', 'user', 'nfsnobody', 'nfsnobody'), (77800, 77800))),
-    ])
+        (
+            {
+                'path': 'home/user/arrays/test.txt',
+                'changes': [
+                    {'type': 'modified', 'added': 77800, 'removed': 77800},
+                    {'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'},
+                    {
+                        'type': 'owner',
+                        'old_user': 'user',
+                        'new_user': 'nfsnobody',
+                        'old_group': 'user',
+                        'new_group': 'nfsnobody',
+                    },
+                ],
+            },
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                2 * 77800,
+                0,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                (77800, 77800),
+            ),
+        ),
+    ],
+)
 def test_archive_diff_json_parser(line, expected):
     model = DiffTree()
     model.setMode(model.DisplayMode.FLAT)

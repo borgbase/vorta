@@ -56,12 +56,14 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     profile = BackupProfileModel.get(name=PROFILE_NAME)
     profile.schedule_make_up_missed = False
     profile.save()
-    event = EventLogModel(subcommand='create',
-                          profile=profile.id,
-                          returncode=0,
-                          category='scheduled',
-                          start_time=last_time,
-                          end_time=last_time)
+    event = EventLogModel(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_time,
+        end_time=last_time,
+    )
     event.save()
 
     qapp.scheduler.set_timer_for_profile(profile.id)
