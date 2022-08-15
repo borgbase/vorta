@@ -1,11 +1,10 @@
 import os
-import tempfile
 import subprocess
+import tempfile
 from datetime import datetime as dt
-
 from vorta.i18n import trans_late
-from vorta.utils import format_archive_name, borg_compat, get_network_status_monitor
-from vorta.store.models import SourceFileModel, ArchiveModel, WifiSettingModel, RepoModel
+from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
+from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 from .borg_job import BorgJob
 
 
@@ -19,8 +18,8 @@ class BorgCreateJob(BorgJob):
                     'time': dt.fromisoformat(result['data']['archive']['start']),
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
-                    'size': result['data']['archive']['stats']['deduplicated_size']
-                }
+                    'size': result['data']['archive']['stats']['deduplicated_size'],
+                },
             )
             new_archive.save()
             if 'cache' in result['data'] and created:
@@ -58,7 +57,7 @@ class BorgCreateJob(BorgJob):
                 'repo_url': params['repo'].url,
                 'profile_name': params['profile'].name,
                 'profile_slug': params['profile'].slug(),
-                'returncode': str(returncode)
+                'returncode': str(returncode),
             }
             proc = subprocess.run(cmd, shell=True, env=env)
             return proc.returncode
@@ -86,20 +85,19 @@ class BorgCreateJob(BorgJob):
         current_wifi = network_status_monitor.get_current_wifi()
         if current_wifi is not None:
             wifi_is_disallowed = WifiSettingModel.select().where(
-                (
-                    WifiSettingModel.ssid == current_wifi
-                ) & (
-                    WifiSettingModel.allowed == False  # noqa
-                ) & (
-                    WifiSettingModel.profile == profile
-                )
+                (WifiSettingModel.ssid == current_wifi)
+                & (WifiSettingModel.allowed == False)  # noqa
+                & (WifiSettingModel.profile == profile)
             )
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
 
-        if profile.repo.is_remote_repo() and profile.dont_run_on_metered_networks \
-                and network_status_monitor.is_network_metered():
+        if (
+            profile.repo.is_remote_repo()
+            and profile.dont_run_on_metered_networks
+            and network_status_monitor.is_network_metered()
+        ):
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
             return ret
 
@@ -116,7 +114,10 @@ class BorgCreateJob(BorgJob):
             return ret
 
         if 'zstd' in profile.compression and not borg_compat.check('ZSTD'):
-            ret['message'] = trans_late('messages', 'Your current Borg version does not support ZStd compression.')
+            ret['message'] = trans_late(
+                'messages',
+                'Your current Borg version does not support ZStd compression.',
+            )
             return ret
 
         cmd = [

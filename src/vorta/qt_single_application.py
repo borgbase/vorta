@@ -1,7 +1,6 @@
-from PyQt5.QtCore import QTextStream
-from PyQt5.QtNetwork import QLocalSocket, QLocalServer
+from PyQt5.QtCore import QTextStream, pyqtSignal
+from PyQt5.QtNetwork import QLocalServer, QLocalSocket
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import pyqtSignal
 
 
 class QtSingleApplication(QApplication):
@@ -37,6 +36,7 @@ class QtSingleApplication(QApplication):
     SUCH DAMAGE.
 
     """
+
     message_received_event = pyqtSignal(str)
 
     def __init__(self, id, *argv):

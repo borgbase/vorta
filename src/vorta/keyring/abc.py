@@ -10,7 +10,7 @@ class VortaKeyring:
         ('.db', 'VortaDBKeyring'),
         ('.darwin', 'VortaDarwinKeyring'),
         ('.kwallet', 'VortaKWallet5Keyring'),
-        ('.secretstorage', 'VortaSecretStorageKeyring')
+        ('.secretstorage', 'VortaSecretStorageKeyring'),
     ]
 
     @classmethod

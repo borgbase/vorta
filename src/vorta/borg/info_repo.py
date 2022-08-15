@@ -1,10 +1,9 @@
-from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.i18n import trans_late
 from vorta.store.models import RepoModel
+from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInfoRepoJob(BorgJob):
-
     def started_event(self):
         self.updated.emit(self.tr('Validating existing repo…'))
 
@@ -19,7 +18,7 @@ class BorgInfoRepoJob(BorgJob):
             999,
             FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'),
             'New Repo',
-            params['ssh_key']
+            params['ssh_key'],
         )
 
         ret = super().prepare(profile)
@@ -33,7 +32,7 @@ class BorgInfoRepoJob(BorgJob):
 
         ret['additional_env'] = {
             'BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK': "yes",
-            'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new'
+            'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new',
         }
 
         ret['password'] = params['password']  # Empty password is '', which disables prompt
@@ -50,9 +49,7 @@ class BorgInfoRepoJob(BorgJob):
 
     def process_result(self, result):
         if result['returncode'] == 0:
-            new_repo, _ = RepoModel.get_or_create(
-                url=result['cmd'][-1]
-            )
+            new_repo, _ = RepoModel.get_or_create(url=result['cmd'][-1])
             if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
                 new_repo.total_size = stats['total_size']

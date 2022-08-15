@@ -1,9 +1,7 @@
 from collections import namedtuple
-
 import psutil
 import pytest
 from PyQt5 import QtCore
-
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab

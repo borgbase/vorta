@@ -1,9 +1,8 @@
-from .borg_job import BorgJob, FakeProfile, FakeRepo
 from vorta.store.models import RepoModel
+from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInitJob(BorgJob):
-
     def started_event(self):
         self.updated.emit(self.tr('Setting up new repo…'))
 
@@ -13,8 +12,14 @@ class BorgInitJob(BorgJob):
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
             999,
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'],
-                     params['encryption']), 'Init Repo', params['ssh_key']
+            FakeRepo(
+                params['repo_url'],
+                999,
+                params['extra_borg_arguments'],
+                params['encryption'],
+            ),
+            'Init Repo',
+            params['ssh_key'],
         )
 
         ret = super().prepare(profile)
@@ -27,9 +32,7 @@ class BorgInitJob(BorgJob):
         cmd.append(f"--encryption={params['encryption']}")
         cmd.append(params['repo_url'])
 
-        ret['additional_env'] = {
-            'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new'
-        }
+        ret['additional_env'] = {'BORG_RSH': 'ssh -oStrictHostKeyChecking=accept-new'}
 
         ret['encryption'] = params['encryption']
         ret['password'] = params['password']
@@ -45,7 +48,7 @@ class BorgInitJob(BorgJob):
                 defaults={
                     'encryption': result['params']['encryption'],
                     'extra_borg_arguments': result['params']['extra_borg_arguments'],
-                }
+                },
             )
             if new_repo.encryption != 'none':
                 self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])

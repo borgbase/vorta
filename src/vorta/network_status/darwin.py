@@ -1,7 +1,6 @@
 import subprocess
-from typing import Optional, Iterator
 from datetime import datetime as dt
-
+from typing import Iterator, Optional
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
@@ -16,7 +15,10 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         From https://gist.github.com/keithweaver/00edf356e8194b89ed8d3b7bbead000c
         """
-        cmd = ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I']
+        cmd = [
+            '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport',
+            '-I',
+        ]
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         out, err = process.communicate()
         process.wait()

@@ -1,9 +1,7 @@
 import asyncio
 import logging
 import os
-
 import secretstorage
-
 from vorta.keyring.abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -36,11 +34,14 @@ class VortaSecretStorageKeyring(VortaKeyring):
                 'application': 'Vorta',
                 'service': service,
                 'repo_url': repo_url,
-                'xdg:schema': 'org.freedesktop.Secret.Generic'}
-            self.collection.create_item(LABEL_TEMPLATE.format(repo_url=repo_url),
-                                        attributes,
-                                        password,
-                                        replace=True)
+                'xdg:schema': 'org.freedesktop.Secret.Generic',
+            }
+            self.collection.create_item(
+                LABEL_TEMPLATE.format(repo_url=repo_url),
+                attributes,
+                password,
+                replace=True,
+            )
             logger.debug(f"Saved password for repo {repo_url}")
 
     def get_password(self, service, repo_url):
@@ -49,7 +50,11 @@ class VortaSecretStorageKeyring(VortaKeyring):
         """
         if self.is_unlocked:
             asyncio.set_event_loop(asyncio.new_event_loop())
-            attributes = {'application': 'Vorta', 'service': service, 'repo_url': repo_url}
+            attributes = {
+                'application': 'Vorta',
+                'service': service,
+                'repo_url': repo_url,
+            }
             items = list(self.collection.search_items(attributes))
             logger.debug('Found %i passwords matching repo URL.', len(items))
             if len(items) > 0:

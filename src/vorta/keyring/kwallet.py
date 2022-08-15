@@ -1,9 +1,7 @@
 import logging
 import os
-
 from PyQt5 import QtDBus
 from PyQt5.QtCore import QVariant
-
 from vorta.keyring.abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -25,22 +23,25 @@ class VortaKWallet5Keyring(VortaKeyring):
             self.service_name,
             self.object_path,
             self.interface_name,
-            QtDBus.QDBusConnection.sessionBus())
+            QtDBus.QDBusConnection.sessionBus(),
+        )
         self.handle = -1
         if not (self.iface.isValid() and self.get_result("isEnabled") is True):
             raise KWalletNotAvailableException
 
     def set_password(self, service, repo_url, password):
-        self.get_result("writePassword", args=[self.handle, self.folder_name, repo_url, password, service])
+        self.get_result(
+            "writePassword",
+            args=[self.handle, self.folder_name, repo_url, password, service],
+        )
         logger.debug(f"Saved password for repo {repo_url}")
 
     def get_password(self, service, repo_url):
-        if not (self.is_unlocked and self.get_result("hasEntry",
-                                                     args=[self.handle, self.folder_name, repo_url, service])):
+        if not (
+            self.is_unlocked and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service])
+        ):
             return None
-        password = self.get_result(
-            "readPassword",
-            args=[self.handle, self.folder_name, repo_url, service])
+        password = self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
         logger.debug(f"Retrieved password for repo {repo_url}")
         return password
 

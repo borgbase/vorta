@@ -2,10 +2,8 @@ import logging
 import os
 import sys
 from typing import Any, Dict, List, Tuple
-
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
-
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
@@ -115,7 +113,11 @@ class VortaApp(QtSingleApplication):
             self.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
-            notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
+            notifier.deliver(
+                self.tr('Vorta Backup'),
+                translate('messages', msg['message']),
+                level='error',
+            )
             self.backup_progress_event.emit(translate('messages', msg['message']))
             return None
 
@@ -197,12 +199,14 @@ class VortaApp(QtSingleApplication):
             msg.setIcon(QMessageBox.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
             msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
-            msg.setInformativeText(self.tr(
-                "Without this, some files will not be accessible and you may end up with an incomplete "
-                "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
-                "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
-                "System Preferences > Security & Privacy</a>."
-            ))
+            msg.setInformativeText(
+                self.tr(
+                    "Without this, some files will not be accessible and you may end up with an incomplete "
+                    "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
+                    "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
+                    "System Preferences > Security & Privacy</a>."
+                )
+            )
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
 
@@ -221,8 +225,12 @@ class VortaApp(QtSingleApplication):
             msg.addButton(self.tr("Continue"), QMessageBox.AcceptRole)
             msg.setDefaultButton(abortButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
-            msg.setInformativeText(self.tr("Only break the lock if you are certain no other Borg process "
-                                           "on any machine is accessing the repository. Abort or break the lock?"))
+            msg.setInformativeText(
+                self.tr(
+                    "Only break the lock if you are certain no other Borg process "
+                    "on any machine is accessing the repository. Abort or break the lock?"
+                )
+            )
             msg.accepted.connect(lambda: self.break_lock(profile))
             self._msg = msg
             msg.show()
@@ -231,7 +239,9 @@ class VortaApp(QtSingleApplication):
             msg = QMessageBox()
             msg.setText(
                 self.tr(
-                    f"You do not have permission to access the repository at {repo_url}. Gain access and try again."))  # noqa: E501
+                    f"You do not have permission to access the repository at {repo_url}. Gain access and try again."
+                )
+            )  # noqa: E501
             msg.setWindowTitle(self.tr("No Repository Permissions"))
             self._msg = msg
             msg.show()
@@ -256,22 +266,25 @@ class VortaApp(QtSingleApplication):
                 profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
             except Exception as exception:
                 double_newline = os.linesep + os.linesep
-                QMessageBox.critical(None,
-                                     self.tr('Failed to import profile'),
-                                     "{}{}\"{}\"{}{}".format(
-                                         self.tr('Failed to import a profile from {}:').format(bootstrap_file),
-                                         double_newline,
-                                         str(exception),
-                                         double_newline,
-                                         self.tr('Consider removing or repairing this file to '
-                                                 'get rid of this message.'),
-                                     ))
+                QMessageBox.critical(
+                    None,
+                    self.tr('Failed to import profile'),
+                    "{}{}\"{}\"{}{}".format(
+                        self.tr('Failed to import a profile from {}:').format(bootstrap_file),
+                        double_newline,
+                        str(exception),
+                        double_newline,
+                        self.tr('Consider removing or repairing this file to ' 'get rid of this message.'),
+                    ),
+                )
                 return
             bootstrap_file.unlink()
             notifier = VortaNotifications.pick()
-            notifier.deliver(self.tr('Profile import successful!'),
-                             self.tr('Profile {} imported.').format(profile.name),
-                             level='info')
+            notifier.deliver(
+                self.tr('Profile import successful!'),
+                self.tr('Profile {} imported.').format(profile.name),
+                level='info',
+            )
             logger.info('Profile {} imported.'.format(profile.name))
         if BackupProfileModel.select().count() == 0:
             default_profile = BackupProfileModel(name='Default')
@@ -298,8 +311,7 @@ class VortaApp(QtSingleApplication):
         # Switch over returncodes
         if returncode == 0:
             # No fail
-            logger.warning(
-                'VortaApp.check_failed_response was called with returncode 0')
+            logger.warning('VortaApp.check_failed_response was called with returncode 0')
         elif returncode == 130:
             # Keyboard interupt
             pass
@@ -318,16 +330,13 @@ class VortaApp(QtSingleApplication):
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
-                text = (
-                    self.tr('Repository data check for repo was killed by signal %s.')
-                    % (signal)
-                )
+                text = self.tr('Repository data check for repo was killed by signal %s.') % (signal)
                 infotext = self.tr('The process running the check job got a kill signal. Try again.')
             else:
                 # Real error
-                text = (
-                    self.tr('Repository data check for repo %s failed. Error code %s')
-                    % (repo_url, returncode)
+                text = self.tr('Repository data check for repo %s failed. Error code %s') % (
+                    repo_url,
+                    returncode,
                 )
                 infotext = error_message + '\n'
                 infotext += self.tr('Consider repairing or recreating the repository soon to avoid missing data.')

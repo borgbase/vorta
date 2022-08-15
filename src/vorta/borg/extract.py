@@ -1,15 +1,11 @@
 import tempfile
-
 from PyQt5.QtCore import QModelIndex, Qt
-
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
-
 from .borg_job import BorgJob
 
 
 class BorgExtractJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Downloading files from archive…'))

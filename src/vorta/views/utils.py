@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QIcon, QImage, QPixmap
-from vorta.utils import uses_dark_mode, get_asset
+from vorta.utils import get_asset, uses_dark_mode
 
 
 def get_colored_icon(icon_name):

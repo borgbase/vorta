@@ -1,10 +1,9 @@
 import os
-from .borg_job import BorgJob
 from vorta.store.models import SettingsModel
+from .borg_job import BorgJob
 
 
 class BorgMountJob(BorgJob):
-
     def started_event(self):
         self.updated.emit(self.tr('Mounting archive into folder…'))
 

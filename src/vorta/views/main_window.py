@@ -1,19 +1,14 @@
 import logging
 from pathlib import Path
-
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QFontMetrics, QKeySequence
-from PyQt5.QtWidgets import (QCheckBox, QFileDialog, QMenu, QMessageBox,
-                             QShortcut, QToolTip)
-
+from PyQt5.QtWidgets import QCheckBox, QFileDialog, QMenu, QMessageBox, QShortcut, QToolTip
 from vorta.profile_export import ImportFailedException, ProfileExport
 from vorta.store.models import BackupProfileModel, SettingsModel
-from vorta.utils import (borg_compat, get_asset, get_network_status_monitor,
-                         is_system_tray_available)
+from vorta.utils import borg_compat, get_asset, get_network_status_monitor, is_system_tray_available
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
-
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -43,8 +38,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # set log label height to two lines
         fontmetrics: QFontMetrics = self.logText.fontMetrics()
-        self.logText.setMinimumHeight(
-            fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
+        self.logText.setMinimumHeight(fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
 
         # Use previous window state
         previous_window_width = SettingsModel.get(key='previous_window_width')
@@ -152,9 +146,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.populate_from_profile()
-        SettingsModel.update({SettingsModel.str_value: self.current_profile.id}) \
-            .where(SettingsModel.key == 'previous_profile_id') \
-            .execute()
+        SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
+            SettingsModel.key == 'previous_profile_id'
+        ).execute()
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
@@ -170,8 +164,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
             msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
-            reply = QMessageBox.question(self, self.tr("Confirm deletion"),
-                                         msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            reply = QMessageBox.question(
+                self,
+                self.tr("Confirm deletion"),
+                msg,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
 
             if reply == QMessageBox.Yes:
                 to_delete.delete_instance(recursive=True)
@@ -207,10 +206,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         React to "Import Profile". Ask to select a .json file and import it as
         new profile.
         """
+
         def profile_imported_event(profile):
-            QMessageBox.information(None,
-                                    self.tr('Profile import successful!'),
-                                    self.tr('Profile {} imported.').format(profile.name))
+            QMessageBox.information(
+                None,
+                self.tr('Profile import successful!'),
+                self.tr('Profile {} imported.').format(profile.name),
+            )
             self.repoTab.populate_repositories()
             self.scheduleTab.populate_logs()
             self.scheduleTab.populate_wifi()
@@ -221,14 +223,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self,
             self.tr("Load profile"),
             str(Path.home()),
-            self.tr("JSON (*.json);;All files (*)"))[0]
+            self.tr("JSON (*.json);;All files (*)"),
+        )[0]
         if filename:
             try:
                 profile_export = ProfileExport.from_json(filename)
             except ImportFailedException as exception:
-                QMessageBox.critical(None,
-                                     self.tr('Failed to import profile'),
-                                     str(exception))
+                QMessageBox.critical(None, self.tr('Failed to import profile'), str(exception))
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
@@ -266,12 +267,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
-        SettingsModel.update({SettingsModel.str_value: str(self.width())}) \
-            .where(SettingsModel.key == 'previous_window_width') \
-            .execute()
-        SettingsModel.update({SettingsModel.str_value: str(self.height())}) \
-            .where(SettingsModel.key == 'previous_window_height') \
-            .execute()
+        SettingsModel.update({SettingsModel.str_value: str(self.width())}).where(
+            SettingsModel.key == 'previous_window_width'
+        ).execute()
+        SettingsModel.update({SettingsModel.str_value: str(self.height())}).where(
+            SettingsModel.key == 'previous_window_height'
+        ).execute()
 
         if not is_system_tray_available():
             if SettingsModel.get(key="enable_background_question").value:
@@ -280,9 +281,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 msg.setParent(self, QtCore.Qt.Sheet)
                 msg.setText(self.tr("Should Vorta continue to run in the background?"))
                 msg.button(QMessageBox.Yes).clicked.connect(
-                    lambda: self.miscTab.save_setting("disable_background_state", True))
-                msg.button(QMessageBox.No).clicked.connect(lambda: (self.miscTab.save_setting(
-                    "disable_background_state", False), self.app.quit()))
+                    lambda: self.miscTab.save_setting("disable_background_state", True)
+                )
+                msg.button(QMessageBox.No).clicked.connect(
+                    lambda: (
+                        self.miscTab.save_setting("disable_background_state", False),
+                        self.app.quit(),
+                    )
+                )
                 msg.setWindowTitle(self.tr("Quit"))
                 dont_show_box = QCheckBox(self.tr("Don't show this again"))
                 dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))

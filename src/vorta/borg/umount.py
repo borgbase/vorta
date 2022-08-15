@@ -1,11 +1,10 @@
 import os.path
 import psutil
-from .borg_job import BorgJob
 from ..i18n import trans_late
+from .borg_job import BorgJob
 
 
 class BorgUmountJob(BorgJob):
-
     def started_event(self):
         self.updated.emit(self.tr('Unmounting archive…'))
 

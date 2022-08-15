@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from vorta.store.models import SettingsModel
 
 
@@ -15,9 +15,15 @@ def get_updater():
         $ defaults read com.borgbase.client.macos
         """
 
-        import objc
         import Cocoa
-        bundle_path = os.path.join(os.path.dirname(sys.executable), os.pardir, 'Frameworks', 'Sparkle.framework')
+        import objc
+
+        bundle_path = os.path.join(
+            os.path.dirname(sys.executable),
+            os.pardir,
+            'Frameworks',
+            'Sparkle.framework',
+        )
         objc.loadBundle('Sparkle', globals(), bundle_path)
         sparkle = SUUpdater.sharedUpdater()  # noqa: F821
 

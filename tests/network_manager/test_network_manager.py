@@ -1,11 +1,15 @@
 from datetime import datetime
 from unittest.mock import MagicMock
-
 import pytest
-
 from vorta.network_status.abc import SystemWifiInfo
-from vorta.network_status.network_manager import NetworkManagerMonitor, NMMetered, NetworkManagerDBusAdapter, \
-    ActiveConnectionInfo, decode_ssid, DBusException
+from vorta.network_status.network_manager import (
+    ActiveConnectionInfo,
+    DBusException,
+    NetworkManagerDBusAdapter,
+    NetworkManagerMonitor,
+    NMMetered,
+    decode_ssid,
+)
 
 
 @pytest.fixture

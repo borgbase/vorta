@@ -1,9 +1,8 @@
-from .borg_job import BorgJob
 from vorta.store.models import ArchiveModel, RepoModel
+from .borg_job import BorgJob
 
 
 class BorgInfoArchiveJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Refreshing archive…'))
@@ -21,8 +20,12 @@ class BorgInfoArchiveJob(BorgJob):
 
         ret['ok'] = True
         ret['cmd'] = [
-            'borg', 'info', '--log-json', '--json',
-            f'{profile.repo.url}::{archive_name}']
+            'borg',
+            'info',
+            '--log-json',
+            '--json',
+            f'{profile.repo.url}::{archive_name}',
+        ]
         ret['archive_name'] = archive_name
 
         return ret
@@ -37,10 +40,8 @@ class BorgInfoArchiveJob(BorgJob):
 
             # Update remote archives.
             for remote_archive in remote_archives:
-                archive = ArchiveModel.get_or_none(
-                    snapshot_id=remote_archive['id'],
-                    repo=repo_id)
-                archive.name = remote_archive['name']   # incase name changed
+                archive = ArchiveModel.get_or_none(snapshot_id=remote_archive['id'], repo=repo_id)
+                archive.name = remote_archive['name']  # incase name changed
                 # archive.time = parser.parse(remote_archive['time'])
                 archive.duration = remote_archive['duration']
                 archive.size = remote_archive['stats']['deduplicated_size']

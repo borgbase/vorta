@@ -1,13 +1,17 @@
 import datetime
 import json
 from json import JSONDecodeError
-
-from playhouse.shortcuts import model_to_dict, dict_to_model
-
+from playhouse.shortcuts import dict_to_model, model_to_dict
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import RepoModel, SourceFileModel, WifiSettingModel, \
-    SchemaVersion, SettingsModel, BackupProfileModel
 from vorta.store.connection import DB, SCHEMA_VERSION, init_db
+from vorta.store.models import (
+    BackupProfileModel,
+    RepoModel,
+    SchemaVersion,
+    SettingsModel,
+    SourceFileModel,
+    WifiSettingModel,
+)
 
 
 class ProfileExport:
@@ -28,8 +32,11 @@ class ProfileExport:
 
     @property
     def repo_url(self):
-        if 'repo' in self._profile_dict and \
-                type(self._profile_dict['repo']) == dict and 'url' in self._profile_dict['repo']:
+        if (
+            'repo' in self._profile_dict
+            and type(self._profile_dict['repo']) == dict
+            and 'url' in self._profile_dict['repo']
+        ):
             return self._profile_dict['repo']['url']
         return None
 
@@ -52,22 +59,20 @@ class ProfileExport:
         # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
         profile_dict['SourceFileModel'] = [
-            model_to_dict(
-                source,
-                recurse=False, exclude=[SourceFileModel.id]) for source in SourceFileModel.select().where(
-                SourceFileModel.profile == profile)]
+            model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
+            for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
+        ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
 
         if include_settings:
             # Add WifiSettingModel
             profile_dict['WifiSettingModel'] = [
-                model_to_dict(
-                    wifi, recurse=False) for wifi in WifiSettingModel.select().where(
-                    WifiSettingModel.profile == profile.id)]
+                model_to_dict(wifi, recurse=False)
+                for wifi in WifiSettingModel.select().where(WifiSettingModel.profile == profile.id)
+            ]
             # Add SettingsModel
-            profile_dict['SettingsModel'] = [
-                model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
+            profile_dict['SettingsModel'] = [model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
         return ProfileExport(profile_dict)
 
     def to_db(self, overwrite_profile=False, overwrite_settings=True):
@@ -162,10 +167,12 @@ class ProfileExport:
 
 
 class VersionException(Exception):
-    """ For when current_version < export_version. Should only occur if downgrading """
+    """For when current_version < export_version. Should only occur if downgrading"""
+
     pass
 
 
 class ImportFailedException(Exception):
     """Raised when a profile could not be imported."""
+
     pass

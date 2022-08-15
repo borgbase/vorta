@@ -3,7 +3,6 @@ internationalisation (i18n) support code
 """
 import logging
 import os
-
 from PyQt5.QtCore import QLocale, QTranslator
 
 logger = logging.getLogger(__name__)
@@ -22,6 +21,7 @@ class VortaTranslator(QTranslator):
     Extends QTranslator to increase the length of strings for testing. Fallback for untranslated
     strings to English doesn't work currently. So only use for testing.
     """
+
     def translate(self, context, text, disambiguation=None, n=-1):
         translated = super().translate(context, text, disambiguation=disambiguation, n=n)
         scale = trans_scale

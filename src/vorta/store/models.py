@@ -6,10 +6,8 @@ At the bottom there is a simple schema migration system.
 
 import json
 from datetime import datetime
-
 import peewee as pw
 from playhouse import signals
-
 from vorta.utils import slugify
 
 DB = pw.Proxy()
@@ -37,6 +35,7 @@ class BaseModel(signals.Model):
 
 class RepoModel(BaseModel):
     """A single remote repo with unique URL."""
+
     url = pw.CharField(unique=True)
     added_at = pw.DateTimeField(default=datetime.now)
     encryption = pw.CharField(null=True)
@@ -56,6 +55,7 @@ class RepoModel(BaseModel):
 
 class RepoPassword(BaseModel):
     """Fallback to save repo passwords. Only used if no Keyring available."""
+
     url = pw.CharField(unique=True)
     password = pw.CharField()
 
@@ -65,6 +65,7 @@ class RepoPassword(BaseModel):
 
 class BackupProfileModel(BaseModel):
     """Allows the user to switch between different configurations."""
+
     name = pw.CharField()
     added_at = pw.DateTimeField(default=datetime.now)
     repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
@@ -107,6 +108,7 @@ class BackupProfileModel(BaseModel):
 
 class SourceFileModel(BaseModel):
     """A folder to be backed up, related to a Backup Configuration."""
+
     dir = pw.CharField()
     dir_size = pw.BigIntegerField(default=-1)
     dir_files_count = pw.BigIntegerField(default=-1)
@@ -121,6 +123,7 @@ class SourceFileModel(BaseModel):
 
 class ArchiveModel(BaseModel):
     """An archive in a remote repository."""
+
     snapshot_id = pw.CharField()
     name = pw.CharField()
     repo = pw.ForeignKeyField(RepoModel, backref='archives')
@@ -137,6 +140,7 @@ class ArchiveModel(BaseModel):
 
 class WifiSettingModel(BaseModel):
     """Save Wifi Settings"""
+
     ssid = pw.CharField()
     last_connected = pw.DateTimeField(null=True)
     allowed = pw.BooleanField(default=True)
@@ -148,6 +152,7 @@ class WifiSettingModel(BaseModel):
 
 class EventLogModel(BaseModel):
     """Keep a log of background jobs."""
+
     start_time = pw.DateTimeField(default=datetime.now)
     end_time = pw.DateTimeField(default=datetime.now)
     category = pw.CharField()
@@ -164,6 +169,7 @@ class EventLogModel(BaseModel):
 
 class SchemaVersion(BaseModel):
     """Keep DB version to apply the correct migrations."""
+
     version = pw.IntegerField()
     changed_at = pw.DateTimeField(default=datetime.now)
 
@@ -173,6 +179,7 @@ class SchemaVersion(BaseModel):
 
 class SettingsModel(BaseModel):
     """App settings unrelated to a single profile or repo"""
+
     key = pw.CharField(unique=True)
     value = pw.BooleanField(default=False)
     str_value = pw.CharField(default='')

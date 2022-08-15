@@ -1,10 +1,8 @@
 from datetime import datetime as dt
 from datetime import timedelta
 from unittest.mock import MagicMock
-
 import pytest
 from PyQt5 import QtCore
-
 import vorta.scheduler
 from vorta.application import VortaApp
 from vorta.store.models import BackupProfileModel, EventLogModel

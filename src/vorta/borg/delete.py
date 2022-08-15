@@ -1,12 +1,9 @@
 from typing import List
-
 from vorta.store.models import RepoModel
-
 from .borg_job import BorgJob
 
 
 class BorgDeleteJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Deleting archive…'))

@@ -1,8 +1,6 @@
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
-
-import os
 import abc
-
+import os
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt
 from vorta.utils import get_dict_from_list, pretty_bytes
 
 
@@ -33,7 +31,15 @@ class FolderItem:
         if parent is None:  # Find path for root folder
             self.contained_size = sum(f[0] for f in self.files_with_attributes)
             for root_folder in nested_file_list.keys():
-                self._filtered_children.append((0, "", root_folder, "", 'd',))
+                self._filtered_children.append(
+                    (
+                        0,
+                        "",
+                        root_folder,
+                        "",
+                        'd',
+                    )
+                )
         else:
             # Each folder contains the size of all children.
             # Note that string compare is used here for performance.
@@ -43,27 +49,15 @@ class FolderItem:
                 if f[3] == search_path or f[3].startswith(search_path_with_trailing_sep):
                     self.contained_size += f[0]
 
-            self.checkedState = (
-                parent.checkedState
-            )  # If there is a parent, use its checked-status.
+            self.checkedState = parent.checkedState  # If there is a parent, use its checked-status.
 
             # This adds direct children.
-            self._filtered_children = [
-                f for f in files_with_attributes if search_path == f[3]
-            ]
+            self._filtered_children = [f for f in files_with_attributes if search_path == f[3]]
 
             # Add nested folders.
-            for immediate_child in get_dict_from_list(
-                nested_file_list, search_path.split("/")
-            ).keys():
-                if not [
-                    True
-                    for child in self._filtered_children
-                    if child[2] == immediate_child
-                ]:
-                    self._filtered_children.append(
-                        (0, "", immediate_child, search_path, 'd')
-                    )
+            for immediate_child in get_dict_from_list(nested_file_list, search_path.split("/")).keys():
+                if not [True for child in self._filtered_children if child[2] == immediate_child]:
+                    self._filtered_children.append((0, "", immediate_child, search_path, 'd'))
 
         # Sorts tuples by name ignoring case
         self._filtered_children.sort(key=lambda x: x[2].upper())
@@ -103,15 +97,11 @@ class FolderItem:
         if value == 2:
             self.checkedState = True
             self.selected_files_folders.add(
-                os.path.join(
-                    self.parentItem.path, self.parentItem.data(0), self.itemData[0]
-                )
+                os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0])
             )
         else:
             self.checkedState = False
-            path_to_remove = os.path.join(
-                self.parentItem.path, self.parentItem.data(0), self.itemData[0]
-            )
+            path_to_remove = os.path.join(self.parentItem.path, self.parentItem.data(0), self.itemData[0])
             if path_to_remove in self.selected_files_folders:
                 self.selected_files_folders.remove(path_to_remove)
 

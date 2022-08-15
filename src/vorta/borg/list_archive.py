@@ -2,7 +2,6 @@ from .borg_job import BorgJob
 
 
 class BorgListArchiveJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Getting archive content…'))
@@ -20,11 +19,16 @@ class BorgListArchiveJob(BorgJob):
 
         ret['archive_name'] = archive_name
         ret['cmd'] = [
-            'borg', 'list', '--info', '--log-json', '--json-lines',
+            'borg',
+            'list',
+            '--info',
+            '--log-json',
+            '--json-lines',
             '--format',
             # fields to include in json output
             "{mode}{user}{group}{size}{mtime}{path}{source}{health}{NL}",
-            f'{profile.repo.url}::{archive_name}']
+            f'{profile.repo.url}::{archive_name}',
+        ]
         ret['ok'] = True
 
         return ret

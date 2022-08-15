@@ -1,11 +1,9 @@
 import logging
 from datetime import datetime
 from enum import Enum
-from typing import Optional, List, Any, NamedTuple, Mapping
-
+from typing import Any, List, Mapping, NamedTuple, Optional
 from PyQt5 import QtDBus
 from PyQt5.QtCore import QObject, QVersionNumber
-
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 logger = logging.getLogger(__name__)
@@ -17,7 +15,10 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
 
     def is_network_metered(self) -> bool:
         try:
-            return self._nm.get_global_metered_status() in (NMMetered.YES, NMMetered.GUESS_YES)
+            return self._nm.get_global_metered_status() in (
+                NMMetered.YES,
+                NMMetered.GUESS_YES,
+            )
         except DBusException:
             logger.exception("Failed to check if network is metered, assuming it isn't")
             return False
@@ -56,10 +57,12 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
                 ssid = self._get_ssid_from_settings(settings)
                 if ssid:
                     timestamp = settings['connection'].get('timestamp')
-                    wifis.append(SystemWifiInfo(
-                        ssid=ssid,
-                        last_connected=timestamp and datetime.utcfromtimestamp(timestamp),
-                    ))
+                    wifis.append(
+                        SystemWifiInfo(
+                            ssid=ssid,
+                            last_connected=timestamp and datetime.utcfromtimestamp(timestamp),
+                        )
+                    )
         return wifis
 
     def _get_ssid_from_settings(self, settings):
@@ -76,10 +79,7 @@ def decode_ssid(raw_ssid: List[int]) -> Optional[str]:
     if str_ssid.isprintable():
         return str_ssid
     else:
-        return ''.join(
-            c if c.isprintable() else ascii(c)[1:-1]
-            for c in str_ssid
-        )
+        return ''.join(c if c.isprintable() else ascii(c)[1:-1] for c in str_ssid)
 
 
 class UnsupportedException(Exception):
@@ -93,6 +93,7 @@ class DBusException(Exception):
 class NetworkManagerDBusAdapter(QObject):
     """Simple adapter to NetworkManager's DBus interface.
     This should be the only part of NM support that needs manual testing."""
+
     BUS_NAME = 'org.freedesktop.NetworkManager'
     NM_PATH = '/org/freedesktop/NetworkManager'
 
@@ -116,7 +117,10 @@ class NetworkManagerDBusAdapter(QObject):
             return False
         nm_version = self._get_nm_version()
         if nm_version < QVersionNumber(1, 2):
-            logger.warning('NetworkManager version 1.2 or later required, found %s', nm_version.toString())
+            logger.warning(
+                'NetworkManager version 1.2 or later required, found %s',
+                nm_version.toString(),
+            )
             return False
         return True
 

@@ -8,11 +8,8 @@ import enum
 import os.path as osp
 from functools import reduce
 from pathlib import PurePath
-from typing import (Generic, List, Optional, Sequence, Tuple, TypeVar, Union,
-                    overload)
-
-from PyQt5.QtCore import (QAbstractItemModel, QModelIndex, QObject,
-                          QSortFilterProxyModel, Qt, pyqtSignal)
+from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtSignal
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -24,7 +21,7 @@ def relative_path(p1: PathLike, p2: PathLike) -> Path:
     if len(p2) <= len(p1):
         return ()
 
-    return tuple(p2[len(p1):])
+    return tuple(p2[len(p1) :])
 
 
 def path_to_str(path: PathLike) -> str:
@@ -37,8 +34,7 @@ def path_to_str(path: PathLike) -> str:
 
 #: Type of FileSystemItem's data
 T = TypeVar('T')
-FileSystemItemLike = Union[Tuple[Union[PurePath, Path], Optional[T]],
-                           'FileSystemItem']
+FileSystemItemLike = Union[Tuple[Union[PurePath, Path], Optional[T]], 'FileSystemItem']
 
 #: Default return value
 A = TypeVar('A')
@@ -66,6 +62,7 @@ class FileSystemItem(Generic[T]):
     _parent : FileSystemItem or None
         The parent of the item.
     """
+
     __slots__ = ['path', 'children', 'data', '_parent', 'subpath']
 
     def __init__(self, path: PathLike, data: T):
@@ -88,10 +85,7 @@ class FileSystemItem(Generic[T]):
     #     """Get an iterable view of the item's children."""
     #     return self.child_map.values()
 
-    def add(self,
-            child: 'FileSystemItem[T]',
-            _subpath: str = None,
-            _check: bool = True):
+    def add(self, child: 'FileSystemItem[T]', _subpath: str = None, _check: bool = True):
         """
         Add a child.
 
@@ -116,10 +110,8 @@ class FileSystemItem(Generic[T]):
         i = bisect.bisect(self.children, child)
 
         # check for a child with the same subpath
-        if _check and len(self.children) > i - 1 >= 0 \
-                and self.children[i - 1].subpath == child.subpath:
-            raise RuntimeError(
-                "The subpath must be unique to a parent's children.")
+        if _check and len(self.children) > i - 1 >= 0 and self.children[i - 1].subpath == child.subpath:
+            raise RuntimeError("The subpath must be unique to a parent's children.")
 
         # add
         child._parent = self
@@ -186,10 +178,10 @@ class FileSystemItem(Generic[T]):
 
         else:
             raise TypeError(
-                "First argument passed to `{}.remove` has invalid type {}".
-                format(
-                    type(self).__name__,
-                    type(child_subpath_index).__name__))
+                "First argument passed to `{}.remove` has invalid type {}".format(
+                    type(self).__name__, type(child_subpath_index).__name__
+                )
+            )
 
     def __getitem__(self, index: int):
         """
@@ -205,11 +197,7 @@ class FileSystemItem(Generic[T]):
         else:
             raise IndexError("Index {} out of range(0, 2)".format(index))
 
-    def get(
-        self,
-        subpath: str,
-        default: Optional[A] = None
-    ) -> Union[Tuple[int, 'FileSystemItem[T]'], Optional[A]]:
+    def get(self, subpath: str, default: Optional[A] = None) -> Union[Tuple[int, 'FileSystemItem[T]'], Optional[A]]:
         """
         Find direct child with given subpath.
 
@@ -318,6 +306,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         The tree display modes available for the model.
 
         """
+
         #: normal file tree
         TREE = enum.auto()
 
@@ -381,8 +370,9 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         self.endResetModel()
 
-    def _addChild(self, item: FileSystemItem[T], path: PathLike,
-                  path_part: str, data: Optional[T]) -> FileSystemItem[T]:
+    def _addChild(
+        self, item: FileSystemItem[T], path: PathLike, path_part: str, data: Optional[T]
+    ) -> FileSystemItem[T]:
         """
         Add a child to an item.
 
@@ -429,8 +419,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         return child
 
-    def _make_filesystemitem(self, path: PathLike,
-                             data: Optional[T]) -> FileSystemItem[T]:
+    def _make_filesystemitem(self, path: PathLike, data: Optional[T]) -> FileSystemItem[T]:
         """
         Construct a `FileSystemItem`.
 
@@ -588,9 +577,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         """
         return True
 
-    def getItem(
-            self, path: Union[PurePath,
-                              PathLike]) -> Optional[FileSystemItem[T]]:
+    def getItem(self, path: Union[PurePath, PathLike]) -> Optional[FileSystemItem[T]]:
         """
         Get the item with the given path.
 
@@ -609,9 +596,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         return self.root.get_path(path)
 
-    def data(self,
-             index: QModelIndex,
-             role: int = Qt.ItemDataRole.DisplayRole):
+    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
         Get the data for the given role and index.
 
@@ -683,8 +668,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         int
             The number of rows.
         """
-        raise NotImplementedError("Method `columnCount` of FileTreeModel" +
-                                  " must be implemented by subclasses.")
+        raise NotImplementedError("Method `columnCount` of FileTreeModel" + " must be implemented by subclasses.")
 
     def indexPath(self, path: Union[PurePath, PathLike]) -> QModelIndex:
         """
@@ -729,8 +713,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
             if i <= -1:
                 i = r
 
-            if (simplified and len(child.children) == 1
-                    and self._simplify_filter(child)):
+            if simplified and len(child.children) == 1 and self._simplify_filter(child):
                 return index, i, child
 
             index = self.index(i if simplified else r, 0, index)
@@ -741,8 +724,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         return index
 
-    def index(self, row: int, column: int,
-              parent: QModelIndex = QModelIndex()) -> QModelIndex:
+    def index(self, row: int, column: int, parent: QModelIndex = QModelIndex()) -> QModelIndex:
         """
         Construct a `QModelIndex`.
 
@@ -762,8 +744,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         """
         # different behavior in flat and treemode
         if self.mode == self.DisplayMode.FLAT:
-            if (0 <= row < len(self._flattened)
-                    and 0 <= column < self.columnCount(parent)):
+            if 0 <= row < len(self._flattened) and 0 <= column < self.columnCount(parent):
                 return self.createIndex(row, column, self._flattened[row])
 
             return QModelIndex()
@@ -781,8 +762,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
             while len(item.children) == 1 and self._simplify_filter(item):
                 item = item.children[0]
 
-        if (0 <= row < len(parent_item.children)
-                and 0 <= column < self.columnCount(parent)):
+        if 0 <= row < len(parent_item.children) and 0 <= column < self.columnCount(parent):
             return self.createIndex(row, column, item)
 
         return QModelIndex()
@@ -832,9 +812,11 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
             # combine items with a single child with the child
-            while (parent_item is not self.root  # do not call filter with root
-                   and len(parent_item.children) == 1
-                   and self._simplify_filter(parent_item)):
+            while (
+                parent_item is not self.root  # do not call filter with root
+                and len(parent_item.children) == 1
+                and self._simplify_filter(parent_item)
+            ):
                 parent_item = parent_item._parent
 
         if parent_item is self.root:
@@ -864,10 +846,12 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         """
         return super().flags(index)
 
-    def headerData(self,
-                   section: int,
-                   orientation: Qt.Orientation,
-                   role: int = Qt.ItemDataRole.DisplayRole):
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: int = Qt.ItemDataRole.DisplayRole,
+    ):
         """
         Get the data for the given role and section in the given header.
 
@@ -897,6 +881,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
     """
     Sort a FileTreeModel.
     """
+
     sorted = pyqtSignal(int, Qt.SortOrder)
 
     def __init__(self, parent=None) -> None:
@@ -941,8 +926,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             if parent == QModelIndex():
                 path = relative_path(model.root.path, item.path)
             else:
-                path = relative_path(parent.internalPointer().path,
-                                     item.path)
+                path = relative_path(parent.internalPointer().path, item.path)
 
             return path[0] if path else ''
 
@@ -951,9 +935,9 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
-        raise NotImplementedError("Method `choose_data` of " +
-                                  "FileTreeSortProxyModel" +
-                                  " must be implemented by subclasses.")
+        raise NotImplementedError(
+            "Method `choose_data` of " + "FileTreeSortProxyModel" + " must be implemented by subclasses."
+        )
 
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
         """

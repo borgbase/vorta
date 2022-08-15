@@ -4,11 +4,9 @@ import threading
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
-
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
-
 from vorta import application
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
@@ -42,8 +40,7 @@ class VortaScheduler(QtCore.QObject):
         super().__init__()
 
         #: mapping of profiles to timers
-        self.timers: Dict[int, Dict[str, Union[
-            Optional[QTimer], Optional[dt], ScheduleStatusType]]] = dict()
+        self.timers: Dict[int, Dict[str, Union[Optional[QTimer], Optional[dt], ScheduleStatusType]]] = dict()
 
         self.app: application.VortaApp = QApplication.instance()
         self.lock = threading.Lock()
@@ -59,8 +56,7 @@ class VortaScheduler(QtCore.QObject):
         self.qt_timer.start()
 
         # connect signals
-        self.app.backup_finished_event.connect(
-            lambda res: self.set_timer_for_profile(res['params']['profile_id']))
+        self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -94,16 +90,13 @@ class VortaScheduler(QtCore.QObject):
             # calculate default timeout
 
             if profile.schedule_mode == 'interval':
-                interval = timedelta(
-                    **{profile.schedule_interval_unit:
-                        profile.schedule_interval_count})
+                interval = timedelta(**{profile.schedule_interval_unit: profile.schedule_interval_count})
             else:
                 # fixed
                 interval = timedelta(days=1)
 
             timeout = interval // 6  # 60 / 6 = 10 [min]
-            timeout = max(min(timeout, timedelta(hours=1)),
-                          timedelta(minutes=1))  # 1 <= t <= 60
+            timeout = max(min(timeout, timedelta(hours=1)), timedelta(minutes=1))  # 1 <= t <= 60
 
             until = dt.now().replace(microsecond=0) + timeout
         elif until < dt.now():
@@ -126,8 +119,7 @@ class VortaScheduler(QtCore.QObject):
             logger.debug(f"Override existing timeout for profile {profile_id}")
 
         self.pauses[profile_id] = (until, timer)
-        logger.debug(
-            f"Paused {profile_id} until {until.strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.debug(f"Paused {profile_id} until {until.strftime('%Y-%m-%d %H:%M:%S')}")
 
     def unpause(self, profile_id: int):
         """
@@ -193,9 +185,10 @@ class VortaScheduler(QtCore.QObject):
                 pause_end, timer = pause
                 if dt.now() < pause_end:
                     logger.debug(
-                        'Nothing scheduled for profile %s ' +
-                        'because of timeout until %s.',
-                        profile_id, pause[0].strftime('%Y-%m-%d %H:%M:%S'))
+                        'Nothing scheduled for profile %s ' + 'because of timeout until %s.',
+                        profile_id,
+                        pause[0].strftime('%Y-%m-%d %H:%M:%S'),
+                    )
                     return
                 else:
                     timer.stop()
@@ -204,7 +197,8 @@ class VortaScheduler(QtCore.QObject):
             if profile.repo is None:  # No backups without repo set
                 logger.debug(
                     'Nothing scheduled for profile %s because of unset repo.',
-                    profile_id)
+                    profile_id,
+                )
                 # Emit signal so that e.g. the GUI can react to the new schedule
                 self.schedule_changed.emit(profile_id)
                 return
@@ -218,28 +212,38 @@ class VortaScheduler(QtCore.QObject):
             logger.info('Setting timer for profile %s', profile_id)
 
             # determine last backup time
-            last_run_log = EventLogModel.select().where(
-                EventLogModel.subcommand == 'create',
-                EventLogModel.category == 'scheduled',
-                EventLogModel.profile == profile.id,
-                0 <= EventLogModel.returncode <= 1,
-            ).order_by(EventLogModel.end_time.desc()).first()
+            last_run_log = (
+                EventLogModel.select()
+                .where(
+                    EventLogModel.subcommand == 'create',
+                    EventLogModel.category == 'scheduled',
+                    EventLogModel.profile == profile.id,
+                    0 <= EventLogModel.returncode <= 1,
+                )
+                .order_by(EventLogModel.end_time.desc())
+                .first()
+            )
 
             if last_run_log is None:
                 # look for non scheduled (manual) backup runs
-                last_run_log = EventLogModel.select().where(
-                    EventLogModel.subcommand == 'create',
-                    EventLogModel.profile == profile.id,
-                    0 <= EventLogModel.returncode <= 1,
-                ).order_by(EventLogModel.end_time.desc()).first()
+                last_run_log = (
+                    EventLogModel.select()
+                    .where(
+                        EventLogModel.subcommand == 'create',
+                        EventLogModel.profile == profile.id,
+                        0 <= EventLogModel.returncode <= 1,
+                    )
+                    .order_by(EventLogModel.end_time.desc())
+                    .first()
+                )
 
             if last_run_log is None:
-                logger.info(f"Nothing scheduled for profile {profile_id} " +
-                            "because it would be the first backup " +
-                            "for this profile.")
-                self.timers[profile_id] = {
-                    'type': ScheduleStatusType.NO_PREVIOUS_BACKUP
-                }
+                logger.info(
+                    f"Nothing scheduled for profile {profile_id} "
+                    + "because it would be the first backup "
+                    + "for this profile."
+                )
+                self.timers[profile_id] = {'type': ScheduleStatusType.NO_PREVIOUS_BACKUP}
                 # Emit signal so that e.g. the GUI can react to the new schedule
                 self.schedule_changed.emit(profile_id)
                 return
@@ -258,12 +262,12 @@ class VortaScheduler(QtCore.QObject):
                     hour=profile.schedule_fixed_hour,
                     minute=profile.schedule_fixed_minute,
                     second=0,
-                    microsecond=0) + timedelta(days=1)
+                    microsecond=0,
+                ) + timedelta(days=1)
 
             else:
                 # unknown schedule mode
-                raise ValueError(
-                    "Unknown schedule mode '{}'".format(profile.schedule_mode))
+                raise ValueError("Unknown schedule mode '{}'".format(profile.schedule_mode))
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
@@ -271,8 +275,11 @@ class VortaScheduler(QtCore.QObject):
                 if profile.schedule_make_up_missed:
                     self.lock.release()
                     try:
-                        logger.debug('Catching up by running job for %s (%s)',
-                                     profile.name, profile_id)
+                        logger.debug(
+                            'Catching up by running job for %s (%s)',
+                            profile.name,
+                            profile_id,
+                        )
                         self.create_backup(profile_id)
                     finally:
                         self.lock.acquire()  # with-statement will try to release
@@ -293,7 +300,8 @@ class VortaScheduler(QtCore.QObject):
                         hour=profile.schedule_fixed_hour,
                         minute=profile.schedule_fixed_minute,
                         second=0,
-                        microsecond=0)
+                        microsecond=0,
+                    )
 
                     if next_time <= dt.now():
                         # time for today has passed, schedule for tomorrow
@@ -314,18 +322,16 @@ class VortaScheduler(QtCore.QObject):
                 self.timers[profile_id] = {
                     'qtt': timer,
                     'dt': next_time,
-                    'type': ScheduleStatusType.SCHEDULED
+                    'type': ScheduleStatusType.SCHEDULED,
                 }
             else:
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
-                logger.debug(
-                    f"Couldn't schedule for {next_time} because "
-                    f"timer value {timer_ms} too large.")
+                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
 
                 self.timers[profile_id] = {
                     'dt': next_time,
-                    'type': ScheduleStatusType.TOO_FAR_AHEAD
+                    'type': ScheduleStatusType.TOO_FAR_AHEAD,
                 }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
@@ -340,11 +346,7 @@ class VortaScheduler(QtCore.QObject):
         now = dt.now()
 
         def is_scheduled(timer):
-            return (
-                timer["type"] == ScheduleStatusType.SCHEDULED
-                and timer["qtt"].isActive()
-                and timer["dt"] >= now
-            )
+            return timer["type"] == ScheduleStatusType.SCHEDULED and timer["qtt"].isActive() and timer["dt"] >= now
 
         scheduled = {profile_id: timer for profile_id, timer in self.timers.items() if is_scheduled(timer)}
         if len(scheduled) == 0:
@@ -382,9 +384,11 @@ class VortaScheduler(QtCore.QObject):
 
         with self.lock:
             logger.info('Starting background backup for %s', profile.name)
-            notifier.deliver(self.tr('Vorta Backup'),
-                             self.tr('Starting background backup for %s.') % profile.name,
-                             level='info')
+            notifier.deliver(
+                self.tr('Vorta Backup'),
+                self.tr('Starting background backup for %s.') % profile.name,
+                level='info',
+            )
             msg = BorgCreateJob.prepare(profile)
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
@@ -395,9 +399,11 @@ class VortaScheduler(QtCore.QObject):
             else:
                 logger.error('Conditions for backup not met. Aborting.')
                 logger.error(msg['message'])
-                notifier.deliver(self.tr('Vorta Backup'),
-                                 translate('messages', msg['message']),
-                                 level='error')
+                notifier.deliver(
+                    self.tr('Vorta Backup'),
+                    translate('messages', msg['message']),
+                    level='error',
+                )
                 self.pause(profile_id)
 
     def notify(self, result):
@@ -406,16 +412,22 @@ class VortaScheduler(QtCore.QObject):
         profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
-            notifier.deliver(self.tr('Vorta Backup'),
-                             self.tr('Backup successful for %s.') % profile_name,
-                             level='info')
+            notifier.deliver(
+                self.tr('Vorta Backup'),
+                self.tr('Backup successful for %s.') % profile_name,
+                level='info',
+            )
             logger.info('Backup creation successful.')
             # unpause scheduler
             self.unpause(result['params']['profile_id'])
 
             self.post_backup_tasks(profile_id)
         else:
-            notifier.deliver(self.tr('Vorta Backup'), self.tr('Error during backup creation.'), level='error')
+            notifier.deliver(
+                self.tr('Vorta Backup'),
+                self.tr('Error during backup creation.'),
+                level='error',
+            )
             logger.error('Error during backup creation.')
             # pause scheduler
             # if a scheduled backup fails the scheduler should pause
@@ -443,15 +455,15 @@ class VortaScheduler(QtCore.QObject):
                     self.app.jobs_manager.add_job(job)
 
         validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
-        recent_validations = EventLogModel.select().where(
-            (
-                EventLogModel.subcommand == 'check'
-            ) & (
-                EventLogModel.start_time > validation_cutoff
-            ) & (
-                EventLogModel.repo_url == profile.repo.url
+        recent_validations = (
+            EventLogModel.select()
+            .where(
+                (EventLogModel.subcommand == 'check')
+                & (EventLogModel.start_time > validation_cutoff)
+                & (EventLogModel.repo_url == profile.repo.url)
             )
-        ).count()
+            .count()
+        )
         if profile.validation_on and recent_validations == 0:
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:

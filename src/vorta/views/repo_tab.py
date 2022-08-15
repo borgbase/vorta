@@ -1,13 +1,10 @@
 import os
 from pathlib import PurePath
-
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QMimeData, QUrl
 from PyQt5.QtWidgets import QApplication, QMenu, QMessageBox
-
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
-
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
@@ -32,10 +29,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
 
-        self.menuAddRepo.addAction(self.tr("New Repository…"),
-                                   self.new_repo)
-        self.menuAddRepo.addAction(self.tr("Existing Repository…"),
-                                   self.add_existing_repo)
+        self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
+        self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
 
@@ -192,9 +187,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 clipboard.setText(pub_key)
 
                 msg.setWindowTitle(self.tr("Public Key Copied to Clipboard"))
-                msg.setText(self.tr(
-                    "The selected public SSH key was copied to the clipboard. "
-                    "Use it to set up remote repo permissions."))
+                msg.setText(
+                    self.tr(
+                        "The selected public SSH key was copied to the clipboard. "
+                        "Use it to set up remote repo permissions."
+                    )
+                )
 
             else:
                 msg.setText(self.tr("Could not find public key."))

@@ -1,9 +1,8 @@
-from .borg_job import BorgJob
 from vorta.utils import borg_compat
+from .borg_job import BorgJob
 
 
 class BorgDiffJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Requesting differences between archives…'))
@@ -25,10 +24,7 @@ class BorgDiffJob(BorgJob):
             ret['cmd'].append('--json-lines')
             ret['json_lines'] = True
 
-        ret['cmd'].extend([
-            f'{profile.repo.url}::{archive_name_1}',
-            f'{archive_name_2}'
-        ])
+        ret['cmd'].extend([f'{profile.repo.url}::{archive_name_1}', f'{archive_name_2}'])
         ret['ok'] = True
         ret['archive_name_older'] = archive_name_1
         ret['archive_name_newer'] = archive_name_2
