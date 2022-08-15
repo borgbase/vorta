@@ -1,6 +1,5 @@
-from .borg_job import BorgJob
 from vorta.utils import borg_compat
-
+from .borg_job import BorgJob
 
 
 class BorgListArchiveJob(BorgJob):

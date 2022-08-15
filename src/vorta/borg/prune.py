@@ -1,5 +1,5 @@
 from vorta.store.models import RepoModel
-from vorta.utils import format_archive_name, borg_compat
+from vorta.utils import borg_compat, format_archive_name
 from .borg_job import BorgJob
 
 
