@@ -1,5 +1,7 @@
+black
 coverage
 flake8
+isort
 macholib
 pyinstaller
 pylint
