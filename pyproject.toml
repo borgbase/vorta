@@ -2,7 +2,7 @@
 line-length = 120
 skip-string-normalization = true
 target-version = ['py39']
-include = "src/vorta/.*.py$"
+include = "(src/vorta/|tests).*.py$"
 
 [tool.isort]
 profile = "black"
