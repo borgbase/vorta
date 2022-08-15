@@ -1,6 +1,5 @@
 from PyQt5 import QtCore, uic
 from PyQt5.QtWidgets import QDialogButtonBox
-
 from vorta.i18n import trans_late, translate
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset

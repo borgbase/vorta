@@ -1,6 +1,6 @@
 import sys
 from datetime import datetime
-from typing import Optional, NamedTuple, List
+from typing import List, NamedTuple, Optional
 
 
 class NetworkStatusMonitor:
@@ -8,9 +8,11 @@ class NetworkStatusMonitor:
     def get_network_status_monitor(cls) -> 'NetworkStatusMonitor':
         if sys.platform == 'darwin':
             from .darwin import DarwinNetworkStatus
+
             return DarwinNetworkStatus()
         else:
-            from .network_manager import NetworkManagerMonitor, UnsupportedException, DBusException
+            from .network_manager import DBusException, NetworkManagerMonitor, UnsupportedException
+
             try:
                 return NetworkManagerMonitor()
             except (UnsupportedException, DBusException):

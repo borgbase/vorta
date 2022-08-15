@@ -2,17 +2,22 @@ import os
 import sys
 from datetime import datetime as dt
 from unittest.mock import MagicMock
-
 import pytest
 from peewee import SqliteDatabase
-
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from vorta.store.models import (ArchiveModel, BackupProfileModel,
-                                EventLogModel, RepoModel, RepoPassword,
-                                SchemaVersion, SettingsModel, SourceFileModel,
-                                WifiSettingModel)
+from vorta.store.models import (
+    ArchiveModel,
+    BackupProfileModel,
+    EventLogModel,
+    RepoModel,
+    RepoPassword,
+    SchemaVersion,
+    SettingsModel,
+    SourceFileModel,
+    WifiSettingModel,
+)
 from vorta.views.main_window import MainWindow
 
 models = [RepoModel, RepoPassword, BackupProfileModel, SourceFileModel,

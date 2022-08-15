@@ -1,10 +1,9 @@
 from datetime import datetime as dt
-from .borg_job import BorgJob
 from vorta.store.models import ArchiveModel, RepoModel
+from .borg_job import BorgJob
 
 
 class BorgListRepoJob(BorgJob):
-
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(self.tr('Refreshing archives…'))
@@ -49,7 +48,7 @@ class BorgListRepoJob(BorgJob):
                     repo=repo.id,
                     defaults={
                         'name': archive['name'],
-                        'time': dt.fromisoformat(archive['time'])
-                    }
+                        'time': dt.fromisoformat(archive['time']),
+                    },
                 )
                 new_archive.save()

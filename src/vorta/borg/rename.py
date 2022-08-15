@@ -3,7 +3,6 @@ from .borg_job import BorgJob
 
 
 class BorgRenameJob(BorgJob):
-
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 

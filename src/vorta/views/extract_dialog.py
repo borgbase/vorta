@@ -5,20 +5,13 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
 from typing import Optional
-
 from PyQt5 import uic
-from PyQt5.QtCore import (QDateTime, QLocale, QMimeData, QModelIndex, QPoint,
-                          Qt, QThread, QUrl)
+from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
-from PyQt5.QtWidgets import (QApplication, QDialogButtonBox, QHeaderView,
-                             QMenu, QPushButton, QShortcut)
-
+from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
-
-from .partials.treemodel import (FileSystemItem, FileTreeModel,
-                                 FileTreeSortProxyModel, path_to_str,
-                                 relative_path)
+from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
@@ -64,10 +57,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
 
         # custom context menu
-        self.treeView.setContextMenuPolicy(
-            Qt.ContextMenuPolicy.CustomContextMenu)
-        self.treeView.customContextMenuRequested.connect(
-            self.treeview_context_menu)
+        self.treeView.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.treeView.customContextMenuRequested.connect(self.treeview_context_menu)
 
         # add sort proxy model
         self.sortproxy = ExtractSortProxyModel(self)
@@ -94,15 +85,12 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.extractButton.setObjectName("extractButton")
         self.extractButton.setText(self.tr("Extract"))
 
-        self.buttonBox.addButton(
-            self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole
-        )
+        self.buttonBox.addButton(self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole)
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
 
         # connect signals
-        self.comboBoxDisplayMode.currentIndexChanged.connect(
-            self.change_display_mode)
+        self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -112,8 +100,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.set_icons()
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(
-            lambda p: self.set_icons())
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -174,9 +161,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         elif selection == 1:
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
         else:
-            raise Exception(
-                "Unknown item in comboBoxDisplayMode with index {}".format(
-                    selection))
+            raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
         self.model.setMode(mode)
 
@@ -189,14 +174,15 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
         menu = QMenu(self.treeView)
 
-        menu.addAction(get_colored_icon('copy'), self.tr("Copy"),
-                       lambda: self.copy_item(index))
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"), lambda: self.copy_item(index))
 
         if self.model.getMode() != self.model.DisplayMode.FLAT:
             menu.addSeparator()
-            menu.addAction(get_colored_icon('angle-down-solid'),
-                           self.tr("Expand recursively"),
-                           lambda: self.treeView.expandRecursively(index))
+            menu.addAction(
+                get_colored_icon('angle-down-solid'),
+                self.tr("Expand recursively"),
+                lambda: self.treeView.expandRecursively(index),
+            )
 
         menu.popup(self.treeView.viewport().mapToGlobal(pos))
 
@@ -227,9 +213,7 @@ def parse_json_lines(lines, model: "ExtractTree"):
         model.addItem(
             (
                 path,
-                FileData(
-                    file_type, size, mode, user, group, health, modified, source_path
-                ),
+                FileData(file_type, size, mode, user, group, health, modified, source_path),
             )
         )
 
@@ -339,9 +323,7 @@ class ExtractTree(FileTreeModel[FileData]):
         parent = child._parent
 
         if not child.data:
-            child.data = FileData(
-                FileType.DIRECTORY, 0, "", "", "", True, datetime.now()
-            )
+            child.data = FileData(FileType.DIRECTORY, 0, "", "", "", True, datetime.now())
 
         if child.data.size != 0:
             # update size
@@ -352,9 +334,7 @@ class ExtractTree(FileTreeModel[FileData]):
                     return
 
                 if parent.data is None:
-                    raise Exception(
-                        "Item {} without data".format(path_to_str(parent.path))
-                    )
+                    raise Exception("Item {} without data".format(path_to_str(parent.path)))
                 else:
                     parent.data.size += size
 
@@ -413,10 +393,7 @@ class ExtractTree(FileTreeModel[FileData]):
         Any
             The data for the specified header section.
         """
-        if (
-            orientation == Qt.Orientation.Horizontal
-            and role == Qt.ItemDataRole.DisplayRole
-        ):
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             if section == 0:
                 return self.tr("Name")
             elif section == 1:
@@ -464,17 +441,13 @@ class ExtractTree(FileTreeModel[FileData]):
                     if parent == QModelIndex():
                         return path_to_str(relative_path(self.root.path, item.path))
 
-                    return path_to_str(
-                        relative_path(parent.internalPointer().path, item.path)
-                    )
+                    return path_to_str(relative_path(parent.internalPointer().path, item.path))
 
                 # standard tree mode
                 return item.subpath
             elif column == 1:
                 # last modified
-                return QLocale.system().toString(
-                    item.data.last_modified, QLocale.FormatType.ShortFormat
-                )
+                return QLocale.system().toString(item.data.last_modified, QLocale.FormatType.ShortFormat)
             elif column == 2:
                 # size
                 return pretty_bytes(item.data.size)
@@ -550,9 +523,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.CheckStateRole and column == 0:
             return item.data.checkstate
 
-    def setData(
-        self, index: QModelIndex, value, role: int = Qt.ItemDataRole.DisplayRole
-    ) -> bool:
+    def setData(self, index: QModelIndex, value, role: int = Qt.ItemDataRole.DisplayRole) -> bool:
         """
         Sets the role data for the item at index to value.
 
@@ -632,9 +603,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if not number_children:
             return
 
-        index.internalPointer().data.checked_children = (
-            0 if value == Qt.CheckState.Unchecked else number_children
-        )
+        index.internalPointer().data.checked_children = 0 if value == Qt.CheckState.Unchecked else number_children
 
         item = index.internalPointer()
         for i in range(number_children):
@@ -646,10 +615,7 @@ class ExtractTree(FileTreeModel[FileData]):
             parent = child_item._parent
             while parent != item:
                 # hidden parent must have 1 child
-                parent.data.checked_children = (
-                    0 if value == Qt.CheckState.Unchecked
-                    else self.rowCount(child)
-                )
+                parent.data.checked_children = 0 if value == Qt.CheckState.Unchecked else self.rowCount(child)
                 parent.data.checkstate = value
 
                 parent = parent._parent
