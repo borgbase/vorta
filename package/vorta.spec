@@ -81,4 +81,3 @@ app = BUNDLE(coll,
                              'PATH': '/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin'
                          }
              })
-

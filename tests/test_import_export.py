@@ -52,9 +52,7 @@ def test_import_fail_not_json(qapp, rootdir, monkeypatch):
     def getOpenFileName(*args, **kwargs):
         return [BAD_FILE]
 
-    monkeypatch.setattr(
-        QFileDialog, "getOpenFileName", getOpenFileName
-    )
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", getOpenFileName)
 
     alert_message = None
 
@@ -62,9 +60,7 @@ def test_import_fail_not_json(qapp, rootdir, monkeypatch):
         nonlocal alert_message
         alert_message = message
 
-    monkeypatch.setattr(
-        QMessageBox, "critical", critical
-    )
+    monkeypatch.setattr(QMessageBox, "critical", critical)
 
     main = qapp.main_window
     main.profile_import_action()
@@ -79,9 +75,7 @@ def test_export_success(qapp, qtbot, tmpdir, monkeypatch):
     def getSaveFileName(*args, **kwargs):
         return [FILE_PATH]
 
-    monkeypatch.setattr(
-        QFileDialog, "getSaveFileName", getSaveFileName
-    )
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", getSaveFileName)
 
     main = qapp.main_window
     main.profile_export_action()
@@ -99,9 +93,7 @@ def test_export_fail_unwritable(qapp, qtbot, tmpdir, monkeypatch):
     def getSaveFileName(*args, **kwargs):
         return [FILE_PATH]
 
-    monkeypatch.setattr(
-        QFileDialog, "getSaveFileName", getSaveFileName
-    )
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", getSaveFileName)
 
     alert_message = None
 
@@ -109,9 +101,7 @@ def test_export_fail_unwritable(qapp, qtbot, tmpdir, monkeypatch):
         nonlocal alert_message
         alert_message = message
 
-    monkeypatch.setattr(
-        QMessageBox, "critical", critical
-    )
+    monkeypatch.setattr(QMessageBox, "critical", critical)
 
     main = qapp.main_window
     main.profile_export_action()

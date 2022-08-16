@@ -2,10 +2,13 @@ import pytest
 from vorta.network_status import darwin
 
 
-@pytest.mark.parametrize('getpacket_output_name, expected', [
-    ('normal_router', False),
-    ('phone', True),
-])
+@pytest.mark.parametrize(
+    'getpacket_output_name, expected',
+    [
+        ('normal_router', False),
+        ('phone', True),
+    ],
+)
 def test_is_network_metered(getpacket_output_name, expected, monkeypatch):
     def mock_getpacket(device):
         assert device == 'en0'
@@ -80,7 +83,7 @@ router (ip_mult): {192.168.43.242}
 domain_name_server (ip_mult): {192.168.43.242}
 vendor_specific (opaque):
 0000  41 4e 44 52 4f 49 44 5f  4d 45 54 45 52 45 44     ANDROID_METERED
-"""
+""",
 }
 
 NETWORKSETUP_OUTPUT = b"""\

@@ -1354,11 +1354,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="75"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
-        <translation>Échec de la mise à niveau de la base de donnée, veuillez remplir un rapport de bug en utilisant le lien dans l&apos;onglet Divers avec l&apos;erreur suivante : 
-{0} 
+        <translation>Échec de la mise à niveau de la base de donnée, veuillez remplir un rapport de bug en utilisant le lien dans l&apos;onglet Divers avec l&apos;erreur suivante :
+{0}
 {1}</translation>
     </message>
     <message>

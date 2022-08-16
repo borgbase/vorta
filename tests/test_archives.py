@@ -76,8 +76,7 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
     qtbot.mouseClick(tab.compactButton, QtCore.Qt.LeftButton)
 
     qtbot.waitUntil(
-        lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(),
-        **pytest._wait_defaults
+        lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(), **pytest._wait_defaults
     )
     vorta.utils.borg_compat.version = '1.1.0'
 
@@ -102,9 +101,7 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', '/tmp')]
 
-    monkeypatch.setattr(
-        psutil, "disk_partitions", psutil_disk_partitions
-    )
+    monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
 
     main = qapp.main_window
     tab = main.archiveTab
@@ -116,9 +113,7 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    monkeypatch.setattr(
-        vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog
-    )
+    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
 
     tab.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
