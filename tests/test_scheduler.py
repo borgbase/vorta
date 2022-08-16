@@ -25,15 +25,12 @@ def clockmock(monkeypatch):
 
 def prepare(func):
     """Decorator adding common preparation steps."""
+
     @wraps(func)
     def do(qapp, qtbot, mocker, borg_json_output):
         stdout, stderr = borg_json_output('create')
-        popen_result = mocker.MagicMock(stdout=stdout,
-                                        stderr=stderr,
-                                        returncode=0)
-        mocker.patch.object(vorta.borg.borg_job,
-                            'Popen',
-                            return_value=popen_result)
+        popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+        mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
         return func(qapp, qtbot, mocker, borg_json_output)
 
@@ -81,12 +78,9 @@ def test_simple_schedule(clockmock):
     profile.schedule_interval_count = 3
     profile.save()
 
-    event = EventLogModel(subcommand='create',
-                          profile=profile.id,
-                          returncode=0,
-                          category='scheduled',
-                          start_time=time,
-                          end_time=time)
+    event = EventLogModel(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
     event.save()
 
     # test set timer and next_job
@@ -94,7 +88,8 @@ def test_simple_schedule(clockmock):
     assert len(scheduler.timers) == 1
     assert scheduler.next_job() == '07:30 ({})'.format(PROFILE_NAME)
     assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
-        ScheduleStatusType.SCHEDULED, dt(2020, 5, 6, 7, 30))
+        ScheduleStatusType.SCHEDULED, dt(2020, 5, 6, 7, 30)
+    )
 
     # test remove_job and next_job
     scheduler.remove_job(profile.id)
@@ -109,21 +104,17 @@ def test_simple_schedule(clockmock):
     [
         # simple
         (td(), td(hours=4, minutes=30), 'hours', 3, td(hours=3)),
-
         # next day
         (td(), td(hours=4, minutes=30), 'hours', 20, td(hours=20)),
-
         # passed by less than interval
         (td(hours=2), td(hours=4, minutes=30), 'hours', 3, td(hours=1)),
-
         # passed by exactly interval
         (td(hours=3), td(hours=4, minutes=30), 'hours', 3, td(hours=3)),
-
         # passed by multiple times the interval
-        (td(hours=7), td(hours=4, minutes=30), 'hours', 3, td(hours=2))
-    ])
-def test_interval(clockmock, passed_time, scheduled, now, unit, count,
-                  added_time):
+        (td(hours=7), td(hours=4, minutes=30), 'hours', 3, td(hours=2)),
+    ],
+)
+def test_interval(clockmock, passed_time, scheduled, now, unit, count, added_time):
     """Test scheduling in interval mode."""
     # setup
     scheduler = VortaScheduler()
@@ -138,12 +129,14 @@ def test_interval(clockmock, passed_time, scheduled, now, unit, count,
     profile.schedule_interval_count = count
     profile.save()
 
-    event = EventLogModel(subcommand='create',
-                          profile=profile.id,
-                          returncode=0,
-                          category='scheduled' if scheduled else '',
-                          start_time=time - passed_time,
-                          end_time=time - passed_time)
+    event = EventLogModel(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled' if scheduled else '',
+        start_time=time - passed_time,
+        end_time=time - passed_time,
+    )
     event.save()
 
     # run test
@@ -152,19 +145,16 @@ def test_interval(clockmock, passed_time, scheduled, now, unit, count,
 
 
 @mark.parametrize("scheduled", [True, False])
-@mark.parametrize(
-    "passed_time",
-    [td(hours=0), td(hours=5),
-     td(hours=14), td(hours=27)])
+@mark.parametrize("passed_time", [td(hours=0), td(hours=5), td(hours=14), td(hours=27)])
 @mark.parametrize(
     "now, hour, minute",
     [
         # same day
         (td(hours=4, minutes=30), 15, 00),
-
         # next day
         (td(hours=4, minutes=30), 3, 30),
-    ])
+    ],
+)
 def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     """Test scheduling in fixed mode."""
     # setup
@@ -181,12 +171,14 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     profile.save()
 
     last_time = time - passed_time
-    event = EventLogModel(subcommand='create',
-                          profile=profile.id,
-                          returncode=0,
-                          category='scheduled' if scheduled else '',
-                          start_time=last_time,
-                          end_time=last_time)
+    event = EventLogModel(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled' if scheduled else '',
+        start_time=last_time,
+        end_time=last_time,
+    )
     event.save()
 
     # run test
