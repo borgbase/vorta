@@ -117,7 +117,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         )
 
         self.populate_from_profile()
-        self.selected_archives = None
+        self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
 
         # Connect to palette change
@@ -137,7 +137,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
 
-        self.bmountarchive_refresh()
+        self.bmountarchive_refresh(icon_only=True)
         self.bmountrepo_refresh()
 
     @pyqtSlot(QPoint)
@@ -315,7 +315,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.bDelete.setEnabled(False)
             tooltip = self.tooltip_dict[self.bDelete]
-            self.bDelete.setToolTip(tooltip + " " + self.tr("(Select two archives)"))
+            self.bDelete.setToolTip(tooltip + " " + self.tr("(Select minimum one archive)"))
 
         # Toggle diff button
         if len(indexes) == 2:
@@ -349,6 +349,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
                 widget.setToolTip(tooltip + " " + self.tr("(Select exactly one archive)"))
+
+            # special treatment for dynamic mount/unmount button.
+            self.bmountarchive_refresh()
+            tooltip = self.bMountArchive.toolTip()
+            self.bMountArchive.setToolTip(tooltip + " " + self.tr("(Select exactly one archive)"))
 
     def archive_copy(self, index=None):
         """
@@ -511,7 +516,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self.mount_action()
 
-    def bmountarchive_refresh(self):
+    def bmountarchive_refresh(self, icon_only=False):
         """
         Update label, tooltip and state of `bMountArchive`.
 
@@ -521,13 +526,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         archive_name = self.selected_archive_name()
 
         if archive_name in self.mount_points:
-            self.bMountArchive.setText(self.tr("Unmount"))
             self.bMountArchive.setIcon(get_colored_icon('eject'))
-            self.bMountArchive.setToolTip(self.tr('Unmount the selected archive from the file system.'))
+            if not icon_only:
+                self.bMountArchive.setText(self.tr("Unmount"))
+                self.bMountArchive.setToolTip(self.tr('Unmount the selected archive from the file system'))
         else:
-            self.bMountArchive.setText(self.tr("Mount…"))
             self.bMountArchive.setIcon(get_colored_icon('folder-open'))
-            self.bMountRepo.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system."))
+            if not icon_only:
+                self.bMountArchive.setText(self.tr("Mount…"))
+                self.bMountArchive.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system"))
 
     def bmountrepo_refresh(self):
         """
@@ -538,12 +545,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """
         if self.repo_mount_point:
             self.bMountRepo.setText(self.tr("Unmount"))
-            self.bMountRepo.setToolTip(self.tr('Unmount the repository from the file system.'))
+            self.bMountRepo.setToolTip(self.tr('Unmount the repository from the file system'))
             self.bMountRepo.setIcon(get_colored_icon('eject'))
         else:
             self.bMountRepo.setText(self.tr("Mount…"))
             self.bMountRepo.setIcon(get_colored_icon('folder-open'))
-            self.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system."))
+            self.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system"))
 
     def mount_action(self, archive_name=None):
         """
