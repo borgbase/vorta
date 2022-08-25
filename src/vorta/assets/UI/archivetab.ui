@@ -34,7 +34,7 @@
         <x>0</x>
         <y>0</y>
         <width>781</width>
-        <height>367</height>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">
@@ -71,7 +71,7 @@
            <item>
             <widget class="QToolButton" name="bCheck">
              <property name="toolTip">
-              <string>Check the consistancy of the repository</string>
+              <string>Check the consistency of the repository</string>
              </property>
              <property name="text">
               <string>Check</string>
@@ -96,6 +96,9 @@
            </item>
            <item>
             <widget class="QToolButton" name="compactButton">
+             <property name="toolTip">
+              <string>Optimize disk space by defragmenting the repository</string>
+             </property>
              <property name="text">
               <string>Compact</string>
              </property>
@@ -111,6 +114,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string notr="true">see source code</string>
              </property>
              <property name="text">
               <string notr="true">bMountRepo</string>
@@ -219,6 +225,9 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string notr="true">see source code</string>
+                </property>
                 <property name="text">
                  <string notr="true">bMountArchive</string>
                 </property>
@@ -309,7 +318,7 @@
               </sizepolicy>
              </property>
              <property name="toolTip">
-              <string>Delete selected archive</string>
+              <string>Delete selected archive(s)</string>
              </property>
              <property name="text">
               <string>Delete</string>
@@ -350,7 +359,7 @@
         <x>0</x>
         <y>0</y>
         <width>781</width>
-        <height>367</height>
+        <height>371</height>
        </rect>
       </property>
       <attribute name="label">
