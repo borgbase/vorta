@@ -1,5 +1,4 @@
 import logging
-import os.path
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
@@ -31,8 +30,9 @@ from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
-from vorta.utils import choose_file_dialog, format_archive_name, get_asset, get_mount_points, pretty_bytes, borg_compat
+from vorta.utils import choose_file_dialog, format_archive_name, get_asset, get_mount_points, pretty_bytes
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
@@ -631,25 +631,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if mount_point is not None:
             profile = self.profile()
-            params = BorgUmountJob.prepare(profile)
+            params = BorgUmountJob.prepare(profile, mount_point, archive_name=archive_name)
             if not params['ok']:
-                self._set_status(params['message'])
+                self._set_status(translate('message', params['message']))
                 return
 
-            if archive_name:
-                params['current_archive'] = archive_name
-            params['mount_point'] = mount_point
-
-            if os.path.normpath(mount_point) in params['active_mount_points']:
-                params['cmd'].append(mount_point)
-
-                job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self.mountErrors.setText)
-                job.result.connect(self.umount_result)
-                self.app.jobs_manager.add_job(job)
-            else:
-                self._set_status(self.tr('Mount point not active.'))
-                return
+            job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
+            job.updated.connect(self.mountErrors.setText)
+            job.result.connect(self.umount_result)
+            self.app.jobs_manager.add_job(job)
 
     def umount_result(self, result):
         self._toggle_all_buttons(True)
@@ -900,7 +890,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def rename_action(self):
         profile = self.profile()
-
 
         archive_name = self.selected_archive_name()
         if archive_name is not None:
