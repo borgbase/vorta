@@ -1,5 +1,16 @@
 # Vorta Backup Client <img alt="Logo" src="https://files.qmax.us/vorta/vorta-512px.png" align="right" height="50">
 
+[![GitHub all releases](https://img.shields.io/github/downloads/borgbase/vorta/total?label=downloads&logo=github&color=green)](https://github.com/borgbase/vorta/releases)
+[![Flathub](https://img.shields.io/flathub/downloads/com.borgbase.Vorta?logo=flathub&logoColor=white&color=green)](https://flathub.org/apps/details/com.borgbase.Vorta)
+[![Github License](https://img.shields.io/github/license/borgbase/vorta?color=bd0000)](https://github.com/borgbase/vorta/blob/master/LICENSE.txt)
+[![pypi](https://img.shields.io/pypi/v/vorta.svg?logo=pypi&logoColor=white&color=0073b7)](https://pypi.org/project/vorta/)
+[![homebrew cask](https://img.shields.io/homebrew/cask/v/vorta?logo=homebrew&color=fbb040)](https://formulae.brew.sh/cask/vorta)
+[![Flathub](https://img.shields.io/flathub/v/com.borgbase.Vorta?color=4a86cf&logo=flathub&logoColor=white)](https://flathub.org/apps/details/com.borgbase.Vorta)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://pre-commit.com)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+<br>
+<br>
+
 Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft.
 
 ![](https://files.qmax.us/vorta/screencast-8-small.gif)
