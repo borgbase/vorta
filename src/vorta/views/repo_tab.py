@@ -108,6 +108,16 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # set labels
         repo: RepoModel = self.profile().repo
         if repo is not None:
+            self.frameRepoSettings.setEnabled(True)
+
+            # local repo doesn't use ssh
+            ssh_enabled = repo.is_remote_repo()
+            # self.bAddSSHKey.setEnabled(ssh_enabled)
+            # otherwise one cannot add a ssh key for adding a repo
+            self.sshComboBox.setEnabled(ssh_enabled)
+            self.sshKeyToClipboardButton.setEnabled(ssh_enabled)
+
+            # update stats
             if repo.unique_csize is not None:
                 self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
                 self.sizeCompressed.setToolTip('')
@@ -131,6 +141,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
             self.repoEncryption.setText(str(repo.encryption))
         else:
+            # Compression and SSH key are only valid entries for a repo
+            self.frameRepoSettings.setEnabled(False)
+
+            # unset stats
             self.sizeCompressed.setText(na)
             self.sizeCompressed.setToolTip(no_repo_selected)
 
