@@ -209,6 +209,9 @@ def get_private_keys():
                     PermissionError,
                     NotImplementedError,
                 ):
+                    logger.debug(
+                        f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True
+                    )
                     continue
                 except OSError as e:
                     if e.errno == errno.ENXIO:
