@@ -1,7 +1,10 @@
+import logging
 import os
 from vorta.store.models import SettingsModel
-from vorta.utils import borg_compat
+from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
 from .borg_job import BorgJob
+
+logger = logging.getLogger(__name__)
 
 
 class BorgMountJob(BorgJob):
@@ -9,7 +12,7 @@ class BorgMountJob(BorgJob):
         self.updated.emit(self.tr('Mounting archive into folder…'))
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, archive: str = None):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -26,8 +29,21 @@ class BorgMountJob(BorgJob):
 
         if borg_compat.check('V2'):
             cmd.extend(["-r", profile.repo.url])
+
+            if archive:
+                # in shell patterns ?, * and [...] have a special meaning
+                pattern = SHELL_PATTERN_ELEMENT.sub(r'\\1', archive)  # escape them
+                cmd.extend(['-a', pattern])
         else:
-            cmd.append(f'{profile.repo.url}')
+            source = f'{profile.repo.url}'
+
+            if archive:
+                source += f'::{archive}'
+
+            cmd.append(source)
+
+        if archive:
+            ret['mounted_archive'] = archive
 
         ret['ok'] = True
         ret['cmd'] = cmd

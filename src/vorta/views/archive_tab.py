@@ -52,7 +52,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
-        self.mount_points = {}  # mount points of archives
+        self.mount_points = {}  # mapping of archive name to mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
@@ -558,16 +558,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             The archive to mount or None, by default None
         """
         profile = self.profile()
-        params = BorgMountJob.prepare(profile)
+        params = BorgMountJob.prepare(profile, archive=archive_name)
         if not params['ok']:
             self._set_status(params['message'])
             return
-
-        if archive_name:
-            # mount archive
-            params['cmd'][-1] += f'::{archive_name}'
-            params['current_archive'] = archive_name
-        # else mount complete repo
 
         def receive():
             mount_point = dialog.selectedFiles()
@@ -591,13 +585,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             mount_point = result['params']['mount_point']
 
-            if result['params'].get('current_archive'):
+            if result['params'].get('mounted_archive'):
                 # archive was mounted
-                archive_name = result['params']['current_archive']
+                archive_name = result['params']['mounted_archive']
                 self.mount_points[archive_name] = mount_point
 
                 # update column in table
-                archive_name = result['params']['current_archive']
                 row = self.row_of_archive(archive_name)
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)

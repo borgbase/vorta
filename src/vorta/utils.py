@@ -355,6 +355,9 @@ def format_archive_name(profile, archive_name_tpl):
     return archive_name_tpl.format(**available_vars)
 
 
+SHELL_PATTERN_ELEMENT = re.compile(r'([?\[\]*])')
+
+
 def get_mount_points(repo_url):
     mount_points = {}
     repo_mounts = []
@@ -365,23 +368,41 @@ def get_mount_points(repo_url):
                 if 'mount' not in proc.cmdline():
                     continue
 
-                for idx, parameter in enumerate(proc.cmdline()):
-                    if parameter.startswith(repo_url):
-                        # mount from this repo
+                if borg_compat.check('V2'):
+                    # command line syntax:
+                    # `borg mount -r <repo> <mountpoint> <path> (-a <archive_pattern>)`
+                    cmd = proc.cmdline()
+                    if repo_url in cmd:
+                        i = cmd.index(repo_url)
+                        if len(cmd) > i + 1:
+                            mount_point = cmd[i + 1]
 
-                        # The borg mount command specifies that the mount_point
-                        # parameter comes after the archive name
-                        if len(proc.cmdline()) > idx + 1:
-                            mount_point = proc.cmdline()[idx + 1]
-
-                            # archive or full mount?
-                            if parameter[len(repo_url) :].startswith('::'):
-                                archive_name = parameter[len(repo_url) + 2 :]
-                                mount_points[archive_name] = mount_point
-                                break
+                            # Archive mount?
+                            ao = '-a' in cmd
+                            if ao or '--glob-archives' in cmd:
+                                i = cmd.index('-a' if ao else '--glob-archives')
+                                if len(cmd) >= i + 1 and not SHELL_PATTERN_ELEMENT.search(cmd[i + 1]):
+                                    mount_points[mount_point] = cmd[i + 1]
                             else:
-                                # repo mount point
                                 repo_mounts.append(mount_point)
+                else:
+                    for idx, parameter in enumerate(proc.cmdline()):
+                        if parameter.startswith(repo_url):
+                            # mount from this repo
+
+                            # The borg mount command specifies that the mount_point
+                            # parameter comes after the archive name
+                            if len(proc.cmdline()) > idx + 1:
+                                mount_point = proc.cmdline()[idx + 1]
+
+                                # archive or full mount?
+                                if parameter[len(repo_url) :].startswith('::'):
+                                    archive_name = parameter[len(repo_url) + 2 :]
+                                    mount_points[archive_name] = mount_point
+                                    break
+                                else:
+                                    # repo mount point
+                                    repo_mounts.append(mount_point)
 
         except (psutil.ZombieProcess, psutil.AccessDenied, psutil.NoSuchProcess):
             # Getting process details may fail (e.g. zombie process on macOS)
