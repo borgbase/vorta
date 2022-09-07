@@ -161,7 +161,7 @@ class BorgCreateJob(BorgJob):
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
 
         if borg_compat.check('V2'):
-            cmd = cmd + ["-r", profile.repo.url, new_archive_name]
+            cmd += ["-r", profile.repo.url, new_archive_name]
         else:
             cmd.append(f"{profile.repo.url}::{new_archive_name}")
 
