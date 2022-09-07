@@ -1,5 +1,6 @@
 import tempfile
 from PyQt5.QtCore import QModelIndex, Qt
+from vorta.utils import borg_compat
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
 from .borg_job import BorgJob
@@ -24,7 +25,10 @@ class BorgExtractJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'extract', '--list', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}::{archive_name}')
+        if borg_compat.check('V2'):
+            cmd += ['-r', profile.repo.url, archive_name]
+        else:
+            cmd.append(f'{profile.repo.url}::{archive_name}')
 
         # process selected items
         # all items will be excluded beside the one actively selected in the
