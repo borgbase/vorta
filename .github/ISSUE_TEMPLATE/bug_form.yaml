@@ -1,0 +1,89 @@
+name: "Bug Report Form"
+description: "Report a bug or a similiar issue."
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue. Please fill out the below template with as much detail as possible. Incomplete bug reports are likely to be closed without comment.
+
+        If you want to suggest a feature use the `Feature Request` template instead.
+        If you have any other question, head to
+        our [Discussions](https://github.com/borgbase/vorta/discussions).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Please decribe your issue and its context in a clear and concise way. Please try to reproduce the issue and provide the steps to reproduce it.
+        Wrap error messages in triple backticks.
+      placeholder: |
+        I encountered a bug.
+
+        ```Error message```
+
+        Steps to reproduce:
+        1.
+        2.
+        3.
+
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: reproducible
+    attributes:
+      label: Reproduction
+      description: Please try to reproduce the issue with the steps you provided and capture the logs of this try for the form input below.
+      options:
+        - label: I tried to reproduce the issue.
+          required: true
+        - label: I was able to reproduce the issue.
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: Operating system (and desktop environment)
+      placeholder: <os> <version>, <desktop> <version>
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version of Vorta
+      description: Vorta and Borg versions can be found in Main Window > Misc Tab.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation
+    attributes:
+      label: What did you install Vorta with?
+      options:
+        - Homebrew
+        - Binary
+        - Distribution package
+        - Flatpak
+        - Pip
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: borg
+    attributes:
+      label: Version of Borg
+      description: Vorta and Borg versions can be found in Main Window > Misc Tab.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Logs are very important for most issues. Please paste them down below. *(No need for backticks)*
+        They can be found in Main Window > Misc Tab > Log.
+        Logs are more helpful if you include (exactly) the logs that were produced during the steps you described above.
+      placeholder: paste logs here
+      render: pytb

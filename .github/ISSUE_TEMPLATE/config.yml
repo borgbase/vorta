@@ -1,0 +1,13 @@
+contact_links:
+
+  - name: Documentation
+    url: https://vorta.borgbase.com/
+    about: Documentation on installing, using and contributing to Vorta.
+
+  - name: Support
+    url: https://github.com/borgbase/vorta/discussions/categories/faq
+    about: Please ask for support in the Discussions FAQ.
+
+  - name: Discussions
+    url: https://github.com/borgbase/vorta/discussions
+    about: Discuss everything here.
