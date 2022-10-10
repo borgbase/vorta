@@ -35,8 +35,8 @@ class BorgDeleteJob(BorgJob):
 
         cmd = ['borg', 'delete', '--info', '--log-json']
         if borg_compat.check('V2'):
-            cmd = cmd + ["-r", profile.repo.url]
-            cmd.extend(archives)
+            cmd = cmd + ["-r", profile.repo.url, '-a']
+            cmd.append(f"re:({'|'.join(archives)})")
         else:
             cmd.append(f'{profile.repo.url}::{archives[0]}')
             cmd.extend(archives[1:])

@@ -15,7 +15,8 @@ class BorgCreateJob(BorgJob):
                 snapshot_id=result['data']['archive']['id'],
                 defaults={
                     'name': result['data']['archive']['name'],
-                    'time': dt.fromisoformat(result['data']['archive']['start']),
+                    # SQLite can't save timezone, so we remove it here. TODO: Keep as UTC?
+                    'time': dt.fromisoformat(result['data']['archive']['start']).replace(tzinfo=None),
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size'],

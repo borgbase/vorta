@@ -38,7 +38,7 @@ class BorgCompactJob(BorgJob):
             ret['message'] = trans_late('messages', 'This feature needs Borg 1.2.0 or higher.')
             return ret
 
-        cmd = ['borg', '--info', '--log-json', 'compact', '--cleanup-commits']
+        cmd = ['borg', '--info', '--log-json', 'compact']
         if borg_compat.check('V2'):
             cmd = cmd + ["-r", profile.repo.url]
         else:
