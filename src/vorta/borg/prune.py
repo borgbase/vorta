@@ -1,5 +1,5 @@
 from vorta.store.models import RepoModel
-from vorta.utils import format_archive_name
+from vorta.utils import borg_compat, format_archive_name
 from .borg_job import BorgJob
 
 
@@ -46,7 +46,11 @@ class BorgPruneJob(BorgJob):
 
         if profile.prune_prefix:
             formatted_prune_prefix = format_archive_name(profile, profile.prune_prefix)
-            pruning_opts += ['--prefix', formatted_prune_prefix]
+
+            if borg_compat.check('V122'):
+                pruning_opts += ['-a', formatted_prune_prefix + '*']  # sh: pattern
+            else:
+                pruning_opts += ['--prefix', formatted_prune_prefix]
 
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
