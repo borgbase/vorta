@@ -382,8 +382,8 @@ def get_mount_points(repo_url):
 
                             # Archive mount?
                             ao = '-a' in cmd
-                            if ao or '--glob-archives' in cmd:
-                                i = cmd.index('-a' if ao else '--glob-archives')
+                            if ao or '--match-archives' in cmd:
+                                i = cmd.index('-a' if ao else '--match-archives')
                                 if len(cmd) >= i + 1 and not SHELL_PATTERN_ELEMENT.search(cmd[i + 1]):
                                     mount_points[mount_point] = cmd[i + 1]
                             else:
