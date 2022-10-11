@@ -9,7 +9,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
-from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
+from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
 
@@ -208,7 +208,9 @@ def parse_json_lines(lines, model: "ExtractTree"):
         # except ValueError:
         #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S")
 
-        modified = QDateTime.fromString(item["mtime"], Qt.DateFormat.ISODateWithMs)
+        modified = QDateTime.fromString(
+            item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
+        )
 
         model.addItem(
             (

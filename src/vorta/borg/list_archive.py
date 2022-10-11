@@ -1,3 +1,4 @@
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -26,8 +27,9 @@ class BorgListArchiveJob(BorgJob):
             '--json-lines',
             '--format',
             # fields to include in json output
-            "{mode}{user}{group}{size}{mtime}{path}{source}{health}{NL}",
-            f'{profile.repo.url}::{archive_name}',
+            "{mode}{user}{group}{size}{" + 'isomtime'
+            if borg_compat.check('V122')
+            else 'mtime' + "}{path}{source}{health}{NL}",
         ]
         ret['ok'] = True
 
