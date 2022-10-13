@@ -75,6 +75,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def set_repos(self):
         self.repoSelector.clear()
+        self.repoSelector.addItem(self.tr('No repository selected'), None)
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
@@ -266,8 +267,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
 
-        if selected_repo_index < 0:
-            # QComboBox is empty
+        if selected_repo_index <= 0:
+            # QComboBox is empty / repo unset
             return
 
         repo = RepoModel.get(id=selected_repo_id)
@@ -289,7 +290,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def copy_URL_action(self):
         selected_repo_id = self.repoSelector.currentData()
         if not selected_repo_id:
-            # QComboBox is empty
+            # QComboBox is empty / repo unset
             return
 
         repo = RepoModel.get(id=selected_repo_id)

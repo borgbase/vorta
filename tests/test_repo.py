@@ -50,17 +50,17 @@ def test_repo_unlink(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
 
-    main.tabWidget.setCurrentIndex(0)
+    main.tabWidget.setCurrentIndex(1)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 0, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     # -1 is the repo id in this test
     qtbot.waitUntil(
-        lambda: main.progressText.text().startswith('Add a backup repository first.'), **pytest._wait_defaults
+        lambda: main.progressText.text().startswith('Select a backup repository first.'), **pytest._wait_defaults
     )
-    assert main.progressText.text() == 'Add a backup repository first.'
+    assert main.progressText.text() == 'Select a backup repository first.'
 
 
 def test_password_autofill(qapp, qtbot):
