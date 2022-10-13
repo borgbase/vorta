@@ -140,7 +140,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
             return ret
 
         if profile.repo is None:
-            ret['message'] = trans_late('messages', 'Add a backup repository first.')
+            ret['message'] = trans_late('messages', 'Select a backup repository first.')
             return ret
 
         if not borg_compat.check('JSON_LOG'):
