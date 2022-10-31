@@ -65,6 +65,7 @@ body:
         - Homebrew
         - Binary
         - Distribution package
+        - AUR (ArchLinux)
         - Flatpak
         - Pip
         - Other
