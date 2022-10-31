@@ -17,7 +17,7 @@ def main():
         from PyQt5.QtWidgets import QMessageBox
 
         logger.critical(
-            "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new",
+            "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new/choose",
             exc_info=(type, value, tb),
         )
         full_exception = ''.join(format_exception(type, value, tb))
