@@ -50,7 +50,7 @@ def test_repo_unlink(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
 
-    main.tabWidget.setCurrentIndex(1)
+    main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0

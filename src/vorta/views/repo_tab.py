@@ -22,7 +22,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.setupUi(parent)
 
         # Populate dropdowns
-        self.populate_repositories()
+        self.populate_from_profile()
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
@@ -60,7 +60,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshKeyToClipboardButton.clicked.connect(self.ssh_copy_to_clipboard_action)
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
-        self.populate_from_profile()
         self.set_icons()
 
         # Connect to palette change
@@ -79,16 +78,16 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         for repo in RepoModel.select():
             self.repoSelector.addItem(repo.url, repo.id)
 
-    def populate_repositories(self):
+    def populate_from_profile(self):
         try:
             self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
         except TypeError:  # raised when signal is not connected
             pass
-        self.set_repos()
-        self.populate_from_profile()
-        self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
 
-    def populate_from_profile(self):
+        # populate repositories
+        self.set_repos()
+
+        # load profile configuration
         profile = self.profile()
         if profile.repo:
             self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
@@ -98,6 +97,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
         self.init_repo_stats()
+
+        self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
 
     def init_repo_stats(self):
         """Set the strings of the repo stats labels."""
@@ -110,6 +111,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         repo: RepoModel = self.profile().repo
         if repo is not None:
             self.frameRepoSettings.setEnabled(True)
+            # remove *unset* item
+            self.repoSelector.removeItem(self.repoSelector.findData(None))
 
             # local repo doesn't use ssh
             ssh_enabled = repo.is_remote_repo()
@@ -267,7 +270,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
 
-        if selected_repo_index <= 0:
+        if not selected_repo_id:
             # QComboBox is empty / repo unset
             return
 
@@ -285,7 +288,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.show()
 
         self.repo_changed.emit()
-        self.init_repo_stats()
+        self.populate_from_profile()
 
     def copy_URL_action(self):
         selected_repo_id = self.repoSelector.currentData()

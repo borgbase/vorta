@@ -213,7 +213,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile import successful!'),
                 self.tr('Profile {} imported.').format(profile.name),
             )
-            self.repoTab.populate_repositories()
+            self.repoTab.populate_from_profile()
             self.scheduleTab.populate_logs()
             self.scheduleTab.populate_wifi()
             self.miscTab.populate()
