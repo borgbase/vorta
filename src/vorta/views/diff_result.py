@@ -464,9 +464,9 @@ class DiffSortProxyModel(FileTreeSortProxyModel):
             if ct == ChangeType.NONE:
                 return ChangeType.MODIFIED
             return ct
+        elif column == 2:
+            return item.data.changed_size
         else:
-            if column == 2 and item.data.modified:
-                return sum(item.data.modified)
             # size
             return item.data.size
 
@@ -584,8 +584,8 @@ class DiffData:
 
     file_type: FileType
     change_type: ChangeType
-    changed_size: int
-    size: int
+    changed_size: int  # total modified bits
+    size: int  # size change (disk usage)
     mode_change: Optional[Tuple[str, str]] = None
     owner_change: Optional[Tuple[str, str, str, str]] = None
     modified: Optional[Tuple[int, int]] = None
