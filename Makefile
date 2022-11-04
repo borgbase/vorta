@@ -37,7 +37,7 @@ bump-version:  ## Tag new version. First set new version number in src/vorta/_ve
 
 translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
 	pylupdate5 -verbose -translate-function trans_late \
-			   $$(find ${VORTA_SRC} -regex ".*[.]\(py\|ui\)") \
+			   $$(find ${VORTA_SRC} -iname "*.py" -o -iname "*.ui") \
 			   -ts ${VORTA_SRC}/i18n/ts/vorta.en.ts
 
 translations-push: translations-from-source  ## Upload .ts to Transifex.
