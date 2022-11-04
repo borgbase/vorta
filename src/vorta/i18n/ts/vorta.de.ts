@@ -392,17 +392,17 @@
     <message>
         <location filename="../../borg/compact.py" line="11"/>
         <source>Starting repository compaction...</source>
-        <translation>Beginne mit dem Zusammenpressen des Repositorys.</translation>
+        <translation>Beginne mit dem Defragmentieren des Repositorys.</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="25"/>
         <source>Errors during compaction. See logs for details.</source>
-        <translation>Zusammenpressen fehlgeschlagen. Details finden sich in den Logs.</translation>
+        <translation>Defragmentierung fehlgeschlagen. Details finden sich in den Logs.</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="27"/>
         <source>Compaction completed.</source>
-        <translation>Zusammenpressen abgeschlossen.</translation>
+        <translation>Defragmentierung abgeschlossen.</translation>
     </message>
 </context>
 <context>
@@ -1113,7 +1113,7 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="100"/>
         <source>Compact</source>
-        <translation>Zusammenpressen</translation>
+        <translation>Optimieren</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="204"/>
@@ -1355,11 +1355,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="75"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
-        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler:
- {0}
+        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler: 
+ {0} 
  {1}</translation>
     </message>
     <message>
