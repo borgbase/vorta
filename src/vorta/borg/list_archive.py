@@ -30,6 +30,7 @@ class BorgListArchiveJob(BorgJob):
             "{mode}{user}{group}{size}{"
             + ('isomtime' if borg_compat.check('V122') else 'mtime')
             + "}{path}{source}{health}{NL}",
+            f'{profile.repo.url}::{archive_name}',
         ]
         ret['ok'] = True
 
