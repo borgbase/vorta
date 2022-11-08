@@ -1,5 +1,5 @@
 export VORTA_SRC := src/vorta
-export FLATPAK_XML := src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
+export APPSTREAM_METADATA := src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 VERSION := $(shell python -c "from src.vorta._version import __version__; print(__version__)")
 
 .PHONY : help
@@ -30,8 +30,8 @@ pypi-release: translations-to-qm  ## Upload new release to PyPi
 	twine upload dist/vorta-${VERSION}.tar.gz
 
 bump-version:  ## Tag new version. First set new version number in src/vorta/_version.py
-	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${FLATPAK_XML}
-	xmlstarlet ed -L -u 'component/releases/release/@version' -v v${VERSION} ${FLATPAK_XML}
+	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${APPSTREAM_METADATA}
+	xmlstarlet ed -L -u 'component/releases/release/@version' -v v${VERSION} ${APPSTREAM_METADATA}
 	git commit -a -m "Bump version to v${VERSION}"
 	git tag -a v${VERSION}
 
@@ -50,11 +50,11 @@ translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls ${VORTA_SRC}/i18n/ts/vorta.*.ts); do lrelease $$f -qm ${VORTA_SRC}/i18n/qm/$$(basename $$f .ts).qm; done
 
 flatpak-install: translations-to-qm
-	pip3 install --prefix=/app --no-deps .
-	install -D ${FLATPAK_XML} /app/share/metainfo/com.borgbase.Vorta.appdata.xml
-	install -D src/vorta/assets/icons/icon.svg /app/share/icons/hicolor/scalable/apps/com.borgbase.Vorta.svg
-	install -D package/icon-symbolic.svg /app/share/icons/hicolor/symbolic/apps/com.borgbase.Vorta-symbolic.svg
-	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop /app/share/applications/com.borgbase.Vorta.desktop
+	pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} --no-build-isolation .
+	install -D ${APPSTREAM_METADATA} ${FLATPAK_DEST}/share/metainfo/com.borgbase.Vorta.appdata.xml
+	install -D src/vorta/assets/icons/icon.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/com.borgbase.Vorta.svg
+	install -D package/icon-symbolic.svg ${FLATPAK_DEST}/share/icons/hicolor/symbolic/apps/com.borgbase.Vorta-symbolic.svg
+	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop ${FLATPAK_DEST}/share/applications/com.borgbase.Vorta.desktop
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
