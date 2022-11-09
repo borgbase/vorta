@@ -61,7 +61,7 @@
         <string>Keep folders on top when sorting</string>
        </property>
        <property name="text">
-        <string>Folders On Top</string>
+        <string>Folders First</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
