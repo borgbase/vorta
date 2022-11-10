@@ -48,7 +48,6 @@ class BorgExtractJob(BorgJob):
 
         pattern_file.write("- *\n")
         pattern_file.flush()
-        pattern_file.close()  # wont delete temp file
         cmd.extend(['--patterns-from', pattern_file.name])
         ret['cleanup_files'].append(pattern_file)
 
