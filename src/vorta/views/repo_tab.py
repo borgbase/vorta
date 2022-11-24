@@ -22,7 +22,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.setupUi(parent)
 
         # Populate dropdowns
-        self.populate_from_profile()
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
@@ -64,6 +63,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         # Connect to palette change
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+
+        self.populate_from_profile()  # needs init of ssh and compression items
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
