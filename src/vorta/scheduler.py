@@ -69,16 +69,15 @@ class VortaScheduler(QtCore.QObject):
             self.bus.connect(service, path, interface, name, "b", self._slotOverloaded)
         else:
             logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
-         
+
     @QtCore.pyqtSlot(bool)
     def _slotOverloaded(self, data):
-        if data!=True:        
+        if data is not True:
             now = dt.now()
 
             current_time = now.strftime("%H:%M:%S")
             print(f"Got '{data}' from 'PrepareForSleep' Signal=", current_time)
             self.reload_all_timers()
-
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
