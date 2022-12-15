@@ -59,20 +59,21 @@ class VortaScheduler(QtCore.QObject):
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
-        # connect to DBus login Manager to receive sleep/resume events
+        # connect to `systemd-logind` to receive sleep/resume events
+        # The signal `PrepareForSleep` will be emitted before and after hibernation.
         service = "org.freedesktop.login1"
+        path = "/org/freedesktop/login1"
+        interface = "org.freedesktop.login1.Manager"
+        name = "PrepareForSleep"
         if QtDBus.QDBusConnection.systemBus().interface().isServiceRegistered(service).value():
-            path = "/org/freedesktop/login1"
-            interface = "org.freedesktop.login1.Manager"
-            name = "PrepareForSleep"
             self.bus = QtDBus.QDBusConnection.systemBus()
             self.bus.connect(service, path, interface, name, "b", self._slotOverloaded)
         else:
             logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
-    def _slotOverloaded(self, data):
-        if data is not True:
+    def _slotOverloaded(self, data: bool):
+        if not data:
             now = dt.now()
 
             current_time = now.strftime("%H:%M:%S")
