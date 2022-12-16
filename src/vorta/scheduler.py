@@ -74,9 +74,7 @@ class VortaScheduler(QtCore.QObject):
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool):
         if not suspend:
-            now = dt.now()
-
-            logger.debug(f"Got login suspend/resume notification at {now.strftime('%H:%M:%S')}")
+            logger.debug(f"Got login suspend/resume notification")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
