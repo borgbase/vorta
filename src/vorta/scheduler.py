@@ -67,17 +67,17 @@ class VortaScheduler(QtCore.QObject):
         name = "PrepareForSleep"
         if QtDBus.QDBusConnection.systemBus().interface().isServiceRegistered(service).value():
             self.bus = QtDBus.QDBusConnection.systemBus()
-            self.bus.connect(service, path, interface, name, "b", self._slotOverloaded)
+            self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
             logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
-    def _slotOverloaded(self, data: bool):
+    def loginSuspendNotify(self, data: bool):
         if not data:
             now = dt.now()
 
             current_time = now.strftime("%H:%M:%S")
-            print(f"Got '{data}' from 'PrepareForSleep' Signal=", current_time)
+            logger.debug(f"Got login suspend/resume notification at %s", current_time)
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
@@ -336,8 +336,6 @@ class VortaScheduler(QtCore.QObject):
                 logger.debug('Scheduling next run for %s', next_time)
 
                 timer = QTimer()
-                if timer.isActive():
-                    timer.stop()
                 timer.setSingleShot(True)
                 timer.setInterval(int(timer_ms))
                 timer.timeout.connect(lambda: self.create_backup(profile_id))
