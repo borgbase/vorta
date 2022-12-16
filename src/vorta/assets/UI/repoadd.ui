@@ -115,7 +115,7 @@
          <item>
           <widget class="QLineEdit" name="repoURL">
            <property name="placeholderText">
-            <string>csvis8xq@csvis8xq.repo.borgbase.com:repo</string>
+            <string>ssh://abc123@abc123.repo.borgbase.com/./repo</string>
            </property>
           </widget>
          </item>
