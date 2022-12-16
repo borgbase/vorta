@@ -76,8 +76,7 @@ class VortaScheduler(QtCore.QObject):
         if not data:
             now = dt.now()
 
-            current_time = now.strftime("%H:%M:%S")
-            logger.debug(f"Got login suspend/resume notification at %s", current_time)
+            logger.debug(f"Got login suspend/resume notification at {now.strftime("%H:%M:%S")}")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
