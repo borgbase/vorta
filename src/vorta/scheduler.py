@@ -4,10 +4,9 @@ import threading
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtDBus
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtDBus
 from vorta import application
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
@@ -65,8 +64,9 @@ class VortaScheduler(QtCore.QObject):
         path = "/org/freedesktop/login1"
         interface = "org.freedesktop.login1.Manager"
         name = "PrepareForSleep"
-        if QtDBus.QDBusConnection.systemBus().interface().isServiceRegistered(service).value():
-            self.bus = QtDBus.QDBusConnection.systemBus()
+        bus = QtDBus.QDBusConnection.systemBus()
+        if bus.isConnected() and bus.interface().isServiceRegistered(service).value():
+            self.bus = bus
             self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
             logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
@@ -74,7 +74,7 @@ class VortaScheduler(QtCore.QObject):
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool):
         if not suspend:
-            logger.debug(f"Got login suspend/resume notification")
+            logger.debug("Got login suspend/resume notification")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
