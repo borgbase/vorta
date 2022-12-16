@@ -72,11 +72,11 @@ class VortaScheduler(QtCore.QObject):
             logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
-    def loginSuspendNotify(self, data: bool):
-        if not data:
+    def loginSuspendNotify(self, suspend: bool):
+        if not suspend:
             now = dt.now()
 
-            logger.debug(f"Got login suspend/resume notification at {now.strftime("%H:%M:%S")}")
+            logger.debug(f"Got login suspend/resume notification at {now.strftime('%H:%M:%S')}")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
