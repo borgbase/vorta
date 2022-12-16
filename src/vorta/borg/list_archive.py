@@ -27,9 +27,10 @@ class BorgListArchiveJob(BorgJob):
             '--json-lines',
             '--format',
             # fields to include in json output
-            "{mode}{user}{group}{size}{" + 'isomtime'
-            if borg_compat.check('V122')
-            else 'mtime' + "}{path}{source}{health}{NL}",
+            "{mode}{user}{group}{size}{"
+            + ('isomtime' if borg_compat.check('V122') else 'mtime')
+            + "}{path}{source}{health}{NL}",
+            f'{profile.repo.url}::{archive_name}',
         ]
         ret['ok'] = True
 

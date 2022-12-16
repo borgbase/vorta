@@ -4,7 +4,7 @@ import threading
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtDBus
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 from vorta import application
@@ -57,6 +57,25 @@ class VortaScheduler(QtCore.QObject):
 
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
+
+        # connect to `systemd-logind` to receive sleep/resume events
+        # The signal `PrepareForSleep` will be emitted before and after hibernation.
+        service = "org.freedesktop.login1"
+        path = "/org/freedesktop/login1"
+        interface = "org.freedesktop.login1.Manager"
+        name = "PrepareForSleep"
+        bus = QtDBus.QDBusConnection.systemBus()
+        if bus.isConnected() and bus.interface().isServiceRegistered(service).value():
+            self.bus = bus
+            self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
+        else:
+            logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
+
+    @QtCore.pyqtSlot(bool)
+    def loginSuspendNotify(self, suspend: bool):
+        if not suspend:
+            logger.debug("Got login suspend/resume notification")
+            self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
