@@ -32,7 +32,7 @@ class BorgCheckJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'check', '--info', '--log-json']
+        cmd = ['borg', 'check', '--info', '--log-json', '--progress']
         cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
