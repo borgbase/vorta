@@ -117,7 +117,10 @@ class BorgJob(JobInterface, BackupProfileMixin):
             try:
                 self.process.wait(timeout=3)
             except TimeoutExpired:
-                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
+                try:
+                    os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
 
     @classmethod
     def prepare(cls, profile):
