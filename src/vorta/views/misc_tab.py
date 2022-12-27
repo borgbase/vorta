@@ -78,6 +78,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
 
                 # create widget
                 cb = QCheckBox(translate('settings', setting.label))
+                cb.setToolTip(setting.tooltip)
                 cb.setCheckState(setting.value)
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
