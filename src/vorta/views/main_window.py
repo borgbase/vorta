@@ -103,6 +103,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.set_icons()
 
+    def open_misc_tab(self):
+        """Make the misc tab visible."""
+        self.tabWidget.setCurrentIndex(3)
+
     def on_close_window(self):
         self.close()
 
@@ -196,7 +200,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         React to pressing "Export Profile" button and save current
         profile as .json file.
         """
-        window = ExportWindow(profile=self.current_profile.refresh())
+        window = ExportWindow(profile=self.current_profile.refresh(), app=self.app)
         self.window = window
         window.setParent(self, QtCore.Qt.Sheet)
         window.show()

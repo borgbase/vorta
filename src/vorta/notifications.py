@@ -3,16 +3,19 @@ import logging
 import sys
 from dataclasses import dataclass
 from pathlib import PurePath
-from typing import Any, Callable, Dict, List, Optional, Sequence, Set
-
+from typing import Any, Callable, Dict, List, NewType, Optional, Sequence, Set
 from PyQt5.QtCore import QMetaType, QObject, QVariant, pyqtSignal, pyqtSlot
-from PyQt5.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusInterface, QDBusMessage
+from PyQt5.QtDBus import QDBus, QDBusConnection, QDBusInterface, QDBusMessage
 from PyQt5.QtGui import QTextDocument
-
+from PyQt5.QtWidgets import QApplication
+from vorta import application
 from vorta.store.models import SettingsModel
 from vorta.utils import get_asset
 
 logger = logging.getLogger(__name__)
+
+Identifier = NewType("Identifier", object)  # notification id
+ActionSlot = Callable[[Identifier, str], Any]  # (id, action)
 
 
 class VortaNotifications:
@@ -25,53 +28,225 @@ class VortaNotifications:
 
     @classmethod
     def pick(cls):
-        if sys.platform == 'darwin':
+        if sys.platform == "darwin":
             return DarwinNotifications()
         elif QDBusConnection.sessionBus().isConnected():
             return DBusNotifications()
         else:
-            logger.warning('could not pick valid notification class')
+            logger.warning("could not pick valid notification class")
             return cls()
 
-    def deliver(self, title, text, level='info'):
-        """Dummy notifier if we're not on macOS or Linux notifier is not available."""
+    def deliver(self, title: str, text: str, level: str = "info", slot: ActionSlot = None) -> Identifier:
+        """
+        Notify the user with the given notification attributes.
+
+        Parameters
+        ----------
+        title : str
+            The summary/header of the notification.
+        text : str
+            The body/text of the notification.
+        level : str, optional
+            The level of severity/interruption/urgency, by default 'info'
+        slot : ActionSlot, optional
+            The slot to call when the notification is clicked, by default None
+
+        Returns
+        -------
+        Identifier
+            The id of the notification delivered.
+        """
+        pass
+
+    def cancel(self, notification_id: Identifier):
+        """
+        Close a notification already delivered.
+
+        Parameters
+        ----------
+        notification_id : Identifier
+            The id of the notification to revoke.
+        """
         pass
 
     def notifications_suppressed(self, level):
         """Decide if notification is sent or not based on settings and level."""
-        if not SettingsModel.get(key='enable_notifications').value:
-            logger.debug('notifications suppressed')
+        if not SettingsModel.get(key="enable_notifications").value:
+            logger.debug("notifications suppressed")
             return True
         if level == 'info' and not SettingsModel.get(key='enable_notifications_success').value:
             logger.debug('success notifications suppressed')
             return True
 
-        logger.debug('notification not suppressed')
+        logger.debug("notification not suppressed")
         return False
 
 
-class DarwinNotifications(VortaNotifications):
-    """
-    Notify via notification center and pyobjc bridge.
-    """
+# ----  MacOS Notifications --------------------------------------------------
 
-    def deliver(self, title, text, level='info'):
-        if self.notifications_suppressed(level):
-            return
+if sys.platform == "darwin":
+    import objc
+    from Foundation import NSUUID, NSObject
+    from UserNotifications import (
+        UNAuthorizationOptions,
+        UNMutableNotificationContent,
+        UNNotificationInterruptionLevel,
+        UNNotificationPresentationOptions,
+        UNNotificationRequest,
+        UNNotificationResponse,
+        UNNotificationSound,
+        UNTimeIntervalNotificationTrigger,
+        UNUserNotificationCenter,
+    )
 
-        from Foundation import NSUserNotification, NSUserNotificationCenter
+    UNUserNotificationCenterDelegate = objc.protocolNamed("UNUserNotificationCenterDelegate")
 
-        notification = NSUserNotification.alloc().init()
-        notification.setTitle_(title)
-        notification.setInformativeText_(text)
-        center = NSUserNotificationCenter.defaultUserNotificationCenter()
-        if center is not None:  # Only works when run from app bundle.
-            return center.deliverNotification_(notification)
+    class InterruptionLevel(enum.Enum):
+        """Urgency of a notification."""
+
+        PASSIVE = 0
+        ACTIVE = 1
+        TIME_SENSITIVE = 2
+        CRITICAL = 3  # Only available to special apps
+
+    class NotificationDelegate(NSObject, protocols=[UNUserNotificationCenterDelegate]):
+        """
+        https://developer.apple.com/documentation/usernotifications/unusernotificationcenterdelegate?language=objc
+        """
+
+        def __init__(self, open_settings_slot, action_slot):
+            self.open_settings_slot = open_settings_slot
+            self.action_slot = action_slot
+
+        def userNotificationCenter_openSettingsForNotification_(self, center, notification):
+            self.open_settings_slot(notification)
+
+        def userNotificationCenter_didReceiveNotificationResponse_withCompletionHandler_(
+            self, center, response, completionHandler
+        ):
+            self.action_slot(response)
+            completionHandler()
+
+        def userNotificationCenter_willPresentNotification_withCompletionHandle_(
+            self, center, notification, completionHandler
+        ):
+            # UNNotificationPresentationOptionAlert is deprecated in favor of
+            # UNNotificationPresentationOptionBanner since MacOS 11+
+            completionHandler(UNNotificationPresentationOptions.UNNotificationPresentationOptionAlert)
+
+    class DarwinNotifications(VortaNotifications):
+        """
+        Notify via notification center and pyobjc bridge.
+
+        https://developer.apple.com/documentation/usernotifications?language=occ
+        """
+
+        INTERRUPTION = {
+            "info": InterruptionLevel.ACTIVE,
+            "error": InterruptionLevel.TIME_SENSITIVE,
+        }
+
+        def __init__(self):
+            self.notifications: Dict[str, ActionSlot] = {}
+            self.app: application.VortaApp = QApplication.instance()
+
+            self.center = UNUserNotificationCenter.currentNotificationCenter()
+            self.center.setDelegate_(NotificationDelegate(self._receive_response, self._open_settings))
+
+            # request silent permission
+            self.center.requestAuthorizationWithOptions_completionHandler_(
+                [
+                    UNAuthorizationOptions.UNAuthorizationOptionProvisional,
+                    UNAuthorizationOptions.UNAuthorizationOptionAlert,
+                    UNAuthorizationOptions.UNAuthorizationOptionSound,
+                    UNAuthorizationOptions.UNAuthorizationOptionProvidesAppNotificationSettings,
+                ],
+                self._process_authorization,
+            )
+
+            # declare notfications types and register actions
+            # PASS actions are not implemented
+
+        def _process_authorization(self, granted: bool, error):
+            if not granted:
+                error_description = error.localizedDescription()
+                self.logger.error(f"Couldn't authorize notifications because of {error_description}")
+
+        def _process_request(self, error):
+            error_description = error.localizedDescription()
+            self.logger.warning(f"Couldn't request notification because of {error_description}")
+
+        def _receive_response(self, response):
+            notification_id = response.notification().request().identifier()
+            action = response.actionIdentifier()
+
+            if action == UNNotificationResponse.UNNotificationDefaultActionIdentifier:
+                # default action when clicking on the notification
+                logger.debug(f"Default action of {notification_id} invoked.")
+                if notification_id in self.notifications:
+                    slot = self.notifications[notification_id]
+                    slot(notification_id, "default")
+            else:
+                # Other actions aren't supported yet.
+                pass
+
+        def _open_settings(self, notification):
+            self.app.open_main_window_action()
+            self.app.main_window.open_misc_tab()
+
+        def _request(
+            self,
+            title: str,
+            body: str,
+            level: InterruptionLevel = InterruptionLevel.ACTIVE,
+            slot: Optional[ActionSlot] = None,
+        ) -> Identifier:
+
+            logger.debug("Send MacOS notification with" + f" title={title}, body={body}, level={level}.")
+
+            # prepare arguments
+            if level == InterruptionLevel.PASSIVE:
+                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelPassive
+            elif level == InterruptionLevel.ACTIVE:
+                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
+            else:
+                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
+
+            # create and post notification
+            content = UNMutableNotificationContent.alloc().init()
+            content.setTile_(title)
+            content.setBody_(body)
+            content.setSound_(UNNotificationSound.defaultSound())
+            content.setInterruptionLevel_(interruption)
+
+            trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval_repeats_(1, False)
+
+            notification_id = NSUUID.UUID().uuidString()
+            request = UNNotificationRequest.requestWithIdentifier_content_trigger_(notification_id, content, trigger)
+
+            self.center.addNotificationRequest_withCompletionHandler_(request, self._process_request)
+
+            if slot:
+                self.notifications[notification_id] = slot
+            elif notification_id in self.notifications:
+                del self.notifications[notification_id]
+
+            return notification_id
+
+        def cancel(self, notification_id: Identifier):
+            self.center.removePendingNotificationRequestsWithIdentifiers_([notification_id])
+            self.center.removeDeliveredNotificationsWithIdentifiers_([notification_id])
+
+            self.notifications.pop(notification_id, None)
+
+        def deliver(self, title, text, level="info", slot=None):
+            if self.notifications_suppressed(level):
+                return
+
+            return self._request(title, text, level=self.INTERRUPTION[level], slot=slot)
 
 
 # ---- DBus notifications ----------------------------------------------------
-
-ActionSlot = Callable[[int, str], Any]
 
 
 class Urgency(enum.Enum):
@@ -148,7 +323,7 @@ class DBusNotifications(QObject, VortaNotifications):
     INTERFACE = "org.freedesktop.Notifications"
 
     # notification specifics
-    URGENCY = {'info': Urgency.NORMAL, 'error': Urgency.CRITICAL}
+    URGENCY = {"info": Urgency.NORMAL, "error": Urgency.CRITICAL}
     APP_NAME = "Vorta"  # human readable name
     APP_IDENTIFIER = "com.borgbase.Vorta"  # name of the .desktop file
 
@@ -163,21 +338,28 @@ class DBusNotifications(QObject, VortaNotifications):
         self.notifications: Dict[Dict[str, ActionSlot]] = {}
 
         # retrieve server capabilities
-        bus = QDBusConnection.sessionBus()
-        notifications = QDBusInterface(self.SERVICE, self.PATH, self.INTERFACE, bus, self)
-        if notifications.isValid():
-            reply = notifications.call(QDBus.AutoDetect, "GetCapabilities")
+        self.bus = QDBusConnection.sessionBus()
+        self.interface = QDBusInterface(self.SERVICE, self.PATH, self.INTERFACE, self.bus, self)
+        if self.interface.isValid():
+            reply = self.interface.call(QDBus.AutoDetect, "GetCapabilities")
             if reply.errorName():
                 logger.warning("Requesting server capabilities failed" + f" because of {reply.errorMessage()}")
             else:
                 self.flags = set(reply.arguments()[0])
-                logger.debug("DBus Notification server capabilites: " + ', '.join(self.flags))
+                logger.debug("DBus Notification server capabilites: " + ", ".join(self.flags))
         else:
             logger.warning("{} is not a valid dbus interface.".format(self.INTERFACE))
 
         # connect to dbus signals
-        bus.connect('', '', self.INTERFACE, "NotificationClosed", 'uu', self._notification_closed)
-        bus.connect('', '', self.INTERFACE, "ActionInvoked", 'us', self._action_invoked)
+        self.bus.connect(
+            "",
+            "",
+            self.INTERFACE,
+            "NotificationClosed",
+            "uu",
+            self._notification_closed,
+        )
+        self.bus.connect("", "", self.INTERFACE, "ActionInvoked", "us", self._action_invoked)
 
     @pyqtSlot(QDBusMessage)
     def _notification_closed(self, msg: QDBusMessage):
@@ -214,12 +396,12 @@ class DBusNotifications(QObject, VortaNotifications):
         summary: str,
         body: str,
         urgency: Urgency = Urgency.NORMAL,
-        category: str = '',
+        category: str = "",
         actions: Sequence[Action] = [],
-        label: str = '',
+        label: str = "",
         slot: Optional[ActionSlot] = None,
         replace_id: int = 0,
-    ):
+    ) -> int:
         """
         Send a notification over the freedesktop dbus interface.
 
@@ -258,11 +440,11 @@ class DBusNotifications(QObject, VortaNotifications):
         notification_id = replace_id
         icon = self.APP_IDENTIFIER
         hints = {
-            'urgency': urgency.value,
-            'desktop-entry': self.APP_IDENTIFIER,
-            'action-icons': True,
-            'category': category,
-            'image-path': PurePath(get_asset("icons/icon.svg")).as_uri(),
+            "urgency": urgency.value,
+            "desktop-entry": self.APP_IDENTIFIER,
+            "action-icons": True,
+            "category": category,
+            "image-path": PurePath(get_asset("icons/icon.svg")).as_uri(),
         }
         time = -1  # unset
 
@@ -270,7 +452,7 @@ class DBusNotifications(QObject, VortaNotifications):
         if len(actions) > 3:
             logger.warning("To many actions for a notification.")
 
-        action_list: List[str] = ['default', label] if label or slot else []
+        action_list: List[str] = ["default", label] if label or slot else []
         for i, action in enumerate(actions):
             if not action.key:
                 action.key = str(i)
@@ -283,13 +465,11 @@ class DBusNotifications(QObject, VortaNotifications):
             body = QTextDocument(body).toPlainText()
 
         # send notification
-        bus = QDBusConnection.sessionBus()
-        notify = QDBusInterface(self.SERVICE, self.PATH, self.INTERFACE, bus)
-        if not notify.isValid():
+        if not self.interface.isValid():
             logger.warning("Invalid dbus interface")
             return
 
-        reply = notify.call(
+        reply = self.interface.call(
             QDBus.CallMode.AutoDetect,  # autodetect reply
             "Notify",  # method
             app_name,
@@ -304,13 +484,13 @@ class DBusNotifications(QObject, VortaNotifications):
 
         if reply.errorName():
             logger.warning(reply.errorMessage())
-            return
+            return 0
 
         # save 'slots'
         notification_id = reply.arguments()[0]
         slots = self.notifications[notification_id] = {}  # replace slots
         if slot:
-            slots['default'] = slot
+            slots["default"] = slot
         for action in actions:
             if action.slot:
                 slots[action.key] = action.slot
@@ -320,15 +500,17 @@ class DBusNotifications(QObject, VortaNotifications):
     @pyqtSlot(int)
     def cancel(self, notification_id: int):
         """Close the notification with the given id."""
-        notification_id = QVariant(notification_id)
-        notification_id.convert(QMetaType.Type.UInt)
+        notification_id = qt_type(notification_id, QMetaType.Type.UInt)
 
-        bus = QDBusConnection.sessionBus()
-        notify = QDBusInterface(self.SERVICE, self.PATH, self.INTERFACE, bus)
-        notify.call(QDBus.CallMode.AutoDetect, "CloseNotification", notification_id)
+        self.interface.call(QDBus.CallMode.AutoDetect, "CloseNotification", notification_id)
 
-    def deliver(self, title, text, level='info') -> int:
+    def deliver(self, title, text, level="info") -> int:
         if self.notifications_suppressed(level):
             return -1
 
-        return self._notify(title, text, urgency=self.URGENCY[level])
+        return self._notify(
+            title,
+            text,
+            urgency=self.URGENCY[level],
+            slot=lambda *args: QApplication.instance().open_main_window_action(),
+        )
