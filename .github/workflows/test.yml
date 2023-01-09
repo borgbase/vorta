@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.8
-      uses: actions/setup-python@d09bd5e6005b175076f227b13d9730d56e9dcfcb # v4.0.0
+      uses: actions/setup-python@2c3dd9e7e29afd70cc0950079bde6c979d1f69f9 # v4.3.1
       with:
         python-version: 3.8
     - name: Install Vorta
@@ -45,14 +45,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@d09bd5e6005b175076f227b13d9730d56e9dcfcb # v4.0.0
+      uses: actions/setup-python@2c3dd9e7e29afd70cc0950079bde6c979d1f69f9 # v4.3.1
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Get pip cache dir
       id: pip-cache
       run: |
-        echo "name=dir::$(pip cache dir)" >> $GITHUB_OUTPUT
+        echo "dir::$(pip cache dir)" >> $GITHUB_OUTPUT
     - name: pip cache
       uses: actions/cache@v2
       with:
