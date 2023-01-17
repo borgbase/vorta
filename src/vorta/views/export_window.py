@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import BackupProfileModel  # noqa: F401
 from vorta.utils import get_asset
-from ..notifications import VortaNotifications
 from ..profile_export import ProfileExport
 
 uifile_import = get_asset('UI/exportwindow.ui')
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class ExportWindow(ExportWindowBase, ExportWindowUI):
-    def __init__(self, profile):
+    def __init__(self, profile, app):
         """
         @type profile: BackupProfileModel
         """
@@ -25,6 +24,8 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
         self.profile = profile
         self.setupUi(self)
         self.setWindowTitle(self.tr("Export Profile"))
+        self.app = app
+
         self.buttonBox.accepted.connect(self.run)
         self.buttonBox.rejected.connect(self.reject)
 
@@ -66,8 +67,7 @@ class ExportWindow(ExportWindowBase, ExportWindowUI):
             )
             return False
         else:
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
+            self.app.notifier.deliver(
                 self.tr('Profile export successful!'),
                 self.tr('Profile export written to {}.').format(filename),
                 level='info',

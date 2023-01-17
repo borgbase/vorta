@@ -13,7 +13,6 @@ from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
-from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
 
 logger = logging.getLogger(__name__)
@@ -388,7 +387,6 @@ class VortaScheduler(QtCore.QObject):
         return ScheduleStatus(job['type'], time=job.get('dt'))
 
     def create_backup(self, profile_id):
-        notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
         if profile is None:
@@ -403,7 +401,7 @@ class VortaScheduler(QtCore.QObject):
 
         with self.lock:
             logger.info('Starting background backup for %s', profile.name)
-            notifier.deliver(
+            self.app.notifier.deliver(
                 self.tr('Vorta Backup'),
                 self.tr('Starting background backup for %s.') % profile.name,
                 level='info',
@@ -418,20 +416,15 @@ class VortaScheduler(QtCore.QObject):
             else:
                 logger.error('Conditions for backup not met. Aborting.')
                 logger.error(msg['message'])
-                notifier.deliver(
-                    self.tr('Vorta Backup'),
-                    translate('messages', msg['message']),
-                    level='error',
-                )
+                self.app.notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
                 self.pause(profile_id)
 
     def notify(self, result):
-        notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
         profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
-            notifier.deliver(
+            self.app.notifier.deliver(
                 self.tr('Vorta Backup'),
                 self.tr('Backup successful for %s.') % profile_name,
                 level='info',
@@ -442,7 +435,7 @@ class VortaScheduler(QtCore.QObject):
 
             self.post_backup_tasks(profile_id)
         else:
-            notifier.deliver(
+            self.app.notifier.deliver(
                 self.tr('Vorta Backup'),
                 self.tr('Error during backup creation.'),
                 level='error',

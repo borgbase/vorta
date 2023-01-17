@@ -57,6 +57,7 @@ class VortaApp(QtSingleApplication):
 
         init_translations(self)
 
+        self.notifier = VortaNotifications.pick()
         self.setQuitOnLastWindowClosed(False)
         self.jobs_manager = JobsManager()
         self.scheduler = VortaScheduler()
@@ -112,12 +113,7 @@ class VortaApp(QtSingleApplication):
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             self.jobs_manager.add_job(job)
         else:
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
-                self.tr('Vorta Backup'),
-                translate('messages', msg['message']),
-                level='error',
-            )
+            self.notifier.deliver(self.tr('Vorta Backup'), translate('messages', msg['message']), level='error')
             self.backup_progress_event.emit(translate('messages', msg['message']))
             return None
 
@@ -279,8 +275,7 @@ class VortaApp(QtSingleApplication):
                 )
                 return
             bootstrap_file.unlink()
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
+            self.notifier.deliver(
                 self.tr('Profile import successful!'),
                 self.tr('Profile {} imported.').format(profile.name),
                 level='info',
