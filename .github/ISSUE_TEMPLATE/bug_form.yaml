@@ -15,7 +15,7 @@ body:
     attributes:
       label: Description
       description: |
-        Please decribe your issue and its context in a clear and concise way. Please try to reproduce the issue and provide the steps to reproduce it.
+        Please describe your issue and its context in a clear and concise way. Please try to reproduce the issue and provide the steps to reproduce it.
         Wrap error messages in triple backticks.
       placeholder: |
         I encountered a bug.
