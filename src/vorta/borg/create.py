@@ -77,7 +77,18 @@ class BorgCreateJob(BorgJob):
             ret['ok'] = False  # Set back to False, so we can do our own checks here.
 
         n_backup_folders = SourceFileModel.select().count()
-        if n_backup_folders == 0:
+
+        # cmd options like `--paths-from-command` require a command
+        # that is appended to the arguments
+        # $ borg create --paths-from-command repo::archive1 -- find /home/user -type f -size -76M
+        extra_cmd_options = []
+        suffix_command = []
+        if profile.repo.create_backup_cmd:
+            s1, sep, s2 = profile.repo.create_backup_cmd.partition('-- ')
+            extra_cmd_options = s1.split()
+            suffix_command = (sep + s2).split()
+
+        if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
 
@@ -132,9 +143,7 @@ class BorgCreateJob(BorgJob):
             '-C',
             profile.compression,
         ]
-
-        if profile.repo.create_backup_cmd:
-            cmd.extend(profile.repo.create_backup_cmd.split(' '))
+        cmd += extra_cmd_options
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
@@ -163,6 +172,8 @@ class BorgCreateJob(BorgJob):
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)
+
+        cmd += suffix_command
 
         ret['message'] = trans_late('messages', 'Starting backup…')
         ret['ok'] = True
