@@ -56,5 +56,13 @@ flatpak-install: translations-to-qm
 	install -D package/icon-symbolic.svg ${FLATPAK_DEST}/share/icons/hicolor/symbolic/apps/com.borgbase.Vorta-symbolic.svg
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop ${FLATPAK_DEST}/share/applications/com.borgbase.Vorta.desktop
 
+lint:
+	flake8
+	isort --check-only .
+	black --check .
+
+test:
+	pytest --cov=vorta
+
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
