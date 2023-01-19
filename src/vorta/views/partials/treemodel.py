@@ -162,15 +162,22 @@ class FileSystemItem(Generic[T]):
         """
         if isinstance(child_subpath_index, FileSystemItem):
             child = child_subpath_index
+            if not child.subpath:
+                raise ValueError("Child without subpath")
+
             i = bisect.bisect_left(self.children, child)
             if i < len(self.children) and self.children[i] == child:
                 del self.children[i]
+            else:
+                raise ValueError("Child not found")
 
         elif isinstance(child_subpath_index, str):
             subpath = child_subpath_index
             i = bisect.bisect_left(self.children, subpath)
             if i < len(self.children) and self.children[i].subpath == subpath:
                 del self.children[i]
+            else:
+                raise ValueError("Child not found")
 
         elif isinstance(child_subpath_index, int):
             i = child_subpath_index
@@ -239,7 +246,7 @@ class FileSystemItem(Generic[T]):
             i, item = res
             return item
 
-        fsi = reduce(walk, path, self)
+        fsi = reduce(walk, path, self)  # handles empty path -> returns self
         return fsi
 
     def __repr__(self):
@@ -351,13 +358,16 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         item : FileSystemItemLike
             The item.
         """
-        self.beginResetModel()
-
         path = item[0]
         data = item[1]
 
         if isinstance(path, PurePath):
             path = path.parts
+
+        if not path:
+            return  # empty path (e.g. `.`) can't be added
+
+        self.beginResetModel()
 
         def child(tup, subpath):
             fsi, i = tup
@@ -594,7 +604,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         if isinstance(path, PurePath):
             path = path.parts
 
-        return self.root.get_path(path)
+        return self.root.get_path(path)  # handels empty path
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
@@ -688,6 +698,9 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         """
         if isinstance(path, PurePath):
             path = path.parts
+
+        if not path:
+            return QModelIndex()  # empty path won't ever be in the model
 
         # flat mode
         if self.mode == self.DisplayMode.FLAT:
@@ -889,7 +902,15 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         super().__init__(parent)
         self.folders_on_top = False
 
-    def keepFoldersOnTop(self, value: bool = None) -> bool:
+    @overload
+    def keepFoldersOnTop(self) -> bool:
+        ...
+
+    @overload
+    def keepFoldersOnTop(self, value: bool) -> bool:
+        ...
+
+    def keepFoldersOnTop(self, value=None) -> bool:
         """
         Set or get whether folders are kept on top when sorting.
 
