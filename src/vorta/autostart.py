@@ -17,11 +17,14 @@ def open_app_at_startup(enabled=True):
 
         # CF = CDLL(find_library('CoreFoundation'))
         from LaunchServices import (
+            LSSharedFileListCopySnapshot,
             LSSharedFileListCreate,
             LSSharedFileListInsertItemURL,
             LSSharedFileListItemRemove,
+            LSSharedFileListItemResolve,
             kLSSharedFileListItemHidden,
             kLSSharedFileListItemLast,
+            kLSSharedFileListNoUserInteraction,
             kLSSharedFileListSessionLoginItems,
         )
 
@@ -30,9 +33,17 @@ def open_app_at_startup(enabled=True):
         login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
         props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
 
-        new_item = LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast, None, None, url, props, None)
-        if not enabled:
-            LSSharedFileListItemRemove(login_items, new_item)
+        if enabled:
+            LSSharedFileListInsertItemURL(login_items, kLSSharedFileListItemLast, None, None, url, props, None)
+        else:
+            # From https://github.com/pudquick/pyLoginItems/blob/master/pyLoginItems.py
+            list_ref = LSSharedFileListCreate(None, kLSSharedFileListSessionLoginItems, None)
+            login_items, _ = LSSharedFileListCopySnapshot(list_ref, None)
+            flags = kLSSharedFileListNoUserInteraction + kLSSharedFileListNoUserInteraction
+            for i in login_items:
+                err, a_CFURL, a_FSRef = LSSharedFileListItemResolve(i, flags, None, None)
+                if 'Vorta.app' in str(a_CFURL):
+                    LSSharedFileListItemRemove(list_ref, i)
 
     elif sys.platform.startswith('linux'):
         from pathlib import Path
