@@ -52,7 +52,7 @@ class BorgListRepoJob(BorgJob):
                     repo=repo.id,
                     defaults={
                         'name': archive['name'],
-                        'time': dt.fromisoformat(archive['time']),
+                        'time': dt.fromisoformat(archive['time']).replace(tzinfo=None),
                     },
                 )
                 new_archive.save()
