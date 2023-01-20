@@ -168,7 +168,11 @@ class BorgCreateJob(BorgJob):
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
-        cmd.append(f"{profile.repo.url}::{new_archive_name}")
+
+        if borg_compat.check('V2'):
+            cmd += ["-r", profile.repo.url, new_archive_name]
+        else:
+            cmd.append(f"{profile.repo.url}::{new_archive_name}")
 
         for f in SourceFileModel.select().where(SourceFileModel.profile == profile.id):
             cmd.append(f.dir)

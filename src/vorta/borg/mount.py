@@ -1,5 +1,6 @@
 import os
 from vorta.store.models import SettingsModel
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -23,7 +24,10 @@ class BorgMountJob(BorgJob):
         if override_mount_permissions:
             cmd += ['-o', f"umask=0277,uid={os.getuid()}"]
 
-        cmd += [f"{profile.repo.url}"]
+        if borg_compat.check('V2'):
+            cmd.extend(["-r", profile.repo.url])
+        else:
+            cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd
