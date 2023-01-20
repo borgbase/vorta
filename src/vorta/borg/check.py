@@ -1,4 +1,5 @@
 from typing import Any, Dict
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -33,7 +34,10 @@ class BorgCheckJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'check', '--info', '--log-json', '--progress']
-        cmd.append(f'{profile.repo.url}')
+        if borg_compat.check('V2'):
+            cmd = cmd + ["-r", profile.repo.url]
+        else:
+            cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd
