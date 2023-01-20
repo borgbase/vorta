@@ -1,4 +1,5 @@
 from vorta.store.models import ArchiveModel, RepoModel
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -19,13 +20,11 @@ class BorgInfoArchiveJob(BorgJob):
             return ret
 
         ret['ok'] = True
-        ret['cmd'] = [
-            'borg',
-            'info',
-            '--log-json',
-            '--json',
-            f'{profile.repo.url}::{archive_name}',
-        ]
+        ret['cmd'] = ['borg', 'info', '--log-json', '--json']
+        if borg_compat.check('V2'):
+            ret['cmd'].extend(["-r", profile.repo.url, '-a', archive_name])
+        else:
+            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
         ret['archive_name'] = archive_name
 
         return ret
@@ -52,7 +51,6 @@ class BorgInfoArchiveJob(BorgJob):
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
-                repo.unique_csize = stats['unique_csize']
                 repo.unique_size = stats['unique_size']
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()

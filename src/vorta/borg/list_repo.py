@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 from vorta.store.models import ArchiveModel, RepoModel
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -21,7 +22,10 @@ class BorgListRepoJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', 'list', '--info', '--log-json', '--json']
+        if borg_compat.check('V2'):
+            cmd = ['borg', 'rlist', '--info', '--log-json', '--json', '-r']
+        else:
+            cmd = ['borg', 'list', '--info', '--log-json', '--json']
         cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True

@@ -1,4 +1,5 @@
 from vorta.store.models import ArchiveModel, RepoModel
+from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
 
@@ -15,7 +16,10 @@ class BorgRenameJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'rename', '--info', '--log-json']
-        cmd.append(f'{profile.repo.url}')
+        if borg_compat.check('V2'):
+            cmd.extend(["-r", profile.repo.url])
+        else:
+            cmd.append(f'{profile.repo.url}')
 
         ret['ok'] = True
         ret['cmd'] = cmd
