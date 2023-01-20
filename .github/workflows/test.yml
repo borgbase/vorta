@@ -24,10 +24,7 @@ jobs:
         pip install .
         pip install -r requirements.d/dev.txt
     - name: Test formatting with Flake8, isort and Black
-      run: |
-        flake8
-        isort --check-only .
-        black --check .
+      run: make lint
     # - name: Run PyLint (info only)
     #   run: pylint --rcfile=setup.cfg src --exit-zero
 
@@ -85,11 +82,10 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                 -a dbus-run-session -- pytest --cov=vorta
+                 -a dbus-run-session -- make test
     - name: Test with pytest (macOS)
       if: runner.os == 'macOS'
-      run: |
-        pytest --cov=vorta
+      run: make test
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
