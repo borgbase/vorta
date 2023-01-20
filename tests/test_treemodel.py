@@ -41,6 +41,11 @@ class TestFileSystemItem:
             # may not add a child with the same subpath
             item.add(child)
 
+        # not implemented due to performance reasons:
+        # child = FileSystemItem((), 8)
+        # with pytest.raises(ValueError):
+        #     item.add(child)  # may not add a child with an empty path
+
     def test_remove(self):
         item = FileSystemItem(PurePath('test').parts, 0)
         child1 = FileSystemItem(PurePath('test/a').parts, 4)
@@ -62,6 +67,14 @@ class TestFileSystemItem:
         item.remove(child3)
         assert len(item.children) == 1
         assert child3 not in item.children
+
+        # test remove item not present
+        child = FileSystemItem(PurePath('notpresent').parts, 2)
+        with pytest.raises(ValueError):
+            item.remove(child)
+        child = FileSystemItem((), 2)
+        with pytest.raises(ValueError):
+            item.remove(child)
 
     def test_get(self):
         item = FileSystemItem(PurePath('test').parts, 0)
@@ -104,6 +117,9 @@ class TestFileSystemItem:
 
         assert item.get_path(PurePath('a/aa').parts) is child11
         assert item.get_path(('b',)) is child2
+
+        # test get empty path
+        assert item.get_path(()) is item
 
 
 class TestFileTreeModel:
@@ -169,6 +185,16 @@ class TestFileTreeModel:
         assert model.getItem(PurePath('/hello/test')) is None
         item3 = model.getItem(PurePath('/hello'))
         assert len(item3.children) == 0
+
+    def test_empty_path(self):
+        model = TreeModelImp()
+        assert model.rowCount() == 0
+
+        model.addItem(((), None))
+        assert model.rowCount() == 0
+
+        model.addItem((PurePath('.'), None))
+        assert model.rowCount() == 0
 
     def test_root(self):
         model = TreeModelImp()
