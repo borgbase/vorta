@@ -13,9 +13,10 @@ class TrayMenu(QSystemTrayIcon):
         menu = QMenu()
 
         # Workaround to get `activated` signal on Unity: https://stackoverflow.com/a/43683895/3983708
-        menu.aboutToShow.connect(self.on_user_click)
+        menu.aboutToShow.connect(self.build_menu)
 
         self.setContextMenu(menu)
+        self.build_menu()
 
         self.activated.connect(self.on_activation)
         self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
@@ -35,7 +36,7 @@ class TrayMenu(QSystemTrayIcon):
         ] and os.environ.get('XDG_CURRENT_DESKTOP'):
             self.app.toggle_main_window_visibility()
 
-    def on_user_click(self):
+    def build_menu(self):
         """Build system tray menu based on current state."""
 
         menu = self.contextMenu()
