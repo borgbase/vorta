@@ -3,7 +3,7 @@ from pathlib import Path
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QFontMetrics, QKeySequence
-from PyQt5.QtWidgets import QCheckBox, QFileDialog, QMenu, QMessageBox, QShortcut, QToolTip
+from PyQt5.QtWidgets import QApplication, QCheckBox, QFileDialog, QMenu, QMessageBox, QShortcut, QToolTip
 from vorta.profile_export import ImportFailedException, ProfileExport
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, get_network_status_monitor, is_system_tray_available
@@ -100,6 +100,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.createStartBtn.setEnabled(False)
             self.createStartBtn.start()
             self.cancelButton.setEnabled(True)
+
+        # Connect to palette change
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
 
         self.set_icons()
 

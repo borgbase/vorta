@@ -85,6 +85,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
+        # Connect to palette change
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+
         # Populate
         self.populate_from_profile()
         self.set_icons()
