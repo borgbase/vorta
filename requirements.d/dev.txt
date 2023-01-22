@@ -11,6 +11,5 @@ pytest-faulthandler
 pytest-mock
 pytest-qt
 tox
-transifex-client
 twine
 wheel
