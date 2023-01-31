@@ -611,42 +611,42 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="238"/>
         <source>Keep</source>
-        <translation>Mantieni</translation>
+        <translation>Mantieni </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="262"/>
         <source>Use -1 for unlimited.</source>
-        <translation>Usa -1 per illimitato</translation>
+        <translation>Usa -1 per illimitati.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="255"/>
         <source> hourly, </source>
-        <translation>orario.</translation>
+        <translation> orari, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="272"/>
         <source> daily, </source>
-        <translation>giornaliero.</translation>
+        <translation> giornalieri, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="286"/>
         <source> weekly, </source>
-        <translation>settimanale.</translation>
+        <translation> settimanali, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="300"/>
         <source> monthly and</source>
-        <translation>mensile e</translation>
+        <translation> mensili e </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="314"/>
         <source> annual archives</source>
-        <translation>archivi annuali</translation>
+        <translation> archivi annuali</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="341"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Non importa ma mantieni tutti gli archivi di almeno:</translation>
+        <translation>Nonostante le regole precedenti, mantieni tutti gli archivi degli ultimi:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="351"/>
