@@ -621,7 +621,7 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="255"/>
         <source> hourly, </source>
-        <translation> orari, </translation>
+        <translation> archivi orari, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="272"/>
@@ -641,7 +641,7 @@
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="314"/>
         <source> annual archives</source>
-        <translation> archivi annuali</translation>
+        <translation> annuali</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archivetab.ui" line="341"/>
