@@ -1,4 +1,4 @@
-black
+black<23.0
 coverage
 flake8
 isort
