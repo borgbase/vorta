@@ -47,8 +47,10 @@ class BorgPruneJob(BorgJob):
         if profile.prune_prefix:
             formatted_prune_prefix = format_archive_name(profile, profile.prune_prefix)
 
-            if borg_compat.check('V122'):
-                pruning_opts += ['-a', 'sh:' + formatted_prune_prefix + '*']
+            if borg_compat.check('V2'):
+                pruning_opts += ['-a', f"sh:{formatted_prune_prefix}*"]
+            elif borg_compat.check('V122'):
+                pruning_opts += ['-a', f"{formatted_prune_prefix}*"]
             else:
                 pruning_opts += ['--prefix', formatted_prune_prefix]
 
