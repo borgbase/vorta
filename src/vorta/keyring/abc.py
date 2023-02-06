@@ -27,7 +27,7 @@ class VortaKeyring:
                 logger.debug(e)
                 continue
 
-        for keyring, _ in sorted(available_keyrings, key=lambda k: k[1], reverse=True):
+        for keyring, _ in sorted(available_keyrings,  reverse=True):
             try:
                 instance = keyring()
                 logger.debug(f"Using {keyring.__name__}")
