@@ -222,6 +222,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bDiff,
             self.fArchiveActions,
             self.bMountRepo,
+            self.bRefreshArchive,
+            self.bMountArchive,
+            self.bExtract,
+            self.bRename,
+            self.bDelete,
+            self.compactButton,
         ]:
             button.setEnabled(enabled)
             button.repaint()
