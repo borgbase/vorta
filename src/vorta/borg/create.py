@@ -136,7 +136,6 @@ class BorgCreateJob(BorgJob):
             'borg',
             'create',
             '--list',
-            '--progress',
             '--info',
             '--log-json',
             '--json',

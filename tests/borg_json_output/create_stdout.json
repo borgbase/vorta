@@ -4,7 +4,6 @@
       "/Users/manu/.pyenv/versions/3.7.1/bin/borg",
       "create",
       "--list",
-      "--progress",
       "--info",
       "--log-json",
       "--json",
