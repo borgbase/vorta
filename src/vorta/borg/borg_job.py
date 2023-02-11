@@ -214,6 +214,12 @@ class BorgJob(JobInterface, BackupProfileMixin):
             bundled_borg = os.path.join(mainBundle.bundlePath(), 'Contents', 'Resources', 'borg-dir', 'borg.exe')
             if os.path.isfile(bundled_borg):
                 return bundled_borg
+        elif sys.platform == 'win32':
+            # Windows: Look in pyinstaller temporary directory
+            if hasattr(sys, '_MEIPASS'):
+                bundled_borg = os.path.join(sys._MEIPASS, 'borg-dir', 'borg.exe')
+                if os.path.isfile(bundled_borg):
+                    return bundled_borg
         return None
 
     def run(self):
