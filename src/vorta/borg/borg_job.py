@@ -9,7 +9,7 @@ import sys
 import time
 from collections import namedtuple
 from datetime import datetime as dt
-from subprocess import PIPE, Popen, TimeoutExpired
+from subprocess import PIPE, Popen, TimeoutExpired, CREATE_NO_WINDOW
 from threading import Lock
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
@@ -242,14 +242,16 @@ class BorgJob(JobInterface, BackupProfileMixin):
             env=self.env,
             cwd=self.cwd,
             start_new_session=True,
+            creationflags=CREATE_NO_WINDOW,
         )
         error_messages = []  # List of error messages included in the result
 
         self.process = p
 
         # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
-        os.set_blocking(p.stdout.fileno(), False)
-        os.set_blocking(p.stderr.fileno(), False)
+        if sys.platform != "win32":
+            os.set_blocking(p.stdout.fileno(), False)
+            os.set_blocking(p.stderr.fileno(), False)
 
         def read_async(fd):
             try:
@@ -260,7 +262,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
         stdout = []
         while True:
             # Wait for new output
-            select.select([p.stdout, p.stderr], [], [], 0.1)
+            if sys.platform != "win32":
+                select.select([p.stdout, p.stderr], [], [], 0.1)
 
             stdout.append(read_async(p.stdout))
             stderr = read_async(p.stderr)
