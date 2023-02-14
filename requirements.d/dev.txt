@@ -1,3 +1,4 @@
+pre-commit
 black==22.*
 coverage
 flake8

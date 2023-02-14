@@ -36,7 +36,9 @@
 - [ ] All new and existing tests passed.
 
 
-*I provide my contribution under the terms of the [license](./../../LICENSE.txt) of this repository and I affirm the Developer Certificate of Origin.*
+*I provide my contribution under the terms of the [license](./../../LICENSE.txt) of this repository and I affirm the [Developer Certificate of Origin][dco].*
+
+[dco]: https://developercertificate.org/
 
 <!--
 This template is sourced from the awesome https://github.com/TalAter/open-source-templates
