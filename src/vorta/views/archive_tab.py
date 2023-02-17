@@ -34,11 +34,11 @@ from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
     choose_file_dialog,
+    find_best_size_formatting,
     format_archive_name,
     get_asset,
     get_mount_points,
     pretty_bytes,
-    find_best_size_formatting,
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
