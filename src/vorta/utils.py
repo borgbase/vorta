@@ -240,7 +240,22 @@ def sort_sizes(size_list):
     return final_list
 
 
-def pretty_bytes(size, metric=True, sign=False, precision=1):
+def find_best_size_formatting(size_list, metric=True):
+    power, units = (
+        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
+        if metric
+        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
+    )
+    min_size = min(size_list)
+    # we tolerate a maximum precision of 1
+    n = 0
+    while abs(min_size / power**n > 0.1) and n + 1 < len(units):
+        n += 1
+    n = max(n - 1, 0)
+    return 1, units[n]
+
+
+def pretty_bytes(size, metric=True, sign=False, precision=1, fixed_unit=None):
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
@@ -249,10 +264,14 @@ def pretty_bytes(size, metric=True, sign=False, precision=1):
         if metric
         else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
     )
-    n = 0
-    while abs(round(size, precision)) >= power and n + 1 < len(units):
-        size /= power
-        n += 1
+    if fixed_unit is None:
+        n = 0
+        while abs(round(size, precision)) >= power and n + 1 < len(units):
+            size /= power
+            n += 1
+    else:
+        n = units.index(fixed_unit)
+        size /= power**n
     try:
         unit = units[n]
         return f'{prefix}{round(size, precision)} {unit}B'

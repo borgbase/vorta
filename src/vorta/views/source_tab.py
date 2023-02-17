@@ -21,6 +21,10 @@ class SourceColumn:
 
 
 class SizeItem(QTableWidgetItem):
+    def __init__(self, s):
+        super().__init__(s)
+        self.setTextAlignment(int('0x82', 16))
+
     def __lt__(self, other):
         if other.text() == '':
             return False
