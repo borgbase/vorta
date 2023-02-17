@@ -246,7 +246,7 @@ def find_best_size_formatting(size_list, metric=True):
         if metric
         else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
     )
-    min_size = min(size_list)
+    min_size = min(s for s in size_list if isinstance(s, int))
     # we tolerate a maximum precision of 1
     n = 0
     while abs(min_size / power**n > 0.1) and n + 1 < len(units):
