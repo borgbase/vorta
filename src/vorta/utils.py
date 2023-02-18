@@ -10,7 +10,7 @@ import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
-from typing import Any, Callable, Iterable, Tuple
+from typing import Any, Callable, Iterable, Tuple, TypeVar
 import psutil
 from paramiko import SSHException
 from paramiko.ecdsakey import ECDSAKey
@@ -241,16 +241,32 @@ def sort_sizes(size_list):
     return final_list
 
 
-def find_best_size_unit(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
+T = TypeVar("T")
+
+
+def clamp(n: T, min_: T, max_: T) -> T:
+    """Restrict the number n inside a range"""
+    return min(max_, max(n, min_))
+
+
+def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
     """
     Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
     representing the smallest size in the sizes iterable.
     """
-    power = 10**3 if metric else 2**10
     min_size = min((s for s in sizes if isinstance(s, int)), default=None)
-    if min_size is None:
+    return find_best_unit_for_size(min_size, metric=metric, precision=precision)
+
+
+def find_best_unit_for_size(size: int, metric: bool = True, precision: int = 1) -> int:
+    """
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    representing the passed size.
+    """
+    if not isinstance(size, int) or size == 0:  # this will also take care of the None case
         return 0
-    n = math.floor(math.log(min_size * 10**precision, power))
+    power = 10**3 if metric else 2**10
+    n = math.floor(math.log(size * 10**precision, power))
     return n
 
 
@@ -269,18 +285,17 @@ def pretty_bytes(size: int, metric: bool = True, sign: bool = False, precision: 
         else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
     )
     if fixed_unit is None:
-        n = 0
-        while abs(round(size, precision)) >= power and n + 1 < len(units):
-            size /= power
-            n += 1
+        n = find_best_unit_for_size(size, metric=metric, precision=precision)
     else:
         n = fixed_unit
-        size /= power**n
+    n = clamp(n, 0, len(units))
+    size /= power**n
     try:
         unit = units[n]
-        return f'{prefix}{round(size, precision)} {unit}B'
-    except KeyError as e:
-        logger.error(e)
+        digits = f'%.{precision}f' % (round(size, precision))
+        return f'{prefix}{digits} {unit}B'
+    except KeyError as error:
+        logger.error(error)
         return "NaN"
 
 

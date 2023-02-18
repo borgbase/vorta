@@ -34,7 +34,7 @@ from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
     choose_file_dialog,
-    find_best_size_unit,
+    find_best_unit_for_sizes,
     format_archive_name,
     get_asset,
     get_mount_points,
@@ -50,6 +50,8 @@ uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
+
+PRECISION = 1
 
 
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
@@ -238,6 +240,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
+        global PRECISION
         profile = self.profile()
         if profile.repo is not None:
             # get mount points
@@ -250,15 +253,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
-            precision = 1  # could be a setting
-            best_unit = find_best_size_unit((a.size for a in archives), precision=precision)
+            best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=PRECISION)
             for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
                 self.archiveTable.setItem(
-                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=precision))
+                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=PRECISION))
                 )
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
