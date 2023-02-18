@@ -27,7 +27,6 @@ def test_best_size_unit_precision1():
 
 
 def test_best_size_unit_empty():
-    MB = 1000000
     sizes = []
     unit = find_best_size_unit(sizes, metric=True, precision=1)
     assert unit == 0  # bytes
@@ -41,14 +40,12 @@ def test_best_size_unit_precision3():
 
 
 def test_best_size_unit_nonmetric1():
-    KB = 1024
     sizes = [102]
     unit = find_best_size_unit(sizes, metric=False, precision=1)
     assert unit == 0  # 102 < 0.1KB
 
 
 def test_best_size_unit_nonmetric2():
-    KB = 1024
     sizes = [103]
     unit = find_best_size_unit(sizes, metric=False, precision=1)
     assert unit == 1  # 103bytes == 0.1KB

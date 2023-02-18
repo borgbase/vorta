@@ -250,7 +250,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
-            precision=1 #could be a setting
+            precision = 1  # could be a setting
             best_unit = find_best_size_unit((a.size for a in archives), precision=precision)
             for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
