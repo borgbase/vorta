@@ -72,5 +72,10 @@ def test_pretty_bytes_nonmetric_fixed1():
 
 
 def test_pretty_bytes_metric_nonfixed2():
-    s = pretty_bytes(1000000, metric=True, precision=1, fixed_unit=2)
+    s = pretty_bytes(1000000, metric=True, precision=1)
     assert s == "1.0 MB"
+
+
+def test_pretty_bytes_metric_large():
+    s = pretty_bytes(10**30, metric=True, precision=1)
+    assert s == "1000000.0 YB"

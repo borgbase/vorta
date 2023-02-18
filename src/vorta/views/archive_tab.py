@@ -240,7 +240,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
-        global PRECISION
         profile = self.profile()
         if profile.repo is not None:
             # get mount points

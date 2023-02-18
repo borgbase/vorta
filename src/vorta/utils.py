@@ -227,7 +227,7 @@ def get_private_keys():
 def sort_sizes(size_list):
     """Sorts sizes with extensions. Assumes that size is already in largest unit possible"""
     final_list = []
-    for suffix in [" B", " KB", " MB", " GB", " TB"]:
+    for suffix in [" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]:
         sub_list = [
             float(size[: -len(suffix)])
             for size in size_list
@@ -288,7 +288,7 @@ def pretty_bytes(size: int, metric: bool = True, sign: bool = False, precision: 
         n = find_best_unit_for_size(size, metric=metric, precision=precision)
     else:
         n = fixed_unit
-    n = clamp(n, 0, len(units))
+    n = clamp(n, 0, len(units) - 1)
     size /= power**n
     try:
         unit = units[n]
