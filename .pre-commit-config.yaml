@@ -12,7 +12,7 @@ minimum_pre_commit_version: "1.15"
 repos:
   # general stuff
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       # check file system problems
       - id: check-case-conflict
@@ -30,14 +30,14 @@ repos:
 
   # format python files
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 22.12.0
     hooks:
       - id: black
         files: ^(src/vorta/|tests)
 
   # sort python imports
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
 
@@ -58,7 +58,7 @@ repos:
 
   # check pep8 conformity using flake8
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
       - id: flake8
 
