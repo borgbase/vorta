@@ -34,7 +34,7 @@ from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
     choose_file_dialog,
-    find_best_size_formatting,
+    find_best_size_unit,
     format_archive_name,
     get_asset,
     get_mount_points,
@@ -250,14 +250,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
-            best_precision, best_unit = find_best_size_formatting(a.size for a in archives)
+            precision=1 #could be a setting
+            best_unit = find_best_size_unit((a.size for a in archives), precision=precision)
             for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
                 self.archiveTable.setItem(
-                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=best_precision))
+                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=precision))
                 )
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))

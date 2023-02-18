@@ -2,6 +2,7 @@ import argparse
 import errno
 import fnmatch
 import getpass
+import math
 import os
 import platform
 import re
@@ -240,22 +241,25 @@ def sort_sizes(size_list):
     return final_list
 
 
-def find_best_size_formatting(size_list, metric=True):
-    power, units = (
-        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
-        if metric
-        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
-    )
-    min_size = min(s for s in size_list if isinstance(s, int))
-    # we tolerate a maximum precision of 1
-    n = 0
-    while abs(min_size / power**n > 0.1) and n + 1 < len(units):
-        n += 1
-    n = max(n - 1, 0)
-    return 1, units[n]
+def find_best_size_unit(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
+    """
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    representing the smallest size in the sizes iterable.
+    """
+    power = 10**3 if metric else 2**10
+    min_size = min((s for s in sizes if isinstance(s, int)), default=None)
+    if min_size is None:
+        return 0
+    n = math.floor(math.log(min_size * 10**precision, power))
+    return n
 
 
-def pretty_bytes(size, metric=True, sign=False, precision=1, fixed_unit=None):
+def pretty_bytes(size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: int = None) -> str:
+    """
+    Formats the size with the requested unit and precision. The find_best_size_unit function
+    can be used to find the correct unit for a list of sizes. If no fixed_unit is passed it will
+    find the biggest unit to represent the size
+    """
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
@@ -270,7 +274,7 @@ def pretty_bytes(size, metric=True, sign=False, precision=1, fixed_unit=None):
             size /= power
             n += 1
     else:
-        n = units.index(fixed_unit)
+        n = fixed_unit
         size /= power**n
     try:
         unit = units[n]
