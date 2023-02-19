@@ -270,7 +270,7 @@ def find_best_unit_for_size(size: int, metric: bool = True, precision: int = 1) 
     return n
 
 
-def pretty_bytes(size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: int = None) -> str:
+def pretty_bytes(size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: Optional[int] = None) -> str:
     """
     Formats the size with the requested unit and precision. The find_best_size_unit function
     can be used to find the correct unit for a list of sizes. If no fixed_unit is passed it will
