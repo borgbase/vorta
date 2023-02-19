@@ -88,15 +88,17 @@ if sys.platform == "darwin":
     import objc
     from Foundation import NSUUID, NSObject
     from UserNotifications import (
-        UNAuthorizationOptions,
         UNMutableNotificationContent,
-        UNNotificationInterruptionLevel,
         UNNotificationPresentationOptions,
         UNNotificationRequest,
         UNNotificationResponse,
         UNNotificationSound,
         UNTimeIntervalNotificationTrigger,
         UNUserNotificationCenter,
+        UNAuthorizationOptionProvisional,
+        UNNotificationInterruptionLevelTimeSensitive,
+        UNNotificationInterruptionLevelPassive,
+        UNNotificationInterruptionLevelActive
     )
 
     UNUserNotificationCenterDelegate = objc.protocolNamed("UNUserNotificationCenterDelegate")
@@ -113,18 +115,16 @@ if sys.platform == "darwin":
         """
         https://developer.apple.com/documentation/usernotifications/unusernotificationcenterdelegate?language=objc
         """
-
-        def __init__(self, open_settings_slot, action_slot):
-            self.open_settings_slot = open_settings_slot
-            self.action_slot = action_slot
-
         def userNotificationCenter_openSettingsForNotification_(self, center, notification):
-            self.open_settings_slot(notification)
+            # self.open_settings_slot(notification)
+            # TODO: put back action
+            pass
 
         def userNotificationCenter_didReceiveNotificationResponse_withCompletionHandler_(
             self, center, response, completionHandler
         ):
-            self.action_slot(response)
+            # self.action_slot(response)
+            # TODO: put back action
             completionHandler()
 
         def userNotificationCenter_willPresentNotification_withCompletionHandle_(
@@ -139,6 +139,7 @@ if sys.platform == "darwin":
         Notify via notification center and pyobjc bridge.
 
         https://developer.apple.com/documentation/usernotifications?language=occ
+        https://foss.heptapod.net/macos-apps/osx-presentation/-/blob/branch/default/presentation.py#L2189
         """
 
         INTERRUPTION = {
@@ -151,16 +152,12 @@ if sys.platform == "darwin":
             self.app: application.VortaApp = QApplication.instance()
 
             self.center = UNUserNotificationCenter.currentNotificationCenter()
-            self.center.setDelegate_(NotificationDelegate(self._receive_response, self._open_settings))
+            self.delegate = NotificationDelegate.alloc().init()
+            self.center.setDelegate_(self.delegate)
 
             # request silent permission
             self.center.requestAuthorizationWithOptions_completionHandler_(
-                [
-                    UNAuthorizationOptions.UNAuthorizationOptionProvisional,
-                    UNAuthorizationOptions.UNAuthorizationOptionAlert,
-                    UNAuthorizationOptions.UNAuthorizationOptionSound,
-                    UNAuthorizationOptions.UNAuthorizationOptionProvidesAppNotificationSettings,
-                ],
+                UNAuthorizationOptionProvisional,
                 self._process_authorization,
             )
 
@@ -169,12 +166,11 @@ if sys.platform == "darwin":
 
         def _process_authorization(self, granted: bool, error):
             if not granted:
-                error_description = error.localizedDescription()
-                self.logger.error(f"Couldn't authorize notifications because of {error_description}")
+                logger.error(f"Couldn't authorize notifications because of {error}")
 
         def _process_request(self, error):
-            error_description = error.localizedDescription()
-            self.logger.warning(f"Couldn't request notification because of {error_description}")
+            # logger.warning(f"Couldn't request notification because of {error}")
+            self._open_settings()
 
         def _receive_response(self, response):
             notification_id = response.notification().request().identifier()
@@ -190,7 +186,7 @@ if sys.platform == "darwin":
                 # Other actions aren't supported yet.
                 pass
 
-        def _open_settings(self, notification):
+        def _open_settings(self):
             self.app.open_main_window_action()
             self.app.main_window.open_misc_tab()
 
@@ -206,22 +202,22 @@ if sys.platform == "darwin":
 
             # prepare arguments
             if level == InterruptionLevel.PASSIVE:
-                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelPassive
+                interruption = UNNotificationInterruptionLevelPassive
             elif level == InterruptionLevel.ACTIVE:
-                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
+                interruption = UNNotificationInterruptionLevelActive
             else:
-                interruption = UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
+                interruption = UNNotificationInterruptionLevelTimeSensitive
 
             # create and post notification
             content = UNMutableNotificationContent.alloc().init()
-            content.setTile_(title)
+            content.setTitle_(title)
             content.setBody_(body)
             content.setSound_(UNNotificationSound.defaultSound())
             content.setInterruptionLevel_(interruption)
 
             trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval_repeats_(1, False)
 
-            notification_id = NSUUID.UUID().uuidString()
+            notification_id = str(NSUUID.UUID())
             request = UNNotificationRequest.requestWithIdentifier_content_trigger_(notification_id, content, trigger)
 
             self.center.addNotificationRequest_withCompletionHandler_(request, self._process_request)
