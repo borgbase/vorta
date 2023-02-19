@@ -203,7 +203,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.setParent(self, QtCore.Qt.Sheet)
 
         index = self.sshComboBox.currentIndex()
-        if index > 1:
+        if index > 0:
             ssh_key_filename = self.sshComboBox.itemData(index)
             ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key_filename}.pub')
             if os.path.isfile(ssh_key_path):
