@@ -52,6 +52,7 @@ ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
+#: The number of decimal digits to show in the size column
 SIZE_DECIMAL_DIGITS = 1
 
 
