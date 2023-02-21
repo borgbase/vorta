@@ -241,10 +241,10 @@ def sort_sizes(size_list):
     return final_list
 
 
-T = TypeVar("T")
+Number = TypeVar("Number", int, float)
 
 
-def clamp(n: T, min_: T, max_: T) -> T:
+def clamp(n: Number, min_: Number, max_: Number) -> Number:
     """Restrict the number n inside a range"""
     return min(max_, max(n, min_))
 
