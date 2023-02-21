@@ -258,7 +258,7 @@ def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precisio
     return find_best_unit_for_size(min_size, metric=metric, precision=precision)
 
 
-def find_best_unit_for_size(size: int, metric: bool = True, precision: int = 1) -> int:
+def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision: int = 1) -> int:
     """
     Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
     representing the passed size.
