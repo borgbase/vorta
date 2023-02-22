@@ -358,7 +358,13 @@ def parse_args():
         help='Create a backup in the background using the given profile. '
         'Vorta must already be running for this to work.',
     )
-
+    parser.add_argument(
+        '--development',
+        '-D',
+        action='store_true',
+        help='Start vorta in a local development environment'
+        'All log, config, cache, and temp files will be stored within the project tree',
+    )
     return parser.parse_known_args()[0]
 
 

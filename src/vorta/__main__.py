@@ -45,6 +45,7 @@ def main():
 
     want_version = getattr(args, 'version', False)
     want_background = getattr(args, 'daemonize', False)
+    want_development = getattr(args, 'development', False)
 
     if want_version:
         print(f"Vorta {__version__}")
@@ -53,6 +54,9 @@ def main():
     if want_background:
         if os.fork():
             sys.exit()
+
+    if want_development:
+        print("In dev mode")
 
     init_logger(background=want_background)
 
