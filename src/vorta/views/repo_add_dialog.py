@@ -183,7 +183,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         keys = get_private_keys()
         for key in keys:
             self.sshComboBox.addItem(
-                f'{key["filename"]} :{key["fingerprint"]})',
+                f'{key["filename"]}',
                 key['filename'],
             )
 

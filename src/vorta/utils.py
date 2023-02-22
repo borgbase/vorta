@@ -175,13 +175,14 @@ def choose_file_dialog(parent, title, want_folder=True):
     return dialog
 
 
-def get_ssh_file_fingerprint(filename):
+def is_ssh_file(filename):
     """Check if the file is a SSH key."""
     filepath = os.path.expanduser('~/.ssh/' + filename)
     with open(filepath, 'rb') as f:
         first_line = f.readline()
     if not first_line.startswith(b'-----BEGIN OPENSSH PRIVATE KEY-----'):
-        return None
+        return False
+    return True
 
 
 def get_private_keys():
@@ -199,11 +200,9 @@ def get_private_keys():
             if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
                 continue
             try:
-                ssh_fingerprint = get_ssh_file_fingerprint(key)
-                if ssh_fingerprint:
+                if is_ssh_file(key):
                     key_details = {
                         'filename': key,
-                        'fingerprint': "abc",
                     }
                     available_private_keys.append(key_details)
             except (
