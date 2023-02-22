@@ -175,7 +175,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshComboBox.clear()
         self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
         for key in keys:
-            self.sshComboBox.addItem(f'{key["filename"]}', key['filename'])
+            self.sshComboBox.addItem(f'{key}', key)
 
     def toggle_available_compression(self):
         use_zstd = borg_compat.check('ZSTD')

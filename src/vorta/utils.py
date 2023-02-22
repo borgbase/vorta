@@ -201,16 +201,8 @@ def get_private_keys():
                 continue
             try:
                 if is_ssh_file(key):
-                    key_details = {
-                        'filename': key,
-                    }
-                    available_private_keys.append(key_details)
-            except (
-                UnicodeDecodeError,
-                IndexError,
-                ValueError,
-                PermissionError,
-            ):
+                    available_private_keys.append(key)
+            except (PermissionError,):
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
                 continue
             except OSError as e:

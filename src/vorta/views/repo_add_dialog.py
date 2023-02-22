@@ -182,10 +182,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def init_ssh_key(self):
         keys = get_private_keys()
         for key in keys:
-            self.sshComboBox.addItem(
-                f'{key["filename"]}',
-                key['filename'],
-            )
+            self.sshComboBox.addItem(f'{key}', key)
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
