@@ -207,11 +207,9 @@ def get_private_keys():
                     available_private_keys.append(key_details)
             except (
                 UnicodeDecodeError,
-                IsADirectoryError,
                 IndexError,
                 ValueError,
                 PermissionError,
-                NotImplementedError,
             ):
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
                 continue
