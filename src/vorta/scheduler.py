@@ -32,7 +32,6 @@ class ScheduleStatus(NamedTuple):
 
 
 class VortaScheduler(QtCore.QObject):
-
     #: The schedule for the profile with the given id changed.
     schedule_changed = QtCore.pyqtSignal(int)
 
@@ -196,7 +195,6 @@ class VortaScheduler(QtCore.QObject):
             return
 
         with self.lock:  # Acquire lock
-
             self.remove_job(profile_id)  # reset schedule
 
             pause = self.pauses.get(profile_id)
@@ -290,7 +288,6 @@ class VortaScheduler(QtCore.QObject):
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
-
                 if profile.schedule_make_up_missed:
                     self.lock.release()
                     try:

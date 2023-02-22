@@ -40,7 +40,6 @@ class QtSingleApplication(QApplication):
     message_received_event = pyqtSignal(str)
 
     def __init__(self, id, *argv):
-
         super().__init__(*argv)
         self._id = id
 

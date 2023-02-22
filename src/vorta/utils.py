@@ -12,10 +12,6 @@ from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, Optional, Tuple, TypeVar
 import psutil
-from paramiko import SSHException
-from paramiko.ecdsakey import ECDSAKey
-from paramiko.ed25519key import Ed25519Key
-from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
@@ -179,9 +175,17 @@ def choose_file_dialog(parent, title, want_folder=True):
     return dialog
 
 
+def get_ssh_file_fingerprint(filename):
+    """Check if the file is a SSH key."""
+    filepath = os.path.expanduser('~/.ssh/' + filename)
+    with open(filepath, 'rb') as f:
+        first_line = f.readline()
+    if not first_line.startswith(b'-----BEGIN OPENSSH PRIVATE KEY-----'):
+        return None
+
+
 def get_private_keys():
     """Find SSH keys in standard folder."""
-    key_formats = [RSAKey, ECDSAKey, Ed25519Key]
 
     ssh_folder = os.path.expanduser('~/.ssh')
 
@@ -191,35 +195,33 @@ def get_private_keys():
             key_file = os.path.join(ssh_folder, key)
             if not os.path.isfile(key_file):
                 continue
-            for key_format in key_formats:
-                try:
-                    parsed_key = key_format.from_private_key_file(key_file)
+            # ignore config, known_hosts*, *.pub, etc.
+            if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
+                continue
+            try:
+                ssh_fingerprint = get_ssh_file_fingerprint(key)
+                if ssh_fingerprint:
                     key_details = {
                         'filename': key,
-                        'format': parsed_key.get_name(),
-                        'bits': parsed_key.get_bits(),
-                        'fingerprint': parsed_key.get_fingerprint().hex(),
+                        'fingerprint': "abc",
                     }
                     available_private_keys.append(key_details)
-                except (
-                    SSHException,
-                    UnicodeDecodeError,
-                    IsADirectoryError,
-                    IndexError,
-                    ValueError,
-                    PermissionError,
-                    NotImplementedError,
-                ):
-                    logger.debug(
-                        f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True
-                    )
+            except (
+                UnicodeDecodeError,
+                IsADirectoryError,
+                IndexError,
+                ValueError,
+                PermissionError,
+                NotImplementedError,
+            ):
+                logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
+                continue
+            except OSError as e:
+                if e.errno == errno.ENXIO:
+                    # when key_file is a (ControlPath) socket
                     continue
-                except OSError as e:
-                    if e.errno == errno.ENXIO:
-                        # when key_file is a (ControlPath) socket
-                        continue
-                    else:
-                        raise
+                else:
+                    raise
 
     return available_private_keys
 
