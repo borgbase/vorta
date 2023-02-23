@@ -10,7 +10,8 @@ import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
-from typing import Any, Callable, Iterable, Optional, Tuple, TypeVar
+from pathlib import Path
+from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
@@ -175,9 +176,8 @@ def choose_file_dialog(parent, title, want_folder=True):
     return dialog
 
 
-def is_ssh_file(filename):
+def is_ssh_file(filepath: str) -> bool:
     """Check if the file is a SSH key."""
-    filepath = os.path.expanduser('~/.ssh/' + filename)
     with open(filepath, 'rb') as f:
         first_line = f.readline()
     if not first_line.startswith(b'-----BEGIN OPENSSH PRIVATE KEY-----'):
@@ -185,7 +185,7 @@ def is_ssh_file(filename):
     return True
 
 
-def get_private_keys():
+def get_private_keys() -> List[str]:
     """Find SSH keys in standard folder."""
 
     ssh_folder = os.path.expanduser('~/.ssh')
@@ -200,7 +200,8 @@ def get_private_keys():
             if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
                 continue
             try:
-                if is_ssh_file(key):
+                filepath = Path.home() / '.ssh' / key
+                if is_ssh_file(filepath):
                     available_private_keys.append(key)
             except (PermissionError,):
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
@@ -209,8 +210,6 @@ def get_private_keys():
                 if e.errno == errno.ENXIO:
                     # when key_file is a (ControlPath) socket
                     continue
-                else:
-                    raise
 
     return available_private_keys
 
