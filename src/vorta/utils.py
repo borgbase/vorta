@@ -10,7 +10,6 @@ import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
-from pathlib import Path
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
 from PyQt5 import QtCore
@@ -200,8 +199,7 @@ def get_private_keys() -> List[str]:
             if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
                 continue
             try:
-                filepath = Path.home() / '.ssh' / key
-                if is_ssh_file(filepath):
+                if is_ssh_file(key_file):
                     available_private_keys.append(key)
             except (PermissionError,):
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
