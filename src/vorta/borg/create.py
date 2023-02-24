@@ -2,6 +2,7 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
+from vorta.config import LOG_DIR
 from vorta.i18n import trans_late
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
@@ -33,7 +34,9 @@ class BorgCreateJob(BorgJob):
                 repo.save()
 
             if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
+                self.app.backup_progress_event.emit(
+                    f'Backup finished with warnings. See <a href="file://{LOG_DIR}">logs</a> for details.'
+                )
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
 
