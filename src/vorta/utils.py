@@ -177,11 +177,10 @@ def choose_file_dialog(parent, title, want_folder=True):
 
 def is_ssh_file(filepath: str) -> bool:
     """Check if the file is a SSH key."""
-    with open(filepath, 'rb') as f:
+    with open(filepath, 'r') as f:
         first_line = f.readline()
-    if not first_line.startswith(b'-----BEGIN OPENSSH PRIVATE KEY-----'):
-        return False
-    return True
+    pattern = r'^-----BEGIN(\s\w+)? PRIVATE KEY-----'
+    return re.match(pattern, first_line) is not None
 
 
 def get_private_keys() -> List[str]:
