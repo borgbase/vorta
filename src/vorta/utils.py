@@ -201,6 +201,9 @@ def get_private_keys() -> List[str]:
                 if is_ssh_file(key_file):
                     available_private_keys.append(key)
             except (PermissionError, UnicodeDecodeError):
+                # Handling PermissionError separately from OSError because it can be safely ignored
+                # (If the user doesn't have permission to read the file, it's not an unexpected error)
+                # If UnicodeDecodeError is raised, it's because the file is not a valid SSH key
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
                 continue
             except OSError as e:
