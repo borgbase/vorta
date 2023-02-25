@@ -316,19 +316,9 @@
         <source>Check completed.</source>
         <translation type="unfinished"/>
     </message>
-    <message>
-        <location filename="../../borg/check.py" line="14"/>
-        <source>Repo check failed. See logs for details.</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>BorgCreateJob</name>
-    <message>
-        <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
-        <translation type="unfinished"/>
-    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>

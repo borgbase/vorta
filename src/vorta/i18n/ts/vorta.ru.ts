@@ -316,19 +316,9 @@
         <source>Check completed.</source>
         <translation>Проверка завершена.</translation>
     </message>
-    <message>
-        <location filename="../../borg/check.py" line="14"/>
-        <source>Repo check failed. See logs for details.</source>
-        <translation>Ошибка при проверке репозитория. Подробнее см. в журналах.</translation>
-    </message>
 </context>
 <context>
     <name>BorgCreateJob</name>
-    <message>
-        <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
-        <translation>Архивация завершена с предупреждениями. Подробности см. в журналах.</translation>
-    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>

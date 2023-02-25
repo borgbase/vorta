@@ -316,19 +316,9 @@
         <source>Check completed.</source>
         <translation>Kontroll slutförd.</translation>
     </message>
-    <message>
-        <location filename="../../borg/check.py" line="14"/>
-        <source>Repo check failed. See logs for details.</source>
-        <translation>Förrådskontroll misslyckades, Se logg för detaljerad info.</translation>
-    </message>
 </context>
 <context>
     <name>BorgCreateJob</name>
-    <message>
-        <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
-        <translation>Säkerhetskopiering slutfördes med varningar. Se loggar för detaljerad info.</translation>
-    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>

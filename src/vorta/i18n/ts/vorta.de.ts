@@ -417,11 +417,6 @@
         <translation>Starte Konsistenzprüfung…</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="23"/>
-        <source>Repo check failed. See logs for details.</source>
-        <translation>Überprüfung des Repositorys fehlgeschlagen. Details dazu im Log.</translation>
-    </message>
-    <message>
         <location filename="../../borg/check.py" line="26"/>
         <source>Check completed.</source>
         <translation>Überprüfung abgeschlossen.</translation>
@@ -435,11 +430,6 @@
         <translation>Beginne mit dem Defragmentieren des Repositorys.</translation>
     </message>
     <message>
-        <location filename="../../borg/compact.py" line="24"/>
-        <source>Errors during compaction. See logs for details.</source>
-        <translation>Defragmentierung fehlgeschlagen. Details finden sich in den Logs.</translation>
-    </message>
-    <message>
         <location filename="../../borg/compact.py" line="26"/>
         <source>Compaction completed.</source>
         <translation>Defragmentierung abgeschlossen.</translation>
@@ -447,11 +437,6 @@
 </context>
 <context>
     <name>BorgCreateJob</name>
-    <message>
-        <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
-        <translation>Datensicherung mit Warnungen abgeschlossen. Siehe Logdateien für Details.</translation>
-    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
@@ -1604,11 +1589,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
-        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler: 
- {0} 
+        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler:
+ {0}
  {1}</translation>
     </message>
     <message>
@@ -2127,11 +2112,6 @@
         <location filename="../../application.py" line="323"/>
         <source>Repo Check Failed</source>
         <translation>Überprüfung des Repositorys fehlgeschlagen</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="328"/>
-        <source>Borg exited with a warning message. See logs for details.</source>
-        <translation>Datensicherung mit Warnmeldungen beendet. Details finden sich in den Logs.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="333"/>
