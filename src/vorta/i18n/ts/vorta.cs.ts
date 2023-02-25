@@ -417,6 +417,11 @@
         <translation>Spouštění kontroly celistvosti…</translation>
     </message>
     <message>
+        <location filename="../../borg/check.py" line="23"/>
+        <source>Repo check failed. See logs for details.</source>
+        <translation>Kontrola repozitáře se nezdařila. Podrobnosti naleznete v záznamech událostí.</translation>
+    </message>
+    <message>
         <location filename="../../borg/check.py" line="26"/>
         <source>Check completed.</source>
         <translation>Kontrola dokončena.</translation>
@@ -430,6 +435,11 @@
         <translation>Spouštění uvolňování prostoru po už smazaných archivech v repozitáři…</translation>
     </message>
     <message>
+        <location filename="../../borg/compact.py" line="24"/>
+        <source>Errors during compaction. See logs for details.</source>
+        <translation>Chyba při uvolňování prostoru po už smazaných archivech. Podrobnosti viz záznamy událostí.</translation>
+    </message>
+    <message>
         <location filename="../../borg/compact.py" line="26"/>
         <source>Compaction completed.</source>
         <translation>Uvolňování prostoru pro už smazaných archivech dokončeno.</translation>
@@ -437,6 +447,11 @@
 </context>
 <context>
     <name>BorgCreateJob</name>
+    <message>
+        <location filename="../../borg/create.py" line="36"/>
+        <source>Backup finished with warnings. See logs for details.</source>
+        <translation>Záloha dokončena s varováními. Podrobnosti naleznete v záznamech událostí.</translation>
+    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
@@ -1591,11 +1606,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
         <translation>Aktualizace schématu se nezdařila, vyplňte hlášení chyby s odkazem v panelu Různé s následující chybou:
- {0}
+ {0} 
  {1}</translation>
     </message>
     <message>
@@ -2114,6 +2129,11 @@
         <location filename="../../application.py" line="323"/>
         <source>Repo Check Failed</source>
         <translation>Kontrola repozitáře se nezdařila</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="328"/>
+        <source>Borg exited with a warning message. See logs for details.</source>
+        <translation>Nástroj Borg skončil s varováním. Podrobnosti naleznete v záznamech událostí.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="333"/>

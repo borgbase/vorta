@@ -377,6 +377,11 @@
         <translation>Vérification complétée.</translation>
     </message>
     <message>
+        <location filename="../../borg/check.py" line="24"/>
+        <source>Repo check failed. See logs for details.</source>
+        <translation>Echec de la vérification du dépôt. Inspecter les logs pour plus d&apos;information.</translation>
+    </message>
+    <message>
         <location filename="../../borg/check.py" line="10"/>
         <source>Starting consistency check…</source>
         <translation>Démarrage du contrôle d&apos;intégrité…</translation>
@@ -390,6 +395,11 @@
         <translation>Démarrage du compactage du dépôt...</translation>
     </message>
     <message>
+        <location filename="../../borg/compact.py" line="25"/>
+        <source>Errors during compaction. See logs for details.</source>
+        <translation>Erreurs pendant le compactage. Consultez les journaux pour plus de détails.</translation>
+    </message>
+    <message>
         <location filename="../../borg/compact.py" line="27"/>
         <source>Compaction completed.</source>
         <translation>Compression terminée.</translation>
@@ -397,6 +407,11 @@
 </context>
 <context>
     <name>BorgCreateJob</name>
+    <message>
+        <location filename="../../borg/create.py" line="36"/>
+        <source>Backup finished with warnings. See logs for details.</source>
+        <translation>La sauvegarde s&apos;est terminé avec des avertissements. Consultez les logs pour plus de détails.</translation>
+    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
@@ -1866,6 +1881,11 @@
     <message>
         <location filename="../../application.py" line="213"/>
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="329"/>
+        <source>Borg exited with a warning message. See logs for details.</source>
         <translation type="unfinished"/>
     </message>
     <message>

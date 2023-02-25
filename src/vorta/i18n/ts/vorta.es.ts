@@ -417,6 +417,11 @@
         <translation>Iniciando verificación de consistencia...</translation>
     </message>
     <message>
+        <location filename="../../borg/check.py" line="23"/>
+        <source>Repo check failed. See logs for details.</source>
+        <translation>Verificación fallida. Vea los registros para mas detalles.</translation>
+    </message>
+    <message>
         <location filename="../../borg/check.py" line="26"/>
         <source>Check completed.</source>
         <translation>Verificación completada.</translation>
@@ -430,6 +435,11 @@
         <translation>Iniciando compactación del repositorio...</translation>
     </message>
     <message>
+        <location filename="../../borg/compact.py" line="24"/>
+        <source>Errors during compaction. See logs for details.</source>
+        <translation>Se encontraron errores durante la compactación. Ver el registro para mas detalles.</translation>
+    </message>
+    <message>
         <location filename="../../borg/compact.py" line="26"/>
         <source>Compaction completed.</source>
         <translation>Compactación terminada.</translation>
@@ -437,6 +447,11 @@
 </context>
 <context>
     <name>BorgCreateJob</name>
+    <message>
+        <location filename="../../borg/create.py" line="36"/>
+        <source>Backup finished with warnings. See logs for details.</source>
+        <translation>El respaldo terminó con advertencias. Vea los registros para mas detalles.</translation>
+    </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
@@ -1591,8 +1606,8 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
         <translation>Falla al actualizar esquema, registre un reporte de error con el enlace en la pestaña Varios con el siguiente error:
 {0}
@@ -2114,6 +2129,11 @@
         <location filename="../../application.py" line="323"/>
         <source>Repo Check Failed</source>
         <translation>No se pudo verificar el repositorio</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="328"/>
+        <source>Borg exited with a warning message. See logs for details.</source>
+        <translation>Borg terminó con un mensaje de advertencia. Ver los registros para mas detalles.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="333"/>
