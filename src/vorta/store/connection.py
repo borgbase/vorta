@@ -18,7 +18,7 @@ from .models import (
 )
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 19
+SCHEMA_VERSION = 20
 
 
 @signals.post_save(sender=SettingsModel)
@@ -91,5 +91,7 @@ def init_db(con=None):
 
         if 'group' in setting:
             s.group = setting['group']
+        if 'tooltip' in setting:
+            s.tooltip = setting['tooltip']
 
         s.save()

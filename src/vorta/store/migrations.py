@@ -219,6 +219,13 @@ def run_migrations(current_schema, db_connection):
             migrator.add_column(SettingsModel._meta.table_name, 'group', pw.CharField(default='')),
         )
 
+    if current_schema.version < 20:
+        _apply_schema_update(
+            current_schema,
+            20,
+            migrator.add_column(SettingsModel._meta.table_name, 'tooltip', pw.CharField(default='')),
+        )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():

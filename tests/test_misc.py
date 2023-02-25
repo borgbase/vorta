@@ -17,7 +17,7 @@ def test_autostart(qapp, qtbot):
             item = tab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
             if not item:
                 continue
-            checkbox = item.widget()
+            checkbox = item.itemAt(0).widget()
             checkbox.__class__ = QCheckBox
             if checkbox.text().startswith("Automatically"):
                 # Have to use pos to click checkbox correctly

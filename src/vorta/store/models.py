@@ -185,6 +185,7 @@ class SettingsModel(BaseModel):
     str_value = pw.CharField(default='')
     label = pw.CharField()
     group = pw.CharField(default='')  # Settings group name and label
+    tooltip = pw.CharField(default='')  # optional tooltip for `checkbox` type
     type = pw.CharField()
 
     class Meta:
