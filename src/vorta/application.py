@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -9,7 +10,7 @@ from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
 from vorta.config import LOG_DIR, PROFILE_BOOTSTRAP_FILE, TEMP_DIR
-from vorta.i18n import init_translations, trans_late, translate
+from vorta.i18n import init_translations, translate
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
 from vorta.qt_single_application import QtSingleApplication
@@ -325,9 +326,9 @@ class VortaApp(QtSingleApplication):
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
-                text = trans_late(
-                    'messages',
-                    f'Borg exited with a warning message. See <a href="file://{LOG_DIR}">logs</a> for details.',
+                text = translate(
+                    'VortaApp',
+                    f'Borg exited with a warning message. See <a href="{Path(LOG_DIR).as_uri()}">logs</a> for details.',
                 )
                 infotext = error_message
             elif returncode > 128:
