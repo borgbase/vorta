@@ -32,7 +32,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': False,
             'type': 'checkbox',
             'group': notifications,
-            'label': trans_late('settings', 'Also notify about successful background tasks'),
+            'label': trans_late('settings', 'Notify about successful background tasks'),
         },
         {
             'key': 'autostart',
@@ -40,6 +40,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'checkbox',
             'group': startup,
             'label': trans_late('settings', 'Automatically start Vorta at login'),
+            'tooltip': trans_late('settings', 'Add Vorta to the systems autostart list'),
         },
         {
             'key': 'foreground',
@@ -47,6 +48,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'checkbox',
             'group': startup,
             'label': trans_late('settings', 'Open main window on startup'),
+            'tooltip': trans_late('settings', 'Open main window when the application is launched'),
         },
         {
             'key': 'get_srcpath_datasize',
@@ -54,6 +56,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'checkbox',
             'group': information,
             'label': trans_late('settings', 'Get statistics of file/folder when added'),
+            'tooltip': trans_late('settings', 'When adding a new source, calculate its size and the number of files.'),
         },
         {
             'key': 'use_system_keyring',
@@ -64,6 +67,9 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'settings',
                 'Store repository passwords in system keychain, if available',
             ),
+            'tooltip': trans_late(
+                'settings', "Otherwise Vorta's configuration database stores the password in plaintext."
+            ),
         },
         {
             'key': 'override_mount_permissions',
@@ -72,8 +78,9 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'group': security,
             'label': trans_late(
                 'settings',
-                'Try to replace existing permissions when mounting an archive',
+                'Try to replace file permissions when mounting an archive',
             ),
+            'tooltip': trans_late('settings', 'Set owner to current user and umask to 0277'),
         },
         {
             'key': 'previous_profile_id',
