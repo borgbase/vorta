@@ -58,7 +58,7 @@ def open_app_at_startup(enabled=True):
         if is_flatpak:
             autostart_path = Path.home() / '.config' / 'autostart'
         else:
-            autostart_path = Path(user_config_path("autostart"))
+            autostart_path = user_config_path("autostart")
 
         if not autostart_path.exists():
             autostart_path.mkdir(parents=True, exist_ok=True)
