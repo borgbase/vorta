@@ -24,8 +24,8 @@ class BorgCheckJob(BorgJob):
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
-                translate(
-                    'BorgCheckJob', f'Repo check failed. See <a href="{Path(LOG_DIR).as_uri()}">logs</a> for details.'
+                translate('RepoCheckJob', 'Repo check failed. See <a href="{0}">logs</a> for details.').format(
+                    Path(LOG_DIR).as_uri()
                 )
             )
             self.app.check_failed_event.emit(result)
