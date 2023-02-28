@@ -293,8 +293,6 @@ class BorgJob(JobInterface, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            if msg == "borg: error: Need at least one PATH argument.":
-                                msg = translate('BorgJob', 'No sources were selected to backup.')
                             self.app.backup_log_event.emit(msg, {})
                             logger.warning(msg)
 
