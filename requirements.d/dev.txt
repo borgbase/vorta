@@ -1,7 +1,6 @@
 black==22.*
 coverage
 flake8
-flake8-print
 isort
 macholib
 pre-commit

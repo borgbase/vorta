@@ -47,7 +47,7 @@ def main():
     want_background = getattr(args, 'daemonize', False)
 
     if want_version:
-        print(f"Vorta {__version__}")  # noqa: T20
+        print(f"Vorta {__version__}")
         sys.exit()
 
     if want_background:
