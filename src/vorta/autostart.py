@@ -47,7 +47,7 @@ def open_app_at_startup(enabled=True):
 
     elif sys.platform.startswith('linux'):
         from pathlib import Path
-        from appdirs import user_config_dir
+        from platformdirs import user_config_path
 
         is_flatpak = Path('/.flatpak-info').exists()
 
@@ -58,7 +58,7 @@ def open_app_at_startup(enabled=True):
         if is_flatpak:
             autostart_path = Path.home() / '.config' / 'autostart'
         else:
-            autostart_path = Path(user_config_dir("autostart"))
+            autostart_path = Path(user_config_path("autostart"))
 
         if not autostart_path.exists():
             autostart_path.mkdir(parents=True, exist_ok=True)
