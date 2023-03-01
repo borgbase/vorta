@@ -220,7 +220,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bList,
             self.bPrune,
             self.bDiff,
-            self.fArchiveActions,
             self.bMountRepo,
             self.bRefreshArchive,
             self.bMountArchive,
