@@ -232,7 +232,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             button.repaint()
 
         # Restore states
-        self.on_selection_change()
+        if enabled:
+            self.on_selection_change()
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
