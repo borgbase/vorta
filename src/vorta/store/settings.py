@@ -93,6 +93,12 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'internal',
             'label': 'Previous window height',
         },
+        {
+            'key': 'files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Files view display mode',
+        },
     ]
     if sys.platform == 'darwin':
         settings += [

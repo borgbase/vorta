@@ -9,6 +9,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
+from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
@@ -90,6 +91,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
 
         # connect signals
+        diff_result_display_mode = SettingsModel.get(key='files_display_mode').str_value
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)

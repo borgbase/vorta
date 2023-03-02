@@ -9,6 +9,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QShortcut, QTreeView
+from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.treemodel import (
     FileSystemItem,
@@ -97,6 +98,8 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
+        diff_result_display_mode = SettingsModel.get(key='files_display_mode').str_value
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
@@ -182,6 +185,10 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
             mode = FileTreeModel.DisplayMode.FLAT
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
+
+        SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
+            SettingsModel.key == 'files_display_mode'
+        ).execute()
 
         self.model.setMode(mode)
 

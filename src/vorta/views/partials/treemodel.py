@@ -10,6 +10,7 @@ from functools import reduce
 from pathlib import PurePath
 from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtSignal
+from vorta.store.models import SettingsModel
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -328,9 +329,15 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         super().__init__(parent)
         self.root: FileSystemItem[T] = FileSystemItem([], None)
 
-        #: mode
-        self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.TREE
-
+        display_mode = SettingsModel.get(key='files_display_mode').str_value
+        if display_mode == '0':
+            self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.TREE
+        elif display_mode == '1':
+            self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.SIMPLIFIED_TREE
+        elif display_mode == '2':
+            self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.FLAT
+        else:
+            raise ValueError("Invalid display mode: {}".format(display_mode))
         #: flat representation of the tree
         self._flattened: List[FileSystemItem] = []
 
