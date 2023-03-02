@@ -212,8 +212,7 @@ def get_private_keys() -> List[str]:
                 if e.errno == errno.ENXIO:
                     # when key_file is a (ControlPath) socket
                     continue
-                else:
-                    raise
+                raise
 
     return available_private_keys
 
