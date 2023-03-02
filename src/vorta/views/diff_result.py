@@ -98,7 +98,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
-        diff_result_display_mode = SettingsModel.get(key='files_display_mode').str_value
+        diff_result_display_mode = SettingsModel.get(key='diff_files_display_mode').str_value
         self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
@@ -187,7 +187,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
         SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
-            SettingsModel.key == 'files_display_mode'
+            SettingsModel.key == 'diff_files_display_mode'
         ).execute()
 
         self.model.setMode(mode)
@@ -852,3 +852,6 @@ class DiffTree(FileTreeModel[DiffData]):
                 )
 
             return tooltip
+
+    def __init__(self, mode, parent=None):
+        super().__init__(mode, parent)

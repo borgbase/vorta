@@ -91,7 +91,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
 
         # connect signals
-        diff_result_display_mode = SettingsModel.get(key='files_display_mode').str_value
+        diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
         self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
@@ -165,6 +165,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
+
+        SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
+            SettingsModel.key == 'extract_files_display_mode'
+        ).execute()
 
         self.model.setMode(mode)
 
@@ -409,6 +413,9 @@ class ExtractTree(FileTreeModel[FileData]):
                 return self.tr("Health")
 
         return None
+
+    def __init__(self, mode, parent=None):
+        super().__init__(mode, parent)
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
