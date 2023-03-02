@@ -175,12 +175,15 @@ def choose_file_dialog(parent, title, want_folder=True):
     return dialog
 
 
-def is_ssh_file(filepath: str) -> bool:
+def is_ssh_private_key_file(filepath: str) -> bool:
     """Check if the file is a SSH key."""
-    with open(filepath, 'r') as f:
-        first_line = f.readline()
-    pattern = r'^-----BEGIN(\s\w+)? PRIVATE KEY-----'
-    return re.match(pattern, first_line) is not None
+    try:
+        with open(filepath, 'r') as f:
+            first_line = f.readline()
+        pattern = r'^-----BEGIN(\s\w+)? PRIVATE KEY-----'
+        return re.match(pattern, first_line) is not None
+    except UnicodeDecodeError:
+        return False
 
 
 def get_private_keys() -> List[str]:
@@ -198,18 +201,19 @@ def get_private_keys() -> List[str]:
             if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
                 continue
             try:
-                if is_ssh_file(key_file):
+                if is_ssh_private_key_file(key_file):
                     available_private_keys.append(key)
-            except (PermissionError, UnicodeDecodeError):
+            except PermissionError:
                 # Handling PermissionError separately from OSError because it can be safely ignored
-                # (If the user doesn't have permission to read the file, it's not an unexpected error)
-                # If UnicodeDecodeError is raised, it's because the file is not a valid SSH key
+                # (if the user doesn't have permission to read the file, it's not an unexpected error).
                 logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
                 continue
             except OSError as e:
                 if e.errno == errno.ENXIO:
                     # when key_file is a (ControlPath) socket
                     continue
+                else:
+                    raise
 
     return available_private_keys
 
