@@ -853,5 +853,5 @@ class DiffTree(FileTreeModel[DiffData]):
 
             return tooltip
 
-    def __init__(self, mode, parent=None):
+    def __init__(self, mode=None, parent=None):
         super().__init__(mode, parent)

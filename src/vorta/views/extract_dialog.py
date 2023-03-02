@@ -414,7 +414,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         return None
 
-    def __init__(self, mode, parent=None):
+    def __init__(self, mode=None, parent=None):
         super().__init__(mode, parent)
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
