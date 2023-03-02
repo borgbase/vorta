@@ -85,7 +85,7 @@ class BorgCreateJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to False, so we can do our own checks here.
 
-        n_backup_folders = SourceFileModel.select().count()
+        n_backup_folders = SourceFileModel.select().where(SourceFileModel.profile == profile).count()
 
         # cmd options like `--paths-from-command` require a command
         # that is appended to the arguments
