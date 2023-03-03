@@ -10,6 +10,7 @@ LOG_DIR = dirs.user_log_path
 CACHE_DIR = dirs.user_cache_path
 TEMP_DIR = CACHE_DIR / "tmp"
 PROFILE_BOOTSTRAP_FILE = Path.home() / '.vorta-init.json'
+DEV_MODE_DIR = Path(__file__).parent.parent.parent / 'dev'
 
 
 # ensure directories exist
