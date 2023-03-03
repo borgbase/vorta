@@ -2,8 +2,11 @@ import os
 import signal
 import sys
 from peewee import SqliteDatabase
+
+# Need to import config as a whole module instead of individual variables
+# because we will be overriding the modules variables
+import vorta.config as config
 from vorta._version import __version__
-from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
@@ -56,13 +59,32 @@ def main():
             sys.exit()
 
     if want_development:
-        print("In dev mode")
+        if not os.path.exists(config.DEV_MODE_DIR):
+            os.makedirs(config.DEV_MODE_DIR)
+
+        config.SETTINGS_DIR = config.DEV_MODE_DIR / 'settings'
+        if not os.path.exists(config.SETTINGS_DIR):
+            os.makedirs(config.SETTINGS_DIR)
+
+        config.LOG_DIR = config.DEV_MODE_DIR / 'logs'
+        if not os.path.exists(config.LOG_DIR):
+            os.makedirs(config.LOG_DIR)
+
+        config.CACHE_DIR = config.DEV_MODE_DIR / 'cache'
+        if not os.path.exists(config.CACHE_DIR):
+            os.makedirs(config.CACHE_DIR)
+
+        config.TEMP_DIR = config.CACHE_DIR / 'tmp'
+        if not os.path.exists(config.TEMP_DIR):
+            os.makedirs(config.TEMP_DIR)
+
+        config.PROFILE_BOOTSTRAP_FILE = config.DEV_MODE_DIR / '.vorta-init.json'
 
     init_logger(background=want_background)
 
     # Init database
     sqlite_db = SqliteDatabase(
-        os.path.join(SETTINGS_DIR, 'settings.db'),
+        os.path.join(config.SETTINGS_DIR, 'settings.db'),
         pragmas={
             'journal_mode': 'wal',
         },

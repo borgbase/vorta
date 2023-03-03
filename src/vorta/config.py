@@ -11,6 +11,7 @@ LOG_DIR = dirs.user_log_dir
 CACHE_DIR = dirs.user_cache_dir
 TEMP_DIR = os.path.join(CACHE_DIR, "tmp")
 PROFILE_BOOTSTRAP_FILE = Path.home() / '.vorta-init.json'
+DEV_MODE_DIR = Path(__file__).parent.parent.parent / 'dev'
 
 if not os.path.exists(SETTINGS_DIR):
     os.makedirs(SETTINGS_DIR)
