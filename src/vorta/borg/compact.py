@@ -24,9 +24,9 @@ class BorgCompactJob(BorgJob):
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
-                translate('BorgCompactJob', 'Errors during compaction. See <a href="{0}">logs</a> for details.').format(
-                    Path(LOG_DIR).as_uri()
-                )
+                translate(
+                    'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
+                ).format(Path(LOG_DIR).as_uri())
             )
         else:
             self.app.backup_progress_event.emit(self.tr('Compaction completed.'))

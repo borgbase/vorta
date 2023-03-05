@@ -327,7 +327,7 @@ class VortaApp(QtSingleApplication):
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
                 text = translate(
-                    'VortaApp', 'Borg exited with warning status (rc 1). See <a href="{0}">logs</a> for details.'
+                    'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
                 ).format(Path(LOG_DIR).as_uri())
                 infotext = error_message
             elif returncode > 128:
