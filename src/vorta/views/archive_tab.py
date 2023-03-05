@@ -715,7 +715,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self._set_status(self.tr('Select an archive to restore first.'))
 
-    def get_extract_display_mode(self):
+    def get_extract_tree(self):
         """
         Get the display mode for the extract dialog.
         """
@@ -732,7 +732,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._set_status('')
         if result['returncode'] == 0:
             archive = ArchiveModel.get(name=result['params']['archive_name'])
-            model = self.get_extract_display_mode()
+            model = self.get_extract_tree()
             self._set_status(self.tr("Processing archive contents"))
             self._t = extract_dialog.ParseThread(result['data'], model)
             self._t.finished.connect(lambda: self.extract_show_dialog(archive, model))
@@ -879,7 +879,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self._set_status(params['message'])
 
-    def get_diff_display_mode(self):
+    def get_diff_tree(self):
         """
         Get the display mode for the diff dialog.
         """
@@ -910,7 +910,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
             self._set_status(self.tr("Processing diff results."))
 
-            model = self.get_diff_display_mode()
+            model = self.get_diff_tree()
 
             self._t = diff_result.ParseThread(result['data'], result['params']['json_lines'], model)
             self._t.finished.connect(lambda: self.show_diff_result(archive_newer, archive_older, model))
