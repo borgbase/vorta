@@ -23,7 +23,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = Path.joinpath(TEMP_DIR, "socket")
+APP_ID = TEMP_DIR / "socket"
 
 
 class VortaApp(QtSingleApplication):
