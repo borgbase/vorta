@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from pathlib import Path, PurePath
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -23,7 +23,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = PurePath.joinpath(TEMP_DIR, "socket")
+APP_ID = Path.joinpath(TEMP_DIR, "socket")
 
 
 class VortaApp(QtSingleApplication):
