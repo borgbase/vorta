@@ -36,12 +36,10 @@ class BorgCreateJob(BorgJob):
 
             if result['returncode'] == 1:
                 self.app.backup_progress_event.emit(
-                    self.app.backup_progress_event.emit(
-                        translate(
-                            'BorgCreateJob',
-                            'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                        ).format(Path(LOG_DIR).as_uri())
-                    )
+                    translate(
+                        'BorgCreateJob',
+                        'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
+                    ).format(Path(LOG_DIR).as_uri())
                 )
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
