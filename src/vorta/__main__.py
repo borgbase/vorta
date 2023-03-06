@@ -1,6 +1,7 @@
 import os
 import signal
 import sys
+from pathlib import PurePath
 from peewee import SqliteDatabase
 from vorta._version import __version__
 from vorta.config import SETTINGS_DIR
@@ -58,7 +59,7 @@ def main():
 
     # Init database
     sqlite_db = SqliteDatabase(
-        os.path.join(SETTINGS_DIR, 'settings.db'),
+        PurePath.joinpath(SETTINGS_DIR, 'settings.db'),
         pragmas={
             'journal_mode': 'wal',
         },

@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from pathlib import Path, PurePath
 from typing import Any, Dict, List, Tuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -22,7 +23,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = os.path.join(TEMP_DIR, "socket")
+APP_ID = PurePath.joinpath(TEMP_DIR, "socket")
 
 
 class VortaApp(QtSingleApplication):
@@ -193,8 +194,8 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
-        test_path = os.path.expanduser('~/Library/Cookies')
-        if os.path.exists(test_path) and not os.access(test_path, os.R_OK):
+        test_path = Path.expanduser('~/Library/Cookies')
+        if Path.exists(test_path) and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
