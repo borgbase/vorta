@@ -36,7 +36,6 @@ class BorgCreateJob(BorgJob):
                 self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
-                self.app.backup_progress_event.emit(self.tr(''))
                 self.app.backup_log_event.emit('', {})
 
     def progress_event(self, fmt):
