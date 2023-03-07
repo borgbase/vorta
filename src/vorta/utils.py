@@ -202,11 +202,16 @@ def get_private_keys() -> List[str]:
                 continue
             try:
                 if is_ssh_private_key_file(key_file):
-                    available_private_keys.append(key)
+                    if os.stat(key_file).st_mode & 0o077 == 0:
+                        available_private_keys.append(key)
+                    else:
+                        logger.warning(f'Permissions for {key_file} are too open.')
+                else:
+                    logger.debug(f'Not a private SSH key file: {key}')
             except PermissionError:
                 # Handling PermissionError separately from OSError because it can be safely ignored
                 # (if the user doesn't have permission to read the file, it's not an unexpected error).
-                logger.debug(f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True)
+                logger.debug(f'Permission error while opening file in .ssh: {key}', exc_info=True)
                 continue
             except OSError as e:
                 if e.errno == errno.ENXIO:
