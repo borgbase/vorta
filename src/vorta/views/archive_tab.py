@@ -31,7 +31,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
-from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
+from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
     choose_file_dialog,
     find_best_unit_for_sizes,
@@ -43,7 +43,6 @@ from vorta.utils import (
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
-from vorta.views.partials.treemodel import FileTreeModel
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
@@ -715,24 +714,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self._set_status(self.tr('Select an archive to restore first.'))
 
-    def get_extract_tree(self):
-        """
-        Get the display mode for the extract dialog.
-        """
-        display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
-        if display_mode == '0':
-            return ExtractTree(mode=FileTreeModel.DisplayMode.TREE)
-        elif display_mode == '1':
-            return ExtractTree(mode=FileTreeModel.DisplayMode.SIMPLIFIED_TREE)
-        else:
-            raise ValueError("Invalid extract dialog display mode: {}".format(display_mode))
-
     def extract_list_result(self, result):
         """Process the contents of the archive to extract."""
         self._set_status('')
         if result['returncode'] == 0:
             archive = ArchiveModel.get(name=result['params']['archive_name'])
-            model = self.get_extract_tree()
+            model = ExtractTree()
             self._set_status(self.tr("Processing archive contents"))
             self._t = extract_dialog.ParseThread(result['data'], model)
             self._t.finished.connect(lambda: self.extract_show_dialog(archive, model))
@@ -879,20 +866,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self._set_status(params['message'])
 
-    def get_diff_tree(self):
-        """
-        Get the display mode for the diff dialog.
-        """
-        display_mode = SettingsModel.get(key='diff_files_display_mode').str_value
-        if display_mode == '0':
-            return DiffTree(mode=FileTreeModel.DisplayMode.TREE)
-        elif display_mode == '1':
-            return DiffTree(mode=FileTreeModel.DisplayMode.SIMPLIFIED_TREE)
-        elif display_mode == '2':
-            return DiffTree(mode=FileTreeModel.DisplayMode.FLAT)
-        else:
-            raise ValueError("Invalid diff dialog display mode: {}".format(display_mode))
-
     def list_diff_result(self, result):
         """
         Process the result of the `BorgDiffJob`.
@@ -910,7 +883,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
             self._set_status(self.tr("Processing diff results."))
 
-            model = self.get_diff_tree()
+            model = DiffTree()
 
             self._t = diff_result.ParseThread(result['data'], result['params']['json_lines'], model)
             self._t.finished.connect(lambda: self.show_diff_result(archive_newer, archive_older, model))

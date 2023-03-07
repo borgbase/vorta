@@ -92,8 +92,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
         # connect signals
         diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
-        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -413,9 +413,6 @@ class ExtractTree(FileTreeModel[FileData]):
                 return self.tr("Health")
 
         return None
-
-    def __init__(self, mode=None, parent=None):
-        super().__init__(mode, parent)
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """

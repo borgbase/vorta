@@ -99,8 +99,8 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
         diff_result_display_mode = SettingsModel.get(key='diff_files_display_mode').str_value
-        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -852,6 +852,3 @@ class DiffTree(FileTreeModel[DiffData]):
                 )
 
             return tooltip
-
-    def __init__(self, mode=None, parent=None):
-        super().__init__(mode, parent)
