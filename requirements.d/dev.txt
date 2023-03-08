@@ -1,9 +1,9 @@
+pre-commit
 black==22.*
 coverage
 flake8
 isort
 macholib
-pre-commit
 pyinstaller
 pylint
 pytest
