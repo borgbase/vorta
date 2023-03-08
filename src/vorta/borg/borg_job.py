@@ -297,7 +297,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit([{self.params["profile_name"]}] + " " + msg, {})
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
                             logger.warning(msg)
 
             if p.poll() is not None:

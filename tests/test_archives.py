@@ -43,9 +43,9 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
 
     assert not tab.bCheck.isEnabled()
 
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 6
-    assert main.progressText.text() == 'Refreshing archives done.'
+    assert 'Refreshing archives done.' in main.progressText.text()
     assert tab.bCheck.isEnabled()
 
 
@@ -93,7 +93,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
 
     qtbot.mouseClick(tab.bCheck, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
-    qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
 def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
