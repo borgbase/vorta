@@ -46,11 +46,11 @@ class VortaApp(QtSingleApplication):
         if self.isRunning():
             if single_app:
                 self.sendMessage("open main window")
-                print('An instance of Vorta is already running. Opening main window.')
+                logger.info('An instance of Vorta is already running. Opening main window.')
                 sys.exit()
             elif args.profile:
                 self.sendMessage(f"create {args.profile}")
-                print('Creating backup using existing Vorta instance.')
+                logger.info('Creating backup using existing Vorta instance.')
                 sys.exit()
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
