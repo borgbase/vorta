@@ -270,7 +270,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 'profile_name': self.params.get('profile_name'),
                                 'cmd': self.params['cmd'][1],
                             }
-                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}', context)
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}', context
+                            )
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
 
@@ -279,9 +281,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 error_messages.append((level_int, parsed["message"]))
 
                         elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
+                            )
                         elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                            self.app.backup_log_event.emit(f'{parsed["message"]}', {})
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
@@ -293,7 +297,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(msg, {})
+                            self.app.backup_log_event.emit([{self.params["profile_name"]}] + " " + msg, {})
                             logger.warning(msg)
 
             if p.poll() is not None:
