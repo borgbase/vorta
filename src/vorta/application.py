@@ -42,7 +42,7 @@ class VortaApp(QtSingleApplication):
     check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
-        super().__init__(APP_ID, args_raw)
+        super().__init__(str(APP_ID), args_raw)
         args = parse_args()
         if self.isRunning():
             if single_app:
