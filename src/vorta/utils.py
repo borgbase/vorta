@@ -209,7 +209,7 @@ def get_private_keys() -> List[str]:
                 else:
                     logger.debug(f'Not a private SSH key file: {key}')
             except PermissionError:
-                logger.warning(f'Permission error while opening file in .ssh: {key}', exc_info=True)
+                logger.warning(f'Permission error while opening file: {key_file}', exc_info=True)
                 continue
             except OSError as e:
                 if e.errno == errno.ENXIO:
