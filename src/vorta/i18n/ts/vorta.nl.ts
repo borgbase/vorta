@@ -1606,8 +1606,8 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
         <translation>Het schema kan niet worden bijgewerkt. Stel een bugmelding op via de link op het tabblad ‘Overig’. Stuur de volgende informatie mee:
 

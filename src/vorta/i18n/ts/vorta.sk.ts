@@ -1606,8 +1606,8 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
         <translation>Upgrade schémy skončil s chybou, otvorte hlásenie o chybe kliknutím na odkaz na karte Rôzne a skopírujte tento text:
 {0}

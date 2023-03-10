@@ -1606,8 +1606,8 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
- {0}
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
+ {0} 
  {1}</source>
         <translation>Falla al actualizar esquema, registre un reporte de error con el enlace en la pestaña Varios con el siguiente error:
 {0}
