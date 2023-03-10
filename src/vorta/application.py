@@ -328,7 +328,7 @@ class VortaApp(QtSingleApplication):
                 msg.setIcon(QMessageBox.Icon.Warning)
                 text = translate(
                     'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
-                ).format(Path(LOG_DIR).as_uri())
+                ).format(LOG_DIR.as_uri())
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)

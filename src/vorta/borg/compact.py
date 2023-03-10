@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict
 from vorta.config import LOG_DIR
 from vorta.i18n import trans_late, translate
@@ -26,7 +25,7 @@ class BorgCompactJob(BorgJob):
             self.app.backup_progress_event.emit(
                 translate(
                     'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
-                ).format(Path(LOG_DIR).as_uri())
+                ).format(LOG_DIR.as_uri())
             )
         else:
             self.app.backup_progress_event.emit(self.tr('Compaction completed.'))

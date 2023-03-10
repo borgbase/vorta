@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
@@ -25,7 +24,7 @@ class BorgCheckJob(BorgJob):
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
                 translate('RepoCheckJob', 'Repo check failed. See the <a href="{0}">logs</a> for details.').format(
-                    Path(LOG_DIR).as_uri()
+                    LOG_DIR.as_uri()
                 )
             )
             self.app.check_failed_event.emit(result)

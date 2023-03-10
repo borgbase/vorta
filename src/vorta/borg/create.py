@@ -2,7 +2,6 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
-from pathlib import Path
 from vorta.config import LOG_DIR
 from vorta.i18n import trans_late, translate
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
@@ -39,7 +38,7 @@ class BorgCreateJob(BorgJob):
                     translate(
                         'BorgCreateJob',
                         'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                    ).format(Path(LOG_DIR).as_uri())
+                    ).format(LOG_DIR.as_uri())
                 )
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
