@@ -195,7 +195,7 @@ class VortaApp(QtSingleApplication):
         incomplete backups.
         """
         test_path = Path('~/Library/Cookies').expanduser()
-        if Path(test_path).exists() and not os.access(test_path, os.R_OK):
+        if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
