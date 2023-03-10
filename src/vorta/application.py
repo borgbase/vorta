@@ -23,7 +23,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = os.path.join(TEMP_DIR, "socket")
+APP_ID = TEMP_DIR / "socket"
 
 
 class VortaApp(QtSingleApplication):
@@ -42,7 +42,7 @@ class VortaApp(QtSingleApplication):
     check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
-        super().__init__(APP_ID, args_raw)
+        super().__init__(str(APP_ID), args_raw)
         args = parse_args()
         if self.isRunning():
             if single_app:
@@ -194,8 +194,8 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
-        test_path = os.path.expanduser('~/Library/Cookies')
-        if os.path.exists(test_path) and not os.access(test_path, os.R_OK):
+        test_path = Path('~/Library/Cookies').expanduser()
+        if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
