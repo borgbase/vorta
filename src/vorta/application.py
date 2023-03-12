@@ -9,7 +9,7 @@ from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
-from vorta.config import PROFILE_BOOTSTRAP_FILE, TEMP_DIR
+from vorta.config import LOG_DIR, PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -326,7 +326,9 @@ class VortaApp(QtSingleApplication):
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
-                text = self.tr('Borg exited with a warning message. See logs for details.')
+                text = translate(
+                    'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
+                ).format(LOG_DIR.as_uri())
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
