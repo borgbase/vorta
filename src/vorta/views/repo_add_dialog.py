@@ -1,3 +1,4 @@
+import logging
 import re
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QAction
@@ -9,6 +10,8 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
 from vorta.views.utils import get_colored_icon
+
+logger = logging.getLogger(__name__)
 
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
@@ -28,7 +31,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
-        self.buttonBox.rejected.connect(self.close)
+        self.buttonBox.rejected.connect(self.cancel_job)
         self.buttonBox.accepted.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
@@ -146,7 +149,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.added_repo.emit(result)
             self.accept()
         else:
-            self._set_status(self.tr('Unable to add your repository.'))
+            if self.cancel_job:
+                self._set_status(self.tr('Cancelled adding repo.'))
+            else:
+                self._set_status(self.tr('Unable to add your repository.'))
 
     def init_encryption(self):
         if borg_compat.check('V2'):
@@ -209,6 +215,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.passwordLabel.setText(translate('utils', msg))
             return not bool(msg)
 
+    def cancel_job(self):
+        self.job.cancel()
+        logger.debug(f"Cancelled adding repo {self.values['repo_url']}")
+        return True
+
 
 class ExistingRepoWindow(AddRepoWindow):
     def __init__(self):
@@ -240,10 +251,10 @@ class ExistingRepoWindow(AddRepoWindow):
             params = BorgInfoRepoJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoRepoJob(params['cmd'], params)
-                thread.updated.connect(self._set_status)
-                thread.result.connect(self.run_result)
-                self.thread = thread  # Needs to be connected to self for tests to work.
-                self.thread.run()
+                job = BorgInfoRepoJob(params['cmd'], params, params['repo_id'])
+                job.updated.connect(self._set_status)
+                job.result.connect(self.run_result)
+                self.job = job  # Needs to be connected to self for tests to work.
+                QApplication.instance().jobs_manager.add_job(job)
             else:
                 self._set_status(params['message'])
