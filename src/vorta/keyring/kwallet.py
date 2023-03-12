@@ -46,8 +46,9 @@ class VortaKWallet5Keyring(VortaKeyring):
         return password
 
     def remove_password(self, service, repo_url):
-        if self.is_unlocked and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service]):
-            self.get_result("removeEntry", args=[self.handle, self.folder_name, repo_url, service])
+        entry = [self.handle, self.folder_name, repo_url, service]
+        if self.is_unlocked and self.get_result("hasEntry", args=entry):
+            self.get_result("removeEntry", args=entry)
             logger.debug(f"Removed password for repo {repo_url}")
 
     def get_result(self, method, args=[]):
