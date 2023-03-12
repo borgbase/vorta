@@ -1,5 +1,6 @@
 from typing import Any, Dict
-from vorta.i18n import trans_late
+from vorta.config import LOG_DIR
+from vorta.i18n import trans_late, translate
 from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
@@ -21,7 +22,11 @@ class BorgCompactJob(BorgJob):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         if result['returncode'] != 0:
-            self.app.backup_progress_event.emit(self.tr('Errors during compaction. See logs for details.'))
+            self.app.backup_progress_event.emit(
+                translate(
+                    'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
+                ).format(LOG_DIR.as_uri())
+            )
         else:
             self.app.backup_progress_event.emit(self.tr('Compaction completed.'))
 
