@@ -88,6 +88,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.updateButton.clicked.connect(self.sources_update)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Connect to palette change
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
@@ -244,12 +245,26 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
 
-        # Initially, sort entries by path name in ascending order
-        self.sourceFilesWidget.sortItems(SourceColumn.Path, QtCore.Qt.AscendingOrder)
+        # Fetch the Sort by Column and order
+        sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
+        sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
+
+        # Sort items as per settings
+        self.sourceFilesWidget.sortItems(sourcetab_sort_column, sourcetab_sort_order)
+
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+
+    def update_sort_order(self, column, order):
+        """Save selected sort by column and order to settings"""
+        SettingsModel.update({SettingsModel.str_value: str(column)}).where(
+            SettingsModel.key == 'sourcetab_sort_column'
+        ).execute()
+        SettingsModel.update({SettingsModel.str_value: str(order)}).where(
+            SettingsModel.key == 'sourcetab_sort_order'
+        ).execute()
 
     def sources_update(self):
         """
