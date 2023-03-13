@@ -257,7 +257,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
-    def update_sort_order(self, column, order):
+    def update_sort_order(self, column: int, order: int):
         """Save selected sort by column and order to settings"""
         SettingsModel.update({SettingsModel.str_value: str(column)}).where(
             SettingsModel.key == 'sourcetab_sort_column'
