@@ -293,7 +293,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
                                 f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
                             )
-                            self.app.backup_progress_event.emit(msg)
+                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
