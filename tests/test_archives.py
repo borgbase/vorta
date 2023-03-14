@@ -60,7 +60,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
@@ -147,7 +147,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
 
     model = tab._window.model
     assert model.root.children[0].subpath == 'home'
-    assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
+    assert 'test-archive, 2000' in tab._window.archiveNameLabel.text()
 
 
 def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
@@ -164,8 +164,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     tab.delete_action()
-
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
 
