@@ -262,7 +262,7 @@ def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision:
     if not isinstance(size, int) or size == 0:  # this will also take care of the None case
         return 0
     power = 10**3 if metric else 2**10
-    n = math.floor(math.log(size * 10**precision, power))
+    n = math.floor(math.log(abs(size) * 10**precision, power))
     return n
 
 
