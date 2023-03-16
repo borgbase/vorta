@@ -53,6 +53,7 @@ class QtSingleApplication(QApplication):
             # Yes, there is.
             self._outStream = QTextStream(self._outSocket)
             self._outStream.setCodec('UTF-8')
+            self._outSocket.readyRead.connect(self._onReadyReply)
         else:
             # No, there isn't.
             self._outSocket = None
@@ -93,3 +94,15 @@ class QtSingleApplication(QApplication):
             if not msg:
                 break
             self.message_received_event.emit(msg)
+
+    def _onReadyReply(self):
+        while True:
+            msg = self._outStream.readLine()
+            if not msg:
+                break
+            self.message_received_event.emit(msg)
+
+    def reply(self, msg):
+        self._inStream << msg << '\n'
+        self._inStream.flush()
+        self._inSocket.waitForBytesWritten()

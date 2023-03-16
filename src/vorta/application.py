@@ -52,7 +52,6 @@ class VortaApp(QtSingleApplication):
             elif args.profile:
                 self.sendMessage(f"create {args.profile}")
                 logger.info('Creating backup using existing Vorta instance.')
-                sys.exit()
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
 
@@ -147,6 +146,9 @@ class VortaApp(QtSingleApplication):
     def message_received_event_response(self, message):
         if message == "open main window":
             self.open_main_window_action()
+        elif message.startswith("created"):
+            logger.debug(f"Backup created: {message[8:]}")
+            sys.exit()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
             if self.jobs_manager.is_worker_running():
