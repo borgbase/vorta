@@ -91,7 +91,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            self.create_backup_action(profile_id=profile.id)
+            self.create_backup_action(profile_id=profile.id, cmd_line=True)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 
@@ -102,7 +102,7 @@ class VortaApp(QtSingleApplication):
         del self.tray
         cleanup_db()
 
-    def create_backup_action(self, profile_id=None):
+    def create_backup_action(self, profile_id=None, cmd_line=False):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
@@ -110,6 +110,8 @@ class VortaApp(QtSingleApplication):
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
+            if cmd_line:
+                job.result.connect(self.create_backup_cmdline_response)
             self.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
@@ -120,6 +122,9 @@ class VortaApp(QtSingleApplication):
             )
             self.backup_progress_event.emit(translate('messages', msg['message']))
             return None
+
+    def create_backup_cmdline_response(self, result):
+        self.reply(f"created {result['data']['archive']['name']}")
 
     def open_main_window_action(self):
         self.main_window.show()
