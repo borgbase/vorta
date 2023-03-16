@@ -58,7 +58,7 @@ def main():
 
     # Init database
     sqlite_db = SqliteDatabase(
-        os.path.join(SETTINGS_DIR, 'settings.db'),
+        SETTINGS_DIR / 'settings.db',
         pragmas={
             'journal_mode': 'wal',
         },
