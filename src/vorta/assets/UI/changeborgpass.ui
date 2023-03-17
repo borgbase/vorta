@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>ChangeBorgPassphrase</class>
+  <widget class="QDialog" name="ChangeRepositoryPass">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>466</width>
+        <height>274</height>
+      </rect>
+    </property>
+    <property name="modal">
+      <bool>true</bool>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+      <property name="verticalSpacing">
+        <number>0</number>
+      </property>
+      <item row="0" column="0">
+                <widget class="QLabel" name="title">
+                  <property name="font">
+                    <font>
+                      <bold>true</bold>
+                    </font>
+                  </property>
+                  <property name="text">
+                    <string>Change Borg Passphrase</string>
+                  </property>
+                  <!-- Center align horizontally -->
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                    </property>
+                </widget>
+              </item>
+      <item row="2" column="0">
+      <!-- Single Box layout with three password inputs, current, new, confirm -->
+
+      <layout class="QFormLayout" name="repoDataFormLayout">
+              <property name="fieldGrowthPolicy">
+                <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
+              <property name="leftMargin">
+                <number>5</number>
+              </property>
+              <property name="topMargin">
+                <number>5</number>
+              </property>
+              <property name="rightMargin">
+                <number>5</number>
+              </property>
+              <property name="bottomMargin">
+                <number>30</number>
+              </property>
+
+
+              <item row="1" column="0">
+                <widget class="QLabel" name="oldPasswordLabel">
+                  <property name="text">
+                    <string>Old Passphrase:</string>
+                  </property>
+                </widget>
+              </item>
+              <item row="1" column="1">
+                <widget class="QLineEdit" name="oldPasswordLineEdit">
+                  <property name="enabled">
+                    <bool>true</bool>
+                  </property>
+                  <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                  </property>
+                </widget>
+              </item>
+
+              <item row="2" column="0">
+                <widget class="QLabel" name="label_3">
+                  <property name="text">
+                    <string>New Passphrase:</string>
+                  </property>
+                </widget>
+              </item>
+              <item row="2" column="1">
+                <widget class="QLineEdit" name="passwordLineEdit">
+                  <property name="enabled">
+                    <bool>true</bool>
+                  </property>
+                  <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                  </property>
+                </widget>
+              </item>
+              <item row="3" column="1">
+                <widget class="QLineEdit" name="confirmLineEdit">
+                  <property name="enabled">
+                    <bool>true</bool>
+                  </property>
+                  <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                  </property>
+                </widget>
+              </item>
+              <item row="3" column="0">
+                <widget class="QLabel" name="confirmLabel">
+                  <property name="text">
+                    <string>Confirm Passphrase:</string>
+                  </property>
+                </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+                <widget class="QLabel" name="errorText">
+                  <property name="text">
+                    <string></string>
+                  </property>
+                </widget>
+              </item>
+
+            </layout>
+
+
+      </item>
+      <item row="3" column="0">
+        <widget class="QDialogButtonBox" name="buttonBox">
+          <property name="standardButtons">
+            <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+          </property>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources />
+  <connections />
+</ui>

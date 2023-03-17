@@ -5,6 +5,7 @@ from PyQt5.QtCore import QMimeData, QUrl
 from PyQt5.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
+from .change_borg_passphrase_dialog import ChangeBorgPassphraseWindow
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
@@ -24,6 +25,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # Populate dropdowns
         self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
+
+        # passphrase change button
+        self.changePassbutton.clicked.connect(self.change_borg_passphrase)
 
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
@@ -72,6 +76,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
+        self.changePassbutton.setIcon(get_colored_icon('lock'))
 
     def set_repos(self):
         self.repoSelector.clear()
@@ -123,6 +128,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             # otherwise one cannot add a ssh key for adding a repo
             self.sshComboBox.setEnabled(ssh_enabled)
             self.sshKeyToClipboardButton.setEnabled(ssh_enabled)
+
+            # Disable the change passphrase button if encryption type is not repokey
+            if repo.encryption in ['repokey', 'repokey-blake2']:
+                self.changePassbutton.setEnabled(True)
+            else:
+                self.changePassbutton.setEnabled(False)
 
             # update stats
             if repo.unique_csize is not None:
@@ -246,6 +257,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         window.setParent(self, QtCore.Qt.Sheet)
         window.added_repo.connect(self.process_new_repo)
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
+        window.open()
+
+    def change_borg_passphrase(self):
+        window = ChangeBorgPassphraseWindow(self.profile())
+        self._window = window  # For tests
+        window.setParent(self, QtCore.Qt.Sheet)
         window.open()
 
     def repo_select_action(self):
