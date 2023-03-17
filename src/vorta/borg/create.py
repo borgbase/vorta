@@ -2,7 +2,8 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
-from vorta.i18n import trans_late
+from vorta.config import LOG_DIR
+from vorta.i18n import trans_late, translate
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 from .borg_job import BorgJob
@@ -33,7 +34,12 @@ class BorgCreateJob(BorgJob):
                 repo.save()
 
             if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
+                self.app.backup_progress_event.emit(
+                    translate(
+                        'BorgCreateJob',
+                        'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
+                    ).format(LOG_DIR.as_uri())
+                )
             else:
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
 
