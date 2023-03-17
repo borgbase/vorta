@@ -55,36 +55,37 @@ class VortaApp(QtSingleApplication):
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
 
-        init_translations(self)
-
-        self.setQuitOnLastWindowClosed(False)
-        self.jobs_manager = JobsManager()
-        self.scheduler = VortaScheduler()
-
-        self.setApplicationName("Vorta")
-
-        # Import profile from ~/.vorta-init.json or add empty "Default" profile.
-        self.bootstrap_profile()
-
-        # Prepare tray and main window
-        self.tray = TrayMenu(self)
-        self.main_window = MainWindow(self)
-
-        if getattr(args, 'daemonize', False):
-            pass
-        elif SettingsModel.get(key='foreground').value:
-            self.open_main_window_action()
-
-        self.backup_started_event.connect(self.backup_started_event_response)
-        self.backup_finished_event.connect(self.backup_finished_event_response)
-        self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
-        self.check_failed_event.connect(self.check_failed_response)
-        self.backup_log_event.connect(self.react_to_log)
-        self.aboutToQuit.connect(self.quit_app_action)
-        self.set_borg_details_action()
-        if sys.platform == 'darwin':
-            self.check_darwin_permissions()
+        if not (self.isRunning() and args.profile):
+            init_translations(self)
+
+            self.setQuitOnLastWindowClosed(False)
+            self.jobs_manager = JobsManager()
+            self.scheduler = VortaScheduler()
+
+            self.setApplicationName("Vorta")
+
+            # Import profile from ~/.vorta-init.json or add empty "Default" profile.
+            self.bootstrap_profile()
+
+            # Prepare tray and main window
+            self.tray = TrayMenu(self)
+            self.main_window = MainWindow(self)
+
+            if getattr(args, 'daemonize', False):
+                pass
+            elif SettingsModel.get(key='foreground').value:
+                self.open_main_window_action()
+
+            self.backup_started_event.connect(self.backup_started_event_response)
+            self.backup_finished_event.connect(self.backup_finished_event_response)
+            self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
+            self.check_failed_event.connect(self.check_failed_response)
+            self.backup_log_event.connect(self.react_to_log)
+            self.aboutToQuit.connect(self.quit_app_action)
+            self.set_borg_details_action()
+            if sys.platform == 'darwin':
+                self.check_darwin_permissions()
 
     def create_backups_cmdline(self, profile_name):
         profile = BackupProfileModel.get_or_none(name=profile_name)
