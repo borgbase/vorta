@@ -1,4 +1,6 @@
+import sys
 from unittest import TestCase, mock
+import pytest
 from vorta.application import VortaApp
 
 
@@ -6,6 +8,7 @@ class TestApplication(TestCase):
     def setUp(self):
         self.app = VortaApp([])
 
+    @pytest.mark.skipif(sys.platform != 'darwin', reason="Checking darwin full disk access")
     @mock.patch('vorta.store.models.SettingsModel.get')
     @mock.patch('vorta.application.QMessageBox')
     @mock.patch('pathlib.Path.exists')
@@ -30,6 +33,7 @@ class TestApplication(TestCase):
         mock_msgbox.return_value.setStandardButtons.assert_called_with(mock.ANY)
         mock_msgbox.return_value.exec.assert_called_with()
 
+    @pytest.mark.skipif(sys.platform != 'darwin', reason="Checking darwin full disk access")
     @mock.patch('vorta.store.models.SettingsModel.get')
     @mock.patch('vorta.application.logger')
     def test_check_darwin_permissions_with_full_access_disabled(self, mock_logger, mock_settings):
