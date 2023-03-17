@@ -194,23 +194,28 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
+
+        # Checks to see if user has disabled this prompt in Misc Tab
+        if not SettingsModel.get(key="check_full_disk_access").value:
+            logger.info('Skipping check due to setting')
+            return
+
         test_path = Path('~/Library/Cookies').expanduser()
         if test_path.exists() and not os.access(test_path, os.R_OK):
-            if SettingsModel.get(key="check_full_disk_access").value:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
-                msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
-                msg.setInformativeText(
-                    self.tr(
-                        "Without this, some files will not be accessible and you may end up with an incomplete "
-                        "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
-                        "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
-                        "System Preferences > Security & Privacy</a>."
-                    )
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
+            msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
+            msg.setInformativeText(
+                self.tr(
+                    "Without this, some files will not be accessible and you may end up with an incomplete "
+                    "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
+                    "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
+                    "System Preferences > Security & Privacy</a>."
                 )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec()
+            )
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
     def react_to_log(self, mgs, context):
         """

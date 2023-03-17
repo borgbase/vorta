@@ -83,17 +83,6 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'tooltip': trans_late('settings', 'Set owner to current user and umask to 0277'),
         },
         {
-            'key': 'check_full_disk_access',
-            'value': True,
-            'type': 'checkbox',
-            'group': startup,
-            'label': trans_late(
-                'settings',
-                'Check for Full Disk Access on startup',
-            ),
-            'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
-        },
-        {
             'key': 'previous_profile_id',
             'str_value': '1',
             'type': 'internal',
@@ -125,6 +114,17 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'value': False,
                 'type': 'checkbox',
                 'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
+            },
+            {
+                'key': 'check_full_disk_access',
+                'value': True,
+                'type': 'checkbox',
+                'group': startup,
+                'label': trans_late(
+                    'settings',
+                    'Check for Full Disk Access on startup',
+                ),
+                'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
             },
         ]
     else:
