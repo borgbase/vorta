@@ -10,6 +10,8 @@ def test_keyring():
     keyring = VortaKeyring.get_keyring()
     keyring.set_password('vorta-repo', REPO, UNICODE_PW)
     assert keyring.get_password("vorta-repo", REPO) == UNICODE_PW
+    keyring.remove_password('vorta-repo', REPO)
+    assert keyring.remove_password("vorta-repo", REPO) is None
 
 
 def test_best_size_unit_precision0():

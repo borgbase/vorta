@@ -80,10 +80,9 @@ class VortaSecretStorageKeyring(VortaKeyring):
             logger.debug('Found %i passwords matching repo URL.', len(items))
             for item in items:
                 if item.is_locked() and item.unlock():
-                    return None
-                self.collection.delete(item)
+                    continue
+                self.collection.item.delete()
                 logger.debug(f"Removed password for repo {repo_url}")
-        return None
 
     @property
     def is_unlocked(self):
