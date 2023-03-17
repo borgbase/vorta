@@ -2,7 +2,7 @@ from unittest import TestCase, mock
 from vorta.application import VortaApp
 
 
-class TestVortaApp(TestCase):
+class TestApplication(TestCase):
     def setUp(self):
         self.app = VortaApp([])
 
@@ -13,12 +13,10 @@ class TestVortaApp(TestCase):
     def test_check_darwin_permissions_with_full_access_enabled(
         self, mock_access, mock_exists, mock_msgbox, mock_settings
     ):
-        # Set up mocks
         mock_settings.return_value.value = True
         mock_exists.return_value = True
         mock_access.return_value = False
 
-        # Call method
         self.app.check_darwin_permissions()
 
         # Assert that the correct methods were called on the mock objects
@@ -35,10 +33,8 @@ class TestVortaApp(TestCase):
     @mock.patch('vorta.store.models.SettingsModel.get')
     @mock.patch('vorta.application.logger')
     def test_check_darwin_permissions_with_full_access_disabled(self, mock_logger, mock_settings):
-        # Set up mocks
         mock_settings.return_value.value = False
 
-        # Call method
         self.app.check_darwin_permissions()
 
         # Assert that the correct methods were called on the mock objects
