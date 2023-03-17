@@ -36,7 +36,7 @@
     "password": "Tr0ub4dor&3",
     "post_backup_cmd": "",
     "dont_run_on_metered_networks": true,
-    "allow_new_networks": false,
+    "allow_new_networks": true,
     "show_notification_when_network_disallowed": true,
     "SourceFileModel": [
         {

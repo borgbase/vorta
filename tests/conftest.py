@@ -78,7 +78,7 @@ def init_db(qapp, qtbot, tmpdir_factory):
 
     default_profile.repo = new_repo.id
     default_profile.dont_run_on_metered_networks = False
-    default_profile.allow_new_networks = False
+    default_profile.allow_new_networks = True
     default_profile.show_notification_when_network_disallowed = True
     default_profile.validation_on = False
     default_profile.save()
