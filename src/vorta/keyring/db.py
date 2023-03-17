@@ -37,7 +37,7 @@ class VortaDBKeyring(VortaKeyring):
             keyring_entry.delete_instance()
             logger.debug(f"Removed password for repo {repo_url}")
         except peewee.DoesNotExist:
-            pass
+            logger.debug(f"Password wasn't found for repo {repo_url}")
 
     @property
     def is_system(self):
