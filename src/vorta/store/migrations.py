@@ -233,7 +233,7 @@ def run_migrations(current_schema, db_connection):
             migrator.add_column(
                 BackupProfileModel._meta.table_name,
                 'allow_new_networks',
-                pw.BooleanField(default=False),
+                pw.BooleanField(default=True),
             ),
             migrator.add_column(
                 BackupProfileModel._meta.table_name,

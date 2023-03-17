@@ -418,9 +418,9 @@ class VortaScheduler(QtCore.QObject):
             else:
                 logger.error('Conditions for backup not met. Aborting.')
                 logger.error(msg['message'])
-                if not (
-                    msg['message'] == 'Current Wifi is not allowed.'
-                    and not profile.show_notification_when_network_disallowed
+                if (
+                    msg['message'] != 'Current Wifi is not allowed.'
+                    or profile.show_notification_when_network_disallowed
                 ):
                     notifier.deliver(
                         self.tr('Vorta Backup'),
