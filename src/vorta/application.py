@@ -113,12 +113,16 @@ class VortaApp(QtSingleApplication):
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             self.jobs_manager.add_job(job)
         else:
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
-                self.tr('Vorta Backup'),
-                translate('messages', msg['message']),
-                level='error',
-            )
+            if not (
+                msg['message'] == 'Current Wifi is not allowed.'
+                and not profile.show_notification_when_network_disallowed
+            ):
+                notifier = VortaNotifications.pick()
+                notifier.deliver(
+                    self.tr('Vorta Backup'),
+                    translate('messages', msg['message']),
+                    level='error',
+                )
             self.backup_progress_event.emit(translate('messages', msg['message']))
             return None
 

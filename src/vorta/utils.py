@@ -322,12 +322,13 @@ def get_sorted_wifis(profile):
     # Pull networks known to OS and all other backup profiles
     system_wifis = get_network_status_monitor().get_known_wifis()
     from_other_profiles = WifiSettingModel.select().where(WifiSettingModel.profile != profile.id).execute()
+    allow_new_networks = profile.allow_new_networks
 
     for wifi in list(from_other_profiles) + system_wifis:
         db_wifi, created = WifiSettingModel.get_or_create(
             ssid=wifi.ssid,
             profile=profile.id,
-            defaults={'last_connected': wifi.last_connected, 'allowed': True},
+            defaults={'last_connected': wifi.last_connected, 'allowed': allow_new_networks},
         )
 
         # Update last connected time

@@ -38,8 +38,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>687</width>
-        <height>384</height>
+        <width>898</width>
+        <height>361</height>
        </rect>
       </property>
       <property name="font">
@@ -520,7 +520,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>384</height>
+        <height>378</height>
        </rect>
       </property>
       <attribute name="label">
@@ -530,7 +530,7 @@
        <property name="verticalSpacing">
         <number>12</number>
        </property>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <property name="spacing">
           <number>4</number>
@@ -567,6 +567,20 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="allowNewNetworksCheckBox">
+         <property name="text">
+          <string>Allow new networks by default</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="networkDisallowedNotificationCheckBox">
+         <property name="text">
+          <string>Show notification when a network is disallowed</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page">
@@ -575,7 +589,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>384</height>
+        <height>378</height>
        </rect>
       </property>
       <attribute name="label">
@@ -634,7 +648,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>384</height>
+        <height>378</height>
        </rect>
       </property>
       <attribute name="label">
