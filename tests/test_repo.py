@@ -63,6 +63,41 @@ def test_repo_unlink(qapp, qtbot):
     assert main.progressText.text() == 'Select a backup repository first.'
 
 
+def test_passphrase_change_failures(qapp, qtbot):
+    # Add new repo window
+    main = qapp.main_window
+    main.repoTab.change_borg_passphrase()
+    change_pass_window = main.repoTab._window
+    qtbot.addWidget(change_pass_window)
+
+    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.confirmLineEdit, LONG_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
+    assert change_pass_window.errorText.text().startswith('Old password is required')
+
+    change_pass_window.passwordLineEdit.clear()
+    change_pass_window.confirmLineEdit.clear()
+    qtbot.keyClicks(change_pass_window.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(change_pass_window.oldPasswordLineEdit, 'a')
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
+    assert change_pass_window.errorText.text() == 'Passwords must be greater than 8 characters long.'
+
+    change_pass_window.passwordLineEdit.clear()
+    change_pass_window.confirmLineEdit.clear()
+    qtbot.keyClicks(change_pass_window.passwordLineEdit, SHORT_PASSWORD + "1")
+    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
+    assert change_pass_window.errorText.text() == 'Passwords must be identical and greater than 8 characters long.'
+
+    change_pass_window.passwordLineEdit.clear()
+    change_pass_window.confirmLineEdit.clear()
+    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
+    assert change_pass_window.errorText.text() == 'Passwords must be identical.'
+
+
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
@@ -146,3 +181,23 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
+
+
+def test_passphrase_change(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    main.repoTab.change_borg_passphrase()
+    change_pass_window = main.repoTab._window
+
+    qtbot.keyClicks(change_pass_window.oldPasswordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.confirmLineEdit, LONG_PASSWORD)
+
+    stdout, stderr = borg_json_output('change_passphrase')
+    print(stdout, stderr)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    change_pass_window.run()
+
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Borg passphrase changed.'), **pytest._wait_defaults)
+    assert main.progressText.text() == 'Borg passphrase changed.'

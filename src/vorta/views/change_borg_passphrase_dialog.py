@@ -62,6 +62,7 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
 
     # No need to add this function to JobsManager because repo is set for the first time
     def run(self):
+        # if self.password_listener() and self.validate():
         if self.password_listener():
             oldPass = self.oldPasswordLineEdit.text()
             newPass = self.passwordLineEdit.text()
@@ -87,6 +88,13 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
             self.accept()
         else:
             self._set_status(self.tr('Unable to change Borg passphrase.'))
+
+    def validate(self):
+        """Check encryption type"""
+        if self.profile.repo.encryption in ['repokey', 'repokey-blake2']:
+            return True
+        self.errorText.setText(translate('utils', 'Encryption type must be repokey.'))
+        return False
 
     def password_listener(self):
         '''Validates passwords only if its going to be used'''
