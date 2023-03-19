@@ -37,6 +37,10 @@ class PasswordInput(QWidget):
     # def set_match_with(self, match_with):
     #     self.match_with = match_with
 
+    def clear(self):
+        """Clear password value"""
+        self._password_edit.clear()
+
     def _check_password_length(self):
         if len(self._password_edit.text()) < self._minimum_length:
             self.password_too_short.emit()
