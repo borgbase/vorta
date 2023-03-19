@@ -7,7 +7,7 @@ from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
-from vorta.views.partials.password_input import PasswordInput
+from vorta.views.partials.password_input import PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')
@@ -28,9 +28,9 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
-        self.passwordLineEdit = PasswordInput(minimum_length=9)
+        self.passwordLineEdit = PasswordLineEdit(minimum_length=9)
         self.repoDataFormLayout.insertRow(2, self.tr("Borg passphrase:"), self.passwordLineEdit)
-        self.confirmLineEdit = PasswordInput(minimum_length=9, match_with=self.passwordLineEdit)
+        self.confirmLineEdit = PasswordLineEdit(minimum_length=9, match_with=self.passwordLineEdit)
         self.repoDataFormLayout.insertRow(3, self.tr("Confirm passphrase:"), self.confirmLineEdit)
 
         self.buttonBox.rejected.connect(self.close)
