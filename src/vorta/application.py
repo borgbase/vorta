@@ -84,7 +84,7 @@ class VortaApp(QtSingleApplication):
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
-        if sys.platform == 'darwin':
+        if sys.platform == 'darwin' and SettingsModel.get(key="check_full_disk_access").value:
             self.check_darwin_permissions()
 
     def create_backups_cmdline(self, profile_name):
@@ -194,11 +194,6 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
-
-        # Checks to see if user has disabled this prompt in Misc Tab
-        if not SettingsModel.get(key="check_full_disk_access").value:
-            logger.info('Skipping check due to setting')
-            return
 
         test_path = Path('~/Library/Cookies').expanduser()
         if test_path.exists() and not os.access(test_path, os.R_OK):
