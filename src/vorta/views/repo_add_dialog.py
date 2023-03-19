@@ -1,12 +1,13 @@
 import re
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QAction, QApplication, QDialogButtonBox, QLineEdit
+from PyQt5.QtWidgets import QApplication, QDialogButtonBox
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
+from vorta.views.partials.password_input import PasswordInput
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')
@@ -27,6 +28,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
+        self.passwordLineEdit = PasswordInput(minimum_length=9)
+        self.repoDataFormLayout.insertRow(2, self.tr("Borg passphrase:"), self.passwordLineEdit)
+        self.confirmLineEdit = PasswordInput(minimum_length=9, match_with=self.passwordLineEdit)
+        self.repoDataFormLayout.insertRow(3, self.tr("Confirm passphrase:"), self.confirmLineEdit)
+
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
@@ -35,13 +41,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.passwordLineEdit.textChanged.connect(self.password_listener)
         self.confirmLineEdit.textChanged.connect(self.password_listener)
         self.encryptionComboBox.activated.connect(self.display_backend_warning)
-
-        # Add clickable icon to toggle password visibility to end of box
-        self.showHideAction = QAction(self.tr("Show my passwords"), self)
-        self.showHideAction.setCheckable(True)
-        self.showHideAction.toggled.connect(self.set_visibility)
-
-        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -61,7 +60,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def set_icons(self):
         self.chooseLocalFolderButton.setIcon(get_colored_icon('folder-open'))
         self.useRemoteRepoButton.setIcon(get_colored_icon('globe'))
-        self.showHideAction.setIcon(get_colored_icon("eye"))
 
     @property
     def values(self):
@@ -101,18 +99,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self.passwordLineEdit.setText(password)
             if self.__class__ == AddRepoWindow:
                 self.confirmLineEdit.setText(password)
-
-    def set_visibility(self, visible):
-        visibility = QLineEdit.Normal if visible else QLineEdit.Password
-        self.passwordLineEdit.setEchoMode(visibility)
-        self.confirmLineEdit.setEchoMode(visibility)
-
-        if visible:
-            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
-            self.showHideAction.setText(self.tr("Hide my passwords"))
-        else:
-            self.showHideAction.setIcon(get_colored_icon("eye"))
-            self.showHideAction.setText(self.tr("Show my passwords"))
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -215,24 +201,12 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
-        self.showHideAction.setText(self.tr("Show my password"))
         self.passwordLineEdit.textChanged.disconnect()
         self.confirmLineEdit.textChanged.disconnect()
         self.confirmLineEdit.hide()
-        self.confirmLabel.hide()
+        # self.confirmLabel.hide()
         del self.confirmLineEdit
-        del self.confirmLabel
-
-    def set_visibility(self, visible):
-        visibility = QLineEdit.Normal if visible else QLineEdit.Password
-        self.passwordLineEdit.setEchoMode(visibility)
-
-        if visible:
-            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
-            self.showHideAction.setText(self.tr("Hide my password"))
-        else:
-            self.showHideAction.setIcon(get_colored_icon("eye"))
-            self.showHideAction.setText(self.tr("Show my password"))
+        # del self.confirmLabel
 
     def run(self):
         if self.validate():
