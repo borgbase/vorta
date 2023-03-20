@@ -74,8 +74,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
-        self.first_repo_refresh = True
-        self.first_selection = True
         self.quick_mount = False
 
         #: Tooltip dict to save the tooltips set in the designer
@@ -377,9 +375,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
-            if self.first_selection:
-                self.first_selection = False
-                self.bmountarchive_update_menu(disconnect_click=False)
+            self.bmountarchive_update_menu()
         else:
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
@@ -607,18 +603,24 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.bMountArchive.setText(self.tr("Mount…"))
                 self.bMountArchive.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system"))
 
-    def bmountarchive_update_menu(self, disconnect_click=True):
+    def bmountarchive_update_menu(self):
         """
         Update the menu of `bMountArchive`.
         """
         archive_name = self.selected_archive_name()
         if archive_name in self.mount_points:
             self.bMountArchive.setMenu(None)
-            self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
-        else:
-            if disconnect_click:
+            try:
                 self.bMountArchive.clicked.disconnect()
-            self.bMountArchive.setMenu(self.menuMountArchive)
+                self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
+            except TypeError:
+                self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
+        else:
+            try:
+                self.bMountArchive.clicked.disconnect()
+                self.bMountArchive.setMenu(self.menuMountArchive)
+            except TypeError:
+                pass
 
     def bmountrepo_refresh(self):
         """
@@ -634,15 +636,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bMountRepo.setMenu(None)
             self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
         else:
-            # if this is the first refresh, then dont disconnect the button to avoid a crash
-            if not self.first_repo_refresh:
+            try:
                 # disconnect the button to open the menu
                 self.bMountRepo.clicked.disconnect()
+            except TypeError:
+                pass
             self.bMountRepo.setText(self.tr("Mount…"))
             self.bMountRepo.setIcon(get_colored_icon('folder-open'))
             self.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system"))
             self.bMountRepo.setMenu(self.menuMountRepo)
-        self.first_repo_refresh = False
 
     def mount_action(self, archive_name=None):
         """
