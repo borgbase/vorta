@@ -96,7 +96,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
         password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
-        if password and self.passwordInput.get_password == "":
+        if password and self.passwordInput.get_password() == "":
             self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
             self.passwordInput.passwordLineEdit.setText(password)
             if self.__class__ == AddRepoWindow:

@@ -130,4 +130,4 @@ class PasswordInput(QWidget):
 
         # fire signal
         # self.passwordLabelChanged.emit(msg)
-        return not bool(self.password_label)
+        return not bool(self.password_label.text())
