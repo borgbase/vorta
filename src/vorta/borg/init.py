@@ -66,5 +66,4 @@ class BorgInitJob(BorgJob):
             )
             if new_repo.encryption != 'none':
                 self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
-            print(new_repo.name)
             new_repo.save()
