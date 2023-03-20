@@ -68,12 +68,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}  # mapping of archive name to mount point
+        self.quick_mount_points = {}  # mapping of archive name to quick mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
-        self.first_refresh = True
+        self.first_repo_refresh = True
+        self.first_selection = True
         self.quick_mount = False
 
         #: Tooltip dict to save the tooltips set in the designer
@@ -112,7 +114,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.selectionModel().selectionChanged.connect(self.on_selection_change)
 
         # connect archive actions
-        self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
@@ -124,11 +125,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bPrune.clicked.connect(self.prune_action)
         self.bCheck.clicked.connect(self.check_action)
         self.bDiff.clicked.connect(self.diff_action)
+        self.menuMountArchive = QMenu(self.bMountArchive)
+        self.menuMountArchive.addAction(translate("MountArchive", "Mount to Folder"), self.bmountarchive_clicked)
+        self.menuMountArchive.addAction(
+            translate("MountArchive", "Quick Mount"), lambda: self.bmountarchive_clicked(True)
+        )
+        self.bMountArchive.setMenu(self.menuMountArchive)
+
         self.menuMountRepo = QMenu(self.bMountRepo)
-
-        self.menuMountRepo.addAction(translate("ArchiveTab", "Mount to Folder"), self.bmountrepo_clicked)
-        self.menuMountRepo.addAction(translate("ArchiveTab", "Quick Mount"), self.quick_mount_action)
-
+        self.menuMountRepo.addAction(translate("MountRepo", "Mount to Folder"), self.bmountrepo_clicked)
+        self.menuMountRepo.addAction(translate("MountRepo", "Quick Mount"), self.quick_mount_action)
         self.bMountRepo.setMenu(self.menuMountRepo)
 
         self.archiveNameTemplate.textChanged.connect(
@@ -262,6 +268,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 mount_point_filename = os.path.basename(self.repo_mount_point)
                 if mount_point_filename.startswith("vorta-quick-mount-"):
                     self.quick_mount = True
+            for mount_point in self.mount_points:
+                mount_point_filename = os.path.basename(self.mount_points[mount_point])
+                if mount_point_filename.startswith("vorta-quick-mount-"):
+                    self.quick_mount_points[mount_point] = self.mount_points[mount_point]
 
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
@@ -367,6 +377,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
+            if self.first_selection:
+                self.first_selection = False
+                self.bmountarchive_update_menu(disconnect_click=False)
         else:
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
@@ -516,7 +529,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 return archive_cell.text()
         return None
 
-    def bmountarchive_clicked(self):
+    def bmountarchive_clicked(self, quick=False):
         """
         Handle `bMountArchive` being clicked.
 
@@ -531,7 +544,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if archive_name in self.mount_points:
             self.unmount_action(archive_name=archive_name)
         else:
-            self.mount_action(archive_name=archive_name)
+            if quick:
+                self.quick_mount_action(archive_name=archive_name)
+            else:
+                self.mount_action(archive_name=archive_name)
 
     def quick_mount_action(self, archive_name=None):
         """
@@ -591,6 +607,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.bMountArchive.setText(self.tr("Mount…"))
                 self.bMountArchive.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system"))
 
+    def bmountarchive_update_menu(self, disconnect_click=True):
+        """
+        Update the menu of `bMountArchive`.
+        """
+        archive_name = self.selected_archive_name()
+        if archive_name in self.mount_points:
+            self.bMountArchive.setMenu(None)
+            self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
+        else:
+            if disconnect_click:
+                self.bMountArchive.clicked.disconnect()
+            self.bMountArchive.setMenu(self.menuMountArchive)
+
     def bmountrepo_refresh(self):
         """
         Update label, tooltip and state of `bMountRepo`.
@@ -606,14 +635,14 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
         else:
             # if this is the first refresh, then dont disconnect the button to avoid a crash
-            if not self.first_refresh:
+            if not self.first_repo_refresh:
                 # disconnect the button to open the menu
                 self.bMountRepo.clicked.disconnect()
-            self.bMountRepo.setText(self.tr("Mount to Folder"))
+            self.bMountRepo.setText(self.tr("Mount…"))
             self.bMountRepo.setIcon(get_colored_icon('folder-open'))
             self.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system"))
             self.bMountRepo.setMenu(self.menuMountRepo)
-        self.first_refresh = False
+        self.first_repo_refresh = False
 
     def mount_action(self, archive_name=None):
         """
@@ -670,7 +699,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
 
+                if quick:
+                    self.quick_mount_points[archive_name] = mount_point
                 # update button
+                self.bmountarchive_update_menu()
                 self.bmountarchive_refresh()
             else:
                 # whole repo was mounted
@@ -719,12 +751,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             if archive_name:
                 # unmount single archive
+                if archive_name in self.quick_mount_points:
+                    shutil.rmtree(self.quick_mount_points[archive_name])
+                    del self.quick_mount_points[archive_name]
                 del self.mount_points[archive_name]
                 row = self.row_of_archive(archive_name)
                 item = QTableWidgetItem('')
                 self.archiveTable.setItem(row, 3, item)
 
                 # update button
+                self.bmountarchive_update_menu()
                 self.bmountarchive_refresh()
             else:
                 # unmount repo
