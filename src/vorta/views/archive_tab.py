@@ -249,7 +249,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if repo_mount_points:
                 self.repo_mount_point = repo_mount_points[0]
 
-            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
+            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.name)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             sorting = self.archiveTable.isSortingEnabled()

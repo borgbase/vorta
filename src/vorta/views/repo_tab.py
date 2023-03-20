@@ -77,7 +77,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.repoSelector.clear()
         self.repoSelector.addItem(self.tr('No repository selected'), None)
         for repo in RepoModel.select():
-            self.repoSelector.addItem(repo.url, repo.id)
+            self.repoSelector.addItem(repo.name, repo.id)
 
     def populate_from_profile(self):
         try:

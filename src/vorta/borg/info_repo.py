@@ -46,6 +46,7 @@ class BorgInfoRepoJob(BorgJob):
                 ret['message'] = trans_late('messages', 'Please unlock your password manager.')
                 return ret
 
+        ret['repo_name'] = params['repo_name']
         ret['ok'] = True
         ret['cmd'] = cmd
 
@@ -53,7 +54,9 @@ class BorgInfoRepoJob(BorgJob):
 
     def process_result(self, result):
         if result['returncode'] == 0:
-            new_repo, _ = RepoModel.get_or_create(url=result['cmd'][-1])
+            new_repo, _ = RepoModel.get_or_create(
+                url=result['cmd'][-1], defaults={'name': result['params']['repo_name']}
+            )
             if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
                 new_repo.total_size = stats['total_size']

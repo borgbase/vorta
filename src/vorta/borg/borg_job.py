@@ -25,7 +25,7 @@ keyring_lock = Lock()
 db_lock = Lock()
 logger = logging.getLogger(__name__)
 
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
+FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 """
@@ -188,6 +188,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
+        ret['repo_name'] = profile.repo.name
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
         ret['profile_id'] = profile.id
