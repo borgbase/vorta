@@ -9,13 +9,14 @@ class PasswordLineEdit(QLineEdit):
 
         self._show_visibility_button = show_visibility_button
         self._error_state = False
+        self._visible = False
 
         self.setEchoMode(QLineEdit.Password)
 
         if self._show_visibility_button:
             self.showHideAction = QAction(self.tr("Show password"), self)
             self.showHideAction.setCheckable(True)
-            self.showHideAction.toggled.connect(self._toggle_password_visibility)
+            self.showHideAction.toggled.connect(self.toggle_visibility)
             self.showHideAction.setIcon(get_colored_icon("eye"))
             self.addAction(self.showHideAction, QLineEdit.TrailingPosition)
 
@@ -23,13 +24,20 @@ class PasswordLineEdit(QLineEdit):
         """Return password text"""
         return self.text()
 
-    def _toggle_password_visibility(self):
-        if self.echoMode() == QLineEdit.Password:
-            self.setEchoMode(QLineEdit.Normal)
+    def toggle_visibility(self):
+        """Toggle password visibility"""
+        self._visible = not self._visible
+        self.setEchoMode(QLineEdit.Normal if self._visible else QLineEdit.Password)
+
+        if self._show_visibility_button:
             self.showHideAction.setIcon(get_colored_icon("eye"))
         else:
-            self.setEchoMode(QLineEdit.Password)
             self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+
+    @property
+    def visible(self):
+        """Return password visibility"""
+        return self._visible
 
     @property
     def error_state(self):
