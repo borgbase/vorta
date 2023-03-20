@@ -17,33 +17,36 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     add_repo_window = main.repoTab._window
     qtbot.addWidget(add_repo_window)
 
-    add_repo_window.passwordLineEdit.setText(LONG_PASSWORD)
-    add_repo_window.confirmLineEdit.setText(LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid')
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    add_repo_window.passwordLineEdit.setText(SHORT_PASSWORD)
-    add_repo_window.confirmLineEdit.setText(SHORT_PASSWORD)
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be greater than 8 characters long.'
+    assert add_repo_window.passwordInput.password_label.text() == 'Passwords must be greater than 8 characters long.'
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    add_repo_window.passwordLineEdit.setText(SHORT_PASSWORD + "1")
-    add_repo_window.confirmLineEdit.setText(SHORT_PASSWORD)
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD + "1")
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical and greater than 8 characters long.'
+    assert (
+        add_repo_window.passwordInput.password_label.text()
+        == 'Passwords must be identical and greater than 8 characters long.'
+    )
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    add_repo_window.passwordLineEdit.setText(LONG_PASSWORD)
-    add_repo_window.confirmLineEdit.setText(SHORT_PASSWORD)
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical.'
+    assert add_repo_window.passwordInput.password_label.text() == 'Passwords must be identical.'
 
 
 def test_repo_unlink(qapp, qtbot):
@@ -75,7 +78,7 @@ def test_password_autofill(qapp, qtbot):
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
-    assert add_repo_window.passwordLineEdit.text() == password
+    assert add_repo_window.passwordInput.passwordLineEdit.text() == password
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
@@ -86,9 +89,8 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
-    # qtbot.keyClicks(add_repo_window.passwordLineEdit._password_edit, LONG_PASSWORD)
-    add_repo_window.passwordLineEdit.setText(LONG_PASSWORD)
-    add_repo_window.confirmLineEdit.setText(LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)

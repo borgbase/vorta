@@ -148,14 +148,6 @@
                   </item>
                 </layout>
               </item>
-
-              <item row="4" column="0" colspan="2">
-                <widget class="QLabel" name="passwordLabel">
-                  <property name="text">
-                    <string>TextLabel</string>
-                  </property>
-                </widget>
-              </item>
             </layout>
           </widget>
           <widget class="QWidget" name="tabWidgetPage2">

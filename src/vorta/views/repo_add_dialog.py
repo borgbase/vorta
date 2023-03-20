@@ -1,13 +1,12 @@
 import re
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QLabel
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
-from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
-from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
-from vorta.views.partials.password_input import PasswordLineEdit
+from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
+from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')
@@ -28,26 +27,29 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
-        self.passwordLineEdit = PasswordLineEdit(minimum_length=9)
-        self.repoDataFormLayout.insertRow(2, self.tr("Borg passphrase:"), self.passwordLineEdit)
-        self.confirmLineEdit = PasswordLineEdit(minimum_length=9, match_with=self.passwordLineEdit)
-        self.repoDataFormLayout.insertRow(3, self.tr("Confirm passphrase:"), self.confirmLineEdit)
+        if self.__class__ == AddRepoWindow:
+            self.passwordInput = PasswordInput(form_layout=self.repoDataFormLayout)
+            self.repoDataFormLayout.addRow(self.passwordInput)
+            self.passwordInput.passwordLineEdit.textChanged.connect(self.password_listener)
+            self.passwordInput.confirmLineEdit.textChanged.connect(self.password_listener)
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
         self.chooseLocalFolderButton.clicked.connect(self.choose_local_backup_folder)
         self.useRemoteRepoButton.clicked.connect(self.use_remote_repo_action)
         self.repoURL.textChanged.connect(self.set_password)
-        self.passwordLineEdit.textChanged.connect(self.password_listener)
-        self.confirmLineEdit.textChanged.connect(self.password_listener)
-        self.encryptionComboBox.activated.connect(self.display_backend_warning)
+
+        if self.__class__ == AddRepoWindow:
+            # connectors only for main class
+            self.encryptionComboBox.activated.connect(self.display_backend_warning)
+
+            self.display_backend_warning()
 
         self.tabWidget.setCurrentIndex(0)
 
         self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
-        self.display_backend_warning()
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -66,7 +68,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         out = dict(
             ssh_key=self.sshComboBox.currentData(),
             repo_url=self.repoURL.text(),
-            password=self.passwordLineEdit.text(),
+            password=self.passwordInput.get_password(),
             extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
         )
         if self.__class__ == AddRepoWindow:
@@ -76,7 +78,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def display_backend_warning(self):
         '''Display password backend message based off current keyring'''
         if self.encryptionComboBox.currentData() != 'none':
-            self.passwordLabel.setText(VortaKeyring.get_keyring().get_backend_warning())
+            self.passwordInput.set_error_label(VortaKeyring.get_keyring().get_backend_warning())
 
     def choose_local_backup_folder(self):
         def receive():
@@ -94,11 +96,11 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
         password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
-        if password and self.passwordLineEdit.text() == "":
-            self.passwordLabel.setText(self.tr("Autofilled password from password manager."))
-            self.passwordLineEdit.setText(password)
+        if password and self.passwordInput.passwordLineEdit.text() == "":
+            self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
+            self.passwordInput.passwordLineEdit.setText(password)
             if self.__class__ == AddRepoWindow:
-                self.confirmLineEdit.setText(password)
+                self.passwordInput.confirmLineEdit.setText(password)
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -110,7 +112,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
     # No need to add this function to JobsManager because repo is set for the first time
     def run(self):
-        if self.validate() and self.password_listener():
+        if self.validate() and self.passwordInput.validate():
             params = BorgInitJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -185,14 +187,9 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def password_listener(self):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
-            self.passwordLabel.setText("")
-            return True
+            self.passwordInput.set_validation(False)
         else:
-            firstPass = self.passwordLineEdit.text()
-            secondPass = self.confirmLineEdit.text()
-            msg = validate_passwords(firstPass, secondPass)
-            self.passwordLabel.setText(translate('utils', msg))
-            return not bool(msg)
+            self.passwordInput.set_validation(True)
 
 
 class ExistingRepoWindow(AddRepoWindow):
@@ -201,12 +198,9 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
-        self.passwordLineEdit.textChanged.disconnect()
-        self.confirmLineEdit.textChanged.disconnect()
-        self.confirmLineEdit.hide()
-        # self.confirmLabel.hide()
-        del self.confirmLineEdit
-        # del self.confirmLabel
+        self.passwordLabel = QLabel(self.tr('Password:'))
+        self.passwordInput = PasswordLineEdit()
+        self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
     def run(self):
         if self.validate():
