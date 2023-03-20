@@ -33,47 +33,37 @@ def test_autostart(qapp, qtbot):
         assert not os.path.exists(autostart_path)
 
 
-def test_full_disk_access_check_disabled(qapp, mocker):
-    """Mock disables the setting 'Check for Full Disk Access on startup' and ensures functionality"""
+@pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
+def test_check_full_disk_access(qapp, qtbot, mocker):
+    """Enables/disables 'Check for Full Disk Access on startup' setting and ensures functionality"""
 
-    # Set mocks
-    mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=False))
-    mocker.patch('pathlib.Path.exists', return_value=True)
-    mocker.patch('os.access', return_value=False)
-    mock_qmessagebox = mocker.patch('vorta.application.QMessageBox')
+    setting = "Check for Full Disk Access on startup"
 
-    qapp.check_darwin_permissions()
-
-    # See that no pop-up occurs
-    mock_qmessagebox.assert_not_called()
-
-
-def test_full_disk_access_check_enabled(qapp, mocker):
-    """Mock enables the setting 'Check for Full Disk Access on startup' and ensures functionality"""
-
-    # Set mocks
+    # Set mocks for setting enabled
     mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=True))
     mocker.patch('pathlib.Path.exists', return_value=True)
     mocker.patch('os.access', return_value=False)
     mock_qmessagebox = mocker.patch('vorta.application.QMessageBox')
 
+    # See that pop-up occurs
     qapp.check_darwin_permissions()
-
-    # see that pop-up occurs
     mock_qmessagebox.assert_called()
 
+    # Reset mocks for setting disabled
+    mock_qmessagebox.reset_mock()
+    mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=False))
 
-@pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
-def test_toggle_full_disk_access_setting(qapp, qtbot, mocker):
-    """On darwin, checks that setting doesn't crash program when toggled on/off"""
+    # See that pop-up does not occur
+    qapp.check_darwin_permissions()
+    mock_qmessagebox.assert_not_called()
 
-    setting = "Check for Full Disk Access on startup"
+    # Checks that setting doesn't crash program when click toggled on then off"""
     _click_toggle_setting(setting, qapp, qtbot)
     _click_toggle_setting(setting, qapp, qtbot)
 
 
 def _click_toggle_setting(setting, qapp, qtbot):
-    """Uses qtbot to click toggle setting in the misc tab"""
+    """Click toggle setting in the misc tab"""
 
     main = qapp.main_window
     main.tabWidget.setCurrentIndex(4)
