@@ -1,9 +1,8 @@
-pre-commit
 black==22.*
 coverage
 flake8
-isort
 macholib
+pre-commit
 pyinstaller
 pylint
 pytest
@@ -11,6 +10,7 @@ pytest-cov
 pytest-faulthandler
 pytest-mock
 pytest-qt
+ruff
 tox
 twine
 wheel
