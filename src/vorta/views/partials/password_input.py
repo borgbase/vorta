@@ -25,9 +25,17 @@ class PasswordLineEdit(QLineEdit):
         """Return password text"""
         return self.text()
 
-    def toggle_visibility(self):
-        """Toggle password visibility"""
-        self._visible = not self._visible
+    @property
+    def visible(self):
+        """Return password visibility"""
+        return self._visible
+
+    @visible.setter
+    def visible(self, value):
+        """Set password visibility"""
+        if not isinstance(value, bool):
+            raise TypeError("visible must be a boolean value")
+        self._visible = value
         self.setEchoMode(QLineEdit.Normal if self._visible else QLineEdit.Password)
 
         if self._show_visibility_button:
@@ -35,10 +43,9 @@ class PasswordLineEdit(QLineEdit):
         else:
             self.showHideAction.setIcon(get_colored_icon("eye-slash"))
 
-    @property
-    def visible(self):
-        """Return password visibility"""
-        return self._visible
+    def toggle_visibility(self):
+        """Toggle password visibility"""
+        self.visible = not self._visible
 
     @property
     def error_state(self):
