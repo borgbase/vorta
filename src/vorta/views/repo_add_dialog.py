@@ -27,11 +27,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
-        if self.__class__ == AddRepoWindow:
-            self.passwordInput = PasswordInput()
-            self.repoDataFormLayout.addRow(self.passwordInput.create_form_widget())
-            self.passwordInput.passwordLineEdit.textChanged.connect(self.password_listener)
-            self.passwordInput.confirmLineEdit.textChanged.connect(self.password_listener)
+        self.passwordInput = PasswordInput()
+        self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
@@ -42,6 +39,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         if self.__class__ == AddRepoWindow:
             # connectors only for main class
             self.encryptionComboBox.activated.connect(self.display_backend_warning)
+            self.encryptionComboBox.currentIndexChanged.connect(self.encryption_listener)
 
             self.display_backend_warning()
 
@@ -184,7 +182,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
 
         return True
 
-    def password_listener(self):
+    def encryption_listener(self):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
             self.passwordInput.set_validation_enabled(False)
@@ -198,6 +196,13 @@ class ExistingRepoWindow(AddRepoWindow):
         self.encryptionComboBox.hide()
         self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
+
+        # Remove existing passwordinput from parent class
+        passwordInput_index = self.repoDataFormLayout.indexOf(self.passwordInput.create_form_widget())
+        if passwordInput_index != -1:
+            self.repoDataFormLayout.removeRow(passwordInput_index)
+        del self.passwordInput
+
         self.passwordLabel = QLabel(self.tr('Password:'))
         self.passwordInput = PasswordLineEdit()
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)

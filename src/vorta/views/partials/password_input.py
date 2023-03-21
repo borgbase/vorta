@@ -92,6 +92,8 @@ class PasswordInput(QObject):
 
     def set_validation_enabled(self, enable: bool):
         self._show_error = enable
+        self.passwordLineEdit.error_state = False
+        self.confirmLineEdit.error_state = False
         if not enable:
             self.set_error_label("")
 
