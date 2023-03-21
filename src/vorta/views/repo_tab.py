@@ -130,7 +130,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.sshKeyToClipboardButton.setEnabled(ssh_enabled)
 
             # Disable the change passphrase button if encryption type is not repokey
-            if repo.encryption in ['repokey', 'repokey-blake2']:
+            if repo.encryption.startswith('repokey'):
                 self.changePassbutton.setEnabled(True)
             else:
                 self.changePassbutton.setEnabled(False)
