@@ -28,8 +28,8 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.saveButton.setText(self.tr("Add"))
 
         if self.__class__ == AddRepoWindow:
-            self.passwordInput = PasswordInput(form_layout=self.repoDataFormLayout)
-            self.repoDataFormLayout.addRow(self.passwordInput)
+            self.passwordInput = PasswordInput()
+            self.repoDataFormLayout.addRow(self.passwordInput.create_form_widget())
             self.passwordInput.passwordLineEdit.textChanged.connect(self.password_listener)
             self.passwordInput.confirmLineEdit.textChanged.connect(self.password_listener)
 
