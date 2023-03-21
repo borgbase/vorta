@@ -68,13 +68,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}  # mapping of archive name to mount point
-        self.quick_mount_points = {}  # mapping of archive name to quick mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
-        self.quick_mount = False
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -124,15 +122,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bCheck.clicked.connect(self.check_action)
         self.bDiff.clicked.connect(self.diff_action)
         self.menuMountArchive = QMenu(self.bMountArchive)
-        self.menuMountArchive.addAction(translate("MountArchive", "Mount to Folder"), self.bmountarchive_clicked)
+        self.menuMountArchive.addAction(translate("MountArchive", "Mount to Folder…"), self.bmountarchive_clicked)
         self.menuMountArchive.addAction(
-            translate("MountArchive", "Quick Mount"), lambda: self.bmountarchive_clicked(True)
+            translate("MountArchive", "Quick Mount…"), lambda: self.bmountarchive_clicked(True)
         )
         self.bMountArchive.setMenu(self.menuMountArchive)
 
         self.menuMountRepo = QMenu(self.bMountRepo)
-        self.menuMountRepo.addAction(translate("MountRepo", "Mount to Folder"), self.bmountrepo_clicked)
-        self.menuMountRepo.addAction(translate("MountRepo", "Quick Mount"), self.quick_mount_action)
+        self.menuMountRepo.addAction(translate("MountRepo", "Mount to Folder…"), self.bmountrepo_clicked)
+        self.menuMountRepo.addAction(translate("MountRepo", "Quick Mount…"), self.quick_mount_action)
         self.bMountRepo.setMenu(self.menuMountRepo)
 
         self.archiveNameTemplate.textChanged.connect(
@@ -263,13 +261,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.mount_points, repo_mount_points = get_mount_points(profile.repo.url)
             if repo_mount_points:
                 self.repo_mount_point = repo_mount_points[0]
-                mount_point_filename = os.path.basename(self.repo_mount_point)
-                if mount_point_filename.startswith("vorta-quick-mount-"):
-                    self.quick_mount = True
-            for mount_point in self.mount_points:
-                mount_point_filename = os.path.basename(self.mount_points[mount_point])
-                if mount_point_filename.startswith("vorta-quick-mount-"):
-                    self.quick_mount_points[mount_point] = self.mount_points[mount_point]
 
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
@@ -375,7 +366,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
-            self.bmountarchive_update_menu()
         else:
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
@@ -389,6 +379,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
+            self.bmountrepo_refresh()
             tooltip = self.bMountArchive.toolTip()
             self.bMountArchive.setToolTip(tooltip + " " + self.tr("(Select exactly one archive)"))
 
@@ -539,16 +530,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if archive_name in self.mount_points:
             self.unmount_action(archive_name=archive_name)
+        elif quick:
+            self.quick_mount_action(archive_name=archive_name)
         else:
-            if quick:
-                self.quick_mount_action(archive_name=archive_name)
-            else:
-                self.mount_action(archive_name=archive_name)
+            self.mount_action(archive_name=archive_name)
+
+    def get_vorta_quick_mountpoint(self):
+        """
+        return a temporary directory in the user's home folder ~/vorta-quick-mount-{randomcharacters}
+        """
+        return os.path.join(
+            os.path.expanduser('~'),
+            'vorta-quick-mount-' + ''.join(random.choices(string.ascii_lowercase + string.digits, k=6)),
+        )
 
     def quick_mount_action(self, archive_name=None):
         """
-        create a temporary directory in the user's home folder ~/vorta-quick-mount-{randomcharacters} and
-        mount the selected archive  or repository to that directory.
+        mount the selected archive  or repository to a temporary directory.
         """
         profile = self.profile()
         params = BorgMountJob.prepare(profile, archive=archive_name)
@@ -556,10 +554,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(params['message'])
             return
 
-        mount_point = os.path.join(
-            os.path.expanduser('~'),
-            'vorta-quick-mount-' + ''.join(random.choices(string.ascii_lowercase + string.digits, k=6)),
-        )
+        mount_point = self.get_vorta_quick_mountpoint()
+        while os.path.exists(mount_point) and os.listdir(mount_point):
+            mount_point = self.get_vorta_quick_mountpoint()
+
         os.mkdir(mount_point)
 
         params['cmd'].append(mount_point)
@@ -597,30 +595,22 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if not icon_only:
                 self.bMountArchive.setText(self.tr("Unmount"))
                 self.bMountArchive.setToolTip(self.tr('Unmount the selected archive from the file system'))
+                self.bMountArchive.setMenu(None)
+                try:
+                    self.bMountArchive.clicked.disconnect(self.bmountarchive_clicked)  # avoid race condition
+                    self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
+                except TypeError:
+                    self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         else:
             self.bMountArchive.setIcon(get_colored_icon('folder-open'))
             if not icon_only:
                 self.bMountArchive.setText(self.tr("Mount…"))
                 self.bMountArchive.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system"))
-
-    def bmountarchive_update_menu(self):
-        """
-        Update the menu of `bMountArchive`.
-        """
-        archive_name = self.selected_archive_name()
-        if archive_name in self.mount_points:
-            self.bMountArchive.setMenu(None)
-            try:
-                self.bMountArchive.clicked.disconnect()
-                self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
-            except TypeError:
-                self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
-        else:
-            try:
-                self.bMountArchive.clicked.disconnect()
-                self.bMountArchive.setMenu(self.menuMountArchive)
-            except TypeError:
-                pass
+                try:
+                    self.bMountArchive.clicked.disconnect(self.bmountarchive_clicked)
+                    self.bMountArchive.setMenu(self.menuMountArchive)
+                except TypeError:  # when bMountArchive.clicked is not connected
+                    pass
 
     def bmountrepo_refresh(self):
         """
@@ -638,8 +628,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             try:
                 # disconnect the button to open the menu
-                self.bMountRepo.clicked.disconnect()
-            except TypeError:
+                self.bMountRepo.clicked.disconnect(self.bmountrepo_clicked)
+            except TypeError:  # on first run, when the button is not connected
                 pass
             self.bMountRepo.setText(self.tr("Mount…"))
             self.bMountRepo.setIcon(get_colored_icon('folder-open'))
@@ -689,7 +679,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if quick:
                 # open the folder
                 QDesktopServices.openUrl(QUrl.fromLocalFile(mount_point))
-                self.quick_mount = True
 
             if result['params'].get('mounted_archive'):
                 # archive was mounted
@@ -701,10 +690,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.archiveTable.setItem(row, 3, item)
 
-                if quick:
-                    self.quick_mount_points[archive_name] = mount_point
                 # update button
-                self.bmountarchive_update_menu()
                 self.bmountarchive_refresh()
             else:
                 # whole repo was mounted
@@ -750,26 +736,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if result['returncode'] == 0:
             self._set_status(self.tr('Un-mounted successfully.'))
+            if os.path.basename(mount_point).startswith("vorta-quick-mount-"):
+                shutil.rmtree(mount_point)
 
             if archive_name:
                 # unmount single archive
-                if archive_name in self.quick_mount_points:
-                    shutil.rmtree(self.quick_mount_points[archive_name])
-                    del self.quick_mount_points[archive_name]
                 del self.mount_points[archive_name]
                 row = self.row_of_archive(archive_name)
                 item = QTableWidgetItem('')
                 self.archiveTable.setItem(row, 3, item)
 
-                # update button
-                self.bmountarchive_update_menu()
                 self.bmountarchive_refresh()
             else:
                 # unmount repo
                 self.repo_mount_point = None
-                if self.quick_mount:
-                    shutil.rmtree(mount_point)
-                    self.quick_mount = False
 
                 self.bmountrepo_refresh()
         else:
