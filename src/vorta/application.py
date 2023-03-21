@@ -56,7 +56,7 @@ class VortaApp(QtSingleApplication):
             sys.exit('Vorta must already be running for --create to work')
 
         self.message_received_event.connect(self.message_received_event_response)
-        if not (self.isRunning() and args.profile):
+        if not args.profile:
             init_translations(self)
 
             self.setQuitOnLastWindowClosed(False)
