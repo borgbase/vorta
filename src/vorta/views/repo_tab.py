@@ -76,8 +76,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def set_repos(self):
         self.repoSelector.clear()
         self.repoSelector.addItem(self.tr('No repository selected'), None)
+        # set tooltip = url for each item in the repoSelector
         for repo in RepoModel.select():
-            self.repoSelector.addItem(repo.name, repo.id)
+            self.repoSelector.addItem(f"{repo.name} - {repo.url}", repo.id)
+            self.repoSelector.setItemData(self.repoSelector.count() - 1, repo.url, QtCore.Qt.ToolTipRole)
 
     def populate_from_profile(self):
         try:

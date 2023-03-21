@@ -196,10 +196,6 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
             return False
 
-        if self.values['repo_name'] == '':
-            self._set_status(self.tr('Please enter a name for your repository.'))
-            return False
-
         if len(self.values['repo_name']) > 64:
             self._set_status(self.tr('Repository name must be less than 64 characters.'))
             return False

@@ -17,7 +17,7 @@ class BorgInfoRepoJob(BorgJob):
         # Build fake profile because we don't have it in the DB yet. Assume unencrypted.
         profile = FakeProfile(
             999,
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'),
+            FakeRepo(params['repo_url'], params['repo_name'], 999, params['extra_borg_arguments'], 'none'),
             'New Repo',
             params['ssh_key'],
         )
@@ -66,7 +66,8 @@ class BorgInfoRepoJob(BorgJob):
                 new_repo.encryption = result['data']['encryption']['mode']
             if new_repo.encryption != 'none':
                 self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
-
+            if new_repo.name == '':
+                new_repo.name = new_repo.id
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']
 
             new_repo.save()

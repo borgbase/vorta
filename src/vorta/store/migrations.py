@@ -237,7 +237,7 @@ def run_migrations(current_schema, db_connection):
             ),
         )
         for repo in RepoModel.select():
-            repo.name = repo.path
+            repo.name = repo.id
             repo.save()
 
 
