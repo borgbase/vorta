@@ -129,7 +129,7 @@ class VortaApp(QtSingleApplication):
         if result['returncode'] == 0:
             self.reply(f"created {result['data']['archive']['name']}")
         else:
-            self.reply(f"failed {result['data']['archive']['name']}")
+            self.reply(f"failed {result['errors']}")
 
     def open_main_window_action(self):
         self.main_window.show()
