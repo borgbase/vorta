@@ -104,7 +104,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
-    assert main.repoTab.repoSelector.currentText() == test_repo_name
+    assert main.repoTab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
