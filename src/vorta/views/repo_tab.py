@@ -111,6 +111,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # prepare translations
         na = self.tr('N/A', "Not available.")
         no_repo_selected = self.tr("Select a repository first.")
+        no_repokey_encryption = self.tr("Change Borg Passphrase (Disabled: No Repokey Encryption)")
         refresh = self.tr("Try refreshing the metadata of any archive.")
 
         # set labels
@@ -134,6 +135,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                 self.changePassbutton.setEnabled(True)
             else:
                 self.changePassbutton.setEnabled(False)
+                self.changePassbutton.setToolTip(no_repokey_encryption)
 
             # update stats
             if repo.unique_csize is not None:

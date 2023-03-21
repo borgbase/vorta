@@ -60,7 +60,6 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
             self.showHideAction.setIcon(get_colored_icon("eye"))
             self.showHideAction.setText(self.tr("Show my passwords"))
 
-    # No need to add this function to JobsManager because repo is set for the first time
     def run(self):
         # if self.password_listener() and self.validate():
         if self.password_listener():
