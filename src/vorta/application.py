@@ -95,6 +95,7 @@ class VortaApp(QtSingleApplication):
             self.create_backup_action(profile_id=profile.id, cmd_line=True)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
+            self.reply("failed - invalid profile name")
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
@@ -125,7 +126,10 @@ class VortaApp(QtSingleApplication):
             return None
 
     def create_backup_cmdline_response(self, result):
-        self.reply(f"created {result['data']['archive']['name']}")
+        if result['returncode'] == 0:
+            self.reply(f"created {result['data']['archive']['name']}")
+        else:
+            self.reply(f"failed {result['data']['archive']['name']}")
 
     def open_main_window_action(self):
         self.main_window.show()
@@ -153,7 +157,10 @@ class VortaApp(QtSingleApplication):
         if message == "open main window":
             self.open_main_window_action()
         elif message.startswith("created"):
-            logger.debug(f"Backup created: {message[8:]}")
+            logger.info(f"Backup created: {message[8:]}")
+            sys.exit()
+        elif message.startswith("failed"):
+            logger.info(f"Backup failed: {message[7:]}")
             sys.exit()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
