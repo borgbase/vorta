@@ -8,7 +8,7 @@ from .borg_job import BorgJob
 class BorgCheckJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Starting consistency check…'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Starting consistency check…')}")
 
     def finished_event(self, result: Dict[str, Any]):
         """
@@ -23,13 +23,14 @@ class BorgCheckJob(BorgJob):
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
-                translate('RepoCheckJob', 'Repo check failed. See the <a href="{0}">logs</a> for details.').format(
+                f"[{self.params['profile_name']}] "
+                + translate('RepoCheckJob', 'Repo check failed. See the <a href="{0}">logs</a> for details.').format(
                     LOG_DIR.as_uri()
                 )
             )
             self.app.check_failed_event.emit(result)
         else:
-            self.app.backup_progress_event.emit(self.tr('Check completed.'))
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Check completed.')}")
 
     @classmethod
     def prepare(cls, profile):

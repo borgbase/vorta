@@ -9,12 +9,16 @@ from .borg_job import BorgJob
 class BorgExtractJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Downloading files from archive…'))
+        self.app.backup_progress_event.emit(
+            f"[{self.params['profile_name']}] {self.tr('Downloading files from archive…')}"
+        )
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(self.tr('Restored files from archive.'))
+        self.app.backup_progress_event.emit(
+            f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
+        )
 
     @classmethod
     def prepare(cls, profile, archive_name, model: ExtractTree, destination_folder):

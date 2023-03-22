@@ -8,7 +8,9 @@ from .borg_job import BorgJob
 class BorgCompactJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Starting repository compaction...'))
+        self.app.backup_progress_event.emit(
+            f"[{self.params['profile_name']} {self.tr('Starting repository compaction...')}]"
+        )
 
     def finished_event(self, result: Dict[str, Any]):
         """
@@ -23,12 +25,13 @@ class BorgCompactJob(BorgJob):
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
-                translate(
+                f"[{self.params['profile_name']}] "
+                + translate(
                     'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
                 ).format(LOG_DIR.as_uri())
             )
         else:
-            self.app.backup_progress_event.emit(self.tr('Compaction completed.'))
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Compaction completed.')}")
 
     @classmethod
     def prepare(cls, profile):
