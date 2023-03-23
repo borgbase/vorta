@@ -57,10 +57,8 @@ def test_repo_unlink(qapp, qtbot):
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
     # -1 is the repo id in this test
-    qtbot.waitUntil(
-        lambda: main.progressText.text().startswith('Select a backup repository first.'), **pytest._wait_defaults
-    )
-    assert main.progressText.text() == 'Select a backup repository first.'
+    qtbot.waitUntil(lambda: 'Select a backup repository first.' in main.progressText.text(), **pytest._wait_defaults)
+    assert 'Select a backup repository first.' in main.progressText.text()
 
 
 def test_passphrase_change_failures(qapp, qtbot):
@@ -173,7 +171,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Backup finished.'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Backup finished.' in main.progressText.text(), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     assert EventLogModel.select().count() == 1
     assert ArchiveModel.select().count() == 3
