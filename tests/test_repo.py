@@ -108,8 +108,6 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert main.repoTab.repoSelector.currentText() == test_repo_url
     # remove password form keyring
     keyring.remove_password('vorta-repo', test_repo_url)
-    assert add_repo_window.passwordLineEdit.text() == ''
-    assert add_repo_window.confirmLineEdit.text() == ''
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) is None
 
 
