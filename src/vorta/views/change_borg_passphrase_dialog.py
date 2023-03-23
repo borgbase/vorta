@@ -90,7 +90,7 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
 
     def validate(self):
         """Check encryption type"""
-        if self.profile.repo.encryption in ['repokey', 'repokey-blake2']:
+        if self.profile.repo.encryption.startswith('repokey'):
             return True
         self.errorText.setText(translate('utils', 'Encryption type must be repokey.'))
         return False
