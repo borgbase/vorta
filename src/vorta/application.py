@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -8,7 +9,7 @@ from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
-from vorta.config import PROFILE_BOOTSTRAP_FILE, TEMP_DIR
+from vorta.config import LOG_DIR, PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -22,7 +23,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = os.path.join(TEMP_DIR, "socket")
+APP_ID = TEMP_DIR / "socket"
 
 
 class VortaApp(QtSingleApplication):
@@ -41,16 +42,16 @@ class VortaApp(QtSingleApplication):
     check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
-        super().__init__(APP_ID, args_raw)
+        super().__init__(str(APP_ID), args_raw)
         args = parse_args()
         if self.isRunning():
             if single_app:
                 self.sendMessage("open main window")
-                print('An instance of Vorta is already running. Opening main window.')
+                logger.info('An instance of Vorta is already running. Opening main window.')
                 sys.exit()
             elif args.profile:
                 self.sendMessage(f"create {args.profile}")
-                print('Creating backup using existing Vorta instance.')
+                logger.info('Creating backup using existing Vorta instance.')
                 sys.exit()
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
@@ -118,7 +119,7 @@ class VortaApp(QtSingleApplication):
                 translate('messages', msg['message']),
                 level='error',
             )
-            self.backup_progress_event.emit(translate('messages', msg['message']))
+            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', msg['message'])}")
             return None
 
     def open_main_window_action(self):
@@ -193,8 +194,8 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
-        test_path = os.path.expanduser('~/Library/Cookies')
-        if os.path.exists(test_path) and not os.access(test_path, os.R_OK):
+        test_path = Path('~/Library/Cookies').expanduser()
+        if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
@@ -249,7 +250,7 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakJob.prepare(profile)
         if not params['ok']:
-            self.backup_progress_event.emit(params['message'])
+            self.backup_progress_event.emit(f"[{profile.name}] {params['message']}")
             return
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
@@ -325,7 +326,9 @@ class VortaApp(QtSingleApplication):
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
-                text = self.tr('Borg exited with a warning message. See logs for details.')
+                text = translate(
+                    'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
+                ).format(LOG_DIR.as_uri())
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)

@@ -28,15 +28,17 @@
 ### Checklist:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
+- [ ] I have read the [CONTRIBUTING](https://vorta.borgbase.com/contributing/) guide.
 - [ ] My code follows the code style of this project.
 - [ ] My change requires a change to the documentation.
 - [ ] I have updated the documentation accordingly.
-- [ ] I have read the [CONTRIBUTING](https://vorta.borgbase.com/contributing/) guide.
 - [ ] I have added tests to cover my changes.
 - [ ] All new and existing tests passed.
 
 
-*I provide my contribution under the terms of the [license](./../../LICENSE.txt) of this repository and I affirm the Developer Certificate of Origin.*
+*I provide my contribution under the terms of the [license](./../../LICENSE.txt) of this repository and I affirm the [Developer Certificate of Origin][dco].*
+
+[dco]: https://developercertificate.org/
 
 <!--
 This template is sourced from the awesome https://github.com/TalAter/open-source-templates

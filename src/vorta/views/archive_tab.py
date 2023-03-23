@@ -32,7 +32,14 @@ from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
-from vorta.utils import choose_file_dialog, format_archive_name, get_asset, get_mount_points, pretty_bytes
+from vorta.utils import (
+    choose_file_dialog,
+    find_best_unit_for_sizes,
+    format_archive_name,
+    get_asset,
+    get_mount_points,
+    pretty_bytes,
+)
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
@@ -43,6 +50,10 @@ uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
+
+
+#: The number of decimal digits to show in the size column
+SIZE_DECIMAL_DIGITS = 1
 
 
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
@@ -245,12 +256,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
+            best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=SIZE_DECIMAL_DIGITS)
             for row, archive in enumerate(archives):
                 self.archiveTable.insertRow(row)
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(row, 1, SizeItem(pretty_bytes(archive.size)))
+                self.archiveTable.setItem(
+                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS))
+                )
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:

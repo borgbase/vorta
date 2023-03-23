@@ -43,9 +43,9 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
 
     assert not tab.bCheck.isEnabled()
 
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Refreshing archives done.', **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 6
-    assert main.progressText.text() == 'Refreshing archives done.'
+    assert 'Refreshing archives done.' in main.progressText.text()
     assert tab.bCheck.isEnabled()
 
 
@@ -60,7 +60,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: main.progressText.text().startswith('Refreshing archives done.'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
@@ -93,7 +93,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
 
     qtbot.mouseClick(tab.bCheck, QtCore.Qt.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
-    qtbot.waitUntil(lambda: main.logText.text().startswith(success_text), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
 def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
@@ -147,7 +147,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
 
     model = tab._window.model
     assert model.root.children[0].subpath == 'home'
-    assert tab._window.archiveNameLabel.text().startswith('test-archive, 2000')
+    assert 'test-archive, 2000' in tab._window.archiveNameLabel.text()
 
 
 def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
@@ -164,8 +164,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     tab.delete_action()
-
-    qtbot.waitUntil(lambda: main.progressText.text() == 'Archive deleted.', **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
 

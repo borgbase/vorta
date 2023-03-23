@@ -2,6 +2,7 @@ import argparse
 import errno
 import fnmatch
 import getpass
+import math
 import os
 import platform
 import re
@@ -9,12 +10,8 @@ import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
-from typing import Any, Callable, Iterable, Tuple
+from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
-from paramiko import SSHException
-from paramiko.ecdsakey import ECDSAKey
-from paramiko.ed25519key import Ed25519Key
-from paramiko.rsakey import RSAKey
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
@@ -178,9 +175,19 @@ def choose_file_dialog(parent, title, want_folder=True):
     return dialog
 
 
-def get_private_keys():
+def is_ssh_private_key_file(filepath: str) -> bool:
+    """Check if the file is a SSH key."""
+    try:
+        with open(filepath, 'r') as f:
+            first_line = f.readline()
+        pattern = r'^-----BEGIN(\s\w+)? PRIVATE KEY-----'
+        return re.match(pattern, first_line) is not None
+    except UnicodeDecodeError:
+        return False
+
+
+def get_private_keys() -> List[str]:
     """Find SSH keys in standard folder."""
-    key_formats = [RSAKey, ECDSAKey, Ed25519Key]
 
     ssh_folder = os.path.expanduser('~/.ssh')
 
@@ -190,35 +197,25 @@ def get_private_keys():
             key_file = os.path.join(ssh_folder, key)
             if not os.path.isfile(key_file):
                 continue
-            for key_format in key_formats:
-                try:
-                    parsed_key = key_format.from_private_key_file(key_file)
-                    key_details = {
-                        'filename': key,
-                        'format': parsed_key.get_name(),
-                        'bits': parsed_key.get_bits(),
-                        'fingerprint': parsed_key.get_fingerprint().hex(),
-                    }
-                    available_private_keys.append(key_details)
-                except (
-                    SSHException,
-                    UnicodeDecodeError,
-                    IsADirectoryError,
-                    IndexError,
-                    ValueError,
-                    PermissionError,
-                    NotImplementedError,
-                ):
-                    logger.debug(
-                        f'Expected error parsing file in .ssh: {key} (You can safely ignore this)', exc_info=True
-                    )
-                    continue
-                except OSError as e:
-                    if e.errno == errno.ENXIO:
-                        # when key_file is a (ControlPath) socket
-                        continue
+            # ignore config, known_hosts*, *.pub, etc.
+            if key.endswith('.pub') or key.startswith('known_hosts') or key == 'config':
+                continue
+            try:
+                if is_ssh_private_key_file(key_file):
+                    if os.stat(key_file).st_mode & 0o077 == 0:
+                        available_private_keys.append(key)
                     else:
-                        raise
+                        logger.warning(f'Permissions for {key_file} are too open.')
+                else:
+                    logger.debug(f'Not a private SSH key file: {key}')
+            except PermissionError:
+                logger.warning(f'Permission error while opening file: {key_file}', exc_info=True)
+                continue
+            except OSError as e:
+                if e.errno == errno.ENXIO:
+                    # when key_file is a (ControlPath) socket
+                    continue
+                raise
 
     return available_private_keys
 
@@ -226,7 +223,7 @@ def get_private_keys():
 def sort_sizes(size_list):
     """Sorts sizes with extensions. Assumes that size is already in largest unit possible"""
     final_list = []
-    for suffix in [" B", " KB", " MB", " GB", " TB"]:
+    for suffix in [" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]:
         sub_list = [
             float(size[: -len(suffix)])
             for size in size_list
@@ -240,7 +237,43 @@ def sort_sizes(size_list):
     return final_list
 
 
-def pretty_bytes(size, metric=True, sign=False, precision=1):
+Number = TypeVar("Number", int, float)
+
+
+def clamp(n: Number, min_: Number, max_: Number) -> Number:
+    """Restrict the number n inside a range"""
+    return min(max_, max(n, min_))
+
+
+def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
+    """
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    representing the smallest size in the sizes iterable.
+    """
+    min_size = min((s for s in sizes if isinstance(s, int)), default=None)
+    return find_best_unit_for_size(min_size, metric=metric, precision=precision)
+
+
+def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision: int = 1) -> int:
+    """
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    representing the passed size.
+    """
+    if not isinstance(size, int) or size == 0:  # this will also take care of the None case
+        return 0
+    power = 10**3 if metric else 2**10
+    n = math.floor(math.log(abs(size) * 10**precision, power))
+    return n
+
+
+def pretty_bytes(
+    size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: Optional[int] = None
+) -> str:
+    """
+    Formats the size with the requested unit and precision. The find_best_size_unit function
+    can be used to find the correct unit for a list of sizes. If no fixed_unit is passed it will
+    find the biggest unit to represent the size
+    """
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
@@ -249,15 +282,18 @@ def pretty_bytes(size, metric=True, sign=False, precision=1):
         if metric
         else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
     )
-    n = 0
-    while abs(round(size, precision)) >= power and n + 1 < len(units):
-        size /= power
-        n += 1
+    if fixed_unit is None:
+        n = find_best_unit_for_size(size, metric=metric, precision=precision)
+    else:
+        n = fixed_unit
+    n = clamp(n, 0, len(units) - 1)
+    size /= power**n
     try:
         unit = units[n]
-        return f'{prefix}{round(size, precision)} {unit}B'
-    except KeyError as e:
-        logger.error(e)
+        digits = f'%.{precision}f' % (round(size, precision))
+        return f'{prefix}{digits} {unit}B'
+    except KeyError as error:
+        logger.error(error)
         return "NaN"
 
 

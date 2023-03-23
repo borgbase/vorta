@@ -2,7 +2,7 @@ import os
 from pathlib import PurePath
 from PyQt5 import QtCore, uic
 from PyQt5.QtCore import QMimeData, QUrl
-from PyQt5.QtWidgets import QApplication, QMenu, QMessageBox
+from PyQt5.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
@@ -111,10 +111,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # set labels
         repo: RepoModel = self.profile().repo
         if repo is not None:
-            self.frameRepoSettings.setEnabled(True)
             # remove *unset* item
             self.repoSelector.removeItem(self.repoSelector.findData(None))
 
+            # Start with every element enabled, then disable SSH-related if relevant
+            for child in self.frameRepoSettings.children():
+                child.setEnabled(True)
             # local repo doesn't use ssh
             ssh_enabled = repo.is_remote_repo()
             # self.bAddSSHKey.setEnabled(ssh_enabled)
@@ -147,7 +149,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoEncryption.setText(str(repo.encryption))
         else:
             # Compression and SSH key are only valid entries for a repo
-            self.frameRepoSettings.setEnabled(False)
+            # Yet Add SSH key button must be enabled for bootstrapping
+            for child in self.frameRepoSettings.children():
+                if not isinstance(child, QLayout):
+                    child.setEnabled(False)
+            self.bAddSSHKey.setEnabled(True)
 
             # unset stats
             self.sizeCompressed.setText(na)
@@ -169,7 +175,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshComboBox.clear()
         self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
         for key in keys:
-            self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
+            self.sshComboBox.addItem(f'{key}', key)
 
     def toggle_available_compression(self):
         use_zstd = borg_compat.check('ZSTD')
@@ -197,7 +203,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.setParent(self, QtCore.Qt.Sheet)
 
         index = self.sshComboBox.currentIndex()
-        if index > 1:
+        if index > 0:
             ssh_key_filename = self.sshComboBox.itemData(index)
             ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key_filename}.pub')
             if os.path.isfile(ssh_key_path):
