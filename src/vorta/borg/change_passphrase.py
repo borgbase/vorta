@@ -1,4 +1,5 @@
 from typing import Any, Dict
+from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
 from vorta.config import LOG_DIR
 from vorta.i18n import trans_late, translate
 from vorta.utils import borg_compat
@@ -41,7 +42,9 @@ class BorgChangePassJob(BorgJob):
 
         if not borg_compat.check('CHANGE_PASSPHRASE'):
             ret['ok'] = False
-            ret['message'] = trans_late('messages', 'This feature needs Borg 1.1.0 or higher.')
+            ret['message'] = trans_late(
+                'messages', 'This feature needs Borg {} or higher.'.format(MIN_BORG_FOR_FEATURE['CHANGE_PASSPHRASE'])
+            )
             return ret
 
         cmd = ['borg', '--info', '--log-json', 'key', 'change-passphrase']
