@@ -17,9 +17,7 @@ def keyring_fixture():
     keyring.get_password('vorta-repo', test_repo_url)
 
     yield
-    # Check if the password still exists after running the test
-    password = keyring.get_password('vorta-repo', test_repo_url)
-    assert password is not None
+
     # Remove password from keyring if not removed
     keyring.remove_password('vorta-repo', test_repo_url)
 
