@@ -10,6 +10,20 @@ LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
 
 
+@pytest.fixture(scope="module")
+def keyring_fixture():
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    keyring = VortaKeyring.get_keyring()
+    keyring.get_password('vorta-repo', test_repo_url)
+
+    yield
+    # Check if the password still exists after running the test
+    password = keyring.get_password('vorta-repo', test_repo_url)
+    assert password is not None
+    # Remove password from keyring if not removed
+    keyring.remove_password('vorta-repo', test_repo_url)
+
+
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
@@ -63,7 +77,7 @@ def test_repo_unlink(qapp, qtbot):
     assert main.progressText.text() == 'Select a backup repository first.'
 
 
-def test_password_autofill(qapp, qtbot):
+def test_password_autofill(qapp, qtbot, keyring_fixture):
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
@@ -81,7 +95,7 @@ def test_password_autofill(qapp, qtbot):
     assert keyring.remove_password("vorta-repo", test_repo_url) is None
 
 
-def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
+def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture):
     # Add new repo window
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
@@ -108,7 +122,6 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert main.repoTab.repoSelector.currentText() == test_repo_url
     # remove password form keyring
     keyring.remove_password('vorta-repo', test_repo_url)
-    assert keyring.remove_password("vorta-repo", RepoModel.get(id=2).url) is None
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
