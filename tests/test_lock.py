@@ -41,4 +41,4 @@ def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)  # Prevent thread collision
     qapp._msg.accept()
     exp_message_text = 'Repository lock broken. Please redo your last action.'
-    qtbot.waitUntil(lambda: main.progressText.text() == exp_message_text, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: exp_message_text in main.progressText.text(), **pytest._wait_defaults)

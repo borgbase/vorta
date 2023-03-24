@@ -7,12 +7,12 @@ from .borg_job import BorgJob
 class BorgListRepoJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Refreshing archives…'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives…')}")
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(self.tr('Refreshing archives done.'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives done.')}")
 
     @classmethod
     def prepare(cls, profile):
