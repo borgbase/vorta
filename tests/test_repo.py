@@ -10,15 +10,16 @@ LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def keyring_fixture():
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    test_repo_url = 'ssh://user@vorta-test-repo.com:22'  # Random repo URL to avoid macOS keychain
+    password = str(uuid.uuid4())
     keyring = VortaKeyring.get_keyring()
-    keyring.get_password('vorta-repo', test_repo_url)
+    keyring.set_password('vorta-repo', test_repo_url, password)
 
-    yield
+    yield test_repo_url, password
 
-    # Remove password from keyring if not removed
+    # Remove password from keyring for the test
     keyring.remove_password('vorta-repo', test_repo_url)
 
 
@@ -77,18 +78,11 @@ def test_password_autofill(qapp, qtbot, keyring_fixture):
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
-
-    keyring = VortaKeyring.get_keyring()
-    password = str(uuid.uuid4())
-    keyring.set_password('vorta-repo', test_repo_url, password)
+    test_repo_url, password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
     assert add_repo_window.passwordLineEdit.text() == password
-    # remove the password from keyring
-    keyring.remove_password('vorta-repo', test_repo_url)
-    assert keyring.remove_password("vorta-repo", test_repo_url) is None
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture):
@@ -96,7 +90,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_url, password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
@@ -116,8 +110,6 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
     assert main.repoTab.repoSelector.currentText() == test_repo_url
-    # remove password form keyring
-    keyring.remove_password('vorta-repo', test_repo_url)
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
