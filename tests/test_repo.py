@@ -12,7 +12,7 @@ SHORT_PASSWORD = 'hunter2'
 
 @pytest.fixture(scope="function")
 def keyring_fixture():
-    test_repo_url = 'ssh://user@vorta-test-repo.com:22'  # Random repo URL to avoid macOS keychain
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
     password = str(uuid.uuid4())
     keyring = VortaKeyring.get_keyring()
     keyring.set_password('vorta-repo', test_repo_url, password)
