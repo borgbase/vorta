@@ -28,6 +28,9 @@ class BorgDiffJob(BorgJob):
             ret['cmd'].append('--json-lines')
             ret['json_lines'] = True
 
+        if borg_compat.check('DIFF_CONTENT_ONLY'):
+            ret['cmd'].append('--content-only')
+
         if borg_compat.check('V2'):
             ret['cmd'].extend(['-r', profile.repo.url, archive_name_1, archive_name_2])
         else:
