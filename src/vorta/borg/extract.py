@@ -39,7 +39,7 @@ class BorgExtractJob(BorgJob):
         # dialog.
         # Unselected (and excluded) parent folders will be restored by borg
         # but without the metadata stored in the archive.
-        pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
+        pattern_file = tempfile.NamedTemporaryFile('w', delete=False)
         pattern_file.write("P fm\n")
 
         indexes = [QModelIndex()]
