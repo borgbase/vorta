@@ -29,7 +29,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordInput.password_label.text() == 'Passwords must be greater than 8 characters long.'
+    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be greater than 8 characters long.'
 
     add_repo_window.passwordInput.passwordLineEdit.clear()
     add_repo_window.passwordInput.confirmLineEdit.clear()
@@ -37,7 +37,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
     assert (
-        add_repo_window.passwordInput.password_label.text()
+        add_repo_window.passwordInput.validation_label.text()
         == 'Passwords must be identical and greater than 8 characters long.'
     )
 
@@ -46,7 +46,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordInput.password_label.text() == 'Passwords must be identical.'
+    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be identical.'
 
 
 def test_repo_unlink(qapp, qtbot):
