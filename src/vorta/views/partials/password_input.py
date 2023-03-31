@@ -78,7 +78,7 @@ class PasswordInput(QObject):
         # Create password line edits
         self.passwordLineEdit = PasswordLineEdit()
         self.confirmLineEdit = PasswordLineEdit()
-        self.password_label = QLabel("")
+        self.validation_label = QLabel("")
 
         self.passwordLineEdit.editingFinished.connect(self.validate)
         self.confirmLineEdit.textChanged.connect(self.validate)
@@ -88,7 +88,7 @@ class PasswordInput(QObject):
         self._label_confirm = label_2
 
     def set_error_label(self, text):
-        self.password_label.setText(text)
+        self.validation_label.setText(text)
 
     def set_validation_enabled(self, enable: bool):
         self._show_error = enable
@@ -127,13 +127,13 @@ class PasswordInput(QObject):
             self.passwordLineEdit.error_state = True
             self.set_error_label(translate('PasswordInput', "Passwords must be greater than 8 characters long."))
 
-        return not bool(self.password_label.text())
+        return not bool(self.validation_label.text())
 
     def add_form_to_layout(self, form_layout):
         """Adds form to layout"""
         form_layout.addRow(self._label_password, self.passwordLineEdit)
         form_layout.addRow(self._label_confirm, self.confirmLineEdit)
-        form_layout.addRow(self.password_label)
+        form_layout.addRow(self.validation_label)
 
     def create_form_widget(self, parent=None):
         """ "Creates and Returns a new QWidget with form layout"""
