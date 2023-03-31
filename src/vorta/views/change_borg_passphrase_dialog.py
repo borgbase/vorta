@@ -63,10 +63,9 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
     def run(self):
         # if self.password_listener() and self.validate():
         if self.password_listener():
-            oldPass = self.oldPasswordLineEdit.text()
             newPass = self.passwordLineEdit.text()
 
-            params = BorgChangePassJob.prepare(self.profile, oldPass, newPass)
+            params = BorgChangePassJob.prepare(self.profile, newPass)
             if params['ok']:
                 self.saveButton.setEnabled(False)
                 job = BorgChangePassJob(params['cmd'], params)
@@ -97,14 +96,8 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
 
     def password_listener(self):
         '''Validates passwords only if its going to be used'''
-        oldPass = self.oldPasswordLineEdit.text()
         firstPass = self.passwordLineEdit.text()
         secondPass = self.confirmLineEdit.text()
-
-        # Since borg originally does not have minimum character requirement
-        if len(oldPass) < 1:
-            self.errorText.setText(translate('utils', 'Old password is required.'))
-            return False
 
         msg = validate_passwords(firstPass, secondPass)
         self.errorText.setText(translate('utils', msg))

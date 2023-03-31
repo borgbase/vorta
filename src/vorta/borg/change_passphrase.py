@@ -2,6 +2,7 @@ from typing import Any, Dict
 from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
 from vorta.config import LOG_DIR
 from vorta.i18n import trans_late, translate
+from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 from .borg_job import BorgJob
 
@@ -33,7 +34,7 @@ class BorgChangePassJob(BorgJob):
             self.app.backup_progress_event.emit(self.tr('Borg passphrase changed.'))
 
     @classmethod
-    def prepare(cls, profile, oldPass, newPass):
+    def prepare(cls, profile, newPass):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -50,10 +51,19 @@ class BorgChangePassJob(BorgJob):
         cmd = ['borg', '--info', '--log-json', 'key', 'change-passphrase']
         cmd.append(f'{profile.repo.url}')
 
-        ret['password'] = oldPass
         ret['additional_env'] = {'BORG_NEW_PASSPHRASE': newPass}
 
         ret['ok'] = True
         ret['cmd'] = cmd
 
         return ret
+
+    def process_result(self, result):
+        if result['returncode'] == 0:
+            # Change passphrase in keyring
+            repo = RepoModel.get(url=result['params']['repo_url'])
+            if repo.encryption != 'none':
+                self.keyring.set_password(
+                    "vorta-repo", repo.url, result['params']['additional_env']['BORG_NEW_PASSPHRASE']
+                )
+                repo.save()

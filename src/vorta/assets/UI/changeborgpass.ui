@@ -7,7 +7,7 @@
         <x>0</x>
         <y>0</y>
         <width>466</width>
-        <height>274</height>
+        <height>174</height>
       </rect>
     </property>
     <property name="modal">
@@ -44,7 +44,7 @@
                 <number>5</number>
               </property>
               <property name="topMargin">
-                <number>5</number>
+                <number>30</number>
               </property>
               <property name="rightMargin">
                 <number>5</number>
@@ -52,25 +52,6 @@
               <property name="bottomMargin">
                 <number>30</number>
               </property>
-
-
-              <item row="1" column="0">
-                <widget class="QLabel" name="oldPasswordLabel">
-                  <property name="text">
-                    <string>Old Passphrase:</string>
-                  </property>
-                </widget>
-              </item>
-              <item row="1" column="1">
-                <widget class="QLineEdit" name="oldPasswordLineEdit">
-                  <property name="enabled">
-                    <bool>true</bool>
-                  </property>
-                  <property name="echoMode">
-                    <enum>QLineEdit::Password</enum>
-                  </property>
-                </widget>
-              </item>
 
               <item row="2" column="0">
                 <widget class="QLabel" name="label_3">

@@ -68,16 +68,10 @@ def test_passphrase_change_failures(qapp, qtbot):
     change_pass_window = main.repoTab._window
     qtbot.addWidget(change_pass_window)
 
-    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(change_pass_window.confirmLineEdit, LONG_PASSWORD)
-    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
-    assert change_pass_window.errorText.text().startswith('Old password is required')
-
     change_pass_window.passwordLineEdit.clear()
     change_pass_window.confirmLineEdit.clear()
     qtbot.keyClicks(change_pass_window.passwordLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.keyClicks(change_pass_window.oldPasswordLineEdit, 'a')
     qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
     assert change_pass_window.errorText.text() == 'Passwords must be greater than 8 characters long.'
 
@@ -186,7 +180,6 @@ def test_passphrase_change(qapp, qtbot, mocker, borg_json_output):
     main.repoTab.change_borg_passphrase()
     change_pass_window = main.repoTab._window
 
-    qtbot.keyClicks(change_pass_window.oldPasswordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(change_pass_window.confirmLineEdit, LONG_PASSWORD)
 
