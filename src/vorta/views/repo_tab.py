@@ -111,7 +111,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # prepare translations
         na = self.tr('N/A', "Not available.")
         no_repo_selected = self.tr("Select a repository first.")
-        no_repokey_encryption = self.tr("Change Borg Passphrase (Disabled: No Repokey Encryption)")
+        no_repokey_encryption = self.tr("Change Borg Passphrase (Repokey encryption needed)")
         refresh = self.tr("Try refreshing the metadata of any archive.")
 
         # set labels
