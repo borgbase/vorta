@@ -12,6 +12,7 @@ from vorta.views.utils import get_colored_icon
 uifile = get_asset('UI/repoadd.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
+
 class RepoWindow(AddRepoBase, AddRepoUI):
     added_repo = QtCore.pyqtSignal(dict)
 
@@ -37,7 +38,6 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         self.init_ssh_key()
         self.set_icons()
 
-    
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
         super().retranslateUi(dialog)
@@ -70,7 +70,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         self.extraBorgArgumentsLineEdit.setText('')
         self.repoLabel.setText(self.tr('Repository URL:'))
         self.is_remote_repo = True
-    
+
     def _set_status(self, text):
         self.errorText.setText(text)
         self.errorText.repaint()
@@ -142,7 +142,7 @@ class AddRepoWindow(RepoWindow):
 
         self.encryptionComboBox.activated.connect(self.display_backend_warning)
         self.encryptionComboBox.currentIndexChanged.connect(self.encryption_listener)
-        
+
         self.display_backend_warning()
 
     def set_password(self, URL):
@@ -163,7 +163,7 @@ class AddRepoWindow(RepoWindow):
             encryption=self.encryptionComboBox.currentData(),
         )
         return out
-    
+
     def encryption_listener(self):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
