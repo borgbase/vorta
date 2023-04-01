@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
 from PyQt5 import uic
-from PyQt5.QtCore import QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
+from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QShortcut, QTreeView
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
@@ -206,6 +206,8 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
         change_type: ChangeType = None
         mode_change: Optional[Tuple[str, str]] = None
         owner_change: Optional[Tuple[str, str, str, str]] = None
+        ctime_change: Optional[Tuple[QDateTime, QDateTime]] = None
+        mtime_change: Optional[Tuple[QDateTime, QDateTime]] = None
         modified: Optional[Tuple[int, int]] = None
 
         # added link, removed link, changed link
@@ -213,6 +215,8 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
         # added directory, removed directory
         # owner (old_user, new_user, old_group, new_group))
         # mode (old_mode, new_mode)
+        # ctime (old_ctime, new_ctime)
+        # mtime (old_mtime, new_mtime)
         for change in item['changes']:
             # if more than one type of change has happened for this file/dir/link, then report the most important
             # (higher priority)
@@ -269,6 +273,22 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                     change['new_user'],
                     change['new_group'],
                 )
+
+            elif change['type'] == 'ctime':
+                # ctime change can occur along with previous changes
+                change_type = ChangeType.MODIFIED
+                ctime_change = (
+                    QDateTime.fromString(change['old_ctime'], Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString(change['new_ctime'], Qt.DateFormat.ISODateWithMs),
+                )
+            elif change['type'] == 'mtime':
+                # mtime change can occur along with previous changes
+                change_type = ChangeType.MODIFIED
+                mtime_change = (
+                    QDateTime.fromString(change['old_mtime'], Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString(change['new_mtime'], Qt.DateFormat.ISODateWithMs),
+                )
+
             else:
                 raise Exception('Unknown change type: {}'.format(change['type']))
 
@@ -282,6 +302,8 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                     size=size,
                     mode_change=mode_change,
                     owner_change=owner_change,
+                    ctime_change=ctime_change,
+                    mtime_change=mtime_change,
                     modified=modified,
                 ),
             )
@@ -492,6 +514,8 @@ class ChangeType(enum.Enum):
                     such as - a file is deleted and replaced with
                     a directory of the same name.
     owner - user and/or group ownership changed.
+    ctime - creation time changed.
+    mtime - modification time changed.
 
     size:
         If type == `added` or `removed`,
@@ -518,6 +542,14 @@ class ChangeType(enum.Enum):
         See old_user property.
     new_group:
         See old_user property.
+    old_ctime:
+        If type == `ctime`, then old_ctime and new_ctime provide creation time changes.
+    new_ctime:
+        See old_ctime property.
+    old_mtime:
+        If type == `mtime`, then old_mtime and new_mtime provide modification time changes.
+    new_mtime:
+        See old_mtime property.
     """
 
     NONE = 0  # no change
@@ -531,6 +563,8 @@ class ChangeType(enum.Enum):
     CHANGED_LINK = MODIFIED
     MODE = MODIFIED  # changed permissions
     OWNER = MODIFIED
+    CTIME = MODIFIED
+    MTIME = MODIFIED
 
     def short(self):
         """Get a short identifier for the change type."""
@@ -588,6 +622,8 @@ class DiffData:
     size: int  # size change (disk usage)
     mode_change: Optional[Tuple[str, str]] = None
     owner_change: Optional[Tuple[str, str, str, str]] = None
+    ctime_change: Optional[Tuple[QDateTime, QDateTime]] = None
+    mtime_change: Optional[Tuple[QDateTime, QDateTime]] = None
     modified: Optional[Tuple[int, int]] = None
 
 
@@ -798,6 +834,7 @@ class DiffTree(FileTreeModel[DiffData]):
 
             modified_template = self.tr("Added {}, deleted {}")
             owner_template = "{: <10} -> {: >10}"
+            time_template = "{}: {} -> {}"
             permission_template = "{} -> {}"
 
             # format
@@ -842,6 +879,22 @@ class DiffTree(FileTreeModel[DiffData]):
                 tooltip += owner_template.format(
                     '{}:{}'.format(item.data.owner_change[0], item.data.owner_change[1]),
                     "{}:{}".format(item.data.owner_change[2], item.data.owner_change[3]),
+                )
+
+            if item.data.ctime_change:
+                tooltip += '\n'
+                tooltip += time_template.format(
+                    "Creation Time",
+                    QLocale.system().toString(item.data.ctime_change[0], QLocale.FormatType.ShortFormat),
+                    QLocale.system().toString(item.data.ctime_change[1], QLocale.FormatType.ShortFormat),
+                )
+
+            if item.data.mtime_change:
+                tooltip += '\n'
+                tooltip += time_template.format(
+                    "Modification Time",
+                    QLocale.system().toString(item.data.mtime_change[0], QLocale.FormatType.ShortFormat),
+                    QLocale.system().toString(item.data.mtime_change[1], QLocale.FormatType.ShortFormat),
                 )
 
             return tooltip
