@@ -1,6 +1,6 @@
 from pathlib import PurePath
 import pytest
-from PyQt5.QtCore import QItemSelectionModel
+from PyQt5.QtCore import QDateTime, QItemSelectionModel, Qt
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
@@ -56,11 +56,22 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
     [
         (
             'changed link        some/changed/link',
-            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None),
+            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None, None, None),
         ),
         (
             ' +77.8 kB  -77.8 kB some/changed/file',
-            ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0, None, None, (77800, 77800)),
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                2 * 77800,
+                0,
+                None,
+                None,
+                None,
+                None,
+                (77800, 77800),
+            ),
         ),
         (
             ' +77.8 kB  -77.8 kB [-rw-rw-rw- -> -rw-r--r--] some/changed/file',
@@ -72,20 +83,33 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
                 0,
                 ('-rw-rw-rw-', '-rw-r--r--'),
                 None,
+                None,
+                None,
                 (77800, 77800),
             ),
         ),
         (
             '[-rw-rw-rw- -> -rw-r--r--] some/changed/file',
-            ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0, ('-rw-rw-rw-', '-rw-r--r--'), None, None),
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODE,
+                0,
+                0,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                None,
+                None,
+                None,
+                None,
+            ),
         ),
         (
             'added directory    some/changed/dir',
-            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None),
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None, None, None),
         ),
         (
             'removed directory  some/changed/dir',
-            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None),
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None, None, None),
         ),
         # Example from https://github.com/borgbase/vorta/issues/521
         (
@@ -99,12 +123,25 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
                 None,
                 ('user', 'user', 'nfsnobody', 'nfsnobody'),
                 None,
+                None,
+                None,
             ),
         ),
         # Very short owner change, to check stripping whitespace from file path
         (
             '[a:a -> b:b]       home/user/arrays/test.txt',
-            ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0, None, ('a', 'a', 'b', 'b'), None),
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                0,
+                0,
+                None,
+                ('a', 'a', 'b', 'b'),
+                None,
+                None,
+                None,
+            ),
         ),
         # All file-related changes in one test
         (
@@ -117,6 +154,8 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
                 77000,
                 ('-rw-rw-rw-', '-rw-r--r--'),
                 ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                None,
+                None,
                 (77800, 800),
             ),
         ),
@@ -139,11 +178,22 @@ def test_archive_diff_parser(line, expected):
     [
         (
             {'path': 'some/changed/link', 'changes': [{'type': 'changed link'}]},
-            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None),
+            ('some/changed/link', FileType.LINK, ChangeType.CHANGED_LINK, 0, 0, None, None, None, None, None),
         ),
         (
             {'path': 'some/changed/file', 'changes': [{'type': 'modified', 'added': 77800, 'removed': 77800}]},
-            ('some/changed/file', FileType.FILE, ChangeType.MODIFIED, 2 * 77800, 0, None, None, (77800, 77800)),
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                2 * 77800,
+                0,
+                None,
+                None,
+                None,
+                None,
+                (77800, 77800),
+            ),
         ),
         (
             {
@@ -161,6 +211,8 @@ def test_archive_diff_parser(line, expected):
                 77000,
                 ('-rw-rw-rw-', '-rw-r--r--'),
                 None,
+                None,
+                None,
                 (77800, 800),
             ),
         ),
@@ -169,15 +221,26 @@ def test_archive_diff_parser(line, expected):
                 'path': 'some/changed/file',
                 'changes': [{'type': 'mode', 'old_mode': '-rw-rw-rw-', 'new_mode': '-rw-r--r--'}],
             },
-            ('some/changed/file', FileType.FILE, ChangeType.MODE, 0, 0, ('-rw-rw-rw-', '-rw-r--r--'), None, None),
+            (
+                'some/changed/file',
+                FileType.FILE,
+                ChangeType.MODE,
+                0,
+                0,
+                ('-rw-rw-rw-', '-rw-r--r--'),
+                None,
+                None,
+                None,
+                None,
+            ),
         ),
         (
             {'path': 'some/changed/dir', 'changes': [{'type': 'added directory'}]},
-            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None),
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.ADDED, 0, 0, None, None, None, None, None),
         ),
         (
             {'path': 'some/changed/dir', 'changes': [{'type': 'removed directory'}]},
-            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None),
+            ('some/changed/dir', FileType.DIRECTORY, ChangeType.REMOVED_DIR, 0, 0, None, None, None, None, None),
         ),
         # Example from https://github.com/borgbase/vorta/issues/521
         (
@@ -202,6 +265,8 @@ def test_archive_diff_parser(line, expected):
                 None,
                 ('user', 'user', 'nfsnobody', 'nfsnobody'),
                 None,
+                None,
+                None,
             ),
         ),
         # Very short owner change, to check stripping whitespace from file path
@@ -210,7 +275,74 @@ def test_archive_diff_parser(line, expected):
                 'path': 'home/user/arrays/test.txt',
                 'changes': [{'type': 'owner', 'old_user': 'a', 'new_user': 'b', 'old_group': 'a', 'new_group': 'b'}],
             },
-            ('home/user/arrays/test.txt', FileType.FILE, ChangeType.OWNER, 0, 0, None, ('a', 'a', 'b', 'b'), None),
+            (
+                'home/user/arrays/test.txt',
+                FileType.FILE,
+                ChangeType.OWNER,
+                0,
+                0,
+                None,
+                ('a', 'a', 'b', 'b'),
+                None,
+                None,
+                None,
+            ),
+        ),
+        # Short ctime change
+        (
+            {
+                'path': 'home/user/arrays',
+                'changes': [
+                    {
+                        'new_ctime': '2023-04-01T17:23:14.104630',
+                        'old_ctime': '2023-03-03T23:40:17.073948',
+                        'type': 'ctime',
+                    }
+                ],
+            },
+            (
+                'home/user/arrays',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                0,
+                0,
+                None,
+                None,
+                (
+                    QDateTime.fromString('2023-03-03T23:40:17.073948', Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString('2023-04-01T17:23:14.104630', Qt.DateFormat.ISODateWithMs),
+                ),
+                None,
+                None,
+            ),
+        ),
+        # Short mtime change
+        (
+            {
+                'path': 'home/user/arrays',
+                'changes': [
+                    {
+                        'new_mtime': '2023-04-01T17:23:14.104630',
+                        'old_mtime': '2023-03-03T23:40:17.073948',
+                        'type': 'mtime',
+                    }
+                ],
+            },
+            (
+                'home/user/arrays',
+                FileType.FILE,
+                ChangeType.MODIFIED,
+                0,
+                0,
+                None,
+                None,
+                None,
+                (
+                    QDateTime.fromString('2023-03-03T23:40:17.073948', Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString('2023-04-01T17:23:14.104630', Qt.DateFormat.ISODateWithMs),
+                ),
+                None,
+            ),
         ),
         # All file-related changes in one test
         (
@@ -226,6 +358,16 @@ def test_archive_diff_parser(line, expected):
                         'old_group': 'user',
                         'new_group': 'nfsnobody',
                     },
+                    {
+                        'new_ctime': '2023-04-01T17:23:14.104630',
+                        'old_ctime': '2023-03-03T23:40:17.073948',
+                        'type': 'ctime',
+                    },
+                    {
+                        'new_mtime': '2023-04-01T17:15:50.290565',
+                        'old_mtime': '2023-03-05T00:24:00.359045',
+                        'type': 'mtime',
+                    },
                 ],
             },
             (
@@ -236,6 +378,14 @@ def test_archive_diff_parser(line, expected):
                 0,
                 ('-rw-rw-rw-', '-rw-r--r--'),
                 ('user', 'user', 'nfsnobody', 'nfsnobody'),
+                (
+                    QDateTime.fromString('2023-03-03T23:40:17.073948', Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString('2023-04-01T17:23:14.104630', Qt.DateFormat.ISODateWithMs),
+                ),
+                (
+                    QDateTime.fromString('2023-03-05T00:24:00.359045', Qt.DateFormat.ISODateWithMs),
+                    QDateTime.fromString('2023-04-01T17:15:50.290565', Qt.DateFormat.ISODateWithMs),
+                ),
                 (77800, 77800),
             ),
         ),
