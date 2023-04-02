@@ -17,7 +17,7 @@ def keyring_fixture():
     keyring = VortaKeyring.get_keyring()
     keyring.set_password('vorta-repo', test_repo_url, password)
 
-    yield test_repo_url, password, keyring
+    yield test_repo_url, password, keyring, LONG_PASSWORD
 
     # Remove password from keyring for the test
     keyring.remove_password('vorta-repo', test_repo_url)
@@ -78,7 +78,7 @@ def test_password_autofill(qapp, qtbot, keyring_fixture):
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url, password, keyring = keyring_fixture
+    test_repo_url, password, keyring, long_password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
@@ -90,7 +90,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url, password, keyring = keyring_fixture
+    test_repo_url, password, keyring, long_password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
@@ -107,7 +107,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture
 
     assert RepoModel.get(id=2).url == test_repo_url
 
-    assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
+    assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == long_password
     assert main.repoTab.repoSelector.currentText() == test_repo_url
 
 
