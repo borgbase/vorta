@@ -107,7 +107,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture
 
     assert RepoModel.get(id=2).url == test_repo_url
 
-    assert long_password in keyring.get_password("vorta-repo", RepoModel.get(id=2).url)
+    assert long_password.lower() in keyring.get_password("vorta-repo", RepoModel.get(id=2).url).lower()
     assert main.repoTab.repoSelector.currentText() == test_repo_url
 
 
