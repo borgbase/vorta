@@ -5,11 +5,15 @@ from .borg_job import BorgJob
 class BorgDiffJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Requesting differences between archives…'))
+        self.app.backup_progress_event.emit(
+            f"[{self.params['profile_name']}] {self.tr('Requesting differences between archives…')}"
+        )
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
-        self.app.backup_progress_event.emit(self.tr('Obtained differences between archives.'))
+        self.app.backup_progress_event.emit(
+            f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}"
+        )
         self.result.emit(result)
 
     @classmethod
@@ -23,6 +27,9 @@ class BorgDiffJob(BorgJob):
         if borg_compat.check('DIFF_JSON_LINES'):
             ret['cmd'].append('--json-lines')
             ret['json_lines'] = True
+
+        if borg_compat.check('DIFF_CONTENT_ONLY'):
+            ret['cmd'].append('--content-only')
 
         if borg_compat.check('V2'):
             ret['cmd'].extend(['-r', profile.repo.url, archive_name_1, archive_name_2])
