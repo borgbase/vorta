@@ -45,6 +45,7 @@ class BorgCreateJob(BorgJob):
                 self.app.backup_progress_event.emit(self.tr('Backup finished.'))
                 self.app.backup_log_event.emit('', {})
                 self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
+
     def progress_event(self, fmt):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
