@@ -64,9 +64,8 @@ def main():
     # and it's set to the flag's argument if the flag has one
     if want_development:
         if want_development == DEFAULT_DIR_FLAG:
-            print("I'm using the default directory")
+            pass
         else:
-            print("I'm using this config: ", want_development)
             config.DEV_MODE_DIR = Path(want_development)
 
         if not os.path.exists(config.DEV_MODE_DIR):
