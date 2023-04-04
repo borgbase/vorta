@@ -115,6 +115,17 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'type': 'checkbox',
                 'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
             },
+            {
+                'key': 'check_full_disk_access',
+                'value': True,
+                'type': 'checkbox',
+                'group': startup,
+                'label': trans_late(
+                    'settings',
+                    'Check for Full Disk Access on startup',
+                ),
+                'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
+            },
         ]
     else:
         settings += [
