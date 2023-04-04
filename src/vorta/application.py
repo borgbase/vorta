@@ -120,7 +120,7 @@ class VortaApp(QtSingleApplication):
                     translate('messages', msg['message']),
                     level='error',
                 )
-            self.backup_progress_event.emit(translate('messages', msg['message']))
+            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', msg['message'])}")
             return None
 
     def open_main_window_action(self):
@@ -195,6 +195,10 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
+
+        if not SettingsModel.get(key="check_full_disk_access").value:
+            return
+
         test_path = Path('~/Library/Cookies').expanduser()
         if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
@@ -251,7 +255,7 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakJob.prepare(profile)
         if not params['ok']:
-            self.backup_progress_event.emit(params['message'])
+            self.backup_progress_event.emit(f"[{profile.name}] {params['message']}")
             return
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
