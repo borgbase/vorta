@@ -1,6 +1,7 @@
 import os
 import signal
 import sys
+from pathlib import Path
 from peewee import SqliteDatabase
 
 # Need to import config as a whole module instead of individual variables
@@ -11,7 +12,7 @@ from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
-from vorta.utils import parse_args
+from vorta.utils import DEFAULT_DIR_FLAG, parse_args
 
 
 def main():
@@ -48,7 +49,7 @@ def main():
 
     want_version = getattr(args, 'version', False)
     want_background = getattr(args, 'daemonize', False)
-    want_development = getattr(args, 'development', False)
+    want_development = getattr(args, 'development')
 
     if want_version:
         print(f"Vorta {__version__}")
@@ -58,7 +59,16 @@ def main():
         if os.fork():
             sys.exit()
 
+    # want_development is None when flag is not called
+    # it's set to the default directory when flag is called without an argument
+    # and it's set to the flag's argument if the flag has one
     if want_development:
+        if want_development == DEFAULT_DIR_FLAG:
+            print("I'm using the default directory")
+        else:
+            print("I'm using this config: ", want_development)
+            config.DEV_MODE_DIR = Path(want_development)
+
         if not os.path.exists(config.DEV_MODE_DIR):
             os.makedirs(config.DEV_MODE_DIR)
 
@@ -79,6 +89,9 @@ def main():
             os.makedirs(config.TEMP_DIR)
 
         config.PROFILE_BOOTSTRAP_FILE = config.DEV_MODE_DIR / '.vorta-init.json'
+
+    # except Exception as exception:
+    #     print("That's an invalid path for a dir \n", exception)
 
     init_logger(background=want_background)
 
