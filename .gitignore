@@ -21,7 +21,7 @@ venv
 .env
 .venv
 # dirs created by the --development option
-dev/
+.dev_config/
 # Avoid adding translations of source language
 # Files are still used by Transifex
 src/vorta/i18n/ts/vorta.en.ts
