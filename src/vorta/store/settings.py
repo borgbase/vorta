@@ -100,6 +100,18 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'internal',
             'label': 'Previous window height',
         },
+        {
+            'key': 'sourcetab_sort_column',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Column',
+        },
+        {
+            'key': 'sourcetab_sort_order',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Order',
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
