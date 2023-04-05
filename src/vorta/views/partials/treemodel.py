@@ -323,14 +323,12 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         #: simple list of items
         FLAT = enum.auto()
 
-    def __init__(self, parent=None):
+    def __init__(self, mode: 'FileTreeModel.DisplayMode' = DisplayMode.TREE, parent=None):
         """Init."""
         super().__init__(parent)
         self.root: FileSystemItem[T] = FileSystemItem([], None)
 
-        #: mode
-        self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.TREE
-
+        self.mode = mode
         #: flat representation of the tree
         self._flattened: List[FileSystemItem] = []
 

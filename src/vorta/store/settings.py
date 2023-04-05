@@ -101,6 +101,18 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'label': 'Previous window height',
         },
         {
+            'key': 'diff_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Diff dialog display mode',
+        },
+        {
+            'key': 'extract_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Extract dialog display mode',
+        },
+        {
             'key': 'sourcetab_sort_column',
             'str_value': '0',
             'type': 'internal',
