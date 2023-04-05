@@ -188,8 +188,14 @@ class AddRepoWindow(RepoWindow):
         if self.encryptionComboBox.currentData() != 'none':
             self.passwordInput.set_error_label(VortaKeyring.get_keyring().get_backend_warning())
 
+    def validate(self):
+        valid = super().validate()
+        if valid:
+            return self.passwordInput.validate()
+        return valid
+
     def run(self):
-        if self.validate() and self.passwordInput.validate():
+        if self.validate():
             params = BorgInitJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
@@ -229,13 +235,3 @@ class ExistingRepoWindow(RepoWindow):
                 self.thread.run()
             else:
                 self._set_status(params['message'])
-
-    # @property
-    # def values(self):
-    #     out = dict(
-    #         ssh_key=self.sshComboBox.currentData(),
-    #         repo_url=self.repoURL.text(),
-    #         password=self.passwordInput.get_password(),
-    #         extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
-    #     )
-    #     return out
