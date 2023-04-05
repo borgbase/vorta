@@ -1,6 +1,6 @@
 import re
 from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QLabel
+from PyQt5.QtWidgets import QApplication, QComboBox, QDialogButtonBox, QLabel, QSizePolicy
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
@@ -34,7 +34,6 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 
         self.tabWidget.setCurrentIndex(0)
 
-        self.init_encryption()
         self.init_ssh_key()
         self.set_icons()
 
@@ -83,6 +82,68 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         else:
             self._set_status(self.tr('Unable to add your repository.'))
 
+    def init_ssh_key(self):
+        keys = get_private_keys()
+        for key in keys:
+            self.sshComboBox.addItem(f'{key}', key)
+
+    def validate(self):
+        """Pre-flight check for valid input and borg binary."""
+        if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
+            self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
+            return False
+
+        if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:
+            self._set_status(self.tr('This repo has already been added.'))
+            return False
+
+        return True
+
+    @property
+    def values(self):
+        out = dict(
+            ssh_key=self.sshComboBox.currentData(),
+            repo_url=self.repoURL.text(),
+            password=self.passwordInput.get_password(),
+            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
+        )
+        return out
+
+
+class AddRepoWindow(RepoWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.passwordInput = PasswordInput()
+        self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
+
+        self.encryptionLabel = QLabel(self.tr('Encryption:'))
+        self.encryptionComboBox = QComboBox()
+        self.encryptionComboBox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        self.advancedFormLayout.setWidget(1, 0, self.encryptionLabel)
+        self.advancedFormLayout.setWidget(1, 1, self.encryptionComboBox)
+
+        self.encryptionComboBox.activated.connect(self.display_backend_warning)
+        self.encryptionComboBox.currentIndexChanged.connect(self.encryption_listener)
+
+        self.display_backend_warning()
+        self.init_encryption()
+
+    def set_password(self, URL):
+        '''Autofill password from keyring only if current entry is empty'''
+        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
+        if password and self.passwordInput.get_password() == "":
+            self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
+            self.passwordInput.passwordLineEdit.setText(password)
+            self.passwordInput.confirmLineEdit.setText(password)
+
+    @property
+    def values(self):
+        out = super().values
+        out['encryption'] = self.encryptionComboBox.currentData()
+        return out
+
     def init_encryption(self):
         if borg_compat.check('V2'):
             encryption_algos = [
@@ -115,55 +176,6 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             self.encryptionComboBox.model().item(2).setEnabled(False)
             self.encryptionComboBox.setCurrentIndex(1)
 
-    def init_ssh_key(self):
-        keys = get_private_keys()
-        for key in keys:
-            self.sshComboBox.addItem(f'{key}', key)
-
-    def validate(self):
-        """Pre-flight check for valid input and borg binary."""
-        if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
-            self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
-            return False
-
-        if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:
-            self._set_status(self.tr('This repo has already been added.'))
-            return False
-
-        return True
-
-
-class AddRepoWindow(RepoWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-        self.passwordInput = PasswordInput()
-        self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
-
-        self.encryptionComboBox.activated.connect(self.display_backend_warning)
-        self.encryptionComboBox.currentIndexChanged.connect(self.encryption_listener)
-
-        self.display_backend_warning()
-
-    def set_password(self, URL):
-        '''Autofill password from keyring only if current entry is empty'''
-        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
-        if password and self.passwordInput.get_password() == "":
-            self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
-            self.passwordInput.passwordLineEdit.setText(password)
-            self.passwordInput.confirmLineEdit.setText(password)
-
-    @property
-    def values(self):
-        out = dict(
-            ssh_key=self.sshComboBox.currentData(),
-            repo_url=self.repoURL.text(),
-            password=self.passwordInput.get_password(),
-            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
-            encryption=self.encryptionComboBox.currentData(),
-        )
-        return out
-
     def encryption_listener(self):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
@@ -192,8 +204,6 @@ class AddRepoWindow(RepoWindow):
 class ExistingRepoWindow(RepoWindow):
     def __init__(self):
         super().__init__()
-        self.encryptionComboBox.hide()
-        self.encryptionLabel.hide()
         self.title.setText(self.tr('Connect to existing Repository'))
 
         self.passwordLabel = QLabel(self.tr('Password:'))
@@ -220,12 +230,12 @@ class ExistingRepoWindow(RepoWindow):
             else:
                 self._set_status(params['message'])
 
-    @property
-    def values(self):
-        out = dict(
-            ssh_key=self.sshComboBox.currentData(),
-            repo_url=self.repoURL.text(),
-            password=self.passwordInput.get_password(),
-            extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
-        )
-        return out
+    # @property
+    # def values(self):
+    #     out = dict(
+    #         ssh_key=self.sshComboBox.currentData(),
+    #         repo_url=self.repoURL.text(),
+    #         password=self.passwordInput.get_password(),
+    #         extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
+    #     )
+    #     return out
