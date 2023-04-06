@@ -5,7 +5,7 @@ from vorta.views.utils import get_colored_icon
 
 
 class PasswordLineEdit(QLineEdit):
-    def __init__(self, *, parent=None, show_visibility_button=True):
+    def __init__(self, *, parent=None, show_visibility_button: bool = True) -> None:
         super().__init__(parent)
 
         self._show_visibility_button = show_visibility_button
@@ -21,17 +21,17 @@ class PasswordLineEdit(QLineEdit):
             self.showHideAction.setIcon(get_colored_icon("eye"))
             self.addAction(self.showHideAction, QLineEdit.TrailingPosition)
 
-    def get_password(self):
+    def get_password(self) -> str:
         """Return password text"""
         return self.text()
 
     @property
-    def visible(self):
+    def visible(self) -> bool:
         """Return password visibility"""
         return self._visible
 
     @visible.setter
-    def visible(self, value):
+    def visible(self, value: bool) -> None:
         """Set password visibility"""
         if not isinstance(value, bool):
             raise TypeError("visible must be a boolean value")
@@ -44,17 +44,17 @@ class PasswordLineEdit(QLineEdit):
             else:
                 self.showHideAction.setIcon(get_colored_icon("eye-slash"))
 
-    def toggle_visibility(self):
+    def toggle_visibility(self) -> None:
         """Toggle password visibility"""
         self.visible = not self._visible
 
     @property
-    def error_state(self):
+    def error_state(self) -> bool:
         """Return error state"""
         return self._error_state
 
     @error_state.setter
-    def error_state(self, error):
+    def error_state(self, error: bool) -> None:
         """Set error state and update style"""
         self._error_state = error
         if error:
@@ -64,7 +64,7 @@ class PasswordLineEdit(QLineEdit):
 
 
 class PasswordInput(QObject):
-    def __init__(self, *, parent=None, minimum_length=9, show_error=True, label: list = None):
+    def __init__(self, *, parent=None, minimum_length: int = 9, show_error: bool = True, label: list = None) -> None:
         super().__init__(parent)
         self._minimum_length = minimum_length
         self._show_error = show_error
@@ -84,24 +84,24 @@ class PasswordInput(QObject):
         self.passwordLineEdit.editingFinished.connect(self.validate)
         self.confirmLineEdit.textChanged.connect(self.validate)
 
-    def set_labels(self, label_1, label_2):
+    def set_labels(self, label_1: QLabel, label_2: QLabel) -> None:
         self._label_password = label_1
         self._label_confirm = label_2
 
-    def set_error_label(self, text):
+    def set_error_label(self, text: str) -> None:
         self.validation_label.setText(text)
 
-    def set_validation_enabled(self, enable: bool):
+    def set_validation_enabled(self, enable: bool) -> None:
         self._show_error = enable
         self.passwordLineEdit.error_state = False
         self.confirmLineEdit.error_state = False
         if not enable:
             self.set_error_label("")
 
-    def get_password(self):
+    def get_password(self) -> str:
         return self.passwordLineEdit.text()
 
-    def validate(self):
+    def validate(self) -> bool:
         if not self._show_error:
             return True
 
@@ -130,7 +130,7 @@ class PasswordInput(QObject):
 
         return not bool(self.validation_label.text())
 
-    def add_form_to_layout(self, form_layout):
+    def add_form_to_layout(self, form_layout: QFormLayout) -> None:
         """Adds form to layout"""
         form_layout.addRow(self._label_password, self.passwordLineEdit)
         form_layout.addRow(self._label_confirm, self.confirmLineEdit)
