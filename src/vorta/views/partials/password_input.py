@@ -81,8 +81,13 @@ class PasswordInput(QObject):
         self.confirmLineEdit = PasswordLineEdit()
         self.validation_label = QLabel("")
 
-        self.passwordLineEdit.editingFinished.connect(self.validate)
+        self.passwordLineEdit.editingFinished.connect(self.on_editing_finished)
         self.confirmLineEdit.textChanged.connect(self.validate)
+
+    def on_editing_finished(self) -> None:
+        self.passwordLineEdit.editingFinished.disconnect(self.on_editing_finished)
+        self.passwordLineEdit.textChanged.connect(self.validate)
+        self.validate()
 
     def set_labels(self, label_1: QLabel, label_2: QLabel) -> None:
         self._label_password = label_1
