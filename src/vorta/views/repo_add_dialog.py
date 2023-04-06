@@ -189,10 +189,7 @@ class AddRepoWindow(RepoWindow):
             self.passwordInput.set_error_label(VortaKeyring.get_keyring().get_backend_warning())
 
     def validate(self):
-        valid = super().validate()
-        if valid:
-            return self.passwordInput.validate()
-        return valid
+        return super().validate() and self.passwordInput.validate()
 
     def run(self):
         if self.validate():
