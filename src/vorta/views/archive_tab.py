@@ -231,8 +231,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bList,
             self.bPrune,
             self.bDiff,
-            self.fArchiveActions,
             self.bMountRepo,
+            self.bDelete,
+            self.compactButton,
+            self.fArchiveActions,
         ]:
             button.setEnabled(enabled)
             button.repaint()
@@ -322,17 +324,22 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
 
+        # task in progress -> disable all
+        reason = ""
+        if not self.repoactions_enabled:
+            reason = self.tr("(borg already running)")
+
         # toggle delete button
-        if len(indexes) > 0:
+        if self.repoactions_enabled and len(indexes) > 0:
             self.bDelete.setEnabled(True)
             self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
         else:
             self.bDelete.setEnabled(False)
             tooltip = self.tooltip_dict[self.bDelete]
-            self.bDelete.setToolTip(tooltip + " " + self.tr("(Select minimum one archive)"))
+            self.bDelete.setToolTip(tooltip + " " + reason or self.tr("(Select minimum one archive)"))
 
         # Toggle diff button
-        if len(indexes) == 2:
+        if self.repoactions_enabled and len(indexes) == 2:
             # Enable diff button
             self.bDiff.setEnabled(True)
             self.bDiff.setToolTip(self.tooltip_dict.get(self.bDiff, ""))
@@ -341,9 +348,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.bDiff.setEnabled(False)
 
             tooltip = self.tooltip_dict[self.bDiff]
-            self.bDiff.setToolTip(tooltip + " " + self.tr("(Select two archives)"))
+            self.bDiff.setToolTip(tooltip + " " + reason or self.tr("(Select two archives)"))
 
-        if len(indexes) == 1:
+        if self.repoactions_enabled and len(indexes) == 1:
             # Enable archive actions
             self.fArchiveActions.setEnabled(True)
 
@@ -354,6 +361,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
         else:
+            reason = reason or self.tr("(Select exactly one archive)")
+
             # too few or too many selected.
             self.fArchiveActions.setEnabled(False)
 
@@ -362,12 +371,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 tooltip = widget.toolTip()
 
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
-                widget.setToolTip(tooltip + " " + self.tr("(Select exactly one archive)"))
+                widget.setToolTip(tooltip + " " + reason)
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
             tooltip = self.bMountArchive.toolTip()
-            self.bMountArchive.setToolTip(tooltip + " " + self.tr("(Select exactly one archive)"))
+            self.bMountArchive.setToolTip(tooltip + " " + reason)
 
     def archive_copy(self, index=None):
         """

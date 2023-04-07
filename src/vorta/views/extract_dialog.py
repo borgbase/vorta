@@ -9,6 +9,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt5.QtGui import QColor, QKeySequence
 from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
+from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
@@ -88,9 +89,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.buttonBox.addButton(self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole)
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
+        diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
 
         # connect signals
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -162,6 +165,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
+
+        SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
+            SettingsModel.key == 'extract_files_display_mode'
+        ).execute()
 
         self.model.setMode(mode)
 
