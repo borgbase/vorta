@@ -236,9 +236,6 @@ def run_migrations(current_schema, db_connection):
                 pw.CharField(default=''),
             ),
         )
-        for repo in RepoModel.select():
-            repo.name = repo.id
-            repo.save()
 
 
 def _apply_schema_update(current_schema, version_after, *operations):
