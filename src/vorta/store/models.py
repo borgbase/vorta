@@ -96,7 +96,6 @@ class BackupProfileModel(BaseModel):
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
     allow_new_networks = pw.BooleanField(default=False)
-    show_notification_when_network_disallowed = pw.BooleanField(default=True)
 
     def refresh(self):
         return type(self).get(self._pk_expr())

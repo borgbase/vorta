@@ -78,9 +78,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.allowNewNetworksCheckBox.stateChanged.connect(
             lambda new_val, attr='allow_new_networks': self.save_profile_attr(attr, new_val)
         )
-        self.networkDisallowedNotificationCheckBox.stateChanged.connect(
-            lambda new_val, attr='show_notification_when_network_disallowed': self.save_profile_attr(attr, new_val)
-        )
         self.postBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
         )
@@ -156,7 +153,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             QtCore.Qt.Unchecked if profile.dont_run_on_metered_networks else QtCore.Qt.Checked
         )
         self.allowNewNetworksCheckBox.setChecked(profile.allow_new_networks)
-        self.networkDisallowedNotificationCheckBox.setChecked(profile.show_notification_when_network_disallowed)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)

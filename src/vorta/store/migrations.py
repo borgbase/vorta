@@ -235,11 +235,6 @@ def run_migrations(current_schema, db_connection):
                 'allow_new_networks',
                 pw.BooleanField(default=True),
             ),
-            migrator.add_column(
-                BackupProfileModel._meta.table_name,
-                "show_notification_when_network_disallowed",
-                pw.BooleanField(default=True),
-            ),
         )
 
 

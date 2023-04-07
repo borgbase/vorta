@@ -530,7 +530,7 @@
        <property name="verticalSpacing">
         <number>12</number>
        </property>
-       <item row="3" column="0">
+       <item row="2" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <property name="spacing">
           <number>4</number>
@@ -557,16 +557,6 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="meteredNetworksCheckBox">
-         <property name="text">
-          <string>Run backups over metered networks</string>
-         </property>
-         <property name="tristate">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QCheckBox" name="allowNewNetworksCheckBox">
          <property name="text">
@@ -574,10 +564,13 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="networkDisallowedNotificationCheckBox">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="meteredNetworksCheckBox">
          <property name="text">
-          <string>Show notification when a network is disallowed</string>
+          <string>Run backups over metered networks</string>
+         </property>
+         <property name="tristate">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
