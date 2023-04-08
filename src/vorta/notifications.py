@@ -1,6 +1,6 @@
 import logging
 import sys
-from PyQt5 import QtCore, QtDBus
+from PyQt6 import QtCore, QtDBus
 from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class DBusNotifications(VortaNotifications):
         icon = "com.borgbase.Vorta-symbolic"
         title = header
         text = msg
-        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
+        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.Type.QStringList)
         hint = {'urgency': self.URGENCY[level]}
         time = 5000  # milliseconds for display timeout
 
@@ -91,7 +91,7 @@ class DBusNotifications(VortaNotifications):
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
         if notify.isValid():
             x = notify.call(
-                QtDBus.QDBus.AutoDetect,
+                QtDBus.QDBus.CallMode.AutoDetect,
                 "Notify",
                 app_name,
                 id_replace,

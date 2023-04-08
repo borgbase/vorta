@@ -1,7 +1,7 @@
 import os
-from PyQt5 import uic
-from PyQt5.QtCore import QProcess, Qt
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox
+from PyQt6 import uic
+from PyQt6.QtCore import QProcess, Qt
+from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 from ..utils import get_asset
 
 uifile = get_asset('UI/sshadd.ui')
@@ -12,7 +12,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
         # dialogButtonBox
         self.generateButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)

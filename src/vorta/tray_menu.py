@@ -1,6 +1,6 @@
 import os
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+from PyQt6.QtGui import QColor, QScreen
+from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
@@ -31,8 +31,8 @@ class TrayMenu(QSystemTrayIcon):
         If XDG_CURRENT_DESKTOP isn't set, always open the tray menu (macOS)
         """
         if reason in [
-            QSystemTrayIcon.Trigger,
-            QSystemTrayIcon.DoubleClick,
+            QSystemTrayIcon.ActivationReason.Trigger,
+            QSystemTrayIcon.ActivationReason.DoubleClick,
         ] and os.environ.get('XDG_CURRENT_DESKTOP'):
             self.app.toggle_main_window_visibility()
 
@@ -72,6 +72,14 @@ class TrayMenu(QSystemTrayIcon):
 
         exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)
+
+    def is_taskbar_dark(self):
+        app = QApplication.instance()
+        long_color = QScreen.grabWindow(app.primaryScreen()).toImage().pixel(0, 0)
+        int_color = int(long_color)
+        return 150 > QColor.lightness(
+            QColor.fromRgb(((int_color >> 16) & 0xFF), ((int_color >> 8) & 0xFF), (int_color & 0xFF))
+        )
 
     def set_tray_icon(self, active=False):
         """

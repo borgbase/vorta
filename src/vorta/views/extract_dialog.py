@@ -5,10 +5,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
 from typing import Optional
-from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
-from PyQt5.QtGui import QColor, QKeySequence
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
+from PyQt6 import uic
+from PyQt6.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
+from PyQt6.QtGui import QColor, QKeySequence, QShortcut
+from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton
 from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
@@ -72,10 +72,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         # header
         header = view.header()
         header.setStretchLastSection(False)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
@@ -467,9 +467,9 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.BackgroundRole and column == 3:
             # health indicator
             if item.data.health:
-                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
             else:
-                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
 
         if role == Qt.ItemDataRole.ToolTipRole:
             if column == 0:
@@ -616,7 +616,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         item = index.internalPointer()
         for i in range(number_children):
-            child = index.child(i, 0)
+            child = index.sibling(i, 0)
             child_item: ExtractFileItem = child.internalPointer()
             child_item.data.checkstate = value
 
@@ -633,8 +633,8 @@ class ExtractTree(FileTreeModel[FileData]):
             self.set_checkstate_recursively(child, value)
 
         self.dataChanged.emit(
-            index.child(0, 0),
-            index.child(0, number_children - 1),
+            index.sibling(0, 0),
+            index.sibling(0, number_children - 1),
             (Qt.ItemDataRole.CheckStateRole,),
         )
 
