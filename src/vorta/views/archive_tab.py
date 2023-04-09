@@ -787,9 +787,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         msg.setText(text)
         msg.setWindowTitle(title)
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
-        msg.button(msg.Yes).setText(self.tr("Yes"))
-        msg.button(msg.Cancel).setText(self.tr("Cancel"))
-        return msg.exec_() == QMessageBox.StandardButton.Yes
+        msg.button(QMessageBox.StandardButton.Yes).setText(self.tr("Yes"))
+        msg.button(QMessageBox.StandardButton.Cancel).setText(self.tr("Cancel"))
+        return msg.exec() == QMessageBox.StandardButton.Yes
 
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
