@@ -248,14 +248,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
-        sourcetab_sort_order = (
-            Qt.SortOrder.DescendingOrder
-            if SettingsModel.get(key='sourcetab_sort_order').str_value
-            else Qt.SortOrder.AscendingOrder
-        )
+        sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
 
         # Sort items as per settings
-        self.sourceFilesWidget.sortItems(sourcetab_sort_column, sourcetab_sort_order)
+        self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
@@ -267,7 +263,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         SettingsModel.update({SettingsModel.str_value: str(column)}).where(
             SettingsModel.key == 'sourcetab_sort_column'
         ).execute()
-        SettingsModel.update({SettingsModel.str_value: str(order)}).where(
+        SettingsModel.update({SettingsModel.str_value: str(order.value)}).where(
             SettingsModel.key == 'sourcetab_sort_order'
         ).execute()
 
