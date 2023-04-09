@@ -616,7 +616,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         item = index.internalPointer()
         for i in range(number_children):
-            child = index.sibling(i, 0)
+            child = self.index(i, 0, index)
             child_item: ExtractFileItem = child.internalPointer()
             child_item.data.checkstate = value
 
@@ -633,8 +633,8 @@ class ExtractTree(FileTreeModel[FileData]):
             self.set_checkstate_recursively(child, value)
 
         self.dataChanged.emit(
-            index.sibling(0, 0),
-            index.sibling(0, number_children - 1),
+            self.index(0, 0, index),
+            self.index(0, number_children - 1, index),
             (Qt.ItemDataRole.CheckStateRole,),
         )
 

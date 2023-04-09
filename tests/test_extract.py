@@ -88,7 +88,7 @@ def test_selection():
     parse_json_lines(lines, model)
 
     # Test select
-    ic = model.sibling(1, 0, QModelIndex())
+    ic = model.index(1, 0, QModelIndex())
     c: FileSystemItem[FileData] = ic.internalPointer()
 
     select(model, ic)
@@ -101,7 +101,7 @@ def test_selection():
     assert c.data.checked_children == 0
 
     # Test select parent as well as children
-    ia = model.sibling(0, 0, QModelIndex())
+    ia = model.index(0, 0, QModelIndex())
     a: FileSystemItem[FileData] = ia.internalPointer()
     aa = model.getItem(("a", "a"))
     aab = model.getItem(("a", "a", "b"))
