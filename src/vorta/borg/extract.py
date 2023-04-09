@@ -51,7 +51,7 @@ class BorgExtractJob(BorgJob):
                 indexes.append(new_index)
 
                 item: FileSystemItem[FileData] = new_index.internalPointer()
-                if item.data.checkstate == Qt.CheckState.Checked:
+                if item.data.checkstate == Qt.CheckState.Checked.value:
                     pattern_file.write("+ " + path_to_str(item.path) + "\n")
 
         pattern_file.write("- fm:*\n")
