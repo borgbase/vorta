@@ -98,8 +98,10 @@ class ToolTipButton(QWidget):
         https://doc.qt.io/qt-5/qwidget.html#mouseMoveEvent
         """
         super().mouseMoveEvent(event)
-        QToolTip.showText(event.globalPosition(), self.toolTip(), self)
-        QCoreApplication.postEvent(self, QHelpEvent(QEvent.Type.ToolTip, event.position(), event.globalPosition()))
+        QToolTip.showText(event.globalPosition().toPoint(), self.toolTip(), self)
+        QCoreApplication.postEvent(
+            self, QHelpEvent(QEvent.Type.ToolTip, event.position().toPoint(), event.globalPosition().toPoint())
+        )
 
     def setIcon(self, icon: QIcon):
         """
