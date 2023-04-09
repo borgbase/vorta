@@ -20,7 +20,6 @@ from vorta.i18n import trans_late
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
-
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
 

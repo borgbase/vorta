@@ -8,7 +8,7 @@ def test_profile_add(qapp, qtbot):
     qtbot.mouseClick(main.profileAddButton, QtCore.Qt.MouseButton.LeftButton)
 
     add_profile_window = main.window
-    qtbot.addWidget(add_profile_window)
+    # qtbot.addWidget(add_profile_window)
 
     qtbot.keyClicks(add_profile_window.profileNameField, 'Test Profile')
     qtbot.mouseClick(
@@ -24,7 +24,7 @@ def test_profile_edit(qapp, qtbot):
     qtbot.mouseClick(main.profileRenameButton, QtCore.Qt.MouseButton.LeftButton)
 
     edit_profile_window = main.window
-    qtbot.addWidget(edit_profile_window)
+    # qtbot.addWidget(edit_profile_window)
 
     edit_profile_window.profileNameField.setText("")
     qtbot.keyClicks(edit_profile_window.profileNameField, 'Test Profile')

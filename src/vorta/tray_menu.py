@@ -1,5 +1,5 @@
 import os
-from PyQt6.QtGui import QColor, QScreen, QIcon
+from PyQt6.QtGui import QColor, QIcon, QScreen
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset

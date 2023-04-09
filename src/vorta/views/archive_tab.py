@@ -4,8 +4,9 @@ from datetime import timedelta
 from typing import Dict, Optional
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
-from PyQt6.QtGui import QDesktopServices, QKeySequence, QAction, QShortcut
+from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
+    QAbstractItemView,
     QApplication,
     QHeaderView,
     QInputDialog,
@@ -15,7 +16,6 @@ from PyQt6.QtWidgets import (
     QTableView,
     QTableWidgetItem,
     QWidget,
-    QAbstractItemView,
 )
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob

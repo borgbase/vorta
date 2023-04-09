@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
-from PyQt6.QtWidgets import QApplication, QHeaderView, QListWidgetItem, QTableView, QTableWidgetItem, QAbstractItemView
+from PyQt6.QtWidgets import QAbstractItemView, QApplication, QHeaderView, QListWidgetItem, QTableWidgetItem
 from vorta import application
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
