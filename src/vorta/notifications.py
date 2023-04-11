@@ -77,11 +77,12 @@ class DBusNotifications(VortaNotifications):
         path = "/org/freedesktop/Notifications"
         interface = "org.freedesktop.Notifications"
         app_name = "vorta"
-        id_replace = QtCore.QVariant(12321)  # random int to identify all notifications
+        id_replace = QtCore.QVariant(12321)
+        id_replace.convert(QtCore.QMetaType(QtCore.QMetaType.Type.UInt.value))
         icon = "com.borgbase.Vorta-symbolic"
         title = header
         text = msg
-        actions_list = QtDBus.QDBusArgument(QtCore.QMetaType.Type.QStringList)
+        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.Type.QStringList.value)
         hint = {'urgency': self.URGENCY[level]}
         time = 5000  # milliseconds for display timeout
 
