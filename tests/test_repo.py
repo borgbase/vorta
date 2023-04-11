@@ -2,6 +2,7 @@ import os
 import uuid
 import pytest
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
@@ -46,9 +47,10 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     assert add_repo_window.passwordLabel.text() == 'Passwords must be identical.'
 
 
-def test_repo_unlink(qapp, qtbot):
+def test_repo_unlink(qapp, qtbot, monkeypatch):
     main = qapp.main_window
     tab = main.repoTab
+    monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
     main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
