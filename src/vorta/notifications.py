@@ -90,6 +90,8 @@ class DBusNotifications(VortaNotifications):
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
         if notify.isValid():
             x = notify.call(
+                # Call arguments for Notify interface need to match exactly:
+                # https://specifications.freedesktop.org/notification-spec/notification-spec-latest.html#command-notify
                 QtDBus.QDBus.CallMode.AutoDetect,
                 "Notify",
                 app_name,
