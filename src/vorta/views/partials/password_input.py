@@ -89,9 +89,9 @@ class PasswordInput(QObject):
         self.passwordLineEdit.textChanged.connect(self.validate)
         self.validate()
 
-    def set_labels(self, label_1: QLabel, label_2: QLabel) -> None:
-        self._label_password = label_1
-        self._label_confirm = label_2
+    def set_labels(self, label_1: str, label_2: str) -> None:
+        self._label_password.setText(label_1)
+        self._label_confirm.setText(label_2)
 
     def set_error_label(self, text: str) -> None:
         self.validation_label.setText(text)
@@ -102,6 +102,13 @@ class PasswordInput(QObject):
         self.confirmLineEdit.error_state = False
         if not enable:
             self.set_error_label("")
+
+    def clear(self) -> None:
+        self.passwordLineEdit.clear()
+        self.confirmLineEdit.clear()
+        self.passwordLineEdit.error_state = False
+        self.confirmLineEdit.error_state = False
+        self.set_error_label("")
 
     def get_password(self) -> str:
         return self.passwordLineEdit.text()
@@ -124,14 +131,20 @@ class PasswordInput(QObject):
             self.passwordLineEdit.error_state = True
             self.confirmLineEdit.error_state = True
             self.set_error_label(
-                translate('PasswordInput', "Passwords must be identical and greater than 8 characters long.")
+                translate('PasswordInput', "Passwords must be identical and atleast {0} characters long.").format(
+                    self._minimum_length
+                )
             )
         elif not pass_equal:
             self.confirmLineEdit.error_state = True
             self.set_error_label(translate('PasswordInput', "Passwords must be identical."))
         elif not pass_long:
             self.passwordLineEdit.error_state = True
-            self.set_error_label(translate('PasswordInput', "Passwords must be greater than 8 characters long."))
+            self.set_error_label(
+                translate('PasswordInput', "Passwords must be atleast {0} characters long.").format(
+                    self._minimum_length
+                )
+            )
 
         return not bool(self.validation_label.text())
 
