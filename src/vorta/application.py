@@ -52,49 +52,50 @@ class VortaApp(QtSingleApplication):
             elif args.profile:
                 self.sendMessage(f"create {args.profile}")
                 logger.info('Creating backup using existing Vorta instance.')
-                sys.exit()
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
 
-        init_translations(self)
-
-        self.setQuitOnLastWindowClosed(False)
-        self.jobs_manager = JobsManager()
-        self.scheduler = VortaScheduler()
-
-        self.setApplicationName("Vorta")
-
-        # Import profile from ~/.vorta-init.json or add empty "Default" profile.
-        self.bootstrap_profile()
-
-        # Prepare tray and main window
-        self.tray = TrayMenu(self)
-        self.main_window = MainWindow(self)
-
-        if getattr(args, 'daemonize', False):
-            pass
-        elif SettingsModel.get(key='foreground').value:
-            self.open_main_window_action()
-
-        self.backup_started_event.connect(self.backup_started_event_response)
-        self.backup_finished_event.connect(self.backup_finished_event_response)
-        self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
-        self.check_failed_event.connect(self.check_failed_response)
-        self.backup_log_event.connect(self.react_to_log)
-        self.aboutToQuit.connect(self.quit_app_action)
-        self.set_borg_details_action()
-        if sys.platform == 'darwin':
-            self.check_darwin_permissions()
+        if not args.profile:
+            init_translations(self)
+
+            self.setQuitOnLastWindowClosed(False)
+            self.jobs_manager = JobsManager()
+            self.scheduler = VortaScheduler()
+
+            self.setApplicationName("Vorta")
+
+            # Import profile from ~/.vorta-init.json or add empty "Default" profile.
+            self.bootstrap_profile()
+
+            # Prepare tray and main window
+            self.tray = TrayMenu(self)
+            self.main_window = MainWindow(self)
+
+            if getattr(args, 'daemonize', False):
+                pass
+            elif SettingsModel.get(key='foreground').value:
+                self.open_main_window_action()
+
+            self.backup_started_event.connect(self.backup_started_event_response)
+            self.backup_finished_event.connect(self.backup_finished_event_response)
+            self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
+            self.check_failed_event.connect(self.check_failed_response)
+            self.backup_log_event.connect(self.react_to_log)
+            self.aboutToQuit.connect(self.quit_app_action)
+            self.set_borg_details_action()
+            if sys.platform == 'darwin':
+                self.check_darwin_permissions()
 
     def create_backups_cmdline(self, profile_name):
         profile = BackupProfileModel.get_or_none(name=profile_name)
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            self.create_backup_action(profile_id=profile.id)
+            self.create_backup_action(profile_id=profile.id, cmd_line=True)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
+            self.reply("failed - invalid profile name")
 
     def quit_app_action(self):
         self.backup_cancelled_event.emit()
@@ -103,7 +104,7 @@ class VortaApp(QtSingleApplication):
         del self.tray
         cleanup_db()
 
-    def create_backup_action(self, profile_id=None):
+    def create_backup_action(self, profile_id=None, cmd_line=False):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
@@ -111,6 +112,8 @@ class VortaApp(QtSingleApplication):
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
+            if cmd_line:
+                job.result.connect(self.create_backup_cmdline_response)
             self.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
@@ -121,6 +124,12 @@ class VortaApp(QtSingleApplication):
             )
             self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', msg['message'])}")
             return None
+
+    def create_backup_cmdline_response(self, result):
+        if result['returncode'] == 0:
+            self.reply(f"created {result['data']['archive']['name']}")
+        else:
+            self.reply(f"failed {result['errors']}")
 
     def open_main_window_action(self):
         self.main_window.show()
@@ -147,6 +156,12 @@ class VortaApp(QtSingleApplication):
     def message_received_event_response(self, message):
         if message == "open main window":
             self.open_main_window_action()
+        elif message.startswith("created"):
+            logger.info(f"Backup created: {message[8:]}")
+            sys.exit()
+        elif message.startswith("failed"):
+            logger.info(f"Backup failed: {message[7:]}")
+            sys.exit()
         elif message.startswith("create"):
             message = message[7:]  # Remove create
             if self.jobs_manager.is_worker_running():
