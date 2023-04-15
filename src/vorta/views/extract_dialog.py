@@ -281,7 +281,7 @@ class FileData:
     last_modified: QDateTime
     source_path: Optional[str] = None  # only relevant for links
 
-    checkstate: int = 0  # whether to extract the file (0, 1 or 2)
+    checkstate: Qt.CheckState = Qt.CheckState.Unchecked  # whether to extract the file (0, 1 or 2)
     checked_children: int = 0  # number of children checked
 
 
@@ -532,7 +532,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.CheckStateRole and column == 0:
             return item.data.checkstate
 
-    def setData(self, index: QModelIndex, value, role: int = Qt.ItemDataRole.DisplayRole) -> bool:
+    def setData(self, index: QModelIndex, value: Qt.CheckState, role: int = Qt.ItemDataRole.DisplayRole) -> bool:
         """
         Sets the role data for the item at index to value.
 
@@ -545,7 +545,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         item: ExtractFileItem = index.internalPointer()
 
-        if value.value == item.data.checkstate:
+        if value == item.data.checkstate:
             return True
 
         super_index = index.parent()
@@ -559,15 +559,15 @@ class ExtractTree(FileTreeModel[FileData]):
             if value == Qt.CheckState.Unchecked:
                 # must have been one of the others previously
                 parent.data.checked_children -= 1
-            elif item.data.checkstate == Qt.CheckState.Unchecked.value:  # old value
+            elif item.data.checkstate == Qt.CheckState.Unchecked:  # old value
                 # change from partially checked to checked
                 # or the other way around does not change this count
                 parent.data.checked_children += 1
 
             if parent.data.checked_children:
-                parent.data.checkstate = Qt.CheckState.PartiallyChecked.value
+                parent.data.checkstate = Qt.CheckState.PartiallyChecked
             else:
-                parent.data.checkstate = Qt.CheckState.Unchecked.value
+                parent.data.checkstate = Qt.CheckState.Unchecked
 
             parent = parent._parent
 
@@ -575,7 +575,7 @@ class ExtractTree(FileTreeModel[FileData]):
             if value == Qt.CheckState.Unchecked:
                 # must have been one of the others previously
                 super_item.data.checked_children -= 1
-            elif item.data.checkstate == Qt.CheckState.Unchecked.value:
+            elif item.data.checkstate == Qt.CheckState.Unchecked:
                 # change from partially checked to checked
                 # or the other way around does not change this count
                 super_item.data.checked_children += 1
@@ -591,7 +591,7 @@ class ExtractTree(FileTreeModel[FileData]):
             self.set_checkstate_recursively(index, value)
 
         # update this item's state
-        item.data.checkstate = value.value
+        item.data.checkstate = value
         self.dataChanged.emit(index, index, (role,))
 
         return True
@@ -618,14 +618,14 @@ class ExtractTree(FileTreeModel[FileData]):
         for i in range(number_children):
             child = self.index(i, 0, index)
             child_item: ExtractFileItem = child.internalPointer()
-            child_item.data.checkstate = value.value
+            child_item.data.checkstate = value
 
             # set state of hidden items
             parent = child_item._parent
             while parent != item:
                 # hidden parent must have 1 child
                 parent.data.checked_children = 0 if value == Qt.CheckState.Unchecked else self.rowCount(child)
-                parent.data.checkstate = value.value
+                parent.data.checkstate = value
 
                 parent = parent._parent
 

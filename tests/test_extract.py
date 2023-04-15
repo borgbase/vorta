@@ -92,12 +92,12 @@ def test_selection():
     c: FileSystemItem[FileData] = ic.internalPointer()
 
     select(model, ic)
-    assert c.data.checkstate == Qt.CheckState(2).value
+    assert c.data.checkstate == Qt.CheckState(2)
     assert c.data.checked_children == 0
 
     # Test deselect
     deselect(model, ic)
-    assert c.data.checkstate == Qt.CheckState(0).value
+    assert c.data.checkstate == Qt.CheckState(0)
     assert c.data.checked_children == 0
 
     # Test select parent as well as children
@@ -121,19 +121,19 @@ def test_selection():
     iab = model.indexPath(("a", "b"))
     deselect(model, iab)
 
-    assert a.data.checkstate == Qt.CheckState(1).value
-    assert aa.data.checkstate == Qt.CheckState(2).value
-    assert ab.data.checkstate == Qt.CheckState(0).value
-    assert abc.data.checkstate == Qt.CheckState(0).value
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert aa.data.checkstate == Qt.CheckState(2)
+    assert ab.data.checkstate == Qt.CheckState(0)
+    assert abc.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 1
     assert ab.data.checked_children == 0
 
     # Test deselect item and children
     deselect(model, ia)
 
-    assert a.data.checkstate == Qt.CheckState(0).value
-    assert aa.data.checkstate == Qt.CheckState(0).value
-    assert ab.data.checkstate == Qt.CheckState(0).value
+    assert a.data.checkstate == Qt.CheckState(0)
+    assert aa.data.checkstate == Qt.CheckState(0)
+    assert ab.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 0
     assert aa.data.checked_children == 0
 
@@ -146,9 +146,9 @@ def test_selection():
     select(model, iab)
     select(model, iaac)
 
-    assert a.data.checkstate == Qt.CheckState(1).value
-    assert aa.data.checkstate == Qt.CheckState(1).value
-    assert ab.data.checkstate == Qt.CheckState(2).value
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert aa.data.checkstate == Qt.CheckState(1)
+    assert ab.data.checkstate == Qt.CheckState(2)
 
     assert a.data.checked_children == 2
     assert ab.data.checked_children == 2
@@ -159,21 +159,21 @@ def test_selection():
     deselect(model, iaa)
     deselect(model, iab)
 
-    assert a.data.checkstate == Qt.CheckState(0).value
+    assert a.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 0
 
     # Test select child with deselected parent
     select(model, iaac)
 
-    assert a.data.checkstate == Qt.CheckState(1).value
-    assert ab.data.checkstate == Qt.CheckState(0).value
-    assert aa.data.checkstate == Qt.CheckState(1).value
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert ab.data.checkstate == Qt.CheckState(0)
+    assert aa.data.checkstate == Qt.CheckState(1)
     assert a.data.checked_children == 1
     assert ab.data.checked_children == 0
     assert aa.data.checked_children == 1
 
     select(model, iaa)
-    assert a.data.checkstate == Qt.CheckState(1).value
+    assert a.data.checkstate == Qt.CheckState(1)
 
     select(model, iab)
-    assert a.data.checkstate == Qt.CheckState(1).value
+    assert a.data.checkstate == Qt.CheckState(1)
