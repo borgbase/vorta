@@ -48,9 +48,9 @@ def qapp(tmpdir_factory):
 
     # Needs to be disabled before calling VortaApp()
     if sys.platform == 'darwin':
-        set = vorta.store.models.SettingsModel.get(key='check_full_disk_access')
-        set.value = False
-        set.save()
+        cfg = vorta.store.models.SettingsModel.get(key='check_full_disk_access')
+        cfg.value = False
+        cfg.save()
 
     from vorta.application import VortaApp
 
