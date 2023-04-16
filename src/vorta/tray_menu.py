@@ -1,5 +1,5 @@
 import os
-from PyQt6.QtGui import QColor, QIcon, QScreen
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
@@ -72,14 +72,6 @@ class TrayMenu(QSystemTrayIcon):
 
         exit_action = menu.addAction(self.tr('Quit'))
         exit_action.triggered.connect(self.app.quit)
-
-    def is_taskbar_dark(self):
-        app = QApplication.instance()
-        long_color = QScreen.grabWindow(app.primaryScreen()).toImage().pixel(0, 0)
-        int_color = int(long_color)
-        return 150 > QColor.lightness(
-            QColor.fromRgb(((int_color >> 16) & 0xFF), ((int_color >> 8) & 0xFF), (int_color & 0xFF))
-        )
 
     def set_tray_icon(self, active=False):
         """
