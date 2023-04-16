@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
-from typing import Optional
+from typing import Optional, Union
 from PyQt6 import uic
 from PyQt6.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
 from PyQt6.QtGui import QColor, QKeySequence, QShortcut
@@ -378,7 +378,7 @@ class ExtractTree(FileTreeModel[FileData]):
         self,
         section: int,
         orientation: Qt.Orientation,
-        role: int = Qt.ItemDataRole.DisplayRole,
+        role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole,
     ):
         """
         Get the data for the given role and section in the given header.
@@ -414,7 +414,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         return None
 
-    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
+    def data(self, index: QModelIndex, role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole):
         """
         Get the data for the given role and index.
 
@@ -532,7 +532,7 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.CheckStateRole and column == 0:
             return item.data.checkstate
 
-    def setData(self, index: QModelIndex, value: Qt.CheckState, role: int = Qt.ItemDataRole.DisplayRole) -> bool:
+    def setData(self, index: QModelIndex, value: Qt.CheckState, role: Union[int, Qt.ItemDataRole]) -> bool:
         """
         Sets the role data for the item at index to value.
 
