@@ -1,4 +1,21 @@
 import sys
+try:
+    from Cocoa import NSURL, NSBundle
+    from CoreFoundation import kCFAllocatorDefault
+    from Foundation import NSDictionary
+    from LaunchServices import (
+        LSSharedFileListCopySnapshot,
+        LSSharedFileListCreate,
+        LSSharedFileListInsertItemURL,
+        LSSharedFileListItemRemove,
+        LSSharedFileListItemResolve,
+        kLSSharedFileListItemHidden,
+        kLSSharedFileListItemLast,
+        kLSSharedFileListNoUserInteraction,
+        kLSSharedFileListSessionLoginItems,
+    )
+except ImportError:
+    pass
 
 AUTOSTART_DELAY = """StartupNotify=false
 X-GNOME-Autostart-enabled=true
@@ -11,23 +28,6 @@ def open_app_at_startup(enabled=True):
     while on Linux it adds a .desktop file at ~/.config/autostart
     """
     if sys.platform == 'darwin':
-        from Cocoa import NSURL, NSBundle
-        from CoreFoundation import kCFAllocatorDefault
-        from Foundation import NSDictionary
-
-        # CF = CDLL(find_library('CoreFoundation'))
-        from LaunchServices import (
-            LSSharedFileListCopySnapshot,
-            LSSharedFileListCreate,
-            LSSharedFileListInsertItemURL,
-            LSSharedFileListItemRemove,
-            LSSharedFileListItemResolve,
-            kLSSharedFileListItemHidden,
-            kLSSharedFileListItemLast,
-            kLSSharedFileListNoUserInteraction,
-            kLSSharedFileListSessionLoginItems,
-        )
-
         app_path = NSBundle.mainBundle().bundlePath()
         url = NSURL.alloc().initFileURLWithPath_(app_path)
         login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
