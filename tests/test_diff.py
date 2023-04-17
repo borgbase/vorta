@@ -1,6 +1,6 @@
 from pathlib import PurePath
 import pytest
-from PyQt5.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab

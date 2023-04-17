@@ -1,6 +1,6 @@
 import sys
 import pytest
-from PyQt5 import QtDBus
+from PyQt6 import QtDBus
 import vorta.borg
 import vorta.notifications
 

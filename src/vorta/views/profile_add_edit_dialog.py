@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QDialogButtonBox
+from PyQt6 import QtCore, uic
+from PyQt6.QtWidgets import QDialogButtonBox
 from vorta.i18n import trans_late, translate
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
@@ -14,20 +14,20 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.edited_profile = None
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.save)
         self.profileNameField.textChanged.connect(self.button_validation)
 
-        self.buttonBox.button(QDialogButtonBox.Save).setText(self.tr("Save"))
-        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setText(self.tr("Save"))
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Cancel"))
 
         self.name_blank = trans_late('AddProfileWindow', 'Please enter a profile name.')
         self.name_exists = trans_late('AddProfileWindow', 'A profile with this name already exists.')
         # Call validate to set inital messages
-        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setEnabled(self.validate())
 
     def _set_status(self, text):
         self.errorText.setText(text)
@@ -40,7 +40,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
         self.accept()
 
     def button_validation(self):
-        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(self.validate())
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setEnabled(self.validate())
 
     def validate(self):
         name = self.profileNameField.text()
