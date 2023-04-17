@@ -1,6 +1,7 @@
 import re
-from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QAction, QApplication, QDialogButtonBox, QLineEdit
+from PyQt6 import QtCore, uic
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QLineEdit
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
@@ -19,7 +20,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.result = None
         self.is_remote_repo = True
 
@@ -41,7 +42,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         self.showHideAction.setCheckable(True)
         self.showHideAction.toggled.connect(self.set_visibility)
 
-        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
+        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.ActionPosition.TrailingPosition)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -105,7 +106,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
                 self.confirmLineEdit.setText(password)
 
     def set_visibility(self, visible):
-        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        visibility = QLineEdit.EchoMode.Normal if visible else QLineEdit.EchoMode.Password
         self.passwordLineEdit.setEchoMode(visibility)
         self.confirmLineEdit.setEchoMode(visibility)
 
@@ -231,7 +232,7 @@ class ExistingRepoWindow(AddRepoWindow):
         del self.confirmLabel
 
     def set_visibility(self, visible):
-        visibility = QLineEdit.Normal if visible else QLineEdit.Password
+        visibility = QLineEdit.EchoMode.Normal if visible else QLineEdit.EchoMode.Password
         self.passwordLineEdit.setEchoMode(visibility)
 
         if visible:

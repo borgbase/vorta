@@ -46,6 +46,12 @@ def qapp(tmpdir_factory):
     mock_db = SqliteDatabase(str(tmp_db))
     vorta.store.connection.init_db(mock_db)
 
+    # Needs to be disabled before calling VortaApp()
+    if sys.platform == 'darwin':
+        cfg = vorta.store.models.SettingsModel.get(key='check_full_disk_access')
+        cfg.value = False
+        cfg.save()
+
     from vorta.application import VortaApp
 
     VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope

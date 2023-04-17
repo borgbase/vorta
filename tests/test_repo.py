@@ -1,7 +1,8 @@
 import os
 import uuid
 import pytest
-from PyQt5 import QtCore
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
@@ -20,7 +21,7 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid')
 
     add_repo_window.passwordLineEdit.clear()
@@ -28,34 +29,35 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.passwordLabel.text() == 'Passwords must be greater than 8 characters long.'
 
     add_repo_window.passwordLineEdit.clear()
     add_repo_window.confirmLineEdit.clear()
     qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD + "1")
     qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.passwordLabel.text() == 'Passwords must be identical and greater than 8 characters long.'
 
     add_repo_window.passwordLineEdit.clear()
     add_repo_window.confirmLineEdit.clear()
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.passwordLabel.text() == 'Passwords must be identical.'
 
 
-def test_repo_unlink(qapp, qtbot):
+def test_repo_unlink(qapp, qtbot, monkeypatch):
     main = qapp.main_window
     tab = main.repoTab
+    monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
     main.tabWidget.setCurrentIndex(0)
-    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
     # -1 is the repo id in this test
     qtbot.waitUntil(lambda: 'Select a backup repository first.' in main.progressText.text(), **pytest._wait_defaults)
     assert 'Select a backup repository first.' in main.progressText.text()
@@ -107,7 +109,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
     main = qapp.main_window
-    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
     ssh_dialog = main.repoTab._window
 
     ssh_dir = tmpdir
@@ -137,7 +139,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: 'Backup finished.' in main.progressText.text(), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     assert EventLogModel.select().count() == 1

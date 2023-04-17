@@ -12,16 +12,13 @@ from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
-from PyQt5 import QtCore
-from PyQt5.QtCore import QFileInfo, QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+from PyQt6 import QtCore
+from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
+from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
-
-QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
-QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
@@ -168,10 +165,10 @@ def get_dict_from_list(dataDict, mapList):
 
 def choose_file_dialog(parent, title, want_folder=True):
     dialog = QFileDialog(parent, title, os.path.expanduser('~'))
-    dialog.setFileMode(QFileDialog.Directory if want_folder else QFileDialog.ExistingFiles)
-    dialog.setParent(parent, QtCore.Qt.Sheet)
+    dialog.setFileMode(QFileDialog.FileMode.Directory if want_folder else QFileDialog.FileMode.ExistingFiles)
+    dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
-        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setOption(QFileDialog.Option.ShowDirsOnly)
     return dialog
 
 
