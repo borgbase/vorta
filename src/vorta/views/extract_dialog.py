@@ -532,7 +532,12 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.CheckStateRole and column == 0:
             return item.data.checkstate
 
-    def setData(self, index: QModelIndex, value: Qt.CheckState, role: Union[int, Qt.ItemDataRole]) -> bool:
+    def setData(
+        self,
+        index: QModelIndex,
+        value: Union[int, Qt.CheckState],
+        role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.CheckStateRole,
+    ) -> bool:
         """
         Sets the role data for the item at index to value.
 
@@ -542,6 +547,13 @@ class ExtractTree(FileTreeModel[FileData]):
         """
         if role != Qt.ItemDataRole.CheckStateRole:
             return False
+
+        # convert int to enum member
+        # PyQt6 will pass Ints where there were IntEnums in PyQt5
+        if isinstance(value, int):
+            value = Qt.CheckState(value)
+        if isinstance(role, int):
+            role = Qt.ItemDataRole(role)
 
         item: ExtractFileItem = index.internalPointer()
 
