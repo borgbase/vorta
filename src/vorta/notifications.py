@@ -1,6 +1,6 @@
 import logging
 import sys
-from PyQt5 import QtCore, QtDBus
+from PyQt6 import QtCore, QtDBus
 from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
@@ -77,13 +77,12 @@ class DBusNotifications(VortaNotifications):
         path = "/org/freedesktop/Notifications"
         interface = "org.freedesktop.Notifications"
         app_name = "vorta"
-        v = QtCore.QVariant(12321)  # random int to identify all notifications
-        if v.convert(QtCore.QVariant.UInt):
-            id_replace = v
+        id_replace = QtCore.QVariant(12321)
+        id_replace.convert(QtCore.QMetaType(QtCore.QMetaType.Type.UInt.value))
         icon = "com.borgbase.Vorta-symbolic"
         title = header
         text = msg
-        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
+        actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.Type.QStringList.value)
         hint = {'urgency': self.URGENCY[level]}
         time = 5000  # milliseconds for display timeout
 
@@ -91,7 +90,9 @@ class DBusNotifications(VortaNotifications):
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
         if notify.isValid():
             x = notify.call(
-                QtDBus.QDBus.AutoDetect,
+                # Call arguments for Notify interface need to match exactly:
+                # https://specifications.freedesktop.org/notification-spec/notification-spec-latest.html#command-notify
+                QtDBus.QDBus.CallMode.AutoDetect,
                 "Notify",
                 app_name,
                 id_replace,

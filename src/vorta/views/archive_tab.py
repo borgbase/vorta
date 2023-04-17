@@ -2,18 +2,17 @@ import logging
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
-from PyQt5.QtGui import QDesktopServices, QKeySequence
-from PyQt5.QtWidgets import (
-    QAction,
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
+from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
     QApplication,
     QHeaderView,
     QInputDialog,
     QLayout,
     QMenu,
     QMessageBox,
-    QShortcut,
     QTableView,
     QTableWidgetItem,
     QWidget,
@@ -77,20 +76,20 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
-        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.Interactive)
-        header.setSectionResizeMode(4, QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Interactive)
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
         header.setStretchLastSection(True)
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
 
-        self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
-        self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
+        self.archiveTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.archiveTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.archiveTable.setWordWrap(False)
-        self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
+        self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
@@ -757,7 +756,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         window = ExtractDialog(archive, model)
         self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window = window  # for testing
         window.show()
         window.accepted.connect(process_result)
@@ -778,19 +777,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
     def row_of_archive(self, archive_name):
-        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
+        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
         rows = [item.row() for item in items if item.column() == 4]
         return rows[0] if rows else None
 
     def confirm_dialog(self, title, text):
         msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
+        msg.setIcon(QMessageBox.Icon.Information)
         msg.setText(text)
         msg.setWindowTitle(title)
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
-        msg.button(msg.Yes).setText(self.tr("Yes"))
-        msg.button(msg.Cancel).setText(self.tr("Cancel"))
-        return msg.exec_() == QMessageBox.Yes
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
+        msg.button(QMessageBox.StandardButton.Yes).setText(self.tr("Yes"))
+        msg.button(QMessageBox.StandardButton.Cancel).setText(self.tr("Cancel"))
+        return msg.exec() == QMessageBox.StandardButton.Yes
 
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
@@ -835,7 +834,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # remove rows from list and database
             for archive in archives:
-                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchExactly):
+                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchFlag.MatchExactly):
                     self.archiveTable.removeRow(entry.row())
                 ArchiveModel.get(name=archive).delete_instance()
 

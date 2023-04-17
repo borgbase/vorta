@@ -1,5 +1,5 @@
 import tempfile
-from PyQt5.QtCore import QModelIndex, Qt
+from PyQt6.QtCore import QModelIndex, Qt
 from vorta.utils import borg_compat
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str

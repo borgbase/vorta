@@ -5,10 +5,10 @@ import re
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
-from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
-from PyQt5.QtGui import QColor, QKeySequence
-from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QShortcut, QTreeView
+from PyQt6 import uic
+from PyQt6.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
+from PyQt6.QtGui import QColor, QKeySequence, QShortcut
+from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QTreeView
 from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.treemodel import (
@@ -89,9 +89,9 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         # header
         header = self.treeView.header()
         header.setStretchLastSection(False)  # stretch only first section
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
 
         # signals
 
@@ -824,11 +824,11 @@ class DiffTree(FileTreeModel[DiffData]):
         if role == Qt.ItemDataRole.ForegroundRole:
             # colour
             if item.data.change_type == ChangeType.ADDED:
-                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
             if item.data.change_type == ChangeType.MODIFIED:
-                return QColor(Qt.yellow) if uses_dark_mode() else QColor(Qt.darkYellow)
+                return QColor(Qt.GlobalColor.yellow) if uses_dark_mode() else QColor(Qt.GlobalColor.darkYellow)
             if item.data.change_type == ChangeType.REMOVED:
-                return QColor(Qt.red) if uses_dark_mode() else QColor(Qt.darkRed)
+                return QColor(Qt.GlobalColor.red) if uses_dark_mode() else QColor(Qt.GlobalColor.darkRed)
             return None  # no change
 
         if role == Qt.ItemDataRole.ToolTipRole:

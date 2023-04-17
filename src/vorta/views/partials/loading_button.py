@@ -2,7 +2,7 @@
 Adapted from https://stackoverflow.com/questions/53618971/how-to-make-a-qpushbutton-a-loading-button
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class LoadingButton(QtWidgets.QPushButton):

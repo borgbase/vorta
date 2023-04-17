@@ -1,9 +1,9 @@
 import logging
 from pathlib import Path
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QFontMetrics, QKeySequence
-from PyQt5.QtWidgets import QApplication, QCheckBox, QFileDialog, QMenu, QMessageBox, QShortcut, QToolTip
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
+from PyQt6.QtWidgets import QApplication, QCheckBox, QFileDialog, QMenu, QMessageBox, QToolTip
 from vorta.profile_export import ImportFailedException, ProfileExport
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.utils import borg_compat, get_asset, get_network_status_monitor, is_system_tray_available
@@ -31,7 +31,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setWindowTitle('Vorta for Borg Backup')
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
-        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
@@ -156,7 +156,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
         self.window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
         window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
@@ -171,11 +171,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self,
                 self.tr("Confirm deletion"),
                 msg,
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
             )
 
-            if reply == QMessageBox.Yes:
+            if reply == QMessageBox.StandardButton.Yes:
                 to_delete.delete_instance(recursive=True)
                 self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
                 self.profileSelector.removeItem(self.profileSelector.currentIndex())
@@ -189,7 +189,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_add_action(self):
         window = AddProfileWindow()
         self.window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
         window.profile_changed.connect(self.profile_add_edit_result)
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
@@ -201,7 +201,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         """
         window = ExportWindow(profile=self.current_profile.refresh())
         self.window = window
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.show()
 
     def profile_import_action(self):
@@ -236,7 +236,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
-            window.setParent(self, QtCore.Qt.Sheet)
+            window.setParent(self, QtCore.Qt.WindowType.Sheet)
             window.profile_imported.connect(profile_imported_event)
             window.show()
 
@@ -280,13 +280,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if not is_system_tray_available():
             if SettingsModel.get(key="enable_background_question").value:
                 msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                msg.setParent(self, QtCore.Qt.Sheet)
+                msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                msg.setParent(self, QtCore.Qt.WindowType.Sheet)
                 msg.setText(self.tr("Should Vorta continue to run in the background?"))
-                msg.button(QMessageBox.Yes).clicked.connect(
+                msg.button(QMessageBox.StandardButton.Yes).clicked.connect(
                     lambda: self.miscTab.save_setting("disable_background_state", True)
                 )
-                msg.button(QMessageBox.No).clicked.connect(
+                msg.button(QMessageBox.StandardButton.No).clicked.connect(
                     lambda: (
                         self.miscTab.save_setting("disable_background_state", False),
                         self.app.quit(),

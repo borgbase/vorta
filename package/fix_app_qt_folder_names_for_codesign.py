@@ -20,11 +20,11 @@ def create_symlink(folder: Path) -> None:
     """
     sibbling = Path(str(folder).replace("MacOS", ""))
 
-    # PyQt5/Qt/qml/QtQml/Models.2
+    # PyQt6/Qt/qml/QtQml/Models.2
     root = str(sibbling).partition("Contents")[2].lstrip("/")
     # ../../../../
     backward = "../" * (root.count("/") + 1)
-    # ../../../../Resources/PyQt5/Qt/qml/QtQml/Models.2
+    # ../../../../Resources/PyQt6/Qt/qml/QtQml/Models.2
     good_path = f"{backward}Resources/{root}"
 
     folder.symlink_to(good_path)
@@ -51,7 +51,7 @@ def fix_dll(dll: Path) -> None:
             return None
         return f"@loader_path{good_path}/{basename}"
 
-    # Resources/PyQt5/Qt/qml/QtQuick/Controls.2/Fusion
+    # Resources/PyQt6/Qt/qml/QtQuick/Controls.2/Fusion
     root = str(dll.parent).partition("Contents")[2][1:]
     # /../../../../../../..
     backward = "/.." * (root.count("/") + 1)
