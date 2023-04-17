@@ -1,4 +1,5 @@
 import sys
+
 try:
     from Cocoa import NSURL, NSBundle
     from CoreFoundation import kCFAllocatorDefault
@@ -14,6 +15,8 @@ try:
         kLSSharedFileListNoUserInteraction,
         kLSSharedFileListSessionLoginItems,
     )
+
+    APP_PATH = NSBundle.mainBundle().bundlePath()
 except ImportError:
     pass
 
@@ -28,8 +31,8 @@ def open_app_at_startup(enabled=True):
     while on Linux it adds a .desktop file at ~/.config/autostart
     """
     if sys.platform == 'darwin':
-        app_path = NSBundle.mainBundle().bundlePath()
-        url = NSURL.alloc().initFileURLWithPath_(app_path)
+
+        url = NSURL.alloc().initFileURLWithPath_(APP_PATH)
         login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
         props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)
 
