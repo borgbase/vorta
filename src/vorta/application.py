@@ -23,7 +23,6 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-config.init_from_platformdirs()
 APP_ID = config.TEMP_DIR / "socket"
 
 

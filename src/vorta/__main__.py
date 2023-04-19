@@ -69,7 +69,6 @@ def main():
             config.init_dev_mode(Path(want_development))
     else:
         config.init_from_platformdirs()
-
     init_logger(background=want_background)
 
     # Init database
