@@ -6,7 +6,7 @@ from peewee import SqliteDatabase
 
 # Need to import config as a whole module instead of individual variables
 # because we will be overriding the modules variables
-import vorta.config as config
+from vorta import config
 from vorta._version import __version__
 from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
@@ -49,7 +49,7 @@ def main():
 
     want_version = getattr(args, 'version', False)
     want_background = getattr(args, 'daemonize', False)
-    want_development = getattr(args, 'development')
+    want_development = getattr(args, 'development', False)
 
     if want_version:
         print(f"Vorta {__version__}")
@@ -59,38 +59,16 @@ def main():
         if os.fork():
             sys.exit()
 
-    # want_development is None when flag is not called
-    # it's set to the default directory when flag is called without an argument
-    # and it's set to the flag's argument if the flag has one
     if want_development:
+        # if we're using the default dev dir
         if want_development == DEFAULT_DIR_FLAG:
-            pass
+            config.init_dev_mode(config.default_dev_dir())
         else:
-            config.DEV_MODE_DIR = Path(want_development)
-
-        if not os.path.exists(config.DEV_MODE_DIR):
-            os.makedirs(config.DEV_MODE_DIR)
-
-        config.SETTINGS_DIR = config.DEV_MODE_DIR / 'settings'
-        if not os.path.exists(config.SETTINGS_DIR):
-            os.makedirs(config.SETTINGS_DIR)
-
-        config.LOG_DIR = config.DEV_MODE_DIR / 'logs'
-        if not os.path.exists(config.LOG_DIR):
-            os.makedirs(config.LOG_DIR)
-
-        config.CACHE_DIR = config.DEV_MODE_DIR / 'cache'
-        if not os.path.exists(config.CACHE_DIR):
-            os.makedirs(config.CACHE_DIR)
-
-        config.TEMP_DIR = config.CACHE_DIR / 'tmp'
-        if not os.path.exists(config.TEMP_DIR):
-            os.makedirs(config.TEMP_DIR)
-
-        config.PROFILE_BOOTSTRAP_FILE = config.DEV_MODE_DIR / '.vorta-init.json'
-
-    # except Exception as exception:
-    #     print("That's an invalid path for a dir \n", exception)
+            # if we're not using the default dev dir and
+            # instead we're using whatever dir is passed as an argument
+            config.init_dev_mode(Path(want_development))
+    else:
+        config.init_from_platformdirs()
 
     init_logger(background=want_background)
 

@@ -22,7 +22,7 @@ from vorta.network_status.abc import NetworkStatusMonitor
 
 # Used to store whether a user wanted to override the
 # default directory for the --development flag
-DEFAULT_DIR_FLAG = "USE_DEFAULT_DIR"
+DEFAULT_DIR_FLAG = object()
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None

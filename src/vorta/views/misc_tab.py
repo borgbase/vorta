@@ -2,8 +2,8 @@ import logging
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QCheckBox, QFormLayout, QHBoxLayout, QLabel, QSizePolicy, QSpacerItem
+from vorta import config
 from vorta._version import __version__
-from vorta.config import LOG_DIR
 from vorta.i18n import translate
 from vorta.store.models import BackupProfileMixin, SettingsModel
 from vorta.store.settings import get_misc_settings
@@ -24,7 +24,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
         self.logLink.setText(
-            f'<a href="file://{LOG_DIR}"><span style="text-decoration:' 'underline; color:#0984e3;">Log</span></a>'
+            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
+            'underline; color:#0984e3;">Log</span></a>'
         )
 
         self.checkboxLayout = QFormLayout(self.frameSettings)
