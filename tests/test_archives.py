@@ -1,7 +1,7 @@
 from collections import namedtuple
 import psutil
 import pytest
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
@@ -58,7 +58,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.bPrune, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.bPrune, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
@@ -73,7 +73,7 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.compactButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.compactButton, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(
         lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(), **pytest._wait_defaults
@@ -91,7 +91,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(tab.bCheck, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.bCheck, QtCore.Qt.MouseButton.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 

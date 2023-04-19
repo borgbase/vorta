@@ -1,5 +1,5 @@
 import tempfile
-from PyQt5.QtCore import QModelIndex, Qt
+from PyQt6.QtCore import QModelIndex, Qt
 from vorta.utils import borg_compat
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
@@ -40,7 +40,7 @@ class BorgExtractJob(BorgJob):
         # Unselected (and excluded) parent folders will be restored by borg
         # but without the metadata stored in the archive.
         pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
-        pattern_file.write("P fm\n")
+        pattern_file.write("P pf\n")
 
         indexes = [QModelIndex()]
         while indexes:
@@ -54,7 +54,7 @@ class BorgExtractJob(BorgJob):
                 if item.data.checkstate == Qt.CheckState.Checked:
                     pattern_file.write("+ " + path_to_str(item.path) + "\n")
 
-        pattern_file.write("- *\n")
+        pattern_file.write("- fm:*\n")
         pattern_file.flush()
         cmd.extend(['--patterns-from', pattern_file.name])
         ret['cleanup_files'].append(pattern_file)

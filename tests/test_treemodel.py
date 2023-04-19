@@ -1,6 +1,6 @@
 from pathlib import PurePath
 import pytest
-from PyQt5.QtCore import QModelIndex
+from PyQt6.QtCore import QModelIndex
 from vorta.views.partials.treemodel import FileSystemItem, FileTreeModel
 
 

@@ -18,7 +18,7 @@ from vorta.utils import DEFAULT_DIR_FLAG, parse_args
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
-        from PyQt5.QtWidgets import QMessageBox
+        from PyQt6.QtWidgets import QMessageBox
 
         logger.critical(
             "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new/choose",
