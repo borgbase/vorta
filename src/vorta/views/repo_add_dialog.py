@@ -1,6 +1,6 @@
 import re
-from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QApplication, QComboBox, QDialogButtonBox, QLabel, QSizePolicy
+from PyQt6 import QtCore, uic
+from PyQt6.QtWidgets import QApplication, QComboBox, QDialogButtonBox, QFormLayout, QLabel, QSizePolicy
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
@@ -19,7 +19,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.result = None
         self.is_remote_repo = True
 
@@ -119,10 +119,10 @@ class AddRepoWindow(RepoWindow):
 
         self.encryptionLabel = QLabel(self.tr('Encryption:'))
         self.encryptionComboBox = QComboBox()
-        self.encryptionComboBox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.encryptionComboBox.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
-        self.advancedFormLayout.setWidget(1, 0, self.encryptionLabel)
-        self.advancedFormLayout.setWidget(1, 1, self.encryptionComboBox)
+        self.advancedFormLayout.setWidget(1, QFormLayout.ItemRole.LabelRole, self.encryptionLabel)
+        self.advancedFormLayout.setWidget(1, QFormLayout.ItemRole.FieldRole, self.encryptionComboBox)
 
         self.encryptionComboBox.activated.connect(self.display_backend_warning)
         self.encryptionComboBox.currentIndexChanged.connect(self.encryption_listener)

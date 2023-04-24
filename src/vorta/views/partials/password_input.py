@@ -1,5 +1,6 @@
-from PyQt5.Qt import QObject
-from PyQt5.QtWidgets import QAction, QFormLayout, QLabel, QLineEdit, QWidget
+from PyQt6.QtCore import QObject
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QFormLayout, QLabel, QLineEdit, QWidget
 from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 
@@ -12,14 +13,14 @@ class PasswordLineEdit(QLineEdit):
         self._error_state = False
         self._visible = False
 
-        self.setEchoMode(QLineEdit.Password)
+        self.setEchoMode(QLineEdit.EchoMode.Password)
 
         if self._show_visibility_button:
             self.showHideAction = QAction(self.tr("Show password"), self)
             self.showHideAction.setCheckable(True)
             self.showHideAction.toggled.connect(self.toggle_visibility)
             self.showHideAction.setIcon(get_colored_icon("eye"))
-            self.addAction(self.showHideAction, QLineEdit.TrailingPosition)
+            self.addAction(self.showHideAction, QLineEdit.ActionPosition.TrailingPosition)
 
     def get_password(self) -> str:
         """Return password text"""
@@ -36,7 +37,7 @@ class PasswordLineEdit(QLineEdit):
         if not isinstance(value, bool):
             raise TypeError("visible must be a boolean value")
         self._visible = value
-        self.setEchoMode(QLineEdit.Normal if self._visible else QLineEdit.Password)
+        self.setEchoMode(QLineEdit.EchoMode.Normal if self._visible else QLineEdit.EchoMode.Password)
 
         if self._show_visibility_button:
             if self._visible:
@@ -159,7 +160,7 @@ class PasswordInput(QObject):
         widget = QWidget(parent=parent)
         form_layout = QFormLayout(widget)
         form_layout.setContentsMargins(0, 0, 0, 0)
-        form_layout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.add_form_to_layout(form_layout)
         widget.setLayout(form_layout)
         return widget

@@ -1,5 +1,5 @@
 import pytest
-from PyQt5.QtWidgets import QFormLayout, QWidget
+from PyQt6.QtWidgets import QFormLayout, QWidget
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 
 
@@ -159,7 +159,7 @@ def test_password_input_add_form_to_layout(qapp, qtbot):
     qtbot.addWidget(widget)
     password_input.add_form_to_layout(form_layout)
 
-    assert form_layout.itemAt(0, QFormLayout.LabelRole).widget() == password_input._label_password
-    assert form_layout.itemAt(0, QFormLayout.FieldRole).widget() == password_input.passwordLineEdit
-    assert form_layout.itemAt(1, QFormLayout.LabelRole).widget() == password_input._label_confirm
-    assert form_layout.itemAt(1, QFormLayout.FieldRole).widget() == password_input.confirmLineEdit
+    assert form_layout.itemAt(0, QFormLayout.ItemRole.LabelRole).widget() == password_input._label_password
+    assert form_layout.itemAt(0, QFormLayout.ItemRole.FieldRole).widget() == password_input.passwordLineEdit
+    assert form_layout.itemAt(1, QFormLayout.ItemRole.LabelRole).widget() == password_input._label_confirm
+    assert form_layout.itemAt(1, QFormLayout.ItemRole.FieldRole).widget() == password_input.confirmLineEdit

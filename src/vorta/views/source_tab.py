@@ -1,9 +1,10 @@
 import logging
 import os
 from pathlib import PurePath
-from PyQt5 import QtCore, QtGui, uic
-from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
-from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QMessageBox, QShortcut, QTableWidgetItem
+from PyQt6 import QtCore, QtGui, uic
+from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
+from PyQt6.QtGui import QShortcut
+from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QMessageBox, QTableWidgetItem
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
 from vorta.utils import FilePathInfoAsync, choose_file_dialog, get_asset, pretty_bytes, sort_sizes
 from vorta.views.utils import get_colored_icon
@@ -23,7 +24,7 @@ class SourceColumn:
 class SizeItem(QTableWidgetItem):
     def __init__(self, s):
         super().__init__(s)
-        self.setTextAlignment(Qt.AlignVCenter + Qt.AlignRight)
+        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
 
     def __lt__(self, other):
         if other.text() == '':
@@ -63,9 +64,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setVisible(True)
         header.setSortIndicatorShown(1)
 
-        header.setSectionResizeMode(SourceColumn.Path, QHeaderView.Stretch)
-        header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(SourceColumn.Path, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeMode.ResizeToContents)
 
         self.sourceFilesWidget.setSortingEnabled(True)
         self.sourceFilesWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -139,7 +140,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         sorting = self.sourceFilesWidget.isSortingEnabled()
         self.sourceFilesWidget.setSortingEnabled(False)
 
-        items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
+        items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchFlag.MatchExactly)
         # Conversion int->str->int needed because QT limits int to 32-bit
         data_size = int(data_size)
         files_count = int(files_count)
@@ -250,7 +251,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
 
         # Sort items as per settings
-        self.sourceFilesWidget.sortItems(sourcetab_sort_column, sourcetab_sort_order)
+        self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
 
         self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
@@ -262,7 +263,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         SettingsModel.update({SettingsModel.str_value: str(column)}).where(
             SettingsModel.key == 'sourcetab_sort_column'
         ).execute()
-        SettingsModel.update({SettingsModel.str_value: str(order)}).where(
+        SettingsModel.update({SettingsModel.str_value: str(order.value)}).where(
             SettingsModel.key == 'sourcetab_sort_order'
         ).execute()
 
