@@ -444,7 +444,7 @@ class VortaScheduler(QtCore.QObject):
         else:
             notifier.deliver(
                 self.tr('Vorta Backup'),
-                self.tr('Error during backup creation.'),
+                self.tr('Error during backup creation for %s.') % profile_name,
                 level='error',
             )
             logger.error('Error during backup creation.')
