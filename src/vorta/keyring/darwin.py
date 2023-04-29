@@ -9,6 +9,9 @@ Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
 import logging
 import sys
+from ctypes import c_char
+import objc
+from Foundation import NSBundle
 from .abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -23,8 +26,6 @@ class VortaDarwinKeyring(VortaKeyring):
         """
         Lazy import to avoid conflict with pytest-xdist.
         """
-        import objc
-        from Foundation import NSBundle
 
         Security = NSBundle.bundleWithIdentifier_('com.apple.security')
 
@@ -121,7 +122,5 @@ class VortaDarwinKeyring(VortaKeyring):
 
 
 def _resolve_password(password_length, password_buffer):
-    from ctypes import c_char
-
     s = (c_char * password_length).from_address(password_buffer.__pointer__)[:]
     return s.decode()
