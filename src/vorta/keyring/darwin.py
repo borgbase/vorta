@@ -18,7 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 class VortaDarwinKeyring(VortaKeyring):
-    """Homemade macOS Keychain Service"""
+    """
+    Homemade macOS Keychain Service
+
+    TODO: Could use the newer API, as done here: https://github.com/jaraco/keyring/pull/522/files
+    """
 
     login_keychain = None
 
@@ -43,6 +47,7 @@ class VortaDarwinKeyring(VortaKeyring):
                 b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}',
             ),
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
+            ('SecKeychainItemDelete', b'i^{OpaqueSecKeychainItemRef=}o^I'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
@@ -97,6 +102,25 @@ class VortaDarwinKeyring(VortaKeyring):
             password = _resolve_password(password_length, password_buffer)
         logger.debug(f"Retrieved password for repo {repo_url}")
         return password
+
+    def remove_password(self, service, repo_url):
+        if not self.login_keychain:
+            self._set_keychain()
+
+        (result, password_length, password_buffer, keychain_item,) = SecKeychainFindGenericPassword(
+            self.login_keychain,
+            len(service),
+            service.encode(),
+            len(repo_url),
+            repo_url.encode(),
+            None,
+            None,
+            None,
+        )
+        password = None
+        if (result == 0) and (password_length != 0):
+            logger.debug(f"Found password for repo {repo_url}")
+            SecKeychainItemDelete(keychain_item, None)
 
     @property
     def is_unlocked(self):

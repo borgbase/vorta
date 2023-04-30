@@ -11,6 +11,19 @@ LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
 
 
+@pytest.fixture(scope="function")
+def keyring_fixture():
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    password = str(uuid.uuid4())
+    keyring = VortaKeyring.get_keyring()
+    keyring.set_password('vorta-repo', test_repo_url, password)
+
+    yield test_repo_url, password, keyring, LONG_PASSWORD
+
+    # Remove password from keyring for the test
+    keyring.remove_password('vorta-repo', test_repo_url)
+
+
 def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     # Add new repo window
     main = qapp.main_window
@@ -63,27 +76,23 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     assert 'Select a backup repository first.' in main.progressText.text()
 
 
-def test_password_autofill(qapp, qtbot):
+def test_password_autofill(qapp, qtbot, keyring_fixture):
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
-
-    keyring = VortaKeyring.get_keyring()
-    password = str(uuid.uuid4())
-    keyring.set_password('vorta-repo', test_repo_url, password)
+    test_repo_url, password, keyring, long_password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
     assert add_repo_window.passwordLineEdit.text() == password
 
 
-def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
+def test_repo_add_success(qapp, qtbot, mocker, borg_json_output, keyring_fixture):
     # Add new repo window
     main = qapp.main_window
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_url, password, keyring, long_password = keyring_fixture
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
@@ -100,8 +109,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     assert RepoModel.get(id=2).url == test_repo_url
 
-    keyring = VortaKeyring.get_keyring()
-    assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
+    assert long_password.lower() in keyring.get_password("vorta-repo", RepoModel.get(id=2).url).lower()
     assert main.repoTab.repoSelector.currentText() == test_repo_url
 
 

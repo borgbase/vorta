@@ -45,6 +45,12 @@ class VortaKWallet5Keyring(VortaKeyring):
         logger.debug(f"Retrieved password for repo {repo_url}")
         return password
 
+    def remove_password(self, service, repo_url):
+        entry = [self.handle, self.folder_name, repo_url, service]
+        if self.is_unlocked and self.get_result("hasEntry", args=entry):
+            self.get_result("removeEntry", args=entry)
+            logger.debug(f"Removed password for repo {repo_url}")
+
     def get_result(self, method, args=[]):
         if args:
             result = self.iface.callWithArgumentList(QtDBus.QDBus.CallMode.AutoDetect, method, args)
