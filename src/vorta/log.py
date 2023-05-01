@@ -8,6 +8,7 @@ Set up logging to user log dir. Uses the platform's default location:
 
 import logging
 from logging.handlers import TimedRotatingFileHandler
+
 from .config import LOG_DIR
 
 logger = logging.getLogger()

@@ -1,9 +1,10 @@
 import os
 import uuid
+
 import pytest
+import vorta.borg.borg_job
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
-import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
 

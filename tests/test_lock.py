@@ -1,7 +1,7 @@
 import pytest
-from PyQt6 import QtCore
 import vorta.application
 import vorta.borg.borg_job
+from PyQt6 import QtCore
 
 
 def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):

@@ -1,6 +1,8 @@
 import logging
 import sys
+
 from PyQt6 import QtCore, QtDBus
+
 from vorta.store.models import SettingsModel
 
 try:

@@ -1,5 +1,6 @@
 import sys
 from typing import Dict, List
+
 from vorta.i18n import trans_late
 
 

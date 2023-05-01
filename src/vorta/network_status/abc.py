@@ -11,7 +11,11 @@ class NetworkStatusMonitor:
 
             return DarwinNetworkStatus()
         else:
-            from .network_manager import DBusException, NetworkManagerMonitor, UnsupportedException
+            from .network_manager import (
+                DBusException,
+                NetworkManagerMonitor,
+                UnsupportedException,
+            )
 
             try:
                 return NetworkManagerMonitor()

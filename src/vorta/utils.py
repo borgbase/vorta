@@ -11,10 +11,12 @@ import unicodedata
 from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
+
 import psutil
 from PyQt6 import QtCore
 from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
 from vorta.log import logger
