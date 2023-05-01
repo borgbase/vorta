@@ -1,3 +1,4 @@
+from typing import Optional
 from PyQt6.QtCore import QObject
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QFormLayout, QLabel, QLineEdit, QWidget
@@ -6,7 +7,7 @@ from vorta.views.utils import get_colored_icon
 
 
 class PasswordLineEdit(QLineEdit):
-    def __init__(self, *, parent=None, show_visibility_button: bool = True) -> None:
+    def __init__(self, *, parent: Optional[QWidget] = None, show_visibility_button: bool = True) -> None:
         super().__init__(parent)
 
         self._show_visibility_button = show_visibility_button
