@@ -1,12 +1,26 @@
 import logging
 import os
 from pathlib import PurePath
+
 from PyQt6 import QtCore, QtGui, uic
 from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
-from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QMessageBox, QTableWidgetItem
+from PyQt6.QtWidgets import (
+    QApplication,
+    QHeaderView,
+    QMenu,
+    QMessageBox,
+    QTableWidgetItem,
+)
+
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
-from vorta.utils import FilePathInfoAsync, choose_file_dialog, get_asset, pretty_bytes, sort_sizes
+from vorta.utils import (
+    FilePathInfoAsync,
+    choose_file_dialog,
+    get_asset,
+    pretty_bytes,
+    sort_sizes,
+)
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')

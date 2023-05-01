@@ -1,7 +1,9 @@
 import asyncio
 import logging
 import os
+
 import secretstorage
+
 from vorta.keyring.abc import VortaKeyring
 
 logger = logging.getLogger(__name__)

@@ -2,10 +2,11 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 from functools import wraps
 from unittest.mock import MagicMock
+
 import pytest
-from pytest import mark
 import vorta.borg
 import vorta.scheduler
+from pytest import mark
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel
 

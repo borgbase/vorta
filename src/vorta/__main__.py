@@ -1,7 +1,9 @@
 import os
 import signal
 import sys
+
 from peewee import SqliteDatabase
+
 from vorta._version import __version__
 from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late, translate
@@ -14,6 +16,7 @@ from vorta.utils import parse_args
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
+
         from PyQt6.QtWidgets import QMessageBox
 
         logger.critical(

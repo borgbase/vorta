@@ -6,8 +6,10 @@ At the bottom there is a simple schema migration system.
 
 import json
 from datetime import datetime
+
 import peewee as pw
 from playhouse import signals
+
 from vorta.utils import slugify
 
 DB = pw.Proxy()

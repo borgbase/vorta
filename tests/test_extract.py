@@ -1,5 +1,5 @@
-from PyQt6.QtCore import QModelIndex, Qt
 import vorta.borg
+from PyQt6.QtCore import QModelIndex, Qt
 from vorta.views.extract_dialog import ExtractTree, FileData, FileType, parse_json_lines
 from vorta.views.partials.treemodel import FileSystemItem
 

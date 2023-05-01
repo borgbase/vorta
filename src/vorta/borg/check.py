@@ -1,7 +1,9 @@
 from typing import Any, Dict
+
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob
 
 

@@ -1,7 +1,9 @@
 import logging
 import os
+
 from vorta.store.models import SettingsModel
 from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
+
 from .borg_job import BorgJob
 
 logger = logging.getLogger(__name__)

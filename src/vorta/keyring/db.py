@@ -1,6 +1,9 @@
 import logging
+
 import peewee
+
 from vorta.store.models import SettingsModel
+
 from .abc import VortaKeyring
 
 logger = logging.getLogger(__name__)

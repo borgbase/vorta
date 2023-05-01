@@ -1,4 +1,5 @@
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob
 
 

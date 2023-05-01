@@ -2,10 +2,11 @@ import os
 import sys
 from pathlib import Path
 from unittest.mock import Mock
+
 import pytest
+import vorta.store.models
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QCheckBox, QFormLayout
-import vorta.store.models
 
 
 def test_autostart(qapp, qtbot):

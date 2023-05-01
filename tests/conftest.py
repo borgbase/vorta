@@ -2,11 +2,12 @@ import os
 import sys
 from datetime import datetime as dt
 from unittest.mock import MagicMock
+
 import pytest
-from peewee import SqliteDatabase
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
+from peewee import SqliteDatabase
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,

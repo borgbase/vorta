@@ -4,9 +4,11 @@ import threading
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
+
 from PyQt6 import QtCore, QtDBus
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
+
 from vorta import application
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
