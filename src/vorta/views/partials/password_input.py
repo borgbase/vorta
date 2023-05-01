@@ -155,7 +155,7 @@ class PasswordInput(QObject):
         form_layout.addRow(self._label_confirm, self.confirmLineEdit)
         form_layout.addRow(self.validation_label)
 
-    def create_form_widget(self, parent=None):
+    def create_form_widget(self, parent: Optional[QWidget] = None) -> QWidget:
         """ "Creates and Returns a new QWidget with form layout"""
         widget = QWidget(parent=parent)
         form_layout = QFormLayout(widget)
