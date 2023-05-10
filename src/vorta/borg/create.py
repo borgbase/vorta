@@ -2,10 +2,17 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
+
 from vorta import config
 from vorta.i18n import trans_late, translate
-from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
+from vorta.store.models import (
+    ArchiveModel,
+    RepoModel,
+    SourceFileModel,
+    WifiSettingModel,
+)
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
+
 from .borg_job import BorgJob
 
 

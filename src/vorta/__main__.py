@@ -2,6 +2,7 @@ import os
 import signal
 import sys
 from pathlib import Path
+
 from peewee import SqliteDatabase
 
 # Need to import config as a whole module instead of individual variables
@@ -18,6 +19,7 @@ from vorta.utils import DEFAULT_DIR_FLAG, parse_args
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
+
         from PyQt6.QtWidgets import QMessageBox
 
         logger.critical(
@@ -52,7 +54,7 @@ def main():
     want_development = getattr(args, 'development', False)
 
     if want_version:
-        print(f"Vorta {__version__}")
+        print(f"Vorta {__version__}")  # noqa: T201
         sys.exit()
 
     if want_background:

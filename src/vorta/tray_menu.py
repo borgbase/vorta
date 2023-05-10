@@ -1,6 +1,8 @@
 import os
+
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 

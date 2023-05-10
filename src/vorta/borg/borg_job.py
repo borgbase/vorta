@@ -11,8 +11,10 @@ from collections import namedtuple
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
+
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QApplication
+
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
