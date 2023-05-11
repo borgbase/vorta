@@ -43,3 +43,7 @@ def ensure_dirs():
     # ensure directories exist
     for dir in (SETTINGS_DIR, LOG_DIR, CACHE_DIR, TEMP_DIR):
         dir.mkdir(parents=True, exist_ok=True)
+
+
+# Make sure that the config values are valid
+init_from_platformdirs()

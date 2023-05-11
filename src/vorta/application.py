@@ -25,11 +25,6 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-# If config.TEMP_DIR is None, this means that the app got launched without going through main
-# (for example when running tests or when running on schedule.)
-# In any case, if the config dirs aren't set, assume you're running system-wide and initialize appropriately
-if not config.TEMP_DIR:
-    config.init_from_platformdirs()
 APP_ID = config.TEMP_DIR / "socket"
 
 
