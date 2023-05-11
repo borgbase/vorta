@@ -25,9 +25,9 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-# If config.TEMP_DIR is None, this means that the app got launched withoug going through main
+# If config.TEMP_DIR is None, this means that the app got launched without going through main
 # (for example when running tests or when running on schedule.)
-# In any case, if the config dirs aren't set, assume you're runnning system wide initialize appropriately
+# In any case, if the config dirs aren't set, assume you're running system-wide and initialize appropriately
 if not config.TEMP_DIR:
     config.init_from_platformdirs()
 APP_ID = config.TEMP_DIR / "socket"
@@ -266,7 +266,11 @@ class VortaApp(QtSingleApplication):
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
 
-    def bootstrap_profile(self, bootstrap_file=config.PROFILE_BOOTSTRAP_FILE):
+    def bootstrap_profile(self, bootstrap_file=None):
+        # Necessary to dynamically load the variable from config during runtime
+        # Check out pull request for #1682 for context
+        bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
+
         """
         Make sure there is at least one profile when first starting Vorta.
         Will either import a profile placed in ~/.vorta-init.json
