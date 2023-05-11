@@ -68,7 +68,7 @@ def main():
         else:
             # if we're not using the default dev dir and
             # instead we're using whatever dir is passed as an argument
-            config.init_dev_mode(Path(want_development))
+            config.init_dev_mode(Path(want_development).resolve())
 
     init_logger(background=want_background)
 
