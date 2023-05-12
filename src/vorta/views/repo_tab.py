@@ -1,10 +1,13 @@
 import os
 from pathlib import PurePath
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QMimeData, QUrl
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
+
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon

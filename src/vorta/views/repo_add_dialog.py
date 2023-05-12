@@ -1,13 +1,21 @@
 import re
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QLineEdit
+
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
-from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, validate_passwords
+from vorta.utils import (
+    borg_compat,
+    choose_file_dialog,
+    get_asset,
+    get_private_keys,
+    validate_passwords,
+)
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/repoadd.ui')

@@ -2,6 +2,7 @@ import logging
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
@@ -17,6 +18,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
     QWidget,
 )
+
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob

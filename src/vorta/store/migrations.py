@@ -1,6 +1,8 @@
 from datetime import datetime
+
 import peewee as pw
 from playhouse.migrate import SqliteMigrator, migrate
+
 from .models import (
     DB,
     ArchiveModel,

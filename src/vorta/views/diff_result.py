@@ -5,10 +5,21 @@ import re
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
+
 from PyQt6 import uic
-from PyQt6.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
+from PyQt6.QtCore import (
+    QDateTime,
+    QLocale,
+    QMimeData,
+    QModelIndex,
+    QPoint,
+    Qt,
+    QThread,
+    QUrl,
+)
 from PyQt6.QtGui import QColor, QKeySequence, QShortcut
 from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QTreeView
+
 from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.treemodel import (

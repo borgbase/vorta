@@ -1,7 +1,14 @@
 import logging
 import sys
+
 from PyQt6 import QtCore, QtDBus
+
 from vorta.store.models import SettingsModel
+
+try:
+    from Foundation import NSUserNotification, NSUserNotificationCenter
+except ImportError:
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +56,6 @@ class DarwinNotifications(VortaNotifications):
     def deliver(self, title, text, level='info'):
         if self.notifications_suppressed(level):
             return
-
-        from Foundation import NSUserNotification, NSUserNotificationCenter
 
         notification = NSUserNotification.alloc().init()
         notification.setTitle_(title)
