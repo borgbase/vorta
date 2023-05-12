@@ -1,5 +1,6 @@
 from datetime import datetime
 from unittest.mock import MagicMock
+
 import pytest
 from vorta.network_status.abc import SystemWifiInfo
 from vorta.network_status.network_manager import (

@@ -2,7 +2,8 @@ import logging
 import queue
 import threading
 from abc import abstractmethod
-from PyQt5.QtCore import QObject
+
+from PyQt6.QtCore import QObject
 
 logger = logging.getLogger(__name__)
 

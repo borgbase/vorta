@@ -2,11 +2,12 @@ import os
 import sys
 from datetime import datetime as dt
 from unittest.mock import MagicMock
+
 import pytest
-from peewee import SqliteDatabase
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
+from peewee import SqliteDatabase
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
@@ -45,6 +46,12 @@ def qapp(tmpdir_factory):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(str(tmp_db))
     vorta.store.connection.init_db(mock_db)
+
+    # Needs to be disabled before calling VortaApp()
+    if sys.platform == 'darwin':
+        cfg = vorta.store.models.SettingsModel.get(key='check_full_disk_access')
+        cfg.value = False
+        cfg.save()
 
     from vorta.application import VortaApp
 

@@ -8,6 +8,7 @@ Set up logging to user log dir. Uses the platform's default location:
 
 import logging
 from logging.handlers import TimedRotatingFileHandler
+
 from .config import LOG_DIR
 
 logger = logging.getLogger()
@@ -16,7 +17,7 @@ logger = logging.getLogger()
 def init_logger(background=False):
     logger.setLevel(logging.DEBUG)
     logging.getLogger('peewee').setLevel(logging.INFO)
-    logging.getLogger('PyQt5').setLevel(logging.INFO)
+    logging.getLogger('PyQt6').setLevel(logging.INFO)
 
     # create logging format
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

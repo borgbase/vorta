@@ -3,8 +3,10 @@ import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
+
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
+
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
@@ -179,10 +181,10 @@ class VortaApp(QtSingleApplication):
 
     def _alert_missing_borg(self):
         msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
+        msg.setIcon(QMessageBox.Icon.Critical)
         msg.setText(self.tr("No Borg Binary Found"))
         msg.setInformativeText(self.tr("Vorta was unable to locate a usable Borg Backup binary."))
-        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec()
 
     def check_darwin_permissions(self):
@@ -201,8 +203,8 @@ class VortaApp(QtSingleApplication):
         test_path = Path('~/Library/Cookies').expanduser()
         if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse)
             msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
             msg.setInformativeText(
                 self.tr(
@@ -212,7 +214,7 @@ class VortaApp(QtSingleApplication):
                     "System Preferences > Security & Privacy</a>."
                 )
             )
-            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.exec()
 
     def react_to_log(self, mgs, context):
@@ -225,9 +227,9 @@ class VortaApp(QtSingleApplication):
             repo_url = context.get('repo_url')
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))
-            msg.setIcon(QMessageBox.Critical)
-            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.RejectRole)
-            msg.addButton(self.tr("Continue"), QMessageBox.AcceptRole)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.ButtonRole.RejectRole)
+            msg.addButton(self.tr("Continue"), QMessageBox.ButtonRole.AcceptRole)
             msg.setDefaultButton(abortButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(
@@ -324,7 +326,7 @@ class VortaApp(QtSingleApplication):
             # Create QMessageBox
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Icon.Critical)  # changed for warning
-            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.setWindowTitle(self.tr('Repo Check Failed'))
 
             if returncode == 1:

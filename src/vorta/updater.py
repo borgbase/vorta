@@ -1,5 +1,6 @@
 import os
 import sys
+
 from vorta.store.models import SettingsModel
 
 

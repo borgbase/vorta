@@ -9,7 +9,15 @@ import os.path as osp
 from functools import reduce
 from pathlib import PurePath
 from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtSignal
+
+from PyQt6.QtCore import (
+    QAbstractItemModel,
+    QModelIndex,
+    QObject,
+    QSortFilterProxyModel,
+    Qt,
+    pyqtSignal,
+)
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -837,7 +845,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         row, item = parent_item._parent.get(parent_item.subpath)
         return self.createIndex(row, 0, parent_item)
 
-    def flags(self, index: QModelIndex) -> Qt.ItemFlags:
+    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
         """
         Returns the item flags for the given index.
 

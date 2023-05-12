@@ -1,9 +1,10 @@
 from datetime import datetime as dt
 from datetime import timedelta
 from unittest.mock import MagicMock
+
 import pytest
-from PyQt5 import QtCore
 import vorta.scheduler
+from PyQt6 import QtCore
 from vorta.application import VortaApp
 from vorta.store.models import BackupProfileModel, EventLogModel
 
@@ -31,17 +32,17 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     qapp.scheduler.schedule_changed.connect(lambda *args: tab.draw_next_scheduled_backup())
 
     # Test
-    qtbot.mouseClick(tab.scheduleOffRadio, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.scheduleOffRadio, QtCore.Qt.MouseButton.LeftButton)
     assert tab.nextBackupDateTimeLabel.text() == 'None scheduled'
 
     tab.scheduleIntervalCount.setValue(5)
-    qtbot.mouseClick(tab.scheduleIntervalRadio, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.scheduleIntervalRadio, QtCore.Qt.MouseButton.LeftButton)
     assert "None" not in tab.nextBackupDateTimeLabel.text()
 
     tab.scheduleFixedTime.setTime(QtCore.QTime(23, 59))
 
     # Clicking currently broken for this button on github.com only
-    # qtbot.mouseClick(tab.scheduleFixedRadio, QtCore.Qt.LeftButton)
+    # qtbot.mouseClick(tab.scheduleFixedRadio, QtCore.Qt.MouseButton.LeftButton)
 
     # Workaround for github
     tab.scheduleFixedRadio.setChecked(True)

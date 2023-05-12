@@ -1,7 +1,9 @@
 import os
 import signal
 import sys
+
 from peewee import SqliteDatabase
+
 from vorta._version import __version__
 from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late, translate
@@ -14,7 +16,8 @@ from vorta.utils import parse_args
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
-        from PyQt5.QtWidgets import QMessageBox
+
+        from PyQt6.QtWidgets import QMessageBox
 
         logger.critical(
             "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new/choose",
@@ -47,7 +50,7 @@ def main():
     want_background = getattr(args, 'daemonize', False)
 
     if want_version:
-        print(f"Vorta {__version__}")
+        print(f"Vorta {__version__}")  # noqa: T201
         sys.exit()
 
     if want_background:

@@ -58,8 +58,8 @@ flatpak-install: translations-to-qm
 
 lint:
 	flake8
-	isort --check-only .
 	black --check .
+	ruff check .
 
 test:
 	pytest --cov=vorta

@@ -7,4 +7,3 @@ source_file  = src/vorta/i18n/ts/vorta.en.ts
 source_lang  = en
 type         = QT
 minimum_perc = 80
-

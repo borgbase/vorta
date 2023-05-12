@@ -1,10 +1,13 @@
 import os
 from pathlib import PurePath
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QMimeData, QUrl
-from PyQt5.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QMimeData, QUrl
+from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
+
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
@@ -192,15 +195,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to create an ssh key."""
         ssh_add_window = SSHAddWindow()
         self._window = ssh_add_window  # For tests
-        ssh_add_window.setParent(self, QtCore.Qt.Sheet)
+        ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
         ssh_add_window.accepted.connect(self.init_ssh)
         # ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
         ssh_add_window.open()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setParent(self, QtCore.Qt.Sheet)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         index = self.sshComboBox.currentIndex()
         if index > 0:
@@ -234,7 +237,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to create a new repo and add it to vorta."""
         window = AddRepoWindow()
         self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
@@ -243,7 +246,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to add a existing repo to vorta."""
         window = ExistingRepoWindow()
         self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
@@ -271,8 +274,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.init_repo_stats()
 
         msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setParent(self, QtCore.Qt.Sheet)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
