@@ -1,7 +1,6 @@
 import os
 import signal
 import sys
-from pathlib import Path
 
 from peewee import SqliteDatabase
 
@@ -63,12 +62,12 @@ def main():
 
     if want_development:
         # if we're using the default dev dir
-        if want_development == DEFAULT_DIR_FLAG:
+        if want_development is DEFAULT_DIR_FLAG:
             config.init_dev_mode(config.default_dev_dir())
         else:
             # if we're not using the default dev dir and
             # instead we're using whatever dir is passed as an argument
-            config.init_dev_mode(Path(want_development).resolve())
+            config.init_dev_mode(want_development)
 
     init_logger(background=want_background)
 

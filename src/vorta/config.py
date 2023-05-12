@@ -22,7 +22,14 @@ def init_from_platformdirs():
 
 
 def init_dev_mode(dir):
-    init(dir / 'settings', dir / 'logs', dir / 'cache', dir / 'tmp', dir)
+    dir_full_path = Path(dir).resolve()
+    init(
+        dir_full_path / 'settings',
+        dir_full_path / 'logs',
+        dir_full_path / 'cache',
+        dir_full_path / 'tmp',
+        dir_full_path,
+    )
 
 
 def init(settings, logs, cache, tmp, bootstrap):
