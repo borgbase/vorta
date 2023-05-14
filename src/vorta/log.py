@@ -13,6 +13,16 @@ from .config import LOG_DIR
 
 logger = logging.getLogger()
 
+"""append '.log' to log file name"""
+
+
+class LogTimedRotatingFileHandler(TimedRotatingFileHandler):
+    def __init__(self, filename, when='d', interval=1, backupCount=5, encoding=None, delay=False, utc=False):
+        super().__init__(
+            filename, when=when, interval=interval, backupCount=backupCount, encoding=encoding, delay=delay, utc=utc
+        )
+        self.suffix += '.log'
+
 
 def init_logger(background=False):
     logger.setLevel(logging.DEBUG)
@@ -23,7 +33,7 @@ def init_logger(background=False):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # create handlers
-    fh = TimedRotatingFileHandler(LOG_DIR / 'vorta.log', when='d', interval=1, backupCount=5)
+    fh = LogTimedRotatingFileHandler(LOG_DIR / 'vorta.log', when='d', interval=1, backupCount=5)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
