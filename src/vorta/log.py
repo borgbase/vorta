@@ -13,10 +13,10 @@ from .config import LOG_DIR
 
 logger = logging.getLogger()
 
-"""append '.log' to log file name"""
-
 
 class LogTimedRotatingFileHandler(TimedRotatingFileHandler):
+    """Create subclass of TimedRotatingFileHandler that always appends '.log' to log files."""
+
     def __init__(self, filename, when='d', interval=1, backupCount=5, encoding=None, delay=False, utc=False):
         super().__init__(
             filename, when=when, interval=interval, backupCount=backupCount, encoding=encoding, delay=delay, utc=utc
