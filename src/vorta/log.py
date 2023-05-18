@@ -15,6 +15,7 @@ logger = logging.getLogger()
 
 
 def log_namer(default_name):
+    # Backups will be named 'vorta.log.[timestamp].log'
     return default_name + '.log'
 
 
