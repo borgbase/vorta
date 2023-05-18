@@ -1,7 +1,9 @@
 from typing import Optional
+
 from PyQt6.QtCore import QObject
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QFormLayout, QLabel, QLineEdit, QWidget
+
 from vorta.i18n import translate
 from vorta.views.utils import get_colored_icon
 
