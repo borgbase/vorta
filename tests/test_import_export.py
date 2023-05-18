@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+
 import pytest
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
 from vorta.store.models import BackupProfileModel, SourceFileModel
 from vorta.views.import_window import ImportWindow
 
@@ -18,7 +19,9 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     import_dialog: ImportWindow = main.window
     import_dialog.overwriteExistingSettings.setChecked(True)
 
-    qtbot.mouseClick(import_dialog.buttonBox.button(QDialogButtonBox.Ok), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(
+        import_dialog.buttonBox.button(QDialogButtonBox.StandardButton.Ok), QtCore.Qt.MouseButton.LeftButton
+    )
     qtbot.waitSignal(import_dialog.profile_imported, **pytest._wait_defaults)
 
     restored_profile = BackupProfileModel.get_or_none(name="Test Profile Restoration")
@@ -81,7 +84,9 @@ def test_export_success(qapp, qtbot, tmpdir, monkeypatch):
     main.profile_export_action()
     export_dialog = main.window
 
-    qtbot.mouseClick(export_dialog.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(
+        export_dialog.buttonBox.button(QDialogButtonBox.StandardButton.Save), QtCore.Qt.MouseButton.LeftButton
+    )
     qtbot.waitUntil(lambda: os.path.isfile(FILE_PATH))
 
     assert os.path.isfile(FILE_PATH)
@@ -107,7 +112,9 @@ def test_export_fail_unwritable(qapp, qtbot, tmpdir, monkeypatch):
     main.profile_export_action()
     export_dialog = main.window
 
-    qtbot.mouseClick(export_dialog.buttonBox.button(QDialogButtonBox.Save), QtCore.Qt.LeftButton)
+    qtbot.mouseClick(
+        export_dialog.buttonBox.button(QDialogButtonBox.StandardButton.Save), QtCore.Qt.MouseButton.LeftButton
+    )
 
     assert 'could not be created' in alert_message
     assert not os.path.isfile(FILE_PATH)

@@ -1,10 +1,18 @@
 from pathlib import PurePath
+
 import pytest
-from PyQt5.QtCore import QDateTime, QItemSelectionModel, Qt
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from vorta.views.diff_result import ChangeType, DiffData, DiffTree, FileType, parse_diff_json, parse_diff_lines
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from vorta.views.diff_result import (
+    ChangeType,
+    DiffData,
+    DiffTree,
+    FileType,
+    parse_diff_json,
+    parse_diff_lines,
+)
 
 
 @pytest.mark.parametrize(

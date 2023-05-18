@@ -1,7 +1,17 @@
 import logging
-from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QCheckBox, QFormLayout, QHBoxLayout, QLabel, QSizePolicy, QSpacerItem
+
+from PyQt6 import uic
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+)
+
 from vorta._version import __version__
 from vorta.config import LOG_DIR
 from vorta.i18n import translate
@@ -87,7 +97,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 # create widget
                 cb = QCheckBox(translate('settings', setting.label))
                 cb.setToolTip(setting.tooltip)
-                cb.setCheckState(setting.value)
+                cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
 

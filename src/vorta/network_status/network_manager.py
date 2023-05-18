@@ -2,8 +2,10 @@ import logging
 from datetime import datetime
 from enum import Enum
 from typing import Any, List, Mapping, NamedTuple, Optional
-from PyQt5 import QtDBus
-from PyQt5.QtCore import QObject, QVersionNumber
+
+from PyQt6 import QtDBus
+from PyQt6.QtCore import QObject, QVersionNumber
+
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 logger = logging.getLogger(__name__)

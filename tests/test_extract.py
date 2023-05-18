@@ -1,5 +1,5 @@
-from PyQt5.QtCore import QModelIndex, Qt
 import vorta.borg
+from PyQt6.QtCore import QModelIndex, Qt
 from vorta.views.extract_dialog import ExtractTree, FileData, FileType, parse_json_lines
 from vorta.views.partials.treemodel import FileSystemItem
 
@@ -92,12 +92,12 @@ def test_selection():
     c: FileSystemItem[FileData] = ic.internalPointer()
 
     select(model, ic)
-    assert c.data.checkstate == 2
+    assert c.data.checkstate == Qt.CheckState(2)
     assert c.data.checked_children == 0
 
     # Test deselect
     deselect(model, ic)
-    assert c.data.checkstate == 0
+    assert c.data.checkstate == Qt.CheckState(0)
     assert c.data.checked_children == 0
 
     # Test select parent as well as children
@@ -121,19 +121,19 @@ def test_selection():
     iab = model.indexPath(("a", "b"))
     deselect(model, iab)
 
-    assert a.data.checkstate == 1
-    assert aa.data.checkstate == 2
-    assert ab.data.checkstate == 0
-    assert abc.data.checkstate == 0
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert aa.data.checkstate == Qt.CheckState(2)
+    assert ab.data.checkstate == Qt.CheckState(0)
+    assert abc.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 1
     assert ab.data.checked_children == 0
 
     # Test deselect item and children
     deselect(model, ia)
 
-    assert a.data.checkstate == 0
-    assert aa.data.checkstate == 0
-    assert ab.data.checkstate == 0
+    assert a.data.checkstate == Qt.CheckState(0)
+    assert aa.data.checkstate == Qt.CheckState(0)
+    assert ab.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 0
     assert aa.data.checked_children == 0
 
@@ -146,9 +146,9 @@ def test_selection():
     select(model, iab)
     select(model, iaac)
 
-    assert a.data.checkstate == 1
-    assert aa.data.checkstate == 1
-    assert ab.data.checkstate == 2
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert aa.data.checkstate == Qt.CheckState(1)
+    assert ab.data.checkstate == Qt.CheckState(2)
 
     assert a.data.checked_children == 2
     assert ab.data.checked_children == 2
@@ -159,21 +159,21 @@ def test_selection():
     deselect(model, iaa)
     deselect(model, iab)
 
-    assert a.data.checkstate == 0
+    assert a.data.checkstate == Qt.CheckState(0)
     assert a.data.checked_children == 0
 
     # Test select child with deselected parent
     select(model, iaac)
 
-    assert a.data.checkstate == 1
-    assert ab.data.checkstate == 0
-    assert aa.data.checkstate == 1
+    assert a.data.checkstate == Qt.CheckState(1)
+    assert ab.data.checkstate == Qt.CheckState(0)
+    assert aa.data.checkstate == Qt.CheckState(1)
     assert a.data.checked_children == 1
     assert ab.data.checked_children == 0
     assert aa.data.checked_children == 1
 
     select(model, iaa)
-    assert a.data.checkstate == 1
+    assert a.data.checkstate == Qt.CheckState(1)
 
     select(model, iab)
-    assert a.data.checkstate == 1
+    assert a.data.checkstate == Qt.CheckState(1)

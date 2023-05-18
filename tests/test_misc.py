@@ -2,10 +2,11 @@ import os
 import sys
 from pathlib import Path
 from unittest.mock import Mock
+
 import pytest
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QCheckBox, QFormLayout
 import vorta.store.models
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QCheckBox, QFormLayout
 
 
 def test_autostart(qapp, qtbot):
@@ -79,5 +80,7 @@ def _click_toggle_setting(setting, qapp, qtbot):
         if checkbox.text() == setting:
             # Have to use pos to click checkbox correctly
             # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
-            qtbot.mouseClick(checkbox, QtCore.Qt.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2)))
+            qtbot.mouseClick(
+                checkbox, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2))
+            )
             break

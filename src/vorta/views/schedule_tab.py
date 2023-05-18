@@ -1,6 +1,13 @@
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QDateTime, QLocale
-from PyQt5.QtWidgets import QApplication, QHeaderView, QListWidgetItem, QTableView, QTableWidgetItem
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QDateTime, QLocale
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
+    QApplication,
+    QHeaderView,
+    QListWidgetItem,
+    QTableWidgetItem,
+)
+
 from vorta import application
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
@@ -37,10 +44,10 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.logTableWidget.setAlternatingRowColors(True)
         header = self.logTableWidget.horizontalHeader()
         header.setVisible(True)
-        [header.setSectionResizeMode(i, QHeaderView.ResizeToContents) for i in range(5)]
-        header.setSectionResizeMode(3, QHeaderView.Stretch)
-        self.logTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.logTableWidget.setEditTriggers(QTableView.NoEditTriggers)
+        [header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents) for i in range(5)]
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.logTableWidget.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.logTableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         # Scheduler intervals we know
         self.scheduleIntervalUnit.addItem(self.tr('Minutes'), 'minutes')
@@ -138,17 +145,19 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleFixedTime.setTime(QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
 
         # Set borg-check options
-        self.validationCheckBox.setCheckState(QtCore.Qt.Checked if profile.validation_on else QtCore.Qt.Unchecked)
+        self.validationCheckBox.setCheckState(
+            QtCore.Qt.CheckState.Checked if profile.validation_on else QtCore.Qt.CheckState.Unchecked
+        )
         self.validationWeeksCount.setValue(profile.validation_weeks)
 
         # Other checkbox options
-        self.pruneCheckBox.setCheckState(QtCore.Qt.Checked if profile.prune_on else QtCore.Qt.Unchecked)
+        self.pruneCheckBox.setCheckState(
+            QtCore.Qt.CheckState.Checked if profile.prune_on else QtCore.Qt.CheckState.Unchecked
+        )
         self.missedBackupsCheckBox.setCheckState(
-            QtCore.Qt.Checked if profile.schedule_make_up_missed else QtCore.Qt.Unchecked
+            QtCore.Qt.CheckState.Checked if profile.schedule_make_up_missed else QtCore.Qt.CheckState.Unchecked
         )
-        self.meteredNetworksCheckBox.setChecked(
-            QtCore.Qt.Unchecked if profile.dont_run_on_metered_networks else QtCore.Qt.Checked
-        )
+        self.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
         self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
@@ -183,11 +192,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         for wifi in get_sorted_wifis(self.profile()):
             item = QListWidgetItem()
             item.setText(wifi.ssid)
-            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
             if wifi.allowed:
-                item.setCheckState(QtCore.Qt.Checked)
+                item.setCheckState(QtCore.Qt.CheckState.Checked)
             else:
-                item.setCheckState(QtCore.Qt.Unchecked)
+                item.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.wifiListWidget.addItem(item)
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
 

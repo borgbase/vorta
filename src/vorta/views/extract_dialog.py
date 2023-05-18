@@ -4,14 +4,39 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
-from typing import Optional
-from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
-from PyQt5.QtGui import QColor, QKeySequence
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton, QShortcut
+from typing import Optional, Union
+
+from PyQt6 import uic
+from PyQt6.QtCore import (
+    QDateTime,
+    QLocale,
+    QMimeData,
+    QModelIndex,
+    QPoint,
+    Qt,
+    QThread,
+    QUrl,
+)
+from PyQt6.QtGui import QColor, QKeySequence, QShortcut
+from PyQt6.QtWidgets import (
+    QApplication,
+    QDialogButtonBox,
+    QHeaderView,
+    QMenu,
+    QPushButton,
+)
+
+from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
-from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
+
+from .partials.treemodel import (
+    FileSystemItem,
+    FileTreeModel,
+    FileTreeSortProxyModel,
+    path_to_str,
+    relative_path,
+)
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
@@ -71,10 +96,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         # header
         header = view.header()
         header.setStretchLastSection(False)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
@@ -88,9 +113,11 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.buttonBox.addButton(self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole)
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
+        diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
 
         # connect signals
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
+        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
@@ -162,6 +189,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
+
+        SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
+            SettingsModel.key == 'extract_files_display_mode'
+        ).execute()
 
         self.model.setMode(mode)
 
@@ -274,7 +305,7 @@ class FileData:
     last_modified: QDateTime
     source_path: Optional[str] = None  # only relevant for links
 
-    checkstate: int = 0  # whether to extract the file (0, 1 or 2)
+    checkstate: Qt.CheckState = Qt.CheckState.Unchecked  # whether to extract the file (0, 1 or 2)
     checked_children: int = 0  # number of children checked
 
 
@@ -371,7 +402,7 @@ class ExtractTree(FileTreeModel[FileData]):
         self,
         section: int,
         orientation: Qt.Orientation,
-        role: int = Qt.ItemDataRole.DisplayRole,
+        role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole,
     ):
         """
         Get the data for the given role and section in the given header.
@@ -407,7 +438,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         return None
 
-    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
+    def data(self, index: QModelIndex, role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole):
         """
         Get the data for the given role and index.
 
@@ -460,9 +491,9 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.BackgroundRole and column == 3:
             # health indicator
             if item.data.health:
-                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
             else:
-                return QColor(Qt.green) if uses_dark_mode() else QColor(Qt.darkGreen)
+                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
 
         if role == Qt.ItemDataRole.ToolTipRole:
             if column == 0:
@@ -525,7 +556,12 @@ class ExtractTree(FileTreeModel[FileData]):
         if role == Qt.ItemDataRole.CheckStateRole and column == 0:
             return item.data.checkstate
 
-    def setData(self, index: QModelIndex, value, role: int = Qt.ItemDataRole.DisplayRole) -> bool:
+    def setData(
+        self,
+        index: QModelIndex,
+        value: Union[int, Qt.CheckState],
+        role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.CheckStateRole,
+    ) -> bool:
         """
         Sets the role data for the item at index to value.
 
@@ -535,6 +571,13 @@ class ExtractTree(FileTreeModel[FileData]):
         """
         if role != Qt.ItemDataRole.CheckStateRole:
             return False
+
+        # convert int to enum member
+        # PyQt6 will pass Ints where there were IntEnums in PyQt5
+        if isinstance(value, int):
+            value = Qt.CheckState(value)
+        if isinstance(role, int):
+            role = Qt.ItemDataRole(role)
 
         item: ExtractFileItem = index.internalPointer()
 
@@ -609,7 +652,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         item = index.internalPointer()
         for i in range(number_children):
-            child = index.child(i, 0)
+            child = self.index(i, 0, index)
             child_item: ExtractFileItem = child.internalPointer()
             child_item.data.checkstate = value
 
@@ -626,8 +669,8 @@ class ExtractTree(FileTreeModel[FileData]):
             self.set_checkstate_recursively(child, value)
 
         self.dataChanged.emit(
-            index.child(0, 0),
-            index.child(0, number_children - 1),
+            self.index(0, 0, index),
+            self.index(0, number_children - 1, index),
             (Qt.ItemDataRole.CheckStateRole,),
         )
 

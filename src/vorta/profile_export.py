@@ -1,7 +1,9 @@
 import datetime
 import json
 from json import JSONDecodeError
+
 from playhouse.shortcuts import dict_to_model, model_to_dict
+
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.connection import DB, SCHEMA_VERSION, init_db
 from vorta.store.models import (
