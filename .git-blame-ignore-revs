@@ -1,2 +1,5 @@
 # Migrate code style to Black
 b6a24debb78b953117a3f637db18942f370a4b85
+
+# Run pre-commit after adding ruff
+24e1dd5c561bc3da972e41e6fd61961f12a2fc9f

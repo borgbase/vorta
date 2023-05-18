@@ -24,7 +24,7 @@ jobs:
       run: |
         pip install .
         pip install -r requirements.d/dev.txt
-    - name: Test formatting with Flake8, isort and Black
+    - name: Test formatting with Flake8, ruff and Black
       run: make lint
     # - name: Run PyLint (info only)
     #   run: pylint --rcfile=setup.cfg src --exit-zero

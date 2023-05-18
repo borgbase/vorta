@@ -1,6 +1,15 @@
 import re
+
 from PyQt6 import QtCore, uic
-from PyQt6.QtWidgets import QApplication, QComboBox, QDialogButtonBox, QFormLayout, QLabel, QSizePolicy
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QDialogButtonBox,
+    QFormLayout,
+    QLabel,
+    QSizePolicy,
+)
+
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring

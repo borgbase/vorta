@@ -1,6 +1,7 @@
 import subprocess
 from datetime import datetime as dt
 from typing import Iterator, Optional
+
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 

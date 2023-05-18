@@ -3,8 +3,10 @@ import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
+
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager

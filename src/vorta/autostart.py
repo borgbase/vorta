@@ -50,6 +50,7 @@ def open_app_at_startup(enabled=True):
 
     elif sys.platform.startswith('linux'):
         from pathlib import Path
+
         from platformdirs import user_config_path
 
         is_flatpak = Path('/.flatpak-info').exists()
