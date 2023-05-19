@@ -71,7 +71,7 @@ jobs:
         run: make test
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
           python: ${{ matrix.python-version }}
