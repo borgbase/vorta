@@ -253,11 +253,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.repo_mount_point = repo_mount_points[0]
 
             if profile.repo.name:
-                self.toolBox.setItemText(
-                    0, self.tr('Archives for {}').format(f"{profile.repo.name} ({profile.repo.url})")
-                )
+                repo_name = f"{profile.repo.name} ({profile.repo.url})"
             else:
-                self.toolBox.setItemText(0, self.tr('Archives for {}').format(profile.repo.url))
+                repo_name = profile.repo.url
+            self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
 
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
