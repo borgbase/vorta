@@ -1,5 +1,7 @@
 import re
+
 import nox
+
 
 @nox.session
 @nox.parametrize("borgbackup", ["2.0.0b5", "2.0.0b4"])
@@ -18,7 +20,7 @@ def run_tests(session, borgbackup):
 
     session.log(f"CLI version: {cli_version}")
     session.log(f"Python version: {python_version}")
-    
+
     assert cli_version == borgbackup
     assert python_version == borgbackup
 
