@@ -12,16 +12,19 @@ TEMP_DIR = None
 PROFILE_BOOTSTRAP_FILE = None
 
 
-def default_dev_dir():
+def default_dev_dir() -> Path:
+    """Returns a default dir for config files in the project's main folder"""
     return Path(__file__).parent.parent.parent / '.dev_config'
 
 
 def init_from_platformdirs():
+    """Initializes config dirs for system-wide use"""
     dirs = platformdirs.PlatformDirs(APP_NAME, APP_AUTHOR)
     init(dirs.user_data_path, dirs.user_log_path, dirs.user_cache_path, dirs.user_cache_path / 'tmp', Path.home())
 
 
-def init_dev_mode(dir):
+def init_dev_mode(dir: Path):
+    """Initializes config dirs for local use inside provided dir"""
     dir_full_path = Path(dir).resolve()
     init(
         dir_full_path / 'settings',
@@ -32,7 +35,8 @@ def init_dev_mode(dir):
     )
 
 
-def init(settings, logs, cache, tmp, bootstrap):
+def init(settings: Path, logs: Path, cache: Path, tmp: Path, bootstrap: Path):
+    """Initializes config directories with provided paths"""
     global SETTINGS_DIR
     global LOG_DIR
     global CACHE_DIR
@@ -47,6 +51,7 @@ def init(settings, logs, cache, tmp, bootstrap):
 
 
 def ensure_dirs():
+    """Creates config dirs and parent dirs if they don't exist"""
     # ensure directories exist
     for dir in (SETTINGS_DIR, LOG_DIR, CACHE_DIR, TEMP_DIR):
         dir.mkdir(parents=True, exist_ok=True)
