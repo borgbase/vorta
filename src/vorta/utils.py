@@ -265,6 +265,27 @@ def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision:
     return n
 
 
+def pretty_bytes_dynamic_units(size, metric=True, sign=False, precision=1):
+    if not isinstance(size, int):
+        return ''
+    prefix = '+' if sign and size > 0 else ''
+    power, units = (
+        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
+        if metric
+        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
+    )
+    n = 0
+    while abs(round(size, precision)) >= power and n + 1 < len(units):
+        size /= power
+        n += 1
+    try:
+        unit = units[n]
+        return f'{prefix}{round(size, precision)} {unit}B'
+    except KeyError as e:
+        logger.error(e)
+        return "NaN"
+
+
 def pretty_bytes(
     size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: Optional[int] = None
 ) -> str:

@@ -1,6 +1,6 @@
 import logging
 
-from PyQt6 import uic
+from PyQt6 import QtCore, uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication,
@@ -28,6 +28,8 @@ logger = logging.getLogger(__name__)
 
 
 class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
+    refresh_archive = QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
         """Init."""
         super().__init__(parent)
@@ -100,6 +102,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
+                cb.stateChanged.connect(lambda v, key=setting.key: self.emit_archive_refresh(key))
 
                 tb = ToolTipButton()
                 tb.setToolTip(setting.tooltip)
@@ -123,6 +126,10 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         """Set or update the icons in this view."""
         for button in self.tooltip_buttons:
             button.setIcon(get_colored_icon('help-about'))
+
+    def emit_archive_refresh(self, key):
+        if key == 'enable_fixed_units':
+            self.refresh_archive.emit()
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)

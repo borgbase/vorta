@@ -60,6 +60,14 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'tooltip': trans_late('settings', 'When adding a new source, calculate its size and the number of files.'),
         },
         {
+            'key': 'enable_fixed_units',
+            'value': False,
+            'type': 'checkbox',
+            'group': information,
+            'label': trans_late('settings', 'Display all archive sizes in a consistent unit of measurement'),
+            'tooltip': trans_late('settings', 'When enabled, replaces dynamic units of measurement based on file size'),
+        },
+        {
             'key': 'use_system_keyring',
             'value': True,
             'type': 'checkbox',

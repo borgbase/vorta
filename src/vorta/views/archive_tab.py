@@ -32,7 +32,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
-from vorta.store.models import ArchiveModel, BackupProfileMixin
+from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
 from vorta.utils import (
     choose_file_dialog,
     find_best_unit_for_sizes,
@@ -40,6 +40,7 @@ from vorta.utils import (
     get_asset,
     get_mount_points,
     pretty_bytes,
+    pretty_bytes_dynamic_units,
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
@@ -263,9 +264,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(
-                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS))
-                )
+
+                if SettingsModel.get(key='enable_fixed_units').value is True:
+                    self.archiveTable.setItem(
+                        row,
+                        1,
+                        SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)),
+                    )
+                else:
+                    self.archiveTable.setItem(
+                        row, 1, SizeItem(pretty_bytes_dynamic_units(archive.size, precision=SIZE_DECIMAL_DIGITS))
+                    )
+
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
