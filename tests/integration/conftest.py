@@ -1,7 +1,8 @@
+import atexit
 import os
+import shutil
+import subprocess
 import sys
-from datetime import datetime as dt
-from unittest.mock import MagicMock
 
 import pytest
 import vorta
@@ -55,9 +56,6 @@ def qapp(tmpdir_factory):
 
     from vorta.application import VortaApp
 
-    VortaApp.set_borg_details_action = MagicMock()  # Can't use pytest-mock in session scope
-    VortaApp.scheduler = MagicMock()
-
     qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
 
     yield qapp
@@ -66,7 +64,48 @@ def qapp(tmpdir_factory):
 
 
 @pytest.fixture(scope='function', autouse=True)
-def init_db(qapp, qtbot, tmpdir_factory):
+def create_test_repo(tmpdir_factory):
+    temp_dir = tmpdir_factory.mktemp('repo')
+    repo_path = str(temp_dir)
+
+    subprocess.run(['borg', 'init', '--encryption=none', repo_path], check=True)
+
+    # create source files dir
+    source_files_dir = os.path.join(temp_dir, 'src')
+    os.mkdir(source_files_dir)
+
+    file_path = os.path.join(source_files_dir, 'file')
+    with open(file_path, 'w') as f:
+        f.write('test')
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive', source_files_dir], cwd=temp_dir, check=True)
+
+    dir_path = os.path.join(source_files_dir, 'dir')
+    os.mkdir(dir_path)
+
+    file_path = os.path.join(dir_path, 'file')
+    with open(file_path, 'w') as f:
+        f.write('test')
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=temp_dir, check=True)
+
+    symlink_path = os.path.join(source_files_dir, 'symlink')
+    os.symlink(file_path, symlink_path)
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=temp_dir, check=True)
+
+    # TODO: More file types and more archives required for testing
+
+    def cleanup():
+        shutil.rmtree(temp_dir)
+
+    atexit.register(cleanup)
+
+    return repo_path, source_files_dir
+
+
+@pytest.fixture(scope='function', autouse=True)
+def init_db(qapp, qtbot, tmpdir_factory, create_test_repo):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -79,7 +118,9 @@ def init_db(qapp, qtbot, tmpdir_factory):
     default_profile = BackupProfileModel(name='Default')
     default_profile.save()
 
-    new_repo = RepoModel(url='i0fi93@i593.repo.borgbase.com:repo')
+    repo_path, source_dir = create_test_repo
+
+    new_repo = RepoModel(url=repo_path)
     new_repo.encryption = 'none'
     new_repo.save()
 
@@ -88,30 +129,25 @@ def init_db(qapp, qtbot, tmpdir_factory):
     default_profile.validation_on = False
     default_profile.save()
 
-    test_archive = ArchiveModel(snapshot_id='99999', name='test-archive', time=dt(2000, 1, 1, 0, 0), repo=1)
-    test_archive.save()
-
-    test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
-    test_archive1.save()
-
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
+    source_dir = SourceFileModel(dir=source_dir, repo=new_repo, dir_size=12, dir_files_count=3, path_isdir=True)
     source_dir.save()
 
     qapp.main_window.deleteLater()
     del qapp.main_window
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
 
+    qapp.scheduler.schedule_changed.disconnect()
+
     yield
 
     qapp.jobs_manager.cancel_all_jobs()
     qapp.backup_finished_event.disconnect()
-    qapp.scheduler.schedule_changed.disconnect()
     qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
     mock_db.close()
 
 
 @pytest.fixture
-def choose_file_dialog(*args):
+def choose_file_dialog(tmpdir):
     class MockFileDialog:
         def __init__(self, *args, **kwargs):
             pass
@@ -120,7 +156,7 @@ def choose_file_dialog(*args):
             func()
 
         def selectedFiles(self):
-            return ['/tmp']
+            return [str(tmpdir)]
 
     return MockFileDialog
 

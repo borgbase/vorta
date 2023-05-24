@@ -4,7 +4,8 @@ import nox
 
 
 @nox.session
-@nox.parametrize("borgbackup", ["2.0.0b5", "2.0.0b4"])
+# @nox.parametrize("borgbackup", ["2.0.0b5", "2.0.0b4"])
+@nox.parametrize("borgbackup", ["1.2.4"])
 def run_tests(session, borgbackup):
     # install borgbackup
     session.install(f"borgbackup=={borgbackup}")
@@ -25,4 +26,4 @@ def run_tests(session, borgbackup):
     assert python_version == borgbackup
 
     # run tests
-    session.run("pytest")
+    session.run("pytest", *session.posargs)
