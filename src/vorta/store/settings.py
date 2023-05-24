@@ -65,7 +65,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'checkbox',
             'group': information,
             'label': trans_late('settings', 'Display all archive sizes in a consistent unit of measurement'),
-            'tooltip': trans_late('settings', 'When enabled, replaces dynamic units of measurement based on file size'),
+            'tooltip': trans_late('settings', 'Enable to replace dynamic units of measurement based on archive size'),
         },
         {
             'key': 'use_system_keyring',
