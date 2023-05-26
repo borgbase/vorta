@@ -34,6 +34,62 @@ def test_autostart(qapp, qtbot):
         assert not os.path.exists(autostart_path)
 
 
+def test_enable_fixed_units(qapp, qtbot, mocker):
+    """
+    Mocks the 'enable fixed units' setting to ensure the correct function is called when displaying the archive size.
+    """
+
+    archive_tab = qapp.main_window.archiveTab
+
+    # set mocks
+    mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
+    mock_fixed = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_fixed_units")
+    mock_dynamic = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_dynamic_units")
+
+    # with setting enabled, fixed units should be used and not dynamic units
+    archive_tab.populate_from_profile()
+    mock_fixed.assert_called()
+    mock_dynamic.assert_not_called()
+
+    # reset mocks and disable setting
+    mock_setting.return_value = Mock(value=False)
+    mock_fixed.reset_mock()
+
+    # with setting disabled, dynamic units should be used and not fixed units
+    archive_tab.populate_from_profile()
+    mock_dynamic.assert_called()
+    mock_fixed.assert_not_called()
+
+
+def test_emit_archive_refresh(qapp, qtbot, mocker):
+    """
+    When the 'enable fixed units' setting is changed, 'refresh_archive' in misc_tab should emit. This emit triggers
+    main_window to call 'archive_tab.populate_from_profile' and refresh the archive tab with new archive size units.
+    """
+
+    setting = "Display all archive sizes in a consistent unit of measurement"
+
+    # set up mocks
+    mock_fixed = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_fixed_units")
+    mock_dynamic = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_dynamic_units")
+
+    # setting is disabled by default, so this click enables the fixed units setting
+    # click toggle the setting, which triggers the emit that refreshes archive tab
+    _click_toggle_setting(setting, qapp, qtbot)
+    mock_fixed.assert_called()
+    mock_dynamic.assert_not_called()
+
+    # reset mocks
+    mock_fixed.reset_mock()
+    mock_dynamic.reset_mock()
+
+    # click toggle disables the fixed units setting
+    # emit should trigger a refresh of the archive tab to show dynamic units
+    _click_toggle_setting(setting, qapp, qtbot)
+    mock_dynamic.assert_called()
+    mock_fixed.assert_not_called()
+
+
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
 def test_check_full_disk_access(qapp, qtbot, mocker):
     """Enables/disables 'Check for Full Disk Access on startup' setting and ensures functionality"""
@@ -64,23 +120,18 @@ def test_check_full_disk_access(qapp, qtbot, mocker):
 
 
 def _click_toggle_setting(setting, qapp, qtbot):
-    """Click toggle setting in the misc tab"""
+    """Toggle setting checkbox in the misc tab"""
 
-    main = qapp.main_window
-    main.tabWidget.setCurrentIndex(4)
-    tab = main.miscTab
+    miscTab = qapp.main_window.miscTab
 
-    for x in range(0, tab.checkboxLayout.count()):
-        item = tab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
-        if not item:
-            continue
-        checkbox = item.itemAt(0).widget()
-        checkbox.__class__ = QCheckBox
-
-        if checkbox.text() == setting:
-            # Have to use pos to click checkbox correctly
-            # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
-            qtbot.mouseClick(
-                checkbox, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2))
-            )
-            break
+    for x in range(miscTab.checkboxLayout.count()):
+        item = miscTab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
+        if item is not None:
+            checkbox = item.itemAt(0).widget()
+            if checkbox.text() == setting and isinstance(checkbox, QCheckBox):
+                # Have to use pos to click checkbox correctly
+                # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
+                qtbot.mouseClick(
+                    checkbox, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2))
+                )
+                break

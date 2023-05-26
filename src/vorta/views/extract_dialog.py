@@ -27,7 +27,7 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.store.models import SettingsModel
-from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
+from vorta.utils import borg_compat, get_asset, pretty_bytes_fixed_units, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 
 from .partials.treemodel import (
@@ -483,7 +483,7 @@ class ExtractTree(FileTreeModel[FileData]):
                 return QLocale.system().toString(item.data.last_modified, QLocale.FormatType.ShortFormat)
             elif column == 2:
                 # size
-                return pretty_bytes(item.data.size)
+                return pretty_bytes_fixed_units(item.data.size)
             else:
                 # health
                 return

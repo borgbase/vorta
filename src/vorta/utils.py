@@ -142,7 +142,7 @@ def get_path_datasize(path, exclude_patterns):
     if file_info.isDir():
         data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
         # logger.info("path (folder) %s %u elements size now=%u (%s)",
-        #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
+        #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes_fixed_units(data_size))
     else:
         # logger.info("path (file) %s size=%u", file_info.path(), file_info.size())
         data_size = file_info.size()
@@ -246,7 +246,7 @@ def clamp(n: Number, min_: Number, max_: Number) -> Number:
 
 def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
     """
-    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    Selects the index of the biggest unit (see the lists in the pretty_bytes_fixed_units function) capable of
     representing the smallest size in the sizes iterable.
     """
     min_size = min((s for s in sizes if isinstance(s, int)), default=None)
@@ -255,7 +255,7 @@ def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precisio
 
 def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision: int = 1) -> int:
     """
-    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
+    Selects the index of the biggest unit (see the lists in the pretty_bytes_fixed_units function) capable of
     representing the passed size.
     """
     if not isinstance(size, int) or size == 0:  # this will also take care of the None case
@@ -286,7 +286,7 @@ def pretty_bytes_dynamic_units(size, metric=True, sign=False, precision=1):
         return "NaN"
 
 
-def pretty_bytes(
+def pretty_bytes_fixed_units(
     size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: Optional[int] = None
 ) -> str:
     """

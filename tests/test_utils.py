@@ -1,7 +1,11 @@
 import uuid
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.utils import find_best_unit_for_sizes, pretty_bytes
+from vorta.utils import (
+    find_best_unit_for_sizes,
+    pretty_bytes_dynamic_units,
+    pretty_bytes_fixed_units,
+)
 
 
 def test_keyring():
@@ -52,31 +56,51 @@ def test_best_size_unit_nonmetric2():
     assert unit == 1  # 103bytes == 0.1KB
 
 
-def test_pretty_bytes_metric_fixed1():
-    s = pretty_bytes(1000000, metric=True, precision=0, fixed_unit=2)
+def test_pretty_bytes_fixed_units_metric_fixed1():
+    s = pretty_bytes_fixed_units(1000000, metric=True, precision=0, fixed_unit=2)
     assert s == "1 MB"
 
 
-def test_pretty_bytes_metric_fixed2():
-    s = pretty_bytes(1000000, metric=True, precision=1, fixed_unit=2)
+def test_pretty_bytes_fixed_units_metric_fixed2():
+    s = pretty_bytes_fixed_units(1000000, metric=True, precision=1, fixed_unit=2)
     assert s == "1.0 MB"
 
 
-def test_pretty_bytes_metric_fixed3():
-    s = pretty_bytes(100000, metric=True, precision=1, fixed_unit=2)
+def test_pretty_bytes_fixed_units_metric_fixed3():
+    s = pretty_bytes_fixed_units(100000, metric=True, precision=1, fixed_unit=2)
     assert s == "0.1 MB"
 
 
-def test_pretty_bytes_nonmetric_fixed1():
-    s = pretty_bytes(1024 * 1024, metric=False, precision=1, fixed_unit=2)
+def test_pretty_bytes_fixed_units_nonmetric_fixed1():
+    s = pretty_bytes_fixed_units(1024 * 1024, metric=False, precision=1, fixed_unit=2)
     assert s == "1.0 MiB"
 
 
-def test_pretty_bytes_metric_nonfixed2():
-    s = pretty_bytes(1000000, metric=True, precision=1)
+def test_pretty_bytes_fixed_units_metric_nonfixed2():
+    s = pretty_bytes_fixed_units(1000000, metric=True, precision=1)
     assert s == "1.0 MB"
 
 
-def test_pretty_bytes_metric_large():
-    s = pretty_bytes(10**30, metric=True, precision=1)
+def test_pretty_bytes_fixed_units_metric_large():
+    s = pretty_bytes_fixed_units(10**30, metric=True, precision=1)
     assert s == "1000000.0 YB"
+
+
+def test_pretty_bytes_dynamic_units_metric_small():
+    s = pretty_bytes_dynamic_units(1000000, metric=True, precision=1)
+    assert s == "1.0 MB"
+
+
+def test_pretty_bytes_dynamic_units_metric_large():
+    s = pretty_bytes_dynamic_units(10**24, metric=True, precision=1)
+    assert s == "1.0 YB"
+
+
+def test_pretty_bytes_dynamic_units_nonmetric_small():
+    s = pretty_bytes_dynamic_units(1024 * 1024, metric=False, precision=1)
+    assert s == "1.0 MiB"
+
+
+def test_pretty_bytes_dynamic_units_nonmetric_large():
+    s = pretty_bytes_dynamic_units(2**40 * 2**40, metric=False, precision=1)
+    assert s == "1.0 YiB"

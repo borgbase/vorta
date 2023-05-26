@@ -39,8 +39,8 @@ from vorta.utils import (
     format_archive_name,
     get_asset,
     get_mount_points,
-    pretty_bytes,
     pretty_bytes_dynamic_units,
+    pretty_bytes_fixed_units,
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
@@ -269,7 +269,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.archiveTable.setItem(
                         row,
                         1,
-                        SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)),
+                        SizeItem(
+                            pretty_bytes_fixed_units(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)
+                        ),
                     )
                 else:
                     self.archiveTable.setItem(
