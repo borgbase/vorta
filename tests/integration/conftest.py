@@ -170,7 +170,6 @@ def borg_json_output():
 
     return _read_json
 
-
 @pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
