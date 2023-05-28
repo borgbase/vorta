@@ -8,6 +8,14 @@ import vorta.views.archive_tab
 from PyQt6 import QtCore
 from vorta.store.models import ArchiveModel
 
+# def test_test(qapp, qtbot):
+#     main = qapp.main_window
+#     tab = main.archiveTab
+#     main.tabWidget.setCurrentIndex(3)
+#     tab.refresh_archive_list()
+#     main.show()
+#     # wait until window close with no timeout
+#     qtbot.wait(1000000)
 
 def test_repo_list(qapp, qtbot):
     main = qapp.main_window
@@ -20,7 +28,7 @@ def test_repo_list(qapp, qtbot):
     assert not tab.bCheck.isEnabled()
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
-    assert ArchiveModel.select().count() == 3
+    assert ArchiveModel.select().count() == 5
     assert 'Refreshing archives done.' in main.progressText.text()
     assert tab.bCheck.isEnabled()
 
