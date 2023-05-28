@@ -74,27 +74,65 @@ def create_test_repo(tmpdir_factory):
     source_files_dir = os.path.join(temp_dir, 'src')
     os.mkdir(source_files_dir)
 
+    # /src/file
     file_path = os.path.join(source_files_dir, 'file')
     with open(file_path, 'w') as f:
         f.write('test')
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive', source_files_dir], cwd=temp_dir, check=True)
-
+    # /src/dir/
     dir_path = os.path.join(source_files_dir, 'dir')
     os.mkdir(dir_path)
 
+    # /src/dir/file
     file_path = os.path.join(dir_path, 'file')
     with open(file_path, 'w') as f:
         f.write('test')
 
+    # Create first archive
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=temp_dir, check=True)
 
-    symlink_path = os.path.join(source_files_dir, 'symlink')
+    # /src/dir/symlink
+    symlink_path = os.path.join(dir_path, 'symlink')
     os.symlink(file_path, symlink_path)
+
+    # /src/dir/hardlink
+    hardlink_path = os.path.join(dir_path, 'hardlink')
+    os.link(file_path, hardlink_path)
+
+    # /src/dir/fifo
+    fifo_path = os.path.join(dir_path, 'fifo')
+    os.mkfifo(fifo_path)
+
+    # /src/dir/socket
+    socket_path = os.path.join(dir_path, 'socket')
+    os.mknod(socket_path, mode=0o600 | 0o140000)
+
+    # /src/dir/chrdev
+    chrdev_path = os.path.join(dir_path, 'chrdev')
+    os.mknod(chrdev_path, mode=0o600 | 0o020000)
+
+    # /src/dir/blkdev
+    # blkdev_path = os.path.join(dir_path, 'blkdev')
+    # os.mknod(blkdev_path, mode=0o600 | 0o060000)
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=temp_dir, check=True)
 
-    # TODO: More file types and more archives required for testing
+    # Rename dir to dir1
+    os.rename(dir_path, os.path.join(source_files_dir, 'dir1'))
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive3', source_files_dir], cwd=temp_dir, check=True)
+
+    # Rename all files under dir1 
+    for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
+        os.rename(os.path.join(source_files_dir, 'dir1', file), os.path.join(source_files_dir, 'dir1', file + '1'))
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive4', source_files_dir], cwd=temp_dir, check=True)
+
+    # Delete all file under dir1
+    for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
+        os.remove(os.path.join(source_files_dir, 'dir1', file))
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive5', source_files_dir], cwd=temp_dir, check=True)
 
     def cleanup():
         shutil.rmtree(temp_dir)

@@ -20,7 +20,7 @@ def test_repo_list(qapp, qtbot):
     assert not tab.bCheck.isEnabled()
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
-    assert ArchiveModel.select().count() == 3
+    assert ArchiveModel.select().count() == 5
     assert 'Refreshing archives done.' in main.progressText.text()
     assert tab.bCheck.isEnabled()
 
