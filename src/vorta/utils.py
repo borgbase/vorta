@@ -367,6 +367,7 @@ def parse_args():
         '-D',
         nargs='?',
         const=DEFAULT_DIR_FLAG,
+        metavar="CONFIG_DIRECTORY",
         help='Start vorta in a local development environment. '
         'All log, config, cache, and temp files will be stored within the project tree. '
         'You can follow this flag with an optional path and it will store the files in the provided location.',
