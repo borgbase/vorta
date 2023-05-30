@@ -22,6 +22,10 @@ from vorta.i18n import trans_late
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
+# Used to store whether a user wanted to override the
+# default directory for the --development flag
+DEFAULT_DIR_FLAG = object()
+
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
 
@@ -374,7 +378,21 @@ def parse_args():
         help='Create a backup in the background using the given profile. '
         'Vorta must already be running for this to work.',
     )
-
+    # the "development" attribute will be None if the flag is not called
+    # if the flag is called without an extra argument, the "development" attribute
+    # will be set to the value of DEFAULT_DIR_FLAG.
+    # if the flag is called with an extra argument, the "development" attribute
+    # will be set to that argument
+    parser.add_argument(
+        '--development',
+        '-D',
+        nargs='?',
+        const=DEFAULT_DIR_FLAG,
+        metavar="CONFIG_DIRECTORY",
+        help='Start vorta in a local development environment. '
+        'All log, config, cache, and temp files will be stored within the project tree. '
+        'You can follow this flag with an optional path and it will store the files in the provided location.',
+    )
     return parser.parse_known_args()[0]
 
 
