@@ -90,6 +90,7 @@ def create_test_repo(tmpdir_factory):
 
     # Create first archive
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
 
     # /src/dir/symlink
     symlink_path = os.path.join(dir_path, 'symlink')
@@ -116,23 +117,33 @@ def create_test_repo(tmpdir_factory):
     # os.mknod(blkdev_path, mode=0o600 | 0o060000)
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
 
     # Rename dir to dir1
     os.rename(dir_path, os.path.join(source_files_dir, 'dir1'))
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive3', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
 
-    # Rename all files under dir1 
+    # Rename all files under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.rename(os.path.join(source_files_dir, 'dir1', file), os.path.join(source_files_dir, 'dir1', file + '1'))
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive4', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
 
     # Delete all file under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.remove(os.path.join(source_files_dir, 'dir1', file))
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive5', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
+
+    # change permission of dir1
+    os.chmod(os.path.join(source_files_dir, 'dir1'), 0o700)
+
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive6', source_files_dir], cwd=temp_dir, check=True)
+    # time.sleep(1)
 
     def cleanup():
         shutil.rmtree(temp_dir)
@@ -188,13 +199,19 @@ def init_db(qapp, qtbot, tmpdir_factory, create_test_repo):
 def choose_file_dialog(tmpdir):
     class MockFileDialog:
         def __init__(self, *args, **kwargs):
-            pass
+            self.directory = kwargs.get('directory', None)
+            self.subdirectory = kwargs.get('subdirectory', None)
 
         def open(self, func):
             func()
 
         def selectedFiles(self):
-            return [str(tmpdir)]
+            if self.subdirectory:
+                return [str(tmpdir.join(self.subdirectory))]
+            elif self.directory:
+                return [str(self.directory)]
+            else:
+                return [str(tmpdir)]
 
     return MockFileDialog
 
@@ -207,6 +224,7 @@ def borg_json_output():
         return stdout, stderr
 
     return _read_json
+
 
 @pytest.fixture
 def rootdir():
