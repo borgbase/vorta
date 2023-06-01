@@ -333,9 +333,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # toggle delete button
         if self.repoactions_enabled and len(indexes) > 0:
             self.bDelete.setEnabled(True)
+            self.bRefreshArchive.setEnabled(True)
             self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
         else:
             self.bDelete.setEnabled(False)
+            self.bRefreshArchive.setEnabled(False)
             tooltip = self.tooltip_dict[self.bDelete]
             self.bDelete.setToolTip(tooltip + " " + reason or self.tr("(Select minimum one archive)"))
 
@@ -365,14 +367,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             reason = reason or self.tr("(Select exactly one archive)")
 
             # too few or too many selected.
-            self.fArchiveActions.setEnabled(False)
+            self.bMountArchive.setEnabled(False)
+            self.bExtract.setEnabled(False)
+            self.bRename.setEnabled(False)
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
                 tooltip = widget.toolTip()
 
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
-                widget.setToolTip(tooltip + " " + reason)
+
+                if 'Refresh' not in tooltip:
+                    widget.setToolTip(tooltip + " " + reason)
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
@@ -488,15 +494,28 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
 
     def refresh_archive_info(self):
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
-            if params['ok']:
-                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.info_result)
-                self._toggle_all_buttons(False)
-                self.app.jobs_manager.add_job(job)
+        selected_archives = self.archiveTable.selectionModel().selectedRows()
+        profile = self.profile()
+
+        name_list = []
+        for index in selected_archives:
+            name_list.append(self.archiveTable.item(index.row(), 4).text())
+
+        archive_list = (
+            profile.repo.archives.select().where(ArchiveModel.name << name_list).order_by(ArchiveModel.time.desc())
+        )
+
+        archive_names = [archive.name for archive in archive_list]
+
+        for archive_name in archive_names:
+            if archive_name is not None:
+                params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
+                if params['ok']:
+                    job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
+                    job.updated.connect(self._set_status)
+                    job.result.connect(self.info_result)
+                    self._toggle_all_buttons(False)
+                    self.app.jobs_manager.add_job(job)
 
     def info_result(self, result):
         self._toggle_all_buttons(True)
