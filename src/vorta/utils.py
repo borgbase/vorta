@@ -4,17 +4,19 @@ import fnmatch
 import getpass
 import math
 import os
-import platform
 import re
+import socket
 import sys
 import unicodedata
 from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
+
 import psutil
 from PyQt6 import QtCore
 from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.i18n import trans_late
 from vorta.log import logger
@@ -376,12 +378,36 @@ def uses_dark_mode():
     return palette.windowText().color().lightness() > palette.window().color().lightness()
 
 
+# patched socket.getfqdn() - see https://bugs.python.org/issue5004
+# Reused with permission from https://github.com/borgbackup/borg/blob/master/src/borg/platform/base.py (BSD-3-Clause)
+def _getfqdn(name=""):
+    """Get fully qualified domain name from name.
+    An empty argument is interpreted as meaning the local host.
+    """
+    name = name.strip()
+    if not name or name == "0.0.0.0":
+        name = socket.gethostname()
+    try:
+        addrs = socket.getaddrinfo(name, None, 0, socket.SOCK_DGRAM, 0, socket.AI_CANONNAME)
+    except OSError:
+        pass
+    else:
+        for addr in addrs:
+            if addr[3]:
+                name = addr[3]
+                break
+    return name
+
+
 def format_archive_name(profile, archive_name_tpl):
     """
     Generate an archive name. Default set in models.BackupProfileModel
     """
+    hostname = socket.gethostname()
+    hostname = hostname.split(".")[0]
     available_vars = {
-        'hostname': platform.node(),
+        'hostname': hostname,
+        'fqdn': _getfqdn(hostname),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),

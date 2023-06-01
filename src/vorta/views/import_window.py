@@ -1,5 +1,6 @@
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
+
 from vorta.keyring.abc import VortaKeyring
 from vorta.profile_export import VersionException
 from vorta.store.connection import SCHEMA_VERSION

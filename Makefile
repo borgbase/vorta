@@ -2,7 +2,7 @@ export VORTA_SRC := src/vorta
 export APPSTREAM_METADATA := src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 VERSION := $(shell python -c "from src.vorta._version import __version__; print(__version__)")
 
-.PHONY : help
+.PHONY : help clean lint test
 .DEFAULT_GOAL := help
 
 clean:
@@ -57,9 +57,7 @@ flatpak-install: translations-to-qm
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop ${FLATPAK_DEST}/share/applications/com.borgbase.Vorta.desktop
 
 lint:
-	flake8
-	isort --check-only .
-	black --check .
+	pre-commit run --all-files --show-diff-on-failure
 
 test:
 	pytest --cov=vorta

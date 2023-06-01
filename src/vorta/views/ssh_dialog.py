@@ -1,7 +1,9 @@
 import os
+
 from PyQt6 import uic
 from PyQt6.QtCore import QProcess, Qt
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox
+
 from ..utils import get_asset
 
 uifile = get_asset('UI/sshadd.ui')

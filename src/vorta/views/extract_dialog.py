@@ -5,14 +5,38 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
 from typing import Optional, Union
+
 from PyQt6 import uic
-from PyQt6.QtCore import QDateTime, QLocale, QMimeData, QModelIndex, QPoint, Qt, QThread, QUrl
+from PyQt6.QtCore import (
+    QDateTime,
+    QLocale,
+    QMimeData,
+    QModelIndex,
+    QPoint,
+    Qt,
+    QThread,
+    QUrl,
+)
 from PyQt6.QtGui import QColor, QKeySequence, QShortcut
-from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QHeaderView, QMenu, QPushButton
+from PyQt6.QtWidgets import (
+    QApplication,
+    QDialogButtonBox,
+    QHeaderView,
+    QMenu,
+    QPushButton,
+)
+
 from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
-from .partials.treemodel import FileSystemItem, FileTreeModel, FileTreeSortProxyModel, path_to_str, relative_path
+
+from .partials.treemodel import (
+    FileSystemItem,
+    FileTreeModel,
+    FileTreeSortProxyModel,
+    path_to_str,
+    relative_path,
+)
 
 uifile = get_asset("UI/extractdialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)

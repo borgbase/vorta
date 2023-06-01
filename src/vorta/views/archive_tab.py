@@ -2,6 +2,7 @@ import logging
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
@@ -17,6 +18,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
     QWidget,
 )
+
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
@@ -251,11 +253,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.repo_mount_point = repo_mount_points[0]
 
             if profile.repo.name:
-                self.toolBox.setItemText(
-                    0, self.tr('Archives for {}').format(f"{profile.repo.name} ({profile.repo.url})")
-                )
+                repo_name = f"{profile.repo.name} ({profile.repo.url})"
             else:
-                self.toolBox.setItemText(0, self.tr('Archives for {}').format(profile.repo.url))
+                repo_name = profile.repo.url
+            self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
 
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 

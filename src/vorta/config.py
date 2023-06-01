@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import platformdirs
 
 APP_NAME = 'Vorta'

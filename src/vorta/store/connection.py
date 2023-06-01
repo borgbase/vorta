@@ -1,8 +1,11 @@
 import os
 from datetime import datetime, timedelta
+
 from peewee import Tuple, fn
 from playhouse import signals
+
 from vorta.autostart import open_app_at_startup
+
 from .migrations import run_migrations
 from .models import (
     DB,
