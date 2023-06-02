@@ -377,7 +377,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
 
-                if 'Refresh' not in tooltip:
+                if widget != self.bRefreshArchive:
                     widget.setToolTip(tooltip + " " + reason)
 
             # special treatment for dynamic mount/unmount button.
