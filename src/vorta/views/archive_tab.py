@@ -113,11 +113,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
-
-        if not borg_compat.check('COMPACT_SUBCOMMAND'):
-            self.compactButton.hide()
-        else:
-            self.compactButton.clicked.connect(self.compact_action)
+        self.compactButton.clicked.connect(self.compact_action)
 
         # other signals
         self.bList.clicked.connect(self.refresh_archive_list)
@@ -959,3 +955,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
+
+    def toggle_compact_button_visibility(self):
+        if borg_compat.check("COMPACT_SUBCOMMAND"):
+            self.compactButton.show()
+        else:
+            self.compactButton.hide()
