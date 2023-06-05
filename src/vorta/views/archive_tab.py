@@ -34,6 +34,7 @@ from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
+    borg_compat,
     choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
@@ -112,7 +113,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
-        self.compactButton.clicked.connect(self.compact_action)
+
+        if not borg_compat.check('COMPACT_SUBCOMMAND'):
+            self.compactButton.hide()
+        else:
+            self.compactButton.clicked.connect(self.compact_action)
 
         # other signals
         self.bList.clicked.connect(self.refresh_archive_list)
