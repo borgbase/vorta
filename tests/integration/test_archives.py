@@ -20,7 +20,7 @@ def test_repo_list(qapp, qtbot):
     assert not tab.bCheck.isEnabled()
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
-    assert ArchiveModel.select().count() == 5
+    assert ArchiveModel.select().count() == 6
     assert 'Refreshing archives done.' in main.progressText.text()
     assert tab.bCheck.isEnabled()
 
@@ -37,6 +37,9 @@ def test_repo_prune(qapp, qtbot):
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
+@pytest.mark.skipif(
+    not vorta.utils.borg_compat.check('COMPACT_SUBCOMMAND'), reason="Borg version does not support compact"
+)
 def test_repo_compact(qapp, qtbot):
     main = qapp.main_window
     tab = main.archiveTab
@@ -44,10 +47,9 @@ def test_repo_compact(qapp, qtbot):
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
-    qtbot.waitUntil(lambda: tab.compactButton.isEnabled(), **pytest._wait_defaults)
 
+    qtbot.waitUntil(lambda: tab.compactButton.isEnabled(), **pytest._wait_defaults)
     assert tab.compactButton.isEnabled()
-    
 
     qtbot.mouseClick(tab.compactButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: 'compaction freed about' in main.logText.text(), **pytest._wait_defaults)
@@ -56,34 +58,41 @@ def test_repo_compact(qapp, qtbot):
 def test_check(qapp, qtbot):
     main = qapp.main_window
     tab = main.archiveTab
+    main.show()
+
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 
+    qapp.check_failed_event.disconnect()
+
+    qtbot.waitUntil(lambda: tab.bCheck.isEnabled(), **pytest._wait_defaults)
     qtbot.mouseClick(tab.bCheck, QtCore.Qt.MouseButton.LeftButton)
     success_text = 'INFO: Archive consistency check complete'
+
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
-# TODO: Fix this test and nox config to support fuse mounts.
-@pytest.mark.skip(reason="TODO: Fix this test and nox config to support fuse mounts.")
 def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', str(tmpdir))]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
+    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
 
     main = qapp.main_window
     tab = main.archiveTab
     main.show()
+
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
     tab.archiveTable.selectRow(0)
 
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    qtbot.waitUntil(lambda: tab.bMountRepo.isEnabled(), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    qtbot.mouseClick(tab.bMountArchive, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
     tab.bmountarchive_clicked()
@@ -101,7 +110,6 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     tab = main.archiveTab
 
     main.tabWidget.setCurrentIndex(3)
-
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 
@@ -126,7 +134,6 @@ def test_archive_delete(qapp, qtbot, mocker):
     tab = main.archiveTab
 
     main.tabWidget.setCurrentIndex(3)
-
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 
@@ -141,11 +148,12 @@ def test_archive_delete(qapp, qtbot, mocker):
     assert ArchiveModel.select().count() == archivesCount - 1
     assert tab.archiveTable.rowCount() == archivesCount - 1
 
+
 def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
 
+    main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 

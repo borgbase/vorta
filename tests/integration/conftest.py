@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 import pytest
 import vorta
@@ -65,14 +66,17 @@ def qapp(tmpdir_factory):
 
 @pytest.fixture(scope='function', autouse=True)
 def create_test_repo(tmpdir_factory):
-    temp_dir = tmpdir_factory.mktemp('repo')
-    repo_path = str(temp_dir)
+    # temp_dir = tmpdir_factory.mktemp('repo')
+    # repo_path = os.path.join(tmpdir_factory.getbasetemp(), 'repo')
+    # os.mkdir(repo_path)
+    repo_path = tmpdir_factory.mktemp('repo')
 
-    subprocess.run(['borg', 'init', '--encryption=none', repo_path], check=True)
+    subprocess.run(['borg', 'init', '--encryption=none', str(repo_path)], check=True)
 
     # create source files dir
-    source_files_dir = os.path.join(temp_dir, 'src')
-    os.mkdir(source_files_dir)
+    # source_files_dir = os.path.join(tmpdir_factory.getbasetemp(), 'borg_src')
+    # os.mkdir(source_files_dir)
+    source_files_dir = tmpdir_factory.mktemp('borg_src')
 
     # /src/file
     file_path = os.path.join(source_files_dir, 'file')
@@ -89,8 +93,8 @@ def create_test_repo(tmpdir_factory):
         f.write('test')
 
     # Create first archive
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
     # /src/dir/symlink
     symlink_path = os.path.join(dir_path, 'symlink')
@@ -112,41 +116,39 @@ def create_test_repo(tmpdir_factory):
     chrdev_path = os.path.join(dir_path, 'chrdev')
     os.mknod(chrdev_path, mode=0o600 | 0o020000)
 
-    # /src/dir/blkdev
-    # blkdev_path = os.path.join(dir_path, 'blkdev')
-    # os.mknod(blkdev_path, mode=0o600 | 0o060000)
-
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
     # Rename dir to dir1
     os.rename(dir_path, os.path.join(source_files_dir, 'dir1'))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive3', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive3', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
     # Rename all files under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.rename(os.path.join(source_files_dir, 'dir1', file), os.path.join(source_files_dir, 'dir1', file + '1'))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive4', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive4', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
     # Delete all file under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.remove(os.path.join(source_files_dir, 'dir1', file))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive5', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive5', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
     # change permission of dir1
     os.chmod(os.path.join(source_files_dir, 'dir1'), 0o700)
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive6', source_files_dir], cwd=temp_dir, check=True)
-    # time.sleep(1)
+    subprocess.run(['borg', 'create', f'{repo_path}::test-archive6', source_files_dir], cwd=str(repo_path), check=True)
+    time.sleep(1)
 
+    # Cleanup
     def cleanup():
-        shutil.rmtree(temp_dir)
+        shutil.rmtree(repo_path)
+        shutil.rmtree(source_files_dir)
 
     atexit.register(cleanup)
 
