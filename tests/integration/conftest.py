@@ -1,6 +1,4 @@
-import atexit
 import os
-import shutil
 import subprocess
 import sys
 import time
@@ -66,17 +64,10 @@ def qapp(tmpdir_factory):
 
 @pytest.fixture(scope='function', autouse=True)
 def create_test_repo(tmpdir_factory):
-    # temp_dir = tmpdir_factory.mktemp('repo')
-    # repo_path = os.path.join(tmpdir_factory.getbasetemp(), 'repo')
-    # os.mkdir(repo_path)
     repo_path = tmpdir_factory.mktemp('repo')
+    source_files_dir = tmpdir_factory.mktemp('borg_src')
 
     subprocess.run(['borg', 'init', '--encryption=none', str(repo_path)], check=True)
-
-    # create source files dir
-    # source_files_dir = os.path.join(tmpdir_factory.getbasetemp(), 'borg_src')
-    # os.mkdir(source_files_dir)
-    source_files_dir = tmpdir_factory.mktemp('borg_src')
 
     # /src/file
     file_path = os.path.join(source_files_dir, 'file')
@@ -94,6 +85,7 @@ def create_test_repo(tmpdir_factory):
 
     # Create first archive
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=str(repo_path), check=True)
+    # Sleep 1 second to prevent timestamp issue where both archives have the same timestamp causing issue with diff
     time.sleep(1)
 
     # /src/dir/symlink
@@ -144,13 +136,6 @@ def create_test_repo(tmpdir_factory):
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive6', source_files_dir], cwd=str(repo_path), check=True)
     time.sleep(1)
-
-    # Cleanup
-    def cleanup():
-        shutil.rmtree(repo_path)
-        shutil.rmtree(source_files_dir)
-
-    atexit.register(cleanup)
 
     return repo_path, source_files_dir
 
