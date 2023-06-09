@@ -34,6 +34,7 @@ def test_repo_prune(qapp, qtbot):
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: 'Pruning old archives' in main.progressText.text(), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
