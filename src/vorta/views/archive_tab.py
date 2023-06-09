@@ -330,7 +330,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not self.repoactions_enabled:
             reason = self.tr("(borg already running)")
 
-        # toggle delete button
+        # Disable the delete and refresh buttons if no archive is selected
         if self.repoactions_enabled and len(indexes) > 0:
             self.bDelete.setEnabled(True)
             self.bRefreshArchive.setEnabled(True)
@@ -355,7 +355,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if self.repoactions_enabled and len(indexes) == 1:
             # Enable archive actions
-            self.fArchiveActions.setEnabled(True)
+            for widget in [self.bMountArchive, self.bExtract, self.bRename]:
+                widget.setEnabled(True)
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
@@ -367,18 +368,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             reason = reason or self.tr("(Select exactly one archive)")
 
             # too few or too many selected.
-            self.bMountArchive.setEnabled(False)
-            self.bExtract.setEnabled(False)
-            self.bRename.setEnabled(False)
-
-            for index in range(layout.count()):
-                widget = layout.itemAt(index).widget()
+            for widget in [self.bMountArchive, self.bExtract, self.bRename]:
                 tooltip = widget.toolTip()
-
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
-
-                if widget != self.bRefreshArchive:
-                    widget.setToolTip(tooltip + " " + reason)
+                widget.setToolTip(tooltip + " " + reason)
+                widget.setEnabled(False)
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
