@@ -60,7 +60,13 @@ lint:
 	pre-commit run --all-files --show-diff-on-failure
 
 test:
-	pytest --cov=vorta
+	nox -- --cov=vorta
+
+test-unit:
+	nox -- tests/unit
+
+test-integration:
+	nox -- tests/integration
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
