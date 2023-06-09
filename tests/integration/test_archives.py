@@ -8,8 +8,13 @@ import vorta.views.archive_tab
 from PyQt6 import QtCore
 from vorta.store.models import ArchiveModel
 
+"""
+This file contains tests for the Archive tab to test the various archive related borg commands.
+"""
+
 
 def test_repo_list(qapp, qtbot):
+    """Test that the archives are created and repo list is populated correctly"""
     main = qapp.main_window
     tab = main.archiveTab
 
@@ -26,6 +31,7 @@ def test_repo_list(qapp, qtbot):
 
 
 def test_repo_prune(qapp, qtbot):
+    """Test for archive pruning"""
     main = qapp.main_window
     tab = main.archiveTab
 
@@ -42,6 +48,7 @@ def test_repo_prune(qapp, qtbot):
     not vorta.utils.borg_compat.check('COMPACT_SUBCOMMAND'), reason="Borg version does not support compact"
 )
 def test_repo_compact(qapp, qtbot):
+    """Test for archive compaction"""
     main = qapp.main_window
     tab = main.archiveTab
 
@@ -57,6 +64,7 @@ def test_repo_compact(qapp, qtbot):
 
 
 def test_check(qapp, qtbot):
+    """Test for archive consistency check"""
     main = qapp.main_window
     tab = main.archiveTab
     main.show()
@@ -75,6 +83,8 @@ def test_check(qapp, qtbot):
 
 
 def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
+    """Test for archive mounting and unmounting"""
+
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', str(tmpdir))]
@@ -107,6 +117,7 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
 
 def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
+    """Test for archive extraction"""
     main = qapp.main_window
     tab = main.archiveTab
 
@@ -131,6 +142,7 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
 
 def test_archive_delete(qapp, qtbot, mocker):
+    """Test for archive deletion"""
     main = qapp.main_window
     tab = main.archiveTab
 
@@ -151,6 +163,7 @@ def test_archive_delete(qapp, qtbot, mocker):
 
 
 def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
+    """Test for archive renaming"""
     main = qapp.main_window
     tab = main.archiveTab
 
