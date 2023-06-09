@@ -321,6 +321,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # handle selection of more than 2 rows
         selectionModel: QItemSelectionModel = self.archiveTable.selectionModel()
         indexes = selectionModel.selectedRows()
+        # actions that are enabled only when a single archive is selected
+        single_archive_action_buttons = [self.bMountArchive, self.bExtract, self.bRename]
 
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
@@ -355,7 +357,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if self.repoactions_enabled and len(indexes) == 1:
             # Enable archive actions
-            for widget in [self.bMountArchive, self.bExtract, self.bRename]:
+            for widget in single_archive_action_buttons:
                 widget.setEnabled(True)
 
             for index in range(layout.count()):
@@ -368,7 +370,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             reason = reason or self.tr("(Select exactly one archive)")
 
             # too few or too many selected.
-            for widget in [self.bMountArchive, self.bExtract, self.bRename]:
+            for widget in single_archive_action_buttons:
                 tooltip = widget.toolTip()
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
                 widget.setToolTip(tooltip + " " + reason)
