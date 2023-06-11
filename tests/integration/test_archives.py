@@ -82,6 +82,7 @@ def test_check(qapp, qtbot):
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
+# TODO: Skip on borg version less than 1.2.0
 def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     """Test for archive mounting and unmounting"""
 

@@ -56,8 +56,7 @@ def create_test_repo(tmpdir_factory):
 
     # Create first archive
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=str(repo_path), check=True)
-    # Sleep 1 second to prevent timestamp issue where both archives have the same timestamp causing issue with diff
-    time.sleep(1)
+    # time.sleep(1)
 
     # /src/dir/symlink
     symlink_path = os.path.join(dir_path, 'symlink')
@@ -80,6 +79,7 @@ def create_test_repo(tmpdir_factory):
     os.mknod(chrdev_path, mode=0o600 | 0o020000)
 
     subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=str(repo_path), check=True)
+
     time.sleep(1)
 
     # Rename dir to dir1
