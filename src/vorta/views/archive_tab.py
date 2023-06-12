@@ -958,6 +958,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def toggle_compact_button_visibility(self):
         if borg_compat.check("COMPACT_SUBCOMMAND"):
-            self.compactButton.show()
+            self.compactButton.setEnabled(True)
         else:
-            self.compactButton.hide()
+            self.compactButton.setEnabled(False)
+            tooltip = self.compactButton.toolTip()
+            self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))
