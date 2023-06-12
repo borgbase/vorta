@@ -75,6 +75,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
+        self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -323,6 +324,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         indexes = selectionModel.selectedRows()
         # actions that are enabled only when a single archive is selected
         single_archive_action_buttons = [self.bMountArchive, self.bExtract, self.bRename]
+        # actions that are enabled when at least one archive is selected
+        multi_archive_action_buttons = [self.bDelete, self.bRefreshArchive]
 
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
@@ -334,14 +337,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         # Disable the delete and refresh buttons if no archive is selected
         if self.repoactions_enabled and len(indexes) > 0:
-            self.bDelete.setEnabled(True)
-            self.bRefreshArchive.setEnabled(True)
-            self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(True)
+                button.setToolTip(self.tooltip_dict.get(button, ""))
         else:
-            self.bDelete.setEnabled(False)
-            self.bRefreshArchive.setEnabled(False)
-            tooltip = self.tooltip_dict[self.bDelete]
-            self.bDelete.setToolTip(tooltip + " " + reason or self.tr("(Select minimum one archive)"))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(False)
+                button.setToolTip(self.tooltip_dict.get(button, "") + " " + self.tr("(Select minimum one archive)"))
 
         # Toggle diff button
         if self.repoactions_enabled and len(indexes) == 2:
