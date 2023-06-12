@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from vorta.config import LOG_DIR
+from vorta import config
 from vorta.i18n import translate
 from vorta.utils import borg_compat
 
@@ -30,7 +30,7 @@ class BorgCompactJob(BorgJob):
                 f"[{self.params['profile_name']}] "
                 + translate(
                     'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
-                ).format(LOG_DIR.as_uri())
+                ).format(config.LOG_DIR.as_uri())
             )
         else:
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Compaction completed.')}")

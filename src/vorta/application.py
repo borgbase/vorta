@@ -7,11 +7,11 @@ from typing import Any, Dict, List, Tuple
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 
+from vorta import config
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
-from vorta.config import LOG_DIR, PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -25,7 +25,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = TEMP_DIR / "socket"
+APP_ID = config.TEMP_DIR / "socket"
 
 
 class VortaApp(QtSingleApplication):
@@ -262,7 +262,11 @@ class VortaApp(QtSingleApplication):
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
 
-    def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
+    def bootstrap_profile(self, bootstrap_file=None):
+        # Necessary to dynamically load the variable from config during runtime
+        # Check out pull request for #1682 for context
+        bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
+
         """
         Make sure there is at least one profile when first starting Vorta.
         Will either import a profile placed in ~/.vorta-init.json
@@ -335,7 +339,7 @@ class VortaApp(QtSingleApplication):
                 msg.setIcon(QMessageBox.Icon.Warning)
                 text = translate(
                     'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
-                ).format(LOG_DIR.as_uri())
+                ).format(config.LOG_DIR.as_uri())
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
