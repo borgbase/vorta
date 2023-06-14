@@ -1,6 +1,5 @@
 import os
 import subprocess
-import time
 
 import pytest
 import vorta
@@ -55,8 +54,11 @@ def create_test_repo(tmpdir_factory):
         f.write('test')
 
     # Create first archive
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive1', source_files_dir], cwd=str(repo_path), check=True)
-    # time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T01:00:00', f'{repo_path}::test-archive1', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     # /src/dir/symlink
     symlink_path = os.path.join(dir_path, 'symlink')
@@ -70,43 +72,53 @@ def create_test_repo(tmpdir_factory):
     fifo_path = os.path.join(dir_path, 'fifo')
     os.mkfifo(fifo_path)
 
-    # /src/dir/socket
-    socket_path = os.path.join(dir_path, 'socket')
-    os.mknod(socket_path, mode=0o600 | 0o140000)
-
     # /src/dir/chrdev
     chrdev_path = os.path.join(dir_path, 'chrdev')
     os.mknod(chrdev_path, mode=0o600 | 0o020000)
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive2', source_files_dir], cwd=str(repo_path), check=True)
-
-    time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T02:00:00', f'{repo_path}::test-archive2', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     # Rename dir to dir1
     os.rename(dir_path, os.path.join(source_files_dir, 'dir1'))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive3', source_files_dir], cwd=str(repo_path), check=True)
-    time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T03:00:00', f'{repo_path}::test-archive3', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     # Rename all files under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.rename(os.path.join(source_files_dir, 'dir1', file), os.path.join(source_files_dir, 'dir1', file + '1'))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive4', source_files_dir], cwd=str(repo_path), check=True)
-    time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T04:00:00', f'{repo_path}::test-archive4', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     # Delete all file under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.remove(os.path.join(source_files_dir, 'dir1', file))
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive5', source_files_dir], cwd=str(repo_path), check=True)
-    time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T05:00:00', f'{repo_path}::test-archive5', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     # change permission of dir1
     os.chmod(os.path.join(source_files_dir, 'dir1'), 0o700)
 
-    subprocess.run(['borg', 'create', f'{repo_path}::test-archive6', source_files_dir], cwd=str(repo_path), check=True)
-    time.sleep(1)
+    subprocess.run(
+        ['borg', 'create', '--timestamp', '2023-06-14T06:00:00', f'{repo_path}::test-archive6', source_files_dir],
+        cwd=str(repo_path),
+        check=True,
+    )
 
     return repo_path, source_files_dir
 
