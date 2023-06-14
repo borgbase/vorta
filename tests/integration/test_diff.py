@@ -321,13 +321,6 @@ from vorta.views.diff_result import (
     ],
 )
 def test_archive_diff_lines(qapp, qtbot, archive_name_1, archive_name_2, expected):
-    main = qapp.main_window
-    tab = main.archiveTab
-
-    main.tabWidget.setCurrentIndex(3)
-    tab.refresh_archive_list()
-    qtbot.waitUntil(lambda: not tab.bCheck.isEnabled(), **pytest._wait_defaults)
-
     params = BorgDiffJob.prepare(vorta.store.models.BackupProfileModel.select().first(), archive_name_1, archive_name_2)
     thread = BorgDiffJob(params['cmd'], params, qapp)
 
