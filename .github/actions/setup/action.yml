@@ -47,6 +47,11 @@ runs:
       shell: bash
       run: pip install nox
 
+    - name: Install pre-commit
+      if: ${{ inputs.setup-pre-commit }}
+      shell: bash
+      run: pip install pre-commit
+
     - name: Hash python version
       if: ${{ inputs.setup-pre-commit }}
       shell: bash
