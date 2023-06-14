@@ -44,9 +44,7 @@ def test_repo_prune(qapp, qtbot):
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
-@pytest.mark.skipif(
-    not vorta.utils.borg_compat.check('COMPACT_SUBCOMMAND'), reason="Borg version does not support compact"
-)
+@pytest.mark.min_borg_version('1.2.0a1')
 def test_repo_compact(qapp, qtbot):
     """Test for archive compaction"""
     main = qapp.main_window
@@ -82,7 +80,7 @@ def test_check(qapp, qtbot):
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
-# TODO: Skip on borg version less than 1.2.0
+@pytest.mark.min_borg_version('1.2.0')
 def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     """Test for archive mounting and unmounting"""
 

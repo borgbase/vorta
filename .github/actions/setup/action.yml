@@ -43,6 +43,10 @@ runs:
     #     pip install -e .
     #     pip install -r requirements.d/dev.txt
 
+    - name: Install Nox
+      shell: bash
+      run: pip install nox
+
     - name: Hash python version
       if: ${{ inputs.setup-pre-commit }}
       shell: bash

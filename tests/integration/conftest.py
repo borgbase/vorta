@@ -6,6 +6,7 @@ import vorta
 import vorta.application
 import vorta.borg.jobs_manager
 from peewee import SqliteDatabase
+from pkg_resources import parse_version
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
@@ -189,3 +190,28 @@ def choose_file_dialog(tmpdir):
 @pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+@pytest.fixture(autouse=True)
+def min_borg_version(qapp, request):
+    if request.node.get_closest_marker('min_borg_version'):
+        borg_version = os.getenv('BORG_VERSION')
+        if not borg_version:
+            borg_version = subprocess.run(['borg', '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+            borg_version = borg_version.split(' ')[1]
+
+        parsed_borg_version = parse_version(borg_version)
+
+        if parsed_borg_version < parse_version(request.node.get_closest_marker('min_borg_version').args[0]):
+            pytest.skip(
+                'skipped due to borg version requirement for test: {}'.format(
+                    request.node.get_closest_marker('min_borg_version').args[0]
+                )
+            )
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "min_borg_version(): set minimum required borg version for a test",
+    )

@@ -22,6 +22,7 @@ import nox
 )
 def run_tests(session, borgbackup):
     # install borgbackup
+    pass
     if (borgbackup == "1.1.18"):
         session.install(f"borgbackup=={borgbackup}")
     else:
@@ -43,4 +44,6 @@ def run_tests(session, borgbackup):
     assert python_version == borgbackup
 
     # run tests
-    session.run("pytest", *session.posargs)
+    # session.run("pytest", *session.posargs)
+    # pass borgbackup version as environment variable
+    session.run("pytest", *session.posargs, env={"BORG_VERSION": borgbackup})
