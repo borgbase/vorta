@@ -19,7 +19,6 @@ from vorta.utils import (
     borg_compat,
     get_asset,
     get_network_status_monitor,
-    is_system_tray_available,
 )
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
@@ -292,27 +291,26 @@ class MainWindow(MainWindowBase, MainWindowUI):
             SettingsModel.key == 'previous_window_height'
         ).execute()
 
-        if not is_system_tray_available():
-            if SettingsModel.get(key="enable_background_question").value:
-                msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-                msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-                msg.setText(self.tr("Should Vorta continue to run in the background?"))
-                msg.button(QMessageBox.StandardButton.Yes).clicked.connect(
-                    lambda: self.miscTab.save_setting("disable_background_state", True)
+        if SettingsModel.get(key="enable_background_question").value:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setText(self.tr("Should Vorta continue to run in the background?"))
+            msg.button(QMessageBox.StandardButton.Yes).clicked.connect(
+                lambda: self.miscTab.save_setting("disable_background_state", True)
+            )
+            msg.button(QMessageBox.StandardButton.No).clicked.connect(
+                lambda: (
+                    self.miscTab.save_setting("disable_background_state", False),
+                    self.app.quit(),
                 )
-                msg.button(QMessageBox.StandardButton.No).clicked.connect(
-                    lambda: (
-                        self.miscTab.save_setting("disable_background_state", False),
-                        self.app.quit(),
-                    )
-                )
-                msg.setWindowTitle(self.tr("Quit"))
-                dont_show_box = QCheckBox(self.tr("Don't show this again"))
-                dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))
-                dont_show_box.setTristate(False)
-                msg.setCheckBox(dont_show_box)
-                msg.exec()
-            elif not SettingsModel.get(key="disable_background_state").value:
-                self.app.quit()
+            )
+            msg.setWindowTitle(self.tr("Quit"))
+            dont_show_box = QCheckBox(self.tr("Don't show this again"))
+            dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))
+            dont_show_box.setTristate(False)
+            msg.setCheckBox(dont_show_box)
+            msg.exec()
+        elif not SettingsModel.get(key="disable_background_state").value:
+            self.app.quit()
         event.accept()
