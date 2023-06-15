@@ -493,17 +493,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def refresh_archive_info(self):
         selected_archives = self.archiveTable.selectionModel().selectedRows()
-        profile = self.profile()
 
-        name_list = []
+        archive_names = []
         for index in selected_archives:
-            name_list.append(self.archiveTable.item(index.row(), 4).text())
-
-        archive_list = (
-            profile.repo.archives.select().where(ArchiveModel.name << name_list).order_by(ArchiveModel.time.desc())
-        )
-
-        archive_names = [archive.name for archive in archive_list]
+            archive_names.append(self.archiveTable.item(index.row(), 4).text())
 
         for archive_name in archive_names:
             if archive_name is not None:
