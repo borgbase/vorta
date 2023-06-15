@@ -7,7 +7,7 @@ on:
     inputs:
       debug_enabled:
         type: boolean
-        description: 'Run the build with tmate debugging enabled'
+        description: "Run the build with tmate debugging enabled"
         required: false
         default: false
 
@@ -15,20 +15,16 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.11
-    - name: Install Vorta
-      run: |
-        pip install .
-        pip install -r requirements.d/dev.txt
-    - name: Test formatting with Flake8, ruff and Black
-      run: make lint
-    # - name: Run PyLint (info only)
-    #   run: pylint --rcfile=setup.cfg src --exit-zero
+      - uses: actions/checkout@v3
+      - name: Setup python, vorta and dev deps
+        uses: ./.github/actions/setup
+        with:
+          python-version: 3.11
+          pre-commit: true
 
+      - name: Test formatting with Flake8, ruff and Black
+        shell: bash
+        run: make lint
 
   test:
     timeout-minutes: 20
@@ -37,63 +33,48 @@ jobs:
       fail-fast: false
 
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v3
 
-    - name: Get pip cache dir
-      id: pip-cache
-      run: |
-        echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - name: pip cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg', 'requirements.d/**') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update && sudo apt install -y \
+            xvfb libssl-dev openssl libacl1-dev libacl1 build-essential borgbackup \
+            libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxcb-shape0 \
+            libegl1 libxcb-cursor0
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install openssl readline xz borgbackup
 
-    - name: Install system dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt update && sudo apt install -y \
-          xvfb libssl-dev openssl libacl1-dev libacl1 build-essential borgbackup \
-          libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-          libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxcb-shape0 \
-          libegl1 libxcb-cursor0
-    - name: Install system dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew install openssl readline xz borgbackup
-    - name: Install Vorta
-      run: |
-        pip install -e .
-        pip install -r requirements.d/dev.txt
+      - name: Setup python, vorta and dev deps
+        uses: ./.github/actions/setup
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
-    - name: Test with pytest (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                 -a dbus-run-session -- make test
-    - name: Test with pytest (macOS)
-      if: runner.os == 'macOS'
-      run: make test
+      - name: Test with pytest (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          xvfb-run --server-args="-screen 0 1024x768x24+32" \
+                   -a dbus-run-session -- make test
+      - name: Test with pytest (macOS)
+        if: runner.os == 'macOS'
+        run: make test
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      env:
-        OS: ${{ runner.os }}
-        python: ${{ matrix.python-version }}
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        env_vars: OS, python
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          OS: ${{ runner.os }}
+          python: ${{ matrix.python-version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          env_vars: OS, python
