@@ -28,6 +28,7 @@ class BorgCreateJob(BorgJob):
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size'],
+                    'trigger': result['params'].get('category', 'user'),
                 },
             )
             new_archive.save()

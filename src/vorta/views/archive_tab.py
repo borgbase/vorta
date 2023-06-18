@@ -280,6 +280,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
 
+                if archive.trigger:
+                    self.archiveTable.setItem(row, 5, QTableWidgetItem(archive.trigger.capitalize()))
+
             self.archiveTable.setRowCount(len(archives))
             self.archiveTable.setSortingEnabled(sorting)
             item = self.archiveTable.item(0, 0)
