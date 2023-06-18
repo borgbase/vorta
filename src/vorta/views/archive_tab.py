@@ -266,6 +266,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
+            # if no archive's name can be found in self.mount_points, then hide the mount point column
+            if not any(a.name in self.mount_points for a in archives):
+                self.archiveTable.hideColumn(3)
+            else:
+                self.archiveTable.showColumn(3)
+
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
             best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=SIZE_DECIMAL_DIGITS)
