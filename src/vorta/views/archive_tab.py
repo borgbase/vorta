@@ -10,7 +10,6 @@ from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
     QHeaderView,
-    QInputDialog,
     QLayout,
     QMenu,
     QMessageBox,
@@ -70,6 +69,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
+        self.renamed_archive_orginal_name = None
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -94,6 +94,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
+        self.archiveTable.cellChanged.connect(self.cell_changed)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
@@ -109,7 +110,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # connect archive actions
         self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
-        self.bRename.clicked.connect(self.rename_action)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
@@ -145,7 +145,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
         self.bRefreshArchive.setIcon(get_colored_icon('refresh'))
-        self.bRename.setIcon(get_colored_icon('edit'))
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
 
@@ -189,7 +188,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             )
         )
         archive_actions.append(menu.addAction(self.bExtract.icon(), self.bExtract.text(), self.extract_action))
-        archive_actions.append(menu.addAction(self.bRename.icon(), self.bRename.text(), self.rename_action))
         # deletion possible with one but also multiple archives
         menu.addAction(self.bDelete.icon(), self.bDelete.text(), self.delete_action)
 
@@ -778,6 +776,40 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if mount_point is not None:
                 QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
+        if column == 4:
+            item = self.archiveTable.item(row, column)
+            self.renamed_archive_orginal_name = item.text()
+            item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
+            self.archiveTable.editItem(item)
+
+    def cell_changed(self, row, column):
+        item = self.archiveTable.item(row, column)
+        new_name = item.text()
+        profile = self.profile()
+
+        # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
+        if new_name == self.renamed_archive_orginal_name or not self.renamed_archive_orginal_name:
+            return
+
+        if not new_name:
+            self._set_status(self.tr('Archive name cannot be blank.'))
+            return
+
+        new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
+        if new_name_exists is not None:
+            self._set_status(self.tr('An archive with this name already exists.'))
+            return
+
+        params = BorgRenameJob.prepare(profile, self.renamed_archive_orginal_name, new_name)
+        if not params['ok']:
+            self._set_status(params['message'])
+
+        job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
+        job.updated.connect(self._set_status)
+        job.result.connect(self.rename_result)
+        self._toggle_all_buttons(False)
+        self.app.jobs_manager.add_job(job)
+
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
         rows = [item.row() for item in items if item.column() == 4]
@@ -912,45 +944,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._resultwindow = window  # for testing
         window.show()
 
-    def rename_action(self):
-        profile = self.profile()
-
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            new_name, finished = QInputDialog.getText(
-                self,
-                self.tr("Change name"),
-                self.tr("New archive name:"),
-                text=archive_name,
-            )
-
-            if not finished:
-                return
-
-            if not new_name:
-                self._set_status(self.tr('Archive name cannot be blank.'))
-                return
-
-            new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
-            if new_name_exists is not None:
-                self._set_status(self.tr('An archive with this name already exists.'))
-                return
-
-            params = BorgRenameJob.prepare(profile, archive_name, new_name)
-            if not params['ok']:
-                self._set_status(params['message'])
-
-            job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self._set_status)
-            job.result.connect(self.rename_result)
-            self._toggle_all_buttons(False)
-            self.app.jobs_manager.add_job(job)
-        else:
-            self._set_status(self.tr("No archive selected"))
-
     def rename_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Archive renamed.'))
+            self.renamed_archive_orginal_name = None
             self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
