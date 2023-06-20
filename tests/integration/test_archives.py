@@ -1,3 +1,4 @@
+import sys
 from collections import namedtuple
 
 import psutil
@@ -137,7 +138,7 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
     qtbot.waitUntil(lambda: 'Restored files from archive.' in main.progressText.text(), **pytest._wait_defaults)
 
-    assert [item.basename for item in tmpdir.listdir()] == ['tmp']
+    assert [item.basename for item in tmpdir.listdir()] == ['private' if sys.platform == 'darwin' else 'tmp']
 
 
 def test_archive_delete(qapp, qtbot, mocker):
