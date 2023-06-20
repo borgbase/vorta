@@ -43,7 +43,5 @@ def run_tests(session, borgbackup):
     assert cli_version == borgbackup
     assert python_version == borgbackup
 
-    # run tests
-    # session.run("pytest", *session.posargs)
-    # pass borgbackup version as environment variable
+    session.log(f"Running tests with BorgBackup {borgbackup} and Python {python_version}")
     session.run("pytest", *session.posargs, env={"BORG_VERSION": borgbackup})

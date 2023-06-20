@@ -35,7 +35,7 @@ models = [
 ]
 
 
-@pytest.fixture
+@pytest.fixture(scope='function', autouse=True)
 def borg_version():
     borg_version = os.getenv('BORG_VERSION')
     if not borg_version:

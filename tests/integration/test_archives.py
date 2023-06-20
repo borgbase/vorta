@@ -161,7 +161,7 @@ def test_archive_delete(qapp, qtbot, mocker):
     assert tab.archiveTable.rowCount() == archivesCount - 1
 
 
-def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
+def test_archive_rename(qapp, qtbot, mocker):
     """Test for archive renaming"""
     main = qapp.main_window
     tab = main.archiveTab
