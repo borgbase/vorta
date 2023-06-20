@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 import pytest
 import vorta
@@ -18,6 +19,7 @@ from vorta.store.models import (
     SourceFileModel,
     WifiSettingModel,
 )
+from vorta.utils import borg_compat
 from vorta.views.main_window import MainWindow
 
 models = [
@@ -33,12 +35,45 @@ models = [
 ]
 
 
+@pytest.fixture
+def borg_version():
+    borg_version = os.getenv('BORG_VERSION')
+    if not borg_version:
+        borg_version = subprocess.run(['borg', '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        borg_version = borg_version.split(' ')[1]
+
+    # test window does not automatically set borg version
+    borg_compat.set_version(borg_version, borg_compat.path)
+
+    parsed_borg_version = parse_version(borg_version)
+    return borg_version, parsed_borg_version
+
+
 @pytest.fixture(scope='function', autouse=True)
-def create_test_repo(tmpdir_factory):
+def create_test_repo(tmpdir_factory, borg_version):
     repo_path = tmpdir_factory.mktemp('repo')
     source_files_dir = tmpdir_factory.mktemp('borg_src')
 
-    subprocess.run(['borg', 'init', '--encryption=none', str(repo_path)], check=True)
+    is_borg_v2 = borg_version[1] >= parse_version('2.0.0b1')
+
+    if is_borg_v2:
+        subprocess.run(['borg', '-r', str(repo_path), 'rcreate', '--encryption=none'], check=True)
+    else:
+        subprocess.run(['borg', 'init', '--encryption=none', str(repo_path)], check=True)
+
+    def create_archive(timestamp, name):
+        if is_borg_v2:
+            subprocess.run(
+                ['borg', '-r', str(repo_path), 'create', '--timestamp', timestamp, name, str(source_files_dir)],
+                cwd=str(repo_path),
+                check=True,
+            )
+        else:
+            subprocess.run(
+                ['borg', 'create', '--timestamp', timestamp, f'{repo_path}::{name}', str(source_files_dir)],
+                cwd=str(repo_path),
+                check=True,
+            )
 
     # /src/file
     file_path = os.path.join(source_files_dir, 'file')
@@ -55,11 +90,7 @@ def create_test_repo(tmpdir_factory):
         f.write('test')
 
     # Create first archive
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T01:00:00', f'{repo_path}::test-archive1', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T01:00:00', 'test-archive1')
 
     # /src/dir/symlink
     symlink_path = os.path.join(dir_path, 'symlink')
@@ -74,52 +105,33 @@ def create_test_repo(tmpdir_factory):
     os.mkfifo(fifo_path)
 
     # /src/dir/chrdev
-    chrdev_path = os.path.join(dir_path, 'chrdev')
-    os.mknod(chrdev_path, mode=0o600 | 0o020000)
+    if sys.platform.startswith('linux'):
+        chrdev_path = os.path.join(dir_path, 'chrdev')
+        os.mknod(chrdev_path, mode=0o600 | 0o020000)
 
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T02:00:00', f'{repo_path}::test-archive2', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T02:00:00', 'test-archive2')
 
     # Rename dir to dir1
     os.rename(dir_path, os.path.join(source_files_dir, 'dir1'))
 
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T03:00:00', f'{repo_path}::test-archive3', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T03:00:00', 'test-archive3')
 
     # Rename all files under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.rename(os.path.join(source_files_dir, 'dir1', file), os.path.join(source_files_dir, 'dir1', file + '1'))
 
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T04:00:00', f'{repo_path}::test-archive4', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T04:00:00', 'test-archive4')
 
     # Delete all file under dir1
     for file in os.listdir(os.path.join(source_files_dir, 'dir1')):
         os.remove(os.path.join(source_files_dir, 'dir1', file))
 
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T05:00:00', f'{repo_path}::test-archive5', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T05:00:00', 'test-archive5')
 
     # change permission of dir1
     os.chmod(os.path.join(source_files_dir, 'dir1'), 0o700)
 
-    subprocess.run(
-        ['borg', 'create', '--timestamp', '2023-06-14T06:00:00', f'{repo_path}::test-archive6', source_files_dir],
-        cwd=str(repo_path),
-        check=True,
-    )
+    create_archive('2023-06-14T06:00:00', 'test-archive6')
 
     return repo_path, source_files_dir
 
@@ -193,14 +205,9 @@ def rootdir():
 
 
 @pytest.fixture(autouse=True)
-def min_borg_version(qapp, request):
+def min_borg_version(borg_version, request):
     if request.node.get_closest_marker('min_borg_version'):
-        borg_version = os.getenv('BORG_VERSION')
-        if not borg_version:
-            borg_version = subprocess.run(['borg', '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-            borg_version = borg_version.split(' ')[1]
-
-        parsed_borg_version = parse_version(borg_version)
+        parsed_borg_version = borg_version[1]
 
         if parsed_borg_version < parse_version(request.node.get_closest_marker('min_borg_version').args[0]):
             pytest.skip(

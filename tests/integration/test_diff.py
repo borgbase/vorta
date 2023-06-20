@@ -1,7 +1,10 @@
+import sys
+
 import pytest
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
+from pkg_resources import parse_version
 from vorta.borg.diff import BorgDiffJob
 from vorta.views.diff_result import (
     ChangeType,
@@ -23,14 +26,10 @@ from vorta.views.diff_result import (
                     'data': {
                         'file_type': FileType.FILE,
                         'change_type': ChangeType.MODIFIED,
-                        # 'changed_size': 0,
-                        # 'size': 0,
-                        # 'mode_change': None,
-                        # 'owner_change': None,
-                        # 'ctime_change': None,
-                        # 'mtime_change': None,
                         'modified': None,
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
                 {
                     'subpath': 'file',
@@ -39,6 +38,8 @@ from vorta.views.diff_result import (
                         'change_type': ChangeType.MODIFIED,
                         'modified': (0, 0),
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
                 {
                     'subpath': 'chrdev',
@@ -86,6 +87,8 @@ from vorta.views.diff_result import (
                         'change_type': ChangeType.MODIFIED,
                         'modified': None,
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
                 {
                     'subpath': 'dir',
@@ -184,6 +187,8 @@ from vorta.views.diff_result import (
                         'file_type': FileType.FILE,
                         'change_type': ChangeType.MODIFIED,
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
                 {
                     'subpath': 'chrdev',
@@ -267,6 +272,8 @@ from vorta.views.diff_result import (
                         'file_type': FileType.FILE,
                         'change_type': ChangeType.MODIFIED,
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
                 {
                     'subpath': 'chrdev1',
@@ -315,12 +322,18 @@ from vorta.views.diff_result import (
                         'file_type': FileType.FILE,
                         'change_type': ChangeType.MODIFIED,
                     },
+                    'min_version': '1.2.4',
+                    'max_version': '1.2.4',
                 },
             ],
         ),
     ],
 )
-def test_archive_diff_lines(qapp, qtbot, archive_name_1, archive_name_2, expected):
+def test_archive_diff_lines(qapp, qtbot, borg_version, archive_name_1, archive_name_2, expected):
+    parsed_borg_version = borg_version[1]
+    supports_fifo = parsed_borg_version > parse_version('1.1.18')
+    supports_chrdev = sys.platform.startswith('linux')
+
     params = BorgDiffJob.prepare(vorta.store.models.BackupProfileModel.select().first(), archive_name_1, archive_name_2)
     thread = BorgDiffJob(params['cmd'], params, qapp)
 
@@ -339,15 +352,28 @@ def test_archive_diff_lines(qapp, qtbot, archive_name_1, archive_name_2, expecte
     parse_thread.start()
     qtbot.waitUntil(lambda: parse_thread.isFinished(), **pytest._wait_defaults)
 
-    assert model.rowCount() == len(expected)
+    expected = [
+        item
+        for item in expected
+        if (
+            ('min_version' not in item or parse_version(item['min_version']) <= parsed_borg_version)
+            and ('max_version' not in item or parse_version(item['max_version']) >= parsed_borg_version)
+            and (item['data']['file_type'] != FileType.FIFO or supports_fifo)
+            and (item['data']['file_type'] != FileType.CHRDEV or supports_chrdev)
+        )
+    ]
+
+    # diff versions of borg produce inconsistent ordering of diff lines so we sort the expected and model
+    expected = sorted(expected, key=lambda item: item['subpath'])
+    sorted_model = sorted(
+        [model.index(index, 0).internalPointer() for index in range(model.rowCount())],
+        key=lambda item: item.subpath,
+    )
+
+    assert len(sorted_model) == len(expected)
 
     for index, item in enumerate(expected):
-        assert model.index(index, 0).internalPointer().subpath == item['subpath']
-
-        # Checking all attributes for every line will produce very large testing output and will be difficult to debug
-        # So we will check only the attributes we are interested in
-        # TODO: Remove below line above code review
-        # assert model.index(index, 0).internalPointer().data == DiffData(**item['data'])
+        assert sorted_model[index].subpath == item['subpath']
 
         for key, value in item['data'].items():
-            assert getattr(model.index(index, 0).internalPointer().data, key) == value
+            assert getattr(sorted_model[index].data, key) == value
