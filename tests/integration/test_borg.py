@@ -23,7 +23,7 @@ def test_borg_prune(qapp, qtbot):
 # test borg info
 def test_borg_repo_info(qapp, qtbot, tmpdir):
     repo_info = {
-        'repo_url': str(Path(tmpdir).parent / 'repo'),
+        'repo_url': str(Path(tmpdir).parent / 'repo0'),
         'extra_borg_arguments': '',
         'ssh_key': '',
         'password': '',
