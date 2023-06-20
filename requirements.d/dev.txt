@@ -3,6 +3,7 @@ coverage
 flake8
 macholib
 nox
+pkg-config
 pre-commit
 pyinstaller
 pylint
