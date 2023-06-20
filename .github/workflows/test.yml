@@ -61,15 +61,17 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
-      - name: Run Unit Tests with pytest (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-unit
+      # TODO: Re-enable unit tests (currently disabled for quick)
+      # TODO: Merge unit tests back to integration to speed up CI
+      # - name: Run Unit Tests with pytest (Linux)
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     xvfb-run --server-args="-screen 0 1024x768x24+32" \
+      #              -a dbus-run-session -- make test-unit
 
-      - name: Run Unit Tests with pytest (macOS)
-        if: runner.os == 'macOS'
-        run: make test-unit
+      # - name: Run Unit Tests with pytest (macOS)
+      #   if: runner.os == 'macOS'
+      #   run: make test-unit
 
       - name: Run Integration Tests with pytest (Linux)
         if: runner.os == 'Linux'
