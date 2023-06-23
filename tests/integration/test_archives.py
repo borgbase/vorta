@@ -1,3 +1,7 @@
+"""
+This file contains tests for the Archive tab to test the various archive related borg commands.
+"""
+
 import sys
 from collections import namedtuple
 
@@ -8,10 +12,6 @@ import vorta.utils
 import vorta.views.archive_tab
 from PyQt6 import QtCore
 from vorta.store.models import ArchiveModel
-
-"""
-This file contains tests for the Archive tab to test the various archive related borg commands.
-"""
 
 
 def test_repo_list(qapp, qtbot):
