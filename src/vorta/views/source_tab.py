@@ -21,6 +21,7 @@ from vorta.utils import (
     pretty_bytes,
     sort_sizes,
 )
+from vorta.views.exclude_dialog import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')
@@ -101,7 +102,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         # Connect signals
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
-        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
+        self.bExclude.clicked.connect(self.show_exclude_dialog)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
@@ -251,10 +252,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         profile = self.profile()
-        self.excludePatternsField.textChanged.disconnect()
         self.excludeIfPresentField.textChanged.disconnect()
         self.sourceFilesWidget.setRowCount(0)  # Clear rows
-        self.excludePatternsField.clear()
         self.excludeIfPresentField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
@@ -267,9 +266,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         # Sort items as per settings
         self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
 
-        self.excludePatternsField.appendPlainText(profile.exclude_patterns)
         self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
-        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
         self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
     def update_sort_order(self, column: int, order: int):
@@ -351,9 +348,13 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
             logger.debug(f"Removed source in row {index.row()}")
 
+    def show_exclude_dialog(self):
+        window = ExcludeDialog(self.profile(), self)
+        window.show()
+
     def save_exclude_patterns(self):
         profile = self.profile()
-        profile.exclude_patterns = self.excludePatternsField.toPlainText()
+        profile.exclude_patterns = ""
         profile.save()
 
     def save_exclude_if_present(self):
