@@ -507,6 +507,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     job.result.connect(self.info_result)
                     self._toggle_all_buttons(False)
                     self.app.jobs_manager.add_job(job)
+                else:
+                    self._set_status(params['message'])
+                    return
 
     def info_result(self, result):
         self._toggle_all_buttons(True)
