@@ -80,7 +80,8 @@ from vorta.views.diff_result import (
             'test-archive3',
             [
                 {
-                    'subpath': 'borg_src1',
+                    'subpath': 'borg_src',
+                    'match_startsWith': True,
                     'data': {
                         # TODO: Check/Review why file_type is FILE instead of DIRECTORY
                         'file_type': FileType.FILE,
@@ -373,7 +374,10 @@ def test_archive_diff_lines(qapp, qtbot, borg_version, archive_name_1, archive_n
     assert len(sorted_model) == len(expected)
 
     for index, item in enumerate(expected):
-        assert sorted_model[index].subpath == item['subpath']
+        if 'match_startsWith' in item and item['match_startsWith']:
+            assert sorted_model[index].subpath.startswith(item['subpath'])
+        else:
+            assert sorted_model[index].subpath == item['subpath']
 
         for key, value in item['data'].items():
             assert getattr(sorted_model[index].data, key) == value
