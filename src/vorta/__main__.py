@@ -4,13 +4,15 @@ import sys
 
 from peewee import SqliteDatabase
 
+# Need to import config as a whole module instead of individual variables
+# because we will be overriding the modules variables
+from vorta import config
 from vorta._version import __version__
-from vorta.config import SETTINGS_DIR
 from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
-from vorta.utils import parse_args
+from vorta.utils import DEFAULT_DIR_FLAG, parse_args
 
 
 def main():
@@ -48,6 +50,7 @@ def main():
 
     want_version = getattr(args, 'version', False)
     want_background = getattr(args, 'daemonize', False)
+    want_development = getattr(args, 'development', False)
 
     if want_version:
         print(f"Vorta {__version__}")  # noqa: T201
@@ -57,11 +60,20 @@ def main():
         if os.fork():
             sys.exit()
 
+    if want_development:
+        # if we're using the default dev dir
+        if want_development is DEFAULT_DIR_FLAG:
+            config.init_dev_mode(config.default_dev_dir())
+        else:
+            # if we're not using the default dev dir and
+            # instead we're using whatever dir is passed as an argument
+            config.init_dev_mode(want_development)
+
     init_logger(background=want_background)
 
     # Init database
     sqlite_db = SqliteDatabase(
-        SETTINGS_DIR / 'settings.db',
+        config.SETTINGS_DIR / 'settings.db',
         pragmas={
             'journal_mode': 'wal',
         },
