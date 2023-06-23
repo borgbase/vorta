@@ -3,7 +3,7 @@ import subprocess
 import tempfile
 from datetime import datetime as dt
 
-from vorta.config import LOG_DIR
+from vorta import config
 from vorta.i18n import trans_late, translate
 from vorta.store.models import (
     ArchiveModel,
@@ -47,7 +47,7 @@ class BorgCreateJob(BorgJob):
                     + translate(
                         'BorgCreateJob',
                         'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                    ).format(LOG_DIR.as_uri())
+                    ).format(config.LOG_DIR.as_uri())
                 )
             else:
                 self.app.backup_log_event.emit('', {})
