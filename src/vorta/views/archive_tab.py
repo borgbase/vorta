@@ -76,6 +76,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
+        self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -959,11 +960,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def toggle_compact_button_visibility(self):
         """
         Enable or disable the compact button depending on the Borg version.
-        This function runs only once, on startup.
+        This function runs once on startup, and everytime the profile is changed.
         """
         if borg_compat.check("COMPACT_SUBCOMMAND"):
             self.compactButton.setEnabled(True)
+            self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
         else:
             self.compactButton.setEnabled(False)
-            tooltip = self.compactButton.toolTip()
+            tooltip = self.tooltip_dict[self.compactButton]
             self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))
