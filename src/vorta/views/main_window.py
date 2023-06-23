@@ -167,6 +167,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
+        self.archiveTab.toggle_compact_button_visibility()
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
