@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
     QLayout,
     QMenu,
     QMessageBox,
+    QStyledItemDelegate,
     QTableView,
     QTableWidgetItem,
     QWidget,
@@ -56,6 +57,13 @@ logger = logging.getLogger(__name__)
 SIZE_DECIMAL_DIGITS = 1
 
 
+# from https://stackoverflow.com/questions/63177587/pyqt-tableview-align-icons-to-center
+class IconDelegate(QStyledItemDelegate):
+    def initStyleOption(self, option, index):
+        super().initStyleOption(option, index)
+        option.decorationSize = option.rect.size() - QtCore.QSize(0, 10)
+
+
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
@@ -83,7 +91,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Interactive)
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
-        header.setStretchLastSection(True)
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
+
+        delegate = IconDelegate(self.archiveTable)
+        self.archiveTable.setItemDelegateForColumn(5, delegate)
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
@@ -253,6 +264,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
+            # if no archive's name can be found in self.mount_points, then hide the mount point column
+            if not any(a.name in self.mount_points for a in archives):
+                self.archiveTable.hideColumn(3)
+            else:
+                self.archiveTable.showColumn(3)
+
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
             best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=SIZE_DECIMAL_DIGITS)
@@ -277,6 +294,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.archiveTable.setItem(row, 3, item)
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
+
+                if archive.trigger == 'scheduled':
+                    item = QTableWidgetItem(get_colored_icon('clock-o'), '')
+                    item.setToolTip(self.tr('Scheduled'))
+                    self.archiveTable.setItem(row, 5, item)
+                elif archive.trigger == 'user':
+                    item = QTableWidgetItem(get_colored_icon('user'), '')
+                    item.setToolTip(self.tr('User initiated'))
+                    item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
+                    self.archiveTable.setItem(row, 5, item)
 
             self.archiveTable.setRowCount(len(archives))
             self.archiveTable.setSortingEnabled(sorting)
