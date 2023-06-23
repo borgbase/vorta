@@ -162,6 +162,13 @@
          </property>
         </widget>
        </item>
+        <item row="3" column="0">
+          <widget class="QLabel" name="label_4">
+          <property name="text">
+            <string/>
+          </property>
+          </widget>
+        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
@@ -202,29 +209,6 @@
           <string>TextLabel</string>
          </property>
         </widget>
-       </item>
-       <item row="3" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayoutSeparator">
-         <item>
-          <widget class="QFrame" name="separatorLine">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::HLine</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="lineWidth">
-            <number>2</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </item>
       </layout>
      </widget>
