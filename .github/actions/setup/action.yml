@@ -37,25 +37,22 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
+    # TODO:
     # - name: Install Vorta
     #   shell: bash
     #   run: |
     #     pip install -e .
     #     pip install -r requirements.d/dev.txt
 
-    - name: Install Nox
+    - name: Install Nox and pre-commit
       shell: bash
-      run: pip install nox
-
-    - name: Install pre-commit
-      if: ${{ inputs.setup-pre-commit }}
-      shell: bash
-      run: pip install pre-commit
+      run: pip install nox pre-commit
 
     - name: Hash python version
       if: ${{ inputs.setup-pre-commit }}
       shell: bash
       run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
+
     - name: Caching for Pre-Commit
       if: ${{ inputs.setup-pre-commit }}
       uses: actions/cache@v3
