@@ -228,6 +228,17 @@ def run_migrations(current_schema, db_connection):
             migrator.add_column(SettingsModel._meta.table_name, 'tooltip', pw.CharField(default='')),
         )
 
+    if current_schema.version < 21:
+        _apply_schema_update(
+            current_schema,
+            21,
+            migrator.add_column(
+                ArchiveModel._meta.table_name,
+                'trigger',
+                pw.CharField(null=True),
+            ),
+        )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
