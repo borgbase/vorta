@@ -59,7 +59,7 @@ def test_repo_compact(qapp, qtbot):
     assert tab.compactButton.isEnabled()
 
     qtbot.mouseClick(tab.compactButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.waitUntil(lambda: 'compaction freed about' in main.logText.text(), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: 'compaction freed about' in main.logText.text().lower(), **pytest._wait_defaults)
 
 
 def test_check(qapp, qtbot):
