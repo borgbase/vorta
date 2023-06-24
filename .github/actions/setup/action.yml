@@ -11,18 +11,17 @@ inputs:
     description: Whether pre-commit shall be setup, too
     required: false
     default: "" # == false
-
+  python-version:
+    description: The python version to install
+    required: true
+    default: "3.10"
 runs:
   using: "composite"
   steps:
-    - name: Set up Python versions
+    - name: Set up Python ${{ inputs.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: |
-            3.8
-            3.9
-            3.10
-            3.11
+        python-version: ${{ inputs.python-version }}
 
     - name: Get pip cache dir
       shell: bash
