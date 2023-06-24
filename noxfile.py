@@ -29,7 +29,6 @@ else:
 @nox.session
 @nox.parametrize("borgbackup", supported_borgbackup_versions)
 def run_tests(session, borgbackup):
-
     # install borgbackup
     if (borgbackup == "1.1.18" or sys.platform == 'darwin'):
         session.install(f"borgbackup=={borgbackup}")
@@ -45,8 +44,8 @@ def run_tests(session, borgbackup):
     cli_version = re.search(r"borg (\S+)", cli_version).group(1)
     python_version = session.run("python", "-c", "import borg; print(borg.__version__)", silent=True).strip()
 
-    session.log(f"CLI version: {cli_version}")
-    session.log(f"Python version: {python_version}")
+    session.log(f"Borg CLI version: {cli_version}")
+    session.log(f"Borg Python version: {python_version}")
 
     assert cli_version == borgbackup
     assert python_version == borgbackup
