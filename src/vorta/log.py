@@ -9,7 +9,7 @@ Set up logging to user log dir. Uses the platform's default location:
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-from .config import LOG_DIR
+from vorta import config
 
 logger = logging.getLogger()
 
@@ -23,7 +23,7 @@ def init_logger(background=False):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # create handlers
-    fh = TimedRotatingFileHandler(LOG_DIR / 'vorta.log', when='d', interval=1, backupCount=5)
+    fh = TimedRotatingFileHandler(config.LOG_DIR / 'vorta.log', when='d', interval=1, backupCount=5)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
