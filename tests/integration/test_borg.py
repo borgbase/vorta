@@ -1,3 +1,7 @@
+"""
+This file contains tests that directly call borg commands and the ouput without UI.
+"""
+
 from pathlib import Path
 
 import pytest

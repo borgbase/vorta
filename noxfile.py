@@ -1,25 +1,24 @@
+import platform
 import re
 
 import nox
 
+system_python_version = platform.python_version_tuple()
+system_python_version = tuple(int(part) for part in system_python_version)
+
+supported_borgbackup_versions = [
+    borgbackup
+    for borgbackup in ("1.1.18", "1.2.2", "1.2.4", "2.0.0b5")
+    # Python version requirements for borgbackup versions
+    if (borgbackup == "1.1.18" and system_python_version >= (3, 5, 0))
+    or (borgbackup == "1.2.2" and system_python_version >= (3, 8, 0))
+    or (borgbackup == "1.2.4" and system_python_version >= (3, 8, 0))
+    or (borgbackup == "2.0.0b5" and system_python_version >= (3, 9, 0))
+]
+
 
 @nox.session
-# @nox.parametrize("borgbackup", ["1.1.18", "1.2.2", "1.2.3", "1.2.4", "2.0.0b5"])
-@nox.parametrize(
-    "python, borgbackup",
-    [
-        (python, borgbackup)
-        # All supported Python and BorgBackup versions
-        for python in ("3.8", "3.9", "3.10", "3.11")
-        for borgbackup in ("1.1.18", "1.2.2", "1.2.4", "2.0.0b5")
-
-        # Python version requirements for borgbackup versions
-        if (borgbackup == "1.1.18" and python >= "3.5")
-        or (borgbackup == "1.2.2" and python >= "3.8")
-        or (borgbackup == "1.2.4" and python >= "3.8")
-        or (borgbackup == "2.0.0b5" and python >= "3.9")
-    ]
-)
+@nox.parametrize("borgbackup", supported_borgbackup_versions)
 def run_tests(session, borgbackup):
     # install borgbackup
     if (borgbackup == "1.1.18"):

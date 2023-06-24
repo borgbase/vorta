@@ -19,7 +19,7 @@ jobs:
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
-          # python-version: 3.11
+          python-version: 3.11
           pre-commit: true
 
       - name: Test formatting with Flake8, ruff and Black
@@ -50,9 +50,10 @@ jobs:
 
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
+        env:
+          PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
         run: |
-          brew install openssl readline xz borgbackup \
-          && echo "PKG_CONFIG_PATH=/usr/local/opt/openssl@3/lib/pkgconfig" >> $GITHUB_ENV
+          brew install openssl readline xz borgbackup
 
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
@@ -67,12 +68,12 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-integration
+                   -a dbus-run-session -- make test
 
       - name: Run Integration Tests with pytest (macOS)
         if: runner.os == 'macOS'
         # TODO: Change integration to all tests
-        run: make test-integration
+        run: echo $PKG_CONFIG_PATH && make test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

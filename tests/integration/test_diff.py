@@ -1,3 +1,7 @@
+"""
+These tests compare the output of the diff command with the expected output.
+"""
+
 import sys
 
 import pytest

@@ -18,14 +18,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Python versions
+    - name: Set up Python ${{ inputs.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: |
-            3.8
-            3.9
-            3.10
-            3.11
+        python-version: ${{ inputs.python-version }}
 
     - name: Get pip cache dir
       shell: bash
@@ -39,13 +35,6 @@ runs:
         key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg', 'requirements.d/**') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-
-    # TODO:
-    # - name: Install Vorta
-    #   shell: bash
-    #   run: |
-    #     pip install -e .
-    #     pip install -r requirements.d/dev.txt
 
     - name: Install Nox and pre-commit
       shell: bash
