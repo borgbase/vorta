@@ -1,3 +1,7 @@
+"""
+Test initialization of new repositories and adding existing ones.
+"""
+
 import os
 from pathlib import PurePath
 
@@ -12,6 +16,7 @@ LONG_PASSWORD = 'long-password-long'
 
 
 def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
+    """Test initializing a new repository"""
     main = qapp.main_window
     main.show()
     main.repoTab.new_repo()
@@ -46,6 +51,7 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
 
 def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
+    """Test adding an existing repository"""
     main = qapp.main_window
     main.show()
     tab = main.repoTab

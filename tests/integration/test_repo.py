@@ -1,9 +1,14 @@
+"""
+Test backup creation
+"""
+
 import pytest
 from PyQt6 import QtCore
 from vorta.store.models import ArchiveModel, EventLogModel
 
 
 def test_create(qapp, qtbot):
+    """Test for manual archive creation"""
     main = qapp.main_window
     main.show()
     main.archiveTab.refresh_archive_list()

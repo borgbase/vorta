@@ -335,6 +335,7 @@ from vorta.views.diff_result import (
     ],
 )
 def test_archive_diff_lines(qapp, qtbot, borg_version, archive_name_1, archive_name_2, expected):
+    """Test that the diff lines are parsed correctly for supported borg versions"""
     parsed_borg_version = borg_version[1]
     supports_fifo = parsed_borg_version > parse_version('1.1.18')
     supports_chrdev = sys.platform.startswith('linux')

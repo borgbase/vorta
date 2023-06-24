@@ -1,5 +1,5 @@
 """
-This file contains tests that directly call borg commands and the ouput without UI.
+This file contains tests that directly call borg commands and verify the exit code.
 """
 
 from pathlib import Path
@@ -13,6 +13,7 @@ from vorta.borg.prune import BorgPruneJob
 
 
 def test_borg_prune(qapp, qtbot):
+    """This test runs borg prune on a test repo directly without UI"""
     params = BorgPruneJob.prepare(vorta.store.models.BackupProfileModel.select().first())
     thread = BorgPruneJob(params['cmd'], params, qapp)
 
@@ -25,6 +26,7 @@ def test_borg_prune(qapp, qtbot):
 
 # test borg info
 def test_borg_repo_info(qapp, qtbot, tmpdir):
+    """This test runs borg info on a test repo directly without UI"""
     repo_info = {
         'repo_url': str(Path(tmpdir).parent / 'repo0'),
         'extra_borg_arguments': '',
@@ -43,6 +45,7 @@ def test_borg_repo_info(qapp, qtbot, tmpdir):
 
 
 def test_borg_archive_info(qapp, qtbot, tmpdir):
+    """Check that archive info command works"""
     main = qapp.main_window
     tab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
