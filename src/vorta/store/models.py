@@ -39,6 +39,7 @@ class RepoModel(BaseModel):
     """A single remote repo with unique URL."""
 
     url = pw.CharField(unique=True)
+    name = pw.CharField(default='')
     added_at = pw.DateTimeField(default=datetime.now)
     encryption = pw.CharField(null=True)
     unique_size = pw.IntegerField(null=True)

@@ -16,6 +16,7 @@ class BorgInitJob(BorgJob):
             999,
             FakeRepo(
                 params['repo_url'],
+                params['repo_name'],
                 999,
                 params['extra_borg_arguments'],
                 params['encryption'],
@@ -61,6 +62,7 @@ class BorgInitJob(BorgJob):
                 defaults={
                     'encryption': result['params']['encryption'],
                     'extra_borg_arguments': result['params']['extra_borg_arguments'],
+                    'name': result['params']['repo_name'],
                 },
             )
             if new_repo.encryption != 'none':
