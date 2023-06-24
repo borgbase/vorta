@@ -51,7 +51,8 @@ jobs:
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install openssl readline xz borgbackup
+          brew install openssl readline xz xxhash pkg-config borgbackup \
+          && brew install --cask macfuse
 
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
