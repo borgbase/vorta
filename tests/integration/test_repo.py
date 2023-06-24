@@ -10,7 +10,6 @@ from vorta.store.models import ArchiveModel, EventLogModel
 def test_create(qapp, qtbot):
     """Test for manual archive creation"""
     main = qapp.main_window
-    main.show()
     main.archiveTab.refresh_archive_list()
     qtbot.waitUntil(lambda: main.archiveTab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
 

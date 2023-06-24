@@ -18,7 +18,6 @@ LONG_PASSWORD = 'long-password-long'
 def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     """Test initializing a new repository"""
     main = qapp.main_window
-    main.show()
     main.repoTab.new_repo()
     add_repo_window = main.repoTab._window
 
@@ -53,7 +52,6 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
     """Test adding an existing repository"""
     main = qapp.main_window
-    main.show()
     tab = main.repoTab
 
     main.tabWidget.setCurrentIndex(0)

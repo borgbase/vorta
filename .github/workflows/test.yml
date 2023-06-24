@@ -27,7 +27,7 @@ jobs:
         run: make lint
 
   test:
-    timeout-minutes: 60
+    timeout-minutes: 20
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

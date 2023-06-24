@@ -66,7 +66,6 @@ def test_check(qapp, qtbot):
     """Test for archive consistency check"""
     main = qapp.main_window
     tab = main.archiveTab
-    main.show()
 
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
@@ -95,7 +94,6 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
     main = qapp.main_window
     tab = main.archiveTab
-    main.show()
 
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
