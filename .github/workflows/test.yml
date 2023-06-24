@@ -36,6 +36,9 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest]
         borg-version: ["1.1.18", "1.2.2", "1.2.4", "2.0.0b5"]
+        exclude:
+          - borg-version: "2.0.0b5"
+            python-version: "3.8"
 
     steps:
       - uses: actions/checkout@v3
@@ -54,24 +57,6 @@ jobs:
         run: |
           brew install openssl readline xz xxhash pkg-config
 
-
-      - name: Install borgbackup (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          borg_version="${{ matrix.borg-version }}"
-          pip install borgbackup
-
-      - name: Install borgbackup (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          borg_version="${{ matrix.borg-version }}"
-          if [[ "$borg_version" == "1.1.18" ]]; then
-            pip install borgbackup
-          else
-            pip install borgbackup[pyfuse3]
-          fi
-
-
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
@@ -84,7 +69,7 @@ jobs:
       - name: Run Integration Tests with pytest (Linux)
         if: runner.os == 'Linux'
         env:
-          borg_version: ${{ matrix.borg-version }}
+          BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
                    -a dbus-run-session -- make test
@@ -92,7 +77,7 @@ jobs:
       - name: Run Integration Tests with pytest (macOS)
         if: runner.os == 'macOS'
         env:
-          borg_version: ${{ matrix.borg-version }}
+          BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
         run: echo $PKG_CONFIG_PATH && make test
 
