@@ -29,6 +29,7 @@ def test_borg_repo_info(qapp, qtbot, tmpdir):
     """This test runs borg info on a test repo directly without UI"""
     repo_info = {
         'repo_url': str(Path(tmpdir).parent / 'repo0'),
+        'repo_name': 'repo0',
         'extra_borg_arguments': '',
         'ssh_key': '',
         'password': '',
