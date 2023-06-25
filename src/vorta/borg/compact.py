@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
-from vorta.config import LOG_DIR
-from vorta.i18n import trans_late, translate
+from vorta import config
+from vorta.i18n import translate
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
@@ -30,7 +30,7 @@ class BorgCompactJob(BorgJob):
                 f"[{self.params['profile_name']}] "
                 + translate(
                     'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
-                ).format(LOG_DIR.as_uri())
+                ).format(config.LOG_DIR.as_uri())
             )
         else:
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Compaction completed.')}")
@@ -44,9 +44,7 @@ class BorgCompactJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         if not borg_compat.check('COMPACT_SUBCOMMAND'):
-            ret['ok'] = False
-            ret['message'] = trans_late('messages', 'This feature needs Borg 1.2.0 or higher.')
-            return ret
+            raise Exception('The compact action needs Borg >= 1.2.0')
 
         cmd = ['borg', '--info', '--log-json', 'compact', '--progress']
         if borg_compat.check('V2'):

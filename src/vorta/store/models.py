@@ -132,6 +132,7 @@ class ArchiveModel(BaseModel):
     time = pw.DateTimeField()
     duration = pw.FloatField(null=True)
     size = pw.IntegerField(null=True)
+    trigger = pw.CharField(null=True)
 
     def formatted_time(self):
         return
