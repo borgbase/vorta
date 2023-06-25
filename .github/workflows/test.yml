@@ -36,10 +36,6 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest]
         borg-version: ["1.1.18", "1.2.2", "1.2.4", "2.0.0b5"]
-        test-type: ["integration"]
-        include:
-          - borg-version: "1.2.4"
-            test-type: "unit"
         exclude:
           - borg-version: "2.0.0b5"
             python-version: "3.8"
@@ -47,19 +43,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt update && sudo apt install -y \
-            xvfb libssl-dev openssl libacl1-dev libacl1 fuse3 build-essential \
-            libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-            libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxcb-shape0 \
-            libegl1 libxcb-cursor0 libfuse-dev libsqlite3-dev libfuse3-dev pkg-config python3-pkgconfig libxxhash-dev
-
-      - name: Install system dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install openssl readline xz xxhash pkg-config
+      - name: Install system dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          os: ${{ runner.os }}
 
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
@@ -70,23 +57,8 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
-      - name: Run Unit Tests with pytest (Linux)
-        if: ${{ runner.os == 'Linux' && matrix.test-type == 'unit' }}
-        env:
-          BORG_VERSION: ${{ matrix.borg-version }}
-        run: |
-          xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-unit
-
-      - name: Run Unit Tests with pytest (macOS)
-        if: ${{ runner.os == 'macOS' && matrix.test-type == 'unit' }}
-        env:
-          BORG_VERSION: ${{ matrix.borg-version }}
-          PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
-        run: echo $PKG_CONFIG_PATH && make test-unit
-
       - name: Run Integration Tests with pytest (Linux)
-        if: ${{ runner.os == 'Linux' && matrix.test-type == 'integration' }}
+        if: runner.os == 'Linux'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
@@ -94,7 +66,7 @@ jobs:
                    -a dbus-run-session -- make test-integration
 
       - name: Run Integration Tests with pytest (macOS)
-        if: ${{ runner.os == 'macOS' && matrix.test-type == 'integration' }}
+        if: runner.os == 'macOS'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig

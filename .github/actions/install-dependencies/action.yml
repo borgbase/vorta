@@ -1,0 +1,24 @@
+name: Install Dependencies
+description: Installs system dependencies
+
+inputs:
+  os:
+    description: Supports Linux and macOS
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install system dependencies (Linux)
+      if: inputs.os == 'Linux'
+      run: |
+        sudo apt update && sudo apt install -y \
+          xvfb libssl-dev openssl libacl1-dev libacl1 build-essential borgbackup \
+          libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxcb-shape0 \
+          libegl1 libxcb-cursor0
+
+    - name: Install system dependencies (macOS)
+      if: inputs.os == 'macOS'
+      run: |
+        brew install openssl readline xz borgbackup
