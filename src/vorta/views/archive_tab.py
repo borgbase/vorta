@@ -70,6 +70,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
+        self.remaining_refresh_archives = (
+            0  # number of archives that are left to refresh before action buttons are enabled again
+        )
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -287,7 +290,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.scrollToItem(item)
 
             self.archiveTable.selectionModel().clearSelection()
-            self._toggle_all_buttons(enabled=True)
+            if self.remaining_refresh_archives == 0:
+                self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
@@ -498,6 +502,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         for index in selected_archives:
             archive_names.append(self.archiveTable.item(index.row(), 4).text())
 
+        self.remaining_refresh_archives = len(archive_names)  # number of archives to refresh
+        self._toggle_all_buttons(False)
         for archive_name in archive_names:
             if archive_name is not None:
                 params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
@@ -505,16 +511,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
                     job.updated.connect(self._set_status)
                     job.result.connect(self.info_result)
-                    self._toggle_all_buttons(False)
                     self.app.jobs_manager.add_job(job)
                 else:
                     self._set_status(params['message'])
                     return
 
     def info_result(self, result):
-        self._toggle_all_buttons(True)
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Refreshed archive.'))
+        self.remaining_refresh_archives -= 1
+        if result['returncode'] == 0 and self.remaining_refresh_archives == 0:
+            self._toggle_all_buttons(True)
+            self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):

@@ -274,7 +274,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
 
-        if not self.app.jobs_manager.is_worker_running():
+        if not self.app.jobs_manager.is_worker_running() and self.archiveTab.remaining_refresh_archives == 0:
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
 
