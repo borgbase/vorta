@@ -66,7 +66,6 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
 
     main.tabWidget.setCurrentIndex(0)
     current_repo_path = vorta.store.models.RepoModel.select().first().url
-    current_repo_name = vorta.store.models.RepoModel.select().first().name
 
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
     qtbot.mouseClick(main.repoTab.repoRemoveToolbutton, Qt.MouseButton.LeftButton)
@@ -96,4 +95,4 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
     # check that repo was added
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert vorta.store.models.RepoModel.select().first().url == str(current_repo_path)
-    assert vorta.store.models.RepoModel.select().first().name == current_repo_name
+    assert vorta.store.models.RepoModel.select().first().name == TEST_REPO_NAME
