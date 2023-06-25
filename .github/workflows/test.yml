@@ -36,6 +36,9 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest]
         borg-version: ["1.1.18", "1.2.2", "1.2.4", "2.0.0b5"]
+        include:
+          - test-type: "unit"
+            borg-version: "1.2.4"
         exclude:
           - borg-version: "2.0.0b5"
             python-version: "3.8"
@@ -66,20 +69,35 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
-      - name: Run Integration Tests with pytest (Linux)
-        if: runner.os == 'Linux'
+      - name: Run Unit Tests with pytest (Linux)
+        if: ${{ runner.os == 'Linux' && matrix.test-type == 'unit' }}
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test
+                   -a dbus-run-session -- make test-unit
 
-      - name: Run Integration Tests with pytest (macOS)
-        if: runner.os == 'macOS'
+      - name: Run Unit Tests with pytest (macOS)
+        if: ${{ runner.os == 'macOS' && matrix.test-type == 'unit' }}
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
-        run: echo $PKG_CONFIG_PATH && make test
+        run: echo $PKG_CONFIG_PATH && make test-unit
+
+      - name: Run Integration Tests with pytest (Linux)
+        if: ${{ runner.os == 'Linux' && matrix.test-type != 'unit' }}
+        env:
+          BORG_VERSION: ${{ matrix.borg-version }}
+        run: |
+          xvfb-run --server-args="-screen 0 1024x768x24+32" \
+                   -a dbus-run-session -- make test-integration
+
+      - name: Run Integration Tests with pytest (macOS)
+        if: ${{ runner.os == 'macOS' && matrix.test-type != 'unit' }}
+        env:
+          BORG_VERSION: ${{ matrix.borg-version }}
+          PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
+        run: echo $PKG_CONFIG_PATH && make test-integration
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
