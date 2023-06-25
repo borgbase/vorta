@@ -70,35 +70,20 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
-      - name: Run Unit Tests with pytest (Linux)
-        if: runner.os == 'Linux'
-        env:
-          BORG_VERSION: ${{ matrix.borg-version }}
-        run: |
-          xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-unit
-
-      - name: Run Unit Tests with pytest (macOS)
-        if: runner.os == 'macOS'
-        env:
-          BORG_VERSION: ${{ matrix.borg-version }}
-          PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
-        run: echo $PKG_CONFIG_PATH && make test-unit
-
       - name: Run Integration Tests with pytest (Linux)
         if: runner.os == 'Linux'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-integration
+                   -a dbus-run-session -- make test
 
       - name: Run Integration Tests with pytest (macOS)
         if: runner.os == 'macOS'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
-        run: echo $PKG_CONFIG_PATH && make test-integration
+        run: echo $PKG_CONFIG_PATH && make test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
