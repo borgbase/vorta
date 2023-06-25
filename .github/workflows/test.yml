@@ -36,9 +36,10 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest]
         borg-version: ["1.1.18", "1.2.2", "1.2.4", "2.0.0b5"]
+        test-type: ["integration"]
         include:
-          - test-type: "unit"
-            borg-version: "1.2.4"
+          - borg-version: "1.2.4"
+            test-type: "unit"
         exclude:
           - borg-version: "2.0.0b5"
             python-version: "3.8"
@@ -70,7 +71,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
 
       - name: Run Unit Tests with pytest (Linux)
-        if: ${{ runner.os == 'Linux' && matrix.test-type == 'unit' }}
+        if: runner.os == 'Linux'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
@@ -78,14 +79,14 @@ jobs:
                    -a dbus-run-session -- make test-unit
 
       - name: Run Unit Tests with pytest (macOS)
-        if: ${{ runner.os == 'macOS' && matrix.test-type == 'unit' }}
+        if: runner.os == 'macOS'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
         run: echo $PKG_CONFIG_PATH && make test-unit
 
       - name: Run Integration Tests with pytest (Linux)
-        if: ${{ runner.os == 'Linux' && matrix.test-type != 'unit' }}
+        if: runner.os == 'Linux'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
@@ -93,7 +94,7 @@ jobs:
                    -a dbus-run-session -- make test-integration
 
       - name: Run Integration Tests with pytest (macOS)
-        if: ${{ runner.os == 'macOS' && matrix.test-type != 'unit' }}
+        if: runner.os == 'macOS'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
