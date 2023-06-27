@@ -12,6 +12,7 @@ from .models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    ExclusionModel,
     RepoModel,
     RepoPassword,
     SchemaVersion,
@@ -52,6 +53,7 @@ def init_db(con=None):
             WifiSettingModel,
             EventLogModel,
             SchemaVersion,
+            ExclusionModel,
         ]
     )
 

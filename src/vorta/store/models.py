@@ -108,6 +108,22 @@ class BackupProfileModel(BaseModel):
         database = DB
 
 
+class ExclusionModel(BaseModel):
+    """
+    If this is a user created exclusion, the name will be the same as the pattern added. For exclusions added from
+    presets, the name will be the same as the preset name.
+    """
+
+    profile = pw.ForeignKeyField(BackupProfileModel, backref='exclusions')
+    name = pw.CharField(unique=True)
+    enabled = pw.BooleanField(default=True)
+    source = pw.CharField(default='user')
+    date_added = pw.DateTimeField(default=datetime.now)
+
+    class Meta:
+        database = DB
+
+
 class SourceFileModel(BaseModel):
     """A folder to be backed up, related to a Backup Configuration."""
 
