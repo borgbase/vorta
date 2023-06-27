@@ -121,6 +121,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # connect archive actions
         self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
+        self.bRename.clicked.connect(self.cell_double_clicked)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
@@ -156,6 +157,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.toolBox.setItemIcon(0, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(1, get_colored_icon('cut'))
         self.bRefreshArchive.setIcon(get_colored_icon('refresh'))
+        self.bRename.setIcon(get_colored_icon('edit'))
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
 
@@ -199,6 +201,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             )
         )
         archive_actions.append(menu.addAction(self.bExtract.icon(), self.bExtract.text(), self.extract_action))
+        archive_actions.append(menu.addAction(self.bRename.icon(), self.bRename.text(), self.cell_double_clicked))
         # deletion possible with one but also multiple archives
         menu.addAction(self.bDelete.icon(), self.bDelete.text(), self.delete_action)
 
@@ -792,7 +795,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Finished extraction."""
         self._toggle_all_buttons(True)
 
-    def cell_double_clicked(self, row, column):
+    def cell_double_clicked(self, row=None, column=None):
+        if not row or not column:
+            row = self.archiveTable.currentRow()
+            column = self.archiveTable.currentColumn()
+
         if column == 3:
             archive_name = self.selected_archive_name()
             if not archive_name:
