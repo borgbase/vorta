@@ -33,6 +33,7 @@ def run_tests(session, borgbackup):
         session.install(f"borgbackup=={borgbackup}")
     elif (borgbackup == "1.1.18"):
         # borgbackup 1.1.18 doesn't support pyfuse3
+        session.install("llfuse")
         session.install(f"borgbackup[llfuse]=={borgbackup}")
     else:
         session.install(f"borgbackup[pyfuse3]=={borgbackup}")
