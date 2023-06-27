@@ -103,9 +103,6 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     qtbot.waitUntil(lambda: tab.bMountRepo.isEnabled(), **pytest._wait_defaults)
 
     qtbot.mouseClick(tab.bMountArchive, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.wait(2000)
-    if not tab.mountErrors.text().startswith('Mounted'):
-        raise Exception(tab.mountErrors.text())
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
     tab.bmountarchive_clicked()
