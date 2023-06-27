@@ -103,7 +103,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
         self.bExclude.clicked.connect(self.show_exclude_dialog)
-        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Connect to palette change
@@ -252,9 +251,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         profile = self.profile()
-        self.excludeIfPresentField.textChanged.disconnect()
         self.sourceFilesWidget.setRowCount(0)  # Clear rows
-        self.excludeIfPresentField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
@@ -265,9 +262,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         # Sort items as per settings
         self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
-
-        self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
-        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
 
     def update_sort_order(self, column: int, order: int):
         """Save selected sort by column and order to settings"""
@@ -355,11 +349,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def save_exclude_patterns(self):
         profile = self.profile()
         profile.exclude_patterns = ""
-        profile.save()
-
-    def save_exclude_if_present(self):
-        profile = self.profile()
-        profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
         profile.save()
 
     def paste_text(self):
