@@ -80,7 +80,7 @@ def test_check(qapp, qtbot):
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
-@pytest.mark.min_borg_version('1.2.0')
+# @pytest.mark.min_borg_version('1.2.0')
 @pytest.mark.skipif(sys.platform == 'darwin', reason="Macos fuse support is uncertain")
 def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     """Test for archive mounting and unmounting"""

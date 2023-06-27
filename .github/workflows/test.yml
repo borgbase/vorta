@@ -42,13 +42,12 @@ jobs:
 
       - name: Install system dependencies
         uses: ./.github/actions/install-dependencies
-        with:
-          os: ${{ runner.os }}
 
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
           python-version: ${{ matrix.python-version }}
+          install-nox: true
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
@@ -97,13 +96,12 @@ jobs:
 
       - name: Install system dependencies
         uses: ./.github/actions/install-dependencies
-        with:
-          os: ${{ runner.os }}
 
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
           python-version: ${{ matrix.python-version }}
+          install-nox: true
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3

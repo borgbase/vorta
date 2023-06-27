@@ -15,6 +15,10 @@ inputs:
     description: The python version to install
     required: true
     default: "3.10"
+  install-nox:
+    description: Whether nox shall be installed
+    required: false
+    default: "" # == false
 runs:
   using: "composite"
   steps:
@@ -36,9 +40,14 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - name: Install Nox and pre-commit
+    - name: Install pre-commit
       shell: bash
-      run: pip install nox pre-commit
+      run: pip install pre-commit
+
+    - name: Install nox
+      if: ${{ inputs.install-nox }}
+      shell: bash
+      run: pip install nox
 
     - name: Hash python version
       if: ${{ inputs.setup-pre-commit }}

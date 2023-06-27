@@ -1,5 +1,4 @@
 import os
-import platform
 import re
 import sys
 
@@ -12,8 +11,7 @@ if borg_version:
     supported_borgbackup_versions = [borg_version]
 else:
     # Generate a list of borg versions compatible with system installed python version
-    system_python_version = platform.python_version_tuple()
-    system_python_version = tuple(int(part) for part in system_python_version)
+    system_python_version = tuple(sys.version_info[:3])
 
     supported_borgbackup_versions = [
         borgbackup
@@ -30,8 +28,12 @@ else:
 @nox.parametrize("borgbackup", supported_borgbackup_versions)
 def run_tests(session, borgbackup):
     # install borgbackup
-    if (borgbackup == "1.1.18" or sys.platform == 'darwin'):
+    if (sys.platform == 'darwin'):
+        # in macOS there's currently no fuse package which works with borgbackup directly
         session.install(f"borgbackup=={borgbackup}")
+    elif (borgbackup == "1.1.18"):
+        # borgbackup 1.1.18 doesn't support pyfuse3
+        session.install(f"borgbackup[llfuse]=={borgbackup}")
     else:
         session.install(f"borgbackup[pyfuse3]=={borgbackup}")
 

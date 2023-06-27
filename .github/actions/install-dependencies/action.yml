@@ -1,16 +1,11 @@
 name: Install Dependencies
 description: Installs system dependencies
 
-inputs:
-  os:
-    description: Supports Linux and macOS
-    required: true
-
 runs:
   using: "composite"
   steps:
     - name: Install system dependencies (Linux)
-      if: inputs.os == 'Linux'
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         sudo apt update && sudo apt install -y \
@@ -21,7 +16,7 @@ runs:
             python3-pkgconfig libxxhash-dev borgbackup
 
     - name: Install system dependencies (macOS)
-      if: inputs.os == 'macOS'
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         brew install openssl readline xz xxhash pkg-config borgbackup
