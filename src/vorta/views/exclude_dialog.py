@@ -15,16 +15,13 @@ ExcludeDialogUi, ExcludeDialogBase = uic.loadUiType(uifile)
 
 class QCustomItemModel(QStandardItemModel):
     # When a user-added item in edit mode has no text, remove it from the list.
-    def __init__(self, profile, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.profile = profile
 
     def setData(self, index: QModelIndex, value, role: int = ...) -> bool:
-        if role == Qt.ItemDataRole.EditRole:
-            if value == '':
-                self.removeRow(index.row())
-                return True
-            ExclusionModel.create(name=value, source='user', profile=self.profile)
+        if role == Qt.ItemDataRole.EditRole and value == '':
+            self.removeRow(index.row())
+            return True
 
         return super().setData(index, value, role)
 
@@ -37,9 +34,9 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         # Complete set of all exclusions selected by the user, these are finally passed to Borg.
         self.exclusion_set = {e.name for e in self.profile.exclusions.select().where(ExclusionModel.enabled)}
         # Custom patterns added by the user to exclude.
-        self.user_excluded_patterns = []
+        self.user_excluded_patterns = {}
 
-        self.customExcludesModel = QCustomItemModel(self.profile)
+        self.customExcludesModel = QCustomItemModel()
         self.customExclusionsList.setModel(self.customExcludesModel)
         self.customExclusionsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.customExclusionsList.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
@@ -92,13 +89,18 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         indexes = self.customExclusionsList.selectedIndexes()
         for index in reversed(indexes):
             self.user_excluded_patterns.pop(index.data())
-            self.exclusion_set.remove(index.data())
+            try:
+                self.exclusion_set.remove(index.data())  # the pattern will be here only if it was checked.
+            except KeyError:
+                pass
             ExclusionModel.delete().where(
                 ExclusionModel.name == index.data(),
                 ExclusionModel.source == 'user',
                 ExclusionModel.profile == self.profile,
             ).execute()
             self.customExcludesModel.removeRow(index.row())
+
+        self.populate_raw_excludes()
 
     def add_pattern(self):
         '''
@@ -114,10 +116,11 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
     def item_changed(self, item):
         '''
         When the user checks or unchecks an item, add or remove it from the exclusion list.
+        When the user adds a new item, add it to the custom exclusion list and the database.
         '''
-        ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
-            ExclusionModel.name == item.text(), ExclusionModel.source == 'user', ExclusionModel.profile == self.profile
-        ).execute()
+        if item.text() not in self.user_excluded_patterns:
+            self.user_excluded_patterns[item.text()] = True
+            ExclusionModel.create(name=item.text(), source='user', profile=self.profile)
 
         if item.checkState() == Qt.CheckState.Checked:
             self.exclusion_set.add(item.text())
