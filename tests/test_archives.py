@@ -168,3 +168,27 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.rowCount() == 1
+
+
+def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    tab.archiveTable.selectRow(0)
+    new_archive_name = 'idf89d8f9d8fd98'
+    stdout, stderr = borg_json_output('rename')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 4)).center()
+    qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.keyClicks(tab.archiveTable.viewport().focusWidget(), new_archive_name)
+    qtbot.keyClick(tab.archiveTable.viewport().focusWidget(), QtCore.Qt.Key.Key_Return)
+
+    # Successful rename case
+    qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
