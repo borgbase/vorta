@@ -11,8 +11,6 @@
 <br>
 <br>
 
-🤝 **This project is part of the [Google Summer of Code](https://summerofcode.withgoogle.com/) 2023 program. Apply or learn more [here](https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas)!**
-
 Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft.
 
 ![](https://files.qmax.us/vorta/screencast-8-small.gif)
@@ -36,6 +34,7 @@ See our website for [download links and and install instructions](https://vorta.
 - To discuss everything around using, improving, packaging and translating Vorta, join the [discussion on Github](https://github.com/borgbase/vorta/discussions).
 - Report bugs by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
+- We currently have students from the Google Summer Of Code 2023 Program contributing to this project.
 
 ## License and Credits
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.

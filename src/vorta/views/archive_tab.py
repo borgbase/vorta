@@ -34,6 +34,7 @@ from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
+    borg_compat,
     choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
@@ -83,6 +84,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
+        self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -264,7 +266,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if repo_mount_points:
                 self.repo_mount_point = repo_mount_points[0]
 
-            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
+            if profile.repo.name:
+                repo_name = f"{profile.repo.name} ({profile.repo.url})"
+            else:
+                repo_name = profile.repo.url
+            self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
+
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
             # if no archive's name can be found in self.mount_points, then hide the mount point column
@@ -985,3 +992,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
+
+    def toggle_compact_button_visibility(self):
+        """
+        Enable or disable the compact button depending on the Borg version.
+        This function runs once on startup, and everytime the profile is changed.
+        """
+        if borg_compat.check("COMPACT_SUBCOMMAND"):
+            self.compactButton.setEnabled(True)
+            self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
+        else:
+            self.compactButton.setEnabled(False)
+            tooltip = self.tooltip_dict[self.compactButton]
+            self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))
