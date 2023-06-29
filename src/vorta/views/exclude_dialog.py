@@ -1,11 +1,9 @@
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, Qt
 from PyQt6.QtGui import QStandardItem, QStandardItemModel
-from PyQt6.QtWidgets import (
-    QAbstractItemView,
-)
+from PyQt6.QtWidgets import QAbstractItemView, QMessageBox
 
-from vorta.store.models import ExclusionModel
+from vorta.store.models import ExclusionModel, RawExclusionModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon
 
@@ -22,6 +20,14 @@ class QCustomItemModel(QStandardItemModel):
         if role == Qt.ItemDataRole.EditRole and value == '':
             self.removeRow(index.row())
             return True
+        if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(ExclusionModel.name == value):
+            QMessageBox.critical(
+                self.parent(),
+                'Error',
+                'This exclusion already exists.',
+            )
+            self.removeRow(index.row())
+            return False
 
         return super().setData(index, value, role)
 
@@ -31,10 +37,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         super().__init__(parent)
         self.setupUi(self)
         self.profile = profile
-        # Complete set of all exclusions selected by the user, these are finally passed to Borg.
-        self.exclusion_set = {e.name for e in self.profile.exclusions.select().where(ExclusionModel.enabled)}
-        # Custom patterns added by the user to exclude.
-        self.user_excluded_patterns = {}
 
         self.customExcludesModel = QCustomItemModel()
         self.customExclusionsList.setModel(self.customExcludesModel)
@@ -55,6 +57,9 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         '''
         )
 
+        self.exclusionsPreviewText.setReadOnly(True)
+        self.rawExclusionsSaveButton.clicked.connect(self.raw_exclusions_saved)
+
         self.customExcludesModel.itemChanged.connect(self.item_changed)
 
         self.bRemovePattern.clicked.connect(self.remove_pattern)
@@ -63,48 +68,58 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.bAddPattern.setIcon(get_colored_icon('plus'))
 
         self.populate_custom_exclusions_list()
-        self.populate_raw_excludes()
+        self.populate_raw_exclusions_text()
+        self.populate_preview_tab()
 
     def populate_custom_exclusions_list(self):
-        self.user_excluded_patterns = {
+        user_excluded_patterns = {
             e.name: e.enabled
             for e in self.profile.exclusions.select()
-            .where(ExclusionModel.source == 'user')
+            .where(ExclusionModel.source == 'custom')
             .order_by(ExclusionModel.date_added.desc())
         }
 
-        for (exclude, enabled) in self.user_excluded_patterns.items():
+        for (exclude, enabled) in user_excluded_patterns.items():
             item = QStandardItem(exclude)
             item.setCheckable(True)
             item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
             self.customExcludesModel.appendRow(item)
 
-    def populate_raw_excludes(self):
-        raw_excludes = ""
-        for exclude in self.exclusion_set:
-            raw_excludes += f"{exclude}\n"
-        self.rawExclusions.setPlainText(raw_excludes)
+    def populate_raw_exclusions_text(self):
+        raw_excludes = RawExclusionModel.get_or_none(profile=self.profile)
+        if raw_excludes:
+            self.rawExclusionsText.setPlainText(raw_excludes.patterns)
+
+    def populate_preview_tab(self):
+        excludes = ""
+        for exclude in ExclusionModel.select().where(
+            ExclusionModel.profile == self.profile,
+            ExclusionModel.enabled,
+            ExclusionModel.source == 'custom',
+        ):
+            excludes += f"{exclude.name}\n"
+
+        raw_excludes = RawExclusionModel.get_or_none(profile=self.profile)
+        if raw_excludes:
+            excludes += raw_excludes.patterns
+
+        self.exclusionsPreviewText.setPlainText(excludes)
 
     def remove_pattern(self):
         indexes = self.customExclusionsList.selectedIndexes()
         for index in reversed(indexes):
-            self.user_excluded_patterns.pop(index.data())
-            try:
-                self.exclusion_set.remove(index.data())  # the pattern will be here only if it was checked.
-            except KeyError:
-                pass
             ExclusionModel.delete().where(
                 ExclusionModel.name == index.data(),
-                ExclusionModel.source == 'user',
+                ExclusionModel.source == 'custom',
                 ExclusionModel.profile == self.profile,
             ).execute()
             self.customExcludesModel.removeRow(index.row())
 
-        self.populate_raw_excludes()
+        self.populate_preview_tab()
 
     def add_pattern(self):
         '''
-        Add an empty item to the list in editable mode
+        Add an empty item to the list in editable mode.
         '''
         item = QStandardItem('')
         item.setCheckable(True)
@@ -115,16 +130,30 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
     def item_changed(self, item):
         '''
-        When the user checks or unchecks an item, add or remove it from the exclusion list.
-        When the user adds a new item, add it to the custom exclusion list and the database.
+        When the user checks or unchecks an item, update the database.
+        When the user adds a new item, add it to the database.
         '''
-        if item.text() not in self.user_excluded_patterns:
-            self.user_excluded_patterns[item.text()] = True
-            ExclusionModel.create(name=item.text(), source='user', profile=self.profile)
+        if not ExclusionModel.get_or_none(name=item.text(), source='custom', profile=self.profile):
+            ExclusionModel.create(name=item.text(), source='custom', profile=self.profile)
 
-        if item.checkState() == Qt.CheckState.Checked:
-            self.exclusion_set.add(item.text())
+        ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
+            ExclusionModel.name == item.text(),
+            ExclusionModel.source == 'custom',
+            ExclusionModel.profile == self.profile,
+        ).execute()
+
+        self.populate_preview_tab()
+
+    def raw_exclusions_saved(self):
+        '''
+        When the user saves changes in the raw exclusions text box, add it to the database.
+        '''
+        raw_excludes = self.rawExclusionsText.toPlainText()
+        raw_excludes_model = RawExclusionModel.get_or_none(profile=self.profile)
+        if raw_excludes_model:
+            raw_excludes_model.patterns = raw_excludes
+            raw_excludes_model.save()
         else:
-            self.exclusion_set.remove(item.text())
+            RawExclusionModel.create(profile=self.profile, patterns=raw_excludes)
 
-        self.populate_raw_excludes()
+        self.populate_preview_tab()
