@@ -111,13 +111,27 @@ class BackupProfileModel(BaseModel):
 class ExclusionModel(BaseModel):
     """
     If this is a user created exclusion, the name will be the same as the pattern added. For exclusions added from
-    presets, the name will be the same as the preset name.
+    presets, the name will be the same as the preset name. Duplicate patterns are already handled by Borg.
     """
 
     profile = pw.ForeignKeyField(BackupProfileModel, backref='exclusions')
     name = pw.CharField(unique=True)
     enabled = pw.BooleanField(default=True)
     source = pw.CharField(default='user')
+    date_added = pw.DateTimeField(default=datetime.now)
+
+    class Meta:
+        database = DB
+
+
+class RawExclusionModel(BaseModel):
+    """
+    The raw exclusion patterns that a user adds to a profile will be added here as plaintext.
+    Each profile will have a single associated RawExclusionModel.
+    """
+
+    profile = pw.ForeignKeyField(BackupProfileModel, backref='raw_exclusions')
+    patterns = pw.TextField(default='')
     date_added = pw.DateTimeField(default=datetime.now)
 
     class Meta:

@@ -19,6 +19,9 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Custom</string>
@@ -53,12 +56,10 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="bAddPattern">
-          </widget>
+          <widget class="QToolButton" name="bAddPattern"/>
          </item>
          <item>
-          <widget class="QToolButton" name="bRemovePattern">
-          </widget>
+          <widget class="QToolButton" name="bRemovePattern"/>
          </item>
         </layout>
        </item>
@@ -69,7 +70,7 @@
        <string>Presets</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tab_4">
       <attribute name="title">
        <string>Raw</string>
       </attribute>
@@ -85,7 +86,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="rawExclusions"/>
+        <widget class="QPlainTextEdit" name="rawExclusionsText"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -103,13 +104,33 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="rawExclusionsSaveButton">
            <property name="text">
             <string>Save</string>
            </property>
           </widget>
          </item>
         </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Preview</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="exclusionsPreviewText"/>
        </item>
       </layout>
      </widget>
