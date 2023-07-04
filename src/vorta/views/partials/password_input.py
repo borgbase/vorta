@@ -45,8 +45,11 @@ class PasswordLineEdit(QLineEdit):
         if self._show_visibility_button:
             if self._visible:
                 self.showHideAction.setIcon(get_colored_icon("eye-slash"))
+                self.showHideAction.setText(self.tr("Hide password"))
+
             else:
                 self.showHideAction.setIcon(get_colored_icon("eye"))
+                self.showHideAction.setText(self.tr("Show password"))
 
     def toggle_visibility(self) -> None:
         """Toggle password visibility"""
