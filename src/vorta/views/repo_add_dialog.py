@@ -225,8 +225,6 @@ class ExistingRepoWindow(RepoWindow):
         super().__init__()
         self.title.setText(self.tr('Connect to existing Repository'))
 
-        self.setFixedHeight(200)
-
         self.passwordLabel = QLabel(self.tr('Password:'))
         self.passwordInput = PasswordLineEdit()
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
