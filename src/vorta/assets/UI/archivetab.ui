@@ -209,10 +209,10 @@
                  </sizepolicy>
                 </property>
                 <property name="toolTip">
-                 <string>Refresh selected archive</string>
+                 <string>Recalculate selected archive's size(s)</string>
                 </property>
                 <property name="text">
-                 <string>Refresh</string>
+                 <string>Recalculate</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>
