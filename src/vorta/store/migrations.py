@@ -239,6 +239,17 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
+    if current_schema.version < 22:
+        _apply_schema_update(
+            current_schema,
+            22,
+            migrator.add_column(
+                RepoModel._meta.table_name,
+                'name',
+                pw.CharField(default=''),
+            ),
+        )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
