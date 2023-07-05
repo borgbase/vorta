@@ -275,7 +275,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
 
-        if not self.app.jobs_manager.is_worker_running() and self.archiveTab.remaining_refresh_archives == 1:
+        if not self.app.jobs_manager.is_worker_running() and (
+            self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
+        ):  # Either the refresh is done or this is the last archive to refresh.
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
 
