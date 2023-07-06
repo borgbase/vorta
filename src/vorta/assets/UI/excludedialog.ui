@@ -69,6 +69,21 @@
       <attribute name="title">
        <string>Presets</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListView" name="exclusionPresetsList"/>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
