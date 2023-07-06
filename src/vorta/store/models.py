@@ -118,7 +118,7 @@ class ExclusionModel(BaseModel):
     profile = pw.ForeignKeyField(BackupProfileModel, backref='exclusions')
     name = pw.CharField(unique=True)
     enabled = pw.BooleanField(default=True)
-    source = pw.CharField(default='user')
+    source = pw.CharField(default='custom')  # custom or preset
     date_added = pw.DateTimeField(default=datetime.now)
 
     class Meta:
