@@ -77,7 +77,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
-        self.renamed_archive_orginal_name = None
+        self.renamed_archive_original_name = None
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -812,20 +812,25 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if column == 4:
             item = self.archiveTable.item(row, column)
-            self.renamed_archive_orginal_name = item.text()
+            self.renamed_archive_original_name = item.text()
             item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
             self.archiveTable.editItem(item)
 
     def cell_changed(self, row, column):
+        # return if this is not a name change
+        if column != 4:
+            return
+
         item = self.archiveTable.item(row, column)
         new_name = item.text()
         profile = self.profile()
 
         # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
-        if new_name == self.renamed_archive_orginal_name or not self.renamed_archive_orginal_name:
+        if new_name == self.renamed_archive_original_name or not self.renamed_archive_original_name:
             return
 
         if not new_name:
+            item.setText(self.renamed_archive_original_name)
             self._set_status(self.tr('Archive name cannot be blank.'))
             return
 
@@ -834,7 +839,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self._set_status(self.tr('An archive with this name already exists.'))
             return
 
-        params = BorgRenameJob.prepare(profile, self.renamed_archive_orginal_name, new_name)
+        params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)
         if not params['ok']:
             self._set_status(params['message'])
 
@@ -981,7 +986,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def rename_result(self, result):
         if result['returncode'] == 0:
             self._set_status(self.tr('Archive renamed.'))
-            self.renamed_archive_orginal_name = None
+            self.renamed_archive_original_name = None
             self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
