@@ -114,6 +114,8 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
+        # Search widget
+        self.searchWidget.textChanged.connect(self.sortproxy.setFilterFixedString)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)

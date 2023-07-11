@@ -115,6 +115,30 @@
      </item>
     </layout>
    </item>
+
+    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+
+      <widget class="QLineEdit" name="searchWidget">
+       <property name="toolTip">
+        <string>Search</string>
+       </property>
+       <property name="placeholderText">
+        <string>Search</string>
+       </property>
+      </widget>
+
+     </item>
+     </layout>
+    </item>
+
    <item>
     <widget class="QTreeView" name="treeView"/>
    </item>

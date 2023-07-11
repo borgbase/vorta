@@ -907,6 +907,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         """Init."""
         super().__init__(parent)
         self.folders_on_top = False
+        self.searchPattern = ""
 
     @overload
     def keepFoldersOnTop(self) -> bool:
@@ -994,3 +995,32 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         data1 = self.choose_data(left)
         data2 = self.choose_data(right)
         return data1 < data2
+
+    def setFilterFixedString(self, pattern: str):
+        """
+        Set the pattern to filter for.
+        """
+        self.searchPattern = pattern
+        self.invalidateRowsFilter()
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        self.setRecursiveFilteringEnabled(True)
+        self.setAutoAcceptChildRows(True)
+
+        if self.searchPattern == "":
+            return True
+
+        sourceModel = self.sourceModel()
+        sourceIndex = sourceModel.index(sourceRow, 0, sourceParent)
+        name = self.extract_path(sourceIndex)
+
+        if self.searchPattern.lower() in name.lower():
+            return True
+
+        # TODO: Implement path: syntax which builds full path of current item and then compares using startWith
+
+        return False
