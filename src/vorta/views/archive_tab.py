@@ -78,7 +78,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
-        self.renamed_archive_orginal_name = None
+        self.renamed_archive_original_name = None
         self.remaining_refresh_archives = (
             0  # number of archives that are left to refresh before action buttons are enabled again
         )
