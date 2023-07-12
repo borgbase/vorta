@@ -67,7 +67,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # Connect to palette change
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
 
-        self.populate_from_profile()  # needs init of ssh and compression
+        self.populate_from_profile()  # needs init of ssh and compression items
 
         # Compressed Repository size only supported in borg v1.
         if borg_compat.check('V2'):
