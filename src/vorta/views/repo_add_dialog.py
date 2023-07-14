@@ -32,6 +32,8 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         self.result = None
         self.is_remote_repo = True
 
+        self.setMinimumWidth(583)
+
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
 
