@@ -167,6 +167,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
+        self.archiveTab.toggle_compact_button_visibility()
 
     def profile_rename_action(self):
         window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
@@ -274,7 +275,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.init_repo_stats()
         self.scheduleTab.populate_logs()
 
-        if not self.app.jobs_manager.is_worker_running():
+        if not self.app.jobs_manager.is_worker_running() and (
+            self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
+        ):  # Either the refresh is done or this is the last archive to refresh.
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
 
