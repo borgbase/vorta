@@ -3,7 +3,7 @@
         "name": "Node Modules and package manager cache",
         "patterns":
         [
-            "fm:/node_modules",
+            "fm:node_modules",
             "fm:.npm"
         ],
         "tags": ["type:dev", "lang:javascript", "os:linux", "os:macos"],
@@ -17,7 +17,7 @@
             "fm:.pyc",
             "fm:.pyo",
             "fm:.env",
-            "fm:/.virtualenvs"
+            "fm:.virtualenvs"
         ],
         "tags": ["type:dev", "lang:python", "os:linux", "os:macos"],
         "author": "Divi"

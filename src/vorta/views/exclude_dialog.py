@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
 )
 
-from vorta.store.models import ExclusionModel, RawExclusionModel
+from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon
 
@@ -18,12 +18,16 @@ uifile = get_asset('UI/excludedialog.ui')
 ExcludeDialogUi, ExcludeDialogBase = uic.loadUiType(uifile)
 
 
-class QCustomItemModel(QStandardItemModel):
-    # When a user-added item in edit mode has no text, remove it from the list.
+class MandatoryInputItemModel(QStandardItemModel):
+    '''
+    A model that prevents the user from adding an empty item to the list.
+    '''
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
     def setData(self, index: QModelIndex, value, role: int = ...) -> bool:
+        # When a user-added item in edit mode has no text, remove it from the list.
         if role == Qt.ItemDataRole.EditRole and value == '':
             self.removeRow(index.row())
             return True
@@ -46,9 +50,9 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile = profile
         self.allPresets = {}
 
-        self.customExcludesModel = QCustomItemModel()
-        self.customExclusionsList.setModel(self.customExcludesModel)
-        self.customExcludesModel.itemChanged.connect(self.custom_item_changed)
+        self.customExclusionsModel = MandatoryInputItemModel()
+        self.customExclusionsList.setModel(self.customExclusionsModel)
+        self.customExclusionsModel.itemChanged.connect(self.custom_item_changed)
         self.customExclusionsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.customExclusionsList.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
         self.customExclusionsList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -105,15 +109,15 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         user_excluded_patterns = {
             e.name: e.enabled
             for e in self.profile.exclusions.select()
-            .where(ExclusionModel.source == 'custom')
-            .order_by(ExclusionModel.date_added.desc())
+            .where(ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value)
+            .order_by(ExclusionModel.name)
         }
 
         for (exclude, enabled) in user_excluded_patterns.items():
             item = QStandardItem(exclude)
             item.setCheckable(True)
             item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
-            self.customExcludesModel.appendRow(item)
+            self.customExclusionsModel.appendRow(item)
 
     def populate_presets_list(self):
         if getattr(sys, 'frozen', False):
@@ -131,46 +135,59 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
                     item.setCheckable(True)
                     preset_model = ExclusionModel.get_or_none(
                         name=preset['name'],
-                        source='preset',
+                        source=ExclusionModel.SourceFieldOptions.PRESET.value,
                         profile=self.profile,
                     )
+
                     if preset_model:
                         item.setCheckState(Qt.CheckState.Checked if preset_model.enabled else Qt.CheckState.Unchecked)
                     else:
                         item.setCheckState(Qt.CheckState.Unchecked)
-                    # add a link icon to the end of the item
+
                     self.exclusionPresetsModel.appendRow(item)
                     self.allPresets[preset['name']] = {
                         'patterns': preset['patterns'],
                         'tags': preset['tags'],
-                        'filename': preset_file,
                     }
 
     def populate_raw_exclusions_text(self):
-        raw_excludes = RawExclusionModel.get_or_none(profile=self.profile)
+        raw_excludes = self.profile.raw_exclusions
         if raw_excludes:
-            self.rawExclusionsText.setPlainText(raw_excludes.patterns)
+            self.rawExclusionsText.setPlainText(raw_excludes)
 
     def populate_preview_tab(self):
-        excludes = "# custom added rules\n"
+        excludes = ""
+
+        if (
+            ExclusionModel.select()
+            .where(
+                ExclusionModel.profile == self.profile,
+                ExclusionModel.enabled,
+                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+            )
+            .count()
+            > 0
+        ):
+            excludes = "# custom added rules\n"
+
         for exclude in ExclusionModel.select().where(
             ExclusionModel.profile == self.profile,
             ExclusionModel.enabled,
-            ExclusionModel.source == 'custom',
+            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
         ):
             excludes += f"{exclude.name}\n"
 
-        raw_excludes = RawExclusionModel.get_or_none(profile=self.profile)
+        raw_excludes = self.profile.raw_exclusions
         if raw_excludes:
             excludes += "\n# raw exclusions\n"
-            excludes += raw_excludes.patterns
+            excludes += raw_excludes
             excludes += "\n"
 
         # go through all source=='preset' exclusions, find the name in the allPresets dict, and add the patterns
         for exclude in ExclusionModel.select().where(
             ExclusionModel.profile == self.profile,
             ExclusionModel.enabled,
-            ExclusionModel.source == 'preset',
+            ExclusionModel.source == ExclusionModel.SourceFieldOptions.PRESET.value,
         ):
             excludes += f"\n#{exclude.name}\n"
             for pattern in self.allPresets[exclude.name]['patterns']:
@@ -183,10 +200,10 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         for index in reversed(indexes):
             ExclusionModel.delete().where(
                 ExclusionModel.name == index.data(),
-                ExclusionModel.source == 'custom',
+                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
                 ExclusionModel.profile == self.profile,
             ).execute()
-            self.customExcludesModel.removeRow(index.row())
+            self.customExclusionsModel.removeRow(index.row())
 
         self.populate_preview_tab()
 
@@ -206,12 +223,16 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         When the user checks or unchecks an item, update the database.
         When the user adds a new item, add it to the database.
         '''
-        if not ExclusionModel.get_or_none(name=item.text(), source='custom', profile=self.profile):
-            ExclusionModel.create(name=item.text(), source='custom', profile=self.profile)
+        if not ExclusionModel.get_or_none(
+            name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
+        ):
+            ExclusionModel.create(
+                name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
+            )
 
         ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
             ExclusionModel.name == item.text(),
-            ExclusionModel.source == 'custom',
+            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
             ExclusionModel.profile == self.profile,
         ).execute()
 
@@ -225,7 +246,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         '''
         preset = ExclusionModel.get_or_none(
             name=item.text(),
-            source='preset',
+            source=ExclusionModel.SourceFieldOptions.PRESET.value,
             profile=self.profile,
         )
         if preset:
@@ -234,7 +255,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         else:
             ExclusionModel.create(
                 name=item.text(),
-                source='preset',
+                source=ExclusionModel.SourceFieldOptions.PRESET.value,
                 profile=self.profile,
                 enabled=item.checkState() == Qt.CheckState.Checked,
             )
@@ -246,11 +267,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         When the user saves changes in the raw exclusions text box, add it to the database.
         '''
         raw_excludes = self.rawExclusionsText.toPlainText()
-        raw_excludes_model = RawExclusionModel.get_or_none(profile=self.profile)
-        if raw_excludes_model:
-            raw_excludes_model.patterns = raw_excludes
-            raw_excludes_model.save()
-        else:
-            RawExclusionModel.create(profile=self.profile, patterns=raw_excludes)
+        self.profile.raw_exclusions = raw_excludes
+        self.profile.save()
 
         self.populate_preview_tab()
