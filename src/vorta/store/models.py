@@ -6,6 +6,7 @@ At the bottom there is a simple schema migration system.
 
 import json
 from datetime import datetime
+from enum import Enum
 
 import peewee as pw
 from playhouse import signals
@@ -74,8 +75,8 @@ class BackupProfileModel(BaseModel):
     repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
+    raw_exclusions = pw.TextField(default='')
     exclude_patterns = pw.TextField(null=True)
-    exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
     schedule_interval_count = pw.IntegerField(default=3)
     schedule_interval_unit = pw.CharField(default='hours')
@@ -115,25 +116,14 @@ class ExclusionModel(BaseModel):
     presets, the name will be the same as the preset name. Duplicate patterns are already handled by Borg.
     """
 
+    class SourceFieldOptions(Enum):
+        CUSTOM = 'custom'
+        PRESET = 'preset'
+
     profile = pw.ForeignKeyField(BackupProfileModel, backref='exclusions')
     name = pw.CharField(unique=True)
     enabled = pw.BooleanField(default=True)
-    source = pw.CharField(default='custom')  # custom or preset
-    date_added = pw.DateTimeField(default=datetime.now)
-
-    class Meta:
-        database = DB
-
-
-class RawExclusionModel(BaseModel):
-    """
-    The raw exclusion patterns that a user adds to a profile will be added here as plaintext.
-    Each profile will have a single associated RawExclusionModel.
-    """
-
-    profile = pw.ForeignKeyField(BackupProfileModel, backref='raw_exclusions')
-    patterns = pw.TextField(default='')
-    date_added = pw.DateTimeField(default=datetime.now)
+    source = pw.CharField(default=SourceFieldOptions.CUSTOM.value)
 
     class Meta:
         database = DB

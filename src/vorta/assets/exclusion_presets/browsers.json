@@ -3,14 +3,14 @@
         "name": "Chromium cache and config files",
         "patterns":
         [
-            "fm:/.config/chromium/*/Local Storage",
-            "fm:/.config/chromium/*/Session Storage",
-            "fm:/.config/chromium/*/Service Worker/CacheStorage",
-            "fm:/.config/chromium/*/Application Cache",
-            "fm:/.config/chromium/*/History Index *",
-            "fm:/snap/chromium/common/.cache",
-            "fm:/snap/chromium/*/.config/chromium/*/Service Worker/CacheStorage",
-            "fm:/snap/chromium/*/.local/share/"
+            "fm:.config/chromium/*/Local Storage",
+            "fm:.config/chromium/*/Session Storage",
+            "fm:.config/chromium/*/Service Worker/CacheStorage",
+            "fm:.config/chromium/*/Application Cache",
+            "fm:.config/chromium/*/History Index *",
+            "fm:snap/chromium/common/.cache",
+            "fm:snap/chromium/*/.config/chromium/*/Service Worker/CacheStorage",
+            "fm:snap/chromium/*/.local/share/"
         ],
         "tags":["application:chromium", "type:browser", "os:linux"],
         "author": "Divi"
@@ -51,15 +51,15 @@
             "fm:.mozilla/firefox/*/urlclassifier3.sqlite",
             "fm:.mozilla/firefox/*/blocklist.xml",
             "fm:.mozilla/firefox/*/extensions.sqlite",
-            "fm:./mozilla/firefox/*/extensions.sqlite-journal",
-            "fm:./mozilla/firefox/*/extensions.rdf",
-            "fm:./mozilla/firefox/*/extensions.ini",
-            "fm:./mozilla/firefox/*/extensions.cache",
-            "fm:./mozilla/firefox/*/XUL.mfasl",
-            "fm:./mozilla/firefox/*/XPC.mfasl",
-            "fm:./mozilla/firefox/*/xpti.dat",
-            "fm:./mozilla/firefox/*/compreg.dat",
-            "fm:./mozilla/firefox/*/pluginreg.dat"
+            "fm:.mozilla/firefox/*/extensions.sqlite-journal",
+            "fm:.mozilla/firefox/*/extensions.rdf",
+            "fm:.mozilla/firefox/*/extensions.ini",
+            "fm:.mozilla/firefox/*/extensions.cache",
+            "fm:.mozilla/firefox/*/XUL.mfasl",
+            "fm:.mozilla/firefox/*/XPC.mfasl",
+            "fm:.mozilla/firefox/*/xpti.dat",
+            "fm:.mozilla/firefox/*/compreg.dat",
+            "fm:.mozilla/firefox/*/pluginreg.dat"
         ],
         "tags": ["application:firefox", "type:browser", "os:linux"],
         "author": "Divi"
