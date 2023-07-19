@@ -3,8 +3,8 @@
         "name": "Node Modules and package manager cache",
         "patterns":
         [
-            "fm:node_modules",
-            "fm:.npm"
+            "*/node_modules",
+            "*.npm"
         ],
         "tags": ["type:dev", "lang:javascript", "os:linux", "os:macos"],
         "author": "Divi"
@@ -13,11 +13,11 @@
         "name": "Python cache and virtualenv",
         "patterns":
         [
-            "fm:__pycache__",
-            "fm:.pyc",
-            "fm:.pyo",
-            "fm:.env",
-            "fm:.virtualenvs"
+            "*/__pycache__",
+            "*.pyc",
+            "*.pyo",
+            "*.env",
+            "*.virtualenvs"
         ],
         "tags": ["type:dev", "lang:python", "os:linux", "os:macos"],
         "author": "Divi"
@@ -26,8 +26,9 @@
         "name": "Rust artefacts",
         "patterns":
         [
-            "fm:.cargo",
-            "fm:.rustup"
+            "*/target",
+            "*.cargo",
+            "*.rustup"
         ],
         "tags": ["type:dev", "lang:rust", "os:linux", "os:macos"],
         "author": "Divi"

@@ -194,6 +194,8 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
                 excludes += f"{pattern}\n"
 
         self.exclusionsPreviewText.setPlainText(excludes)
+        self.profile.exclude_patterns = excludes
+        self.profile.save()
 
     def remove_pattern(self):
         indexes = self.customExclusionsList.selectedIndexes()
