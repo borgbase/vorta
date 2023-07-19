@@ -131,7 +131,7 @@ class VortaApp(QtSingleApplication):
 
     def toggle_main_window_visibility(self):
         if self.main_window.isVisible():
-            self.main_window.close()
+            self.main_window.hide()
         else:
             self.open_main_window_action()
 

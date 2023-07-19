@@ -18,6 +18,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
     startup = trans_late('settings', 'Startup')
     information = trans_late('settings', 'Information')
     security = trans_late('settings', 'Security')
+    background = trans_late('backup', 'Background')
 
     # Default settings for all platforms.
     settings = [
@@ -158,9 +159,10 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'key': 'enable_background_question',
                 'value': True,
                 'type': 'checkbox',
+                'group': background,
                 'label': trans_late(
                     'settings',
-                    "If the system tray isn't available, " "ask whether to continue in the background " "on exit",
+                    "When closing the window ask whether to continue in the background",
                 ),
             },
             {
