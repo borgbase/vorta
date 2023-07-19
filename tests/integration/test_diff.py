@@ -87,7 +87,6 @@ from vorta.views.diff_result import (
                     'subpath': 'borg_src',
                     'match_startsWith': True,
                     'data': {
-                        # TODO: Check/Review why file_type is FILE instead of DIRECTORY
                         'file_type': FileType.FILE,
                         'change_type': ChangeType.MODIFIED,
                         'modified': None,
