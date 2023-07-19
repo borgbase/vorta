@@ -1,33 +1,37 @@
-# Number of days of inactivity before an issue becomes stale
-daysUntilStale: 60
+name: Close stale issues
+on:
+  schedule:
+    - cron: '50 1 * * *'
 
-# Number of days of inactivity before a stale issue is closed
-daysUntilClose: 7
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          days-before-issue-stale: 60
+          days-before-pr-stale: -1
+          days-before-issue-close: 7
+          # days-before-pr-close: 10
 
-# Issues with these labels will never be considered stale
-exemptLabels:
-  - "status:idea"
-  - "status:planning"
-  - "status:on hold"
-  - "status:ready"
-  - "type:bug"
-  - "type:docs"
-  - "type:enhancement"
-  - "type:feature"
-  - "type:refactor"
-  - "type:task"
+          stale-issue-label: "status:stale"
+          stale-pr-label: "status:stale"
 
-# Label to use when marking an issue as stale
-staleLabel: "status:stale"
+          exempt-issue-labels: >
+            status:idea,
+            status:planning,
+            status:on hold,
+            status:ready,
+            type:bug,
+            type:docs,
+            type:enhancement,
+            type:feature,
+            type:refactor,
+            type:task,
 
-# Comment to post when marking an issue as stale. Set to `false` to disable
-markComment: >
-  This issue has been automatically marked as stale because it has not had
-  recent activity. It will be closed if no further activity occurs. Thank you
-  for your contributions.
-
-# Comment to post when closing a stale issue. Set to `false` to disable
-closeComment: false
-
-# Limit to only `issues` or `pulls`
-only: issues
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had
+            recent activity. It will be closed if no further activity occurs. Thank you
+            for your contributions.
+          close-issue-message: >
+            This issue was closed because it has been stalled for 7 days with no activity.
