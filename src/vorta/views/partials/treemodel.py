@@ -5,7 +5,6 @@ Implementation of a tree model for use with `QTreeView` based on (file) paths.
 import argparse
 import bisect
 import enum
-import os
 import os.path as osp
 from fnmatch import fnmatch
 from functools import reduce
@@ -1081,7 +1080,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
                 return False
 
         if self.searchPattern.path:
-            search_path = os.path.join(*self.searchPattern.path)
+            search_path = path_to_str(self.searchPattern.path)
             if not fnmatch(item_path, search_path):
                 return False
 
