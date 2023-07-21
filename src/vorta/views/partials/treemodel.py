@@ -2,10 +2,12 @@
 Implementation of a tree model for use with `QTreeView` based on (file) paths.
 
 """
-
+import argparse
 import bisect
 import enum
+import os
 import os.path as osp
+from fnmatch import fnmatch
 from functools import reduce
 from pathlib import PurePath
 from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
@@ -902,12 +904,13 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
     """
 
     sorted = pyqtSignal(int, Qt.SortOrder)
+    searchStringError = pyqtSignal(bool)
 
     def __init__(self, parent=None) -> None:
         """Init."""
         super().__init__(parent)
         self.folders_on_top = False
-        self.searchPattern = ""
+        self.searchPattern = None
 
     @overload
     def keepFoldersOnTop(self) -> bool:
@@ -996,12 +999,54 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         data2 = self.choose_data(right)
         return data1 < data2
 
-    def setFilterFixedString(self, pattern: str):
+    def setSearchString(self, pattern: str):
         """
         Set the pattern to filter for.
         """
-        self.searchPattern = pattern
+        self.searchStringError.emit(False)
+
+        if not pattern:
+            self.searchPattern = None
+
+        self.searchPattern = self.parse_search_string(pattern)
         self.invalidateRowsFilter()
+
+    def parse_search_string(self, pattern: str):
+        """
+        Parse the search string into a list of tokens.
+        """
+
+        def valid_size(value):
+            comparison_sign = ['<', '>']
+            size_units = ['KB', 'MB', 'GB']
+
+            if not any(value.startswith(unit) for unit in comparison_sign):
+                raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >")
+
+            if not any(value.endswith(unit) for unit in size_units):
+                raise argparse.ArgumentTypeError("Invalid size format. Supported units: KB, MB, GB")
+
+            try:
+                # TODO: Yet to check how the model stores actual size of the file but assuming in bytes for now
+                return (value[0], int(value[1:-2]) * 1024 ** (size_units.index(value[-2:]) + 1))
+            except ValueError:
+                raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
+
+        parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
+        parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
+        parser.add_argument(
+            "-m", "--match", choices=["in", "exact"], default="in", help="Type of match query."
+        )  # TODO: Type "regex"
+        parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
+        parser.add_argument("-p", "--path", nargs="*", default=None, help="Specify path to match.")
+        parser.add_argument("-c", "--change", choices=["A", "R"], help="Only available in Diff View.")
+        parser.add_argument("-s", "--size", nargs="+", type=valid_size, help="Match by size.")
+
+        try:
+            return parser.parse_args(pattern.split())
+        except SystemExit:
+            self.searchStringError.emit(True)
+            return None
 
     def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
         """
@@ -1011,16 +1056,33 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         self.setRecursiveFilteringEnabled(True)
         self.setAutoAcceptChildRows(True)
 
-        if self.searchPattern == "":
+        if not self.searchPattern:
             return True
 
-        sourceModel = self.sourceModel()
-        sourceIndex = sourceModel.index(sourceRow, 0, sourceParent)
-        name = self.extract_path(sourceIndex)
+        model: FileTreeModel = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
-        if self.searchPattern.lower() in name.lower():
-            return True
+        item_path = path_to_str(item.path)
+        item_name = item.subpath
 
-        # TODO: Implement path: syntax which builds full path of current item and then compares using startWith
+        if self.searchPattern.search_string:
+            # TODO: Move operations on search string to setSearchString method
 
-        return False
+            search_string = " ".join(self.searchPattern.search_string)
+
+            # Ignore Case?
+            if self.searchPattern.ignore_case:
+                item_name = item_name.lower()
+                search_string = search_string.lower()
+
+            if self.searchPattern.match == "in" and search_string not in item_name:
+                return False
+            elif self.searchPattern.match == "exact" and search_string != item_name:
+                return False
+
+        if self.searchPattern.path:
+            search_path = os.path.join(*self.searchPattern.path)
+            if not fnmatch(item_path, search_path):
+                return False
+
+        return True

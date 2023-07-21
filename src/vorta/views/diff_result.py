@@ -79,7 +79,11 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
         # TODO: Move to BaseFileDialog once it's added to extract dialog UI
-        self.searchWidget.textChanged.connect(self.sortproxy.setFilterFixedString)
+        self.searchWidget.textChanged.connect(self.sortproxy.setSearchString)
+        self.sortproxy.searchStringError.connect(self.searchStringError)
+
+    def searchStringError(self, error: bool):
+        self.searchWidget.setStyleSheet("border: 2px solid red;" if error else "")
 
     def get_sort_proxy_model(self):
         """Return the sort proxy model for the tree view."""
