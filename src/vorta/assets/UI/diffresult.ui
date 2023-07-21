@@ -128,16 +128,30 @@
 
       <widget class="QLineEdit" name="searchWidget">
        <property name="toolTip">
-        <string>Search</string>
+        <string>Search Pattern</string>
        </property>
        <property name="placeholderText">
-        <string>Search</string>
+        <string>Search Pattern</string>
        </property>
       </widget>
 
      </item>
+
+     <item>
+        <widget class="QToolButton" name="bSearch">
+         <property name="toolTip">
+            <string>Submit Search</string>
+         </property>
+         <property name="text">
+        <string>Search</string>
+       </property>
+        </widget>
+     </item>
+
+
      </layout>
     </item>
+
 
    <item>
     <widget class="QTreeView" name="treeView"/>

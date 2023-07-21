@@ -78,9 +78,17 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
-        # TODO: Move to BaseFileDialog once it's added to extract dialog UI
-        self.searchWidget.textChanged.connect(self.sortproxy.setSearchString)
+        self.bSearch.clicked.connect(self.submitSearchPattern)
         self.sortproxy.searchStringError.connect(self.searchStringError)
+
+    def keyPressEvent(self, event):
+        if event.key() in [Qt.Key.Key_Return, Qt.Key.Key_Enter] and self.searchWidget.hasFocus():
+            self.submitSearchPattern()
+        else:
+            super().keyPressEvent(event)
+
+    def submitSearchPattern(self):
+        self.sortproxy.setSearchString(self.searchWidget.text())
 
     def searchStringError(self, error: bool):
         self.searchWidget.setStyleSheet("border: 2px solid red;" if error else "")
