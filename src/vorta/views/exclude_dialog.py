@@ -7,7 +7,10 @@ from PyQt6.QtCore import QModelIndex, Qt
 from PyQt6.QtGui import QStandardItem, QStandardItemModel
 from PyQt6.QtWidgets import (
     QAbstractItemView,
+    QApplication,
+    QMenu,
     QMessageBox,
+    QStyledItemDelegate,
 )
 
 from vorta.store.models import ExclusionModel
@@ -69,6 +72,14 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         '''
         )
+        self.customExclusionsListDelegate = QStyledItemDelegate()
+        self.customExclusionsList.setItemDelegate(self.customExclusionsListDelegate)
+        self.customExclusionsListDelegate.closeEditor.connect(self.custom_pattern_editing_finished)
+        # allow removing items with the delete key (remove_pattern is called in keyPressEvent)
+        self.customExclusionsList.keyPressEvent = self.customPatternKeyPressEvent
+        # context menu
+        self.customExclusionsList.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.customExclusionsList.customContextMenuRequested.connect(self.custom_exclusions_context_menu)
 
         self.exclusionPresetsModel = QStandardItemModel()
         self.exclusionPresetsList.setModel(self.exclusionPresetsModel)
@@ -93,10 +104,12 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         self.exclusionsPreviewText.setReadOnly(True)
 
-        self.rawExclusionsSaveButton.clicked.connect(self.raw_exclusions_saved)
+        self.rawExclusionsText.textChanged.connect(self.raw_exclusions_saved)
 
         self.bRemovePattern.clicked.connect(self.remove_pattern)
         self.bRemovePattern.setIcon(get_colored_icon('minus'))
+        self.bPreviewCopy.clicked.connect(self.copy_preview_to_clipboard)
+        self.bPreviewCopy.setIcon(get_colored_icon('copy'))
         self.bAddPattern.clicked.connect(self.add_pattern)
         self.bAddPattern.setIcon(get_colored_icon('plus'))
 
@@ -118,6 +131,31 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             item.setCheckable(True)
             item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
             self.customExclusionsModel.appendRow(item)
+
+    def custom_exclusions_context_menu(self, pos):
+        # index under cursor
+        index = self.customExclusionsList.indexAt(pos)
+        if not index.isValid():
+            return
+
+        menu = QMenu(self.customExclusionsList)
+        menu.addAction(
+            get_colored_icon('minus'),
+            self.tr('Remove'),
+            lambda: self.remove_pattern(index),
+        )
+        menu.addAction(
+            get_colored_icon('check-circle'),
+            self.tr('Toggle'),
+            lambda: self.toggle_custom_pattern(index),
+        )
+        menu.addAction(
+            get_colored_icon('copy'),
+            self.tr('Copy'),
+            lambda: QApplication.clipboard().setText(index.data()),
+        )
+
+        menu.popup(self.customExclusionsList.viewport().mapToGlobal(pos))
 
     def populate_presets_list(self):
         if getattr(sys, 'frozen', False):
@@ -189,7 +227,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             ExclusionModel.enabled,
             ExclusionModel.source == ExclusionModel.SourceFieldOptions.PRESET.value,
         ):
-            excludes += f"\n#{exclude.name}\n"
+            excludes += f"\n# {exclude.name}\n"
             for pattern in self.allPresets[exclude.name]['patterns']:
                 excludes += f"{pattern}\n"
 
@@ -197,9 +235,32 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile.exclude_patterns = excludes
         self.profile.save()
 
-    def remove_pattern(self):
-        indexes = self.customExclusionsList.selectedIndexes()
-        for index in reversed(indexes):
+    def copy_preview_to_clipboard(self):
+        cb = QApplication.clipboard()
+        cb.clear(mode=cb.Mode.Clipboard)
+        cb.setText(self.exclusionsPreviewText.toPlainText(), mode=cb.Mode.Clipboard)
+
+    def customPatternKeyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Delete:
+            self.remove_pattern()
+        else:
+            super().keyPressEvent(event)
+
+    def remove_pattern(self, index=None):
+        '''
+        Remove the selected item(s) from the list and the database.
+        If there is no selection, this was called from the context menu and the index is passed in.
+        '''
+        if not index:
+            indexes = self.customExclusionsList.selectedIndexes()
+            for index in reversed(sorted(indexes)):
+                ExclusionModel.delete().where(
+                    ExclusionModel.name == index.data(),
+                    ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+                    ExclusionModel.profile == self.profile,
+                ).execute()
+                self.customExclusionsModel.removeRow(index.row())
+        else:
             ExclusionModel.delete().where(
                 ExclusionModel.name == index.data(),
                 ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
@@ -209,16 +270,39 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         self.populate_preview_tab()
 
+    def toggle_custom_pattern(self, index):
+        '''
+        Toggle the check state of the selected item.
+        '''
+        item = self.customExclusionsModel.itemFromIndex(index)
+        if item.checkState() == Qt.CheckState.Checked:
+            item.setCheckState(Qt.CheckState.Unchecked)
+        else:
+            item.setCheckState(Qt.CheckState.Checked)
+
     def add_pattern(self):
         '''
         Add an empty item to the list in editable mode.
+        Don't add an item if the user is already editing an item.
         '''
+        if self.customExclusionsList.state() == QAbstractItemView.State.EditingState:
+            return
         item = QStandardItem('')
         item.setCheckable(True)
         item.setCheckState(Qt.CheckState.Checked)
         self.customExclusionsList.model().appendRow(item)
         self.customExclusionsList.edit(item.index())
         self.customExclusionsList.scrollToBottom()
+
+    def custom_pattern_editing_finished(self, editor):
+        '''
+        Go through all items in the list and if any of them are empty, remove them.
+        Handles the case where the user presses the escape key to cancel editing.
+        '''
+        for row in range(self.customExclusionsModel.rowCount()):
+            item = self.customExclusionsModel.item(row)
+            if item.text() == '':
+                self.customExclusionsModel.removeRow(row)
 
     def custom_item_changed(self, item):
         '''
