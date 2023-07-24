@@ -344,6 +344,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)
+        self._window = window  # for testing
         window.show()
 
     def save_exclude_patterns(self):
