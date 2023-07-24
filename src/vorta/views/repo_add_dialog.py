@@ -77,6 +77,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         out = dict(
             ssh_key=self.sshComboBox.currentData(),
             repo_url=self.repoURL.text(),
+            repo_name=self.repoName.text(),
             password=self.passwordLineEdit.text(),
             extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
         )
@@ -94,6 +95,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
             folder = dialog.selectedFiles()
             if folder:
                 self.repoURL.setText(folder[0])
+                self.repoName.setText(folder[0].split('/')[-1])
                 self.repoURL.setEnabled(False)
                 self.sshComboBox.setEnabled(False)
                 self.repoLabel.setText(self.tr('Repository Path:'))
@@ -126,6 +128,7 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
     def use_remote_repo_action(self):
         self.repoURL.setText('')
         self.repoURL.setEnabled(True)
+        self.repoName.setText('')
         self.sshComboBox.setEnabled(True)
         self.extraBorgArgumentsLineEdit.setText('')
         self.repoLabel.setText(self.tr('Repository URL:'))
@@ -197,6 +200,10 @@ class AddRepoWindow(AddRepoBase, AddRepoUI):
         """Pre-flight check for valid input and borg binary."""
         if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
             self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
+            return False
+
+        if len(self.values['repo_name']) > 64:
+            self._set_status(self.tr('Repository name must be less than 64 characters.'))
             return False
 
         if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:

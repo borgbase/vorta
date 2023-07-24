@@ -85,8 +85,10 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_name = 'Test Repo'
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
+    qtbot.keyClicks(add_repo_window.repoName, test_repo_name)
     qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
 
@@ -103,7 +105,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
-    assert main.repoTab.repoSelector.currentText() == test_repo_url
+    assert main.repoTab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
