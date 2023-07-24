@@ -167,7 +167,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             # we are running in a normal Python environment
             bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../assets/exclusion_presets')
 
-        for preset_file in os.listdir(bundle_dir):
+        for preset_file in sorted(os.listdir(bundle_dir)):
             with open(os.path.join(bundle_dir, preset_file), 'r') as f:
                 preset_data = json.load(f)
                 for preset in preset_data:
