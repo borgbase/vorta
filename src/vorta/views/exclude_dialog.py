@@ -53,6 +53,8 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile = profile
         self.allPresets = {}
 
+        self.buttonBox.rejected.connect(self.close)
+
         self.customExclusionsModel = MandatoryInputItemModel()
         self.customExclusionsList.setModel(self.customExclusionsModel)
         self.customExclusionsModel.itemChanged.connect(self.custom_item_changed)
