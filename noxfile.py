@@ -15,12 +15,12 @@ else:
 
     supported_borgbackup_versions = [
         borgbackup
-        for borgbackup in ("1.1.18", "1.2.2", "1.2.4", "2.0.0b5")
+        for borgbackup in ("1.1.18", "1.2.2", "1.2.4", "2.0.0b6")
         # Python version requirements for borgbackup versions
         if (borgbackup == "1.1.18" and system_python_version >= (3, 5, 0))
         or (borgbackup == "1.2.2" and system_python_version >= (3, 8, 0))
         or (borgbackup == "1.2.4" and system_python_version >= (3, 8, 0))
-        or (borgbackup == "2.0.0b5" and system_python_version >= (3, 9, 0))
+        or (borgbackup == "2.0.0b6" and system_python_version >= (3, 9, 0))
     ]
 
 
