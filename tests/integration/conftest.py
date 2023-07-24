@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 
 import pytest
 import vorta
@@ -105,9 +104,12 @@ def create_test_repo(tmpdir_factory, borg_version):
     os.mkfifo(fifo_path)
 
     # /src/dir/chrdev
-    if sys.platform.startswith('linux'):
+    supports_chrdev = True
+    try:
         chrdev_path = os.path.join(dir_path, 'chrdev')
         os.mknod(chrdev_path, mode=0o600 | 0o020000)
+    except PermissionError:
+        supports_chrdev = False
 
     create_archive('2023-06-14T02:00:00', 'test-archive2')
 
@@ -133,7 +135,7 @@ def create_test_repo(tmpdir_factory, borg_version):
 
     create_archive('2023-06-14T06:00:00', 'test-archive6')
 
-    return repo_path, source_files_dir
+    return repo_path, source_files_dir, supports_chrdev
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -150,7 +152,7 @@ def init_db(qapp, qtbot, tmpdir_factory, create_test_repo):
     default_profile = BackupProfileModel(name='Default')
     default_profile.save()
 
-    repo_path, source_dir = create_test_repo
+    repo_path, source_dir, _ = create_test_repo
 
     new_repo = RepoModel(url=repo_path)
     new_repo.encryption = 'none'
