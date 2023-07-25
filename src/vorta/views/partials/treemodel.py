@@ -6,6 +6,7 @@ import argparse
 import bisect
 import enum
 import os.path as osp
+import re
 from fnmatch import fnmatch
 from functools import reduce
 from pathlib import PurePath
@@ -1015,29 +1016,47 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         Parse the search string into a list of tokens.
         """
 
-        def valid_size(value):
-            comparison_sign = ['<', '>']
+        def parse_size(size):
+            """
+            Parse the size string into a tuple of two values.
+            """
+
+            comparison_sign = ['<', '>', '<=', '>=']
             size_units = ['KB', 'MB', 'GB']
 
-            if not any(value.startswith(unit) for unit in comparison_sign):
-                raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >")
+            # TODO: Should we just use regex? ^([<>]=?|)(\d+(\.\d+)?)([KMG]B)?$
+            if not any(size.startswith(unit) for unit in comparison_sign):
+                raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >, <=, >=")
 
-            if not any(value.endswith(unit) for unit in size_units):
+            if not any(size.endswith(unit) for unit in size_units):
                 raise argparse.ArgumentTypeError("Invalid size format. Supported units: KB, MB, GB")
 
             try:
-                # TODO: Yet to check how the model stores actual size of the file but assuming in bytes for now
-                return (value[0], int(value[1:-2]) * 1024 ** (size_units.index(value[-2:]) + 1))
+                unit = size[-2:]
+                if size[1] == '=':
+                    return (size[:2], int(size[2:-2]) * 1024 ** (size_units.index(unit) + 1))
+                else:
+                    return (size[0], int(size[1:-2]) * 1024 ** (size_units.index(unit) + 1))
             except ValueError:
                 raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
+
+        def valid_size(value):
+            size = value.split(',')
+
+            if len(size) == 1:
+                return parse_size(size[0])
+            elif len(size) == 2:
+                return (parse_size(size[0]), parse_size(size[1]))
+            else:
+                raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
 
         parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
         parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
         parser.add_argument(
-            "-m", "--match", choices=["in", "exact"], default="in", help="Type of match query."
+            "-m", "--match", choices=["in", "ex", "re", "fm"], default=None, help="Type of match query."
         )  # TODO: Type "regex"
         parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
-        parser.add_argument("-p", "--path", nargs="*", default=None, help="Specify path to match.")
+        parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
         parser.add_argument("-c", "--change", choices=["A", "R"], help="Only available in Diff View.")
         parser.add_argument("-s", "--size", nargs="+", type=valid_size, help="Match by size.")
 
@@ -1058,11 +1077,25 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         if not self.searchPattern:
             return True
 
+        # Match type "fm" is only available with path
+        if self.searchPattern.match == "fm" and not self.searchPattern.path:
+            self.searchStringError.emit(True)
+            return False
+
         model: FileTreeModel = self.sourceModel()
         item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
         item_path = path_to_str(item.path)
         item_name = item.subpath
+
+        # Set default values
+        if self.searchPattern.match is None:
+            self.searchPattern.match = "fm" if self.searchPattern.path else "in"
+
+        if self.searchPattern.path:
+            search_item = item_path
+        else:
+            search_item = item_name
 
         if self.searchPattern.search_string:
             # TODO: Move operations on search string to setSearchString method
@@ -1071,17 +1104,36 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
 
             # Ignore Case?
             if self.searchPattern.ignore_case:
-                item_name = item_name.lower()
+                search_item = search_item.lower()
                 search_string = search_string.lower()
 
-            if self.searchPattern.match == "in" and search_string not in item_name:
+            if self.searchPattern.match == "in" and search_string not in search_item:
                 return False
-            elif self.searchPattern.match == "exact" and search_string != item_name:
+            elif self.searchPattern.match == "ex" and search_string != search_item:
+                return False
+            elif self.searchPattern.match == "re" and not re.search(search_string, search_item):
+                return False
+            elif self.searchPattern.match == "fm" and not fnmatch(search_item, search_string):
                 return False
 
-        if self.searchPattern.path:
-            search_path = path_to_str(self.searchPattern.path)
-            if not fnmatch(item_path, search_path):
-                return False
+        def validate_size_filter(item_size, filter_size):
+            comparison_sign = filter_size[0]
+            filter_size = filter_size[1]
+
+            if comparison_sign == '<':
+                return item_size < filter_size
+            elif comparison_sign == '>':
+                return item_size > filter_size
+            elif comparison_sign == '<=':
+                return item_size <= filter_size
+            elif comparison_sign == '>=':
+                return item_size >= filter_size
+
+        if self.searchPattern.size:
+            item_size = item.data.size
+
+            for filter_size in self.searchPattern.size:
+                if not validate_size_filter(item_size, filter_size):
+                    return False
 
         return True
