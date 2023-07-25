@@ -65,13 +65,7 @@ class PasswordLineEdit(QLineEdit):
         """Set error state and update style"""
         self._error_state = error
         if error:
-            self.setStyleSheet(
-                """
-                QLineEdit {
-                    border: 2px solid red;
-                }
-            """
-            )
+            self.setStyleSheet("QLineEdit { border: 2px solid red; }")
         else:
             self.setStyleSheet('')
 

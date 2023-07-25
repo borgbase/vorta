@@ -39,7 +39,7 @@ def test_password_line_error_state(qtbot):
 
     password_line_edit.error_state = True
     assert password_line_edit.error_state
-    assert password_line_edit.styleSheet() == "border: 2px solid red;"
+    assert password_line_edit.styleSheet() == "QLineEdit { border: 2px solid red; }"
 
 
 def test_password_line_visibility_button(qtbot):
