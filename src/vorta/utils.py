@@ -18,7 +18,6 @@ from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
-from vorta.i18n import trans_late
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
@@ -505,21 +504,6 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
-
-
-def validate_passwords(first_pass, second_pass):
-    '''Validates the password for borg, do not use on single fields'''
-    pass_equal = first_pass == second_pass
-    pass_long = len(first_pass) > 8
-
-    if not pass_long and not pass_equal:
-        return trans_late('utils', "Passwords must be identical and greater than 8 characters long.")
-    if not pass_equal:
-        return trans_late('utils', "Passwords must be identical.")
-    if not pass_long:
-        return trans_late('utils', "Passwords must be greater than 8 characters long.")
-
-    return ""
 
 
 def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
