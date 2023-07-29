@@ -1057,7 +1057,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         )  # TODO: Type "regex"
         parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
         parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
-        parser.add_argument("-c", "--change", choices=["A", "R"], help="Only available in Diff View.")
+        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
         parser.add_argument("-s", "--size", nargs="+", type=valid_size, help="Match by size.")
 
         try:
@@ -1135,5 +1135,11 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             for filter_size in self.searchPattern.size:
                 if not validate_size_filter(item_size, filter_size):
                     return False
+
+        if self.searchPattern.change:
+            item_change = item.data.change_type.short()
+
+            if item_change != self.searchPattern.change:
+                return False
 
         return True
