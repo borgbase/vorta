@@ -53,6 +53,9 @@ class BaseFileDialog(QDialog):
         self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
         self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
 
+        self.bSearch.clicked.connect(self.submitSearchPattern)
+        self.sortproxy.searchStringError.connect(self.searchStringError)
+
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
@@ -124,3 +127,15 @@ class BaseFileDialog(QDialog):
         selectedRows = self.treeView.selectionModel().selectedRows()
         if selectedRows:
             self.treeView.scrollTo(selectedRows[0])
+
+    def keyPressEvent(self, event):
+        if event.key() in [Qt.Key.Key_Return, Qt.Key.Key_Enter] and self.searchWidget.hasFocus():
+            self.submitSearchPattern()
+        else:
+            super().keyPressEvent(event)
+
+    def submitSearchPattern(self):
+        self.sortproxy.setSearchString(self.searchWidget.text())
+
+    def searchStringError(self, error: bool):
+        self.searchWidget.setStyleSheet("border: 2px solid red;" if error else "")

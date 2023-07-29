@@ -106,6 +106,44 @@
      </item>
     </layout>
    </item>
+
+    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+
+      <widget class="QLineEdit" name="searchWidget">
+       <property name="toolTip">
+        <string>Search Pattern</string>
+       </property>
+       <property name="placeholderText">
+        <string>Search Pattern</string>
+       </property>
+      </widget>
+
+     </item>
+
+     <item>
+        <widget class="QToolButton" name="bSearch">
+         <property name="toolTip">
+            <string>Submit Search</string>
+         </property>
+         <property name="text">
+        <string>Search</string>
+       </property>
+        </widget>
+     </item>
+
+
+     </layout>
+    </item>
+
+
    <item>
     <widget class="QTreeView" name="treeView">
      <attribute name="headerMinimumSectionSize">
