@@ -115,6 +115,28 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.bAddPattern.clicked.connect(self.add_pattern)
         self.bAddPattern.setIcon(get_colored_icon('plus'))
 
+        # help text
+        self.customPresetsHelpText.setOpenExternalLinks(True)
+        self.customPresetsHelpText.setOpenExternalLinks(True)
+        self.customPresetsHelpText.setText(
+            "Patterns that you add here will be used to exclude files and folders from the backup. "
+            "For more info on how to use patterns, see the "
+            "<a href=\"https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns\">documentation</a>. "
+            "To add multiple patterns at once, use the \"Raw\" tab."
+        )
+        self.exclusionPresetsHelpText.setText(
+            "These presets are provided by the community and are a good starting point",
+            "for excluding certain types of files. You can enable or disable them as you see fit. "
+            "To see the patterns that are used for each preset, switch to the \"Preview\" tab after enabling it.",
+        )
+
+        self.rawExclusionsHelpText.setText(
+            "You can use this field to add multiple patterns at once. Each pattern should be on a separate line."
+        )
+        self.exclusionsPreviewHelpText.setText(
+            "This is a preview of the patterns that will be used to exclude files and folders from the backup."
+        )
+
         self.populate_custom_exclusions_list()
         self.populate_presets_list()
         self.populate_raw_exclusions_text()
