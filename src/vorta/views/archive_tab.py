@@ -293,18 +293,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
 
+                # format units based on user settings for 'dynamic' or 'fixed' units
                 if SettingsModel.get(key='enable_fixed_units').value is True:
-                    self.archiveTable.setItem(
-                        row,
-                        1,
-                        SizeItem(
-                            pretty_bytes_fixed_units(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)
-                        ),
-                    )
+                    size = pretty_bytes_fixed_units(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)
                 else:
-                    self.archiveTable.setItem(
-                        row, 1, SizeItem(pretty_bytes_dynamic_units(archive.size, precision=SIZE_DECIMAL_DIGITS))
-                    )
+                    size = pretty_bytes_dynamic_units(archive.size, precision=SIZE_DECIMAL_DIGITS)
+
+                self.archiveTable.setItem(row, 1, SizeItem(size))
 
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
