@@ -28,10 +28,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
-         </property>
+        <widget class="QLabel" name="customPresetsHelpText">
          <property name="wordWrap">
           <bool>true</bool>
          </property>
@@ -71,10 +68,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
-         </property>
+        <widget class="QLabel" name="exclusionPresetsHelpText">
          <property name="wordWrap">
           <bool>true</bool>
          </property>
@@ -91,10 +85,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
-         </property>
+        <widget class="QLabel" name="rawExclusionsHelpText">
          <property name="wordWrap">
           <bool>true</bool>
          </property>
@@ -111,10 +102,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Some instruction text here maybe to tell the user  what they are doing. ignore the non SFPro font. more lorem ipsum.</string>
-         </property>
+        <widget class="QLabel" name="exclusionsPreviewHelpText">
          <property name="wordWrap">
           <bool>true</bool>
          </property>
