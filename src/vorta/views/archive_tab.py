@@ -863,6 +863,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
         if new_name_exists is not None:
             self._set_status(self.tr('An archive with this name already exists.'))
+            item.setText(self.renamed_archive_original_name)
             return
 
         params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)

@@ -44,6 +44,7 @@ class BorgInfoArchiveJob(BorgJob):
                 if archive is None:
                     # archive id was changed during rename, so we need to find it by name
                     archive = ArchiveModel.get_or_none(name=remote_archive['name'], repo=repo_id)
+                    archive.snapshot_id = remote_archive['id']
 
                 archive.name = remote_archive['name']  # incase name changed
                 # archive.time = parser.parse(remote_archive['time'])
