@@ -70,7 +70,7 @@ def test_pretty_bytes_fixed_units(size, metric, precision, fixed_unit, expected_
         (2**40 * 2**40, False, "1.0 YiB"),  # 1YiB, nonmetric
     ],
 )
-def test_pretty_bytes_dynamic_units(size, metric, expected_output):
+def test_pretty_bytes_nonfixed_units(size, metric, expected_output):
     # test pretty bytes when NOT specifying a fixed unit of measurement
     output = pretty_bytes(size, metric=metric, precision=1)
     assert output == expected_output
