@@ -4,8 +4,7 @@ import pytest
 from vorta.keyring.abc import VortaKeyring
 from vorta.utils import (
     find_best_unit_for_sizes,
-    pretty_bytes_dynamic_units,
-    pretty_bytes_fixed_units,
+    pretty_bytes,
 )
 
 
@@ -52,13 +51,12 @@ def test_best_unit_for_sizes_nonmetric(sizes, expected_unit):
         (10**5, True, 1, 2, "0.1 MB"),  # 100KB, metric, precision 1, fixed unit "2" (MB)
         (10**6, True, 0, 2, "1 MB"),  # 1MB, metric, precision 0, fixed unit "2" (MB)
         (10**6, True, 1, 2, "1.0 MB"),  # 1MB, metric, precision 1, fixed unit "2" (MB)
-        (10**6, True, 1, None, "1.0 MB"),  # 1MB, metric, precision 1, no fixed unit
-        (10**30, True, 1, None, "1000000.0 YB"),  # test with large number, metric, precision 1, no fixed units
         (1024 * 1024, False, 1, 2, "1.0 MiB"),  # 1MiB, nonmetric, precision 1, fixed unit "2" (MiB)
     ],
 )
 def test_pretty_bytes_fixed_units(size, metric, precision, fixed_unit, expected_output):
-    output = pretty_bytes_fixed_units(size, metric=metric, precision=precision, fixed_unit=fixed_unit)
+    # test pretty bytes when specifying a fixed unit of measurement
+    output = pretty_bytes(size, metric=metric, precision=precision, fixed_unit=fixed_unit)
     assert output == expected_output
 
 
@@ -66,11 +64,13 @@ def test_pretty_bytes_fixed_units(size, metric, precision, fixed_unit, expected_
     "size, metric, expected_output",
     [
         (10**6, True, "1.0 MB"),  # 1MB, metric
-        (10**24, True, "1.0 YB"),  # large size (1YB), metric
+        (10**24, True, "1.0 YB"),  # 1YB, metric
+        (10**30, True, "1000000.0 YB"),  # test huge number, metric
         (1024 * 1024, False, "1.0 MiB"),  # 1MiB, nonmetric
-        (2**40 * 2**40, False, "1.0 YiB"),  # large size (1YiB), nonmetric
+        (2**40 * 2**40, False, "1.0 YiB"),  # 1YiB, nonmetric
     ],
 )
 def test_pretty_bytes_dynamic_units(size, metric, expected_output):
-    output = pretty_bytes_dynamic_units(size, metric=metric, precision=1)
+    # test pretty bytes when NOT specifying a fixed unit of measurement
+    output = pretty_bytes(size, metric=metric, precision=1)
     assert output == expected_output

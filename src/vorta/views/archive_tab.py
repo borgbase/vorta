@@ -41,8 +41,7 @@ from vorta.utils import (
     format_archive_name,
     get_asset,
     get_mount_points,
-    pretty_bytes_dynamic_units,
-    pretty_bytes_fixed_units,
+    pretty_bytes,
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
@@ -294,11 +293,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
 
                 # format units based on user settings for 'dynamic' or 'fixed' units
-                if SettingsModel.get(key='enable_fixed_units').value is True:
-                    size = pretty_bytes_fixed_units(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS)
-                else:
-                    size = pretty_bytes_dynamic_units(archive.size, precision=SIZE_DECIMAL_DIGITS)
-
+                fixed_unit = best_unit if SettingsModel.get(key='enable_fixed_units').value else None
+                size = pretty_bytes(archive.size, fixed_unit=fixed_unit, precision=SIZE_DECIMAL_DIGITS)
                 self.archiveTable.setItem(row, 1, SizeItem(size))
 
                 if archive.duration is not None:

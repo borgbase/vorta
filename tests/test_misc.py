@@ -35,59 +35,43 @@ def test_autostart(qapp, qtbot):
 
 
 def test_enable_fixed_units(qapp, qtbot, mocker):
-    """
-    Mocks the 'enable fixed units' setting to ensure the correct function is called when displaying the archive size.
-    """
+    """Tests the 'enable fixed units' setting to ensure the archive tab sizes are displayed correctly."""
 
-    archive_tab = qapp.main_window.archiveTab
+    tab = qapp.main_window.archiveTab
 
     # set mocks
     mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
-    mock_fixed = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_fixed_units")
-    mock_dynamic = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_dynamic_units")
+    mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
 
-    # with setting enabled, fixed units should be used and not dynamic units
-    archive_tab.populate_from_profile()
-    mock_fixed.assert_called()
-    mock_dynamic.assert_not_called()
+    # with setting enabled, fixed units should be decided and passed to pretty_bytes as an 'int'
+    tab.populate_from_profile()
+    mock_pretty_bytes.assert_called()
+    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    assert 'fixed_unit' in kwargs_list
+    assert isinstance(kwargs_list['fixed_unit'], int)
 
-    # reset mocks and disable setting
+    # disable setting and reset mock
     mock_setting.return_value = Mock(value=False)
-    mock_fixed.reset_mock()
+    mock_pretty_bytes.reset_mock()
 
-    # with setting disabled, dynamic units should be used and not fixed units
-    archive_tab.populate_from_profile()
-    mock_dynamic.assert_called()
-    mock_fixed.assert_not_called()
+    # with setting disabled, pretty_bytes should be called with fixed units set to 'None'
+    tab.populate_from_profile()
+    mock_pretty_bytes.assert_called()
+    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    assert 'fixed_unit' in kwargs_list
+    assert kwargs_list['fixed_unit'] is None
 
 
 def test_emit_archive_refresh(qapp, qtbot, mocker):
-    """
-    When the 'enable fixed units' setting is changed, 'refresh_archive' in misc_tab should emit. This emit triggers
-    main_window to call 'archive_tab.populate_from_profile' and refresh the archive tab with new archive size units.
-    """
+    """Test that an emit occurs when `enable fixed units` setting is changed"""
 
     setting = "Display all archive sizes in a consistent unit of measurement"
+    mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
 
-    # set up mocks
-    mock_fixed = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_fixed_units")
-    mock_dynamic = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes_dynamic_units")
-
-    # setting is disabled by default, so this click enables the fixed units setting
-    # click toggle the setting, which triggers the emit that refreshes archive tab
+    # click the setting, see that 'pretty_bytes' is called to recalculate the archive unit size
+    mock_pretty_bytes.reset_mock()
     _click_toggle_setting(setting, qapp, qtbot)
-    mock_fixed.assert_called()
-    mock_dynamic.assert_not_called()
-
-    # reset mocks
-    mock_fixed.reset_mock()
-    mock_dynamic.reset_mock()
-
-    # click toggle disables the fixed units setting
-    # emit should trigger a refresh of the archive tab to show dynamic units
-    _click_toggle_setting(setting, qapp, qtbot)
-    mock_dynamic.assert_called()
-    mock_fixed.assert_not_called()
+    mock_pretty_bytes.assert_called()
 
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")

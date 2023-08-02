@@ -18,7 +18,7 @@ from vorta.utils import (
     FilePathInfoAsync,
     choose_file_dialog,
     get_asset,
-    pretty_bytes_fixed_units,
+    pretty_bytes,
     sort_sizes,
 )
 from vorta.views.utils import get_colored_icon
@@ -171,7 +171,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 db_item.path_isdir = False
                 self.sourceFilesWidget.item(item.row(), SourceColumn.Path).setIcon(get_colored_icon('file'))
 
-            self.sourceFilesWidget.item(item.row(), SourceColumn.Size).setText(pretty_bytes_fixed_units(data_size))
+            self.sourceFilesWidget.item(item.row(), SourceColumn.Size).setText(pretty_bytes(data_size))
 
             db_item.dir_size = data_size
             db_item.dir_files_count = files_count
@@ -236,9 +236,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         else:  # Use cached data from DB
             if source.dir_size > -1:
-                self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(
-                    pretty_bytes_fixed_units(source.dir_size)
-                )
+                self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
 
                 if source.path_isdir:
                     self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(

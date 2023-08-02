@@ -21,7 +21,7 @@ from PyQt6.QtGui import QColor, QKeySequence, QShortcut
 from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QTreeView
 
 from vorta.store.models import SettingsModel
-from vorta.utils import get_asset, pretty_bytes_fixed_units, uses_dark_mode
+from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.treemodel import (
     FileSystemItem,
     FileTreeModel,
@@ -827,10 +827,10 @@ class DiffTree(FileTreeModel[DiffData]):
                 # change type
                 return item.data.change_type.short()
             elif column == 2:
-                return pretty_bytes_fixed_units(item.data.changed_size)
+                return pretty_bytes(item.data.changed_size)
             else:
                 # size
-                return pretty_bytes_fixed_units(item.data.size)
+                return pretty_bytes(item.data.size)
 
         if role == Qt.ItemDataRole.ForegroundRole:
             # colour
@@ -884,8 +884,8 @@ class DiffTree(FileTreeModel[DiffData]):
             if item.data.modified:
                 tooltip += '\n'
                 tooltip += modified_template.format(
-                    pretty_bytes_fixed_units(item.data.modified[0]),
-                    pretty_bytes_fixed_units(item.data.modified[1]),
+                    pretty_bytes(item.data.modified[0]),
+                    pretty_bytes(item.data.modified[1]),
                 )
 
             if item.data.mode_change:

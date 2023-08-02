@@ -247,7 +247,7 @@ def clamp(n: Number, min_: Number, max_: Number) -> Number:
 
 def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precision: int = 1) -> int:
     """
-    Selects the index of the biggest unit (see the lists in the pretty_bytes_fixed_units function) capable of
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
     representing the smallest size in the sizes iterable.
     """
     min_size = min((s for s in sizes if isinstance(s, int)), default=None)
@@ -256,7 +256,7 @@ def find_best_unit_for_sizes(sizes: Iterable[int], metric: bool = True, precisio
 
 def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision: int = 1) -> int:
     """
-    Selects the index of the biggest unit (see the lists in the pretty_bytes_fixed_units function) capable of
+    Selects the index of the biggest unit (see the lists in the pretty_bytes function) capable of
     representing the passed size.
     """
     if not isinstance(size, int) or size == 0:  # this will also take care of the None case
@@ -266,22 +266,7 @@ def find_best_unit_for_size(size: Optional[int], metric: bool = True, precision:
     return n
 
 
-def pretty_bytes_dynamic_units(size, metric=True, sign=False, precision=1):
-    if not isinstance(size, int):
-        return ''
-    prefix = '+' if sign and size > 0 else ''
-    power, units = (10**3, METRIC_UNITS) if metric else (2**10, NONMETRIC_UNITS)
-    n = find_best_unit_for_size(size, metric=metric, precision=precision)
-    size /= power**n
-    try:
-        unit = units[n]
-        return f'{prefix}{round(size, precision)} {unit}B'
-    except KeyError as e:
-        logger.error(e)
-        return "NaN"
-
-
-def pretty_bytes_fixed_units(
+def pretty_bytes(
     size: int, metric: bool = True, sign: bool = False, precision: int = 1, fixed_unit: Optional[int] = None
 ) -> str:
     """

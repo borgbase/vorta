@@ -10,7 +10,7 @@ from vorta.utils import (
     borg_compat,
     get_asset,
     get_private_keys,
-    pretty_bytes_fixed_units,
+    pretty_bytes,
 )
 
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
@@ -136,21 +136,21 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
             # update stats
             if repo.unique_csize is not None:
-                self.sizeCompressed.setText(pretty_bytes_fixed_units(repo.unique_csize))
+                self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
                 self.sizeCompressed.setToolTip('')
             else:
                 self.sizeCompressed.setText(na)
                 self.sizeCompressed.setToolTip(refresh)
 
             if repo.unique_size is not None:
-                self.sizeDeduplicated.setText(pretty_bytes_fixed_units(repo.unique_size))
+                self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
                 self.sizeDeduplicated.setToolTip('')
             else:
                 self.sizeDeduplicated.setText(na)
                 self.sizeDeduplicated.setToolTip(refresh)
 
             if repo.total_size is not None:
-                self.sizeOriginal.setText(pretty_bytes_fixed_units(repo.total_size))
+                self.sizeOriginal.setText(pretty_bytes(repo.total_size))
                 self.sizeOriginal.setToolTip('')
             else:
                 self.sizeOriginal.setText(na)
