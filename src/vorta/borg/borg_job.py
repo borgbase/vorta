@@ -292,12 +292,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: "
-                                f"{pretty_bytes(parsed['original_size'])}, "
-                                # f"{translate('BorgJob','Compressed')}:
-                                #   f"{pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: "
-                                f"{pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
+                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
