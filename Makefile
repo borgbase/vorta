@@ -5,12 +5,19 @@ VERSION := $(shell python -c "from src.vorta._version import __version__; print(
 .PHONY : help clean lint test
 .DEFAULT_GOAL := help
 
+# Set Homebrew location to /opt/homebrew on Apple Silicon, /usr/local on Intel
+ifeq ($(shell uname -m),arm64)
+	export HOMEBREW = /opt/homebrew
+else
+	export HOMEBREW = /usr/local
+endif
+
 clean:
 	rm -rf dist/*
 
 dist/Vorta.app:  ## Build macOS app locally (without Borg)
 	pyinstaller --clean --noconfirm package/vorta.spec
-	cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+	cp -R ${HOMEBREW}/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	rm -rf build/vorta dist/vorta
 
 dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
