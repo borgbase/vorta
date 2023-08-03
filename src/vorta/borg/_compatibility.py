@@ -8,6 +8,7 @@ MIN_BORG_FOR_FEATURE = {
     'COMPACT_SUBCOMMAND': parse_version('1.2.0a1'),
     'V122': parse_version('1.2.2'),
     'V2': parse_version('2.0.0b1'),
+    'CHANGE_PASSPHRASE': parse_version('1.1.0'),
     # add new version-checks here.
 }
 

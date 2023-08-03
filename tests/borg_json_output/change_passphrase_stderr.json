@@ -1,0 +1,2 @@
+{"type": "log_message", "time": 1679134475.3384268, "message": "Key updated", "levelname": "INFO", "name": "borg.archiver"}
+{"type": "log_message", "time": 1679134475.338515, "message": "Key location: /Users/chirag/Projects/vorta/repo2", "levelname": "INFO", "name": "borg.archiver"}

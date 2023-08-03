@@ -152,3 +152,51 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
+
+
+def test_passphrase_change_failures(qapp, qtbot):
+    # Add new repo window
+    main = qapp.main_window
+    main.repoTab.change_borg_passphrase()
+    change_pass_window = main.repoTab._window
+    qtbot.addWidget(change_pass_window)
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert change_pass_window.passwordInput.validation_label.text() == 'Passwords must be atleast 9 characters long.'
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, SHORT_PASSWORD + "1")
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert (
+        change_pass_window.passwordInput.validation_label.text()
+        == 'Passwords must be identical and atleast 9 characters long.'
+    )
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert change_pass_window.passwordInput.validation_label.text() == 'Passwords must be identical.'
+
+
+def test_passphrase_change(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    main.repoTab.change_borg_passphrase()
+    change_pass_window = main.repoTab._window
+
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
+
+    stdout, stderr = borg_json_output('change_passphrase')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    change_pass_window.run()
+
+    qtbot.waitUntil(lambda: main.progressText.text().startswith('Borg passphrase changed.'), **pytest._wait_defaults)
+    assert main.progressText.text() == 'Borg passphrase changed.'
