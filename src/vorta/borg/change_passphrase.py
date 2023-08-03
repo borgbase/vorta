@@ -1,9 +1,11 @@
 from typing import Any, Dict
+
 from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
 from vorta.config import LOG_DIR
 from vorta.i18n import trans_late, translate
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob
 
 
