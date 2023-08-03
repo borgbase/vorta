@@ -142,9 +142,6 @@
            <attribute name="horizontalHeaderCascadingSectionResizes">
             <bool>false</bool>
            </attribute>
-           <attribute name="horizontalHeaderStretchLastSection">
-            <bool>true</bool>
-           </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
@@ -171,6 +168,11 @@
            <column>
             <property name="text">
              <string>Name</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Trigger</string>
             </property>
            </column>
           </widget>
@@ -207,10 +209,10 @@
                  </sizepolicy>
                 </property>
                 <property name="toolTip">
-                 <string>Refresh selected archive</string>
+                 <string>Recalculate selected archive's size(s)</string>
                 </property>
                 <property name="text">
-                 <string>Refresh</string>
+                 <string>Recalculate</string>
                 </property>
                 <property name="toolButtonStyle">
                  <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -618,7 +620,7 @@
             <item row="0" column="1">
              <widget class="QLineEdit" name="prunePrefixTemplate">
               <property name="toolTip">
-               <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+               <string>Available variables: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</string>
               </property>
               <property name="placeholderText">
                <string>{hostname}-{profile_slug}-</string>
@@ -675,7 +677,7 @@
             <item row="0" column="1">
              <widget class="QLineEdit" name="archiveNameTemplate">
               <property name="toolTip">
-               <string>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</string>
+               <string>Available variables: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</string>
               </property>
               <property name="placeholderText">
                <string>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</string>

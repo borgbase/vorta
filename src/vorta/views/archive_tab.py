@@ -2,22 +2,24 @@ import logging
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
-from PyQt5.QtGui import QDesktopServices, QKeySequence
-from PyQt5.QtWidgets import (
-    QAction,
+
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
+from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
     QApplication,
     QHeaderView,
     QInputDialog,
     QLayout,
     QMenu,
     QMessageBox,
-    QShortcut,
+    QStyledItemDelegate,
     QTableView,
     QTableWidgetItem,
     QWidget,
 )
+
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
@@ -33,6 +35,7 @@ from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, BackupProfileMixin
 from vorta.utils import (
+    borg_compat,
     choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
@@ -56,6 +59,13 @@ logger = logging.getLogger(__name__)
 SIZE_DECIMAL_DIGITS = 1
 
 
+# from https://stackoverflow.com/questions/63177587/pyqt-tableview-align-icons-to-center
+class IconDelegate(QStyledItemDelegate):
+    def initStyleOption(self, option, index):
+        super().initStyleOption(option, index)
+        option.decorationSize = option.rect.size() - QtCore.QSize(0, 10)
+
+
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
@@ -69,28 +79,36 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
+        self.remaining_refresh_archives = (
+            0  # number of archives that are left to refresh before action buttons are enabled again
+        )
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
+        self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
+        self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
-        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.Interactive)
-        header.setSectionResizeMode(4, QHeaderView.Stretch)
-        header.setStretchLastSection(True)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Interactive)
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
+
+        delegate = IconDelegate(self.archiveTable)
+        self.archiveTable.setItemDelegateForColumn(5, delegate)
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
 
-        self.archiveTable.setSelectionBehavior(QTableView.SelectRows)
-        self.archiveTable.setEditTriggers(QTableView.NoEditTriggers)
+        self.archiveTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.archiveTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.archiveTable.setWordWrap(False)
-        self.archiveTable.setTextElideMode(QtCore.Qt.ElideLeft)
+        self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
@@ -251,8 +269,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             if repo_mount_points:
                 self.repo_mount_point = repo_mount_points[0]
 
-            self.toolBox.setItemText(0, self.tr('Archives for %s') % profile.repo.url)
+            if profile.repo.name:
+                repo_name = f"{profile.repo.name} ({profile.repo.url})"
+            else:
+                repo_name = profile.repo.url
+            self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
+
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
+
+            # if no archive's name can be found in self.mount_points, then hide the mount point column
+            if not any(a.name in self.mount_points for a in archives):
+                self.archiveTable.hideColumn(3)
+            else:
+                self.archiveTable.showColumn(3)
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
@@ -279,13 +308,24 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
 
+                if archive.trigger == 'scheduled':
+                    item = QTableWidgetItem(get_colored_icon('clock-o'), '')
+                    item.setToolTip(self.tr('Scheduled'))
+                    self.archiveTable.setItem(row, 5, item)
+                elif archive.trigger == 'user':
+                    item = QTableWidgetItem(get_colored_icon('user'), '')
+                    item.setToolTip(self.tr('User initiated'))
+                    item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
+                    self.archiveTable.setItem(row, 5, item)
+
             self.archiveTable.setRowCount(len(archives))
             self.archiveTable.setSortingEnabled(sorting)
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
 
             self.archiveTable.selectionModel().clearSelection()
-            self._toggle_all_buttons(enabled=True)
+            if self.remaining_refresh_archives == 0:
+                self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
@@ -320,6 +360,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # handle selection of more than 2 rows
         selectionModel: QItemSelectionModel = self.archiveTable.selectionModel()
         indexes = selectionModel.selectedRows()
+        # actions that are enabled only when a single archive is selected
+        single_archive_action_buttons = [self.bMountArchive, self.bExtract, self.bRename]
+        # actions that are enabled when at least one archive is selected
+        multi_archive_action_buttons = [self.bDelete, self.bRefreshArchive]
 
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
@@ -329,14 +373,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not self.repoactions_enabled:
             reason = self.tr("(borg already running)")
 
-        # toggle delete button
+        # Disable the delete and refresh buttons if no archive is selected
         if self.repoactions_enabled and len(indexes) > 0:
-            self.bDelete.setEnabled(True)
-            self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(True)
+                button.setToolTip(self.tooltip_dict.get(button, ""))
         else:
-            self.bDelete.setEnabled(False)
-            tooltip = self.tooltip_dict[self.bDelete]
-            self.bDelete.setToolTip(tooltip + " " + reason or self.tr("(Select minimum one archive)"))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(False)
+                button.setToolTip(self.tooltip_dict.get(button, "") + " " + self.tr("(Select minimum one archive)"))
 
         # Toggle diff button
         if self.repoactions_enabled and len(indexes) == 2:
@@ -352,7 +397,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if self.repoactions_enabled and len(indexes) == 1:
             # Enable archive actions
-            self.fArchiveActions.setEnabled(True)
+            for widget in single_archive_action_buttons:
+                widget.setEnabled(True)
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
@@ -364,14 +410,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             reason = reason or self.tr("(Select exactly one archive)")
 
             # too few or too many selected.
-            self.fArchiveActions.setEnabled(False)
-
-            for index in range(layout.count()):
-                widget = layout.itemAt(index).widget()
+            for widget in single_archive_action_buttons:
                 tooltip = widget.toolTip()
-
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
                 widget.setToolTip(tooltip + " " + reason)
+                widget.setEnabled(False)
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
@@ -487,20 +530,31 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
 
     def refresh_archive_info(self):
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
-            if params['ok']:
-                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.info_result)
-                self._toggle_all_buttons(False)
-                self.app.jobs_manager.add_job(job)
+        selected_archives = self.archiveTable.selectionModel().selectedRows()
+
+        archive_names = []
+        for index in selected_archives:
+            archive_names.append(self.archiveTable.item(index.row(), 4).text())
+
+        self.remaining_refresh_archives = len(archive_names)  # number of archives to refresh
+        self._toggle_all_buttons(False)
+        for archive_name in archive_names:
+            if archive_name is not None:
+                params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
+                if params['ok']:
+                    job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
+                    job.updated.connect(self._set_status)
+                    job.result.connect(self.info_result)
+                    self.app.jobs_manager.add_job(job)
+                else:
+                    self._set_status(params['message'])
+                    return
 
     def info_result(self, result):
-        self._toggle_all_buttons(True)
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Refreshed archive.'))
+        self.remaining_refresh_archives -= 1
+        if result['returncode'] == 0 and self.remaining_refresh_archives == 0:
+            self._toggle_all_buttons(True)
+            self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):
@@ -757,7 +811,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         window = ExtractDialog(archive, model)
         self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window = window  # for testing
         window.show()
         window.accepted.connect(process_result)
@@ -778,19 +832,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
 
     def row_of_archive(self, archive_name):
-        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchExactly)
+        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
         rows = [item.row() for item in items if item.column() == 4]
         return rows[0] if rows else None
 
     def confirm_dialog(self, title, text):
         msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
+        msg.setIcon(QMessageBox.Icon.Information)
         msg.setText(text)
         msg.setWindowTitle(title)
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
-        msg.button(msg.Yes).setText(self.tr("Yes"))
-        msg.button(msg.Cancel).setText(self.tr("Cancel"))
-        return msg.exec_() == QMessageBox.Yes
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
+        msg.button(QMessageBox.StandardButton.Yes).setText(self.tr("Yes"))
+        msg.button(QMessageBox.StandardButton.Cancel).setText(self.tr("Cancel"))
+        return msg.exec() == QMessageBox.StandardButton.Yes
 
     def delete_action(self):
         # Since this function modify the UI, we can't put the whole function in a JobQUeue.
@@ -835,7 +889,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             # remove rows from list and database
             for archive in archives:
-                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchExactly):
+                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchFlag.MatchExactly):
                     self.archiveTable.removeRow(entry.row())
                 ArchiveModel.get(name=archive).delete_instance()
 
@@ -953,3 +1007,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
         else:
             self._toggle_all_buttons(True)
+
+    def toggle_compact_button_visibility(self):
+        """
+        Enable or disable the compact button depending on the Borg version.
+        This function runs once on startup, and everytime the profile is changed.
+        """
+        if borg_compat.check("COMPACT_SUBCOMMAND"):
+            self.compactButton.setEnabled(True)
+            self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
+        else:
+            self.compactButton.setEnabled(False)
+            tooltip = self.tooltip_dict[self.compactButton]
+            self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))

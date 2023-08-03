@@ -1,4 +1,5 @@
 from vorta.i18n import trans_late
+
 from .borg_job import BorgJob
 
 

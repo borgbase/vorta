@@ -6,8 +6,10 @@ At the bottom there is a simple schema migration system.
 
 import json
 from datetime import datetime
+
 import peewee as pw
 from playhouse import signals
+
 from vorta.utils import slugify
 
 DB = pw.Proxy()
@@ -37,6 +39,7 @@ class RepoModel(BaseModel):
     """A single remote repo with unique URL."""
 
     url = pw.CharField(unique=True)
+    name = pw.CharField(default='')
     added_at = pw.DateTimeField(default=datetime.now)
     encryption = pw.CharField(null=True)
     unique_size = pw.IntegerField(null=True)
@@ -130,6 +133,7 @@ class ArchiveModel(BaseModel):
     time = pw.DateTimeField()
     duration = pw.FloatField(null=True)
     size = pw.IntegerField(null=True)
+    trigger = pw.CharField(null=True)
 
     def formatted_time(self):
         return

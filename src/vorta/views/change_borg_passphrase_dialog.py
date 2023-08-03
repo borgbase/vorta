@@ -1,9 +1,9 @@
-from PyQt5 import QtCore, uic
-from PyQt5.QtWidgets import QAction, QApplication, QDialogButtonBox, QLineEdit
+from PyQt6 import QtCore, uic
+from PyQt6.QtWidgets import QApplication, QDialogButtonBox
+
 from vorta.borg.change_passphrase import BorgChangePassJob
-from vorta.i18n import translate
-from vorta.utils import get_asset, validate_passwords
-from vorta.views.utils import get_colored_icon
+from vorta.utils import get_asset
+from vorta.views.partials.password_input import PasswordInput
 
 uifile = get_asset('UI/changeborgpass.ui')
 ChangeBorgPassUI, ChangeBorgPassBase = uic.loadUiType(uifile)
@@ -15,27 +15,20 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
     def __init__(self, profile):
         super().__init__()
         self.setupUi(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.result = None
         self.profile = profile
 
-        # dialogButtonBox
+        self.setMinimumWidth(583)
+
+        self.passwordInput = PasswordInput()
+        self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
+
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Update"))
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
-        self.passwordLineEdit.textChanged.connect(self.password_listener)
-        self.confirmLineEdit.textChanged.connect(self.password_listener)
-
-        # Add clickable icon to toggle password visibility to end of box
-        self.showHideAction = QAction(self.tr("Show my passwords"), self)
-        self.showHideAction.setCheckable(True)
-        self.showHideAction.toggled.connect(self.set_visibility)
-
-        self.passwordLineEdit.addAction(self.showHideAction, QLineEdit.TrailingPosition)
-
-        self.set_icons()
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -45,25 +38,10 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
         if hasattr(self, 'saveButton'):
             self.saveButton.setText(self.tr("Update"))
 
-    def set_icons(self):
-        self.showHideAction.setIcon(get_colored_icon("eye"))
-
-    def set_visibility(self, visible):
-        visibility = QLineEdit.Normal if visible else QLineEdit.Password
-        self.passwordLineEdit.setEchoMode(visibility)
-        self.confirmLineEdit.setEchoMode(visibility)
-
-        if visible:
-            self.showHideAction.setIcon(get_colored_icon("eye-slash"))
-            self.showHideAction.setText(self.tr("Hide my passwords"))
-        else:
-            self.showHideAction.setIcon(get_colored_icon("eye"))
-            self.showHideAction.setText(self.tr("Show my passwords"))
-
     def run(self):
         # if self.password_listener() and self.validate():
-        if self.password_listener():
-            newPass = self.passwordLineEdit.text()
+        if self.passwordInput.validate():
+            newPass = self.passwordInput.passwordLineEdit.text()
 
             params = BorgChangePassJob.prepare(self.profile, newPass)
             if params['ok']:
@@ -87,18 +65,9 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
         else:
             self._set_status(self.tr('Unable to change Borg passphrase.'))
 
-    def validate(self):
-        """Check encryption type"""
-        if self.profile.repo.encryption.startswith('repokey'):
-            return True
-        self.errorText.setText(translate('utils', 'Encryption type must be repokey.'))
-        return False
-
-    def password_listener(self):
-        '''Validates passwords only if its going to be used'''
-        firstPass = self.passwordLineEdit.text()
-        secondPass = self.confirmLineEdit.text()
-
-        msg = validate_passwords(firstPass, secondPass)
-        self.errorText.setText(translate('utils', msg))
-        return not bool(msg)
+    # def validate(self):
+    #     """Check encryption type"""
+    #     if self.profile.repo.encryption.startswith('repokey'):
+    #         return True
+    #     self.errorText.setText(translate('utils', 'Encryption type must be repokey.'))
+    #     return False

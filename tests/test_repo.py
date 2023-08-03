@@ -1,8 +1,10 @@
 import os
 import uuid
+
 import pytest
-from PyQt5 import QtCore
 import vorta.borg.borg_job
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
 
@@ -17,77 +19,52 @@ def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
     add_repo_window = main.repoTab._window
     qtbot.addWidget(add_repo_window)
 
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid')
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD)
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be greater than 8 characters long.'
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be atleast 9 characters long.'
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, SHORT_PASSWORD + "1")
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical and greater than 8 characters long.'
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD + "1")
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert (
+        add_repo_window.passwordInput.validation_label.text()
+        == 'Passwords must be identical and atleast 9 characters long.'
+    )
 
-    add_repo_window.passwordLineEdit.clear()
-    add_repo_window.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.LeftButton)
-    assert add_repo_window.passwordLabel.text() == 'Passwords must be identical.'
+    add_repo_window.passwordInput.passwordLineEdit.clear()
+    add_repo_window.passwordInput.confirmLineEdit.clear()
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be identical.'
 
 
-def test_repo_unlink(qapp, qtbot):
+def test_repo_unlink(qapp, qtbot, monkeypatch):
     main = qapp.main_window
     tab = main.repoTab
+    monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
     main.tabWidget.setCurrentIndex(0)
-    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
     # -1 is the repo id in this test
     qtbot.waitUntil(lambda: 'Select a backup repository first.' in main.progressText.text(), **pytest._wait_defaults)
     assert 'Select a backup repository first.' in main.progressText.text()
-
-
-def test_passphrase_change_failures(qapp, qtbot):
-    # Add new repo window
-    main = qapp.main_window
-    main.repoTab.change_borg_passphrase()
-    change_pass_window = main.repoTab._window
-    qtbot.addWidget(change_pass_window)
-
-    change_pass_window.passwordLineEdit.clear()
-    change_pass_window.confirmLineEdit.clear()
-    qtbot.keyClicks(change_pass_window.passwordLineEdit, SHORT_PASSWORD)
-    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
-    assert change_pass_window.errorText.text() == 'Passwords must be greater than 8 characters long.'
-
-    change_pass_window.passwordLineEdit.clear()
-    change_pass_window.confirmLineEdit.clear()
-    qtbot.keyClicks(change_pass_window.passwordLineEdit, SHORT_PASSWORD + "1")
-    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
-    assert change_pass_window.errorText.text() == 'Passwords must be identical and greater than 8 characters long.'
-
-    change_pass_window.passwordLineEdit.clear()
-    change_pass_window.confirmLineEdit.clear()
-    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(change_pass_window.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.LeftButton)
-    assert change_pass_window.errorText.text() == 'Passwords must be identical.'
 
 
 def test_password_autofill(qapp, qtbot):
@@ -102,7 +79,7 @@ def test_password_autofill(qapp, qtbot):
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
 
-    assert add_repo_window.passwordLineEdit.text() == password
+    assert add_repo_window.passwordInput.passwordLineEdit.text() == password
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
@@ -111,10 +88,12 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main.repoTab.new_repo()  # couldn't click menu
     add_repo_window = main.repoTab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_name = 'Test Repo'
 
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.repoName, test_repo_name)
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -129,12 +108,12 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
-    assert main.repoTab.repoSelector.currentText() == test_repo_url
+    assert main.repoTab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
     main = qapp.main_window
-    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
     ssh_dialog = main.repoTab._window
 
     ssh_dir = tmpdir
@@ -164,7 +143,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: 'Backup finished.' in main.progressText.text(), **pytest._wait_defaults)
     qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     assert EventLogModel.select().count() == 1
@@ -175,16 +154,45 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.scheduleTab.logTableWidget.rowCount() == 1
 
 
+def test_passphrase_change_failures(qapp, qtbot):
+    # Add new repo window
+    main = qapp.main_window
+    main.repoTab.change_borg_passphrase()
+    change_pass_window = main.repoTab._window
+    qtbot.addWidget(change_pass_window)
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, SHORT_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert change_pass_window.passwordInput.validation_label.text() == 'Passwords must be atleast 9 characters long.'
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, SHORT_PASSWORD + "1")
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert (
+        change_pass_window.passwordInput.validation_label.text()
+        == 'Passwords must be identical and atleast 9 characters long.'
+    )
+
+    change_pass_window.passwordInput.clear()
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+    qtbot.mouseClick(change_pass_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert change_pass_window.passwordInput.validation_label.text() == 'Passwords must be identical.'
+
+
 def test_passphrase_change(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     main.repoTab.change_borg_passphrase()
     change_pass_window = main.repoTab._window
 
-    qtbot.keyClicks(change_pass_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(change_pass_window.confirmLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(change_pass_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('change_passphrase')
-    print(stdout, stderr)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 

@@ -3,7 +3,8 @@ internationalisation (i18n) support code
 """
 import logging
 import os
-from PyQt5.QtCore import QLocale, QTranslator
+
+from PyQt6.QtCore import QLocale, QTranslator
 
 logger = logging.getLogger(__name__)
 

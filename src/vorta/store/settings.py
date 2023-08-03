@@ -1,5 +1,6 @@
 import sys
 from typing import Dict, List
+
 from vorta.i18n import trans_late
 
 
@@ -100,6 +101,30 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'internal',
             'label': 'Previous window height',
         },
+        {
+            'key': 'diff_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Diff dialog display mode',
+        },
+        {
+            'key': 'extract_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Extract dialog display mode',
+        },
+        {
+            'key': 'sourcetab_sort_column',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Column',
+        },
+        {
+            'key': 'sourcetab_sort_order',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Order',
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -114,6 +139,17 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'value': False,
                 'type': 'checkbox',
                 'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
+            },
+            {
+                'key': 'check_full_disk_access',
+                'value': True,
+                'type': 'checkbox',
+                'group': startup,
+                'label': trans_late(
+                    'settings',
+                    'Check for Full Disk Access on startup',
+                ),
+                'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
             },
         ]
     else:

@@ -1,7 +1,9 @@
 import logging
 import os
-from PyQt5 import QtDBus
-from PyQt5.QtCore import QVariant
+
+from PyQt6 import QtDBus
+from PyQt6.QtCore import QMetaType, QVariant
+
 from vorta.keyring.abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -47,9 +49,9 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     def get_result(self, method, args=[]):
         if args:
-            result = self.iface.callWithArgumentList(QtDBus.QDBus.AutoDetect, method, args)
+            result = self.iface.callWithArgumentList(QtDBus.QDBus.CallMode.AutoDetect, method, args)
         else:
-            result = self.iface.call(QtDBus.QDBus.AutoDetect, method)
+            result = self.iface.call(QtDBus.QDBus.CallMode.AutoDetect, method)
         return result.arguments()[0]
 
     @property
@@ -60,7 +62,7 @@ class VortaKWallet5Keyring(VortaKeyring):
     def try_unlock(self):
         wallet_name = self.get_result("networkWallet")
         wId = QVariant(0)
-        wId.convert(4)
+        wId.convert(QMetaType(QMetaType.Type.LongLong.value))
         output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
         try:
             self.handle = int(output)

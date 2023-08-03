@@ -2,10 +2,17 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
-from vorta.config import LOG_DIR
+
+from vorta import config
 from vorta.i18n import trans_late, translate
-from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
+from vorta.store.models import (
+    ArchiveModel,
+    RepoModel,
+    SourceFileModel,
+    WifiSettingModel,
+)
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
+
 from .borg_job import BorgJob
 
 
@@ -21,6 +28,7 @@ class BorgCreateJob(BorgJob):
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size'],
+                    'trigger': result['params'].get('category', 'user'),
                 },
             )
             new_archive.save()
@@ -39,9 +47,10 @@ class BorgCreateJob(BorgJob):
                     + translate(
                         'BorgCreateJob',
                         'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                    ).format(LOG_DIR.as_uri())
+                    ).format(config.LOG_DIR.as_uri())
                 )
             else:
+                self.app.backup_log_event.emit('', {})
                 self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
 
     def progress_event(self, fmt):

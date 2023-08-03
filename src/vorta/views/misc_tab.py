@@ -1,9 +1,19 @@
 import logging
-from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QCheckBox, QFormLayout, QHBoxLayout, QLabel, QSizePolicy, QSpacerItem
+
+from PyQt6 import uic
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+)
+
+from vorta import config
 from vorta._version import __version__
-from vorta.config import LOG_DIR
 from vorta.i18n import translate
 from vorta.store.models import BackupProfileMixin, SettingsModel
 from vorta.store.settings import get_misc_settings
@@ -24,7 +34,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
         self.logLink.setText(
-            f'<a href="file://{LOG_DIR}"><span style="text-decoration:' 'underline; color:#0984e3;">Log</span></a>'
+            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
+            'underline; color:#0984e3;">Log</span></a>'
         )
 
         self.checkboxLayout = QFormLayout(self.frameSettings)
@@ -87,7 +98,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 # create widget
                 cb = QCheckBox(translate('settings', setting.label))
                 cb.setToolTip(setting.tooltip)
-                cb.setCheckState(setting.value)
+                cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
 

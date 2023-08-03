@@ -1,7 +1,9 @@
 from typing import Any, Dict
-from vorta.config import LOG_DIR
+
+from vorta import config
 from vorta.i18n import translate
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob
 
 
@@ -25,7 +27,7 @@ class BorgCheckJob(BorgJob):
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] "
                 + translate('RepoCheckJob', 'Repo check failed. See the <a href="{0}">logs</a> for details.').format(
-                    LOG_DIR.as_uri()
+                    config.LOG_DIR.as_uri()
                 )
             )
             self.app.check_failed_event.emit(result)

@@ -11,8 +11,10 @@ from collections import namedtuple
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
+
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
@@ -25,7 +27,7 @@ keyring_lock = Lock()
 db_lock = Lock()
 logger = logging.getLogger(__name__)
 
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
+FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 """
@@ -188,6 +190,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
+        ret['repo_name'] = profile.repo.name
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
         ret['profile_id'] = profile.id

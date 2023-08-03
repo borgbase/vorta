@@ -1,8 +1,11 @@
 import os
 from datetime import datetime, timedelta
+
 from peewee import Tuple, fn
 from playhouse import signals
+
 from vorta.autostart import open_app_at_startup
+
 from .migrations import run_migrations
 from .models import (
     DB,
@@ -18,7 +21,7 @@ from .models import (
 )
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 20
+SCHEMA_VERSION = 22
 
 
 @signals.post_save(sender=SettingsModel)
