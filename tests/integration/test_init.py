@@ -39,8 +39,8 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     add_repo_window.repoName.del_()
     qtbot.keyClicks(add_repo_window.repoName, TEST_REPO_NAME)
 
-    qtbot.keyClicks(add_repo_window.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.confirmLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     add_repo_window.run()
 
