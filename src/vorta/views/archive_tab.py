@@ -1012,6 +1012,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def rename_result(self, result):
         if result['returncode'] == 0:
+            self.refresh_archive_info()
             self._set_status(self.tr('Archive renamed.'))
             self.renamed_archive_original_name = None
             self.populate_from_profile()
