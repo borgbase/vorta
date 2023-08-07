@@ -4,7 +4,7 @@ import pytest
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, QMimeData, Qt
 from vorta.views.diff_result import (
     ChangeType,
     DiffData,
@@ -409,3 +409,56 @@ def test_archive_diff_json_parser(line, expected):
 
     assert item.path == PurePath(expected[0]).parts
     assert item.data == DiffData(*expected[1:])
+
+
+def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    stdout, stderr = borg_json_output("diff_archives")
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    compat = vorta.utils.borg_compat
+
+    def check(feature_name):
+        if feature_name == 'DIFF_JSON_LINES':
+            return False
+        return vorta.utils.BorgCompatibility.check(compat, feature_name)
+
+    mocker.patch.object(vorta.utils.borg_compat, 'check', check)
+
+    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
+    model = tab.archiveTable.model()
+
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+
+    selection_model.select(model.index(0, 0), flags)
+    selection_model.select(model.index(1, 0), flags)
+
+    tab.diff_action()
+
+    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+
+    # save original clipboard text to reset later.
+    original_clipboard = None
+    if qapp.clipboard().mimeData().hasText():
+        original_clipboard = QMimeData()
+        original_clipboard.setText(qapp.clipboard().mimeData().text())
+
+    # test 'diff_item_copy()' by passing it an item to copy
+    index = tab._resultwindow.treeView.model().index(0, 0)
+    assert index is not None
+    tab._resultwindow.diff_item_copy(index)
+    clipboard = qapp.clipboard().mimeData()
+    assert clipboard.hasText()
+    assert clipboard.text() == "/test"
+
+    # return original text to clipboard
+    if original_clipboard:
+        qapp.clipboard().setMimeData(original_clipboard)
