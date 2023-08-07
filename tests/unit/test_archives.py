@@ -221,7 +221,7 @@ def test_double_click(qapp, qtbot, borg_json_output, setup_archiver_tab):
     assert item is not None
     cell_pos = tab.archiveTable.visualItemRect(item).center()
 
-    # Through testing I found one must click the cell first, then double click to trigger emit
+    # single click to select cell, then double click to trigger emit
     with qtbot.waitSignal(tab.archiveTable.cellDoubleClicked, timeout=1000):
         qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=cell_pos)
         qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=cell_pos)
