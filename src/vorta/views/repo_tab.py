@@ -269,6 +269,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def change_borg_passphrase(self):
         window = ChangeBorgPassphraseWindow(self.profile())
         self._window = window  # For tests
+        window.setWindowTitle(self.tr("Change Borg Passphrase"))
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
 
