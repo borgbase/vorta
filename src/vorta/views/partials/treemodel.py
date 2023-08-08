@@ -1060,6 +1060,13 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
         parser.add_argument("-s", "--size", nargs="+", type=valid_size, help="Match by size.")
 
+        # Diff view only
+        parser.add_argument("-b", "--balance", nargs="+", type=valid_size, help="Match by balance size.")
+
+        # Extract view only
+        parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
+        parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
+
         try:
             return parser.parse_args(pattern.split())
         except SystemExit:
@@ -1130,11 +1137,41 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
                 return item_size >= filter_size
 
         if self.searchPattern.size:
-            item_size = item.data.size
+            # Diff view has size column corresponding to the changed_size while
+            # Extract view has size column corresponding to the size
+            if hasattr(item.data, 'changed_size'):
+                item_size = item.data.changed_size
+            else:
+                item_size = item.data.size
 
             for filter_size in self.searchPattern.size:
                 if not validate_size_filter(item_size, filter_size):
                     return False
+
+        if self.searchPattern.balance:
+            # Only available in Diff view
+            if hasattr(item.data, 'changed_size'):
+                item_balance = item.data.size
+
+                for filter_balance in self.searchPattern.balance:
+                    if not validate_size_filter(item_balance, filter_balance):
+                        return False
+            else:
+                self.searchStringError.emit(True)
+
+        if self.searchPattern.healthy:
+            if hasattr(item.data, 'health'):
+                if not item.data.health:
+                    return False
+            else:
+                self.searchStringError.emit(True)
+
+        if self.searchPattern.unhealthy:
+            if hasattr(item.data, 'health'):
+                if item.data.health:
+                    return False
+            else:
+                self.searchStringError.emit(True)
 
         if self.searchPattern.change:
             item_change = item.data.change_type.short()
