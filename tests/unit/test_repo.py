@@ -12,43 +12,48 @@ LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
 
 
-def test_repo_add_failures(qapp, qtbot, mocker, borg_json_output):
+@pytest.mark.parametrize(
+    "first_password, second_password, validation_error",
+    [
+        (SHORT_PASSWORD, SHORT_PASSWORD, 'Passwords must be at least 9 characters long.'),
+        (LONG_PASSWORD, SHORT_PASSWORD, 'Passwords must be identical.'),
+        (SHORT_PASSWORD + "1", SHORT_PASSWORD, 'Passwords must be identical and at least 9 characters long.'),
+        (LONG_PASSWORD, LONG_PASSWORD, ''),
+    ],
+)
+def test_new_repo_password_validation(qapp, qtbot, borg_json_output, first_password, second_password, validation_error):
     # Add new repo window
     main = qapp.main_window
-    main.repoTab.new_repo()
-    add_repo_window = main.repoTab._window
+    tab = main.repoTab
+    tab.new_repo()
+    add_repo_window = tab._window
     qtbot.addWidget(add_repo_window)
 
-    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
+    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, first_password)
+    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, second_password)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
-    assert add_repo_window.errorText.text().startswith('Please enter a valid')
+    assert add_repo_window.passwordInput.validation_label.text() == validation_error
 
-    add_repo_window.passwordInput.passwordLineEdit.clear()
-    add_repo_window.passwordInput.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD)
-    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
+
+@pytest.mark.parametrize(
+    "repo_name, error_text",
+    [
+        ('test_repo_name', ''),  # valid repo name
+        ('a' * 64, ''),  # also valid (<=64 characters)
+        ('a' * 65, 'Repository name must be less than 65 characters.'),  # not valid (>64 characters)
+    ],
+)
+def test_repo_add_name_validation(qapp, qtbot, borg_json_output, repo_name, error_text):
+    main = qapp.main_window
+    tab = main.repoTab
+    tab.new_repo()
+    add_repo_window = tab._window
+    qtbot.addWidget(add_repo_window)
+
     qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
+    qtbot.keyClicks(add_repo_window.repoName, repo_name)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
-    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be atleast 9 characters long.'
-
-    add_repo_window.passwordInput.passwordLineEdit.clear()
-    add_repo_window.passwordInput.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, SHORT_PASSWORD + "1")
-    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
-    assert (
-        add_repo_window.passwordInput.validation_label.text()
-        == 'Passwords must be identical and atleast 9 characters long.'
-    )
-
-    add_repo_window.passwordInput.passwordLineEdit.clear()
-    add_repo_window.passwordInput.confirmLineEdit.clear()
-    qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
-    qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, SHORT_PASSWORD)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
-    assert add_repo_window.passwordInput.validation_label.text() == 'Passwords must be identical.'
+    assert add_repo_window.errorText.text() == error_text
 
 
 def test_repo_unlink(qapp, qtbot, monkeypatch):
@@ -56,7 +61,6 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     tab = main.repoTab
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
-    main.tabWidget.setCurrentIndex(0)
     qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
@@ -69,8 +73,9 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
 
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
-    main.repoTab.new_repo()  # couldn't click menu
-    add_repo_window = main.repoTab._window
+    tab = main.repoTab
+    tab.new_repo()
+    add_repo_window = tab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
     keyring = VortaKeyring.get_keyring()
@@ -82,14 +87,28 @@ def test_password_autofill(qapp, qtbot):
     assert add_repo_window.passwordInput.passwordLineEdit.text() == password
 
 
-def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
-    # Add new repo window
+def test_repo_add_failure(qapp, qtbot, borg_json_output):
     main = qapp.main_window
-    main.repoTab.new_repo()  # couldn't click menu
-    add_repo_window = main.repoTab._window
+    tab = main.repoTab
+    tab.new_repo()
+    add_repo_window = tab._window
+    qtbot.addWidget(add_repo_window)
+
+    # Add repo with invalid URL
+    qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
+    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    assert add_repo_window.errorText.text().startswith('Please enter a valid repo URL')
+
+
+def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.repoTab
+    tab.new_repo()
+    add_repo_window = tab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
     test_repo_name = 'Test Repo'
 
+    # Enter valid repo URL, name, and password
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.repoName, test_repo_name)
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
@@ -108,13 +127,15 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
 
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
-    assert main.repoTab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
+    assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
 def test_ssh_dialog(qapp, qtbot, tmpdir):
     main = qapp.main_window
-    qtbot.mouseClick(main.repoTab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
-    ssh_dialog = main.repoTab._window
+    tab = main.repoTab
+
+    qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
+    ssh_dialog = tab._window
 
     ssh_dir = tmpdir
     key_tmpfile = ssh_dir.join("id_rsa-test")
