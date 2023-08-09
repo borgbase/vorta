@@ -11,7 +11,6 @@ from PyQt6.QtWidgets import QCheckBox, QFormLayout
 
 def test_autostart(qapp, qtbot):
     """Check if file exists only on Linux, otherwise just check it doesn't crash"""
-
     setting = "Automatically start Vorta at login"
 
     _click_toggle_setting(setting, qapp, qtbot)
@@ -69,7 +68,6 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
 def test_check_full_disk_access(qapp, qtbot, mocker):
     """Enables/disables 'Check for Full Disk Access on startup' setting and ensures functionality"""
-
     setting = "Check for Full Disk Access on startup"
 
     # Set mocks for setting enabled
@@ -97,7 +95,6 @@ def test_check_full_disk_access(qapp, qtbot, mocker):
 
 def _click_toggle_setting(setting, qapp, qtbot):
     """Toggle setting checkbox in the misc tab"""
-
     miscTab = qapp.main_window.miscTab
 
     for x in range(miscTab.checkboxLayout.count()):
@@ -107,7 +104,6 @@ def _click_toggle_setting(setting, qapp, qtbot):
             if checkbox.text() == setting and isinstance(checkbox, QCheckBox):
                 # Have to use pos to click checkbox correctly
                 # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
-                qtbot.mouseClick(
-                    checkbox, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2))
-                )
+                pos = QtCore.QPoint(2, int(checkbox.height() / 2))
+                qtbot.mouseClick(checkbox, QtCore.Qt.MouseButton.LeftButton, pos=pos)
                 break
