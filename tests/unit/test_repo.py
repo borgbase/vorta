@@ -48,9 +48,10 @@ def test_repo_add_name_validation(qapp, qtbot, borg_json_output, repo_name, erro
     tab = main.repoTab
     tab.new_repo()
     add_repo_window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
     qtbot.addWidget(add_repo_window)
 
-    qtbot.keyClicks(add_repo_window.repoURL, 'bbb.com:repo')
+    qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.repoName, repo_name)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.errorText.text() == error_text
