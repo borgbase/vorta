@@ -103,7 +103,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
-                cb.stateChanged.connect(lambda v, key=setting.key: self.emit_archive_refresh(key))
+                if setting.key == 'enable_fixed_units':
+                    cb.stateChanged.connect(self.refresh_archive.emit)
 
                 tb = ToolTipButton()
                 tb.setToolTip(setting.tooltip)
@@ -127,10 +128,6 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         """Set or update the icons in this view."""
         for button in self.tooltip_buttons:
             button.setIcon(get_colored_icon('help-about'))
-
-    def emit_archive_refresh(self, key):
-        if key == 'enable_fixed_units':
-            self.refresh_archive.emit()
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)

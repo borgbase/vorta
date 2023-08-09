@@ -36,14 +36,14 @@ def test_autostart(qapp, qtbot):
 
 def test_enable_fixed_units(qapp, qtbot, mocker):
     """Tests the 'enable fixed units' setting to ensure the archive tab sizes are displayed correctly."""
-
     tab = qapp.main_window.archiveTab
+    setting = "Display all archive sizes in a consistent unit of measurement"
 
     # set mocks
     mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
     mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
 
-    # with setting enabled, fixed units should be decided and passed to pretty_bytes as an 'int'
+    # with setting enabled, fixed units should be determined and passed to pretty_bytes as an 'int'
     tab.populate_from_profile()
     mock_pretty_bytes.assert_called()
     kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
@@ -61,17 +61,9 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
     assert 'fixed_unit' in kwargs_list
     assert kwargs_list['fixed_unit'] is None
 
-
-def test_emit_archive_refresh(qapp, qtbot, mocker):
-    """Test that an emit occurs when `enable fixed units` setting is changed"""
-
-    setting = "Display all archive sizes in a consistent unit of measurement"
-    mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
-
-    # click the setting, see that 'pretty_bytes' is called to recalculate the archive unit size
-    mock_pretty_bytes.reset_mock()
-    _click_toggle_setting(setting, qapp, qtbot)
-    mock_pretty_bytes.assert_called()
+    # use the qt bot to click the setting and see that the refresh_archive emit works as intended.
+    with qtbot.waitSignal(qapp.main_window.miscTab.refresh_archive, timeout=5000):
+        _click_toggle_setting(setting, qapp, qtbot)
 
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
