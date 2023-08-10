@@ -21,7 +21,6 @@ def sources_setup(qapp, qtbot, monkeypatch, choose_file_dialog):
 
 def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, sources_setup):
     main, tab = sources_setup()
-
     # test adding a folder with os access
     mocker.patch('os.access', return_value=True)
     tab.source_add(want_folder=True)
@@ -39,9 +38,10 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, sources_setup):
     tab.source_remove()
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 1, **pytest._wait_defaults)
     assert tab.sourceFilesWidget.rowCount() == 1
+    qtbot.waitUntil(lambda: len(qapp.main_window.sourceTab.updateThreads) == 0, **pytest._wait_defaults)
 
 
-@pytest.mark.skipif(platform=sys.platform.startswith("linux"), reason="spurious test fails due to 'updateThreads'")
+@pytest.mark.skipif(sys.platform.startswith("linux"), reason="spurious test fails due to 'updateThreads'")
 @pytest.mark.parametrize(
     "path, valid",
     [
