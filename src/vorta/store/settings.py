@@ -64,8 +64,12 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': False,
             'type': 'checkbox',
             'group': information,
-            'label': trans_late('settings', 'Display all archive sizes in a consistent unit of measurement'),
-            'tooltip': trans_late('settings', 'Enable to replace dynamic units of measurement based on archive size'),
+            'label': trans_late('settings', 'Use the same unit of measurement for archive sizes'),
+            'tooltip': trans_late(
+                'settings',
+                'When enabled, all archive sizes will use the same unit of measurement, '
+                'such as  KB or MB. This can make archive sizes easier to compare.',
+            ),
         },
         {
             'key': 'use_system_keyring',
