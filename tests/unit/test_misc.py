@@ -36,7 +36,7 @@ def test_autostart(qapp, qtbot):
 def test_enable_fixed_units(qapp, qtbot, mocker):
     """Tests the 'enable fixed units' setting to ensure the archive tab sizes are displayed correctly."""
     tab = qapp.main_window.archiveTab
-    setting = "Display all archive sizes in a consistent unit of measurement"
+    setting = "Use the same unit of measurement for archive sizes"
 
     # set mocks
     mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
