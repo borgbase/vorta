@@ -37,7 +37,7 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, source_env):
 
     # test removing a folder
     tab.sourceFilesWidget.selectRow(1)
-    tab.source_remove()
+    qtbot.mouseClick(tab.removeButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 1, **pytest._wait_defaults)
     assert tab.sourceFilesWidget.rowCount() == 1
 
@@ -75,18 +75,19 @@ def test_paste_text(qapp, qtbot, mocker, monkeypatch, source_env, path, valid):
 
 def test_sources_update(qapp, qtbot, mocker, source_env):
     main, tab = source_env
+    update_path_info_spy = mocker.spy(tab, "update_path_info")
 
     # test that `update_path_info()` has been called for each source path
-    update_path_info_spy = mocker.spy(tab, "update_path_info")
     qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     assert tab.sourceFilesWidget.rowCount() == 1
     assert update_path_info_spy.call_count == 1
 
-    # add a new source and test again
+    # add a new source and reset mock
     tab.source_add(want_folder=True)
-    qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
     update_path_info_spy.reset_mock()
-    tab.sources_update()
+
+    # retest that `update_path_info()` has been called for each source path
+    qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     assert tab.sourceFilesWidget.rowCount() == 2
     assert update_path_info_spy.call_count == 2
