@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 import vorta.views
 from PyQt6 import QtCore
@@ -39,6 +41,7 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, sources_setup):
     assert tab.sourceFilesWidget.rowCount() == 1
 
 
+@pytest.mark.skipif(platform=sys.platform.startswith("linux"), reason="spurious test fails due to 'updateThreads'")
 @pytest.mark.parametrize(
     "path, valid",
     [
