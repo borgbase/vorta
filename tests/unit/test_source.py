@@ -1,5 +1,6 @@
 import pytest
 import vorta.views
+from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 
 
@@ -76,12 +77,13 @@ def test_sources_update(qapp, qtbot, mocker, sources_setup):
 
     # test that `update_path_info()` has been called for each source path
     update_path_info_spy = mocker.spy(tab, "update_path_info")
-    tab.sources_update()
+    qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     assert tab.sourceFilesWidget.rowCount() == 1
     assert update_path_info_spy.call_count == 1
 
     # add a new source and test again
     tab.source_add(want_folder=True)
+    qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
     update_path_info_spy.reset_mock()
     tab.sources_update()
