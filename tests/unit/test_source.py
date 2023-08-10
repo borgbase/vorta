@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 import vorta.views
 from PyQt6 import QtCore
@@ -38,10 +36,10 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, sources_setup):
     tab.source_remove()
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 1, **pytest._wait_defaults)
     assert tab.sourceFilesWidget.rowCount() == 1
+    # Wait for directory sizing to finish
     qtbot.waitUntil(lambda: len(qapp.main_window.sourceTab.updateThreads) == 0, **pytest._wait_defaults)
 
 
-@pytest.mark.skipif(sys.platform.startswith("linux"), reason="spurious test fails due to 'updateThreads'")
 @pytest.mark.parametrize(
     "path, valid",
     [
@@ -92,3 +90,5 @@ def test_sources_update(qapp, qtbot, mocker, sources_setup):
     tab.sources_update()
     assert tab.sourceFilesWidget.rowCount() == 2
     assert update_path_info_spy.call_count == 2
+    # Wait for directory sizing to finish
+    qtbot.waitUntil(lambda: len(qapp.main_window.sourceTab.updateThreads) == 0, **pytest._wait_defaults)
