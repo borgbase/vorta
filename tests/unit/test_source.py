@@ -23,6 +23,8 @@ def source_env(qapp, qtbot, monkeypatch, choose_file_dialog):
 
 def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, source_env):
     main, tab = source_env
+    mocker.patch.object(QMessageBox, "exec")  # prevent QMessageBox from stopping test
+
     # test adding a folder with os access
     mocker.patch('os.access', return_value=True)
     tab.source_add(want_folder=True)
@@ -31,7 +33,6 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, source_env):
 
     # test adding a folder without os access
     mocker.patch('os.access', return_value=False)
-    monkeypatch.setattr(QMessageBox, "exec", lambda *args: True)  # prevent QMessageBox from stopping test
     tab.source_add(want_folder=True)
     assert tab.sourceFilesWidget.rowCount() == 2
 
@@ -52,13 +53,13 @@ def test_source_add_remove(qapp, qtbot, monkeypatch, mocker, source_env):
         (f"file://{__file__}{__file__}", False),  # invalid - no new line separating file names
     ],
 )
-def test_paste_text(qapp, qtbot, mocker, monkeypatch, source_env, path, valid):
+def test_paste_text(qapp, qtbot, mocker, source_env, path, valid):
     main, tab = source_env
     mock_clipboard = mocker.Mock()
     mock_clipboard.text.return_value = path
 
     mocker.patch.object(vorta.views.source_tab.QApplication, 'clipboard', return_value=mock_clipboard)
-    monkeypatch.setattr(QMessageBox, "exec", lambda *args: True)  # prevent QMessageBox from stopping test
+    mocker.patch.object(QMessageBox, "exec")  # prevent QMessageBox from stopping test
     tab.paste_text()
 
     if valid:
