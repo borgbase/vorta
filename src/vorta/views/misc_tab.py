@@ -1,6 +1,6 @@
 import logging
 
-from PyQt6 import uic
+from PyQt6 import QtCore, uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication,
@@ -28,6 +28,8 @@ logger = logging.getLogger(__name__)
 
 
 class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
+    refresh_archive = QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
         """Init."""
         super().__init__(parent)
@@ -101,6 +103,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
+                if setting.key == 'enable_fixed_units':
+                    cb.stateChanged.connect(self.refresh_archive.emit)
 
                 tb = ToolTipButton()
                 tb.setToolTip(setting.tooltip)
