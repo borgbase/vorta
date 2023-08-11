@@ -24,6 +24,8 @@ from vorta.network_status.abc import NetworkStatusMonitor
 # Used to store whether a user wanted to override the
 # default directory for the --development flag
 DEFAULT_DIR_FLAG = object()
+METRIC_UNITS = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+NONMETRIC_UNITS = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
@@ -140,14 +142,10 @@ def get_network_status_monitor():
 
 def get_path_datasize(path, exclude_patterns):
     file_info = QFileInfo(path)
-    data_size = 0
 
     if file_info.isDir():
         data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
-        # logger.info("path (folder) %s %u elements size now=%u (%s)",
-        #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
     else:
-        # logger.info("path (file) %s size=%u", file_info.path(), file_info.size())
         data_size = file_info.size()
         files_count = 1
 
@@ -279,11 +277,7 @@ def pretty_bytes(
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
-    power, units = (
-        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
-        if metric
-        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
-    )
+    power, units = (10**3, METRIC_UNITS) if metric else (2**10, NONMETRIC_UNITS)
     if fixed_unit is None:
         n = find_best_unit_for_size(size, metric=metric, precision=precision)
     else:
