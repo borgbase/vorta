@@ -18,7 +18,7 @@ SHORT_PASSWORD = 'hunter2'
         (SHORT_PASSWORD, SHORT_PASSWORD, 'Passwords must be at least 9 characters long.'),
         (LONG_PASSWORD, SHORT_PASSWORD, 'Passwords must be identical.'),
         (SHORT_PASSWORD + "1", SHORT_PASSWORD, 'Passwords must be identical and at least 9 characters long.'),
-        (LONG_PASSWORD, LONG_PASSWORD, ''),
+        (LONG_PASSWORD, LONG_PASSWORD, ''),  # no error, password meets requirements.
     ],
 )
 def test_new_repo_password_validation(qapp, qtbot, borg_json_output, first_password, second_password, validation_error):
