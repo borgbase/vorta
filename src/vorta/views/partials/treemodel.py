@@ -7,6 +7,7 @@ import bisect
 import enum
 import os.path as osp
 import re
+from datetime import datetime
 from fnmatch import fnmatch
 from functools import reduce
 from pathlib import PurePath
@@ -1021,7 +1022,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             Parse the size string into a tuple of two values.
             """
 
-            comparison_sign = ['<', '>', '<=', '>=']
+            comparison_sign = ['<', '>', '<=', '>=', '=']
             size_units = ['KB', 'MB', 'GB']
 
             # TODO: Should we just use regex? ^([<>]=?|)(\d+(\.\d+)?)([KMG]B)?$
@@ -1040,15 +1041,49 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             except ValueError:
                 raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
 
+        def parse_date(value):
+            """
+            Parse the date string into a tuple of two values.
+            """
+
+            comparison_sign = ['<', '>', '<=', '>=', '=']
+
+            if not any(value.startswith(unit) for unit in comparison_sign):
+                raise argparse.ArgumentTypeError("Invalid date format. Supported comparison signs: <, >, <=, >=, =")
+
+            if value[1] == '=':
+                date = value[2:]
+                sign = value[:2]
+            else:
+                date = value[1:]
+                sign = value[:1]
+
+            try:
+                date = datetime.strptime(date, '%Y-%m-%d')
+            except ValueError:
+                raise argparse.ArgumentTypeError("Invalid date format. Must be YYYY-MM-DD.")
+
+            return (sign, date)
+
         def valid_size(value):
             size = value.split(',')
 
             if len(size) == 1:
-                return parse_size(size[0])
+                return [parse_size(size[0])]
             elif len(size) == 2:
-                return (parse_size(size[0]), parse_size(size[1]))
+                return [parse_size(size[0]), parse_size(size[1])]
             else:
                 raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
+
+        def valid_date_range(value):
+            date = value.split(',')
+
+            if len(date) == 1:
+                return [parse_date(date[0])]
+            elif len(date) == 2:
+                return [parse_date(date[0]), parse_date(date[1])]
+            else:
+                raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
 
         parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
         parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
@@ -1058,14 +1093,15 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
         parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
         parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
-        parser.add_argument("-s", "--size", nargs="+", type=valid_size, help="Match by size.")
+        parser.add_argument("-s", "--size", type=valid_size, help="Match by size.")
 
         # Diff view only
-        parser.add_argument("-b", "--balance", nargs="+", type=valid_size, help="Match by balance size.")
+        parser.add_argument("-b", "--balance", type=valid_size, help="Match by balance size.")
 
         # Extract view only
         parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
         parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
+        parser.add_argument("--last-modified", type=valid_date_range, help="Match by last modified date.")
 
         try:
             return parser.parse_args(pattern.split())
@@ -1123,18 +1159,17 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             elif self.searchPattern.match == "fm" and not fnmatch(search_item, search_string):
                 return False
 
-        def validate_size_filter(item_size, filter_size):
-            comparison_sign = filter_size[0]
-            filter_size = filter_size[1]
-
+        def compare_values_with_sign(item_value, filter_value, comparison_sign):
             if comparison_sign == '<':
-                return item_size < filter_size
+                return item_value < filter_value
             elif comparison_sign == '>':
-                return item_size > filter_size
+                return item_value > filter_value
             elif comparison_sign == '<=':
-                return item_size <= filter_size
+                return item_value <= filter_value
             elif comparison_sign == '>=':
-                return item_size >= filter_size
+                return item_value >= filter_value
+            elif comparison_sign == '=':
+                return item_value == filter_value
 
         if self.searchPattern.size:
             # Diff view has size column corresponding to the changed_size while
@@ -1145,7 +1180,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
                 item_size = item.data.size
 
             for filter_size in self.searchPattern.size:
-                if not validate_size_filter(item_size, filter_size):
+                if not compare_values_with_sign(item_size, filter_size[1], filter_size[0]):
                     return False
 
         if self.searchPattern.balance:
@@ -1154,7 +1189,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
                 item_balance = item.data.size
 
                 for filter_balance in self.searchPattern.balance:
-                    if not validate_size_filter(item_balance, filter_balance):
+                    if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
                         return False
             else:
                 self.searchStringError.emit(True)
@@ -1170,6 +1205,18 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             if hasattr(item.data, 'health'):
                 if item.data.health:
                     return False
+            else:
+                self.searchStringError.emit(True)
+
+        if self.searchPattern.last_modified:
+            if hasattr(item.data, 'last_modified'):
+                item_last_modified = item.data.last_modified
+
+                for filter_last_modified in self.searchPattern.last_modified:
+                    if not compare_values_with_sign(
+                        item_last_modified, filter_last_modified[1], filter_last_modified[0]
+                    ):
+                        return False
             else:
                 self.searchStringError.emit(True)
 
