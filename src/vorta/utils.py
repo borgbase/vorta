@@ -18,13 +18,14 @@ from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
-from vorta.i18n import trans_late
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
 # Used to store whether a user wanted to override the
 # default directory for the --development flag
 DEFAULT_DIR_FLAG = object()
+METRIC_UNITS = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+NONMETRIC_UNITS = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
@@ -141,14 +142,10 @@ def get_network_status_monitor():
 
 def get_path_datasize(path, exclude_patterns):
     file_info = QFileInfo(path)
-    data_size = 0
 
     if file_info.isDir():
         data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
-        # logger.info("path (folder) %s %u elements size now=%u (%s)",
-        #            file_info.absoluteFilePath(), files_count, data_size, pretty_bytes(data_size))
     else:
-        # logger.info("path (file) %s size=%u", file_info.path(), file_info.size())
         data_size = file_info.size()
         files_count = 1
 
@@ -280,11 +277,7 @@ def pretty_bytes(
     if not isinstance(size, int):
         return ''
     prefix = '+' if sign and size > 0 else ''
-    power, units = (
-        (10**3, ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'])
-        if metric
-        else (2**10, ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'])
-    )
+    power, units = (10**3, METRIC_UNITS) if metric else (2**10, NONMETRIC_UNITS)
     if fixed_unit is None:
         n = find_best_unit_for_size(size, metric=metric, precision=precision)
     else:
@@ -505,21 +498,6 @@ def is_system_tray_available():
         is_available = tray.isSystemTrayAvailable()
 
     return is_available
-
-
-def validate_passwords(first_pass, second_pass):
-    '''Validates the password for borg, do not use on single fields'''
-    pass_equal = first_pass == second_pass
-    pass_long = len(first_pass) > 8
-
-    if not pass_long and not pass_equal:
-        return trans_late('utils', "Passwords must be identical and greater than 8 characters long.")
-    if not pass_equal:
-        return trans_late('utils', "Passwords must be identical.")
-    if not pass_long:
-        return trans_late('utils', "Passwords must be greater than 8 characters long.")
-
-    return ""
 
 
 def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:

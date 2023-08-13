@@ -33,7 +33,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
-from vorta.store.models import ArchiveModel, BackupProfileMixin
+from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
@@ -79,11 +79,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app = app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
+        self.remaining_refresh_archives = (
+            0  # number of archives that are left to refresh before action buttons are enabled again
+        )
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
+        self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
         self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
         header = self.archiveTable.horizontalHeader()
@@ -287,9 +291,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
                 formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
                 self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-                self.archiveTable.setItem(
-                    row, 1, SizeItem(pretty_bytes(archive.size, fixed_unit=best_unit, precision=SIZE_DECIMAL_DIGITS))
-                )
+
+                # format units based on user settings for 'dynamic' or 'fixed' units
+                fixed_unit = best_unit if SettingsModel.get(key='enable_fixed_units').value else None
+                size = pretty_bytes(archive.size, fixed_unit=fixed_unit, precision=SIZE_DECIMAL_DIGITS)
+                self.archiveTable.setItem(row, 1, SizeItem(size))
+
                 if archive.duration is not None:
                     formatted_duration = str(timedelta(seconds=round(archive.duration)))
                 else:
@@ -320,7 +327,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.scrollToItem(item)
 
             self.archiveTable.selectionModel().clearSelection()
-            self._toggle_all_buttons(enabled=True)
+            if self.remaining_refresh_archives == 0:
+                self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
@@ -355,6 +363,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # handle selection of more than 2 rows
         selectionModel: QItemSelectionModel = self.archiveTable.selectionModel()
         indexes = selectionModel.selectedRows()
+        # actions that are enabled only when a single archive is selected
+        single_archive_action_buttons = [self.bMountArchive, self.bExtract, self.bRename]
+        # actions that are enabled when at least one archive is selected
+        multi_archive_action_buttons = [self.bDelete, self.bRefreshArchive]
 
         # Toggle archive actions frame
         layout: QLayout = self.fArchiveActions.layout()
@@ -364,14 +376,15 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if not self.repoactions_enabled:
             reason = self.tr("(borg already running)")
 
-        # toggle delete button
+        # Disable the delete and refresh buttons if no archive is selected
         if self.repoactions_enabled and len(indexes) > 0:
-            self.bDelete.setEnabled(True)
-            self.bDelete.setToolTip(self.tooltip_dict.get(self.bDelete, ""))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(True)
+                button.setToolTip(self.tooltip_dict.get(button, ""))
         else:
-            self.bDelete.setEnabled(False)
-            tooltip = self.tooltip_dict[self.bDelete]
-            self.bDelete.setToolTip(tooltip + " " + reason or self.tr("(Select minimum one archive)"))
+            for button in multi_archive_action_buttons:
+                button.setEnabled(False)
+                button.setToolTip(self.tooltip_dict.get(button, "") + " " + self.tr("(Select minimum one archive)"))
 
         # Toggle diff button
         if self.repoactions_enabled and len(indexes) == 2:
@@ -387,7 +400,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         if self.repoactions_enabled and len(indexes) == 1:
             # Enable archive actions
-            self.fArchiveActions.setEnabled(True)
+            for widget in single_archive_action_buttons:
+                widget.setEnabled(True)
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
@@ -399,14 +413,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             reason = reason or self.tr("(Select exactly one archive)")
 
             # too few or too many selected.
-            self.fArchiveActions.setEnabled(False)
-
-            for index in range(layout.count()):
-                widget = layout.itemAt(index).widget()
+            for widget in single_archive_action_buttons:
                 tooltip = widget.toolTip()
-
                 tooltip = self.tooltip_dict.setdefault(widget, tooltip)
                 widget.setToolTip(tooltip + " " + reason)
+                widget.setEnabled(False)
 
             # special treatment for dynamic mount/unmount button.
             self.bmountarchive_refresh()
@@ -522,20 +533,31 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.populate_from_profile()
 
     def refresh_archive_info(self):
-        archive_name = self.selected_archive_name()
-        if archive_name is not None:
-            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
-            if params['ok']:
-                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.info_result)
-                self._toggle_all_buttons(False)
-                self.app.jobs_manager.add_job(job)
+        selected_archives = self.archiveTable.selectionModel().selectedRows()
+
+        archive_names = []
+        for index in selected_archives:
+            archive_names.append(self.archiveTable.item(index.row(), 4).text())
+
+        self.remaining_refresh_archives = len(archive_names)  # number of archives to refresh
+        self._toggle_all_buttons(False)
+        for archive_name in archive_names:
+            if archive_name is not None:
+                params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
+                if params['ok']:
+                    job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
+                    job.updated.connect(self._set_status)
+                    job.result.connect(self.info_result)
+                    self.app.jobs_manager.add_job(job)
+                else:
+                    self._set_status(params['message'])
+                    return
 
     def info_result(self, result):
-        self._toggle_all_buttons(True)
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Refreshed archive.'))
+        self.remaining_refresh_archives -= 1
+        if result['returncode'] == 0 and self.remaining_refresh_archives == 0:
+            self._toggle_all_buttons(True)
+            self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def selected_archive_name(self):

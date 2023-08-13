@@ -11,7 +11,6 @@ from PyQt6.QtWidgets import QCheckBox, QFormLayout
 
 def test_autostart(qapp, qtbot):
     """Check if file exists only on Linux, otherwise just check it doesn't crash"""
-
     setting = "Automatically start Vorta at login"
 
     _click_toggle_setting(setting, qapp, qtbot)
@@ -34,10 +33,41 @@ def test_autostart(qapp, qtbot):
         assert not os.path.exists(autostart_path)
 
 
+def test_enable_fixed_units(qapp, qtbot, mocker):
+    """Tests the 'enable fixed units' setting to ensure the archive tab sizes are displayed correctly."""
+    tab = qapp.main_window.archiveTab
+    setting = "Use the same unit of measurement for archive sizes"
+
+    # set mocks
+    mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
+    mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
+
+    # with setting enabled, fixed units should be determined and passed to pretty_bytes as an 'int'
+    tab.populate_from_profile()
+    mock_pretty_bytes.assert_called()
+    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    assert 'fixed_unit' in kwargs_list
+    assert isinstance(kwargs_list['fixed_unit'], int)
+
+    # disable setting and reset mock
+    mock_setting.return_value = Mock(value=False)
+    mock_pretty_bytes.reset_mock()
+
+    # with setting disabled, pretty_bytes should be called with fixed units set to 'None'
+    tab.populate_from_profile()
+    mock_pretty_bytes.assert_called()
+    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    assert 'fixed_unit' in kwargs_list
+    assert kwargs_list['fixed_unit'] is None
+
+    # use the qt bot to click the setting and see that the refresh_archive emit works as intended.
+    with qtbot.waitSignal(qapp.main_window.miscTab.refresh_archive, timeout=5000):
+        _click_toggle_setting(setting, qapp, qtbot)
+
+
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
 def test_check_full_disk_access(qapp, qtbot, mocker):
     """Enables/disables 'Check for Full Disk Access on startup' setting and ensures functionality"""
-
     setting = "Check for Full Disk Access on startup"
 
     # Set mocks for setting enabled
@@ -64,23 +94,16 @@ def test_check_full_disk_access(qapp, qtbot, mocker):
 
 
 def _click_toggle_setting(setting, qapp, qtbot):
-    """Click toggle setting in the misc tab"""
+    """Toggle setting checkbox in the misc tab"""
+    miscTab = qapp.main_window.miscTab
 
-    main = qapp.main_window
-    main.tabWidget.setCurrentIndex(4)
-    tab = main.miscTab
-
-    for x in range(0, tab.checkboxLayout.count()):
-        item = tab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
-        if not item:
-            continue
-        checkbox = item.itemAt(0).widget()
-        checkbox.__class__ = QCheckBox
-
-        if checkbox.text() == setting:
-            # Have to use pos to click checkbox correctly
-            # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
-            qtbot.mouseClick(
-                checkbox, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(2, int(checkbox.height() / 2))
-            )
-            break
+    for x in range(miscTab.checkboxLayout.count()):
+        item = miscTab.checkboxLayout.itemAt(x, QFormLayout.ItemRole.FieldRole)
+        if item is not None:
+            checkbox = item.itemAt(0).widget()
+            if checkbox.text() == setting and isinstance(checkbox, QCheckBox):
+                # Have to use pos to click checkbox correctly
+                # https://stackoverflow.com/questions/19418125/pysides-qtest-not-checking-box/24070484#24070484
+                pos = QtCore.QPoint(2, int(checkbox.height() / 2))
+                qtbot.mouseClick(checkbox, QtCore.Qt.MouseButton.LeftButton, pos=pos)
+                break
