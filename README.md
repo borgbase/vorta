@@ -40,4 +40,4 @@ See our website for [download links and and install instructions](https://vorta.
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.
 - Licensed under [GPLv3](LICENSE.txt). © 2018-2023 Manuel Riel and Vorta contributors
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
-- Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) unless specified otherwise.
+- Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) and Material Design icons by Google (licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)). See the `src/vorta/assets/icons` folder for a copy of applicable licenses.
