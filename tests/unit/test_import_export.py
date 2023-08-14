@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
+from vorta.profile_export import VersionException
 from vorta.store.models import BackupProfileModel, SourceFileModel
 from vorta.views.import_window import ImportWindow
 
@@ -30,6 +31,41 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     restored_repo = restored_profile.repo
     assert restored_repo is not None
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
+
+
+@pytest.mark.parametrize(
+    "exception, error_message",
+    [
+        (AttributeError, "Schema upgrade failure"),
+        (VersionException, "Newer profile_export export files cannot be used on older versions"),
+        (PermissionError, "Cannot read profile_export export file due to permission error"),
+        (FileNotFoundError, "Profile export file not found"),
+    ],
+)
+def test_import_exceptions(qapp, qtbot, rootdir, monkeypatch, mocker, exception, error_message):
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *args: [VALID_IMPORT_FILE])
+    monkeypatch.setattr(QMessageBox, 'information', lambda *args: None)
+
+    main = qapp.main_window
+    main.profile_import_action()
+    import_dialog: ImportWindow = main.window
+    import_dialog.overwriteExistingSettings.setChecked(True)
+
+    def raise_exception(*args, **kwargs):
+        raise exception
+
+    # force an exception and mock the error QMessageBox
+    monkeypatch.setattr(import_dialog.profile_export, 'to_db', raise_exception)
+    mock_messagebox = mocker.patch.object(QMessageBox, "critical")
+
+    qtbot.mouseClick(
+        import_dialog.buttonBox.button(QDialogButtonBox.StandardButton.Ok), QtCore.Qt.MouseButton.LeftButton
+    )
+
+    # assert the correct error appears, and the profile does not get added
+    mock_messagebox.assert_called_once()
+    assert error_message in mock_messagebox.call_args[0][2]
+    assert BackupProfileModel.get_or_none(name="Test Profile Restoration") is None
 
 
 def test_import_bootstrap_success(qapp, mocker):
@@ -92,7 +128,7 @@ def test_export_success(qapp, qtbot, tmpdir, monkeypatch):
     assert os.path.isfile(FILE_PATH)
 
 
-def test_export_fail_unwritable(qapp, qtbot, tmpdir, monkeypatch):
+def test_export_fail_unwritable(qapp, qtbot, monkeypatch):
     FILE_PATH = os.path.join(os.path.abspath(os.sep), "testresult.vortabackup")
 
     def getSaveFileName(*args, **kwargs):
