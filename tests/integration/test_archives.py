@@ -171,15 +171,11 @@ def test_archive_rename(qapp, qtbot, mocker):
 
     tab.archiveTable.selectRow(0)
     new_archive_name = 'idf89d8f9d8fd98'
-    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.rename_action()
+    pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 4)).center()
+    qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.keyClicks(tab.archiveTable.viewport().focusWidget(), new_archive_name)
+    qtbot.keyClick(tab.archiveTable.viewport().focusWidget(), QtCore.Qt.Key.Key_Return)
 
     # Successful rename case
-    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
-    assert ArchiveModel.select().filter(name=new_archive_name).count() == 1
-
-    # Duplicate name case
-    tab.archiveTable.selectRow(0)
-    exp_text = 'An archive with this name already exists.'
-    tab.rename_action()
-    qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)

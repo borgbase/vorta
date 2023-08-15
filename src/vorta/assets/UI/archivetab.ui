@@ -257,7 +257,7 @@
                 </property>
                </widget>
               </item>
-              <item>
+               <item>
                <widget class="QToolButton" name="bRename">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
