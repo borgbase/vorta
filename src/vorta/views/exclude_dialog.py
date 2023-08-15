@@ -127,7 +127,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.exclusionPresetsHelpText.setText(
             translate(
                 "ExclusionPresetsHelp",
-                "These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that are used for each preset, switch to the \"Preview\" tab after enabling it.",  # noqa: E501
+                "These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that comprise a preset, switch to the \"Preview\" tab after enabling it.",  # noqa: E501
             )
         )
         self.rawExclusionsHelpText.setText(
@@ -139,7 +139,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.exclusionsPreviewHelpText.setText(
             translate(
                 "ExclusionsPreviewHelp",
-                "This is a preview of the patterns that will be used to exclude files and folders from the backup.",
+                "This is a preview of the patterns that will be passed to borg for excluding files and folders from the backup.",  # noqa: E501
             )
         )
 
