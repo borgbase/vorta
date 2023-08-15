@@ -345,9 +345,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
     def show_exclude_dialog(self):
         # Close existing window
         if hasattr(self, '_window') and self._window is not None:
-            self._window.activateWindow()
-            self._window.raise_()
-            return
+            self._window.close()
         window = ExcludeDialog(self.profile(), self)
         self._window = window  # for testing
         window.show()

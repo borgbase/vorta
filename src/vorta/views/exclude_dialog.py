@@ -168,21 +168,28 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         if not index.isValid():
             return
 
+        selected_rows = self.customExclusionsList.selectedIndexes()
+
+        if selected_rows and index not in selected_rows:
+            return  # popup only for selected items
+
         menu = QMenu(self.customExclusionsList)
-        menu.addAction(
-            get_colored_icon('minus'),
-            self.tr('Remove'),
-            lambda: self.remove_pattern(index),
-        )
-        menu.addAction(
-            get_colored_icon('check-circle'),
-            self.tr('Toggle'),
-            lambda: self.toggle_custom_pattern(index),
-        )
         menu.addAction(
             get_colored_icon('copy'),
             self.tr('Copy'),
             lambda: QApplication.clipboard().setText(index.data()),
+        )
+
+        # Remove and Toggle can work with multiple items selected
+        menu.addAction(
+            get_colored_icon('minus'),
+            self.tr('Remove'),
+            lambda: self.remove_pattern(index if not selected_rows else None),
+        )
+        menu.addAction(
+            get_colored_icon('check-circle'),
+            self.tr('Toggle'),
+            lambda: self.toggle_custom_pattern(index if not selected_rows else None),
         )
 
         menu.popup(self.customExclusionsList.viewport().mapToGlobal(pos))
@@ -279,7 +286,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
     def remove_pattern(self, index=None):
         '''
         Remove the selected item(s) from the list and the database.
-        If there is no selection, this was called from the context menu and the index is passed in.
+        If there is no index, this was called from the context menu and the indexes are passed in.
         '''
         if not index:
             indexes = self.customExclusionsList.selectedIndexes()
@@ -300,15 +307,25 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         self.populate_preview_tab()
 
-    def toggle_custom_pattern(self, index):
+    def toggle_custom_pattern(self, index=None):
         '''
-        Toggle the check state of the selected item.
+        Toggle the check state of the selected item(s).
+        If there is no index, this was called from the context menu and the indexes are passed in.
         '''
-        item = self.customExclusionsModel.itemFromIndex(index)
-        if item.checkState() == Qt.CheckState.Checked:
-            item.setCheckState(Qt.CheckState.Unchecked)
+        if not index:
+            indexes = self.customExclusionsList.selectedIndexes()
+            for index in indexes:
+                item = self.customExclusionsModel.itemFromIndex(index)
+                if item.checkState() == Qt.CheckState.Checked:
+                    item.setCheckState(Qt.CheckState.Unchecked)
+                else:
+                    item.setCheckState(Qt.CheckState.Checked)
         else:
-            item.setCheckState(Qt.CheckState.Checked)
+            item = self.customExclusionsModel.itemFromIndex(index)
+            if item.checkState() == Qt.CheckState.Checked:
+                item.setCheckState(Qt.CheckState.Unchecked)
+            else:
+                item.setCheckState(Qt.CheckState.Checked)
 
     def add_pattern(self):
         '''
