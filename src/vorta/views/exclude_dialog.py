@@ -3,7 +3,7 @@ import os
 import sys
 
 from PyQt6 import uic
-from PyQt6.QtCore import QModelIndex, Qt
+from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QStandardItem, QStandardItemModel
 from PyQt6.QtWidgets import (
     QAbstractItemView,
@@ -78,8 +78,8 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customExclusionsListDelegate = QStyledItemDelegate()
         self.customExclusionsList.setItemDelegate(self.customExclusionsListDelegate)
         self.customExclusionsListDelegate.closeEditor.connect(self.custom_pattern_editing_finished)
-        # allow removing items with the delete key (remove_pattern is called in keyPressEvent)
-        self.customExclusionsList.keyPressEvent = self.customPatternKeyPressEvent
+        # allow removing items with the delete key with event filter
+        self.installEventFilter(self)
         # context menu
         self.customExclusionsList.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customExclusionsList.customContextMenuRequested.connect(self.custom_exclusions_context_menu)
@@ -277,12 +277,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         cb.clear(mode=cb.Mode.Clipboard)
         cb.setText(self.exclusionsPreviewText.toPlainText(), mode=cb.Mode.Clipboard)
 
-    def customPatternKeyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Delete:
-            self.remove_pattern()
-        else:
-            super().keyPressEvent(event)
-
     def remove_pattern(self, index=None):
         '''
         Remove the selected item(s) from the list and the database.
@@ -404,3 +398,12 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile.save()
 
         self.populate_preview_tab()
+
+    def eventFilter(self, source, event):
+        '''
+        When the user presses the delete key, remove the selected items.
+        '''
+        if event.type() == event.Type.KeyPress and event.key() == Qt.Key.Key_Delete:
+            self.remove_pattern()
+            return True
+        return QObject.eventFilter(self, source, event)
