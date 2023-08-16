@@ -59,7 +59,9 @@ def test_best_unit_for_sizes_nonmetric(sizes, expected_unit):
     ],
 )
 def test_pretty_bytes_fixed_units(size, metric, precision, fixed_unit, expected_output):
-    # test pretty bytes when specifying a fixed unit of measurement
+    """
+    test pretty bytes when specifying a fixed unit of measurement
+    """
     output = pretty_bytes(size, metric=metric, precision=precision, fixed_unit=fixed_unit)
     assert output == expected_output
 
@@ -81,7 +83,9 @@ def test_pretty_bytes_nonfixed_units(size, metric, expected_output):
 
 
 def test_normalize_path():
-    # Test that path is normalized for macOS, but does nothing for other platforms.
+    """
+    Test that path is normalized for macOS, but does nothing for other platforms.
+    """
     input_path = '/Users/username/caf\u00e9/file.txt'
     expected_output = '/Users/username/café/file.txt'
 
@@ -94,6 +98,9 @@ def test_normalize_path():
 
 
 def test_get_path_datasize(tmpdir):
+    """
+    Test that get_path_datasize() works correctly when passed excluded patterns.
+    """
     # Create a temporary directory for testing
     test_dir = tmpdir.mkdir("test_dir")
     test_file = test_dir.join("test_file.txt")
@@ -102,7 +109,7 @@ def test_get_path_datasize(tmpdir):
     # Create a subdirectory with a file to exclude
     excluded_dir = test_dir.mkdir("excluded_dir")
     excluded_file = excluded_dir.join("excluded_file.txt")
-    excluded_file.write("Excluded file, sound not be checked.")
+    excluded_file.write("Excluded file, should not be checked.")
 
     exclude_patterns = [f"{excluded_dir}"]
 
@@ -123,7 +130,9 @@ def test_get_path_datasize(tmpdir):
 
 
 def test_is_system_tray_available(mocker):
-    # sanity check to ensure proper behavior
+    """
+    sanity check to ensure proper behavior
+    """
     mocker.patch('PyQt6.QtWidgets.QSystemTrayIcon.isSystemTrayAvailable', return_value=False)
     assert is_system_tray_available() is False
     mocker.patch('PyQt6.QtWidgets.QSystemTrayIcon.isSystemTrayAvailable', return_value=True)
