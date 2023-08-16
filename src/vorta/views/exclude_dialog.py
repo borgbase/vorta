@@ -53,6 +53,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.setupUi(self)
         self.profile = profile
         self.allPresets = {}
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
 
         self.buttonBox.rejected.connect(self.close)
 

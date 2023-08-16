@@ -343,9 +343,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             logger.debug(f"Removed source in row {index.row()}")
 
     def show_exclude_dialog(self):
-        # Close existing window
-        if hasattr(self, '_window') and self._window is not None:
-            self._window.close()
         window = ExcludeDialog(self.profile(), self)
         self._window = window  # for testing
         window.show()
