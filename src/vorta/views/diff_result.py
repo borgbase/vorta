@@ -89,6 +89,7 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         """Set or update the icons in the right color scheme."""
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
+        self.bSearch.setIcon(get_colored_icon('search'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(2, get_colored_icon("view-list-details"))

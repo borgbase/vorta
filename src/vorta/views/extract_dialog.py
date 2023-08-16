@@ -107,6 +107,7 @@ class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
+        self.bSearch.setIcon(get_colored_icon('search'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
