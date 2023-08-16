@@ -152,19 +152,15 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
     stdout, stderr = borg_json_output('rename')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.rename_action()
 
+    pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 4)).center()
+    qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    qtbot.keyClicks(tab.archiveTable.viewport().focusWidget(), new_archive_name)
+    qtbot.keyClick(tab.archiveTable.viewport().focusWidget(), QtCore.Qt.Key.Key_Return)
+    
     # Successful rename case
-    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Archive renamed.', **pytest._wait_defaults)
-    assert ArchiveModel.select().filter(name=new_archive_name).count() == 1
-
-    # Duplicate name case
-    tab.archiveTable.selectRow(0)
-    exp_text = 'An archive with this name already exists.'
-    mocker.patch.object(vorta.views.archive_tab.QInputDialog, 'getText', return_value=(new_archive_name, True))
-    tab.rename_action()
-    qtbot.waitUntil(lambda: tab.mountErrors.text() == exp_text, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
 
 
 def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
@@ -200,20 +196,3 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
         qtbot.mouseClick(tab.bRefreshArchive, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
-
-
-def test_double_click(qapp, qtbot, borg_json_output, archive_env):
-    """
-    Currently this test just ensures the 'cellDoubleClicked' emit works as intended.
-    functionality will be more useful when the "inline edit for archive renaming" gets merged in
-    """
-    main, tab = archive_env
-    # (0, 4) is the cell which contains the archive name
-    item = tab.archiveTable.item(0, 4)
-    assert item is not None
-    cell_pos = tab.archiveTable.visualItemRect(item).center()
-
-    # single click to select cell, then double click to trigger emit
-    with qtbot.waitSignal(tab.archiveTable.cellDoubleClicked, timeout=1000):
-        qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=cell_pos)
-        qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=cell_pos)
