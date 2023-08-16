@@ -17,21 +17,6 @@ class MockFileDialog:
         return ['/tmp']
 
 
-@pytest.fixture()
-def archive_env(qapp, qtbot):
-    def setup():
-        main = qapp.main_window
-        tab = main.archiveTab
-        main.tabWidget.setCurrentIndex(3)
-
-        tab.populate_from_profile()
-        qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, timeout=2000)
-
-        return main, tab
-
-    return setup
-
-
 def test_prune_intervals(qapp, qtbot):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
     main = qapp.main_window
@@ -46,7 +31,7 @@ def test_prune_intervals(qapp, qtbot):
 
 
 def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('list')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -63,7 +48,7 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('prune')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -76,7 +61,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
     vorta.utils.borg_compat.version = '1.2.0'
-    main, tab = archive_env()
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('compact')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -91,7 +76,7 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_check(qapp, mocker, borg_json_output, qtbot, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('check')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -108,7 +93,7 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
         return [DiskPartitions('borgfs', '/tmp')]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
-    main, tab = archive_env()
+    main, tab = archive_env
     tab.archiveTable.selectRow(0)
 
     stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
@@ -131,7 +116,7 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
 
 
 def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -146,7 +131,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('delete')
@@ -160,7 +145,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     tab.archiveTable.selectRow(0)
     new_archive_name = 'idf89d8f9d8fd98'
@@ -183,7 +168,7 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
 
     # mock the clipboard to ensure no changes are made to it during testing
     mocker.patch.object(qapp.clipboard(), "setMimeData")
@@ -205,7 +190,7 @@ def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
 
 
 def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env):
-    main, tab = archive_env()
+    main, tab = archive_env
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('info')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -218,9 +203,11 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
 
 
 def test_double_click(qapp, qtbot, borg_json_output, archive_env):
-    # Currently this test just ensures the 'cellDoubleClicked' emit works as intended.
-    # functionality will be more useful when the "inline edit for archive renaming" gets merged in
-    main, tab = archive_env()
+    """
+    Currently this test just ensures the 'cellDoubleClicked' emit works as intended.
+    functionality will be more useful when the "inline edit for archive renaming" gets merged in
+    """
+    main, tab = archive_env
     # (0, 4) is the cell which contains the archive name
     item = tab.archiveTable.item(0, 4)
     assert item is not None
