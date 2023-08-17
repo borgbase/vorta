@@ -209,10 +209,6 @@ def test_archiveitem_contextmenu(qapp, qtbot, archive_env):
     context_menu = tab.archiveTable.findChild(QMenu)
 
     assert context_menu is not None
-    assert any(action.text() == 'Copy' for action in context_menu.actions())
-    assert any(action.text() == 'Recalculate' for action in context_menu.actions())
-    assert any(action.text() == 'Mount…' for action in context_menu.actions())
-    assert any(action.text() == 'Extract…' for action in context_menu.actions())
-    assert any(action.text() == 'Rename…' for action in context_menu.actions())
-    assert any(action.text() == 'Delete' for action in context_menu.actions())
-    assert any(action.text() == 'Diff' for action in context_menu.actions())
+    expected_actions = ['Copy', 'Recalculate', 'Mount…', 'Extract…', 'Rename…', 'Delete', 'Diff']
+    for action in expected_actions:
+        assert any(menu_actions.text() == action for menu_actions in context_menu.actions())
