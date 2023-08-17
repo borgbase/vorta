@@ -2,6 +2,8 @@ import pytest
 import vorta.views
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
+from vorta.views.main_window import MainWindow
+from vorta.views.source_tab import SourceTab
 
 
 @pytest.fixture()
@@ -9,11 +11,11 @@ def source_env(qapp, qtbot, monkeypatch, choose_file_dialog):
     """
     Handles common setup and teardown for unit tests involving the source tab.
     """
-    monkeypatch.setattr(vorta.views.source_tab, "choose_file_dialog", choose_file_dialog)
-    main = qapp.main_window
+    main: MainWindow = qapp.main_window
+    tab: SourceTab = main.sourceTab
     main.tabWidget.setCurrentIndex(1)
-    tab = main.sourceTab
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 1, timeout=2000)
+    monkeypatch.setattr(vorta.views.source_tab, "choose_file_dialog", choose_file_dialog)
 
     yield main, tab
 
@@ -100,3 +102,27 @@ def test_sources_update(qapp, qtbot, mocker, source_env):
     qtbot.mouseClick(tab.updateButton, QtCore.Qt.MouseButton.LeftButton)
     assert tab.sourceFilesWidget.rowCount() == 2
     assert update_path_info_spy.call_count == 2
+
+
+def test_source_copy(qapp, qtbot, monkeypatch, mocker, source_env):
+    """
+    Test source_copy() with and without an index passed.
+    If no index is passed, it should copy the first selected source
+    """
+    main, tab = source_env
+
+    mock_clipboard = mocker.patch.object(qapp.clipboard(), "setMimeData")
+    tab.source_add(want_folder=True)
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == 2, **pytest._wait_defaults)
+
+    tab.sourceFilesWidget.selectRow(0)
+    tab.source_copy()
+    assert mock_clipboard.call_count == 1
+    source = mock_clipboard.call_args[0][0]  # retrieves the QMimeData() object used in method call
+    assert source.text() == "/tmp"
+
+    index = tab.sourceFilesWidget.model().index(1, 0)
+    tab.source_copy(index)
+    assert mock_clipboard.call_count == 2
+    source = mock_clipboard.call_args[0][0]  # retrieves the QMimeData() object used in method call
+    assert source.text() == "/tmp/another"

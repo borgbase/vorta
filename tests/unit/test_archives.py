@@ -6,6 +6,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMenu
 from vorta.store.models import ArchiveModel, BackupProfileModel
 
 
@@ -196,3 +197,22 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
+
+
+def test_archiveitem_contextmenu(qapp, qtbot, archive_env):
+    main, tab = archive_env
+
+    pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 0)).center()
+    tab.archiveTable.customContextMenuRequested.emit(pos)
+    qtbot.waitUntil(lambda: tab.archiveTable.findChild(QMenu) is not None, timeout=2000)
+
+    context_menu = tab.archiveTable.findChild(QMenu)
+
+    assert context_menu is not None
+    assert any(action.text() == 'Copy' for action in context_menu.actions())
+    assert any(action.text() == 'Recalculate' for action in context_menu.actions())
+    assert any(action.text() == 'Mount…' for action in context_menu.actions())
+    assert any(action.text() == 'Extract…' for action in context_menu.actions())
+    assert any(action.text() == 'Rename…' for action in context_menu.actions())
+    assert any(action.text() == 'Delete' for action in context_menu.actions())
+    assert any(action.text() == 'Diff' for action in context_menu.actions())
