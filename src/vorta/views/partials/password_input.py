@@ -138,7 +138,7 @@ class PasswordInput(QObject):
             self.passwordLineEdit.error_state = True
             self.confirmLineEdit.error_state = True
             self.set_error_label(
-                translate('PasswordInput', "Passwords must be identical and atleast {0} characters long.").format(
+                translate('PasswordInput', "Passwords must be identical and at least {0} characters long.").format(
                     self._minimum_length
                 )
             )
@@ -148,7 +148,7 @@ class PasswordInput(QObject):
         elif not pass_long:
             self.passwordLineEdit.error_state = True
             self.set_error_label(
-                translate('PasswordInput', "Passwords must be atleast {0} characters long.").format(
+                translate('PasswordInput', "Passwords must be at least {0} characters long.").format(
                     self._minimum_length
                 )
             )
