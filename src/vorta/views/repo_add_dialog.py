@@ -107,7 +107,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             return False
 
         if len(self.values['repo_name']) > 64:
-            self._set_status(self.tr('Repository name must be less than 64 characters.'))
+            self._set_status(self.tr('Repository name must be less than 65 characters.'))
             return False
 
         if RepoModel.get_or_none(RepoModel.url == self.values['repo_url']) is not None:

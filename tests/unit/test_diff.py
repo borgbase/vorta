@@ -18,13 +18,8 @@ from vorta.views.diff_result import (
 @pytest.mark.parametrize(
     'json_mock_file,folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
 )
-def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root, archive_env):
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -409,3 +404,59 @@ def test_archive_diff_json_parser(line, expected):
 
     assert item.path == PurePath(expected[0]).parts
     assert item.data == DiffData(*expected[1:])
+
+
+def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    stdout, stderr = borg_json_output("diff_archives")
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    compat = vorta.utils.borg_compat
+
+    def check(feature_name):
+        if feature_name == 'DIFF_JSON_LINES':
+            return False
+        return vorta.utils.BorgCompatibility.check(compat, feature_name)
+
+    mocker.patch.object(vorta.utils.borg_compat, 'check', check)
+
+    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
+    model = tab.archiveTable.model()
+
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+
+    selection_model.select(model.index(0, 0), flags)
+    selection_model.select(model.index(1, 0), flags)
+
+    tab.diff_action()
+
+    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+
+    # mock the clipboard to ensure no changes are made to it during testing
+    mocker.patch.object(qapp.clipboard(), "setMimeData")
+    clipboard_spy = mocker.spy(qapp.clipboard(), "setMimeData")
+
+    # test 'diff_item_copy()' by passing it an item to copy
+    index = tab._resultwindow.treeView.model().index(0, 0)
+    assert index is not None
+    tab._resultwindow.diff_item_copy(index)
+    clipboard_data = clipboard_spy.call_args[0][0]
+    assert clipboard_data.hasText()
+    assert clipboard_data.text() == "/test"
+
+    clipboard_spy.reset_mock()
+
+    # test 'diff_item_copy()' by selecting a row to copy
+    tab._resultwindow.treeView.selectionModel().select(tab._resultwindow.treeView.model().index(0, 0), flags)
+    tab._resultwindow.diff_item_copy()
+    clipboard_data = clipboard_spy.call_args[0][0]
+    assert clipboard_data.hasText()
+    assert clipboard_data.text() == "/test"
