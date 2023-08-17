@@ -493,7 +493,7 @@ class ExtractTree(FileTreeModel[FileData]):
             if item.data.health:
                 return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
             else:
-                return QColor(Qt.GlobalColor.green) if uses_dark_mode() else QColor(Qt.GlobalColor.darkGreen)
+                return QColor(Qt.GlobalColor.red) if uses_dark_mode() else QColor(Qt.GlobalColor.darkRed)
 
         if role == Qt.ItemDataRole.ToolTipRole:
             if column == 0:
