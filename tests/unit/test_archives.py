@@ -30,18 +30,15 @@ def test_prune_intervals(qapp, qtbot):
         assert getattr(profile, f'prune_{i}') == 9
 
 
-def test_repo_list(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
+def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('list')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
     qtbot.waitUntil(lambda: not tab.bCheck.isEnabled(), **pytest._wait_defaults)
-
     assert not tab.bCheck.isEnabled()
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
@@ -50,11 +47,9 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output):
     assert tab.bCheck.isEnabled()
 
 
-def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
+
     stdout, stderr = borg_json_output('prune')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
@@ -64,12 +59,10 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output):
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
 
 
-def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
+def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
     vorta.utils.borg_compat.version = '1.2.0'
-    main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+    main, tab = archive_env
+
     stdout, stderr = borg_json_output('compact')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
@@ -82,11 +75,8 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output):
     vorta.utils.borg_compat.version = '1.1.0'
 
 
-def test_check(qapp, mocker, borg_json_output, qtbot):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+def test_check(qapp, mocker, borg_json_output, qtbot, archive_env):
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output('check')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -97,17 +87,13 @@ def test_check(qapp, mocker, borg_json_output, qtbot):
     qtbot.waitUntil(lambda: success_text in main.logText.text(), **pytest._wait_defaults)
 
 
-def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog):
+def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog, archive_env):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
         return [DiskPartitions('borgfs', '/tmp')]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
-
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-    tab.populate_from_profile()
+    main, tab = archive_env
     tab.archiveTable.selectRow(0)
 
     stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
@@ -129,14 +115,8 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
-def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
-
+def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -144,20 +124,14 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output):
     tab.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
-    # qtbot.waitUntil(lambda: tab._window == qapp.activeWindow(), **pytest._wait_defaults)
 
     model = tab._window.model
     assert model.root.children[0].subpath == 'home'
     assert 'test-archive, 2000' in tab._window.archiveNameLabel.text()
 
 
-def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
 
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('delete')
@@ -170,13 +144,43 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output):
     assert tab.archiveTable.rowCount() == 1
 
 
-def test_archive_rename(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
+def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
+    main, tab = archive_env
 
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+    # mock the clipboard to ensure no changes are made to it during testing
+    mocker.patch.object(qapp.clipboard(), "setMimeData")
+    clipboard_spy = mocker.spy(qapp.clipboard(), "setMimeData")
+
+    # test 'archive_copy()' by passing it an index to copy
+    index = tab.archiveTable.model().index(0, 0)
+    tab.archive_copy(index)
+    assert clipboard_spy.call_count == 1
+    actual_data = clipboard_spy.call_args[0][0]  # retrieves the QMimeData() object used in method call
+    assert actual_data.text() == "test-archive"
+
+    # test 'archive_copy()' by selecting a row to copy
+    tab.archiveTable.selectRow(1)
+    tab.archive_copy()
+    assert clipboard_spy.call_count == 2
+    actual_data = clipboard_spy.call_args[0][0]  # retrieves the QMimeData() object used in method call
+    assert actual_data.text() == "test-archive1"
+
+
+def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
+    tab.archiveTable.selectRow(0)
+    stdout, stderr = borg_json_output('info')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    with qtbot.waitSignal(tab.bRefreshArchive.clicked, timeout=5000):
+        qtbot.mouseClick(tab.bRefreshArchive, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
+
+
+def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
+    main, tab = archive_env
 
     tab.archiveTable.selectRow(0)
     new_archive_name = 'idf89d8f9d8fd98'

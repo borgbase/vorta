@@ -7,11 +7,9 @@ from PyQt6 import QtCore
 from vorta.store.models import ArchiveModel, EventLogModel
 
 
-def test_create(qapp, qtbot):
+def test_create(qapp, qtbot, archive_env):
     """Test for manual archive creation"""
-    main = qapp.main_window
-    main.archiveTab.refresh_archive_list()
-    qtbot.waitUntil(lambda: main.archiveTab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
+    main, tab = archive_env
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: 'Backup finished.' in main.progressText.text(), **pytest._wait_defaults)
