@@ -24,7 +24,6 @@ def test_borg_prune(qapp, qtbot):
     assert blocker.args[0]['returncode'] == 0
 
 
-# test borg info
 def test_borg_repo_info(qapp, qtbot, tmpdir):
     """This test runs borg info on a test repo directly without UI"""
     repo_info = {
@@ -45,14 +44,8 @@ def test_borg_repo_info(qapp, qtbot, tmpdir):
     assert blocker.args[0]['returncode'] == 0
 
 
-def test_borg_archive_info(qapp, qtbot, tmpdir):
+def test_borg_archive_info(qapp, qtbot, archive_env):
     """Check that archive info command works"""
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-    tab.refresh_archive_list()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
-
     params = BorgInfoArchiveJob.prepare(vorta.store.models.BackupProfileModel.select().first(), "test-archive1")
     thread = BorgInfoArchiveJob(params['cmd'], params, qapp)
 
