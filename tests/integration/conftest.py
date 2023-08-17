@@ -19,7 +19,7 @@ from vorta.store.models import (
     WifiSettingModel,
 )
 from vorta.utils import borg_compat
-from vorta.views.main_window import MainWindow
+from vorta.views.main_window import ArchiveTab, MainWindow
 
 models = [
     RepoModel,
@@ -204,6 +204,19 @@ def choose_file_dialog(tmpdir):
 @pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+@pytest.fixture()
+def archive_env(qapp, qtbot):
+    """
+    Common setup for integration tests involving the archive tab.
+    """
+    main: MainWindow = qapp.main_window
+    tab: ArchiveTab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+    tab.refresh_archive_list()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
+    return main, tab
 
 
 @pytest.fixture(autouse=True)
