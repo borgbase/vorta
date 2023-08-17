@@ -18,13 +18,8 @@ from vorta.views.diff_result import (
 @pytest.mark.parametrize(
     'json_mock_file,folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
 )
-def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root, archive_env):
+    main, tab = archive_env
 
     stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)

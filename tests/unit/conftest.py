@@ -17,7 +17,7 @@ from vorta.store.models import (
     SourceFileModel,
     WifiSettingModel,
 )
-from vorta.views.main_window import MainWindow
+from vorta.views.main_window import ArchiveTab, MainWindow
 
 models = [
     RepoModel,
@@ -105,3 +105,16 @@ def borg_json_output():
 @pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
+
+
+@pytest.fixture()
+def archive_env(qapp, qtbot):
+    """
+    Common setup for unit tests involving the archive tab.
+    """
+    main: MainWindow = qapp.main_window
+    tab: ArchiveTab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
+    return main, tab
