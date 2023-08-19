@@ -8,6 +8,7 @@ from .models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    ExclusionModel,
     RepoModel,
     SettingsModel,
     SourceFileModel,
@@ -260,6 +261,16 @@ def run_migrations(current_schema, db_connection):
                 pw.CharField(default=''),
             ),
         )
+
+    # add a default exclusion to help the user understand how to use the new exclude GUI
+    if current_schema.version < 24:
+        if ExclusionModel.select().count() == 0:
+            for profile in BackupProfileModel:
+                ExclusionModel.create(
+                    profile=profile,
+                    name='*/node_modules',
+                    enabled=True,
+                )
 
 
 def _apply_schema_update(current_schema, version_after, *operations):
