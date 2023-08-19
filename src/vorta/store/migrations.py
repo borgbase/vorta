@@ -262,8 +262,20 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
+    # convert every pattern in the old exclude_patterns string to a new ExclusionModel object
     # add a default exclusion to help the user understand how to use the new exclude GUI
     if current_schema.version < 24:
+        for profile in BackupProfileModel:
+            previous_exclusions = profile.exclude_patterns.splitlines()
+            for pattern in previous_exclusions:
+                ExclusionModel.create(
+                    profile=profile,
+                    name=pattern,
+                    enabled=True,
+                )
+            profile.exclude_patterns = ''
+            profile.save()
+
         if ExclusionModel.select().count() == 0:
             for profile in BackupProfileModel:
                 ExclusionModel.create(
