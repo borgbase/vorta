@@ -1103,6 +1103,9 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
         parser.add_argument("--last-modified", type=valid_date_range, help="Match by last modified date.")
 
+        # no parents allowed
+        parser.add_argument("--exclude-parents", action="store_true", help="Match only items without parents.")
+
         try:
             return parser.parse_args(pattern.split())
         except SystemExit:
@@ -1130,6 +1133,11 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
 
         item_path = path_to_str(item.path)
         item_name = item.subpath
+
+        # Exclude Parents
+        if self.searchPattern.exclude_parents:
+            if item.children:
+                return False
 
         # Set default values
         if self.searchPattern.match is None:

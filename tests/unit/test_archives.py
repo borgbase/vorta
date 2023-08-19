@@ -196,3 +196,79 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
+
+
+@pytest.mark.parametrize(
+    'search_string,expected_search_results',
+    [
+        # Normal "in" search
+        ('txt', ['hello.txt', 'file1.txt', 'file.txt']),
+        # Ignore Case
+        ('HELLO.txt -i', ['hello.txt']),
+        ('HELLO.txt', []),
+        # Health match
+        ('--unhealthy', ['abigfile.pdf']),
+        ('--healthy', ['hello.txt', 'file1.txt', 'file.txt', 'abigfile.pdf']),
+        # Size Match
+        ('--size >=15MB', []),
+        ('--size >9MB,<11MB', ['abigfile.pdf']),
+        ('--size >1KB,<4KB --exclude-parents', ['hello.txt']),
+        # Path Match Type
+        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt']),
+        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt', 'file.txt']),
+        # Regex Match Type
+        ("file[^/]*\\.txt|\\.pdf -m re", ['file1.txt', 'file.txt', 'abigfile.pdf']),
+        # Exact Match Type
+        ('hello', ['hello.txt']),
+        ('hello -m ex', []),
+        # Date Filter
+        ('--last-modified >2025-01-01', ['file.txt']),
+        ('--last-modified <2025-01-01 --exclude-parents', ['hello.txt', 'file1.txt', 'abigfile.pdf']),
+    ],
+)
+def test_archive_extract_filters(qtbot, mocker, borg_json_output, archive_env, search_string, expected_search_results):
+    vorta.utils.borg_compat.version = '1.2.4'
+
+    _, tab = archive_env
+    tab.archiveTable.selectRow(0)
+
+    stdout, stderr = borg_json_output('extract_archives_search')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    # click on diff button
+    qtbot.mouseClick(tab.bExtract, QtCore.Qt.MouseButton.LeftButton)
+
+    # Wait for window to open
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._window.treeView.model().rowCount(QtCore.QModelIndex()) > 0, **pytest._wait_defaults)
+
+    tab._window.searchWidget.setText(search_string)
+    qtbot.mouseClick(tab._window.bSearch, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(
+        lambda: (tab._window.treeView.model().rowCount(QtCore.QModelIndex()) > 0)
+        or (len(expected_search_results) == 0),
+        **pytest._wait_defaults,
+    )
+
+    proxy_model = tab._window.treeView.model()
+
+    filtered_items = []
+
+    def recursive_search_visible_items_in_tree(model, parent_index):
+        for row in range(model.rowCount(parent_index)):
+            index = model.index(row, 0, parent_index)
+            if model.data(index, QtCore.Qt.ItemDataRole.DisplayRole) is not None:
+                if model.rowCount(index) == 0:
+                    filtered_items.append(model.data(index, QtCore.Qt.ItemDataRole.DisplayRole))
+            recursive_search_visible_items_in_tree(model, index)
+
+    recursive_search_visible_items_in_tree(proxy_model, QtCore.QModelIndex())
+
+    # sort both lists to make sure the order is not important
+    filtered_items.sort()
+    expected_search_results.sort()
+
+    assert filtered_items == expected_search_results
+    vorta.utils.borg_compat.version = '1.1.0'
