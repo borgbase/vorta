@@ -59,6 +59,10 @@ class BaseFileDialog(QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
+        # Add a cross icon inside the search field to clear the search string
+        self.searchWidget.setClearButtonEnabled(True)
+        # self.searchLineEdit.textChanged.connect(self.searchLineEditChanged)
+
         self.set_icons()
 
         # Connect to palette change
