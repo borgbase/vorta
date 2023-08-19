@@ -39,8 +39,7 @@ jobs:
 
       - name: Generate matrices
         run: |
-          branch_name=${GITHUB_REF##refs/heads/}
-          ./.github/scripts/generate-matrix.sh "${{ github.event_name }}" "$branch_name"
+          ./.github/scripts/generate-matrix.sh "${{ github.event_name }}" "${GITHUB_REF##refs/heads/}"
 
       - name: Set matrix for unit tests
         id: set-matrix-unit
@@ -70,14 +69,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           install-nox: true
 
-      - name: Debug
-        run: |
-          if [ "$github.event.inputs.debug_enabled" == "true" ]; then
-            echo "Debugging is enabled"
-          else
-            echo "Debugging is not enabled"
-          fi
-
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
@@ -88,7 +79,7 @@ jobs:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                    -a dbus-run-session -- make test-unit
+                -a dbus-run-session -- make test-unit
 
       - name: Run Unit Tests with pytest (macOS)
         if: runner.os == 'macOS'
@@ -111,7 +102,7 @@ jobs:
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}
     env:
-      EXCLUDE: false  # Only exclude python 3.8 with Borg v2.0.0b5
+      EXCLUDE: false  # used to exclude incompatible combinations of python and borg
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix-integration)}}
@@ -119,7 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Validate Matrix
+      - name: Validate version combination  # excludes all tests involving incompatible python and borg versions
         run: |
           if [[ "${{ matrix.python-version }}" == "3.8" && "${{ matrix.borg-version }}" == "2.0.0b5" ]]; then
             echo "Python version 3.8 and Borg version 2.0.0b5 detected. This combination is excluded. Exiting job."
@@ -147,7 +138,7 @@ jobs:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-integration
+                -a dbus-run-session -- make test-integration
 
       - name: Run Integration Tests with pytest (macOS)
         if: runner.os == 'macOS' && env.EXCLUDE == 'false'
