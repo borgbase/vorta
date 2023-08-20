@@ -101,8 +101,6 @@ jobs:
     needs: prepare-matrix
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}
-    env:
-      EXCLUDE: false  # used to exclude incompatible combinations of python and borg
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix-integration)}}
@@ -110,19 +108,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Validate version combination  # excludes all tests involving incompatible python and borg versions
-        run: |
-          if [[ "${{ matrix.python-version }}" == "3.8" && "${{ matrix.borg-version }}" == "2.0.0b5" ]]; then
-            echo "Python version 3.8 and Borg version 2.0.0b5 detected. This combination is excluded. Exiting job."
-            echo "EXCLUDE=true" >> $GITHUB_ENV
-          fi
-
       - name: Install system dependencies
-        if: env.EXCLUDE == 'false'
         uses: ./.github/actions/install-dependencies
 
       - name: Setup python, vorta and dev deps
-        if: env.EXCLUDE == 'false'
         uses: ./.github/actions/setup
         with:
           python-version: ${{ matrix.python-version }}
@@ -130,10 +119,10 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' && env.EXCLUDE == 'false'}}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true'}}
 
       - name: Run Integration Tests with pytest (Linux)
-        if: runner.os == 'Linux' && env.EXCLUDE == 'false'
+        if: runner.os == 'Linux'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
@@ -141,14 +130,13 @@ jobs:
                 -a dbus-run-session -- make test-integration
 
       - name: Run Integration Tests with pytest (macOS)
-        if: runner.os == 'macOS' && env.EXCLUDE == 'false'
+        if: runner.os == 'macOS'
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
         run: echo $PKG_CONFIG_PATH && make test-integration
 
       - name: Upload coverage to Codecov
-        if: env.EXCLUDE == 'false'
         uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
