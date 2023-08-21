@@ -26,16 +26,36 @@ jobs:
         shell: bash
         run: make lint
 
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-unit: ${{ steps.set-matrix-unit.outputs.matrix }}
+      matrix-integration: ${{ steps.set-matrix-integration.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Give execute permission to script
+        run: chmod +x ./.github/scripts/generate-matrix.sh
+
+      - name: Generate matrices
+        run: |
+          ./.github/scripts/generate-matrix.sh "${{ github.event_name }}" "${GITHUB_REF##refs/heads/}"
+
+      - name: Set matrix for unit tests
+        id: set-matrix-unit
+        run: echo "matrix=$(cat matrix-unit.json)" >> $GITHUB_OUTPUT
+
+      - name: Set matrix for integration tests
+        id: set-matrix-integration
+        run: echo "matrix=$(cat matrix-integration.json)" >> $GITHUB_OUTPUT
+
   test-unit:
+    needs: prepare-matrix
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        os: [ubuntu-latest, macos-latest]
-        borg-version: ["1.2.4"]
+      matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix-unit)}}
 
     steps:
       - uses: actions/checkout@v3
@@ -51,7 +71,7 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
 
       - name: Run Unit Tests with pytest (Linux)
         if: runner.os == 'Linux'
@@ -59,7 +79,7 @@ jobs:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                    -a dbus-run-session -- make test-unit
+                -a dbus-run-session -- make test-unit
 
       - name: Run Unit Tests with pytest (macOS)
         if: runner.os == 'macOS'
@@ -78,18 +98,12 @@ jobs:
           env_vars: OS, python
 
   test-integration:
+    needs: prepare-matrix
     timeout-minutes: 20
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        os: [ubuntu-latest, macos-latest]
-        borg-version: ["1.1.18", "1.2.2", "1.2.4", "2.0.0b5"]
-        exclude:
-          - borg-version: "2.0.0b5"
-            python-version: "3.8"
+      matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix-integration)}}
 
     steps:
       - uses: actions/checkout@v3
@@ -105,7 +119,7 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true'}}
 
       - name: Run Integration Tests with pytest (Linux)
         if: runner.os == 'Linux'
@@ -113,7 +127,7 @@ jobs:
           BORG_VERSION: ${{ matrix.borg-version }}
         run: |
           xvfb-run --server-args="-screen 0 1024x768x24+32" \
-                   -a dbus-run-session -- make test-integration
+                -a dbus-run-session -- make test-integration
 
       - name: Run Integration Tests with pytest (macOS)
         if: runner.os == 'macOS'
