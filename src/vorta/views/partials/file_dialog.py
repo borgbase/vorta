@@ -142,4 +142,4 @@ class BaseFileDialog(QDialog):
         self.sortproxy.setSearchString(self.searchWidget.text())
 
     def searchStringError(self, error: bool):
-        self.searchWidget.setStyleSheet("border: 2px solid red;" if error else "")
+        self.searchWidget.setStyleSheet("QLineEdit { border: 2px solid red; }" if error else "")
