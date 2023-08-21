@@ -61,7 +61,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customExclusionsList.setModel(self.customExclusionsModel)
         self.customExclusionsModel.itemChanged.connect(self.custom_item_changed)
         self.customExclusionsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.customExclusionsList.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.customExclusionsList.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.customExclusionsList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.customExclusionsList.setAlternatingRowColors(True)
         self.customExclusionsList.setStyleSheet(

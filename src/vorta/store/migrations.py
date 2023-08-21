@@ -266,13 +266,16 @@ def run_migrations(current_schema, db_connection):
     # add a default exclusion to help the user understand how to use the new exclude GUI
     if current_schema.version < 24:
         for profile in BackupProfileModel:
-            previous_exclusions = profile.exclude_patterns.splitlines()
+            previous_exclusions = profile.exclude_patterns.splitlines() if profile.exclude_patterns else []
             for pattern in previous_exclusions:
-                ExclusionModel.create(
-                    profile=profile,
-                    name=pattern,
-                    enabled=True,
-                )
+                try:
+                    ExclusionModel.create(
+                        profile=profile,
+                        name=pattern,
+                        enabled=True,
+                    )
+                except pw.IntegrityError:
+                    pass
             profile.exclude_patterns = ''
             profile.save()
 
