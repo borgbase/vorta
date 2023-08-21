@@ -15,9 +15,19 @@ from vorta.views.utils import get_colored_icon
 
 
 class BaseFileDialog(QDialog):
+    """
+    Base class for all file view dialogs.
+    Attributes:
+        model: The model to use for the file view.
+    """
+
     __metaclass__ = ABCMeta
 
     def __init__(self, model):
+        """
+        Initialize the file view dialog with model, setup UI and connect signals.
+        """
+
         super().__init__()
         self.setupUi(self)
 
@@ -70,14 +80,12 @@ class BaseFileDialog(QDialog):
 
     @abstractmethod
     def get_sort_proxy_model(self):
+        """Return a sort proxy model for the file view."""
         pass
 
     @abstractmethod
     def get_diff_result_display_mode(self):
-        pass
-
-    @abstractmethod
-    def set_archive_names(self):
+        """Return the display mode for the diff result."""
         pass
 
     def copy_item(self, index: QModelIndex = None):
@@ -133,13 +141,16 @@ class BaseFileDialog(QDialog):
             self.treeView.scrollTo(selectedRows[0])
 
     def keyPressEvent(self, event):
+        """React to Enter key press in search field."""
         if event.key() in [Qt.Key.Key_Return, Qt.Key.Key_Enter] and self.searchWidget.hasFocus():
             self.submitSearchPattern()
         else:
             super().keyPressEvent(event)
 
     def submitSearchPattern(self):
+        """Submit the search pattern to the sort proxy model."""
         self.sortproxy.setSearchString(self.searchWidget.text())
 
     def searchStringError(self, error: bool):
+        """Handle search string errors."""
         self.searchWidget.setStyleSheet("QLineEdit { border: 2px solid red; }" if error else "")
