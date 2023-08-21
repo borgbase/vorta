@@ -946,6 +946,7 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
 
     @staticmethod
     def valid_size(value):
+        """Validate the size string."""
         size = value.split(',')
 
         if len(size) == 1:
@@ -1163,6 +1164,7 @@ class DiffTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
         super().__init__(parent)
 
     def get_parser(self):
+        """Add Diff view specific arguments to the parser."""
         parser = super().get_parser()
         parser.add_argument(
             "-b", "--balance", type=FileTreeSortFilterProxyModel.valid_size, help="Match by balance size."
@@ -1229,6 +1231,7 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
 
     @staticmethod
     def valid_date_range(value):
+        """Parse the date range string."""
         date = value.split(',')
 
         if len(date) == 1:
@@ -1242,6 +1245,7 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
             raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
 
     def get_parser(self):
+        """Add Extract view specific arguments to the parser."""
         parser = super().get_parser()
         parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
         parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
