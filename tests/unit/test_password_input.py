@@ -86,7 +86,7 @@ def test_password_input_validation(qapp, qtbot):
     qtbot.keyClicks(password_input.confirmLineEdit, "123456789")
 
     assert password_input.passwordLineEdit.error_state
-    assert password_input.validation_label.text() == "Passwords must be atleast 10 characters long."
+    assert password_input.validation_label.text() == "Passwords must be at least 10 characters long."
 
     password_input.clear()
     qtbot.keyClicks(password_input.passwordLineEdit, "123456789")
@@ -94,7 +94,7 @@ def test_password_input_validation(qapp, qtbot):
 
     assert password_input.passwordLineEdit.error_state
     assert password_input.confirmLineEdit.error_state
-    assert password_input.validation_label.text() == "Passwords must be identical and atleast 10 characters long."
+    assert password_input.validation_label.text() == "Passwords must be identical and at least 10 characters long."
 
     password_input.clear()
     qtbot.keyClicks(password_input.passwordLineEdit, "1234567890")
@@ -130,7 +130,7 @@ def test_password_input_validation_disabled(qapp, qtbot):
 
     assert password_input.passwordLineEdit.error_state
     assert password_input.confirmLineEdit.error_state
-    assert password_input.validation_label.text() == "Passwords must be identical and atleast 9 characters long."
+    assert password_input.validation_label.text() == "Passwords must be identical and at least 9 characters long."
 
     password_input.set_validation_enabled(False)
     assert not password_input.passwordLineEdit.error_state
