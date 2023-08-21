@@ -24,7 +24,7 @@ elif [[ "$event_name" == "push" ]] || [[ "$event_name" == "pull_request" ]]; the
 
     echo '{
       "python-version": ["3.10"],
-      "os": ["ubuntu-latest", "macos-latest"],
+      "os": ["ubuntu-latest"],
       "borg-version": ["1.2.4"]
     }' | jq -c . > matrix-integration.json
 fi
