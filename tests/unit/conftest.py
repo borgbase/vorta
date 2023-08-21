@@ -64,15 +64,16 @@ def init_db(qapp, qtbot, tmpdir_factory):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
-    # qapp.main_window.deleteLater()
-    # del qapp.main_window
+    qapp.main_window.deleteLater()
+    del qapp.main_window
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
+
+    qapp.scheduler.schedule_changed.disconnect()
 
     yield
 
     qapp.jobs_manager.cancel_all_jobs()
     qapp.backup_finished_event.disconnect()
-    qapp.scheduler.schedule_changed.disconnect()
     qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
     mock_db.close()
 
