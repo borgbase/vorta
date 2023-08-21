@@ -227,6 +227,10 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
     ],
 )
 def test_archive_extract_filters(qtbot, mocker, borg_json_output, archive_env, search_string, expected_search_results):
+    """
+    Tests the supported search filters for the extract window.
+    """
+
     vorta.utils.borg_compat.version = '1.2.4'
 
     _, tab = archive_env
