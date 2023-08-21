@@ -22,6 +22,8 @@ from PyQt6.QtCore import (
     pyqtSignal,
 )
 
+from vorta.views.utils import compare_values_with_sign
+
 #: A representation of a path
 Path = Tuple[str, ...]
 PathLike = Union[Path, Sequence[str]]
@@ -899,9 +901,9 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         return super().headerData(section, orientation, role)
 
 
-class FileTreeSortProxyModel(QSortFilterProxyModel):
+class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
     """
-    Sort a FileTreeModel.
+    Sort and Filter a FileTreeModel.
     """
 
     sorted = pyqtSignal(int, Qt.SortOrder)
@@ -910,8 +912,48 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
     def __init__(self, parent=None) -> None:
         """Init."""
         super().__init__(parent)
+
+        self.setRecursiveFilteringEnabled(True)
+        self.setAutoAcceptChildRows(True)
+
         self.folders_on_top = False
         self.searchPattern = None
+
+    @staticmethod
+    def parse_size(size):
+        """
+        Parse the size string into a tuple of two values.
+        """
+
+        comparison_sign = ['<', '>', '<=', '>=', '=']
+        size_units = ['KB', 'MB', 'GB']
+
+        # TODO: Should we just use regex? ^([<>]=?|)(\d+(\.\d+)?)([KMG]B)?$
+        if not any(size.startswith(unit) for unit in comparison_sign):
+            raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >, <=, >=")
+
+        if not any(size.endswith(unit) for unit in size_units):
+            raise argparse.ArgumentTypeError("Invalid size format. Supported units: KB, MB, GB")
+
+        try:
+            unit = size[-2:]
+            if size[1] == '=':
+                return (size[:2], int(size[2:-2]) * 1024 ** (size_units.index(unit) + 1))
+            else:
+                return (size[0], int(size[1:-2]) * 1024 ** (size_units.index(unit) + 1))
+        except ValueError:
+            raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
+
+    @staticmethod
+    def valid_size(value):
+        size = value.split(',')
+
+        if len(size) == 1:
+            return [FileTreeSortFilterProxyModel.parse_size(size[0])]
+        elif len(size) == 2:
+            return [FileTreeSortFilterProxyModel.parse_size(size[0]), FileTreeSortFilterProxyModel.parse_size(size[1])]
+        else:
+            raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
 
     @overload
     def keepFoldersOnTop(self) -> bool:
@@ -968,7 +1010,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         raise NotImplementedError(
-            "Method `choose_data` of " + "FileTreeSortProxyModel" + " must be implemented by subclasses."
+            "Method `choose_data` of " + "FileTreeSortFilterProxyModel" + " must be implemented by subclasses."
         )
 
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
@@ -1004,121 +1046,45 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         """
         Set the pattern to filter for.
         """
+
+        try:
+            self.searchPattern = self.parse_search_string(pattern)
+        except SystemExit:
+            self.searchStringError.emit(True)
+            return None
+
         self.searchStringError.emit(False)
-
-        if not pattern:
-            self.searchPattern = None
-
-        self.searchPattern = self.parse_search_string(pattern)
         self.invalidateRowsFilter()
+
+    def get_parser(self):
+        """
+        Creates and returns the parser for the search string.
+        """
+        parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
+        parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
+        parser.add_argument(
+            "-m", "--match", choices=["in", "ex", "re", "fm"], default=None, help="Type of match query."
+        )
+        parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
+        parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
+        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
+        parser.add_argument("-s", "--size", type=FileTreeSortFilterProxyModel.valid_size, help="Match by size.")
+        parser.add_argument("--exclude-parents", action="store_true", help="Match only items without children.")
+
+        return parser
 
     def parse_search_string(self, pattern: str):
         """
         Parse the search string into a list of tokens.
         """
 
-        def parse_size(size):
-            """
-            Parse the size string into a tuple of two values.
-            """
-
-            comparison_sign = ['<', '>', '<=', '>=', '=']
-            size_units = ['KB', 'MB', 'GB']
-
-            # TODO: Should we just use regex? ^([<>]=?|)(\d+(\.\d+)?)([KMG]B)?$
-            if not any(size.startswith(unit) for unit in comparison_sign):
-                raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >, <=, >=")
-
-            if not any(size.endswith(unit) for unit in size_units):
-                raise argparse.ArgumentTypeError("Invalid size format. Supported units: KB, MB, GB")
-
-            try:
-                unit = size[-2:]
-                if size[1] == '=':
-                    return (size[:2], int(size[2:-2]) * 1024 ** (size_units.index(unit) + 1))
-                else:
-                    return (size[0], int(size[1:-2]) * 1024 ** (size_units.index(unit) + 1))
-            except ValueError:
-                raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
-
-        def parse_date(value):
-            """
-            Parse the date string into a tuple of two values.
-            """
-
-            comparison_sign = ['<', '>', '<=', '>=', '=']
-
-            if not any(value.startswith(unit) for unit in comparison_sign):
-                raise argparse.ArgumentTypeError("Invalid date format. Supported comparison signs: <, >, <=, >=, =")
-
-            if value[1] == '=':
-                date = value[2:]
-                sign = value[:2]
-            else:
-                date = value[1:]
-                sign = value[:1]
-
-            try:
-                date = datetime.strptime(date, '%Y-%m-%d')
-            except ValueError:
-                raise argparse.ArgumentTypeError("Invalid date format. Must be YYYY-MM-DD.")
-
-            return (sign, date)
-
-        def valid_size(value):
-            size = value.split(',')
-
-            if len(size) == 1:
-                return [parse_size(size[0])]
-            elif len(size) == 2:
-                return [parse_size(size[0]), parse_size(size[1])]
-            else:
-                raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
-
-        def valid_date_range(value):
-            date = value.split(',')
-
-            if len(date) == 1:
-                return [parse_date(date[0])]
-            elif len(date) == 2:
-                return [parse_date(date[0]), parse_date(date[1])]
-            else:
-                raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
-
-        parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
-        parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
-        parser.add_argument(
-            "-m", "--match", choices=["in", "ex", "re", "fm"], default=None, help="Type of match query."
-        )  # TODO: Type "regex"
-        parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
-        parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
-        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
-        parser.add_argument("-s", "--size", type=valid_size, help="Match by size.")
-
-        # Diff view only
-        parser.add_argument("-b", "--balance", type=valid_size, help="Match by balance size.")
-
-        # Extract view only
-        parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
-        parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
-        parser.add_argument("--last-modified", type=valid_date_range, help="Match by last modified date.")
-
-        # no parents allowed
-        parser.add_argument("--exclude-parents", action="store_true", help="Match only items without parents.")
-
-        try:
-            return parser.parse_args(pattern.split())
-        except SystemExit:
-            self.searchStringError.emit(True)
-            return None
+        parser = self.get_parser()
+        return parser.parse_args(pattern.split())
 
     def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
         """
         Return whether the row should be accepted.
         """
-
-        self.setRecursiveFilteringEnabled(True)
-        self.setAutoAcceptChildRows(True)
 
         if not self.searchPattern:
             return True
@@ -1128,7 +1094,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             self.searchStringError.emit(True)
             return False
 
-        model: FileTreeModel = self.sourceModel()
+        model = self.sourceModel()
         item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
         item_path = path_to_str(item.path)
@@ -1167,18 +1133,6 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             elif self.searchPattern.match == "fm" and not fnmatch(search_item, search_string):
                 return False
 
-        def compare_values_with_sign(item_value, filter_value, comparison_sign):
-            if comparison_sign == '<':
-                return item_value < filter_value
-            elif comparison_sign == '>':
-                return item_value > filter_value
-            elif comparison_sign == '<=':
-                return item_value <= filter_value
-            elif comparison_sign == '>=':
-                return item_value >= filter_value
-            elif comparison_sign == '=':
-                return item_value == filter_value
-
         if self.searchPattern.size:
             # Diff view has size column corresponding to the changed_size while
             # Extract view has size column corresponding to the size
@@ -1191,47 +1145,139 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
                 if not compare_values_with_sign(item_size, filter_size[1], filter_size[0]):
                     return False
 
-        if self.searchPattern.balance:
-            # Only available in Diff view
-            if hasattr(item.data, 'changed_size'):
-                item_balance = item.data.size
-
-                for filter_balance in self.searchPattern.balance:
-                    if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
-                        return False
-            else:
-                self.searchStringError.emit(True)
-
-        if self.searchPattern.healthy:
-            if hasattr(item.data, 'health'):
-                if not item.data.health:
-                    return False
-            else:
-                self.searchStringError.emit(True)
-
-        if self.searchPattern.unhealthy:
-            if hasattr(item.data, 'health'):
-                if item.data.health:
-                    return False
-            else:
-                self.searchStringError.emit(True)
-
-        if self.searchPattern.last_modified:
-            if hasattr(item.data, 'last_modified'):
-                item_last_modified = item.data.last_modified
-
-                for filter_last_modified in self.searchPattern.last_modified:
-                    if not compare_values_with_sign(
-                        item_last_modified, filter_last_modified[1], filter_last_modified[0]
-                    ):
-                        return False
-            else:
-                self.searchStringError.emit(True)
-
         if self.searchPattern.change:
             item_change = item.data.change_type.short()
 
             if item_change != self.searchPattern.change:
                 return False
+
+        return True
+
+
+class DiffTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
+    """
+    Tree model for diff view.
+    """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    def get_parser(self):
+        parser = super().get_parser()
+        parser.add_argument(
+            "-b", "--balance", type=FileTreeSortFilterProxyModel.valid_size, help="Match by balance size."
+        )
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.balance:
+            item_balance = item.data.size
+
+            for filter_balance in self.searchPattern.balance:
+                if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
+                    return False
+
+        return True
+
+
+class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
+    """
+    Tree model for diff view.
+    """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    @staticmethod
+    def parse_date(value):
+        """
+        Parse the date string into a tuple of two values.
+        """
+
+        comparison_sign = ['<', '>', '<=', '>=', '=']
+
+        if not any(value.startswith(unit) for unit in comparison_sign):
+            raise argparse.ArgumentTypeError("Invalid date format. Supported comparison signs: <, >, <=, >=, =")
+
+        if value[1] == '=':
+            date = value[2:]
+            sign = value[:2]
+        else:
+            date = value[1:]
+            sign = value[:1]
+
+        try:
+            date = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            raise argparse.ArgumentTypeError("Invalid date format. Must be YYYY-MM-DD.")
+
+        return (sign, date)
+
+    @staticmethod
+    def valid_date_range(value):
+        date = value.split(',')
+
+        if len(date) == 1:
+            return [ExtractTreeSortFilterProxyModel.parse_date(date[0])]
+        elif len(date) == 2:
+            return [
+                ExtractTreeSortFilterProxyModel.parse_date(date[0]),
+                ExtractTreeSortFilterProxyModel.parse_date(date[1]),
+            ]
+        else:
+            raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
+
+    def get_parser(self):
+        parser = super().get_parser()
+        parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
+        parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
+        parser.add_argument(
+            "--last-modified",
+            type=ExtractTreeSortFilterProxyModel.valid_date_range,
+            help="Match by last modified date.",
+        )
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.healthy and not item.data.health:
+            return False
+
+        if self.searchPattern.unhealthy and item.data.health:
+            return False
+
+        if self.searchPattern.last_modified:
+            item_last_modified = item.data.last_modified
+
+            for filter_last_modified in self.searchPattern.last_modified:
+                if not compare_values_with_sign(item_last_modified, filter_last_modified[1], filter_last_modified[0]):
+                    return False
 
         return True

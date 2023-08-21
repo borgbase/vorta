@@ -27,9 +27,9 @@ from vorta.views.partials.file_dialog import BaseFileDialog
 from vorta.views.utils import get_colored_icon
 
 from .partials.treemodel import (
+    ExtractTreeSortFilterProxyModel,
     FileSystemItem,
     FileTreeModel,
-    FileTreeSortProxyModel,
     path_to_str,
     relative_path,
 )
@@ -171,7 +171,7 @@ def parse_json_lines(lines, model: "ExtractTree"):
 # ---- Sorting ---------------------------------------------------------------
 
 
-class ExtractSortProxyModel(FileTreeSortProxyModel):
+class ExtractSortProxyModel(ExtractTreeSortFilterProxyModel):
     """
     Sort a ExtractTree model.
     """

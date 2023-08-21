@@ -15,3 +15,16 @@ def get_colored_icon(icon_name):
     svg_img = QImage.fromData(svg_str).scaledToHeight(128)
 
     return QIcon(QPixmap(svg_img))
+
+
+def compare_values_with_sign(item_value, filter_value, comparison_sign):
+    if comparison_sign == '<':
+        return item_value < filter_value
+    elif comparison_sign == '>':
+        return item_value > filter_value
+    elif comparison_sign == '<=':
+        return item_value <= filter_value
+    elif comparison_sign == '>=':
+        return item_value >= filter_value
+    elif comparison_sign == '=':
+        return item_value == filter_value

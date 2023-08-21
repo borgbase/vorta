@@ -21,9 +21,9 @@ from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.file_dialog import BaseFileDialog
 from vorta.views.partials.treemodel import (
+    DiffTreeSortFilterProxyModel,
     FileSystemItem,
     FileTreeModel,
-    FileTreeSortProxyModel,
     path_to_str,
     relative_path,
 )
@@ -393,7 +393,7 @@ def size_to_byte(significand: str, unit: str) -> int:
 # ---- Sorting ---------------------------------------------------------------
 
 
-class DiffSortProxyModel(FileTreeSortProxyModel):
+class DiffSortProxyModel(DiffTreeSortFilterProxyModel):
     """
     Sort a DiffTree model.
     """
