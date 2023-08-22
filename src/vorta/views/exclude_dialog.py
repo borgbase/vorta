@@ -67,7 +67,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customExclusionsList.setStyleSheet(
             '''
             QListView::item {
-                padding: 20px 0px;
+                padding: 10px 0px;
                 border-bottom: .5px solid black;
             }
             QListView::item:selected {
@@ -94,7 +94,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.exclusionPresetsList.setStyleSheet(
             '''
             QListView::item {
-                padding: 20px 0px;
+                padding: 10px 0px;
                 border-bottom: .5px solid black;
             }
             QListView::item:selected {
