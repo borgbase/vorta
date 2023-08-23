@@ -64,18 +64,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customExclusionsList.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.customExclusionsList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.customExclusionsList.setAlternatingRowColors(True)
-        self.customExclusionsList.setStyleSheet(
-            '''
-            QListView::item {
-                padding: 10px 0px;
-                border-bottom: .5px solid black;
-            }
-            QListView::item:selected {
-                background-color: palette(highlight);
-            }
-
-        '''
-        )
         self.customExclusionsListDelegate = QStyledItemDelegate()
         self.customExclusionsList.setItemDelegate(self.customExclusionsListDelegate)
         self.customExclusionsListDelegate.closeEditor.connect(self.custom_pattern_editing_finished)
@@ -91,20 +79,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.exclusionPresetsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.exclusionPresetsList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.exclusionPresetsList.setAlternatingRowColors(True)
-        self.exclusionPresetsList.setStyleSheet(
-            '''
-            QListView::item {
-                padding: 10px 0px;
-                border-bottom: .5px solid black;
-            }
-            QListView::item:selected {
-                background-color: palette(highlight);
-            }
-            QListView::item::icon {
-                padding-right: 10px;
-            }
-        '''
-        )
 
         self.exclusionsPreviewText.setReadOnly(True)
 
