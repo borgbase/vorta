@@ -7,28 +7,48 @@ import pytest
 import vorta.store.models
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QCheckBox, QFormLayout
+from vorta.store.models import SettingsModel
 
 
-def test_autostart(qapp, qtbot):
-    """Check if file exists only on Linux, otherwise just check it doesn't crash"""
+def test_toggle_all_settings(qapp, qtbot):
+    """Toggle each setting twice as a basic sanity test to ensure app does crash."""
+    groups = (
+        SettingsModel.select(SettingsModel.group)
+        .distinct(True)
+        .where(SettingsModel.group != '')
+        .order_by(SettingsModel.group.asc())
+    )
+
+    settings = [
+        setting
+        for group in groups
+        for setting in SettingsModel.select().where(
+            SettingsModel.type == 'checkbox', SettingsModel.group == group.group
+        )
+    ]
+
+    for setting in settings:
+        for _ in range(2):
+            _click_toggle_setting(setting.label, qapp, qtbot)
+
+
+@pytest.mark.skipif(sys.platform != "linux", reason="testing autostart path for Linux only")
+def test_autostart_linux(qapp, qtbot):
+    """Checks that autostart path is added correctly on Linux when setting is enabled."""
     setting = "Automatically start Vorta at login"
 
+    # ensure file is present when autostart is enabled
     _click_toggle_setting(setting, qapp, qtbot)
+    autostart_path = (
+        Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
+    )
+    qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
+    with open(autostart_path) as desktop_file:
+        desktop_file_text = desktop_file.read()
+    assert desktop_file_text.startswith("[Desktop Entry]")
 
-    if sys.platform == 'linux':
-        autostart_path = (
-            Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart")
-            / "vorta.desktop"
-        )
-        qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
-
-        with open(autostart_path) as desktop_file:
-            desktop_file_text = desktop_file.read()
-
-        assert desktop_file_text.startswith("[Desktop Entry]")
-
+    # ensure file is removed when autostart is disabled
     _click_toggle_setting(setting, qapp, qtbot)
-
     if sys.platform == 'linux':
         assert not os.path.exists(autostart_path)
 
@@ -61,14 +81,13 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
     assert kwargs_list['fixed_unit'] is None
 
     # use the qt bot to click the setting and see that the refresh_archive emit works as intended.
-    with qtbot.waitSignal(qapp.main_window.miscTab.refresh_archive, timeout=5000):
+    with qtbot.waitSignal(qapp.main_window.miscTab.refresh_archive, **pytest._wait_defaults):
         _click_toggle_setting(setting, qapp, qtbot)
 
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
 def test_check_full_disk_access(qapp, qtbot, mocker):
-    """Enables/disables 'Check for Full Disk Access on startup' setting and ensures functionality"""
-    setting = "Check for Full Disk Access on startup"
+    """tests if the full disk access warning is properly silenced with the setting enabled"""
 
     # Set mocks for setting enabled
     mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=True))
@@ -87,10 +106,6 @@ def test_check_full_disk_access(qapp, qtbot, mocker):
     # See that pop-up does not occur
     qapp.check_darwin_permissions()
     mock_qmessagebox.assert_not_called()
-
-    # Checks that setting doesn't crash program when click toggled on then off"""
-    _click_toggle_setting(setting, qapp, qtbot)
-    _click_toggle_setting(setting, qapp, qtbot)
 
 
 def _click_toggle_setting(setting, qapp, qtbot):
