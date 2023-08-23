@@ -77,6 +77,7 @@ class BackupProfileModel(BaseModel):
     compression = pw.CharField(default='lz4')
     raw_exclusions = pw.TextField(default='')
     exclude_patterns = pw.TextField(null=True)
+    exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
     schedule_interval_count = pw.IntegerField(default=3)
     schedule_interval_unit = pw.CharField(default='hours')
