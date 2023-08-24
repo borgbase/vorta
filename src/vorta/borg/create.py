@@ -173,7 +173,7 @@ class BorgCreateJob(BorgJob):
 
         if profile.exclude_if_present is not None:
             for f in profile.exclude_if_present.split('\n'):
-                if f.strip():
+                if f.strip() and not f.strip().startswith('#'):
                     cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.

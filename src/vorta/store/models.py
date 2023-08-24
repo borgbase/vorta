@@ -76,6 +76,7 @@ class BackupProfileModel(BaseModel):
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
     raw_exclusions = pw.TextField(default='')
+    raw_exclude_if_present = pw.TextField(default='')
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
@@ -125,6 +126,19 @@ class ExclusionModel(BaseModel):
     name = pw.CharField(unique=True)
     enabled = pw.BooleanField(default=True)
     source = pw.CharField(default=SourceFieldOptions.CUSTOM.value)
+
+    class Meta:
+        database = DB
+
+
+class ExcludeIfPresentModel(BaseModel):
+    """
+    These patters can't be presets and are used to exclude directories if a specific file is present.
+    """
+
+    profile = pw.ForeignKeyField(BackupProfileModel, backref='exclude_if_present_patterns')
+    name = pw.CharField(unique=True)
+    enabled = pw.BooleanField(default=True)
 
     class Meta:
         database = DB

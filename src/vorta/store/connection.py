@@ -12,6 +12,7 @@ from .models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    ExcludeIfPresentModel,
     ExclusionModel,
     RepoModel,
     RepoPassword,
@@ -54,6 +55,7 @@ def init_db(con=None):
             EventLogModel,
             SchemaVersion,
             ExclusionModel,
+            ExcludeIfPresentModel,
         ]
     )
 

@@ -1,7 +1,3 @@
-import json
-import os
-import sys
-
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QStandardItem, QStandardItemModel
@@ -14,12 +10,12 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.i18n import translate
-from vorta.store.models import ExclusionModel
+from vorta.store.models import ExcludeIfPresentModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/excludedialog.ui')
-ExcludeDialogUi, ExcludeDialogBase = uic.loadUiType(uifile)
+uifile = get_asset('UI/excludeifpresentdialog.ui')
+ExcludeIfPresentDialogUi, ExcludeIfPresentDialogBase = uic.loadUiType(uifile)
 
 
 class MandatoryInputItemModel(QStandardItemModel):
@@ -35,7 +31,7 @@ class MandatoryInputItemModel(QStandardItemModel):
         if role == Qt.ItemDataRole.EditRole and value == '':
             self.removeRow(index.row())
             return True
-        if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(ExclusionModel.name == value):
+        if role == Qt.ItemDataRole.EditRole and ExcludeIfPresentModel.get_or_none(ExcludeIfPresentModel.name == value):
             QMessageBox.critical(
                 self.parent(),
                 'Error',
@@ -47,12 +43,11 @@ class MandatoryInputItemModel(QStandardItemModel):
         return super().setData(index, value, role)
 
 
-class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
+class ExcludeIfPresentDialog(ExcludeIfPresentDialogBase, ExcludeIfPresentDialogUi):
     def __init__(self, profile, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.profile = profile
-        self.allPresets = {}
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
 
         self.buttonBox.rejected.connect(self.close)
@@ -73,13 +68,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customExclusionsList.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customExclusionsList.customContextMenuRequested.connect(self.custom_exclusions_context_menu)
 
-        self.exclusionPresetsModel = QStandardItemModel()
-        self.exclusionPresetsList.setModel(self.exclusionPresetsModel)
-        self.exclusionPresetsModel.itemChanged.connect(self.preset_item_changed)
-        self.exclusionPresetsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.exclusionPresetsList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.exclusionPresetsList.setAlternatingRowColors(True)
-
         self.exclusionsPreviewText.setReadOnly(True)
 
         self.rawExclusionsText.textChanged.connect(self.raw_exclusions_saved)
@@ -96,39 +84,30 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customPresetsHelpText.setText(
             translate(
                 "CustomPresetsHelp",
-                "Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the <a href=\"https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns\">documentation</a>. To add multiple patterns at once, use the \"Raw\" tab.",  # noqa: E501
-            )
-        )
-        self.exclusionPresetsHelpText.setText(
-            translate(
-                "ExclusionPresetsHelp",
-                "These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that comprise a preset, switch to the \"Preview\" tab after enabling it.",  # noqa: E501
+                "You can add names of filesystem objects (e.g. a file or folder name) which, when contained within another folder, will prevent the containing folder from being backed up. This option will exclude a directory if a specific file or folder is present in that directory. For more info, see the <a href=\"https://borgbackup.readthedocs.io/en/stable/usage/create.html\">documentation</a>. To add multiple names at once, use the \"Raw\" tab.",  # noqa: E501
             )
         )
         self.rawExclusionsHelpText.setText(
             translate(
                 "RawExclusionsHelp",
-                "You can use this field to add multiple patterns at once. Each pattern should be on a separate line.",
+                "You can use this field to add multiple names at once. Each name should be on a separate line. You can also add comments with #, which will be ignored when the list is parsed.",  # noqa: E501
             )
         )
         self.exclusionsPreviewHelpText.setText(
             translate(
                 "ExclusionsPreviewHelp",
-                "This is a preview of the patterns that will be passed to borg for excluding files and folders from the backup.",  # noqa: E501
+                "This is a preview of all the names which will be passed to Borg's --exclude-if-present option.",  # noqa: E501
             )
         )
 
         self.populate_custom_exclusions_list()
-        self.populate_presets_list()
         self.populate_raw_exclusions_text()
         self.populate_preview_tab()
 
     def populate_custom_exclusions_list(self):
         user_excluded_patterns = {
             e.name: e.enabled
-            for e in self.profile.exclusions.select()
-            .where(ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value)
-            .order_by(ExclusionModel.name)
+            for e in self.profile.exclude_if_present_patterns.select().order_by(ExcludeIfPresentModel.name)
         }
 
         for (exclude, enabled) in user_excluded_patterns.items():
@@ -169,39 +148,8 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         menu.popup(self.customExclusionsList.viewport().mapToGlobal(pos))
 
-    def populate_presets_list(self):
-        if getattr(sys, 'frozen', False):
-            # we are running in a bundle
-            bundle_dir = os.path.join(sys._MEIPASS, 'assets/exclusion_presets')
-        else:
-            # we are running in a normal Python environment
-            bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../assets/exclusion_presets')
-
-        for preset_file in sorted(os.listdir(bundle_dir)):
-            with open(os.path.join(bundle_dir, preset_file), 'r') as f:
-                preset_data = json.load(f)
-                for preset in preset_data:
-                    item = QStandardItem(preset['name'])
-                    item.setCheckable(True)
-                    preset_model = ExclusionModel.get_or_none(
-                        name=preset['name'],
-                        source=ExclusionModel.SourceFieldOptions.PRESET.value,
-                        profile=self.profile,
-                    )
-
-                    if preset_model:
-                        item.setCheckState(Qt.CheckState.Checked if preset_model.enabled else Qt.CheckState.Unchecked)
-                    else:
-                        item.setCheckState(Qt.CheckState.Unchecked)
-
-                    self.exclusionPresetsModel.appendRow(item)
-                    self.allPresets[preset['name']] = {
-                        'patterns': preset['patterns'],
-                        'tags': preset['tags'],
-                    }
-
     def populate_raw_exclusions_text(self):
-        raw_excludes = self.profile.raw_exclusions
+        raw_excludes = self.profile.raw_exclude_if_present
         if raw_excludes:
             self.rawExclusionsText.setPlainText(raw_excludes)
 
@@ -209,21 +157,19 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         excludes = ""
 
         if (
-            ExclusionModel.select()
+            ExcludeIfPresentModel.select()
             .where(
-                ExclusionModel.profile == self.profile,
-                ExclusionModel.enabled,
-                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+                ExcludeIfPresentModel.profile == self.profile,
+                ExcludeIfPresentModel.enabled,
             )
             .count()
             > 0
         ):
             excludes = "# custom added rules\n"
 
-        for exclude in ExclusionModel.select().where(
-            ExclusionModel.profile == self.profile,
-            ExclusionModel.enabled,
-            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+        for exclude in ExcludeIfPresentModel.select().where(
+            ExcludeIfPresentModel.profile == self.profile,
+            ExcludeIfPresentModel.enabled,
         ):
             excludes += f"{exclude.name}\n"
 
@@ -231,24 +177,14 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         if excludes:
             excludes += "\n"
 
-        raw_excludes = self.profile.raw_exclusions
+        raw_excludes = self.profile.raw_exclude_if_present
         if raw_excludes:
             excludes += "# raw exclusions\n"
             excludes += raw_excludes
             excludes += "\n"
 
-        # go through all source=='preset' exclusions, find the name in the allPresets dict, and add the patterns
-        for exclude in ExclusionModel.select().where(
-            ExclusionModel.profile == self.profile,
-            ExclusionModel.enabled,
-            ExclusionModel.source == ExclusionModel.SourceFieldOptions.PRESET.value,
-        ):
-            excludes += f"\n# {exclude.name}\n"
-            for pattern in self.allPresets[exclude.name]['patterns']:
-                excludes += f"{pattern}\n"
-
         self.exclusionsPreviewText.setPlainText(excludes)
-        self.profile.exclude_patterns = excludes
+        self.profile.exclude_if_present = excludes
         self.profile.save()
 
     def copy_preview_to_clipboard(self):
@@ -264,17 +200,15 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         if not index:
             indexes = self.customExclusionsList.selectedIndexes()
             for index in reversed(sorted(indexes)):
-                ExclusionModel.delete().where(
-                    ExclusionModel.name == index.data(),
-                    ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
-                    ExclusionModel.profile == self.profile,
+                ExcludeIfPresentModel.delete().where(
+                    ExcludeIfPresentModel.name == index.data(),
+                    ExcludeIfPresentModel.profile == self.profile,
                 ).execute()
                 self.customExclusionsModel.removeRow(index.row())
         else:
-            ExclusionModel.delete().where(
-                ExclusionModel.name == index.data(),
-                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
-                ExclusionModel.profile == self.profile,
+            ExcludeIfPresentModel.delete().where(
+                ExcludeIfPresentModel.name == index.data(),
+                ExcludeIfPresentModel.profile == self.profile,
             ).execute()
             self.customExclusionsModel.removeRow(index.row())
 
@@ -329,42 +263,13 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         When the user checks or unchecks an item, update the database.
         When the user adds a new item, add it to the database.
         '''
-        if not ExclusionModel.get_or_none(
-            name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
-        ):
-            ExclusionModel.create(
-                name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
-            )
+        if not ExcludeIfPresentModel.get_or_none(name=item.text(), profile=self.profile):
+            ExcludeIfPresentModel.create(name=item.text(), profile=self.profile)
 
-        ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
-            ExclusionModel.name == item.text(),
-            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
-            ExclusionModel.profile == self.profile,
+        ExcludeIfPresentModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
+            ExcludeIfPresentModel.name == item.text(),
+            ExcludeIfPresentModel.profile == self.profile,
         ).execute()
-
-        self.populate_preview_tab()
-
-    def preset_item_changed(self, item):
-        '''
-        Create or update the preset in the database.
-        If the user unchecks the preset, set enabled to False, otherwise set it to True.
-        If the preset doesn't exist, create it and set enabled to True.
-        '''
-        preset = ExclusionModel.get_or_none(
-            name=item.text(),
-            source=ExclusionModel.SourceFieldOptions.PRESET.value,
-            profile=self.profile,
-        )
-        if preset:
-            preset.enabled = item.checkState() == Qt.CheckState.Checked
-            preset.save()
-        else:
-            ExclusionModel.create(
-                name=item.text(),
-                source=ExclusionModel.SourceFieldOptions.PRESET.value,
-                profile=self.profile,
-                enabled=item.checkState() == Qt.CheckState.Checked,
-            )
 
         self.populate_preview_tab()
 
@@ -373,7 +278,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         When the user saves changes in the raw exclusions text box, add it to the database.
         '''
         raw_excludes = self.rawExclusionsText.toPlainText()
-        self.profile.raw_exclusions = raw_excludes
+        self.profile.raw_exclude_if_present = raw_excludes
         self.profile.save()
 
         self.populate_preview_tab()

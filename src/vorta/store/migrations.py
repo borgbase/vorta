@@ -8,6 +8,7 @@ from .models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    ExcludeIfPresentModel,
     ExclusionModel,
     RepoModel,
     SettingsModel,
@@ -262,8 +263,19 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
+        _apply_schema_update(
+            current_schema,
+            23,
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'raw_exclude_if_present',
+                pw.CharField(default=''),
+            ),
+        )
+
     # convert every pattern in the old exclude_patterns string to a new ExclusionModel object
-    # add a default exclusion to help the user understand how to use the new exclude GUI
+    # add a default exclusion to help the user understand how to use the new exclude
+    # do the same with the exclude_if_present text
     if current_schema.version < 24:
         for profile in BackupProfileModel:
             previous_exclusions = profile.exclude_patterns.splitlines() if profile.exclude_patterns else []
@@ -276,6 +288,19 @@ def run_migrations(current_schema, db_connection):
                     )
                 except pw.IntegrityError:
                     pass
+
+            previous_exclude_if_present = profile.exclude_if_present.splitlines() if profile.exclude_if_present else []
+            for pattern in previous_exclude_if_present:
+                try:
+                    ExcludeIfPresentModel.create(
+                        profile=profile,
+                        name=pattern,
+                        enabled=True,
+                    )
+                except pw.IntegrityError:
+                    pass
+
+            profile.exclude_if_present = ''
             profile.exclude_patterns = ''
             profile.save()
 
@@ -284,6 +309,14 @@ def run_migrations(current_schema, db_connection):
                 ExclusionModel.create(
                     profile=profile,
                     name='*/node_modules',
+                    enabled=True,
+                )
+
+        if ExcludeIfPresentModel.select().count() == 0:
+            for profile in BackupProfileModel:
+                ExcludeIfPresentModel.create(
+                    profile=profile,
+                    name='.nobackup',
                     enabled=True,
                 )
 
