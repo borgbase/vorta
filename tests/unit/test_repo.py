@@ -180,26 +180,31 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
 @pytest.mark.parametrize(
     "response",
     [
-        {"return_code": 0, "error": "", "icon": None, "info": None},  # no error
-        {"return_code": 130, "error": "", "icon": None, "info": None},  # keyboard interrupt
+        {
+            "return_code": 0,  # no error
+            "error": "",
+            "icon": None,
+            "info": None,
+        },
         {
             "return_code": 1,  # warning
-            "error": "Borg exited with warning status",
+            "error": "Borg exited with warning status (rc 1).",
             "icon": QMessageBox.Icon.Warning,
             "info": "",
         },
         {
-            "return_code": 135,  # 128+n = kill signal n
-            "error": "killed by signal 7",
+            "return_code": 2,  # critical error
+            "error": "Repository data check for repo test_repo_url failed. Error code 2",
             "icon": QMessageBox.Icon.Critical,
-            "info": "the check job got a kill signal",
+            "info": "Consider repairing or recreating the repository soon to avoid missing data.",
         },
         {
-            "return_code": 2,  # real error
-            "error": "Error code 2",
+            "return_code": 135,  # 128 + n = kill signal n
+            "error": "killed by signal 7",
             "icon": QMessageBox.Icon.Critical,
-            "info": "Consider repairing or recreating the repository",
+            "info": "The process running the check job got a kill signal. Try again.",
         },
+        {"return_code": 130, "error": "", "icon": None, "info": None},  # keyboard interrupt
     ],
 )
 def test_repo_check_failed_response(qapp, qtbot, mocker, response):
@@ -210,21 +215,16 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         'errors': [(0, 'test_error_message')] if response["return_code"] not in [0, 130] else None,
     }
 
-    mocked_msgbox_exec = mocker.patch.object(QMessageBox, "exec")
-    mocked_msgbox_text = mocker.patch.object(QMessageBox, "setText")
-    mocked_msgbox_info = mocker.patch.object(QMessageBox, "setInformativeText")
-    mocked_msgbox_icon = mocker.patch.object(QMessageBox, "setIcon")
+    mock_exec = mocker.patch.object(QMessageBox, "exec")
+    mock_text = mocker.patch.object(QMessageBox, "setText")
+    mock_info = mocker.patch.object(QMessageBox, "setInformativeText")
+    mock_icon = mocker.patch.object(QMessageBox, "setIcon")
 
     qapp.check_failed_response(mock_result)
 
-    if mocked_msgbox_exec.call_count != 0:
-        assert mocked_msgbox_icon.call_count != 0
-        mocked_msgbox_icon.assert_called_with(response["icon"])
-
-        error_text = mocked_msgbox_text.call_args[0][0]
-        assert error_text is not None
-        assert response["error"] in error_text
-
-        info_text = mocked_msgbox_info.call_args[0][0]
-        assert info_text is not None
-        assert response["info"] in info_text
+    # return codes 0 and 130 do not provide a message
+    # for all other return codes, assert the message is formatted correctly
+    if mock_exec.call_count != 0:
+        mock_icon.assert_called_with(response["icon"])
+        assert response["error"] in mock_text.call_args[0][0]
+        assert response["info"] in mock_info.call_args[0][0]
