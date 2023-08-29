@@ -1,5 +1,6 @@
 import os
 import uuid
+from typing import Any, Dict
 
 import pytest
 import vorta.borg.borg_job
@@ -174,3 +175,55 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        {"return_code": 0, "error": "", "icon": None, "info": None},  # no error
+        {"return_code": 130, "error": "", "icon": None, "info": None},  # keyboard interrupt
+        {
+            "return_code": 1,  # warning
+            "error": "Borg exited with warning status",
+            "icon": QMessageBox.Icon.Warning,
+            "info": "",
+        },
+        {
+            "return_code": 135,  # 128+n = kill signal n
+            "error": "killed by signal 7",
+            "icon": QMessageBox.Icon.Critical,
+            "info": "the check job got a kill signal",
+        },
+        {
+            "return_code": 2,  # real error
+            "error": "Error code 2",
+            "icon": QMessageBox.Icon.Critical,
+            "info": "Consider repairing or recreating the repository",
+        },
+    ],
+)
+def test_repo_check_failed_response(qapp, qtbot, mocker, response):
+    """Test the processing of the signal that a repo consistency check has failed."""
+    mock_result: Dict[str, Any] = {
+        'params': {'repo_url': 'test_repo_url'},
+        'returncode': response["return_code"],
+        'errors': [(0, 'test_error_message')] if response["return_code"] not in [0, 130] else None,
+    }
+
+    mocked_msgbox_exec = mocker.patch.object(QMessageBox, "exec")
+    mocked_msgbox_text = mocker.patch.object(QMessageBox, "setText")
+    mocked_msgbox_info = mocker.patch.object(QMessageBox, "setInformativeText")
+    mocked_msgbox_icon = mocker.patch.object(QMessageBox, "setIcon")
+
+    qapp.check_failed_response(mock_result)
+
+    if mocked_msgbox_exec.call_count != 0:
+        mocked_msgbox_icon.assert_called_with(response["icon"])
+
+        error_text = mocked_msgbox_text.call_args[0][0]
+        assert error_text is not None
+        assert response["error"] in error_text
+
+        info_text = mocked_msgbox_info.call_args[0][0]
+        assert info_text is not None
+        assert response["info"] in info_text

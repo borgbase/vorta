@@ -87,7 +87,7 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason="Full Disk Access check only on Darwin")
 def test_check_full_disk_access(qapp, qtbot, mocker):
-    """tests if the full disk access warning is properly silenced with the setting enabled"""
+    """Tests if the full disk access warning is properly silenced with the setting enabled"""
 
     # Set mocks for setting enabled
     mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=True))
