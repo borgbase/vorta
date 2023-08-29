@@ -218,6 +218,7 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
     qapp.check_failed_response(mock_result)
 
     if mocked_msgbox_exec.call_count != 0:
+        assert mocked_msgbox_icon.call_count != 0
         mocked_msgbox_icon.assert_called_with(response["icon"])
 
         error_text = mocked_msgbox_text.call_args[0][0]
