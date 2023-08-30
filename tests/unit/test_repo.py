@@ -228,3 +228,42 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         mock_icon.assert_called_with(response["icon"])
         assert response["error"] in mock_text.call_args[0][0]
         assert response["info"] in mock_info.call_args[0][0]
+
+
+def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
+    """Testing the proper QMessageBox dialogue appears depending on the copy action circumstances."""
+    tab = qapp.main_window.repoTab
+    text = mocker.patch.object(QMessageBox, "setText")
+    mocker.patch.object(QMessageBox, "show")  # prevent QMessageBox from disrupting test
+    mocker.patch.object(qapp.clipboard(), "setText")  # prevent actual clipboard data from being changed
+
+    # create a new ssh key to be copied
+    qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
+    ssh_dialog, ssh_dir = tab._window, tmpdir
+    key_tmpfile, pub_tmpfile = ssh_dir.join("id_rsa-test"), ssh_dir.join("id_rsa-test.pub")  # noqa: F841
+    key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
+    ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
+    ssh_dialog.generate_key()
+    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
+    assert len(ssh_dir.listdir()) == 2
+    assert tab.sshComboBox.count() > 1
+
+    # no ssh key selected to copy
+    assert tab.sshComboBox.currentIndex() == 0
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Select a public key from the dropdown first."
+    text.assert_called_with(message)
+
+    # Select a key and copy it
+    tab.sshComboBox.setCurrentIndex(1)
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions."
+    text.assert_called_with(message)
+
+    # handle ssh key file not found
+    mocker.patch.object(os.path, "isfile", return_value=False)
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Could not find public key."
+    text.assert_called_with(message)
