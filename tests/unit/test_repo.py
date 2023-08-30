@@ -245,8 +245,10 @@ def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
     ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
     ssh_dialog.generate_key()
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
+    mock_expanduser = mocker.patch('os.path.expanduser', return_value=str(tmpdir))
+    tab.init_ssh()
     assert len(ssh_dir.listdir()) == 2
-    assert tab.sshComboBox.count() > 1
+    assert tab.sshComboBox.count() == 2
 
     # no ssh key selected to copy
     assert tab.sshComboBox.currentIndex() == 0
@@ -255,6 +257,7 @@ def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
     text.assert_called_with(message)
 
     # Select a key and copy it
+    mock_expanduser.return_value = pub_tmpfile
     tab.sshComboBox.setCurrentIndex(1)
     assert tab.sshComboBox.currentIndex() == 1
     qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
