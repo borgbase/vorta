@@ -132,10 +132,8 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
-def test_ssh_dialog(qapp, qtbot, tmpdir):
-    main = qapp.main_window
-    tab = main.repoTab
-
+def setup_ssh_key_for_test(qtbot, tab, tmpdir):
+    """Helper function to set up an SSH key for the test."""
     qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
     ssh_dialog = tab._window
 
@@ -150,6 +148,15 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
     assert len(ssh_dir.listdir()) == 2
 
+    return ssh_dialog, key_tmpfile, pub_tmpfile
+
+
+def test_ssh_dialog(qapp, qtbot, tmpdir):
+    main = qapp.main_window
+    tab = main.repoTab
+
+    ssh_dialog, key_tmpfile, pub_tmpfile = setup_ssh_key_for_test(qtbot, tab, tmpdir)
+
     # Ensure valid keys were created
     key_tmpfile_content = key_tmpfile.read()
     assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
@@ -158,6 +165,44 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
 
     ssh_dialog.generate_key()
     qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'), **pytest._wait_defaults)
+
+
+def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
+    """Testing the proper QMessageBox dialogue appears depending on the copy action circumstances."""
+    tab = qapp.main_window.repoTab
+
+    # set mocks to test assertions and prevent test interruptions
+    text = mocker.patch.object(QMessageBox, "setText")
+    mocker.patch.object(QMessageBox, "show")
+    mocker.patch.object(qapp.clipboard(), "setText")
+
+    ssh_dialog, key_tmpfile, pub_tmpfile = setup_ssh_key_for_test(qtbot, tab, tmpdir)
+
+    # populate the ssh combobox with the ssh key we created in tmpdir
+    mock_expanduser = mocker.patch('os.path.expanduser', return_value=str(tmpdir))
+    tab.init_ssh()
+    assert tab.sshComboBox.count() == 2
+
+    # test when no ssh key is selected to copy
+    assert tab.sshComboBox.currentIndex() == 0
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Select a public key from the dropdown first."
+    text.assert_called_with(message)
+
+    # Select a key and copy it
+    mock_expanduser.return_value = pub_tmpfile
+    tab.sshComboBox.setCurrentIndex(1)
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions."
+    text.assert_called_with(message)
+
+    # handle ssh key file not found
+    mock_expanduser.return_value = "foobar"
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Could not find public key."
+    text.assert_called_with(message)
 
 
 def test_create(qapp, borg_json_output, mocker, qtbot):
@@ -228,45 +273,3 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         mock_icon.assert_called_with(response["icon"])
         assert response["error"] in mock_text.call_args[0][0]
         assert response["info"] in mock_info.call_args[0][0]
-
-
-def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
-    """Testing the proper QMessageBox dialogue appears depending on the copy action circumstances."""
-    tab = qapp.main_window.repoTab
-    text = mocker.patch.object(QMessageBox, "setText")
-    mocker.patch.object(QMessageBox, "show")  # prevent QMessageBox from disrupting test
-    mocker.patch.object(qapp.clipboard(), "setText")  # prevent actual clipboard data from being changed
-
-    # create a new ssh key to be copied
-    qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
-    ssh_dialog, ssh_dir = tab._window, tmpdir
-    key_tmpfile, pub_tmpfile = ssh_dir.join("id_rsa-test"), ssh_dir.join("id_rsa-test.pub")  # noqa: F841
-    key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
-    ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
-    ssh_dialog.generate_key()
-    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
-    mock_expanduser = mocker.patch('os.path.expanduser', return_value=str(tmpdir))
-    tab.init_ssh()
-    assert len(ssh_dir.listdir()) == 2
-    assert tab.sshComboBox.count() == 2
-
-    # no ssh key selected to copy
-    assert tab.sshComboBox.currentIndex() == 0
-    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
-    message = "Select a public key from the dropdown first."
-    text.assert_called_with(message)
-
-    # Select a key and copy it
-    mock_expanduser.return_value = pub_tmpfile
-    tab.sshComboBox.setCurrentIndex(1)
-    assert tab.sshComboBox.currentIndex() == 1
-    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
-    message = "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions."
-    text.assert_called_with(message)
-
-    # handle ssh key file not found
-    mocker.patch.object(os.path, "isfile", return_value=False)
-    assert tab.sshComboBox.currentIndex() == 1
-    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
-    message = "Could not find public key."
-    text.assert_called_with(message)
