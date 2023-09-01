@@ -1,46 +1,21 @@
 from PyQt6 import uic
-from PyQt6.QtCore import QModelIndex, QObject, Qt
-from PyQt6.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtCore import QObject, Qt
+from PyQt6.QtGui import QStandardItem
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
     QMenu,
-    QMessageBox,
     QStyledItemDelegate,
 )
 
 from vorta.i18n import translate
 from vorta.store.models import ExcludeIfPresentModel
 from vorta.utils import get_asset
+from vorta.views.exclude_dialog import MandatoryInputItemModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/excludeifpresentdialog.ui')
 ExcludeIfPresentDialogUi, ExcludeIfPresentDialogBase = uic.loadUiType(uifile)
-
-
-class MandatoryInputItemModel(QStandardItemModel):
-    '''
-    A model that prevents the user from adding an empty item to the list.
-    '''
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def setData(self, index: QModelIndex, value, role: int = ...) -> bool:
-        # When a user-added item in edit mode has no text, remove it from the list.
-        if role == Qt.ItemDataRole.EditRole and value == '':
-            self.removeRow(index.row())
-            return True
-        if role == Qt.ItemDataRole.EditRole and ExcludeIfPresentModel.get_or_none(ExcludeIfPresentModel.name == value):
-            QMessageBox.critical(
-                self.parent(),
-                'Error',
-                'This exclusion already exists.',
-            )
-            self.removeRow(index.row())
-            return False
-
-        return super().setData(index, value, role)
 
 
 class ExcludeIfPresentDialog(ExcludeIfPresentDialogBase, ExcludeIfPresentDialogUi):
@@ -52,7 +27,7 @@ class ExcludeIfPresentDialog(ExcludeIfPresentDialogBase, ExcludeIfPresentDialogU
 
         self.buttonBox.rejected.connect(self.close)
 
-        self.customExclusionsModel = MandatoryInputItemModel()
+        self.customExclusionsModel = MandatoryInputItemModel(model=ExcludeIfPresentModel)
         self.customExclusionsList.setModel(self.customExclusionsModel)
         self.customExclusionsModel.itemChanged.connect(self.custom_item_changed)
         self.customExclusionsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)

@@ -27,15 +27,16 @@ class MandatoryInputItemModel(QStandardItemModel):
     A model that prevents the user from adding an empty item to the list.
     '''
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, model=None):
         super().__init__(parent)
+        self.model = model
 
     def setData(self, index: QModelIndex, value, role: int = ...) -> bool:
         # When a user-added item in edit mode has no text, remove it from the list.
         if role == Qt.ItemDataRole.EditRole and value == '':
             self.removeRow(index.row())
             return True
-        if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(ExclusionModel.name == value):
+        if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(self.model.name == value):
             QMessageBox.critical(
                 self.parent(),
                 'Error',
@@ -57,7 +58,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         self.buttonBox.rejected.connect(self.close)
 
-        self.customExclusionsModel = MandatoryInputItemModel()
+        self.customExclusionsModel = MandatoryInputItemModel(model=ExclusionModel)
         self.customExclusionsList.setModel(self.customExclusionsModel)
         self.customExclusionsModel.itemChanged.connect(self.custom_item_changed)
         self.customExclusionsList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)

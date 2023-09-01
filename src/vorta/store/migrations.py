@@ -287,6 +287,8 @@ def run_migrations(current_schema, db_connection):
                         enabled=True,
                     )
                 except pw.IntegrityError:
+                    # Previously, users could add the same exclusion multiple times, since it was just a string.
+                    # Now, we enforce uniqueness, so we need to catch the IntegrityError and ignore it.
                     pass
 
             previous_exclude_if_present = profile.exclude_if_present.splitlines() if profile.exclude_if_present else []
@@ -298,6 +300,7 @@ def run_migrations(current_schema, db_connection):
                         enabled=True,
                     )
                 except pw.IntegrityError:
+                    # Same as above
                     pass
 
             profile.exclude_if_present = ''
@@ -309,7 +312,7 @@ def run_migrations(current_schema, db_connection):
                 ExclusionModel.create(
                     profile=profile,
                     name='*/node_modules',
-                    enabled=True,
+                    enabled=False,
                 )
 
         if ExcludeIfPresentModel.select().count() == 0:
@@ -317,7 +320,7 @@ def run_migrations(current_schema, db_connection):
                 ExcludeIfPresentModel.create(
                     profile=profile,
                     name='.nobackup',
-                    enabled=True,
+                    enabled=False,
                 )
 
 
