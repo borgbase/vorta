@@ -198,9 +198,19 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         ssh_add_window = SSHAddWindow()
         self._window = ssh_add_window  # For tests
         ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        ssh_add_window.accepted.connect(self.init_ssh)
-        # ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
+        ssh_add_window.create_ssh_key_message.connect(self.init_ssh)
+        ssh_add_window.create_ssh_key_message.connect(self.create_ssh_key_message)
         ssh_add_window.open()
+
+    def create_ssh_key_message(self, exitCode: int, output_file: str):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+        if exitCode == 0:
+            msg.setText(self.tr(f"New key was copied to clipboard, and written to:\n{output_file}"))
+        else:
+            msg.setText(self.tr('Error during key generation.'))
+        msg.show()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()

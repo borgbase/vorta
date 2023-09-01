@@ -1,6 +1,6 @@
 import os
 
-from PyQt6 import uic
+from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QProcess, Qt
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
@@ -11,6 +11,8 @@ SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
+    create_ssh_key_message = QtCore.pyqtSignal(int, str)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -68,15 +70,17 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.sshproc.finished.connect(self.generate_key_result)
             self.sshproc.start('ssh-keygen', ['-t', format, '-b', length, '-f', output_path, '-N', ''])
 
-    def generate_key_result(self, exitCode, exitStatus):
+    def generate_key_result(self, exitCode):
         if exitCode == 0:
             output_path = os.path.expanduser(self.outputFileTextBox.text())
             pub_key = open(output_path + '.pub').read().strip()
             clipboard = QApplication.clipboard()
             clipboard.setText(pub_key)
-            self.errors.setText(self.tr('New key was copied to clipboard and written to %s.') % output_path)
+            self.reject()
+            self.create_ssh_key_message.emit(exitCode, output_path)
         else:
-            self.errors.setText(self.tr('Error during key generation.'))
+            self.reject()
+            self.create_ssh_key_message.emit(exitCode, "")
 
     def get_values(self):
         return {
