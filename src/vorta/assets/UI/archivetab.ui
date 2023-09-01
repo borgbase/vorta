@@ -221,23 +221,23 @@
               </item>
               <item>
                <widget class="QToolButton" name="bDiff">
-               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-               </sizepolicy>
-               </property>
-               <property name="toolTip">
-               <string>Compare two archives</string>
-               </property>
-               <property name="text">
-               <string>Diff</string>
-               </property>
-               <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-               </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Compare two archives</string>
+                </property>
+                <property name="text">
+                 <string>Diff</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
-               </item>
+              </item>
               <item>
                <widget class="QToolButton" name="bMountArchive">
                 <property name="sizePolicy">
@@ -295,25 +295,25 @@
                 </property>
                </widget>
               </item>
-               <item>
+              <item>
                <widget class="QToolButton" name="bDelete">
-               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-               </sizepolicy>
-               </property>
-               <property name="toolTip">
-               <string>Delete selected archive(s)</string>
-               </property>
-               <property name="text">
-               <string>Delete</string>
-               </property>
-               <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-               </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Delete selected archive(s)</string>
+                </property>
+                <property name="text">
+                 <string>Delete</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
+                </property>
                </widget>
-               </item>
+              </item>
              </layout>
             </widget>
            </item>
