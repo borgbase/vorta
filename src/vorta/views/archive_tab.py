@@ -154,7 +154,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app.paletteChanged.connect(lambda p: self.set_icons())
 
     def set_icons(self):
-        "Used when changing between light- and dark mode"
+        """Used when changing between light- and dark mode"""
         self.bCheck.setIcon(get_colored_icon('check-circle'))
         self.bDiff.setIcon(get_colored_icon('stream-solid'))
         self.bPrune.setIcon(get_colored_icon('cut'))
@@ -189,11 +189,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # archive actions
         button_connection_pairs = [
             (self.bRefreshArchive, self.refresh_archive_info),
+            (self.bDiff, self.diff_action),
             (self.bMountArchive, self.bmountarchive_clicked),
             (self.bExtract, self.extract_action),
             (self.bRename, self.cell_double_clicked),
             (self.bDelete, self.delete_action),
-            (self.bDiff, self.diff_action),
         ]
 
         for button, connection in button_connection_pairs:
