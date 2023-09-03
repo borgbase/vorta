@@ -48,10 +48,10 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': True,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Show main window of Vorta on startup'),
+            'label': trans_late('settings', 'Show main window of Vorta on launch'),
             'tooltip': trans_late(
                 'settings',
-                'Turning this off will make Vorta minimize to the system tray on startup',
+                'Make Vorta appear on screen on launch, othherwise minimize to systemt tray',
             ),
         },
         {
