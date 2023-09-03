@@ -51,7 +51,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'label': trans_late('settings', 'Show main window of Vorta on launch'),
             'tooltip': trans_late(
                 'settings',
-                'Make Vorta appear on screen on launch, othherwise minimize to systemt tray',
+                'Make Vorta appear on screen on launch, othherwise minimize to system tray',
             ),
         },
         {
