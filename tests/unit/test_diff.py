@@ -166,7 +166,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
 )
 def test_archive_diff_parser(line, expected):
     model = DiffTree()
-    model.setMode(model.DisplayMode.FLAT)
+    model.setEnabled(model.DisplayMode.FLAT)
     parse_diff_lines([line], model)
 
     assert model.rowCount() == 1
@@ -396,7 +396,7 @@ def test_archive_diff_parser(line, expected):
 )
 def test_archive_diff_json_parser(line, expected):
     model = DiffTree()
-    model.setMode(model.DisplayMode.FLAT)
+    model.setEnabled(model.DisplayMode.FLAT)
     parse_diff_json([line], model)
 
     assert model.rowCount() == 1

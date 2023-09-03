@@ -201,7 +201,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
             SettingsModel.key == 'diff_files_display_mode'
         ).execute()
 
-        self.model.setMode(mode)
+        self.model.setEnabled(mode)
 
     def slot_sorted(self, column, order):
         """React the tree view being sorted."""

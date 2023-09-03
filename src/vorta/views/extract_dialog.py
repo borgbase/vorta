@@ -187,6 +187,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             mode = FileTreeModel.DisplayMode.TREE
         elif selection == 1:
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
+        elif selection == 2:
+            mode = FileTreeModel.DisplayMode.FLAT
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
@@ -194,7 +196,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             SettingsModel.key == 'extract_files_display_mode'
         ).execute()
 
-        self.model.setMode(mode)
+        self.model.setEnabled(mode)
 
     def treeview_context_menu(self, pos: QPoint):
         """Display a context menu for `treeView`."""
