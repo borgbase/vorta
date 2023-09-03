@@ -48,8 +48,11 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': True,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Open main window on startup'),
-            'tooltip': trans_late('settings', 'Open main window when the application is launched'),
+            'label': trans_late('settings', 'Show main window of Vorta on startup'),
+            'tooltip': trans_late(
+                'settings',
+                'Turning this off will make Vorta minimize to the system tray on startup',
+            ),
         },
         {
             'key': 'get_srcpath_datasize',
