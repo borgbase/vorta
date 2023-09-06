@@ -198,7 +198,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         ssh_add_window = SSHAddWindow()
         self._window = ssh_add_window  # For tests
         ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        ssh_add_window.reject.connect(self.init_ssh)
+        ssh_add_window.rejected.connect(self.init_ssh)
         ssh_add_window.create_ssh_key_failure.connect(self.create_ssh_key_failure)
         ssh_add_window.open()
 
