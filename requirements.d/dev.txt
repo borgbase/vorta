@@ -3,7 +3,6 @@ coverage
 flake8
 macholib
 nox
-peewee
 pkgconfig
 pre-commit
 pyinstaller
