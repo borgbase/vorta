@@ -131,6 +131,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 class AddRepoWindow(RepoWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setWindowTitle("Add New Repository")
 
         self.passwordInput = PasswordInput()
         self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
@@ -226,6 +227,7 @@ class ExistingRepoWindow(RepoWindow):
     def __init__(self):
         super().__init__()
         self.title.setText(self.tr('Connect to existing Repository'))
+        self.setWindowTitle("Add Existing Repository")
 
         self.passwordLabel = QLabel(self.tr('Password:'))
         self.passwordInput = PasswordLineEdit()
