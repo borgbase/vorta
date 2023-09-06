@@ -11,7 +11,8 @@ SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
-    create_ssh_key_message = QtCore.pyqtSignal(int, str)
+    create_ssh_key_success = QtCore.pyqtSignal()
+    create_ssh_key_failure = QtCore.pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
@@ -70,17 +71,16 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.sshproc.finished.connect(self.generate_key_result)
             self.sshproc.start('ssh-keygen', ['-t', format, '-b', length, '-f', output_path, '-N', ''])
 
-    def generate_key_result(self, exitCode):
-        if exitCode == 0:
+    def generate_key_result(self, exit_code):
+        if exit_code == 0:
             output_path = os.path.expanduser(self.outputFileTextBox.text())
             pub_key = open(output_path + '.pub').read().strip()
             clipboard = QApplication.clipboard()
             clipboard.setText(pub_key)
             self.reject()
-            self.create_ssh_key_message.emit(exitCode, output_path)
         else:
             self.reject()
-            self.create_ssh_key_message.emit(exitCode, "")
+            self.create_ssh_key_failure.emit(exit_code)
 
     def get_values(self):
         return {
