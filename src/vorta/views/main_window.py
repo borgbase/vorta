@@ -71,8 +71,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
-        self.miscTab = MiscTab(self.miscTabSlot)
+        self.miscTab = MiscTab(self.SettingsTabSlot)
         self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+        self.settingsWidget.hide()
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
@@ -80,6 +81,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
+        self.settingsButton.clicked.connect(self.loadMiscTab)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -265,6 +267,16 @@ class MainWindow(MainWindowBase, MainWindowUI):
         else:
             self.profileSelector.addItem(profile_name, profile_id)
             self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+
+    def loadMiscTab(self):
+        if self.settingsWidget.isVisible():
+            self.settingsWidget.hide()
+            self.tabWidget.setCurrentIndex(0)
+            self.tabWidget.show()
+        else:
+            self.tabWidget.hide()
+            self.settingsWidget.setCurrentIndex(0)
+            self.settingsWidget.show()
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
