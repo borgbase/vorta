@@ -2,13 +2,13 @@ import logging
 from pathlib import Path
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QPoint
+from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
     QFileDialog,
-    QMenu,
+    QListWidgetItem,
     QMessageBox,
     QToolTip,
 )
@@ -96,14 +96,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # Init profile list
         self.populate_profile_selector()
-        self.profileSelector.currentIndexChanged.connect(self.profile_select_action)
+        self.profileSelector.currentItemChanged.connect(self.profile_select_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
-        profile_add_menu = QMenu()
-        profile_add_menu.addAction(self.tr('Import from file…'), self.profile_import_action)
-        self.profileAddButton.setMenu(profile_add_menu)
-        self.profileAddButton.clicked.connect(self.profile_add_action)
+        self.profileAddButton.addAction(self.tr("Create new profile"), self.profile_add_action)
+        self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
 
         # OS-specific startup options:
         if not get_network_status_monitor().is_network_status_available():
@@ -132,6 +130,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
         self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
+        self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
 
     def set_progress(self, text=''):
         self.progressText.setText(text)
@@ -152,14 +151,29 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.cancelButton.repaint()
 
     def populate_profile_selector(self):
+        # Clear the previous entries
         self.profileSelector.clear()
+
+        # Keep track of the current item to be selected (if any)
+        current_item = None
+
+        # Add items to the QListWidget
         for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
-            self.profileSelector.addItem(profile.name, profile.id)
-        current_profile_index = self.profileSelector.findData(self.current_profile.id)
-        self.profileSelector.setCurrentIndex(current_profile_index)
+            item = QListWidgetItem(profile.name)
+            item.setData(Qt.ItemDataRole.UserRole, profile.id)
+
+            self.profileSelector.addItem(item)
+
+            if profile.id == self.current_profile.id:
+                current_item = item
+
+        # Set the current profile as selected
+        if current_item:
+            self.profileSelector.setCurrentItem(current_item)
 
     def profile_select_action(self, index):
-        backup_profile_id = self.profileSelector.currentData()
+        profile = self.profileSelector.currentItem()
+        backup_profile_id = profile.data(Qt.ItemDataRole.UserRole) if profile else None
         if not backup_profile_id:
             return
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
@@ -173,7 +187,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab.toggle_compact_button_visibility()
 
     def profile_rename_action(self):
-        window = EditProfileWindow(rename_existing_id=self.profileSelector.currentData())
+        backup_profile_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
+        window = EditProfileWindow(rename_existing_id=backup_profile_id)
         self.window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
@@ -182,7 +197,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
-            to_delete_id = self.profileSelector.currentData()
+            to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
             msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
@@ -197,7 +212,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             if reply == QMessageBox.StandardButton.Yes:
                 to_delete.delete_instance(recursive=True)
                 self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
-                self.profileSelector.removeItem(self.profileSelector.currentIndex())
+                self.profileSelector.takeItem(self.profileSelector.currentRow())
                 self.profile_select_action(0)
 
         else:
@@ -261,12 +276,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
-        if self.profileSelector.currentData() == profile_id:
-            self.profileSelector.setItemText(self.profileSelector.currentIndex(), profile_name)
+        if self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole) == profile_id:
+            self.profileSelector.currentItem().setText(profile_name)
         # Profile is added
         else:
-            self.profileSelector.addItem(profile_name, profile_id)
-            self.profileSelector.setCurrentIndex(self.profileSelector.count() - 1)
+            profile = QListWidgetItem(profile_name)
+            profile.setData(Qt.ItemDataRole.UserRole, profile_id)
+            self.profileSelector.addItem(profile)
+            self.profileSelector.setCurrentItem(profile)
 
     def loadMiscTab(self):
         if self.settingsWidget.isVisible():
