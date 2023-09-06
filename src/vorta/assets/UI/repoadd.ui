@@ -5,6 +5,9 @@
   <property name="modal">
    <bool>true</bool>
   </property>
+  <property name="windowTitle">
+    <string>Add Repository</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="verticalSpacing">
     <number>0</number>
