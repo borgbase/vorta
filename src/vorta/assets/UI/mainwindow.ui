@@ -38,7 +38,7 @@
         <property name="fixedSize">
          <size>
           <width>200</width>
-          <height>200</height>
+          <height>350</height>
          </size>
         </property>
         <property name="verticalScrollBarPolicy">

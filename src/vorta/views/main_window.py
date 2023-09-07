@@ -152,6 +152,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.cancelButton.setEnabled(not create_enabled)
         self.cancelButton.repaint()
 
+    def resize_profile_selector(self):
+        item_height = self.profileSelector.sizeHintForRow(0)
+        total_height = item_height * self.profileSelector.count() + 2  # 2px pad to prevent scroll bar appearing
+
+        if total_height > 350:
+            self.profileSelector.setFixedHeight(350)
+        else:
+            self.profileSelector.setFixedHeight(total_height)
+
     def populate_profile_selector(self):
         # Clear the previous entries
         self.profileSelector.clear()
@@ -168,6 +177,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
             if profile.id == self.current_profile.id:
                 current_item = item
+
+        self.resize_profile_selector()
 
         # Set the current profile as selected
         if current_item:
@@ -216,6 +227,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
                 self.profileSelector.takeItem(self.profileSelector.currentRow())
                 self.profile_select_action(0)
+                self.resize_profile_selector()
 
         else:
             warn = self.tr("Cannot delete the last profile.")
@@ -286,6 +298,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             profile.setData(Qt.ItemDataRole.UserRole, profile_id)
             self.profileSelector.addItem(profile)
             self.profileSelector.setCurrentItem(profile)
+            self.resize_profile_selector()
 
     def toggle_settings_tab(self):
         if self.settingsWidget.isVisible():
