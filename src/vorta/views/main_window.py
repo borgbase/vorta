@@ -83,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
-        self.settingsButton.clicked.connect(self.toggle_misc_tab)
+        self.settingsButton.clicked.connect(self.toggle_settings_tab)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -287,7 +287,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.addItem(profile)
             self.profileSelector.setCurrentItem(profile)
 
-    def toggle_misc_tab(self):
+    def toggle_settings_tab(self):
         if self.settingsWidget.isVisible():
             self.settingsWidget.hide()
             self.tabWidget.setCurrentIndex(0)
