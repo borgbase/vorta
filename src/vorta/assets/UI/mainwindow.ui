@@ -113,9 +113,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="settingsButton">
+       <widget class="QPushButton" name="miscButton">
         <property name="text">
-         <string>Settings</string>
+         <string>Misc</string>
         </property>
         <property name="minimumSize">
          <size>
@@ -149,7 +149,7 @@
     <item>
       <layout class="QVBoxLayout" name="verticalLayoutSidebar">
         <item>
-         <widget class="QTabWidget" name="settingsWidget">
+         <widget class="QTabWidget" name="miscWidget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>

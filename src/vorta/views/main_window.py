@@ -75,7 +75,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab = MiscTab(self.SettingsTabSlot)
         self.aboutTab = AboutTab(self.AboutTabSlot)
         self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
-        self.settingsWidget.hide()
+        self.miscWidget.hide()
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
@@ -83,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
-        self.settingsButton.clicked.connect(self.toggle_settings_tab)
+        self.miscButton.clicked.connect(self.toggle_settings_tab)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -132,7 +132,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
         self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('trash'))
-        self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
+        self.miscButton.setIcon(get_colored_icon('settings_wheel'))
 
     def set_progress(self, text=''):
         self.progressText.setText(text)
@@ -301,18 +301,18 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.resize_profile_selector()
 
     def toggle_settings_tab(self):
-        if self.settingsWidget.isVisible():
-            self.settingsWidget.hide()
+        if self.miscWidget.isVisible():
+            self.miscWidget.hide()
             self.tabWidget.setCurrentIndex(0)
             self.tabWidget.show()
-            self.settingsButton.setText("Settings")
-            self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
+            self.miscButton.setText("Misc")
+            self.miscButton.setIcon(get_colored_icon('settings_wheel'))
         else:
             self.tabWidget.hide()
-            self.settingsWidget.setCurrentIndex(0)
-            self.settingsWidget.show()
-            self.settingsButton.setText("Close Settings")
-            self.settingsButton.setIcon(get_colored_icon('close_X'))
+            self.miscWidget.setCurrentIndex(0)
+            self.miscWidget.show()
+            self.miscButton.setText("Close Misc")
+            self.miscButton.setIcon(get_colored_icon('close_X'))
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
