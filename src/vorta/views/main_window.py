@@ -83,7 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
-        self.miscButton.clicked.connect(self.toggle_settings_tab)
+        self.miscButton.clicked.connect(self.toggle_misc_visibility)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -198,6 +198,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             SettingsModel.key == 'previous_profile_id'
         ).execute()
         self.archiveTab.toggle_compact_button_visibility()
+        if self.miscWidget.isVisible():
+            self.toggle_misc_visibility()
 
     def profile_rename_action(self):
         backup_profile_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
@@ -300,7 +302,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.setCurrentItem(profile)
             self.resize_profile_selector()
 
-    def toggle_settings_tab(self):
+    def toggle_misc_visibility(self):
         if self.miscWidget.isVisible():
             self.miscWidget.hide()
             self.tabWidget.setCurrentIndex(0)
