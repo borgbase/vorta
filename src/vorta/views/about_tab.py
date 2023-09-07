@@ -23,9 +23,9 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
         self.versionLabel.setText(__version__)
         self.logLink.setText(
             f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> to see the logs.'
+            'underline; color:#0984e3;">Click here</span></a> to view the logs.'
         )
 
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
-        self.borgPath.setText(f"Borg path: {path}")
+        self.borgPath.setText(f"<center>Path to Borg:<br>{path}</center>")
