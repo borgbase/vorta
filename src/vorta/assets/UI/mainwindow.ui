@@ -180,7 +180,7 @@
           </widget>
           <widget class="QWidget" name="profileTabSlot">
            <attribute name="title">
-            <string>Profile Management</string>
+            <string>Repository Management</string>
            </attribute>
           </widget>
          </widget>

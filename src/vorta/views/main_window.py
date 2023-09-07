@@ -24,6 +24,7 @@ from vorta.utils import (
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
 
+from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
 from .export_window import ExportWindow
 from .import_window import ImportWindow
@@ -72,7 +73,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.SettingsTabSlot)
-        self.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+        self.aboutTab = AboutTab(self.AboutTabSlot)
+        self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.settingsWidget.hide()
         self.tabWidget.setCurrentIndex(0)
 
@@ -82,6 +84,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
         self.settingsButton.clicked.connect(self.loadMiscTab)
+        self.settingsButton.clicked.connect(self.toggle_settings_button)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -294,6 +297,15 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.tabWidget.hide()
             self.settingsWidget.setCurrentIndex(0)
             self.settingsWidget.show()
+
+    def toggle_settings_button(self):
+        if self.settingsButton.text() == "Settings":
+            self.settingsButton.setText("Close Settings")
+            self.settingsButton.setIcon(get_colored_icon('close_X'))
+
+        else:
+            self.settingsButton.setText("Settings")
+            self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
