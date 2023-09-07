@@ -83,8 +83,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
-        self.settingsButton.clicked.connect(self.loadMiscTab)
-        self.settingsButton.clicked.connect(self.toggle_settings_button)
+        self.settingsButton.clicked.connect(self.toggle_misc_tab)
         self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
@@ -288,24 +287,19 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.profileSelector.addItem(profile)
             self.profileSelector.setCurrentItem(profile)
 
-    def loadMiscTab(self):
+    def toggle_misc_tab(self):
         if self.settingsWidget.isVisible():
             self.settingsWidget.hide()
             self.tabWidget.setCurrentIndex(0)
             self.tabWidget.show()
+            self.settingsButton.setText("Settings")
+            self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
         else:
             self.tabWidget.hide()
             self.settingsWidget.setCurrentIndex(0)
             self.settingsWidget.show()
-
-    def toggle_settings_button(self):
-        if self.settingsButton.text() == "Settings":
             self.settingsButton.setText("Close Settings")
             self.settingsButton.setIcon(get_colored_icon('close_X'))
-
-        else:
-            self.settingsButton.setText("Settings")
-            self.settingsButton.setIcon(get_colored_icon('settings_wheel'))
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
