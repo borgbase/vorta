@@ -17,7 +17,10 @@ def get_colored_icon(icon_name):
     return QIcon(QPixmap(svg_img))
 
 
-def compare_values_with_sign(item_value, filter_value, comparison_sign):
+def compare_values_with_sign(item_value: int, filter_value: int, comparison_sign: str) -> bool:
+    """
+    Compare two values with a comparison sign.
+    """
     if comparison_sign == '<':
         return item_value < filter_value
     elif comparison_sign == '>':

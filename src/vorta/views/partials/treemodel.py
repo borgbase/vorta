@@ -920,7 +920,7 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
         self.searchPattern = None
 
     @staticmethod
-    def parse_size(size):
+    def parse_size(size: str) -> Tuple[str, int]:
         """
         Parse the size string into a tuple of two values.
         """
@@ -944,15 +944,15 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
         except ValueError:
             raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
 
-    @staticmethod
-    def valid_size(value):
+    @classmethod
+    def valid_size(cls, value: str) -> List[Tuple[str, int]]:
         """Validate the size string."""
         size = value.split(',')
 
         if len(size) == 1:
-            return [FileTreeSortFilterProxyModel.parse_size(size[0])]
+            return [cls.parse_size(size[0])]
         elif len(size) == 2:
-            return [FileTreeSortFilterProxyModel.parse_size(size[0]), FileTreeSortFilterProxyModel.parse_size(size[1])]
+            return [cls.parse_size(size[0]), cls.parse_size(size[1])]
         else:
             raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
 
@@ -1077,6 +1077,8 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
     def parse_search_string(self, pattern: str):
         """
         Parse the search string into a list of tokens.
+
+        May raise `SystemExit`.
         """
 
         parser = self.get_parser()
@@ -1205,7 +1207,7 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
         super().__init__(parent)
 
     @staticmethod
-    def parse_date(value):
+    def parse_date(value: str) -> Tuple[str, datetime]:
         """
         Parse the date string into a tuple of two values.
         """
@@ -1229,17 +1231,17 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
 
         return (sign, date)
 
-    @staticmethod
-    def valid_date_range(value):
+    @classmethod
+    def valid_date_range(cls, value: str) -> List[Tuple[str, datetime]]:
         """Parse the date range string."""
         date = value.split(',')
 
         if len(date) == 1:
-            return [ExtractTreeSortFilterProxyModel.parse_date(date[0])]
+            return [cls.parse_date(date[0])]
         elif len(date) == 2:
             return [
-                ExtractTreeSortFilterProxyModel.parse_date(date[0]),
-                ExtractTreeSortFilterProxyModel.parse_date(date[1]),
+                cls.parse_date(date[0]),
+                cls.parse_date(date[1]),
             ]
         else:
             raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
@@ -1247,11 +1249,18 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
     def get_parser(self):
         """Add Extract view specific arguments to the parser."""
         parser = super().get_parser()
-        parser.add_argument("--healthy", action="store_true", help="Match only healthy items.")
-        parser.add_argument("--unhealthy", action="store_true", help="Match only unhealthy items.")
+
+        health_group = parser.add_mutually_exclusive_group()
+        health_group.add_argument(
+            "--healthy", default=None, action="store_true", dest="healthy", help="Match only healthy items."
+        )
+        health_group.add_argument(
+            "--unhealthy", default=None, action="store_false", dest="healthy", help="Match only unhealthy items."
+        )
+
         parser.add_argument(
             "--last-modified",
-            type=ExtractTreeSortFilterProxyModel.valid_date_range,
+            type=self.valid_date_range,
             help="Match by last modified date.",
         )
 
@@ -1271,10 +1280,10 @@ class ExtractTreeSortFilterProxyModel(FileTreeSortFilterProxyModel):
         model = self.sourceModel()
         item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
-        if self.searchPattern.healthy and not item.data.health:
+        if self.searchPattern.healthy is True and not item.data.health:
             return False
 
-        if self.searchPattern.unhealthy and item.data.health:
+        if self.searchPattern.healthy is False and item.data.health:
             return False
 
         if self.searchPattern.last_modified:
