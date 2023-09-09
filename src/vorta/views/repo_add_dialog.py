@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import RepoModel
+from vorta.store.models import BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
@@ -223,7 +223,7 @@ class AddRepoWindow(RepoWindow):
                 self._set_status(params['message'])
 
 
-class ExistingRepoWindow(RepoWindow):
+class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
     def __init__(self):
         super().__init__()
         self.title.setText(self.tr('Connect to existing Repository'))
@@ -233,12 +233,46 @@ class ExistingRepoWindow(RepoWindow):
         self.passwordInput = PasswordLineEdit()
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
+    def run_result(self, result):
+        self.saveButton.setEnabled(True)
+        if result['returncode'] == 0:
+            self.added_repo.emit(result)
+            self.accept()
+        else:
+            self._set_status(self.tr('Unable to add your repository.\nYou need to initialize a new repository.'))
+            self.initialize_new_repo_window()
+
+    def initialize_new_repo_window(self):
+        new_window = AddRepoWindow()
+        new_window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        new_window.added_repo.connect(self.process_new_repo)
+
+        # Autofilling of fields from this previous window
+        new_window.repoURL.setText(self.values['repo_url'])
+        new_window.repoName.setText(self.values['repo_name'])
+        new_window.set_password(new_window.values['repo_url'])
+        new_window.passwordInput.passwordLineEdit.setText(self.passwordInput.get_password())
+        new_window.passwordInput.confirmLineEdit.setText(self.passwordInput.get_password())
+        new_window._set_status(self.tr("Autofilled from previous window"))
+        new_window.open()
+
+    def process_new_repo(self, result):
+        if result['returncode'] == 0:
+            new_repo = RepoModel.get(url=result['params']['repo_url'])
+            profile = self.profile()
+            profile.repo = new_repo.id
+            profile.save()
+
+            self.set_repos()
+            self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
+            self.repo_added.emit()
+            self.init_repo_stats()
+
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
         password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordInput.get_password() == "":
-            self._set_status(self.tr("Autofilled password from password manager."))
-            self.passwordInput.setText(password)
+            self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
 
     def run(self):
         if self.validate():
