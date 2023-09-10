@@ -131,7 +131,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileAddButton.setIcon(get_colored_icon('plus'))
         self.profileRenameButton.setIcon(get_colored_icon('edit'))
         self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
-        self.profileDeleteButton.setIcon(get_colored_icon('trash'))
+        self.profileDeleteButton.setIcon(get_colored_icon('minus'))
         self.miscButton.setIcon(get_colored_icon('settings_wheel'))
 
     def set_progress(self, text=''):
@@ -156,8 +156,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         item_height = self.profileSelector.sizeHintForRow(0)
         total_height = item_height * self.profileSelector.count() + 2  # 2px pad to prevent scroll bar appearing
 
-        if total_height > 350:
-            self.profileSelector.setFixedHeight(350)
+        if total_height > 400:
+            self.profileSelector.setFixedHeight(400)
         else:
             self.profileSelector.setFixedHeight(total_height)
 
