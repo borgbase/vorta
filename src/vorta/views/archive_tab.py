@@ -382,7 +382,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
-                widget.setToolTip(self.tooltip_dict.get(widget, ""))
+                if widget is not None:
+                    widget.setToolTip(self.tooltip_dict.get(widget, ""))
 
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
