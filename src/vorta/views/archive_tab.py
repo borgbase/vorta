@@ -825,6 +825,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
 
     def cell_double_clicked(self, row=None, column=None):
+        if not self.bRename.isEnabled():
+            return
+
         if not row or not column:
             row = self.archiveTable.currentRow()
             column = self.archiveTable.currentColumn()

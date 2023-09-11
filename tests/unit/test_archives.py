@@ -179,7 +179,10 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
 
 
-def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
+def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """
+    Tests the functionality of in-line renaming an archive by double-clicking its name.
+    """
     main, tab = archive_env
 
     tab.archiveTable.selectRow(0)
@@ -190,9 +193,12 @@ def test_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
 
     pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 4)).center()
     qtbot.mouseClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    assert tab.bRename.isEnabled()
     qtbot.mouseDClick(tab.archiveTable.viewport(), QtCore.Qt.MouseButton.LeftButton, pos=pos)
+    tab.archiveTable.viewport().focusWidget().setText("")
     qtbot.keyClicks(tab.archiveTable.viewport().focusWidget(), new_archive_name)
     qtbot.keyClick(tab.archiveTable.viewport().focusWidget(), QtCore.Qt.Key.Key_Return)
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
+    assert tab.archiveTable.model().index(0, 4).data() == new_archive_name
