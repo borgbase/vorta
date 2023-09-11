@@ -11,7 +11,6 @@ SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
-    create_ssh_key_success = QtCore.pyqtSignal()
     create_ssh_key_failure = QtCore.pyqtSignal(int)
 
     def __init__(self):
