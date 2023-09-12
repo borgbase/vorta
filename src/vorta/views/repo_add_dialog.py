@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QFormLayout,
     QLabel,
+    QMessageBox,
     QSizePolicy,
 )
 
@@ -240,7 +241,19 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
             self.accept()
         else:
             self._set_status(self.tr('Unable to add your repository.\nYou need to initialize a new repository.'))
+            self.exception_handler()
+
+    def exception_handler(self):
+        exception_window = QMessageBox.question(
+            self,
+            'Add new Repository instead',
+            self.tr('This reposiotory does not seem to be initiated. Initialize a new repository?'),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+        if exception_window == QMessageBox.StandardButton.Yes:
             self.initialize_new_repo_window()
+        else:
+            self.close()
 
     def initialize_new_repo_window(self):
         new_window = AddRepoWindow()
