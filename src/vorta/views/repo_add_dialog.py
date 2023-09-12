@@ -263,6 +263,8 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
         # Autofilling of fields from this previous window
         new_window.repoURL.setText(self.values['repo_url'])
         new_window.repoName.setText(self.values['repo_name'])
+        new_window.values['repo_url'] = self.values['repo_url']
+        new_window.values['repo_name'] = self.values['repo_name']
         new_window.set_password(new_window.values['repo_url'])
         new_window.passwordInput.passwordLineEdit.setText(self.passwordInput.get_password())
         new_window.passwordInput.confirmLineEdit.setText(self.passwordInput.get_password())
