@@ -274,11 +274,14 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
         new_window.repoName.setText(self.values['repo_name'])
 
         # setting values from this previous window (self) to new_window
+        new_window.values['ssh_key'] = self.values['ssh_key']
         new_window.values['repo_url'] = self.values['repo_url']
         new_window.values['repo_name'] = self.values['repo_name']
+        new_window.values['extra_borg_arguments'] = self.values['extra_borg_arguments']
 
         # setting password
         new_window.set_password(new_window.values['repo_url'])
+        new_window.values['password'] = self.values['password']
         new_window.passwordInput.passwordLineEdit.setText(self.passwordInput.get_password())
         new_window.passwordInput.confirmLineEdit.setText(self.passwordInput.get_password())
         new_window._set_status(self.tr("Autofilled from previous window"))
