@@ -244,13 +244,13 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
             self.exception_handler()
 
     def exception_handler(self):
-        exception_window = QMessageBox.question(
+        answer = QMessageBox.question(
             self,
             'Add new Repository instead',
             self.tr('This reposiotory does not seem to be initiated. Initialize a new repository?'),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
-        if exception_window == QMessageBox.StandardButton.Yes:
+        if answer == QMessageBox.StandardButton.Yes:
             self.initialize_new_repo_window()
         else:
             self.close()
@@ -260,11 +260,24 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
         new_window.setParent(self, QtCore.Qt.WindowType.Sheet)
         new_window.added_repo.connect(self.process_new_repo)
 
-        # Autofilling of fields from this previous window
+        # setting the type of repo - remote or local
+        if self.repoURL.isEnabled():
+            new_window.reURL.setEnabled(True)
+        else:
+            new_window.repoURL.setEnabled(False)
+            new_window.sshComboBox.setEnabled(False)
+            new_window.repoLabel.setText(self.tr('Repository Path:'))
+            new_window.is_remote_repo = False
+
+        # autofilling fields from this previous window (self) to new_window
         new_window.repoURL.setText(self.values['repo_url'])
         new_window.repoName.setText(self.values['repo_name'])
+
+        # setting values from this previous window (self) to new_window
         new_window.values['repo_url'] = self.values['repo_url']
         new_window.values['repo_name'] = self.values['repo_name']
+
+        # setting password
         new_window.set_password(new_window.values['repo_url'])
         new_window.passwordInput.passwordLineEdit.setText(self.passwordInput.get_password())
         new_window.passwordInput.confirmLineEdit.setText(self.passwordInput.get_password())
