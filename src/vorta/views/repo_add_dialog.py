@@ -262,7 +262,7 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
 
         # setting the type of repo - remote or local
         if self.repoURL.isEnabled():
-            new_window.reURL.setEnabled(True)
+            new_window.repoURL.setEnabled(True)
         else:
             new_window.repoURL.setEnabled(False)
             new_window.sshComboBox.setEnabled(False)
@@ -282,8 +282,6 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
         # setting password
         new_window.set_password(new_window.values['repo_url'])
         new_window.values['password'] = self.values['password']
-        new_window.passwordInput.passwordLineEdit.setText(self.passwordInput.get_password())
-        new_window.passwordInput.confirmLineEdit.setText(self.passwordInput.get_password())
         new_window._set_status(self.tr("Autofilled from previous window"))
         new_window.open()
 
@@ -298,12 +296,6 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
             self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
             self.repo_added.emit()
             self.init_repo_stats()
-
-    def set_password(self, URL):
-        '''Autofill password from keyring only if current entry is empty'''
-        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
-        if password and self.passwordInput.get_password() == "":
-            self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
 
     def run(self):
         if self.validate():
