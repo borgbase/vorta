@@ -1,7 +1,7 @@
 import os
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QProcess, Qt
+from PyQt6.QtCore import QProcess, Qt, pyqtSlot
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
 from ..utils import get_asset
@@ -11,7 +11,7 @@ SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
-    create_ssh_key_failure = QtCore.pyqtSignal(int)
+    failure = QtCore.pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
@@ -70,6 +70,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.sshproc.finished.connect(self.generate_key_result)
             self.sshproc.start('ssh-keygen', ['-t', format, '-b', length, '-f', output_path, '-N', ''])
 
+    @pyqtSlot(int)
     def generate_key_result(self, exit_code):
         if exit_code == 0:
             output_path = os.path.expanduser(self.outputFileTextBox.text())
@@ -79,7 +80,7 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.reject()
         else:
             self.reject()
-            self.create_ssh_key_failure.emit(exit_code)
+            self.failure.emit(exit_code)
 
     def get_values(self):
         return {
