@@ -149,7 +149,7 @@ def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
     qtbot.waitUntil(lambda: ssh_dialog_closed.called, **pytest._wait_defaults)
     assert len(ssh_dir.listdir()) == 2
 
-    # Ensure it populated in SSH combobox
+    # Ensure new key is populated in SSH combobox
     mocker.patch('os.path.expanduser', return_value=str(tmpdir))
     tab.init_ssh()
     assert tab.sshComboBox.count() == 2
