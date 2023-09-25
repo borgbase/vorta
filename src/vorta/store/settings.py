@@ -48,8 +48,11 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': True,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Open main window on startup'),
-            'tooltip': trans_late('settings', 'Open main window when the application is launched'),
+            'label': trans_late('settings', 'Show main window of Vorta on launch'),
+            'tooltip': trans_late(
+                'settings',
+                'Make Vorta appear on screen instead of minimizing to system tray',
+            ),
         },
         {
             'key': 'get_srcpath_datasize',
@@ -58,6 +61,18 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'group': information,
             'label': trans_late('settings', 'Get statistics of file/folder when added'),
             'tooltip': trans_late('settings', 'When adding a new source, calculate its size and the number of files.'),
+        },
+        {
+            'key': 'enable_fixed_units',
+            'value': False,
+            'type': 'checkbox',
+            'group': information,
+            'label': trans_late('settings', 'Use the same unit of measurement for archive sizes'),
+            'tooltip': trans_late(
+                'settings',
+                'When enabled, all archive sizes will use the same unit of measurement, '
+                'such as  KB or MB. This can make archive sizes easier to compare.',
+            ),
         },
         {
             'key': 'use_system_keyring',

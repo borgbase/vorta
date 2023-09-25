@@ -1,0 +1,22 @@
+name: Install Dependencies
+description: Installs system dependencies
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt update && sudo apt install -y \
+            xvfb libssl-dev openssl libacl1-dev libacl1 fuse3 build-essential \
+            libxkbcommon-x11-0 dbus-x11 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxcb-shape0 \
+            libegl1 libxcb-cursor0 libfuse-dev libsqlite3-dev libfuse3-dev pkg-config \
+            python3-pkgconfig libxxhash-dev borgbackup
+
+    - name: Install system dependencies (macOS)
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install openssl readline xz xxhash pkg-config borgbackup
