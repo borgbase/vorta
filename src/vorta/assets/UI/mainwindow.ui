@@ -55,8 +55,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>25</width>
-              <height>25</height>
+              <width>20</width>
+              <height>20</height>
              </size>
             </property>
            </widget>
@@ -68,8 +68,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>25</width>
-              <height>25</height>
+              <width>20</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -97,8 +97,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>25</width>
-              <height>25</height>
+              <width>20</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -113,8 +113,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>25</width>
-              <height>25</height>
+              <width>20</width>
+              <height>20</height>
              </size>
             </property>
             <property name="popupMode">
@@ -140,12 +140,12 @@
       <item>
        <widget class="QPushButton" name="miscButton">
         <property name="text">
-         <string>Misc</string>
+         <string>Settings / About</string>
         </property>
         <property name="minimumSize">
          <size>
           <width>150</width>
-          <height>50</height>
+          <height>40</height>
          </size>
         </property>
         <property name="flat">
@@ -201,11 +201,6 @@
           <widget class="QWidget" name="AboutTabSlot">
            <attribute name="title">
             <string>About</string>
-           </attribute>
-          </widget>
-          <widget class="QWidget" name="profileTabSlot">
-           <attribute name="title">
-            <string>Repository Management</string>
            </attribute>
           </widget>
          </widget>
