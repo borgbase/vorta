@@ -6,6 +6,7 @@ import vorta
 import vorta.application
 import vorta.borg.jobs_manager
 from peewee import SqliteDatabase
+from PyQt6.QtCore import Qt
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
@@ -119,3 +120,26 @@ def archive_env(qapp, qtbot):
     tab.populate_from_profile()
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
     return main, tab
+
+
+@pytest.fixture
+def search_visible_items_in_tree():
+    """ "
+    Returns a function that searches for visible items in a QTreeView.
+    """
+
+    def inner_search_visible_items_in_tree(model, parent_index):
+        filtered_items = []
+
+        def recursive_search_visible_items_in_tree(model, parent_index):
+            for row in range(model.rowCount(parent_index)):
+                index = model.index(row, 0, parent_index)
+                if model.data(index, Qt.ItemDataRole.DisplayRole) is not None:
+                    if model.rowCount(index) == 0:
+                        filtered_items.append(model.data(index, Qt.ItemDataRole.DisplayRole))
+                recursive_search_visible_items_in_tree(model, index)
+
+        recursive_search_visible_items_in_tree(model, parent_index)
+        return filtered_items
+
+    return inner_search_visible_items_in_tree

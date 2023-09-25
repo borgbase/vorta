@@ -4,7 +4,7 @@ import pytest
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, QModelIndex, Qt
 from vorta.views.diff_result import (
     ChangeType,
     DiffData,
@@ -460,3 +460,88 @@ def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output):
     clipboard_data = clipboard_spy.call_args[0][0]
     assert clipboard_data.hasText()
     assert clipboard_data.text() == "/test"
+
+
+@pytest.mark.parametrize(
+    'search_string,expected_search_results',
+    [
+        # Normal "in" search
+        ('txt', ['hello.txt', 'file1.txt']),
+        # Ignore Case
+        ('HELLO.txt -i', ['hello.txt']),
+        ('HELLO.txt', []),
+        # Size Match
+        ('--size >=15MB', []),
+        ('--size >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
+        ('--size >1KB,<1MB --exclude-parents', ['hello.txt']),
+        # Path Match Type
+        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt']),
+        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt']),
+        ('home/kali/vorta/source1/*.bin --path -m fm', ['notemptyfile.bin', 'emptyfile.bin']),
+        # Regex Match Type
+        ("file[^/]*\\.txt|\\.bin -m re", ['file1.txt', 'notemptyfile.bin', 'emptyfile.bin']),
+        # Exact Match Type
+        ('hello', ['hello.txt']),
+        ('hello -m ex', []),
+        # Diff Specific Filters #
+        # Balance Match
+        ('--balance >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
+        ('--balance >1KB,<1MB --exclude-parents', ['hello.txt']),
+        ('--balance >10GB', []),
+    ],
+)
+def test_archive_diff_filters(
+    qtbot, mocker, borg_json_output, search_visible_items_in_tree, archive_env, search_string, expected_search_results
+):
+    """
+    Tests the supported search filters for the extract window.
+    """
+
+    vorta.utils.borg_compat.version = '1.2.4'
+
+    # _, tab = archive_env
+    main, tab = archive_env
+    main.show()
+    tab.archiveTable.selectRow(0)
+
+    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
+    model = tab.archiveTable.model()
+
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+
+    selection_model.select(model.index(0, 0), flags)
+    selection_model.select(model.index(1, 0), flags)
+
+    # qtbot.wait(100000)
+    stdout, stderr = borg_json_output('diff_archives_search')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    # click on diff button
+    qtbot.mouseClick(tab.bDiff, Qt.MouseButton.LeftButton)
+
+    # qtbot.wait(1000000)
+
+    # Wait for window to open
+    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._resultwindow.treeView.model().rowCount(QModelIndex()) > 0, **pytest._wait_defaults)
+
+    tab._resultwindow.searchWidget.setText(search_string)
+    qtbot.mouseClick(tab._resultwindow.bSearch, Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(
+        lambda: (tab._resultwindow.treeView.model().rowCount(QModelIndex()) > 0) or (len(expected_search_results) == 0),
+        **pytest._wait_defaults,
+    )
+
+    proxy_model = tab._resultwindow.treeView.model()
+
+    filtered_items = search_visible_items_in_tree(proxy_model, QModelIndex())
+
+    # sort both lists to make sure the order is not important
+    filtered_items.sort()
+    expected_search_results.sort()
+
+    assert filtered_items == expected_search_results
+    vorta.utils.borg_compat.version = '1.1.0'
