@@ -131,13 +131,13 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
 
 
-def test_ssh_dialog(qapp, qtbot, tmpdir):
+def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
     main = qapp.main_window
     tab = main.repoTab
 
     qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
     ssh_dialog = tab._window
-
+    ssh_dialog_closed = mocker.spy(ssh_dialog, 'reject')
     ssh_dir = tmpdir
     key_tmpfile = ssh_dir.join("id_rsa-test")
     pub_tmpfile = ssh_dir.join("id_rsa-test.pub")
@@ -145,9 +145,14 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
     ssh_dialog.generate_key()
 
-    # Ensure new key files exist
-    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('New key was copied'), **pytest._wait_defaults)
+    # Ensure new key file was created
+    qtbot.waitUntil(lambda: ssh_dialog_closed.called, **pytest._wait_defaults)
     assert len(ssh_dir.listdir()) == 2
+
+    # Ensure new key is populated in SSH combobox
+    mocker.patch('os.path.expanduser', return_value=str(tmpdir))
+    tab.init_ssh()
+    assert tab.sshComboBox.count() == 2
 
     # Ensure valid keys were created
     key_tmpfile_content = key_tmpfile.read()
@@ -155,8 +160,31 @@ def test_ssh_dialog(qapp, qtbot, tmpdir):
     pub_tmpfile_content = pub_tmpfile.read()
     assert pub_tmpfile_content.startswith('ssh-ed25519')
 
+
+def test_ssh_dialog_failure(qapp, qtbot, mocker, monkeypatch, tmpdir):
+    main = qapp.main_window
+    tab = main.repoTab
+    monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
+    failure_message = mocker.spy(tab, "create_ssh_key_failure")
+
+    qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
+    ssh_dialog = tab._window
+    ssh_dir = tmpdir
+    key_tmpfile = ssh_dir.join("invalid///===for_testing")
+    key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
+    ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
     ssh_dialog.generate_key()
-    qtbot.waitUntil(lambda: ssh_dialog.errors.text().startswith('Key file already'), **pytest._wait_defaults)
+
+    qtbot.waitUntil(lambda: failure_message.called, **pytest._wait_defaults)
+    failure_message.assert_called_once()
+
+    # Ensure no new ney file was created
+    assert len(ssh_dir.listdir()) == 0
+
+    # Ensure no new key file in combo box
+    mocker.patch('os.path.expanduser', return_value=str(tmpdir))
+    tab.init_ssh()
+    assert tab.sshComboBox.count() == 1
 
 
 def test_create(qapp, borg_json_output, mocker, qtbot):
