@@ -5,6 +5,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtWidgets import QMenu
 from vorta.views.diff_result import (
     ChangeType,
     DiffData,
@@ -460,3 +461,49 @@ def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output):
     clipboard_data = clipboard_spy.call_args[0][0]
     assert clipboard_data.hasText()
     assert clipboard_data.text() == "/test"
+
+
+def test_treeview_context_menu(qapp, qtbot, mocker, borg_json_output):
+    main = qapp.main_window
+    tab = main.archiveTab
+    main.tabWidget.setCurrentIndex(3)
+
+    tab.populate_from_profile()
+    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
+
+    stdout, stderr = borg_json_output("diff_archives")
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    compat = vorta.utils.borg_compat
+
+    def check(feature_name):
+        if feature_name == 'DIFF_JSON_LINES':
+            return False
+        return vorta.utils.BorgCompatibility.check(compat, feature_name)
+
+    mocker.patch.object(vorta.utils.borg_compat, 'check', check)
+
+    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
+    model = tab.archiveTable.model()
+
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+
+    selection_model.select(model.index(0, 0), flags)
+    selection_model.select(model.index(1, 0), flags)
+
+    tab.diff_action()
+
+    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+    assert hasattr(tab, '_resultwindow')
+
+    pos = tab._resultwindow.treeView.visualRect(tab._resultwindow.treeView.model().index(0, 0)).center()
+    tab._resultwindow.treeview_context_menu(pos)
+    qtbot.waitUntil(lambda: tab._resultwindow.findChild(QMenu) is not None, timeout=2000)
+    context_menu = tab._resultwindow.findChild(QMenu)
+
+    assert context_menu is not None
+    expected_actions = ['Copy', 'Expand recursively']
+    for action in expected_actions:
+        assert any(menu_actions.text() == action for menu_actions in context_menu.actions())
