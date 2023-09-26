@@ -199,7 +199,15 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self._window = ssh_add_window  # For tests
         ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
         ssh_add_window.rejected.connect(self.init_ssh)
+        ssh_add_window.failure.connect(self.create_ssh_key_failure)
         ssh_add_window.open()
+
+    def create_ssh_key_failure(self, exit_code):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+        msg.setText(self.tr(f'Error during key generation. Exited with code {exit_code}.'))
+        msg.show()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()
@@ -222,7 +230,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                         "Use it to set up remote repo permissions."
                     )
                 )
-
             else:
                 msg.setText(self.tr("Could not find public key."))
         else:
