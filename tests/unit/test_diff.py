@@ -17,6 +17,7 @@ from vorta.views.diff_result import (
 
 
 def setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_file="diff_archives"):
+    """Sets up the diff result window."""
     stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
@@ -49,6 +50,7 @@ def setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_fil
     'json_mock_file, folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
 )
 def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root, archive_env):
+    """Tests basic functionality of archive diff."""
     main, tab = archive_env
     setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_file)
 
@@ -59,6 +61,7 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
 
 
 def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """Tests copy action by row selection and when passed an index."""
     main, tab = archive_env
     setup_diff_result_window(qtbot, mocker, tab, borg_json_output)
 
@@ -87,6 +90,7 @@ def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output, archive_env):
 
 
 def test_treeview_context_menu(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """Tests the diff result window context menu for expected actions."""
     main, tab = archive_env
     setup_diff_result_window(qtbot, mocker, tab, borg_json_output)
 
