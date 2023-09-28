@@ -7,7 +7,7 @@ import pytest
 import vorta.store.models
 from PyQt6 import QtCore
 from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QCheckBox, QFormLayout
+from PyQt6.QtWidgets import QCheckBox, QFormLayout, QMessageBox
 from vorta.store.models import SettingsModel
 
 
@@ -62,13 +62,15 @@ def test_enable_background_question(qapp, monkeypatch, mocker):
     # disable system trey and enable setting to test
     monkeypatch.setattr("vorta.views.main_window.is_system_tray_available", lambda: False)
     mocker.patch.object(vorta.store.models.SettingsModel, "get", return_value=Mock(value=True))
+    mocker.patch.object(QMessageBox, "exec")  # prevent QMessageBox from stopping test
 
-    # users should be prompted whether to run Vorta in background
-    mock_msgbox = mocker.patch("vorta.views.main_window.QMessageBox", autospec=True)
+    # Create a mock for QMessageBox and its setText method
+    mock_msgbox = mocker.Mock(spec=QMessageBox)
+    mocker.patch("vorta.views.main_window.QMessageBox", return_value=mock_msgbox)
+
     main.closeEvent(close_event)
 
-    mock_msgbox.assert_called_once()
-    mock_msgbox().setText.assert_called_with("Should Vorta continue to run in the background?")
+    mock_msgbox.setText.assert_called_once_with("Should Vorta continue to run in the background?")
     close_event.accept.assert_called_once()
 
 
