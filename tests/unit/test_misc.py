@@ -55,6 +55,7 @@ def test_autostart_linux(qapp, qtbot):
 
 
 def test_enable_background_question(qapp, monkeypatch, mocker):
+    """Tests that 'enable background question' correctly prompts user."""
     main = qapp.main_window
     close_event = Mock(value=QCloseEvent())
 
