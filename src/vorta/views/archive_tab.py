@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
-from PyQt6.QtGui import QAction, QDesktopServices, QKeySequence, QShortcut
+from PyQt6.QtGui import QDesktopServices, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
@@ -154,7 +154,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app.paletteChanged.connect(lambda p: self.set_icons())
 
     def set_icons(self):
-        "Used when changing between light- and dark mode"
+        """Used when changing between light- and dark mode"""
         self.bCheck.setIcon(get_colored_icon('check-circle'))
         self.bDiff.setIcon(get_colored_icon('stream-solid'))
         self.bPrune.setIcon(get_colored_icon('cut'))
@@ -183,46 +183,22 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             return  # popup only for selected items
 
         menu = QMenu(self.archiveTable)
-        menu.addAction(
-            get_colored_icon('copy'),
-            self.tr("Copy"),
-            lambda: self.archive_copy(index=index),
-        )
+        menu.addAction(get_colored_icon('copy'), self.tr("Copy"), lambda: self.archive_copy(index=index))
         menu.addSeparator()
 
         # archive actions
-        archive_actions = []
-        archive_actions.append(
-            menu.addAction(
-                self.bRefreshArchive.icon(),
-                self.bRefreshArchive.text(),
-                self.refresh_archive_info,
-            )
-        )
-        archive_actions.append(
-            menu.addAction(
-                self.bMountArchive.icon(),
-                self.bMountArchive.text(),
-                self.bmountarchive_clicked,
-            )
-        )
-        archive_actions.append(menu.addAction(self.bExtract.icon(), self.bExtract.text(), self.extract_action))
-        archive_actions.append(menu.addAction(self.bRename.icon(), self.bRename.text(), self.cell_double_clicked))
-        # deletion possible with one but also multiple archives
-        menu.addAction(self.bDelete.icon(), self.bDelete.text(), self.delete_action)
+        button_connection_pairs = [
+            (self.bRefreshArchive, self.refresh_archive_info),
+            (self.bDiff, self.diff_action),
+            (self.bMountArchive, self.bmountarchive_clicked),
+            (self.bExtract, self.extract_action),
+            (self.bRename, self.cell_double_clicked),
+            (self.bDelete, self.delete_action),
+        ]
 
-        if not (self.repoactions_enabled and len(selected_rows) <= 1):
-            for action in archive_actions:
-                action.setEnabled(False)
-
-        # diff action
-        menu.addSeparator()
-        diff_action = QAction(self.bDiff.icon(), self.bDiff.text(), menu)
-        diff_action.triggered.connect(self.diff_action)
-        menu.addAction(diff_action)
-
-        selected_rows = self.archiveTable.selectionModel().selectedRows(index.column())
-        diff_action.setEnabled(self.repoactions_enabled and len(selected_rows) == 2)
+        for button, connection in button_connection_pairs:
+            action = menu.addAction(button.icon(), button.text(), connection)
+            action.setEnabled(button.isEnabled())
 
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
@@ -406,7 +382,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
             for index in range(layout.count()):
                 widget = layout.itemAt(index).widget()
-                widget.setToolTip(self.tooltip_dict.get(widget, ""))
+                if widget is not None:
+                    widget.setToolTip(self.tooltip_dict.get(widget, ""))
 
             # refresh bMountArchive for the selected archive
             self.bmountarchive_refresh()
@@ -825,6 +802,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self._toggle_all_buttons(True)
 
     def cell_double_clicked(self, row=None, column=None):
+        if not self.bRename.isEnabled():
+            return
+
         if not row or not column:
             row = self.archiveTable.currentRow()
             column = self.archiveTable.currentColumn()
