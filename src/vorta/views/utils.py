@@ -15,3 +15,17 @@ def get_colored_icon(icon_name):
     svg_img = QImage.fromData(svg_str).scaledToHeight(128)
 
     return QIcon(QPixmap(svg_img))
+
+
+def get_colored_pixmap(icon_name, scaled_height):
+    """
+    Return SVG icon in the correct color.
+    """
+    with open(get_asset(f"icons/{icon_name}.svg"), 'rb') as svg_file:
+        svg_str = svg_file.read()
+    if uses_dark_mode():
+        svg_str = svg_str.replace(b'#000000', b'#ffffff')
+    # Reduce image size to specified scaled height
+    svg_img = QImage.fromData(svg_str).scaledToHeight(scaled_height)
+
+    return QPixmap(svg_img)
