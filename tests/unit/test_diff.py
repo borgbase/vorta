@@ -5,6 +5,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtWidgets import QMenu
 from vorta.views.diff_result import (
     ChangeType,
     DiffData,
@@ -15,12 +16,8 @@ from vorta.views.diff_result import (
 )
 
 
-@pytest.mark.parametrize(
-    'json_mock_file,folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
-)
-def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root, archive_env):
-    main, tab = archive_env
-
+def setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_file="diff_archives"):
+    """Sets up the diff result window."""
     stdout, stderr = borg_json_output(json_mock_file)
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
@@ -46,12 +43,68 @@ def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, fol
     tab.diff_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
+    assert hasattr(tab, '_resultwindow')
+
+
+@pytest.mark.parametrize(
+    'json_mock_file, folder_root', [('diff_archives', 'test'), ('diff_archives_dict_issue', 'Users')]
+)
+def test_archive_diff(qapp, qtbot, mocker, borg_json_output, json_mock_file, folder_root, archive_env):
+    """Tests basic functionality of archive diff."""
+    main, tab = archive_env
+    setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_file)
 
     model = tab._resultwindow.treeView.model().sourceModel()
     assert model.root.children[0].subpath == folder_root
-
     assert tab._resultwindow.archiveNameLabel_1.text() == 'test-archive'
     tab._resultwindow.accept()
+
+
+def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """Tests copy action by row selection and when passed an index."""
+    main, tab = archive_env
+    setup_diff_result_window(qtbot, mocker, tab, borg_json_output)
+
+    # mock the clipboard to ensure no changes are made to it during testing
+    mocker.patch.object(qapp.clipboard(), "setMimeData")
+    clipboard_spy = mocker.spy(qapp.clipboard(), "setMimeData")
+
+    # test 'diff_item_copy()' by passing it an item to copy
+    index = tab._resultwindow.treeView.model().index(0, 0)
+    assert index is not None
+    tab._resultwindow.diff_item_copy(index)
+    clipboard_data = clipboard_spy.call_args[0][0]
+    assert clipboard_data.hasText()
+    assert clipboard_data.text() == "/test"
+
+    clipboard_spy.reset_mock()
+
+    # test 'diff_item_copy()' by selecting a row to copy
+    flags = QItemSelectionModel.SelectionFlag.Rows
+    flags |= QItemSelectionModel.SelectionFlag.Select
+    tab._resultwindow.treeView.selectionModel().select(tab._resultwindow.treeView.model().index(0, 0), flags)
+    tab._resultwindow.diff_item_copy()
+    clipboard_data = clipboard_spy.call_args[0][0]
+    assert clipboard_data.hasText()
+    assert clipboard_data.text() == "/test"
+
+
+def test_treeview_context_menu(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """Tests the diff result window context menu for expected actions."""
+    main, tab = archive_env
+    setup_diff_result_window(qtbot, mocker, tab, borg_json_output)
+
+    # Load the context menu at the first result in window
+    pos = tab._resultwindow.treeView.visualRect(tab._resultwindow.treeView.model().index(0, 0)).center()
+    tab._resultwindow.treeview_context_menu(pos)
+    qtbot.waitUntil(lambda: tab._resultwindow.findChild(QMenu) is not None, **pytest._wait_defaults)
+    context_menu = tab._resultwindow.findChild(QMenu)
+    assert context_menu is not None
+
+    # assert the actions are available in the context menu
+    expected_actions = ['Copy', 'Expand recursively']
+    for action in expected_actions:
+        assert any(menu_actions.text() == action for menu_actions in context_menu.actions())
 
 
 @pytest.mark.parametrize(
@@ -404,59 +457,3 @@ def test_archive_diff_json_parser(line, expected):
 
     assert item.path == PurePath(expected[0]).parts
     assert item.data == DiffData(*expected[1:])
-
-
-def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output):
-    main = qapp.main_window
-    tab = main.archiveTab
-    main.tabWidget.setCurrentIndex(3)
-
-    tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2)
-
-    stdout, stderr = borg_json_output("diff_archives")
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-
-    compat = vorta.utils.borg_compat
-
-    def check(feature_name):
-        if feature_name == 'DIFF_JSON_LINES':
-            return False
-        return vorta.utils.BorgCompatibility.check(compat, feature_name)
-
-    mocker.patch.object(vorta.utils.borg_compat, 'check', check)
-
-    selection_model: QItemSelectionModel = tab.archiveTable.selectionModel()
-    model = tab.archiveTable.model()
-
-    flags = QItemSelectionModel.SelectionFlag.Rows
-    flags |= QItemSelectionModel.SelectionFlag.Select
-
-    selection_model.select(model.index(0, 0), flags)
-    selection_model.select(model.index(1, 0), flags)
-
-    tab.diff_action()
-
-    qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
-
-    # mock the clipboard to ensure no changes are made to it during testing
-    mocker.patch.object(qapp.clipboard(), "setMimeData")
-    clipboard_spy = mocker.spy(qapp.clipboard(), "setMimeData")
-
-    # test 'diff_item_copy()' by passing it an item to copy
-    index = tab._resultwindow.treeView.model().index(0, 0)
-    assert index is not None
-    tab._resultwindow.diff_item_copy(index)
-    clipboard_data = clipboard_spy.call_args[0][0]
-    assert clipboard_data.hasText()
-    assert clipboard_data.text() == "/test"
-
-    clipboard_spy.reset_mock()
-
-    # test 'diff_item_copy()' by selecting a row to copy
-    tab._resultwindow.treeView.selectionModel().select(tab._resultwindow.treeView.model().index(0, 0), flags)
-    tab._resultwindow.diff_item_copy()
-    clipboard_data = clipboard_spy.call_args[0][0]
-    assert clipboard_data.hasText()
-    assert clipboard_data.text() == "/test"
