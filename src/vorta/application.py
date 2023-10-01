@@ -325,7 +325,7 @@ class VortaApp(QtSingleApplication):
             # No fail
             logger.warning('VortaApp.check_failed_response was called with returncode 0')
         elif returncode == 130:
-            # Keyboard interupt
+            # Keyboard interrupt
             pass
         else:  # Real error
             # Create QMessageBox

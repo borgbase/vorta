@@ -1,5 +1,6 @@
 import os
 import uuid
+from typing import Any, Dict
 
 import pytest
 import vorta.borg.borg_job
@@ -187,6 +188,55 @@ def test_ssh_dialog_failure(qapp, qtbot, mocker, monkeypatch, tmpdir):
     assert tab.sshComboBox.count() == 1
 
 
+def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
+    """Testing the proper QMessageBox dialogue appears depending on the copy action circumstances."""
+    tab = qapp.main_window.repoTab
+
+    # set mocks to test assertions and prevent test interruptions
+    text = mocker.patch.object(QMessageBox, "setText")
+    mocker.patch.object(QMessageBox, "show")
+    mocker.patch.object(qapp.clipboard(), "setText")
+
+    qtbot.mouseClick(tab.bAddSSHKey, QtCore.Qt.MouseButton.LeftButton)
+    ssh_dialog = tab._window
+    ssh_dialog_closed = mocker.spy(ssh_dialog, 'reject')
+    ssh_dir = tmpdir
+    key_tmpfile = ssh_dir.join("id_rsa-test")
+    pub_tmpfile = ssh_dir.join("id_rsa-test.pub")
+    key_tmpfile_full = os.path.join(key_tmpfile.dirname, key_tmpfile.basename)
+    ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
+    ssh_dialog.generate_key()
+
+    # Ensure new key file was created
+    qtbot.waitUntil(lambda: ssh_dialog_closed.called, **pytest._wait_defaults)
+    assert len(ssh_dir.listdir()) == 2
+    # populate the ssh combobox with the ssh key we created in tmpdir
+    mock_expanduser = mocker.patch('os.path.expanduser', return_value=str(tmpdir))
+    tab.init_ssh()
+    assert tab.sshComboBox.count() == 2
+
+    # test when no ssh key is selected to copy
+    assert tab.sshComboBox.currentIndex() == 0
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Select a public key from the dropdown first."
+    text.assert_called_with(message)
+
+    # Select a key and copy it
+    mock_expanduser.return_value = pub_tmpfile
+    tab.sshComboBox.setCurrentIndex(1)
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions."
+    text.assert_called_with(message)
+
+    # handle ssh key file not found
+    mock_expanduser.return_value = "foobar"
+    assert tab.sshComboBox.currentIndex() == 1
+    qtbot.mouseClick(tab.sshKeyToClipboardButton, QtCore.Qt.MouseButton.LeftButton)
+    message = "Could not find public key."
+    text.assert_called_with(message)
+
+
 def test_create(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
     stdout, stderr = borg_json_output('create')
@@ -202,3 +252,56 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
     assert main.scheduleTab.logTableWidget.rowCount() == 1
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        {
+            "return_code": 0,  # no error
+            "error": "",
+            "icon": None,
+            "info": None,
+        },
+        {
+            "return_code": 1,  # warning
+            "error": "Borg exited with warning status (rc 1).",
+            "icon": QMessageBox.Icon.Warning,
+            "info": "",
+        },
+        {
+            "return_code": 2,  # critical error
+            "error": "Repository data check for repo test_repo_url failed. Error code 2",
+            "icon": QMessageBox.Icon.Critical,
+            "info": "Consider repairing or recreating the repository soon to avoid missing data.",
+        },
+        {
+            "return_code": 135,  # 128 + n = kill signal n
+            "error": "killed by signal 7",
+            "icon": QMessageBox.Icon.Critical,
+            "info": "The process running the check job got a kill signal. Try again.",
+        },
+        {"return_code": 130, "error": "", "icon": None, "info": None},  # keyboard interrupt
+    ],
+)
+def test_repo_check_failed_response(qapp, qtbot, mocker, response):
+    """Test the processing of the signal that a repo consistency check has failed."""
+    mock_result: Dict[str, Any] = {
+        'params': {'repo_url': 'test_repo_url'},
+        'returncode': response["return_code"],
+        'errors': [(0, 'test_error_message')] if response["return_code"] not in [0, 130] else None,
+    }
+
+    mock_exec = mocker.patch.object(QMessageBox, "exec")
+    mock_text = mocker.patch.object(QMessageBox, "setText")
+    mock_info = mocker.patch.object(QMessageBox, "setInformativeText")
+    mock_icon = mocker.patch.object(QMessageBox, "setIcon")
+
+    qapp.check_failed_response(mock_result)
+
+    # return codes 0 and 130 do not provide a message
+    # for all other return codes, assert the message is formatted correctly
+    if mock_exec.call_count != 0:
+        mock_icon.assert_called_with(response["icon"])
+        assert response["error"] in mock_text.call_args[0][0]
+        assert response["info"] in mock_info.call_args[0][0]
