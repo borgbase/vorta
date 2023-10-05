@@ -1489,11 +1489,11 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="69"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error: 
- {0} 
+        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+ {0}
  {1}</source>
-        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler: 
- {0} 
+        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler:
+ {0}
  {1}</translation>
     </message>
     <message>
