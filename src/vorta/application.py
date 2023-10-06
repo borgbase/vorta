@@ -317,8 +317,8 @@ class VortaApp(QtSingleApplication):
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
         returncode = result['returncode']
-        errors: List[Tuple[int, str]] = result['errors']
-        error_message = errors[0][1] if errors else ''
+        errors: List[Tuple[int, dict]] = result['errors']
+        error_message = errors[0]['message'] if errors else ''
 
         # Switch over returncodes
         if returncode == 0:
