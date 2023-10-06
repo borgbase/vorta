@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import BackupProfileMixin, RepoModel
+from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
@@ -128,6 +128,19 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         )
         return out
 
+    @classmethod
+    def from_values(cls, values: dict):
+        """Instantiate window from a values dict as returned by values property."""
+        window = cls()
+        window.sshComboBox.setCurrentData(values['ssh_key'])
+        window.repoURL.setText(values['repo_url'])
+        window.repoName.setText(values['repo_name'])
+        window.passwordInput.passwordLineEdit.setText(values['password'])
+        # do not set confirmLineEdit, let user confirm password
+        window._set_status("Autofill password from previous window.")
+        window.extraBorgArgumentsLineEdit.setText(values['extra_borg_arguments'])
+        return window
+
 
 class AddRepoWindow(RepoWindow):
     def __init__(self, parent=None):
@@ -163,6 +176,13 @@ class AddRepoWindow(RepoWindow):
         out = super().values
         out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    @classmethod
+    def from_values(cls, values: dict):
+        """Instantiate window from a values dict as returned by values property."""
+        window = super().from_values(values)
+        window.encryptionComboBox.setCurrentData(values['encryption'])
+        return window
 
     def init_encryption(self):
         if borg_compat.check('V2'):
@@ -224,7 +244,7 @@ class AddRepoWindow(RepoWindow):
                 self._set_status(params['message'])
 
 
-class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
+class ExistingRepoWindow(RepoWindow):
     def __init__(self):
         super().__init__()
         self.title.setText(self.tr('Connect to existing Repository'))
@@ -234,68 +254,35 @@ class ExistingRepoWindow(RepoWindow, BackupProfileMixin):
         self.passwordInput = PasswordLineEdit()
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
+    def set_password(self, URL):
+        '''Autofill password from keyring only if current entry is empty'''
+        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
+        if password and self.passwordInput.get_password() == "":
+            self._set_status(self.tr("Autofilled password from password manager."))
+            self.passwordInput.setText(password)
+
     def run_result(self, result):
         self.saveButton.setEnabled(True)
         if result['returncode'] == 0:
             self.added_repo.emit(result)
             self.accept()
         else:
-            self._set_status(self.tr('Unable to add your repository.\nYou need to initialize a new repository.'))
-            self.exception_handler()
+            self._set_status(self.tr('Unable to add your repository.'))
+            if 'msgid' in result and result['msgid'] == 'Repository.DoesNotExist':
+                self.init_new_repo()
 
-    def exception_handler(self):
+    def init_new_repo(self):
         answer = QMessageBox.question(
             self,
             'Add new Repository instead',
-            self.tr('This reposiotory does not seem to be initiated. Initialize a new repository?'),
+            self.tr("This repository doesn't seem to exist. Do you want to initialize a new repository?"),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
         if answer == QMessageBox.StandardButton.Yes:
-            self.initialize_new_repo_window()
-        else:
+            init_dialog = AddRepoWindow.from_values(self.values)
+            init_dialog.setParent(self.parent())
             self.close()
-
-    def initialize_new_repo_window(self):
-        new_window = AddRepoWindow()
-        new_window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        new_window.added_repo.connect(self.process_new_repo)
-
-        # setting the type of repo - remote or local
-        if self.repoURL.isEnabled():
-            new_window.repoURL.setEnabled(True)
-        else:
-            new_window.repoURL.setEnabled(False)
-            new_window.sshComboBox.setEnabled(False)
-            new_window.repoLabel.setText(self.tr('Repository Path:'))
-            new_window.is_remote_repo = False
-
-        # autofilling fields from this previous window (self) to new_window
-        new_window.repoURL.setText(self.values['repo_url'])
-        new_window.repoName.setText(self.values['repo_name'])
-
-        # setting values from this previous window (self) to new_window
-        new_window.values['ssh_key'] = self.values['ssh_key']
-        new_window.values['repo_url'] = self.values['repo_url']
-        new_window.values['repo_name'] = self.values['repo_name']
-        new_window.values['extra_borg_arguments'] = self.values['extra_borg_arguments']
-
-        # setting password
-        new_window.set_password(new_window.values['repo_url'])
-        new_window.values['password'] = self.values['password']
-        new_window._set_status(self.tr("Autofilled from previous window"))
-        new_window.open()
-
-    def process_new_repo(self, result):
-        if result['returncode'] == 0:
-            new_repo = RepoModel.get(url=result['params']['repo_url'])
-            profile = self.profile()
-            profile.repo = new_repo.id
-            profile.save()
-
-            self.set_repos()
-            self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
-            self.repo_added.emit()
-            self.init_repo_stats()
+            init_dialog.open()
 
     def run(self):
         if self.validate():
