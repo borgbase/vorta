@@ -24,6 +24,8 @@ def init_logger(background=False):
 
     # create handlers
     fh = TimedRotatingFileHandler(config.LOG_DIR / 'vorta.log', when='d', interval=1, backupCount=5)
+    # ensure ".log" suffix
+    fh.namer = lambda log_name: log_name.replace(".log", "") + ".log"
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
