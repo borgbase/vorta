@@ -98,7 +98,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         # Init profile list
         self.populate_profile_selector()
-        self.profileSelector.currentItemChanged.connect(self.profile_select_action)
+        self.profileSelector.itemClicked.connect(self.profile_clicked_action)
+        self.profileSelector.currentItemChanged.connect(self.profile_selection_changed_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
@@ -173,7 +174,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if current_item:
             self.profileSelector.setCurrentItem(current_item)
 
-    def profile_select_action(self, index):
+    def profile_selection_changed_action(self, index):
         profile = self.profileSelector.currentItem()
         backup_profile_id = profile.data(Qt.ItemDataRole.UserRole) if profile else None
         if not backup_profile_id:
@@ -187,6 +188,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             SettingsModel.key == 'previous_profile_id'
         ).execute()
         self.archiveTab.toggle_compact_button_visibility()
+
+    def profile_clicked_action(self):
         if self.miscWidget.isVisible():
             self.toggle_misc_visibility()
 
@@ -217,7 +220,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 to_delete.delete_instance(recursive=True)
                 self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
                 self.profileSelector.takeItem(self.profileSelector.currentRow())
-                self.profile_select_action(0)
+                self.profile_selection_changed_action(0)
 
         else:
             warn = self.tr("Cannot delete the last profile.")
