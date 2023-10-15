@@ -201,6 +201,63 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="alignment">
+          <set>Qt::AlignHCenter</set>
+         </property>
+         <property name="spacing">
+          <number>20</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="vortaInfo">
+           <property name="text">
+            <string>
+             Vorta is a cross-platform, open-source client designed to simplify the management of Borg backups.
+
+                      Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
+            </string>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="alignment">
+          <set>Qt::AlignHCenter</set>
+         </property>
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to view Vorta's repository on GitHub.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/master/index.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt; Click here&lt;/span&gt;&lt;/a&gt; to view the docs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="topMargin">
           <number>10</number>
          </property>
@@ -210,6 +267,9 @@
          <property name="spacing">
           <number>20</number>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignHCenter</set>
+         </property>
          <item>
           <widget class="QLabel" name="gpl_logo"/>
          </item>
@@ -217,16 +277,6 @@
           <widget class="QLabel" name="python_logo"/>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QFrame" name="seperator">
-         <property name="frameShape">
-          <enum>QFrame::HLine</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-        </widget>
        </item>
       </layout>
      </item>
