@@ -32,4 +32,4 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
 
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
-        self.borgPath.setText(f"<center>Path to Borg:<br>{path}</center>")
+        self.borgPath.setText(f"<center>Path to Borg: {path}</center>")
