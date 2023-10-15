@@ -208,7 +208,7 @@
           <number>20</number>
          </property>
          <item>
-          <widget class="QLabel" name="vortaInfo">
+          <widget class="QLabel" name="label">
            <property name="text">
             <string>
              Vorta is a cross-platform, open-source client designed to simplify the management of Borg backups.
