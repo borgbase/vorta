@@ -296,10 +296,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if self.miscWidget.isVisible():
             self.miscWidget.hide()
             self.tabWidget.setCurrentIndex(0)
+            self.miscButton.setStyleSheet("")
             self.tabWidget.show()
         else:
             self.tabWidget.hide()
             self.miscWidget.setCurrentIndex(0)
+            self.miscButton.setStyleSheet("background-color: #1768E3;")
             self.miscWidget.show()
 
     def backup_started_event(self):

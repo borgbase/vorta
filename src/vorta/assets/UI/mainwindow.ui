@@ -140,13 +140,19 @@
       <item>
        <widget class="QPushButton" name="miscButton">
         <property name="text">
-         <string>Settings / About</string>
+         <string> Settings / About</string>
         </property>
         <property name="minimumSize">
          <size>
           <width>150</width>
           <height>40</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton:focus { border: none; outline: none; }</string>
         </property>
         <property name="flat">
          <bool>false</bool>
