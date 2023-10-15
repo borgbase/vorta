@@ -49,9 +49,9 @@
       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QToolButton" name="profileRenameButton">
-            <property name="toolTip">
-             <string>Rename current profile</string>
+           <widget class="QToolButton" name="profileAddButton">
+            <property name="text">
+             <string/>
             </property>
             <property name="iconSize">
              <size>
@@ -59,12 +59,15 @@
               <height>20</height>
              </size>
             </property>
+            <property name="popupMode">
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="profileExportButton">
+           <widget class="QToolButton" name="profileDeleteButton">
             <property name="toolTip">
-             <string>Export current profile</string>
+             <string>Delete current profile</string>
             </property>
             <property name="iconSize">
              <size>
@@ -91,25 +94,22 @@
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="profileDeleteButton">
+           <widget class="QToolButton" name="profileRenameButton">
             <property name="toolTip">
-             <string>Delete current profile</string>
+             <string>Rename current profile</string>
             </property>
             <property name="iconSize">
              <size>
               <width>20</width>
               <height>20</height>
              </size>
-            </property>
-            <property name="text">
-             <string/>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="profileAddButton">
-            <property name="text">
-             <string/>
+           <widget class="QToolButton" name="profileExportButton">
+            <property name="toolTip">
+             <string>Export current profile</string>
             </property>
             <property name="iconSize">
              <size>
@@ -117,8 +117,8 @@
               <height>20</height>
              </size>
             </property>
-            <property name="popupMode">
-             <enum>QToolButton::InstantPopup</enum>
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
