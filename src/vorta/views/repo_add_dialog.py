@@ -125,6 +125,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             repo_name=self.repoName.text(),
             password=self.passwordInput.get_password(),
             extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
+            is_remote_repo=self.is_remote_repo,
         )
         return out
 
@@ -139,6 +140,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         # do not set confirmLineEdit, let user confirm password
         window._set_status("Autofilled password from previous window.")
         window.extraBorgArgumentsLineEdit.setText(values['extra_borg_arguments'])
+        window.is_remote_repo = values['is_remote_repo']
         return window
 
 
