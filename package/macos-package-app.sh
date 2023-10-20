@@ -39,9 +39,12 @@ create-dmg \
   "Vorta.app"
 
 # Notarize DMG
-RESULT=$(xcrun notarytool submit --output-format plist --wait --timeout 10m \
-    --apple-id $APPLE_ID_USER --password $APPLE_ID_PASSWORD --team-id $APPLE_TEAM_ID \
-    "$APP_BUNDLE.dmg" )
+xcrun notarytool submit \
+    --output-format plist --wait --timeout 10m \
+    --apple-id $APPLE_ID_USER \
+    --password $APPLE_ID_PASSWORD \
+    --team-id $APPLE_TEAM_ID \
+    "$APP_BUNDLE.dmg"
 
 # Staple the notary ticket
 xcrun stapler staple $APP_BUNDLE.dmg
