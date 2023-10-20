@@ -21,10 +21,7 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
-        self.borg_version = "1.0"
-        self.borg_path = "/usr/bin/borg"
-        self.vorta_version = __version__
-        self.versionLabel.setText(self.vorta_version)
+        self.versionLabel.setText(__version__)
         self.logLink.setText(
             f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
             'underline; color:#0984e3;">Click here</span></a> to view the logs.'
@@ -33,7 +30,5 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
         self.python_logo.setPixmap(get_colored_pixmap('python_logo', 40))
 
     def set_borg_details(self, version, path):
-        self.borg_version = version
-        self.borg_path = path
         self.borgVersion.setText(version)
-        self.borgPath.setText(f"<center>Path to Borg: {self.borg_path}</center>")
+        self.borgPath.setText(f"<center>Path to Borg: {path}</center>")
