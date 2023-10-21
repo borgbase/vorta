@@ -6,7 +6,7 @@ from vorta import config
 from vorta._version import __version__
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
-from vorta.views.utils import get_colored_pixmap
+from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/abouttab.ui')
 AboutTabUI, AboutTabBase = uic.loadUiType(uifile)
@@ -26,8 +26,8 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
             f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
             'underline; color:#0984e3;">Click here</span></a> to view the logs.'
         )
-        self.gpl_logo.setPixmap(get_colored_pixmap('gpl_logo', 40))
-        self.python_logo.setPixmap(get_colored_pixmap('python_logo', 40))
+        self.gpl_logo.setPixmap(get_colored_icon('gpl_logo', scaled_height=40, return_qpixmap=True))
+        self.python_logo.setPixmap(get_colored_icon('python_logo', scaled_height=40, return_qpixmap=True))
 
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
