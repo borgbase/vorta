@@ -3,7 +3,7 @@ from PyQt6.QtGui import QIcon, QImage, QPixmap
 from vorta.utils import get_asset, uses_dark_mode
 
 
-def get_colored_icon(icon_name):
+def get_colored_icon(icon_name, scaled_height=128, return_qpixmap=False):
     """
     Return SVG icon in the correct color.
     """
@@ -11,7 +11,9 @@ def get_colored_icon(icon_name):
         svg_str = svg_file.read()
     if uses_dark_mode():
         svg_str = svg_str.replace(b'#000000', b'#ffffff')
-    # Reduce image size to 128 height
-    svg_img = QImage.fromData(svg_str).scaledToHeight(128)
+    svg_img = QImage.fromData(svg_str).scaledToHeight(scaled_height)
 
-    return QIcon(QPixmap(svg_img))
+    if return_qpixmap:
+        return QPixmap(svg_img)
+    else:
+        return QIcon(QPixmap(svg_img))
