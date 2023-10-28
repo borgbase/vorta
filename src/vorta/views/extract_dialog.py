@@ -1,10 +1,12 @@
+import argparse
 import enum
 import json
 import logging
+import webbrowser
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from PyQt6 import uic
 from PyQt6.QtCore import (
@@ -24,12 +26,12 @@ from PyQt6.QtWidgets import (
 from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.file_dialog import BaseFileDialog
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import compare_values_with_sign, get_colored_icon
 
 from .partials.treemodel import (
-    ExtractTreeSortFilterProxyModel,
     FileSystemItem,
     FileTreeModel,
+    FileTreeSortFilterProxyModel,
     path_to_str,
     relative_path,
 )
@@ -89,6 +91,8 @@ class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
         self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.rejected.connect(self.close)
 
+        self.bHelp.clicked.connect(lambda: webbrowser.open('https://vorta.borgbase.com/usage/search/'))
+
     def get_sort_proxy_model(self):
         """Get the sort proxy model for this dialog."""
         return ExtractSortProxyModel()
@@ -110,6 +114,7 @@ class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
         self.bSearch.setIcon(get_colored_icon('search'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+        self.bHelp.setIcon(get_colored_icon('help-about'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
 
@@ -171,10 +176,102 @@ def parse_json_lines(lines, model: "ExtractTree"):
 # ---- Sorting ---------------------------------------------------------------
 
 
-class ExtractSortProxyModel(ExtractTreeSortFilterProxyModel):
+class ExtractSortProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a ExtractTree model.
     """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    @staticmethod
+    def parse_date(value: str) -> Tuple[str, datetime]:
+        """
+        Parse the date string into a tuple of two values.
+        """
+
+        comparison_sign = ['<', '>', '<=', '>=', '=']
+
+        if not any(value.startswith(unit) for unit in comparison_sign):
+            raise argparse.ArgumentTypeError("Invalid date format. Supported comparison signs: <, >, <=, >=, =")
+
+        if value[1] == '=':
+            date = value[2:]
+            sign = value[:2]
+        else:
+            date = value[1:]
+            sign = value[:1]
+
+        try:
+            date = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            raise argparse.ArgumentTypeError("Invalid date format. Must be YYYY-MM-DD.")
+
+        return (sign, date)
+
+    @classmethod
+    def valid_date_range(cls, value: str) -> List[Tuple[str, datetime]]:
+        """Parse the date range string."""
+        date = value.split(',')
+
+        if len(date) == 1:
+            return [cls.parse_date(date[0])]
+        elif len(date) == 2:
+            return [
+                cls.parse_date(date[0]),
+                cls.parse_date(date[1]),
+            ]
+        else:
+            raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
+
+    def get_parser(self):
+        """Add Extract view specific arguments to the parser."""
+        parser = super().get_parser()
+
+        health_group = parser.add_mutually_exclusive_group()
+        health_group.add_argument(
+            "--healthy", default=None, action="store_true", dest="healthy", help="Match only healthy items."
+        )
+        health_group.add_argument(
+            "--unhealthy", default=None, action="store_false", dest="healthy", help="Match only unhealthy items."
+        )
+
+        parser.add_argument(
+            "--last-modified",
+            type=self.valid_date_range,
+            help="Match by last modified date.",
+        )
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.healthy is True and not item.data.health:
+            return False
+
+        if self.searchPattern.healthy is False and item.data.health:
+            return False
+
+        if self.searchPattern.last_modified:
+            item_last_modified = item.data.last_modified
+
+            for filter_last_modified in self.searchPattern.last_modified:
+                if not compare_values_with_sign(item_last_modified, filter_last_modified[1], filter_last_modified[0]):
+                    return False
+
+        return True
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""

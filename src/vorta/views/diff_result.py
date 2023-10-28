@@ -2,6 +2,7 @@ import enum
 import json
 import logging
 import re
+import webbrowser
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
@@ -21,13 +22,13 @@ from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.partials.file_dialog import BaseFileDialog
 from vorta.views.partials.treemodel import (
-    DiffTreeSortFilterProxyModel,
     FileSystemItem,
     FileTreeModel,
+    FileTreeSortFilterProxyModel,
     path_to_str,
     relative_path,
 )
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import compare_values_with_sign, get_colored_icon
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
@@ -78,6 +79,8 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
+        self.bHelp.clicked.connect(lambda: webbrowser.open('https://vorta.borgbase.com/usage/search/'))
+
     def get_sort_proxy_model(self):
         """Return the sort proxy model for the tree view."""
         return DiffSortProxyModel(self)
@@ -90,6 +93,7 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bSearch.setIcon(get_colored_icon('search'))
+        self.bHelp.setIcon(get_colored_icon('help-about'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(2, get_colored_icon("view-list-details"))
@@ -393,10 +397,45 @@ def size_to_byte(significand: str, unit: str) -> int:
 # ---- Sorting ---------------------------------------------------------------
 
 
-class DiffSortProxyModel(DiffTreeSortFilterProxyModel):
+class DiffSortProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a DiffTree model.
     """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    def get_parser(self):
+        """Add Diff view specific arguments to the parser."""
+        parser = super().get_parser()
+        parser.add_argument(
+            "-b", "--balance", type=FileTreeSortFilterProxyModel.valid_size, help="Match by balance size."
+        )
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.balance:
+            item_balance = item.data.size
+
+            for filter_balance in self.searchPattern.balance:
+                if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
+                    return False
+
+        return True
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""

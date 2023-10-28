@@ -148,6 +148,17 @@
         </widget>
      </item>
 
+      <item>
+        <widget class="QToolButton" name="bHelp">
+         <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="toolTip">
+            <string>Help</string>
+         </property>
+        </widget>
+      </item>
+
      </layout>
     </item>
 

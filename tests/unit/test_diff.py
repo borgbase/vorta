@@ -72,7 +72,7 @@ def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output, archive_env):
     # test 'diff_item_copy()' by passing it an item to copy
     index = tab._resultwindow.treeView.model().index(0, 0)
     assert index is not None
-    tab._resultwindow.diff_item_copy(index)
+    tab._resultwindow.copy_item(index)
     clipboard_data = clipboard_spy.call_args[0][0]
     assert clipboard_data.hasText()
     assert clipboard_data.text() == "/test"
@@ -83,7 +83,7 @@ def test_diff_item_copy(qapp, qtbot, mocker, borg_json_output, archive_env):
     flags = QItemSelectionModel.SelectionFlag.Rows
     flags |= QItemSelectionModel.SelectionFlag.Select
     tab._resultwindow.treeView.selectionModel().select(tab._resultwindow.treeView.model().index(0, 0), flags)
-    tab._resultwindow.diff_item_copy()
+    tab._resultwindow.copy_item()
     clipboard_data = clipboard_spy.call_args[0][0]
     assert clipboard_data.hasText()
     assert clipboard_data.text() == "/test"
