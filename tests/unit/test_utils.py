@@ -9,6 +9,7 @@ from vorta.utils import (
     is_system_tray_available,
     normalize_path,
     pretty_bytes,
+    sort_sizes,
 )
 
 
@@ -19,6 +20,33 @@ def test_keyring():
     keyring = VortaKeyring.get_keyring()
     keyring.set_password('vorta-repo', REPO, UNICODE_PW)
     assert keyring.get_password("vorta-repo", REPO) == UNICODE_PW
+
+
+@pytest.mark.parametrize(
+    "input_sizes, expected_sorted",
+    [
+        # Basic ordering
+        (["1.0 GB", "2.0 MB", "3.0 KB"], ["3.0 KB", "2.0 MB", "1.0 GB"]),
+        # Multiple same units
+        (["3.0 GB", "2.0 GB", "1.0 GB"], ["1.0 GB", "2.0 GB", "3.0 GB"]),
+        # Multiple different units
+        (["2.0 MB", "3.0 GB", "1.0 KB", "5.0 GB"], ["1.0 KB", "2.0 MB", "3.0 GB", "5.0 GB"]),
+        # Larger to smaller units
+        (["1.0 YB", "1.0 ZB", "1.0 EB", "1.0 PB"], ["1.0 PB", "1.0 EB", "1.0 ZB", "1.0 YB"]),
+        # Skipping non-numeric sizes
+        (["2x MB", "3.0 KB", "apple GB", "1.0 GB"], ["3.0 KB", "1.0 GB"]),
+        # Skipping invalid suffix
+        (["1.0 XX", "5.0 YY", "9.0 ZZ", "1.0 MB"], ["1.0 MB"]),
+        # Floats with decimals
+        (["2.5 GB", "2.3 GB", "1.1 MB"], ["1.1 MB", "2.3 GB", "2.5 GB"]),
+        # Checking the same sizes across different units
+        (["1.0 MB", "1000.0 KB"], ["1000.0 KB", "1.0 MB"]),
+        # Handle empty lists
+        ([], []),
+    ],
+)
+def test_sort_sizes(input_sizes, expected_sorted):
+    assert sort_sizes(input_sizes) == expected_sorted
 
 
 @pytest.mark.parametrize(
@@ -60,7 +88,7 @@ def test_best_unit_for_sizes_nonmetric(sizes, expected_unit):
 )
 def test_pretty_bytes_fixed_units(size, metric, precision, fixed_unit, expected_output):
     """
-    test pretty bytes when specifying a fixed unit of measurement
+    Test pretty bytes when specifying a fixed unit of measurement
     """
     output = pretty_bytes(size, metric=metric, precision=precision, fixed_unit=fixed_unit)
     assert output == expected_output
@@ -131,7 +159,7 @@ def test_get_path_datasize(tmpdir):
 
 def test_is_system_tray_available(mocker):
     """
-    sanity check to ensure proper behavior
+    Sanity check to ensure proper behavior
     """
     mocker.patch('PyQt6.QtWidgets.QSystemTrayIcon.isSystemTrayAvailable', return_value=False)
     assert is_system_tray_available() is False
