@@ -1,6 +1,7 @@
-import sys
-import os
 import json
+import os
+import sys
+
 from PyQt6.QtGui import QIcon, QImage, QPixmap
 
 from vorta.utils import get_asset, uses_dark_mode

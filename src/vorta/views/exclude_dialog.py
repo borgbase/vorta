@@ -1,7 +1,3 @@
-import json
-import os
-import sys
-
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QStandardItem, QStandardItemModel
@@ -14,7 +10,7 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.i18n import translate
-from vorta.store.models import ExclusionModel, BackupProfileModel
+from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon, get_exclusion_presets
 
@@ -37,7 +33,6 @@ class MandatoryInputItemModel(QStandardItemModel):
             self.removeRow(index.row())
             return True
         if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(name=value, profile=self.profile):
-            print('basdf')
             QMessageBox.critical(
                 self.parent(),
                 'Error',

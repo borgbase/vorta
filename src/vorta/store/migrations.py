@@ -8,7 +8,6 @@ from .models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
-    ExclusionModel,
     RepoModel,
     SettingsModel,
     SourceFileModel,
@@ -250,6 +249,7 @@ def run_migrations(current_schema, db_connection):
                 pw.CharField(default=''),
             ),
         )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
