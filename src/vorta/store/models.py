@@ -12,6 +12,7 @@ import peewee as pw
 from playhouse import signals
 
 from vorta.utils import slugify
+from vorta.views.utils import get_exclusion_presets
 
 DB = pw.Proxy()
 
@@ -75,7 +76,6 @@ class BackupProfileModel(BaseModel):
     repo = pw.ForeignKeyField(RepoModel, default=None, null=True)
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
-    raw_exclusions = pw.TextField(default='')
     exclude_patterns = pw.TextField(null=True)
     exclude_if_present = pw.TextField(null=True)
     schedule_mode = pw.CharField(default='off')
@@ -106,6 +106,49 @@ class BackupProfileModel(BaseModel):
 
     def slug(self):
         return slugify(self.name)
+
+    def get_combined_exclusion_string(self):
+        allPresets = get_exclusion_presets()
+        excludes = ""
+
+        if (
+            ExclusionModel.select()
+            .where(
+                ExclusionModel.profile == self,
+                ExclusionModel.enabled,
+                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+            )
+            .count()
+            > 0
+        ):
+            excludes = "# custom added rules\n"
+
+        for exclude in ExclusionModel.select().where(
+            ExclusionModel.profile == self,
+            ExclusionModel.enabled,
+            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+        ):
+            excludes += f"{exclude.name}\n"
+
+        raw_excludes = self.exclude_patterns
+        if raw_excludes:
+            excludes += "\n# raw exclusions\n"
+            excludes += raw_excludes
+            excludes += "\n"
+
+        # go through all source=='preset' exclusions, find the name in the allPresets dict, and add the patterns
+        for exclude in ExclusionModel.select().where(
+            ExclusionModel.profile == self,
+            ExclusionModel.enabled,
+            ExclusionModel.source == ExclusionModel.SourceFieldOptions.PRESET.value,
+        ):
+            if exclude.name not in allPresets:
+                continue
+            excludes += f"\n# {exclude.name}\n"
+            for pattern in allPresets[exclude.name]['patterns']:
+                excludes += f"{pattern}\n"
+
+        return excludes
 
     class Meta:
         database = DB

@@ -251,31 +251,6 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
-    if current_schema.version < 23:
-        _apply_schema_update(
-            current_schema,
-            23,
-            migrator.add_column(
-                BackupProfileModel._meta.table_name,
-                'raw_exclusions',
-                pw.CharField(default=''),
-            ),
-        )
-
-    if current_schema.version < 24:
-        # convert every pattern in the old exclude_patterns string to a new ExclusionModel object
-        for profile in BackupProfileModel:
-            previous_exclusions = profile.exclude_patterns.splitlines() if profile.exclude_patterns else []
-            for pattern in previous_exclusions:
-                ExclusionModel.create(
-                    profile=profile,
-                    name=pattern,
-                    enabled=True,
-                )
-            profile.exclude_patterns = ''
-            profile.save()
-        _apply_schema_update(current_schema, 24)
-
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
         migrate(*operations)

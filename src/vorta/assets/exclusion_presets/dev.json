@@ -6,7 +6,7 @@
             "*/node_modules",
             "*.npm"
         ],
-        "tags": ["type:dev", "lang:javascript", "os:linux", "os:macos"],
+        "tags": ["type:dev", "lang:javascript", "os:linux", "os:darwin"],
         "author": "Divi"
     },
     {
@@ -19,7 +19,7 @@
             "*.env",
             "*.virtualenvs"
         ],
-        "tags": ["type:dev", "lang:python", "os:linux", "os:macos"],
+        "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
         "author": "Divi"
     },
     {
@@ -30,7 +30,7 @@
             "*.cargo",
             "*.rustup"
         ],
-        "tags": ["type:dev", "lang:rust", "os:linux", "os:macos"],
+        "tags": ["type:dev", "lang:rust", "os:linux", "os:darwin"],
         "author": "Divi"
     }
 ]
