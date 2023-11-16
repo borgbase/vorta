@@ -165,11 +165,18 @@ class BorgCreateJob(BorgJob):
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
         if profile.exclude_patterns is not None:
-            pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
-            pattern_file.write(profile.exclude_patterns)
-            pattern_file.flush()
-            cmd.extend(['--exclude-from', pattern_file.name])
-            ret['cleanup_files'].append(pattern_file)
+            exclude_dirs = []
+            for p in profile.exclude_patterns.split('\n'):
+                if p.strip():
+                    expanded_directory = os.path.expanduser(p.strip())
+                    exclude_dirs.append(expanded_directory)
+
+            if exclude_dirs:
+                pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
+                pattern_file.write('\n'.join(exclude_dirs))
+                pattern_file.flush()
+                cmd.extend(['--exclude-from', pattern_file.name])
+                ret['cleanup_files'].append(pattern_file)
 
         if profile.exclude_if_present is not None:
             for f in profile.exclude_if_present.split('\n'):

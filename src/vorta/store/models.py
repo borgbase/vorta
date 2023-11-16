@@ -122,7 +122,7 @@ class ExclusionModel(BaseModel):
         PRESET = 'preset'
 
     profile = pw.ForeignKeyField(BackupProfileModel, backref='exclusions')
-    name = pw.CharField(unique=True)
+    name = pw.CharField()
     enabled = pw.BooleanField(default=True)
     source = pw.CharField(default=SourceFieldOptions.CUSTOM.value)
 

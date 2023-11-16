@@ -344,6 +344,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window = window  # for testing
         window.show()
 

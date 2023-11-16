@@ -115,7 +115,7 @@
         <item>
          <widget class="QPushButton" name="bExclude">
           <property name="text">
-           <string>Select Exclude Patterns…</string>
+           <string>Manage Excluded Items…</string>
           </property>
          </widget>
         </item>
