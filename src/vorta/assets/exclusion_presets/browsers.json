@@ -1,6 +1,7 @@
 [
     {
         "name": "Chromium cache and config files",
+        "slug": "chromium-cache",
         "patterns":
         [
             "*.config/chromium/*/Local Storage",
@@ -17,6 +18,7 @@
     },
     {
         "name": "Google Chrome cache and config files",
+        "slug": "google-chrome-cache",
         "patterns":
         [
             "*.config/google-chrome/ShaderCache",
@@ -31,6 +33,7 @@
     },
     {
         "name": "Brave cache and config files",
+        "slug": "brave-cache",
         "patterns":[
             "*.config/BraveSoftware/Brave-Browser/*/Feature Engagement Tracker/",
             "*.config/BraveSoftware/Brave-Browser/*/Local Storage/",
@@ -44,6 +47,7 @@
     },
     {
         "name": "Mozilla Firefox cache and config files",
+        "slug": "firefox-cache",
         "patterns":[
             "*.mozilla/firefox/*/Cache",
             "*.mozilla/firefox/*/minidumps",

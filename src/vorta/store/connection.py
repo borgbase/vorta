@@ -22,7 +22,7 @@ from .models import (
 )
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 24
+SCHEMA_VERSION = 22
 
 
 @signals.post_save(sender=SettingsModel)

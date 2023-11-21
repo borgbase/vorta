@@ -167,11 +167,12 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         menu.popup(self.customExclusionsList.viewport().mapToGlobal(pos))
 
     def populate_presets_list(self):
-        for preset_name in self.allPresets.keys():
-            item = QStandardItem(preset_name)
+        for preset_slug in self.allPresets.keys():
+            item = QStandardItem(self.allPresets[preset_slug]['name'])
             item.setCheckable(True)
+            item.setData(preset_slug, Qt.ItemDataRole.UserRole)
             preset_model = ExclusionModel.get_or_none(
-                name=preset_name,
+                name=preset_slug,
                 source=ExclusionModel.SourceFieldOptions.PRESET.value,
                 profile=self.profile,
             )
@@ -292,7 +293,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         If the preset doesn't exist, create it and set enabled to True.
         '''
         preset = ExclusionModel.get_or_none(
-            name=item.text(),
+            name=item.data(Qt.ItemDataRole.UserRole),
             source=ExclusionModel.SourceFieldOptions.PRESET.value,
             profile=self.profile,
         )
@@ -301,7 +302,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             preset.save()
         else:
             ExclusionModel.create(
-                name=item.text(),
+                name=item.data(Qt.ItemDataRole.UserRole),
                 source=ExclusionModel.SourceFieldOptions.PRESET.value,
                 profile=self.profile,
                 enabled=item.checkState() == Qt.CheckState.Checked,

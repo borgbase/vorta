@@ -1,6 +1,7 @@
 [
     {
         "name": "Node Modules and package manager cache",
+        "slug": "node-cache",
         "patterns":
         [
             "*/node_modules",
@@ -11,6 +12,7 @@
     },
     {
         "name": "Python cache and virtualenv",
+        "slug": "python-cache",
         "patterns":
         [
             "*/__pycache__",
@@ -24,6 +26,7 @@
     },
     {
         "name": "Rust artefacts",
+        "slug": "rust-artefacts",
         "patterns":
         [
             "*/target",

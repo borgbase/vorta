@@ -24,6 +24,11 @@ def get_colored_icon(icon_name, scaled_height=128, return_qpixmap=False):
 
 
 def get_exclusion_presets():
+    """
+    Loads exclusion presets from JSON files in assets/exclusion_presets.
+
+    Currently the preset name is used as identifier.
+    """
     allPresets = {}
     os_tag = f"os:{sys.platform}"
     if getattr(sys, 'frozen', False):
@@ -38,7 +43,8 @@ def get_exclusion_presets():
             preset_list = json.load(f)
             for preset in preset_list:
                 if os_tag in preset['tags']:
-                    allPresets[preset['name']] = {
+                    allPresets[preset['slug']] = {
+                        'name': preset['name'],
                         'patterns': preset['patterns'],
                         'tags': preset['tags'],
                     }
