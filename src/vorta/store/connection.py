@@ -1,9 +1,11 @@
 import os
+import shutil
 from datetime import datetime, timedelta
 
 from peewee import Tuple, fn
 from playhouse import signals
 
+from vorta import config
 from vorta.autostart import open_app_at_startup
 
 from .migrations import run_migrations
@@ -83,6 +85,7 @@ def init_db(con=None):
     if created or current_schema.version == SCHEMA_VERSION:
         pass
     else:
+        backup_current_db()
         run_migrations(current_schema, con)
 
     # Create missing settings and update labels.
@@ -98,3 +101,11 @@ def init_db(con=None):
             s.tooltip = setting['tooltip']
 
         s.save()
+
+
+def backup_current_db():
+    """
+    Creates a backup copy of settings.db
+    """
+
+    shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / 'settings.db.bak')
