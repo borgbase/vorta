@@ -177,10 +177,11 @@ class BorgCreateJob(BorgJob):
             cmd.extend(['--exclude-from', pattern_file.name])
             ret['cleanup_files'].append(pattern_file)
 
-        if profile.exclude_if_present is not None:
-            for f in profile.exclude_if_present.split('\n'):
-                if f.strip():
-                    cmd.extend(['--exclude-if-present', f.strip()])
+        # Currently not in use, but may be added back to the UI later.
+        # if profile.exclude_if_present is not None:
+        #     for f in profile.exclude_if_present.split('\n'):
+        #         if f.strip():
+        #             cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
