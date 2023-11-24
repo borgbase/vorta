@@ -15,7 +15,6 @@
     "ssh_key": null,
     "compression": "zstd,8",
     "exclude_patterns": null,
-    "exclude_if_present": ".nobackup",
     "schedule_mode": "off",
     "schedule_interval_unit": "hours",
     "schedule_interval_count": 2,

@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Node Modules and package manager cache",
+        "slug": "node-cache",
+        "patterns":
+        [
+            "fm:*/node_modules",
+            "fm:*/.npm"
+        ],
+        "tags": ["type:dev", "lang:javascript", "os:linux", "os:darwin"],
+        "author": "Divi"
+    },
+    {
+        "name": "Python cache and virtualenv",
+        "slug": "python-cache",
+        "patterns":
+        [
+            "fm:*/__pycache__",
+            "fm:*.pyc",
+            "fm:*.pyo",
+            "fm:*/.virtualenvs"
+        ],
+        "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
+        "author": "Divi"
+    },
+    {
+        "name": "Rust artefacts",
+        "slug": "rust-artefacts",
+        "patterns":
+        [
+            "fm:*/.cargo",
+            "fm:*/.rustup"
+        ],
+        "tags": ["type:dev", "lang:rust", "os:linux", "os:darwin"],
+        "author": "Divi"
+    }
+]
