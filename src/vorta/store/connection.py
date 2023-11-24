@@ -108,5 +108,6 @@ def backup_current_db(schema_version):
     Creates a backup copy of settings.db
     """
 
-    backup_file_name = f'settings_v{schema_version}.db.bak'
+    timestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+    backup_file_name = f'settings_v{schema_version}_{timestamp}.db'
     shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / backup_file_name)
