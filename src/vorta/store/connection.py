@@ -85,7 +85,7 @@ def init_db(con=None):
     if created or current_schema.version == SCHEMA_VERSION:
         pass
     else:
-        backup_current_db()
+        backup_current_db(current_schema.version)
         run_migrations(current_schema, con)
 
     # Create missing settings and update labels.
@@ -103,9 +103,10 @@ def init_db(con=None):
         s.save()
 
 
-def backup_current_db():
+def backup_current_db(schema_version):
     """
     Creates a backup copy of settings.db
     """
 
-    shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / 'settings.db.bak')
+    backup_file_name = f'settings_v{schema_version}.db.bak'
+    shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / backup_file_name)
