@@ -4,8 +4,8 @@
         "slug": "node-cache",
         "patterns":
         [
-            "*/node_modules",
-            "*.npm"
+            "fm:*/node_modules",
+            "fm:*/.npm"
         ],
         "tags": ["type:dev", "lang:javascript", "os:linux", "os:darwin"],
         "author": "Divi"
@@ -15,11 +15,10 @@
         "slug": "python-cache",
         "patterns":
         [
-            "*/__pycache__",
-            "*.pyc",
-            "*.pyo",
-            "*.env",
-            "*.virtualenvs"
+            "fm:*/__pycache__",
+            "fm:*.pyc",
+            "fm:*.pyo",
+            "fm:*/.virtualenvs"
         ],
         "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
         "author": "Divi"
@@ -29,9 +28,8 @@
         "slug": "rust-artefacts",
         "patterns":
         [
-            "*/target",
-            "*.cargo",
-            "*.rustup"
+            "fm:*/.cargo",
+            "fm:*/.rustup"
         ],
         "tags": ["type:dev", "lang:rust", "os:linux", "os:darwin"],
         "author": "Divi"
