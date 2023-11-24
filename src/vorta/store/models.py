@@ -7,6 +7,7 @@ At the bottom there is a simple schema migration system.
 import json
 from datetime import datetime
 from enum import Enum
+import logging
 
 import peewee as pw
 from playhouse import signals
@@ -15,6 +16,7 @@ from vorta.utils import slugify
 from vorta.views.utils import get_exclusion_presets
 
 DB = pw.Proxy()
+logger = logging.getLogger(__name__)
 
 
 class JSONField(pw.TextField):
@@ -143,6 +145,7 @@ class BackupProfileModel(BaseModel):
             ExclusionModel.source == ExclusionModel.SourceFieldOptions.PRESET.value,
         ):
             if exclude.name not in allPresets:
+                logger.warning("Exclusion preset %s not found in built-in presets.", exclude.name)
                 continue
             excludes += f"\n# {exclude.name}\n"
             for pattern in allPresets[exclude.name]['patterns']:
