@@ -33,12 +33,12 @@ class MandatoryInputItemModel(QStandardItemModel):
             self.removeRow(index.row())
             return True
         if role == Qt.ItemDataRole.EditRole and ExclusionModel.get_or_none(name=value, profile=self.profile):
+            self.removeRow(index.row())
             QMessageBox.critical(
                 self.parent(),
                 'Error',
                 'This exclusion already exists.',
             )
-            self.removeRow(index.row())
             return False
 
         return super().setData(index, value, role)

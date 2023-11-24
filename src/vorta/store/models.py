@@ -5,9 +5,9 @@ At the bottom there is a simple schema migration system.
 """
 
 import json
+import logging
 from datetime import datetime
 from enum import Enum
-import logging
 
 import peewee as pw
 from playhouse import signals
