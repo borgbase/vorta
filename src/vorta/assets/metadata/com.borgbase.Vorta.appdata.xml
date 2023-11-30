@@ -40,6 +40,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="v0.9.1-beta3" date="2023-11-30" urgency="low">
+      <description>
+        <ul>
+          <li>Exclude GUI. By @diivi (#1846)</li>
+          <li>Backup settings.db before migrations. By @AdwaitSalankar (#1848)</li>
+          <li>Loosen platformdirs dependency (#1843)</li>
+        </ul>
+      </description>
+    </release>
     <release version="v0.9.1-beta2" date="2023-10-27" urgency="low">
       <description>
         <ul>
@@ -48,8 +57,6 @@
           <li>Update macOS notarization for use with notarytool (#1831)</li>
         </ul>
       </description>
-    </release>
-    <release version="v0.9.1-beta2" date="2023-10-27">
     </release>
   </releases>
   <url type="bugtracker">https://github.com/borgbase/vorta/issues</url>
