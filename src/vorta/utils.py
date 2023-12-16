@@ -56,22 +56,6 @@ class FilePathInfoAsync(QThread):
         self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
-class MultiSelectionFileDialog(QFileDialog):
-    def __init__(self, parent, title, initial_dir=os.path.expanduser('~')):
-        super().__init__(parent, title, initial_dir)
-
-    def selectedFiles(self, tree_view=None):
-        selected_files = super().selectedFiles()
-
-        if self.fileMode() == QFileDialog.FileMode.Directory:
-            if tree_view:
-                selected_indexes = tree_view.selectionModel().selectedIndexes()
-                selected_dirs = [tree_view.model().filePath(index) for index in selected_indexes]
-                selected_files += selected_dirs
-
-        return selected_files
-
-
 def normalize_path(path):
     """normalize paths for MacOS (but do nothing on other platforms)"""
     # HFS+ converts paths to a canonical form, so users shouldn't be required to enter an exact match.
@@ -189,17 +173,14 @@ def get_dict_from_list(dataDict, mapList):
 
 
 def choose_file_dialog(parent, title, want_folder=True):
-    dialog = MultiSelectionFileDialog(parent, title, os.path.expanduser('~'))
+    dialog = QFileDialog(parent, title, os.path.expanduser('~'))
     dialog.setFileMode(QFileDialog.FileMode.Directory if want_folder else QFileDialog.FileMode.ExistingFiles)
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
-        dialog.setOption(QFileDialog.Option.ShowDirsOnly)
-        dialog.setOption(QFileDialog.Option.DontUseNativeDialog)
-        dir_dialog = dialog.findChild(QTreeView)
-        dir_dialog.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        return dialog, dir_dialog
-
-    return dialog
+        list_view = dialog.findChild(QTreeView)
+        list_view.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+    dialog.exec()
+    return dialog.selectedFiles()
 
 
 def is_ssh_private_key_file(filepath: str) -> bool:
