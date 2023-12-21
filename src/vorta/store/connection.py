@@ -28,18 +28,18 @@ SCHEMA_VERSION = 22
 
 
 @signals.post_save(sender=SettingsModel)
-def setup_autostart(model_class, instance, created):
+def setup_autostart(model_class, instance, created) -> None:
     if instance.key == 'autostart':
         open_app_at_startup(instance.value)
 
 
-def cleanup_db():
+def cleanup_db() -> None:
     # Clean up database
     DB.execute_sql("VACUUM")
     DB.close()
 
 
-def init_db(con=None):
+def init_db(con=None) -> None:
     if con is not None:
         os.umask(0o0077)
         DB.initialize(con)
@@ -62,18 +62,18 @@ def init_db(con=None):
     # Delete old log entries after 6 months.
     # The last `create` command of each profile must not be deleted
     # since the scheduler uses it to determine the last backup time.
-    last_backups_per_profile = (
+    last_backups_per_profile = Tuple(
         EventLogModel.select(EventLogModel.profile, fn.MAX(EventLogModel.start_time))
         .where(EventLogModel.subcommand == 'create')
         .group_by(EventLogModel.profile)
     )
-    last_scheduled_backups_per_profile = (
+    last_scheduled_backups_per_profile = Tuple(
         EventLogModel.select(EventLogModel.profile, fn.MAX(EventLogModel.start_time))
         .where(EventLogModel.subcommand == 'create', EventLogModel.category == 'scheduled')
         .group_by(EventLogModel.profile)
     )
 
-    three_months_ago = datetime.now() - timedelta(days=6 * 30)
+    three_months_ago: datetime = datetime.now() - timedelta(days=6 * 30)
     entry = Tuple(EventLogModel.profile, EventLogModel.start_time)
     EventLogModel.delete().where(
         EventLogModel.start_time < three_months_ago,
@@ -105,11 +105,11 @@ def init_db(con=None):
         s.save()
 
 
-def backup_current_db(schema_version):
+def backup_current_db(schema_version) -> None:
     """
     Creates a backup copy of settings.db
     """
 
-    timestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+    timestamp: str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
     backup_file_name = f'settings_v{schema_version}_{timestamp}.db'
     shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / backup_file_name)

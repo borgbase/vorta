@@ -251,7 +251,7 @@ def run_migrations(current_schema, db_connection):
         )
 
 
-def _apply_schema_update(current_schema, version_after, *operations):
+def _apply_schema_update(current_schema, version_after, *operations) -> None:
     with DB.atomic():
         migrate(*operations)
         current_schema.version = version_after
