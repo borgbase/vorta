@@ -8,11 +8,7 @@ import json
 import logging
 from datetime import datetime
 from enum import Enum
-<<<<<<< HEAD
-from typing import Any, Dict
-=======
 from typing import Any, Dict, Optional
->>>>>>> 194ab15 (made store/ typesafe)
 
 import peewee as pw
 from playhouse import signals
@@ -31,19 +27,11 @@ class JSONField(pw.TextField):
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
 
-<<<<<<< HEAD
-    def db_value(self, value) -> (None or str):
-        """Convert the python value for storage in the database."""
-        return value if value is None else json.dumps(value)
-
-    def python_value(self, value) -> (None or str):
-=======
     def db_value(self, value) -> Optional[str]:
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
 
     def python_value(self, value) -> Optional[str]:
->>>>>>> 194ab15 (made store/ typesafe)
         """Convert the database value to a pythonic value."""
         return value if value is None else json.loads(value)
 
