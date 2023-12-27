@@ -73,7 +73,7 @@ def init_db(con=None) -> None:
         .group_by(EventLogModel.profile)
     )
 
-    three_months_ago: datetime = datetime.now() - timedelta(days=6 * 30)
+    three_months_ago = datetime.now() - timedelta(days=6 * 30)
     entry = Tuple(EventLogModel.profile, EventLogModel.start_time)
     EventLogModel.delete().where(
         EventLogModel.start_time < three_months_ago,
@@ -110,6 +110,6 @@ def backup_current_db(schema_version) -> None:
     Creates a backup copy of settings.db
     """
 
-    timestamp: str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+    timestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
     backup_file_name = f'settings_v{schema_version}_{timestamp}.db'
     shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / backup_file_name)
