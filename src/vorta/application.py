@@ -308,11 +308,6 @@ class VortaApp(QtSingleApplication):
 
         Displays a `QMessageBox` with an error message depending on the
         return code of the `BorgJob`.
-
-        Parameters
-        ----------
-        repo_url : str
-            The url of the repo of concern
         """
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
