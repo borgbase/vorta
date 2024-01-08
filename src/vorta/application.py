@@ -344,7 +344,7 @@ class VortaApp(QtSingleApplication):
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
-                text = self.tr('Repository data check for repo was killed by signal %s.') % (signal)
+                text = self.tr('Repository data check for repo was killed by signal %s.') % signal
                 infotext = self.tr('The process running the check job got a kill signal. Try again.')
             else:
                 # Real error
