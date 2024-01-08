@@ -79,19 +79,20 @@ class JobsManager:
 
     def is_worker_running(self, site=None):
         """
-        See if there are any active jobs. The user can't start a backup if a job is
-        running. The scheduler can.
-        """
-        # Check status for specific site (repo)
-        if site in self.workers:
-            return self.workers[site].is_alive()
-        else:
-            return False
+        See if there are any active jobs.
+        The user can't start a backup if a job is running. The scheduler can.
 
-        # Check if *any* worker is active
-        for _, worker in self.workers.items():
-            if worker.is_alive():
-                return True
+        If site is None, check if there is any worker active for any site (repo).
+        If site is not None, only check if there is a worker active for the given site (repo).
+        """
+        if site is not None:
+            if site in self.workers:
+                if self.workers[site].is_alive():
+                    return True
+        else:
+            for _, worker in self.workers.items():
+                if worker.is_alive():
+                    return True
         return False
 
     def add_job(self, job):
