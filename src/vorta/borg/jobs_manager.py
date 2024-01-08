@@ -50,6 +50,7 @@ class SiteWorker(threading.Thread):
         self.current_job = None
 
     def run(self):
+        job = None
         while True:
             try:
                 job = self.jobs.get(False)
@@ -58,7 +59,8 @@ class SiteWorker(threading.Thread):
                 job.run()
                 logger.debug("Finish job for site: %s", job.repo_id())
             except queue.Empty:
-                logger.debug("No more jobs for site: %s", job.repo_id())
+                if job is not None:
+                    logger.debug("No more jobs for site: %s", job.repo_id())
                 return
 
 
