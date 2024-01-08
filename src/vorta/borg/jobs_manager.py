@@ -25,9 +25,9 @@ class JobInterface(QObject):
     @abstractmethod
     def cancel(self):
         """
-        Cancel can be called when the job is not started. It is the responsability of FuncJob to not cancel job if
+        Cancel can be called when the job is not started. It is the responsibility of FuncJob to not cancel job if
         no job is running.
-        The cancel mehod of JobsManager calls the cancel method on the running jobs only. Other jobs are dequeued.
+        The cancel method of JobsManager calls the cancel method on the running jobs only. Other jobs are dequeued.
         """
         pass
 
