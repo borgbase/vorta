@@ -40,7 +40,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
         # on the input data. so we just tell what we know for sure.
         # "auto" is used for some slower / older algorithms to avoid wasting a lot of time
-        # on uncompressible data.
+        # on incompressible data.
         self.repoCompression.addItem(self.tr('LZ4 (modern, default)'), 'lz4')
         self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd,3')
         self.repoCompression.addItem(self.tr('Zstandard Level 8 (modern)'), 'zstd,8')

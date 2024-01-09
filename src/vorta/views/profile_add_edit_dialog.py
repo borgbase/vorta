@@ -27,7 +27,7 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
         self.name_blank = trans_late('AddProfileWindow', 'Please enter a profile name.')
         self.name_exists = trans_late('AddProfileWindow', 'A profile with this name already exists.')
-        # Call validate to set inital messages
+        # Call validate to set initial messages
         self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setEnabled(self.validate())
 
     def _set_status(self, text):
