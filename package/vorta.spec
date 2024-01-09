@@ -23,6 +23,7 @@ a = Analysis([os.path.join(SRC_DIR, '__main__.py')],
              datas=[
                 (os.path.join(SRC_DIR, 'assets/UI/*'), 'assets/UI'),
                 (os.path.join(SRC_DIR, 'assets/icons/*'), 'assets/icons'),
+                (os.path.join(SRC_DIR, 'assets/exclusion_presets/*'), 'assets/exclusion_presets'),
                 (os.path.join(SRC_DIR, 'i18n/qm/*'), 'vorta/i18n/qm'),
              ],
              hiddenimports=[

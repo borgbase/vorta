@@ -308,11 +308,6 @@ class VortaApp(QtSingleApplication):
 
         Displays a `QMessageBox` with an error message depending on the
         return code of the `BorgJob`.
-
-        Parameters
-        ----------
-        repo_url : str
-            The url of the repo of concern
         """
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
@@ -344,7 +339,7 @@ class VortaApp(QtSingleApplication):
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
-                text = self.tr('Repository data check for repo was killed by signal %s.') % (signal)
+                text = self.tr('Repository data check for repo was killed by signal %s.') % signal
                 infotext = self.tr('The process running the check job got a kill signal. Try again.')
             else:
                 # Real error
