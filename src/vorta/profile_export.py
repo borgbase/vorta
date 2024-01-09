@@ -36,7 +36,7 @@ class ProfileExport:
     def repo_url(self):
         if (
             'repo' in self._profile_dict
-            and type(self._profile_dict['repo']) == dict
+            and isinstance(self._profile_dict['repo'], dict)
             and 'url' in self._profile_dict['repo']
         ):
             return self._profile_dict['repo']['url']

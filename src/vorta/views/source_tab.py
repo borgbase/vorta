@@ -331,7 +331,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         profile = self.profile()
         # sort indexes, starting with lowest
         indexes.sort()
-        # remove each selected row, starting with highest index (otherways, higher indexes become invalid)
+        # remove each selected row, starting with the highest index (otherwise, higher indexes become invalid)
         for index in reversed(indexes):
             db_item = SourceFileModel.get(
                 dir=self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text(),

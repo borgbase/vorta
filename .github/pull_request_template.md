@@ -36,7 +36,7 @@
 - [ ] All new and existing tests passed.
 
 
-*I provide my contribution under the terms of the [license](./../../LICENSE.txt) of this repository and I affirm the [Developer Certificate of Origin][dco].*
+*I provide my contribution under the terms of the [license](./../LICENSE.txt) of this repository and I affirm the [Developer Certificate of Origin][dco].*
 
 [dco]: https://developercertificate.org/
 
