@@ -49,6 +49,13 @@
         </ul>
       </description>
     </release>
+    <release version="v0.9.1" date="2024-01-10" urgency="low">
+      <description>
+        <ul>
+          <li>First production 0.9 release</li>
+        </ul>
+      </description>
+    </release>
     <release version="v0.9.1-beta2" date="2023-10-27" urgency="low">
       <description>
         <ul>

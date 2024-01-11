@@ -875,7 +875,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         return msg.exec() == QMessageBox.StandardButton.Yes
 
     def delete_action(self):
-        # Since this function modify the UI, we can't put the whole function in a JobQUeue.
+        # Since this function modify the UI, we can't put the whole function in a JobQueue.
 
         # determine selected archives
         archives = []
