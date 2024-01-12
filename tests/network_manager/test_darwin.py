@@ -6,17 +6,17 @@ from vorta.network_status import darwin
     'getpacket_output_name, expected',
     [
         ('normal_router', False),
-        ('phone', True),
+        ('android_phone', True),
     ],
 )
-def test_is_network_metered(getpacket_output_name, expected, monkeypatch):
+def test_is_network_metered_with_android(getpacket_output_name, expected, monkeypatch):
     def mock_getpacket(device):
         assert device == 'en0'
         return GETPACKET_OUTPUTS[getpacket_output_name]
 
     monkeypatch.setattr(darwin, 'call_ipconfig_getpacket', mock_getpacket)
 
-    result = darwin.is_network_metered('en0')
+    result = darwin.is_network_metered_with_android('en0')
     assert result == expected
 
 
@@ -55,7 +55,7 @@ interface_mtu (uint16): 0x5dc
 server_identifier (ip): 172.16.12.1
 end (none):
 """,
-    'phone': b"""\
+    'android_phone': b"""\
 op = BOOTREPLY
 htype = 1
 flags = 0

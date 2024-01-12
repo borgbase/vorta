@@ -8,7 +8,7 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
     def is_network_metered(self) -> bool:
-        return any(is_network_metered(d) for d in get_network_devices())
+        return any(is_network_metered_with_android(d) for d in get_network_devices())
 
     def get_current_wifi(self) -> Optional[str]:
         """
@@ -47,7 +47,7 @@ def get_network_devices() -> Iterator[str]:
             yield line.split()[1].strip().decode('ascii')
 
 
-def is_network_metered(bsd_device) -> bool:
+def is_network_metered_with_android(bsd_device) -> bool:
     return b'ANDROID_METERED' in call_ipconfig_getpacket(bsd_device)
 
 
