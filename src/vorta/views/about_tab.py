@@ -26,7 +26,7 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
             f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
             'underline; color:#0984e3;">Click here</span></a> to view the logs.'
         )
-        self.gpl_logo.setPixmap(get_colored_icon('gpl_logo', scaled_height=40, return_qpixmap=True))
+        
         self.python_logo.setPixmap(get_colored_icon('python_logo', scaled_height=40, return_qpixmap=True))
 
     def set_borg_details(self, version, path):
