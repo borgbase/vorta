@@ -2,6 +2,8 @@ import subprocess
 from datetime import datetime as dt
 from typing import Iterator, Optional
 
+from CoreWLAN import CWInterface
+
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
@@ -13,30 +15,30 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
     def get_current_wifi(self) -> Optional[str]:
         """
         Get current SSID or None if Wifi is off.
-
-        From https://gist.github.com/keithweaver/00edf356e8194b89ed8d3b7bbead000c
         """
-        cmd = [
-            '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport',
-            '-I',
-        ]
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-        out, err = process.communicate()
-        process.wait()
-        for line in out.decode(errors='ignore').split('\n'):
-            split_line = line.strip().split(':')
-            if split_line[0] == 'SSID':
-                return split_line[1].strip()
+        interface = self._get_wifi_interface()
+        network = interface.lastNetworkJoined()
+        network_name = network.ssid()
+
+        return network_name
+
+    def _get_wifi_interface(self):
+        interface = CWInterface.interface()
+        return interface
 
     def get_known_wifis(self):
         """
-        Listing all known Wifi networks isn't possible any more from macOS 11. Instead we
-        just return the current Wifi.
+        Use the program, "networksetup" to get the list of know Wi-Fi networks.
         """
+
         wifis = []
-        current_wifi = self.get_current_wifi()
-        if current_wifi is not None:
-            wifis.append(SystemWifiInfo(ssid=current_wifi, last_connected=dt.now()))
+        interface = self._get_wifi_interface()
+        command = ['/usr/sbin/networksetup', '-listpreferredwirelessnetworks', interface]
+
+        result = subprocess.run(command, capture_output=True, text=True)
+
+        for wifi_network_name in result:
+            wifis.append(SystemWifiInfo(ssid=wifi_network_name, last_connected=dt.now()))
 
         return wifis
 
