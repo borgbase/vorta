@@ -2,7 +2,7 @@ import subprocess
 from datetime import datetime as dt
 from typing import Iterator, Optional
 
-from CoreWLAN import CWInterface
+from CoreWLAN import CWInterface, CWNetwork
 
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
@@ -14,16 +14,16 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
     def get_current_wifi(self) -> Optional[str]:
         """
-        Get current SSID or None if Wifi is off.
+        Get current SSID or None if Wi-Fi is off.
         """
-        interface = self._get_wifi_interface()
-        network = interface.lastNetworkJoined()
+        interface: CWInterface = self._get_wifi_interface()
+        network: CWNetwork = interface.lastNetworkJoined()
         network_name = network.ssid()
 
         return network_name
 
-    def _get_wifi_interface(self):
-        interface = CWInterface.interface()
+    def _get_wifi_interface(self) -> CWInterface:
+        interface: CWInterface = CWInterface.interface()
         return interface
 
     def get_known_wifis(self):
@@ -32,10 +32,18 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         """
 
         wifis = []
-        interface = self._get_wifi_interface()
-        command = ['/usr/sbin/networksetup', '-listpreferredwirelessnetworks', interface]
+        interface: CWInterface = self._get_wifi_interface()
+        interface_name = interface.name()
+        output = call_networksetup_listpreferredwirelessnetworks(interface_name)
 
-        result = subprocess.run(command, capture_output=True, text=True)
+        result = []
+        for line in output.strip().splitlines():
+            if line.strip().startswith("Preferred networks"):
+                continue
+            elif not line:
+                continue
+            else:
+                result.append(line.strip())
 
         for wifi_network_name in result:
             wifis.append(SystemWifiInfo(ssid=wifi_network_name, last_connected=dt.now()))
@@ -68,3 +76,11 @@ def call_networksetup_listallhardwareports():
         return subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
         logger.debug("Command %s failed", ' '.join(cmd))
+
+
+def call_networksetup_listpreferredwirelessnetworks(interface) -> str:
+    command = ['/usr/sbin/networksetup', '-listpreferredwirelessnetworks', interface]
+    try:
+        return subprocess.check_output(command).decode(encoding='utf-8')
+    except subprocess.CalledProcessError:
+        logger.debug("Command %s failed", " ".join(command))

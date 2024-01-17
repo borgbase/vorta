@@ -21,6 +21,7 @@ def test_get_current_wifis_when_wifi_is_on(mocker):
 def test_get_network_metered_with_ios(mocker):
     pass
 
+
 @pytest.mark.parametrize(
     'getpacket_output_name, expected',
     [
@@ -37,6 +38,27 @@ def test_is_network_metered_with_android(getpacket_output_name, expected, monkey
 
     result = darwin.is_network_metered_with_android('en0')
     assert result == expected
+
+
+def test_get_preferred_wifi_networks(monkeypatch):
+    networksetup_output = """
+Preferred networks on en0:
+    Home Network
+    Coffee Shop Wifi
+    iPhone
+    Office Wifi
+    """
+    monkeypatch.setattr(
+        darwin,
+        "call_networksetup_listpreferredwirelessnetworks",
+        lambda interface_name: networksetup_output
+    )
+
+    network_status = darwin.DarwinNetworkStatus()
+    result = network_status.get_known_wifis()
+
+    assert len(result) == 4
+    assert result[0].ssid == "Home Network"
 
 
 def test_get_network_devices(monkeypatch):
