@@ -4,7 +4,7 @@ import pytest
 from vorta.network_status import darwin
 
 
-def test_get_current_wifis_when_wifi_is_on(mocker):
+def test_get_current_wifi_when_wifi_is_on(mocker):
     mock_interface = MagicMock()
     mock_network = MagicMock()
     mock_interface.lastNetworkJoined.return_value = mock_network
@@ -16,6 +16,18 @@ def test_get_current_wifis_when_wifi_is_on(mocker):
     result = instance.get_current_wifi()
 
     assert result == "Coffee Shop Wifi"
+
+
+def test_get_current_wifi_when_wifi_is_off(mocker):
+    mock_interface = MagicMock()
+    mock_interface.lastNetworkJoined.return_value = None
+
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=mock_interface)
+
+    result = instance.get_current_wifi()
+
+    assert result is None
 
 
 def test_get_network_metered_with_ios(mocker):

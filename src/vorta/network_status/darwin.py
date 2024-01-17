@@ -17,10 +17,14 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         Get current SSID or None if Wi-Fi is off.
         """
         interface: CWInterface = self._get_wifi_interface()
-        network: CWNetwork = interface.lastNetworkJoined()
-        network_name = network.ssid()
+        # If the user has Wi-Fi turned off lastNetworkJoined will return None.
+        network: [CWNetwork | None] = interface.lastNetworkJoined()
 
-        return network_name
+        if network:
+            network_name = network.ssid()
+            return network_name
+        else:
+            return None
 
     def _get_wifi_interface(self) -> CWInterface:
         interface: CWInterface = CWInterface.interface()
