@@ -10,7 +10,15 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
     def is_network_metered(self) -> bool:
-        return any(is_network_metered_with_android(d) for d in get_network_devices())
+        interface: CWInterface = self._get_wifi_interface()
+        network: Optional[CWNetwork] = interface.lastNetworkJoined()
+
+        if network:
+            is_ios_hotspot = network.isPersonalHotspot()
+        else:
+            is_ios_hotspot = False
+
+        return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
 
     def get_current_wifi(self) -> Optional[str]:
         """
@@ -18,7 +26,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         """
         interface: CWInterface = self._get_wifi_interface()
         # If the user has Wi-Fi turned off lastNetworkJoined will return None.
-        network: [CWNetwork | None] = interface.lastNetworkJoined()
+        network: Optional[CWNetwork] = interface.lastNetworkJoined()
 
         if network:
             network_name = network.ssid()
@@ -32,7 +40,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
     def get_known_wifis(self):
         """
-        Use the program, "networksetup" to get the list of know Wi-Fi networks.
+        Use the program, "networksetup", to get the list of know Wi-Fi networks.
         """
 
         wifis = []
