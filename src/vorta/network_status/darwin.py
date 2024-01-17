@@ -2,7 +2,7 @@ import subprocess
 from datetime import datetime as dt
 from typing import Iterator, Optional
 
-from CoreWLAN import CWInterface, CWNetwork
+from CoreWLAN import CWInterface, CWNetwork, CWWiFiClient
 
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
@@ -35,7 +35,8 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
             return None
 
     def _get_wifi_interface(self) -> CWInterface:
-        interface: CWInterface = CWInterface.interface()
+        wifi_client: CWWiFiClient = CWWiFiClient.sharedWiFiClient()
+        interface: CWInterface = wifi_client.interface()
         return interface
 
     def get_known_wifis(self):
