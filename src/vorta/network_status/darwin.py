@@ -34,11 +34,6 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         else:
             return None
 
-    def _get_wifi_interface(self) -> CWInterface:
-        wifi_client: CWWiFiClient = CWWiFiClient.sharedWiFiClient()
-        interface: CWInterface = wifi_client.interface()
-        return interface
-
     def get_known_wifis(self):
         """
         Use the program, "networksetup", to get the list of know Wi-Fi networks.
@@ -62,6 +57,11 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
             wifis.append(SystemWifiInfo(ssid=wifi_network_name, last_connected=dt.now()))
 
         return wifis
+
+    def _get_wifi_interface(self) -> CWInterface:
+        wifi_client: CWWiFiClient = CWWiFiClient.sharedWiFiClient()
+        interface: CWInterface = wifi_client.interface()
+        return interface
 
 
 def get_network_devices() -> Iterator[str]:
