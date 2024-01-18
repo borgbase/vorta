@@ -53,7 +53,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         for line in output.strip().splitlines():
             if line.strip().startswith("Preferred networks"):
                 continue
-            elif not line:
+            elif not line.strip():
                 continue
             else:
                 result.append(line.strip())

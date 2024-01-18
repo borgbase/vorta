@@ -30,10 +30,7 @@ def test_get_current_wifi_when_wifi_is_off(mocker):
     assert result is None
 
 
-@pytest.mark.parametrize(
-    "is_hotspot_enabled",
-    [True, False]
-)
+@pytest.mark.parametrize("is_hotspot_enabled", [True, False])
 def test_network_is_metered_with_ios(mocker, is_hotspot_enabled):
     mock_interface = MagicMock()
     mock_network = MagicMock()
@@ -84,12 +81,11 @@ Preferred networks on en0:
     Home Network
     Coffee Shop Wifi
     iPhone
+
     Office Wifi
     """
     monkeypatch.setattr(
-        darwin,
-        "call_networksetup_listpreferredwirelessnetworks",
-        lambda interface_name: networksetup_output
+        darwin, "call_networksetup_listpreferredwirelessnetworks", lambda interface_name: networksetup_output
     )
 
     network_status = darwin.DarwinNetworkStatus()
