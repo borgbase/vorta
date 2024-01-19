@@ -24,7 +24,10 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         """
         Get current SSID or None if Wi-Fi is off.
         """
-        interface: CWInterface = self._get_wifi_interface()
+        interface: Optional[CWInterface] = self._get_wifi_interface()
+        if not interface:
+            return None
+
         # If the user has Wi-Fi turned off lastNetworkJoined will return None.
         network: Optional[CWNetwork] = interface.lastNetworkJoined()
 
@@ -34,13 +37,16 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         else:
             return None
 
-    def get_known_wifis(self):
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         """
         Use the program, "networksetup", to get the list of know Wi-Fi networks.
         """
 
         wifis = []
-        interface: CWInterface = self._get_wifi_interface()
+        interface: Optional[CWInterface] = self._get_wifi_interface()
+        if not interface:
+            return []
+
         interface_name = interface.name()
         output = call_networksetup_listpreferredwirelessnetworks(interface_name)
 
@@ -58,9 +64,9 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         return wifis
 
-    def _get_wifi_interface(self) -> CWInterface:
+    def _get_wifi_interface(self) -> Optional[CWInterface]:
         wifi_client: CWWiFiClient = CWWiFiClient.sharedWiFiClient()
-        interface: CWInterface = wifi_client.interface()
+        interface: Optional[CWInterface] = wifi_client.interface()
         return interface
 
 

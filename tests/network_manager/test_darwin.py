@@ -30,6 +30,15 @@ def test_get_current_wifi_when_wifi_is_off(mocker):
     assert result is None
 
 
+def test_get_current_wifi_when_no_wifi_interface(mocker):
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
+
+    result = instance.get_current_wifi()
+
+    assert result is None
+
+
 @pytest.mark.parametrize("is_hotspot_enabled", [True, False])
 def test_network_is_metered_with_ios(mocker, is_hotspot_enabled):
     mock_interface = MagicMock()
@@ -75,7 +84,7 @@ def test_is_network_metered_with_android(getpacket_output_name, expected, monkey
     assert result == expected
 
 
-def test_get_preferred_wifi_networks(monkeypatch):
+def test_get_known_wifi_networks_when_wifi_interface_exists(monkeypatch):
     networksetup_output = """
 Preferred networks on en0:
     Home Network
@@ -93,6 +102,15 @@ Preferred networks on en0:
 
     assert len(result) == 4
     assert result[0].ssid == "Home Network"
+
+
+def test_get_known_wifi_networks_when_no_wifi_interface(mocker):
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
+
+    results = instance.get_known_wifis()
+
+    assert results == []
 
 
 def test_get_network_devices(monkeypatch):
