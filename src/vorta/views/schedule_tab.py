@@ -1,5 +1,5 @@
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QDateTime, QLocale
+from PyQt6.QtCore import QDateTime, QLocale, Qt
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
@@ -202,7 +202,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
     def save_wifi_item(self, item):
         db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)
-        db_item.allowed = item.checkState() == 2
+        db_item.allowed = item.checkState() == Qt.CheckState.Checked
         db_item.save()
 
     def save_profile_attr(self, attr, new_value):
