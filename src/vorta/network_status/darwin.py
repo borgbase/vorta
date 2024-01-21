@@ -1,6 +1,6 @@
 import subprocess
 from datetime import datetime as dt
-from typing import Iterator, Optional
+from typing import Iterator, Optional, List
 
 from CoreWLAN import CWInterface, CWNetwork, CWWiFiClient
 
@@ -37,7 +37,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         else:
             return None
 
-    def get_known_wifis(self) -> list[SystemWifiInfo]:
+    def get_known_wifis(self) -> List[SystemWifiInfo]:
         """
         Use the program, "networksetup", to get the list of know Wi-Fi networks.
         """
