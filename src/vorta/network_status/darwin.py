@@ -1,6 +1,6 @@
 import subprocess
 from datetime import datetime as dt
-from typing import Iterator, Optional, List
+from typing import Iterator, List, Optional
 
 from CoreWLAN import CWInterface, CWNetwork, CWWiFiClient
 
