@@ -575,15 +575,21 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>384</height>
+        <height>402</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Log</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
         <widget class="QTableWidget" name="logTableWidget">
+         <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>39</y>
+         <width>671</width>
+         <height>361</height>
+        </rect>
+       </property>
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -624,9 +630,35 @@
            <string>Returncode</string>
           </property>
          </column>
-        </widget>
-       </item>
-      </layout>
+     </widget>
+     <widget class="QWidget" name="page_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>0</y>
+        <width>621</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <property name="topMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="logLink">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="page_3">
       <property name="geometry">
@@ -634,7 +666,7 @@
         <x>0</x>
         <y>0</y>
         <width>687</width>
-        <height>384</height>
+        <height>402</height>
        </rect>
       </property>
       <attribute name="label">
