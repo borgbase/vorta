@@ -70,7 +70,7 @@ class VortaScheduler(QtCore.QObject):
             self.bus = bus
             self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
-            logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
+            logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool):

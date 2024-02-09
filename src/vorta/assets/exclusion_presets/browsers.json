@@ -1,0 +1,71 @@
+[
+    {
+        "name": "Chromium cache and config files",
+        "slug": "chromium-cache",
+        "patterns":
+        [
+            "fm:*/.config/chromium/*/Local Storage",
+            "fm:*/.config/chromium/*/Session Storage",
+            "fm:*/.config/chromium/*/Service Worker/CacheStorage",
+            "fm:*/.config/chromium/*/Application Cache",
+            "fm:*/.config/chromium/*/History Index *",
+            "fm:*/snap/chromium/common/.cache",
+            "fm:*/snap/chromium/*/.config/chromium/*/Service Worker/CacheStorage",
+            "fm:*/snap/chromium/*/.local/share/"
+        ],
+        "tags":["application:chromium", "type:browser", "os:linux"],
+        "author": "Divi"
+    },
+    {
+        "name": "Google Chrome cache and config files",
+        "slug": "google-chrome-cache",
+        "patterns":
+        [
+            "fm:*/.config/google-chrome/ShaderCache",
+            "fm:*/.config/google-chrome/*/Local Storage",
+            "fm:*/.config/google-chrome/*/Session Storage",
+            "fm:*/.config/google-chrome/*/Application Cache",
+            "fm:*/.config/google-chrome/*/History Index *",
+            "fm:*/.config/google-chrome/*/Service Worker/CacheStorage"
+        ],
+        "tags": ["application:chrome", "type:browser", "os:linux"],
+        "author": "Divi"
+    },
+    {
+        "name": "Brave cache and config files",
+        "slug": "brave-cache",
+        "patterns":[
+            "fm:*/.config/BraveSoftware/Brave-Browser/*/Feature Engagement Tracker/",
+            "fm:*/.config/BraveSoftware/Brave-Browser/*/Local Storage/",
+            "fm:*/.config/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage/",
+            "fm:*/.config/BraveSoftware/Brave-Browser/*/Session Storage/",
+            "fm:*/.config/BraveSoftware/Brave-Browser/Safe Browsing/",
+            "fm:*/.config/BraveSoftware/Brave-Browser/ShaderCache/"
+        ],
+        "tags": ["application:brave", "type:browser", "os:linux"],
+        "author": "Divi"
+    },
+    {
+        "name": "Mozilla Firefox cache and config files",
+        "slug": "firefox-cache",
+        "patterns":[
+            "fm:*/.mozilla/firefox/*/Cache",
+            "fm:*/.mozilla/firefox/*/minidumps",
+            "fm:*/.mozilla/firefox/*/.parentlock",
+            "fm:*/.mozilla/firefox/*/urlclassifier3.sqlite",
+            "fm:*/.mozilla/firefox/*/blocklist.xml",
+            "fm:*/.mozilla/firefox/*/extensions.sqlite",
+            "fm:*/.mozilla/firefox/*/extensions.sqlite-journal",
+            "fm:*/.mozilla/firefox/*/extensions.rdf",
+            "fm:*/.mozilla/firefox/*/extensions.ini",
+            "fm:*/.mozilla/firefox/*/extensions.cache",
+            "fm:*/.mozilla/firefox/*/XUL.mfasl",
+            "fm:*/.mozilla/firefox/*/XPC.mfasl",
+            "fm:*/.mozilla/firefox/*/xpti.dat",
+            "fm:*/.mozilla/firefox/*/compreg.dat",
+            "fm:*/.mozilla/firefox/*/pluginreg.dat"
+        ],
+        "tags": ["application:firefox", "type:browser", "os:linux"],
+        "author": "Divi"
+    }
+]

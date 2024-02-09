@@ -614,7 +614,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         if isinstance(path, PurePath):
             path = path.parts
 
-        return self.root.get_path(path)  # handels empty path
+        return self.root.get_path(path)  # handles empty path
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
