@@ -485,13 +485,17 @@ def test_archive_diff_json_parser(line, expected):
         ('--balance >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
         ('--balance >1KB,<1MB --exclude-parents', ['hello.txt']),
         ('--balance >10GB', []),
+        # Change Type
+        ('--change A', ['notemptyfile.bin', 'emptyfile.bin']),
+        ('--change D', ['file1.txt']),
+        ('--change M', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
     ],
 )
 def test_archive_diff_filters(
     qtbot, mocker, borg_json_output, search_visible_items_in_tree, archive_env, search_string, expected_search_results
 ):
     """
-    Tests the supported search filters for the extract window.
+    Tests the supported search filters for the diff window.
     """
 
     vorta.utils.borg_compat.version = '1.2.4'
@@ -510,15 +514,12 @@ def test_archive_diff_filters(
     selection_model.select(model.index(0, 0), flags)
     selection_model.select(model.index(1, 0), flags)
 
-    # qtbot.wait(100000)
     stdout, stderr = borg_json_output('diff_archives_search')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     # click on diff button
     qtbot.mouseClick(tab.bDiff, Qt.MouseButton.LeftButton)
-
-    # qtbot.wait(1000000)
 
     # Wait for window to open
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)

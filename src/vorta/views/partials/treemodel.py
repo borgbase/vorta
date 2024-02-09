@@ -1067,7 +1067,6 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
         )
         parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
         parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
-        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
         parser.add_argument("-s", "--size", type=FileTreeSortFilterProxyModel.valid_size, help="Match by size.")
         parser.add_argument("--exclude-parents", action="store_true", help="Match only items without children.")
 
@@ -1117,8 +1116,6 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
             search_item = item_name
 
         if self.searchPattern.search_string:
-            # TODO: Move operations on search string to setSearchString method
-
             search_string = " ".join(self.searchPattern.search_string)
 
             # Ignore Case?
@@ -1146,11 +1143,5 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
             for filter_size in self.searchPattern.size:
                 if not compare_values_with_sign(item_size, filter_size[1], filter_size[0]):
                     return False
-
-        if self.searchPattern.change:
-            item_change = item.data.change_type.short()
-
-            if item_change != self.searchPattern.change:
-                return False
 
         return True

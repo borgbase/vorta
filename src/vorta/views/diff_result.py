@@ -83,7 +83,7 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
 
     def get_sort_proxy_model(self):
         """Return the sort proxy model for the tree view."""
-        return DiffSortProxyModel(self)
+        return DiffSortFilterProxyModel(self)
 
     def get_diff_result_display_mode(self):
         return SettingsModel.get(key='diff_files_display_mode').str_value
@@ -396,7 +396,7 @@ def size_to_byte(significand: str, unit: str) -> int:
 # ---- Sorting ---------------------------------------------------------------
 
 
-class DiffSortProxyModel(FileTreeSortFilterProxyModel):
+class DiffSortFilterProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a DiffTree model.
     """
@@ -410,6 +410,7 @@ class DiffSortProxyModel(FileTreeSortFilterProxyModel):
         parser.add_argument(
             "-b", "--balance", type=FileTreeSortFilterProxyModel.valid_size, help="Match by balance size."
         )
+        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
 
         return parser
 
@@ -433,6 +434,12 @@ class DiffSortProxyModel(FileTreeSortFilterProxyModel):
             for filter_balance in self.searchPattern.balance:
                 if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
                     return False
+
+        if self.searchPattern.change:
+            item_change = item.data.change_type.short()
+
+            if item_change != self.searchPattern.change:
+                return False
 
         return True
 

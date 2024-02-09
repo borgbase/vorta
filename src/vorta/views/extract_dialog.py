@@ -70,7 +70,6 @@ class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
     def __init__(self, archive, model):
         """Init."""
         super().__init__(model)
-        # TODO: disable self.treeView.setTextElideMode(Qt.TextElideMode.ElideMiddle)
 
         # header
         header = self.treeView.header()
@@ -95,7 +94,7 @@ class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
 
     def get_sort_proxy_model(self):
         """Get the sort proxy model for this dialog."""
-        return ExtractSortProxyModel()
+        return ExtractSortFilterProxyModel()
 
     def get_diff_result_display_mode(self):
         """Get the display mode for this dialog."""
@@ -176,7 +175,7 @@ def parse_json_lines(lines, model: "ExtractTree"):
 # ---- Sorting ---------------------------------------------------------------
 
 
-class ExtractSortProxyModel(FileTreeSortFilterProxyModel):
+class ExtractSortFilterProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a ExtractTree model.
     """
@@ -258,11 +257,8 @@ class ExtractSortProxyModel(FileTreeSortFilterProxyModel):
         model = self.sourceModel()
         item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
-        if self.searchPattern.healthy is True and not item.data.health:
-            return False
-
-        if self.searchPattern.healthy is False and item.data.health:
-            return False
+        if self.searchPattern.healthy is not None:
+            return item.data.health == self.searchPattern.healthy
 
         if self.searchPattern.last_modified:
             item_last_modified = item.data.last_modified
