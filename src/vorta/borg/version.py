@@ -22,6 +22,7 @@ class BorgVersionJob(BorgJob):
             return ret
 
         ret['cmd'] = ['borg', '--version']
+        ret['profile_name'] = 'default'
         ret['ok'] = True
         return ret
 
