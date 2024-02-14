@@ -213,7 +213,7 @@
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; for view Git repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to view Git repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="openExternalLinks">
             <bool>true</bool>
@@ -246,7 +246,7 @@
             <string>
              Vorta is a cross-platform, open-source client designed to simplify the management of Borg backups.
 
-                      Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
+                      Copyright (C) 2018-2024 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
             </string>
            </property>
            <property name="indent">
