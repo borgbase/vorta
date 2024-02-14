@@ -241,12 +241,12 @@
           <number>20</number>
          </property>
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="copyrightLabel">
            <property name="text">
             <string>
              Vorta is a cross-platform, open-source client designed to simplify the management of Borg backups.
 
-                      Copyright (C) 2018-2024 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
+                      Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
             </string>
            </property>
            <property name="indent">

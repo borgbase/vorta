@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from PyQt6 import QtCore, uic
 
@@ -28,6 +29,9 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
         )
         self.gpl_logo.setPixmap(get_colored_icon('gpl_logo', scaled_height=40, return_qpixmap=True))
         self.python_logo.setPixmap(get_colored_icon('python_logo', scaled_height=40, return_qpixmap=True))
+        copyright_text = self.copyrightLabel.text()
+        copyright_text = copyright_text.replace('2020', str(datetime.now().year))
+        self.copyrightLabel.setText(copyright_text)
 
     def set_borg_details(self, version, path):
         self.borgVersion.setText(version)
