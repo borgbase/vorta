@@ -72,8 +72,8 @@ class RepoWindow(AddRepoBase, AddRepoUI):
                 self.is_remote_repo = False
 
         dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
-        dialog.filesSelected.connect(receive)
-        dialog.open()
+        if dialog.exec():
+            receive()
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')

@@ -642,8 +642,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.app.jobs_manager.add_job(job)
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.filesSelected.connect(receive)
-        dialog.open()
+        if dialog.exec():
+            receive()
 
     def mount_result(self, result):
         if result['returncode'] == 0:
@@ -789,8 +789,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                         self._set_status(params['message'])
 
             dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
-            dialog.filesSelected.connect(receive)
-            dialog.open()
+            if dialog.exec():
+                receive()
 
         window = ExtractDialog(archive, model)
         self._toggle_all_buttons(True)
