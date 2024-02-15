@@ -15,7 +15,13 @@ from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
 from PyQt6 import QtCore
 from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
-from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon, QListView, QTreeView
+from PyQt6.QtWidgets import (
+    QApplication,
+    QFileDialog,
+    QListView,
+    QSystemTrayIcon,
+    QTreeView,
+)
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.log import logger
