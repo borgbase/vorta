@@ -85,7 +85,7 @@ def choose_file_dialog(*args):
 
         def open(self, func):
             func()
-        
+
         def exec(self):
             return 1
 
