@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
 )
 
-from vorta import application, config
+from vorta import application
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, EventLogModel, WifiSettingModel
@@ -43,10 +43,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         # Set up log table
         self.logTableWidget.setAlternatingRowColors(True)
         header = self.logTableWidget.horizontalHeader()
-        self.logLink.setText(
-            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> for complete logs.'
-        )
         header.setVisible(True)
         [header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents) for i in range(5)]
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
