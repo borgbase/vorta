@@ -286,7 +286,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             self.update_path_info(row)  # Update data for each entry
 
     def source_add(self, want_folder):
-        def receive(dirs):
+        def receive():
+            dirs = dialog.selectedFiles()
             for dir in dirs:
                 if not os.access(dir, os.R_OK):
                     msg = QMessageBox()
@@ -301,8 +302,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
 
-        paths = choose_file_dialog(self, msg, want_folder=want_folder)
-        receive(paths)
+        dialog = choose_file_dialog(self, msg, want_folder)
+        dialog.exec()
+        receive()
 
     def source_copy(self, index=None):
         """

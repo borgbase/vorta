@@ -177,10 +177,11 @@ def choose_file_dialog(parent, title, want_folder=True):
     dialog.setFileMode(QFileDialog.FileMode.Directory if want_folder else QFileDialog.FileMode.ExistingFiles)
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
+        dialog.setOption(QFileDialog.Option.ShowDirsOnly)
         list_view = dialog.findChild(QTreeView)
         list_view.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-    dialog.exec()
-    return dialog.selectedFiles()
+
+    return dialog
 
 
 def is_ssh_private_key_file(filepath: str) -> bool:
