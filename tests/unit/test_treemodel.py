@@ -87,7 +87,7 @@ class TestFileSystemItem:
         item.add(child2)
         item.add(child3)
 
-        # test get inexistent subpath
+        # test get nonexistent subpath
         assert item.get('unknown') is None
         assert item.get('unknown', default='default') == 'default'
 

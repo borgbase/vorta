@@ -24,7 +24,7 @@ class NetworkStatusMonitor:
 
     def is_network_status_available(self):
         """Is the network status really available, and not just a dummy implementation?"""
-        return type(self) != NetworkStatusMonitor
+        return type(self) is not NetworkStatusMonitor
 
     def is_network_metered(self) -> bool:
         """Is the currently connected network a metered connection?"""

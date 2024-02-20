@@ -1,5 +1,5 @@
 name: "Bug Report Form"
-description: "Report a bug or a similiar issue."
+description: "Report a bug or a similar issue."
 body:
   - type: markdown
     attributes:
