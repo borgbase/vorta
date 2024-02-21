@@ -430,16 +430,32 @@ class VortaScheduler(QtCore.QObject):
         profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
-            notifier.deliver(
-                self.tr('Vorta Backup'),
-                self.tr('Backup successful for %s.') % profile_name,
-                level='info',
-            )
-            logger.info('Backup creation successful.')
-            # unpause scheduler
-            self.unpause(result['params']['profile_id'])
+            try:
+                notifier.deliver(
+                    self.tr('Vorta Backup'),
+                    self.tr('Backup successful for %s.') % profile_name,
+                    level='info',
+                )
+                logger.info('Backup creation successful.')
+                # unpause scheduler
+                self.unpause(result['params']['profile_id'])
 
-            self.post_backup_tasks(profile_id)
+                self.post_backup_tasks(profile_id)
+                # Notify after successful post_backup_tasks
+                notifier.deliver(
+                    self.tr('Vorta Backup'),
+                    self.tr('Post Backup Tasks successful for %s' % profile_id),
+                    level='info',
+                )
+                logger.info('Post Backup Tasks successful for %s' % profile_id)
+            
+            except Exception as e:
+                # Handle exceptions if post_backup_tasks fails
+                notifier.deliver(
+                    self.tr('Vorta Backup'),
+                    self.tr('Error during post backup tasks for %s.') % profile_name,
+                    level='error',
+                )
         else:
             notifier.deliver(
                 self.tr('Vorta Backup'),
