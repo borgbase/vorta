@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>com.borgbase.Vorta</id>
+  <launchable type="desktop-id">com.borgbase.Vorta.desktop</launchable>
+  <developer_name>Vorta contributors</developer_name>
   <name>Vorta</name>
   <project_license>GPL-3.0</project_license>
   <metadata_license>CC0-1.0</metadata_license>
@@ -40,18 +42,13 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="v0.9.1-beta3" date="2023-11-30" urgency="low">
+    <release version="v0.9.1" date="2024-01-10" urgency="low">
       <description>
         <ul>
+          <li>First production 0.9 release</li>
           <li>Exclude GUI. By @diivi (#1846)</li>
           <li>Backup settings.db before migrations. By @AdwaitSalankar (#1848)</li>
           <li>Loosen platformdirs dependency (#1843)</li>
-        </ul>
-      </description>
-    </release>
-    <release version="v0.9.1-beta2" date="2023-10-27" urgency="low">
-      <description>
-        <ul>
           <li>Unit test improvements and coverage increase. By @bigtedde (#1787)</li>
           <li>Profile sidebar and new setting interface. By @bigtedde (#1809)</li>
           <li>Update macOS notarization for use with notarytool (#1831)</li>

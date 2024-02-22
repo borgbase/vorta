@@ -28,10 +28,10 @@ else:
 @nox.parametrize("borgbackup", supported_borgbackup_versions)
 def run_tests(session, borgbackup):
     # install borgbackup
-    if (sys.platform == 'darwin'):
+    if sys.platform == 'darwin':
         # in macOS there's currently no fuse package which works with borgbackup directly
         session.install(f"borgbackup=={borgbackup}")
-    elif (borgbackup == "1.1.18"):
+    elif borgbackup == "1.1.18":
         # borgbackup 1.1.18 doesn't support pyfuse3
         session.install("llfuse")
         session.install(f"borgbackup[llfuse]=={borgbackup}")
