@@ -1,8 +1,9 @@
 import os
 import shutil
 from datetime import datetime, timedelta
+from typing import Any, Optional
 
-from peewee import Tuple, fn
+from peewee import SqliteDatabase, Tuple, fn
 from playhouse import signals
 
 from vorta import config
@@ -39,7 +40,7 @@ def cleanup_db() -> None:
     DB.close()
 
 
-def init_db(con=None) -> None:
+def init_db(con: Optional[SqliteDatabase] = None) -> None:
     if con is not None:
         os.umask(0o0077)
         DB.initialize(con)
@@ -105,7 +106,7 @@ def init_db(con=None) -> None:
         s.save()
 
 
-def backup_current_db(schema_version) -> None:
+def backup_current_db(schema_version: Any) -> None:
     """
     Creates a backup copy of settings.db
     """
