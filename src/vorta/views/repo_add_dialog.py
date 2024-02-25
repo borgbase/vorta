@@ -277,7 +277,11 @@ class ExistingRepoWindow(RepoWindow):
         else:
             self._set_status(self.tr('Unable to add your repository.'))
             for error in result['errors']:
-                if 'msgid' in error and error['msgid'] in ['Repository.DoesNotExist', 'Repository.InvalidRepository']:
+                if 'msgid' in error and error['msgid'] in [
+                    'Repository.DoesNotExist',
+                    'Repository.InvalidRepository',
+                    'InvalidRepository',
+                ]:
                     self.init_new_repo()
                     break
 
