@@ -12,7 +12,7 @@ from vorta import application, config
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, EventLogModel, WifiSettingModel
-from vorta.utils import get_asset, get_sorted_wifis
+from vorta.utils import choose_file_dialog, get_asset, get_sorted_wifis
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -81,6 +81,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleIntervalCount.valueChanged.connect(self.on_scheduler_change)
         self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
+        self.chooseLocalPreBackupScriptButton.clicked.connect(lambda: self.choose_local_script(context="pre"))
+        self.chooseLocalPostBackupScriptButton.clicked.connect(lambda: self.choose_local_script(context="post"))
 
         # Network and shell commands events
         self.meteredNetworksCheckBox.stateChanged.connect(
@@ -135,6 +137,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.toolBox.setItemIcon(1, get_colored_icon('wifi'))
         self.toolBox.setItemIcon(2, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
+        self.chooseLocalPreBackupScriptButton.setIcon(get_colored_icon('file'))
+        self.chooseLocalPostBackupScriptButton.setIcon(get_colored_icon('file'))
 
     def populate_from_profile(self):
         """Populate current view with data from selected profile."""
@@ -237,3 +241,23 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
                 QTableWidgetItem(str(log_line.returncode)),
             )
         self.logTableWidget.setSortingEnabled(sorting)  # restore sorting now that modifications are done
+
+    def choose_local_script(self, context: str) -> None:
+        def save_to_profile(target, script):
+            with open(script, "r") as s:
+                content = s.read()
+                target.setText(content)
+                attr = 'pre_backup_cmd' if context == "pre" else 'post_backup_cmd'
+                self.save_profile_attr(attr, content)
+
+        def receive():
+            script = dialog.selectedFiles()[0]
+            if context == "pre":
+                save_to_profile(self.preBackupCmdLineEdit, script)
+            elif context == "post":
+                save_to_profile(self.postBackupCmdLineEdit, script)
+
+        dialog = choose_file_dialog(
+            self, self.tr('Choose Script'), want_folder=False, file_filter='*.sh', single_selection=True
+        )
+        dialog.open(receive)
