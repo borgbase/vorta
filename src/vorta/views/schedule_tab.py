@@ -13,6 +13,7 @@ from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, EventLogModel, WifiSettingModel
 from vorta.utils import choose_file_dialog, get_asset, get_sorted_wifis
+from vorta.views.script_edit_dialog import ScriptEditWindow
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -83,6 +84,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
         self.chooseLocalPreBackupScriptButton.clicked.connect(lambda: self.choose_local_script(context="pre"))
         self.chooseLocalPostBackupScriptButton.clicked.connect(lambda: self.choose_local_script(context="post"))
+        self.preBackupScriptEditorButton.clicked.connect(lambda: self.launch_script_editor(context="pre"))
+        self.postBackupScriptEditorButton.clicked.connect(lambda: self.launch_script_editor(context="post"))
 
         # Network and shell commands events
         self.meteredNetworksCheckBox.stateChanged.connect(
@@ -139,6 +142,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
         self.chooseLocalPreBackupScriptButton.setIcon(get_colored_icon('file'))
         self.chooseLocalPostBackupScriptButton.setIcon(get_colored_icon('file'))
+        self.preBackupScriptEditorButton.setIcon(get_colored_icon('edit'))
+        self.postBackupScriptEditorButton.setIcon(get_colored_icon('edit'))
 
     def populate_from_profile(self):
         """Populate current view with data from selected profile."""
@@ -261,3 +266,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             self, self.tr('Choose Script'), want_folder=False, file_filter='*.sh', single_selection=True
         )
         dialog.open(receive)
+
+    def launch_script_editor(self, context: str) -> None:
+        edit_window = ScriptEditWindow(context, profile=self.profile())
+        edit_window.exec()
+        self.populate_from_profile()  # Refresh the view after the script has been edited.
