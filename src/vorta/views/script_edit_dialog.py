@@ -1,13 +1,12 @@
 from PyQt6 import QtCore, uic
 
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
 uifile = get_asset("UI/scriptedit.ui")
 ScriptEditUI, ScriptEditBase = uic.loadUiType(uifile)
 
 
-class ScriptEditWindow(ScriptEditUI, ScriptEditBase, BackupProfileMixin):
+class ScriptEditWindow(ScriptEditUI, ScriptEditBase):
     def __init__(self, context: str, profile, parent=None) -> None:
         super().__init__(parent)
         self.setupUi(self)

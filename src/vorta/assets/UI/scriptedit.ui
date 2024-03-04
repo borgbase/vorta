@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>ScriptEdit</class>
  <widget class="QDialog" name="ScriptEdit">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>440</width>
+    <height>260</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Edit Script</string>
   </property>
