@@ -1,4 +1,5 @@
 from PyQt6 import QtCore, uic
+from PyQt6.QtWidgets import QDialogButtonBox
 
 from vorta.utils import get_asset
 
@@ -15,11 +16,18 @@ class ScriptEditWindow(ScriptEditUI, ScriptEditBase):
         self.context = context
         if context == "pre":
             self.setWindowTitle(self.tr("Edit Pre-Backup Script"))
+            self.label.setText(self.tr("Pre-Backup Script:"))
         elif context == "post":
             self.setWindowTitle(self.tr("Edit Post-Backup Script"))
+            self.label.setText(self.tr("Post-Backup Script:"))
+
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setText(self.tr("Save"))
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Cancel"))
 
         self.profile = profile
-        self.saveScriptButton.clicked.connect(self.save_script)
+
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Save).clicked.connect(self.save_script)
+        self.buttonBox.button(QDialogButtonBox.StandardButton.Cancel).clicked.connect(self.close)
 
         # Populate data from profile
         self.populate_from_profile()
