@@ -6,10 +6,10 @@ import string
 import sys
 from datetime import timedelta
 from typing import Dict, Optional
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, QUrl, pyqtSlot
-from PyQt5.QtGui import QDesktopServices, QKeySequence
-from PyQt5.QtWidgets import (
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, QUrl, pyqtSlot
+from PyQt6.QtGui import QDesktopServices, QKeySequence
+from PyQt6.QtWidgets import (
     QAction,
     QApplication,
     QHeaderView,
