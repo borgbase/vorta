@@ -9,7 +9,15 @@ import os.path as osp
 from functools import reduce
 from pathlib import PurePath
 from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtSignal
+
+from PyQt6.QtCore import (
+    QAbstractItemModel,
+    QModelIndex,
+    QObject,
+    QSortFilterProxyModel,
+    Qt,
+    pyqtSignal,
+)
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -323,14 +331,12 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         #: simple list of items
         FLAT = enum.auto()
 
-    def __init__(self, parent=None):
+    def __init__(self, mode: 'FileTreeModel.DisplayMode' = DisplayMode.TREE, parent=None):
         """Init."""
         super().__init__(parent)
         self.root: FileSystemItem[T] = FileSystemItem([], None)
 
-        #: mode
-        self.mode: 'FileTreeModel.DisplayMode' = self.DisplayMode.TREE
-
+        self.mode = mode
         #: flat representation of the tree
         self._flattened: List[FileSystemItem] = []
 
@@ -604,7 +610,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         if isinstance(path, PurePath):
             path = path.parts
 
-        return self.root.get_path(path)  # handels empty path
+        return self.root.get_path(path)  # handles empty path
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
         """
@@ -839,7 +845,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         row, item = parent_item._parent.get(parent_item.subpath)
         return self.createIndex(row, 0, parent_item)
 
-    def flags(self, index: QModelIndex) -> Qt.ItemFlags:
+    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
         """
         Returns the item flags for the given index.
 

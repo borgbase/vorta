@@ -13,5 +13,5 @@ trim_trailing_whitespace = true
 [Makefile]
 indent_style = tab
 
-[.github/**.yml]
+[**.{yml,yaml}]
 indent_size = 2

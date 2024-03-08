@@ -7,7 +7,8 @@ APP_BUNDLE_ID="com.borgbase.client.macos"
 APP_BUNDLE="Vorta"
 # CERTIFICATE_NAME="Developer ID Application: Joe Doe (XXXXXX)"
 # APPLE_ID_USER="name@example.com"
-# APPLE_ID_PASSWORD="@keychain:Notarization"
+# APPLE_ID_PASSWORD="CHANGEME"
+# APPLE_TEAM_ID="CNMSCAXT48"
 
 
 # Sign app bundle, Sparkle and Borg
@@ -37,38 +38,13 @@ create-dmg \
   "Vorta.dmg" \
   "Vorta.app"
 
-
 # Notarize DMG
-RESULT=$(xcrun altool --notarize-app --type osx \
-    --primary-bundle-id $APP_BUNDLE_ID \
-    --username $APPLE_ID_USER --password $APPLE_ID_PASSWORD \
-    --file "$APP_BUNDLE.dmg" --output-format xml)
-
-REQUEST_UUID=$(echo "$RESULT" | xpath5.18 "//key[normalize-space(text()) = 'RequestUUID']/following-sibling::string[1]/text()" 2> /dev/null)
-
-# Poll for notarization status
-echo "Submitted notarization request $REQUEST_UUID, waiting for response..."
-sleep 60
-while true
-do
-  RESULT=$(xcrun altool --notarization-info "$REQUEST_UUID" \
-    --username "$APPLE_ID_USER" \
-    --password "$APPLE_ID_PASSWORD" \
-    --output-format xml)
-  STATUS=$(echo "$RESULT" | xpath5.18 "//key[normalize-space(text()) = 'Status']/following-sibling::string[1]/text()" 2> /dev/null)
-
-  if [ "$STATUS" = "success" ]; then
-    echo "Notarization of $APP_BUNDLE succeeded!"
-    break
-  elif [ "$STATUS" = "in progress" ]; then
-    echo "Notarization in progress..."
-    sleep 20
-  else
-    echo "Notarization of $APP_BUNDLE failed:"
-    echo "$RESULT"
-    exit 1
-  fi
-done
+xcrun notarytool submit \
+    --output-format plist --wait --timeout 10m \
+    --apple-id $APPLE_ID_USER \
+    --password $APPLE_ID_PASSWORD \
+    --team-id $APPLE_TEAM_ID \
+    "$APP_BUNDLE.dmg"
 
 # Staple the notary ticket
 xcrun stapler staple $APP_BUNDLE.dmg

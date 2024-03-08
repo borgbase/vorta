@@ -1,6 +1,7 @@
 from pathlib import PurePath
+
 import pytest
-from PyQt5.QtCore import QModelIndex
+from PyQt6.QtCore import QModelIndex
 from vorta.views.partials.treemodel import FileSystemItem, FileTreeModel
 
 
@@ -86,7 +87,7 @@ class TestFileSystemItem:
         item.add(child2)
         item.add(child3)
 
-        # test get inexistent subpath
+        # test get nonexistent subpath
         assert item.get('unknown') is None
         assert item.get('unknown', default='default') == 'default'
 

@@ -1,17 +1,18 @@
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob
 
 
 class BorgInfoArchiveJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Refreshing archive…'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive…')}")
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(self.tr('Refreshing archive done.'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}")
 
     @classmethod
     def prepare(cls, profile, archive_name):
@@ -40,6 +41,11 @@ class BorgInfoArchiveJob(BorgJob):
             # Update remote archives.
             for remote_archive in remote_archives:
                 archive = ArchiveModel.get_or_none(snapshot_id=remote_archive['id'], repo=repo_id)
+                if archive is None:
+                    # archive id was changed during rename, so we need to find it by name
+                    archive = ArchiveModel.get_or_none(name=remote_archive['name'], repo=repo_id)
+                    archive.snapshot_id = remote_archive['id']
+
                 archive.name = remote_archive['name']  # incase name changed
                 # archive.time = parser.parse(remote_archive['time'])
                 archive.duration = remote_archive['duration']

@@ -1,12 +1,13 @@
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, format_archive_name
+
 from .borg_job import BorgJob
 
 
 class BorgPruneJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Pruning old archives…'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning old archives…')}")
 
     def finished_event(self, result):
         # set repo stats to N/A
@@ -19,7 +20,7 @@ class BorgPruneJob(BorgJob):
 
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(self.tr('Pruning done.'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
 
     @classmethod
     def prepare(cls, profile):

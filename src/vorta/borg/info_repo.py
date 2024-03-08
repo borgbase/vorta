@@ -1,6 +1,7 @@
 from vorta.i18n import trans_late
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
+
 from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
@@ -17,7 +18,7 @@ class BorgInfoRepoJob(BorgJob):
         # Build fake profile because we don't have it in the DB yet. Assume unencrypted.
         profile = FakeProfile(
             999,
-            FakeRepo(params['repo_url'], 999, params['extra_borg_arguments'], 'none'),
+            FakeRepo(params['repo_url'], params['repo_name'], 999, params['extra_borg_arguments'], 'none'),
             'New Repo',
             params['ssh_key'],
         )
@@ -46,6 +47,7 @@ class BorgInfoRepoJob(BorgJob):
                 ret['message'] = trans_late('messages', 'Please unlock your password manager.')
                 return ret
 
+        ret['repo_name'] = params['repo_name']
         ret['ok'] = True
         ret['cmd'] = cmd
 
@@ -53,7 +55,9 @@ class BorgInfoRepoJob(BorgJob):
 
     def process_result(self, result):
         if result['returncode'] == 0:
-            new_repo, _ = RepoModel.get_or_create(url=result['cmd'][-1])
+            new_repo, _ = RepoModel.get_or_create(
+                url=result['cmd'][-1], defaults={'name': result['params']['repo_name']}
+            )
             if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
                 new_repo.total_size = stats['total_size']
@@ -63,7 +67,6 @@ class BorgInfoRepoJob(BorgJob):
                 new_repo.encryption = result['data']['encryption']['mode']
             if new_repo.encryption != 'none':
                 self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
-
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']
 
             new_repo.save()

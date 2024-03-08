@@ -1,10 +1,13 @@
 import os
 from pathlib import PurePath
-from PyQt5 import QtCore, uic
-from PyQt5.QtCore import QMimeData, QUrl
-from PyQt5.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QMimeData, QUrl
+from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
+
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
@@ -37,7 +40,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
         # on the input data. so we just tell what we know for sure.
         # "auto" is used for some slower / older algorithms to avoid wasting a lot of time
-        # on uncompressible data.
+        # on incompressible data.
         self.repoCompression.addItem(self.tr('LZ4 (modern, default)'), 'lz4')
         self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd,3')
         self.repoCompression.addItem(self.tr('Zstandard Level 8 (modern)'), 'zstd,8')
@@ -76,8 +79,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def set_repos(self):
         self.repoSelector.clear()
         self.repoSelector.addItem(self.tr('No repository selected'), None)
+        # set tooltip = url for each item in the repoSelector
         for repo in RepoModel.select():
-            self.repoSelector.addItem(repo.url, repo.id)
+            self.repoSelector.addItem(f"{repo.name + ' - ' if repo.name else ''}{repo.url}", repo.id)
+            self.repoSelector.setItemData(self.repoSelector.count() - 1, repo.url, QtCore.Qt.ItemDataRole.ToolTipRole)
 
     def populate_from_profile(self):
         try:
@@ -175,7 +180,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshComboBox.clear()
         self.sshComboBox.addItem(self.tr('Automatically choose SSH Key (default)'), None)
         for key in keys:
-            self.sshComboBox.addItem(f'{key["filename"]} ({key["format"]})', key['filename'])
+            self.sshComboBox.addItem(f'{key}', key)
 
     def toggle_available_compression(self):
         use_zstd = borg_compat.check('ZSTD')
@@ -192,15 +197,22 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to create an ssh key."""
         ssh_add_window = SSHAddWindow()
         self._window = ssh_add_window  # For tests
-        ssh_add_window.setParent(self, QtCore.Qt.Sheet)
-        ssh_add_window.accepted.connect(self.init_ssh)
-        # ssh_add_window.rejected.connect(lambda: self.sshComboBox.setCurrentIndex(0))
+        ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        ssh_add_window.rejected.connect(self.init_ssh)
+        ssh_add_window.failure.connect(self.create_ssh_key_failure)
         ssh_add_window.open()
+
+    def create_ssh_key_failure(self, exit_code):
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+        msg.setText(self.tr(f'Error during key generation. Exited with code {exit_code}.'))
+        msg.show()
 
     def ssh_copy_to_clipboard_action(self):
         msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setParent(self, QtCore.Qt.Sheet)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         index = self.sshComboBox.currentIndex()
         if index > 0:
@@ -218,7 +230,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
                         "Use it to set up remote repo permissions."
                     )
                 )
-
             else:
                 msg.setText(self.tr("Could not find public key."))
         else:
@@ -234,7 +245,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to create a new repo and add it to vorta."""
         window = AddRepoWindow()
         self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
@@ -243,7 +254,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         """Open a dialog to add a existing repo to vorta."""
         window = ExistingRepoWindow()
         self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.Sheet)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
         # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
@@ -271,8 +282,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.init_repo_stats()
 
         msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setParent(self, QtCore.Qt.Sheet)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()

@@ -4,9 +4,11 @@ import threading
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
-from PyQt5 import QtCore, QtDBus
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication
+
+from PyQt6 import QtCore, QtDBus
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication
+
 from vorta import application
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
@@ -32,7 +34,6 @@ class ScheduleStatus(NamedTuple):
 
 
 class VortaScheduler(QtCore.QObject):
-
     #: The schedule for the profile with the given id changed.
     schedule_changed = QtCore.pyqtSignal(int)
 
@@ -69,7 +70,7 @@ class VortaScheduler(QtCore.QObject):
             self.bus = bus
             self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
-            logger.warn('Failed to connect to DBUS interface to detect sleep/resume events')
+            logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool):
@@ -196,7 +197,6 @@ class VortaScheduler(QtCore.QObject):
             return
 
         with self.lock:  # Acquire lock
-
             self.remove_job(profile_id)  # reset schedule
 
             pause = self.pauses.get(profile_id)
@@ -290,7 +290,6 @@ class VortaScheduler(QtCore.QObject):
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
-
                 if profile.schedule_make_up_missed:
                     self.lock.release()
                     try:
@@ -444,7 +443,7 @@ class VortaScheduler(QtCore.QObject):
         else:
             notifier.deliver(
                 self.tr('Vorta Backup'),
-                self.tr('Error during backup creation.'),
+                self.tr('Error during backup creation for %s.') % profile_name,
                 level='error',
             )
             logger.error('Error during backup creation.')

@@ -1,23 +1,22 @@
 import os
-from paramiko.ecdsakey import ECDSAKey
-from paramiko.ed25519key import Ed25519Key
-from paramiko.rsakey import RSAKey
-from PyQt5 import uic
-from PyQt5.QtCore import QProcess, Qt
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox
+
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QProcess, Qt, pyqtSlot
+from PyQt6.QtWidgets import QApplication, QDialogButtonBox
+
 from ..utils import get_asset
 
 uifile = get_asset('UI/sshadd.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
-FORMAT_MAPPING = {'ed25519': Ed25519Key, 'rsa': RSAKey, 'ecdsa': ECDSAKey}
-
 
 class SSHAddWindow(SSHAddBase, SSHAddUI):
+    failure = QtCore.pyqtSignal(int)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
         # dialogButtonBox
         self.generateButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
@@ -71,15 +70,17 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
             self.sshproc.finished.connect(self.generate_key_result)
             self.sshproc.start('ssh-keygen', ['-t', format, '-b', length, '-f', output_path, '-N', ''])
 
-    def generate_key_result(self, exitCode, exitStatus):
-        if exitCode == 0:
+    @pyqtSlot(int)
+    def generate_key_result(self, exit_code):
+        if exit_code == 0:
             output_path = os.path.expanduser(self.outputFileTextBox.text())
             pub_key = open(output_path + '.pub').read().strip()
             clipboard = QApplication.clipboard()
             clipboard.setText(pub_key)
-            self.errors.setText(self.tr('New key was copied to clipboard and written to %s.') % output_path)
+            self.reject()
         else:
-            self.errors.setText(self.tr('Error during key generation.'))
+            self.reject()
+            self.failure.emit(exit_code)
 
     def get_values(self):
         return {

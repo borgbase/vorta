@@ -2,7 +2,8 @@ import logging
 import queue
 import threading
 from abc import abstractmethod
-from PyQt5.QtCore import QObject
+
+from PyQt6.QtCore import QObject
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +25,9 @@ class JobInterface(QObject):
     @abstractmethod
     def cancel(self):
         """
-        Cancel can be called when the job is not started. It is the responsability of FuncJob to not cancel job if
+        Cancel can be called when the job is not started. It is the responsibility of FuncJob to not cancel job if
         no job is running.
-        The cancel mehod of JobsManager calls the cancel method on the running jobs only. Other jobs are dequeued.
+        The cancel method of JobsManager calls the cancel method on the running jobs only. Other jobs are dequeued.
         """
         pass
 
@@ -49,6 +50,7 @@ class SiteWorker(threading.Thread):
         self.current_job = None
 
     def run(self):
+        job = None
         while True:
             try:
                 job = self.jobs.get(False)
@@ -57,7 +59,8 @@ class SiteWorker(threading.Thread):
                 job.run()
                 logger.debug("Finish job for site: %s", job.repo_id())
             except queue.Empty:
-                logger.debug("No more jobs for site: %s", job.repo_id())
+                if job is not None:
+                    logger.debug("No more jobs for site: %s", job.repo_id())
                 return
 
 
@@ -76,19 +79,20 @@ class JobsManager:
 
     def is_worker_running(self, site=None):
         """
-        See if there are any active jobs. The user can't start a backup if a job is
-        running. The scheduler can.
-        """
-        # Check status for specific site (repo)
-        if site in self.workers:
-            return self.workers[site].is_alive()
-        else:
-            return False
+        See if there are any active jobs.
+        The user can't start a backup if a job is running. The scheduler can.
 
-        # Check if *any* worker is active
-        for _, worker in self.workers.items():
-            if worker.is_alive():
-                return True
+        If site is None, check if there is any worker active for any site (repo).
+        If site is not None, only check if there is a worker active for the given site (repo).
+        """
+        if site is not None:
+            if site in self.workers:
+                if self.workers[site].is_alive():
+                    return True
+        else:
+            for _, worker in self.workers.items():
+                if worker.is_alive():
+                    return True
         return False
 
     def add_job(self, job):

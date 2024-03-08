@@ -1,5 +1,6 @@
 import sys
 from typing import Dict, List
+
 from vorta.i18n import trans_late
 
 
@@ -47,8 +48,11 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': True,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Open main window on startup'),
-            'tooltip': trans_late('settings', 'Open main window when the application is launched'),
+            'label': trans_late('settings', 'Show main window of Vorta on launch'),
+            'tooltip': trans_late(
+                'settings',
+                'Make Vorta appear on screen instead of minimizing to system tray',
+            ),
         },
         {
             'key': 'get_srcpath_datasize',
@@ -57,6 +61,18 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'group': information,
             'label': trans_late('settings', 'Get statistics of file/folder when added'),
             'tooltip': trans_late('settings', 'When adding a new source, calculate its size and the number of files.'),
+        },
+        {
+            'key': 'enable_fixed_units',
+            'value': False,
+            'type': 'checkbox',
+            'group': information,
+            'label': trans_late('settings', 'Use the same unit of measurement for archive sizes'),
+            'tooltip': trans_late(
+                'settings',
+                'When enabled, all archive sizes will use the same unit of measurement, '
+                'such as  KB or MB. This can make archive sizes easier to compare.',
+            ),
         },
         {
             'key': 'use_system_keyring',
@@ -100,6 +116,30 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'type': 'internal',
             'label': 'Previous window height',
         },
+        {
+            'key': 'diff_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Diff dialog display mode',
+        },
+        {
+            'key': 'extract_files_display_mode',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Extract dialog display mode',
+        },
+        {
+            'key': 'sourcetab_sort_column',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Column',
+        },
+        {
+            'key': 'sourcetab_sort_order',
+            'str_value': '0',
+            'type': 'internal',
+            'label': 'Source Tab Sort Order',
+        },
     ]
     if sys.platform == 'darwin':
         settings += [
@@ -114,6 +154,17 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'value': False,
                 'type': 'checkbox',
                 'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
+            },
+            {
+                'key': 'check_full_disk_access',
+                'value': True,
+                'type': 'checkbox',
+                'group': startup,
+                'label': trans_late(
+                    'settings',
+                    'Check for Full Disk Access on startup',
+                ),
+                'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
             },
         ]
     else:

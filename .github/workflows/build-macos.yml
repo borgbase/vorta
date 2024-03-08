@@ -50,6 +50,7 @@ jobs:
         CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
         APPLE_ID_USER: ${{ secrets.APPLE_ID_USER }}
         APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
         security create-keychain -p 123 build.keychain

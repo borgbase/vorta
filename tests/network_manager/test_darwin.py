@@ -1,23 +1,116 @@
+from unittest.mock import MagicMock
+
 import pytest
 from vorta.network_status import darwin
+
+
+def test_get_current_wifi_when_wifi_is_on(mocker):
+    mock_interface = MagicMock()
+    mock_network = MagicMock()
+    mock_interface.lastNetworkJoined.return_value = mock_network
+    mock_network.ssid.return_value = "Coffee Shop Wifi"
+
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=mock_interface)
+
+    result = instance.get_current_wifi()
+
+    assert result == "Coffee Shop Wifi"
+
+
+def test_get_current_wifi_when_wifi_is_off(mocker):
+    mock_interface = MagicMock()
+    mock_interface.lastNetworkJoined.return_value = None
+
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=mock_interface)
+
+    result = instance.get_current_wifi()
+
+    assert result is None
+
+
+def test_get_current_wifi_when_no_wifi_interface(mocker):
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
+
+    result = instance.get_current_wifi()
+
+    assert result is None
+
+
+@pytest.mark.parametrize("is_hotspot_enabled", [True, False])
+def test_network_is_metered_with_ios(mocker, is_hotspot_enabled):
+    mock_interface = MagicMock()
+    mock_network = MagicMock()
+    mock_interface.lastNetworkJoined.return_value = mock_network
+    mock_network.isPersonalHotspot.return_value = is_hotspot_enabled
+
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=mock_interface)
+
+    result = instance.is_network_metered()
+
+    assert result == is_hotspot_enabled
+
+
+def test_network_is_metered_when_wifi_is_off(mocker):
+    mock_interface = MagicMock()
+    mock_interface.lastNetworkJoined.return_value = None
+
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=mock_interface)
+
+    result = instance.is_network_metered()
+
+    assert result is False
 
 
 @pytest.mark.parametrize(
     'getpacket_output_name, expected',
     [
         ('normal_router', False),
-        ('phone', True),
+        ('android_phone', True),
     ],
 )
-def test_is_network_metered(getpacket_output_name, expected, monkeypatch):
+def test_is_network_metered_with_android(getpacket_output_name, expected, monkeypatch):
     def mock_getpacket(device):
         assert device == 'en0'
         return GETPACKET_OUTPUTS[getpacket_output_name]
 
     monkeypatch.setattr(darwin, 'call_ipconfig_getpacket', mock_getpacket)
 
-    result = darwin.is_network_metered('en0')
+    result = darwin.is_network_metered_with_android('en0')
     assert result == expected
+
+
+def test_get_known_wifi_networks_when_wifi_interface_exists(monkeypatch):
+    networksetup_output = """
+Preferred networks on en0:
+    Home Network
+    Coffee Shop Wifi
+    iPhone
+
+    Office Wifi
+    """
+    monkeypatch.setattr(
+        darwin, "call_networksetup_listpreferredwirelessnetworks", lambda interface_name: networksetup_output
+    )
+
+    network_status = darwin.DarwinNetworkStatus()
+    result = network_status.get_known_wifis()
+
+    assert len(result) == 4
+    assert result[0].ssid == "Home Network"
+
+
+def test_get_known_wifi_networks_when_no_wifi_interface(mocker):
+    instance = darwin.DarwinNetworkStatus()
+    mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
+
+    results = instance.get_known_wifis()
+
+    assert results == []
 
 
 def test_get_network_devices(monkeypatch):
@@ -55,7 +148,7 @@ interface_mtu (uint16): 0x5dc
 server_identifier (ip): 172.16.12.1
 end (none):
 """,
-    'phone': b"""\
+    'android_phone': b"""\
 op = BOOTREPLY
 htype = 1
 flags = 0

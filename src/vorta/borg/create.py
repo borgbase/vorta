@@ -2,9 +2,17 @@ import os
 import subprocess
 import tempfile
 from datetime import datetime as dt
-from vorta.i18n import trans_late
-from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
+
+from vorta import config
+from vorta.i18n import trans_late, translate
+from vorta.store.models import (
+    ArchiveModel,
+    RepoModel,
+    SourceFileModel,
+    WifiSettingModel,
+)
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
+
 from .borg_job import BorgJob
 
 
@@ -20,6 +28,7 @@ class BorgCreateJob(BorgJob):
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
                     'size': result['data']['archive']['stats']['deduplicated_size'],
+                    'trigger': result['params'].get('category', 'user'),
                 },
             )
             new_archive.save()
@@ -33,16 +42,23 @@ class BorgCreateJob(BorgJob):
                 repo.save()
 
             if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(self.tr('Backup finished with warnings. See logs for details.'))
+                self.app.backup_progress_event.emit(
+                    f"[{self.params['profile_name']}] "
+                    + translate(
+                        'BorgCreateJob',
+                        'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
+                    ).format(config.LOG_DIR.as_uri())
+                )
             else:
-                self.app.backup_progress_event.emit(self.tr('Backup finished.'))
+                self.app.backup_log_event.emit('', {})
+                self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
 
     def progress_event(self, fmt):
-        self.app.backup_progress_event.emit(fmt)
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(self.tr('Backup started.'))
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup started.')}")
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
@@ -148,24 +164,24 @@ class BorgCreateJob(BorgJob):
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
-        if profile.exclude_patterns is not None:
-            exclude_dirs = []
-            for p in profile.exclude_patterns.split('\n'):
-                if p.strip():
-                    expanded_directory = os.path.expanduser(p.strip())
-                    exclude_dirs.append(expanded_directory)
+        exclude_dirs = []
+        for p in profile.get_combined_exclusion_string().split('\n'):
+            if p.strip():
+                expanded_directory = os.path.expanduser(p.strip())
+                exclude_dirs.append(expanded_directory)
 
-            if exclude_dirs:
-                pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
-                pattern_file.write('\n'.join(exclude_dirs))
-                pattern_file.flush()
-                cmd.extend(['--exclude-from', pattern_file.name])
-                ret['cleanup_files'].append(pattern_file)
+        if exclude_dirs:
+            pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
+            pattern_file.write('\n'.join(exclude_dirs))
+            pattern_file.flush()
+            cmd.extend(['--exclude-from', pattern_file.name])
+            ret['cleanup_files'].append(pattern_file)
 
-        if profile.exclude_if_present is not None:
-            for f in profile.exclude_if_present.split('\n'):
-                if f.strip():
-                    cmd.extend(['--exclude-if-present', f.strip()])
+        # Currently not in use, but may be added back to the UI later.
+        # if profile.exclude_if_present is not None:
+        #     for f in profile.exclude_if_present.split('\n'):
+        #         if f.strip():
+        #             cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)

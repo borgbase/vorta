@@ -1,9 +1,17 @@
 import logging
-from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QCheckBox, QFormLayout, QHBoxLayout, QLabel, QSizePolicy, QSpacerItem
-from vorta._version import __version__
-from vorta.config import LOG_DIR
+
+from PyQt6 import QtCore, uic
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QSizePolicy,
+    QSpacerItem,
+)
+
 from vorta.i18n import translate
 from vorta.store.models import BackupProfileMixin, SettingsModel
 from vorta.store.settings import get_misc_settings
@@ -18,14 +26,12 @@ logger = logging.getLogger(__name__)
 
 
 class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
+    refresh_archive = QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
-        self.versionLabel.setText(__version__)
-        self.logLink.setText(
-            f'<a href="file://{LOG_DIR}"><span style="text-decoration:' 'underline; color:#0984e3;">Log</span></a>'
-        )
 
         self.checkboxLayout = QFormLayout(self.frameSettings)
         self.checkboxLayout.setSpacing(4)
@@ -87,9 +93,11 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 # create widget
                 cb = QCheckBox(translate('settings', setting.label))
                 cb.setToolTip(setting.tooltip)
-                cb.setCheckState(setting.value)
+                cb.setCheckState(Qt.CheckState(setting.value))
                 cb.setTristate(False)
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
+                if setting.key == 'enable_fixed_units':
+                    cb.stateChanged.connect(self.refresh_archive.emit)
 
                 tb = ToolTipButton()
                 tb.setToolTip(setting.tooltip)
@@ -118,7 +126,3 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         setting = SettingsModel.get(key=key)
         setting.value = bool(new_value)
         setting.save()
-
-    def set_borg_details(self, version, path):
-        self.borgVersion.setText(version)
-        self.borgPath.setText(path)

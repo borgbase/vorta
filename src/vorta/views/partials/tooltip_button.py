@@ -1,7 +1,8 @@
 from typing import Optional
-from PyQt5.QtCore import QCoreApplication, QEvent, QSize, Qt
-from PyQt5.QtGui import QHelpEvent, QIcon, QMouseEvent, QPaintEvent
-from PyQt5.QtWidgets import QSizePolicy, QStyle, QStylePainter, QToolTip, QWidget
+
+from PyQt6.QtCore import QCoreApplication, QEvent, QSize, Qt
+from PyQt6.QtGui import QHelpEvent, QIcon, QMouseEvent, QPaintEvent
+from PyQt6.QtWidgets import QSizePolicy, QStyle, QStylePainter, QToolTip, QWidget
 
 
 class ToolTipButton(QWidget):
@@ -24,7 +25,7 @@ class ToolTipButton(QWidget):
         """
         super().__init__(parent)
         self.setCursor(Qt.CursorShape.WhatsThisCursor)
-        self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.setMouseTracking(True)
         self._icon = icon or QIcon()
 
@@ -98,8 +99,10 @@ class ToolTipButton(QWidget):
         https://doc.qt.io/qt-5/qwidget.html#mouseMoveEvent
         """
         super().mouseMoveEvent(event)
-        QToolTip.showText(event.globalPos(), self.toolTip(), self)
-        QCoreApplication.postEvent(self, QHelpEvent(QEvent.Type.ToolTip, event.pos(), event.globalPos()))
+        QToolTip.showText(event.globalPosition().toPoint(), self.toolTip(), self)
+        QCoreApplication.postEvent(
+            self, QHelpEvent(QEvent.Type.ToolTip, event.position().toPoint(), event.globalPosition().toPoint())
+        )
 
     def setIcon(self, icon: QIcon):
         """

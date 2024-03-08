@@ -11,8 +11,10 @@ from collections import namedtuple
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
+
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
@@ -25,7 +27,7 @@ keyring_lock = Lock()
 db_lock = Lock()
 logger = logging.getLogger(__name__)
 
-FakeRepo = namedtuple('Repo', ['url', 'id', 'extra_borg_arguments', 'encryption'])
+FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 """
@@ -188,6 +190,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         ret['ssh_key'] = profile.ssh_key
         ret['repo_id'] = profile.repo.id
         ret['repo_url'] = profile.repo.url
+        ret['repo_name'] = profile.repo.name
         ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
         ret['profile_name'] = profile.name
         ret['profile_id'] = profile.id
@@ -270,7 +273,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 'profile_name': self.params.get('profile_name'),
                                 'cmd': self.params['cmd'][1],
                             }
-                            self.app.backup_log_event.emit(f'{parsed["levelname"]}: {parsed["message"]}', context)
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}', context
+                            )
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
 
@@ -279,9 +284,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 error_messages.append((level_int, parsed["message"]))
 
                         elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(f'{parsed["path"]} ({parsed["status"]})', {})
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
+                            )
                         elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                            self.app.backup_log_event.emit(f'{parsed["message"]}', {})
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
@@ -289,11 +296,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
                                 f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
                             )
-                            self.app.backup_progress_event.emit(msg)
+                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(msg, {})
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
                             logger.warning(msg)
 
             if p.poll() is not None:

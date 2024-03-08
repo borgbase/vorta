@@ -18,13 +18,13 @@ def create_symlink(folder: Path) -> None:
     """Create the appropriate symlink in the MacOS folder
     pointing to the Resources folder.
     """
-    sibbling = Path(str(folder).replace("MacOS", ""))
+    sibling = Path(str(folder).replace("MacOS", ""))
 
-    # PyQt5/Qt/qml/QtQml/Models.2
-    root = str(sibbling).partition("Contents")[2].lstrip("/")
+    # PyQt6/Qt/qml/QtQml/Models.2
+    root = str(sibling).partition("Contents")[2].lstrip("/")
     # ../../../../
     backward = "../" * (root.count("/") + 1)
-    # ../../../../Resources/PyQt5/Qt/qml/QtQml/Models.2
+    # ../../../../Resources/PyQt6/Qt/qml/QtQml/Models.2
     good_path = f"{backward}Resources/{root}"
 
     folder.symlink_to(good_path)
@@ -41,7 +41,7 @@ def fix_dll(dll: Path) -> None:
 
     def match_func(pth: str) -> Optional[str]:
         """Callback function for MachO.rewriteLoadCommands() that is
-        called on every lookup path setted in the DLL headers.
+        called on every lookup path set in the DLL headers.
         By returning None for system libraries, it changes nothing.
         Else we return a relative path pointing to the good file
         in the MacOS folder.
@@ -51,7 +51,7 @@ def fix_dll(dll: Path) -> None:
             return None
         return f"@loader_path{good_path}/{basename}"
 
-    # Resources/PyQt5/Qt/qml/QtQuick/Controls.2/Fusion
+    # Resources/PyQt6/Qt/qml/QtQuick/Controls.2/Fusion
     root = str(dll.parent).partition("Contents")[2][1:]
     # /../../../../../../..
     backward = "/.." * (root.count("/") + 1)
@@ -73,7 +73,7 @@ def find_problematic_folders(folder: Path) -> Generator[Path, None, None]:
     """Recursively yields problematic folders (containing a dot in their name)."""
     for path in folder.iterdir():
         if not path.is_dir() or path.is_symlink():
-            # Skip simlinks as they are allowed (even with a dot)
+            # Skip symlinks as they are allowed (even with a dot)
             continue
         if "." in path.name:
             yield path
@@ -83,7 +83,7 @@ def find_problematic_folders(folder: Path) -> Generator[Path, None, None]:
 
 def move_contents_to_resources(folder: Path) -> Generator[Path, None, None]:
     """Recursively move any non symlink file from a problematic folder
-    to the sibbling one in Resources.
+    to the sibling one in Resources.
     """
     for path in folder.iterdir():
         if path.is_symlink():
@@ -91,10 +91,10 @@ def move_contents_to_resources(folder: Path) -> Generator[Path, None, None]:
         if path.name == "qml":
             yield from move_contents_to_resources(path)
         else:
-            sibbling = Path(str(path).replace("MacOS", "Resources"))
-            sibbling.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(path, sibbling)
-            yield sibbling
+            sibling = Path(str(path).replace("MacOS", "Resources"))
+            sibling.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(path, sibling)
+            yield sibling
 
 
 def main(args: List[str]) -> int:

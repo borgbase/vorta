@@ -1,0 +1,62 @@
+name: Setup
+description: Sets up python and pre-commit
+
+# note:
+# this is a local composite action
+# documentation: https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+# code example: https://github.com/GuillaumeFalourd/poc-github-actions/blob/main/.github/actions/local-action/action.yaml
+
+inputs:
+  pre-commit:
+    description: Whether pre-commit shall be setup, too
+    required: false
+    default: "" # == false
+  python-version:
+    description: The python version to install
+    required: true
+    default: "3.10"
+  install-nox:
+    description: Whether nox shall be installed
+    required: false
+    default: "" # == false
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Get pip cache dir
+      shell: bash
+      id: pip-cache
+      run: |
+        echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+    - name: pip cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg', 'requirements.d/**') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install pre-commit
+      shell: bash
+      run: pip install pre-commit
+
+    - name: Install nox
+      if: ${{ inputs.install-nox }}
+      shell: bash
+      run: pip install nox
+
+    - name: Hash python version
+      if: ${{ inputs.setup-pre-commit }}
+      shell: bash
+      run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
+
+    - name: Caching for Pre-Commit
+      if: ${{ inputs.setup-pre-commit }}
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}

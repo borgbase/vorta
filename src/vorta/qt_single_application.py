@@ -1,6 +1,6 @@
-from PyQt5.QtCore import QTextStream, pyqtSignal
-from PyQt5.QtNetwork import QLocalServer, QLocalSocket
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QTextStream, pyqtSignal
+from PyQt6.QtNetwork import QLocalServer, QLocalSocket
+from PyQt6.QtWidgets import QApplication
 
 
 class QtSingleApplication(QApplication):
@@ -52,7 +52,6 @@ class QtSingleApplication(QApplication):
         if self._isRunning:
             # Yes, there is.
             self._outStream = QTextStream(self._outSocket)
-            self._outStream.setCodec('UTF-8')
         else:
             # No, there isn't.
             self._outSocket = None
@@ -84,7 +83,6 @@ class QtSingleApplication(QApplication):
         if not self._inSocket:
             return
         self._inStream = QTextStream(self._inSocket)
-        self._inStream.setCodec('UTF-8')
         self._inSocket.readyRead.connect(self._onReadyRead)
 
     def _onReadyRead(self):

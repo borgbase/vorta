@@ -3,13 +3,15 @@ import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMessageBox
+
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
+
+from vorta import config
 from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
-from vorta.config import PROFILE_BOOTSTRAP_FILE, TEMP_DIR
 from vorta.i18n import init_translations, translate
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
@@ -23,7 +25,7 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = TEMP_DIR / "socket"
+APP_ID = config.TEMP_DIR / "socket"
 
 
 class VortaApp(QtSingleApplication):
@@ -119,7 +121,7 @@ class VortaApp(QtSingleApplication):
                 translate('messages', msg['message']),
                 level='error',
             )
-            self.backup_progress_event.emit(translate('messages', msg['message']))
+            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', msg['message'])}")
             return None
 
     def open_main_window_action(self):
@@ -171,18 +173,19 @@ class VortaApp(QtSingleApplication):
         """
         if 'version' in result['data']:
             borg_compat.set_version(result['data']['version'], result['data']['path'])
-            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+            self.main_window.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
             self.main_window.repoTab.toggle_available_compression()
+            self.main_window.archiveTab.toggle_compact_button_visibility()
             self.scheduler.reload_all_timers()  # Start timer after Borg version is set.
         else:
             self._alert_missing_borg()
 
     def _alert_missing_borg(self):
         msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
+        msg.setIcon(QMessageBox.Icon.Critical)
         msg.setText(self.tr("No Borg Binary Found"))
         msg.setInformativeText(self.tr("Vorta was unable to locate a usable Borg Backup binary."))
-        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec()
 
     def check_darwin_permissions(self):
@@ -194,11 +197,15 @@ class VortaApp(QtSingleApplication):
         This function tries reading a file that is known to be restricted and warn the user about
         incomplete backups.
         """
+
+        if not SettingsModel.get(key="check_full_disk_access").value:
+            return
+
         test_path = Path('~/Library/Cookies').expanduser()
         if test_path.exists() and not os.access(test_path, os.R_OK):
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse)
             msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
             msg.setInformativeText(
                 self.tr(
@@ -208,7 +215,7 @@ class VortaApp(QtSingleApplication):
                     "System Preferences > Security & Privacy</a>."
                 )
             )
-            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.exec()
 
     def react_to_log(self, mgs, context):
@@ -221,9 +228,9 @@ class VortaApp(QtSingleApplication):
             repo_url = context.get('repo_url')
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))
-            msg.setIcon(QMessageBox.Critical)
-            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.RejectRole)
-            msg.addButton(self.tr("Continue"), QMessageBox.AcceptRole)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.ButtonRole.RejectRole)
+            msg.addButton(self.tr("Continue"), QMessageBox.ButtonRole.AcceptRole)
             msg.setDefaultButton(abortButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(
@@ -250,12 +257,16 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakJob.prepare(profile)
         if not params['ok']:
-            self.backup_progress_event.emit(params['message'])
+            self.backup_progress_event.emit(f"[{profile.name}] {params['message']}")
             return
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
 
-    def bootstrap_profile(self, bootstrap_file=PROFILE_BOOTSTRAP_FILE):
+    def bootstrap_profile(self, bootstrap_file=None):
+        # Necessary to dynamically load the variable from config during runtime
+        # Check out pull request for #1682 for context
+        bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
+
         """
         Make sure there is at least one profile when first starting Vorta.
         Will either import a profile placed in ~/.vorta-init.json
@@ -297,11 +308,6 @@ class VortaApp(QtSingleApplication):
 
         Displays a `QMessageBox` with an error message depending on the
         return code of the `BorgJob`.
-
-        Parameters
-        ----------
-        repo_url : str
-            The url of the repo of concern
         """
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
@@ -314,24 +320,26 @@ class VortaApp(QtSingleApplication):
             # No fail
             logger.warning('VortaApp.check_failed_response was called with returncode 0')
         elif returncode == 130:
-            # Keyboard interupt
+            # Keyboard interrupt
             pass
         else:  # Real error
             # Create QMessageBox
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Icon.Critical)  # changed for warning
-            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.setWindowTitle(self.tr('Repo Check Failed'))
 
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
-                text = self.tr('Borg exited with a warning message. See logs for details.')
+                text = translate(
+                    'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
-                text = self.tr('Repository data check for repo was killed by signal %s.') % (signal)
+                text = self.tr('Repository data check for repo was killed by signal %s.') % signal
                 infotext = self.tr('The process running the check job got a kill signal. Try again.')
             else:
                 # Real error

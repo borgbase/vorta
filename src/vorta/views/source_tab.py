@@ -1,11 +1,27 @@
 import logging
 import os
 from pathlib import PurePath
-from PyQt5 import QtCore, QtGui, uic
-from PyQt5.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
-from PyQt5.QtWidgets import QApplication, QHeaderView, QMenu, QMessageBox, QShortcut, QTableWidgetItem
+
+from PyQt6 import QtCore, QtGui, uic
+from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
+from PyQt6.QtGui import QShortcut
+from PyQt6.QtWidgets import (
+    QApplication,
+    QHeaderView,
+    QMenu,
+    QMessageBox,
+    QTableWidgetItem,
+)
+
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
-from vorta.utils import FilePathInfoAsync, choose_file_dialog, get_asset, pretty_bytes, sort_sizes
+from vorta.utils import (
+    FilePathInfoAsync,
+    choose_file_dialog,
+    get_asset,
+    pretty_bytes,
+    sort_sizes,
+)
+from vorta.views.exclude_dialog import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/sourcetab.ui')
@@ -23,7 +39,7 @@ class SourceColumn:
 class SizeItem(QTableWidgetItem):
     def __init__(self, s):
         super().__init__(s)
-        self.setTextAlignment(Qt.AlignVCenter + Qt.AlignRight)
+        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
 
     def __lt__(self, other):
         if other.text() == '':
@@ -63,9 +79,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.setVisible(True)
         header.setSortIndicatorShown(1)
 
-        header.setSectionResizeMode(SourceColumn.Path, QHeaderView.Stretch)
-        header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(SourceColumn.Path, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeMode.ResizeToContents)
 
         self.sourceFilesWidget.setSortingEnabled(True)
         self.sourceFilesWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -86,8 +102,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         # Connect signals
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
-        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
-        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        self.bExclude.clicked.connect(self.show_exclude_dialog)
+        header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Connect to palette change
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
@@ -138,7 +154,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         sorting = self.sourceFilesWidget.isSortingEnabled()
         self.sourceFilesWidget.setSortingEnabled(False)
 
-        items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchExactly)
+        items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchFlag.MatchExactly)
         # Conversion int->str->int needed because QT limits int to 32-bit
         data_size = int(data_size)
         files_count = int(files_count)
@@ -235,21 +251,26 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         profile = self.profile()
-        self.excludePatternsField.textChanged.disconnect()
-        self.excludeIfPresentField.textChanged.disconnect()
         self.sourceFilesWidget.setRowCount(0)  # Clear rows
-        self.excludePatternsField.clear()
-        self.excludeIfPresentField.clear()
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
 
-        # Initially, sort entries by path name in ascending order
-        self.sourceFilesWidget.sortItems(SourceColumn.Path, QtCore.Qt.AscendingOrder)
-        self.excludePatternsField.appendPlainText(profile.exclude_patterns)
-        self.excludeIfPresentField.appendPlainText(profile.exclude_if_present)
-        self.excludePatternsField.textChanged.connect(self.save_exclude_patterns)
-        self.excludeIfPresentField.textChanged.connect(self.save_exclude_if_present)
+        # Fetch the Sort by Column and order
+        sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
+        sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
+
+        # Sort items as per settings
+        self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
+
+    def update_sort_order(self, column: int, order: int):
+        """Save selected sort by column and order to settings"""
+        SettingsModel.update({SettingsModel.str_value: str(column)}).where(
+            SettingsModel.key == 'sourcetab_sort_column'
+        ).execute()
+        SettingsModel.update({SettingsModel.str_value: str(order.value)}).where(
+            SettingsModel.key == 'sourcetab_sort_order'
+        ).execute()
 
     def sources_update(self):
         """
@@ -310,7 +331,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         profile = self.profile()
         # sort indexes, starting with lowest
         indexes.sort()
-        # remove each selected row, starting with highest index (otherways, higher indexes become invalid)
+        # remove each selected row, starting with the highest index (otherwise, higher indexes become invalid)
         for index in reversed(indexes):
             db_item = SourceFileModel.get(
                 dir=self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text(),
@@ -321,15 +342,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
             logger.debug(f"Removed source in row {index.row()}")
 
-    def save_exclude_patterns(self):
-        profile = self.profile()
-        profile.exclude_patterns = self.excludePatternsField.toPlainText()
-        profile.save()
-
-    def save_exclude_if_present(self):
-        profile = self.profile()
-        profile.exclude_if_present = self.excludeIfPresentField.toPlainText()
-        profile.save()
+    def show_exclude_dialog(self):
+        window = ExcludeDialog(self.profile(), self)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window = window  # for testing
+        window.show()
 
     def paste_text(self):
         sources = QApplication.clipboard().text().splitlines()
@@ -349,4 +366,5 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         if len(invalidSources) != 0:  # Check if any invalid paths
             msg = QMessageBox()
             msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
+            self._msg = msg  # for testing
             msg.exec()
