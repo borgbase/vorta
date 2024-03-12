@@ -12,7 +12,8 @@ from vorta import application, config
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, EventLogModel, WifiSettingModel
-from vorta.utils import get_asset, get_sorted_wifis
+from vorta.utils import get_asset
+from vorta.views.workers.wifi_list_worker import PopulateWifiAsync
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -33,6 +34,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.setupUi(parent)
         self.app: application.VortaApp = QApplication.instance()
         self.toolBox.setCurrentIndex(0)
+        self.workers = []
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
@@ -171,7 +173,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         else:
             self.createCmdLineEdit.setEnabled(False)
 
-        self.populate_wifi()
+        populateWifiWorker = PopulateWifiAsync(profile, self.wifiListWidget)
+        self.workers.append(populateWifiWorker)  # preserve reference
+        populateWifiWorker.start()
         self.populate_logs()
         self.draw_next_scheduled_backup()
 
@@ -191,18 +195,18 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.nextBackupDateTimeLabel.setText(text)
         self.nextBackupDateTimeLabel.repaint()
 
-    def populate_wifi(self):
-        self.wifiListWidget.clear()
-        for wifi in get_sorted_wifis(self.profile()):
-            item = QListWidgetItem()
-            item.setText(wifi.ssid)
-            item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
-            if wifi.allowed:
-                item.setCheckState(QtCore.Qt.CheckState.Checked)
-            else:
-                item.setCheckState(QtCore.Qt.CheckState.Unchecked)
-            self.wifiListWidget.addItem(item)
-        self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
+    # def populate_wifi(self):
+    #     self.wifiListWidget.clear()
+    #     for wifi in get_sorted_wifis(self.profile()):
+    #         item = QListWidgetItem()
+    #         item.setText(wifi.ssid)
+    #         item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
+    #         if wifi.allowed:
+    #             item.setCheckState(QtCore.Qt.CheckState.Checked)
+    #         else:
+    #             item.setCheckState(QtCore.Qt.CheckState.Unchecked)
+    #         self.wifiListWidget.addItem(item)
+    #     self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
 
     def save_wifi_item(self, item):
         db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)

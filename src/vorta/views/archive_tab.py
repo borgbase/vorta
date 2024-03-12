@@ -1,6 +1,5 @@
 import logging
 import sys
-from datetime import timedelta
 from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
@@ -36,17 +35,14 @@ from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
-    find_best_unit_for_sizes,
     format_archive_name,
-    get_asset,
-    get_mount_points,
-    pretty_bytes,
+    get_asset
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
-from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
+from vorta.views.workers.archive_table_worker import PopulateArchiveTableAsync
 
 uifile = get_asset('UI/archivetab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
@@ -73,6 +69,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.mount_points = {}  # mapping of archive name to mount point
+        self.workers = []
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
         self.app = app
@@ -241,10 +238,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Populate archive list and prune settings from profile."""
         profile = self.profile()
         if profile.repo is not None:
-            # get mount points
-            self.mount_points, repo_mount_points = get_mount_points(profile.repo.url)
-            if repo_mount_points:
-                self.repo_mount_point = repo_mount_points[0]
 
             if profile.repo.name:
                 repo_name = f"{profile.repo.name} ({profile.repo.url})"
@@ -252,58 +245,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                 repo_name = profile.repo.url
             self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
 
-            archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
+            populateArchiveTableWorker = PopulateArchiveTableAsync(profile, self.mount_points, self.archiveTable)
+            self.workers.append(populateArchiveTableWorker)  # preserve worker reference
+            populateArchiveTableWorker.start()
 
-            # if no archive's name can be found in self.mount_points, then hide the mount point column
-            if not any(a.name in self.mount_points for a in archives):
-                self.archiveTable.hideColumn(3)
-            else:
-                self.archiveTable.showColumn(3)
-
-            sorting = self.archiveTable.isSortingEnabled()
-            self.archiveTable.setSortingEnabled(False)
-            best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=SIZE_DECIMAL_DIGITS)
-            for row, archive in enumerate(archives):
-                self.archiveTable.insertRow(row)
-
-                formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
-                self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
-
-                # format units based on user settings for 'dynamic' or 'fixed' units
-                fixed_unit = best_unit if SettingsModel.get(key='enable_fixed_units').value else None
-                size = pretty_bytes(archive.size, fixed_unit=fixed_unit, precision=SIZE_DECIMAL_DIGITS)
-                self.archiveTable.setItem(row, 1, SizeItem(size))
-
-                if archive.duration is not None:
-                    formatted_duration = str(timedelta(seconds=round(archive.duration)))
-                else:
-                    formatted_duration = ''
-
-                self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-
-                mount_point = self.mount_points.get(archive.name)
-                if mount_point is not None:
-                    item = QTableWidgetItem(mount_point)
-                    self.archiveTable.setItem(row, 3, item)
-
-                self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
-
-                if archive.trigger == 'scheduled':
-                    item = QTableWidgetItem(get_colored_icon('clock-o'), '')
-                    item.setToolTip(self.tr('Scheduled'))
-                    self.archiveTable.setItem(row, 5, item)
-                elif archive.trigger == 'user':
-                    item = QTableWidgetItem(get_colored_icon('user'), '')
-                    item.setToolTip(self.tr('User initiated'))
-                    item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
-                    self.archiveTable.setItem(row, 5, item)
-
-            self.archiveTable.setRowCount(len(archives))
-            self.archiveTable.setSortingEnabled(sorting)
-            item = self.archiveTable.item(0, 0)
-            self.archiveTable.scrollToItem(item)
-
-            self.archiveTable.selectionModel().clearSelection()
             if self.remaining_refresh_archives == 0:
                 self._toggle_all_buttons(enabled=True)
         else:

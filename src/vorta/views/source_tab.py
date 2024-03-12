@@ -14,15 +14,14 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
+from vorta.views.workers.file_path_info_worker import FilePathInfoAsync
 from vorta.utils import (
-    FilePathInfoAsync,
     choose_file_dialog,
     get_asset,
-    pretty_bytes,
-    sort_sizes,
+    pretty_bytes
 )
 from vorta.views.exclude_dialog import ExcludeDialog
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import get_colored_icon, SizeItem
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
@@ -34,23 +33,6 @@ class SourceColumn:
     Path = 0
     Size = 1
     FilesCount = 2
-
-
-class SizeItem(QTableWidgetItem):
-    def __init__(self, s):
-        super().__init__(s)
-        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
-
-    def __lt__(self, other):
-        if other.text() == '':
-            return False
-        elif self.text() == '':
-            return True
-        else:
-            return sort_sizes([self.text(), other.text()]) == [
-                self.text(),
-                other.text(),
-            ]
 
 
 class FilesCount(QTableWidgetItem):
