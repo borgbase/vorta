@@ -94,6 +94,9 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         if result['returncode'] == 0:
             self.added_repo.emit(result)
             self.accept()
+            # clear FailedRepoModel if adding repo succeeds
+            FailedRepoModel.delete().execute()
+
         else:
             self.save_failed_repo(
                 self.repoURL.text(),
