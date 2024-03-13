@@ -7,13 +7,15 @@ class BorgDiffJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Requesting differences between archives…')}"
+            self.params['profile_id'],
+            f"[{self.params['profile_name']}] {self.tr('Requesting differences between archives…')}",
         )
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}"
+            self.params['profile_id'],
+            f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}",
         )
         self.result.emit(result)
 

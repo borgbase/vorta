@@ -135,9 +135,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileDeleteButton.setIcon(get_colored_icon('minus'))
         self.miscButton.setIcon(get_colored_icon('settings_wheel'))
 
-    def set_progress(self, text=''):
-        profile = extract_profile_name(text)
-        if profile == self.current_profile.name:
+    def set_progress(self, profile_id, text=''):
+        profile = BackupProfileModel.get_by_id(profile_id)
+        profile.last_status = text
+        profile.save()
+        if profile.name == self.current_profile.name:
             self.progressText.setText(text)
             self.progressText.repaint()
 
@@ -145,6 +147,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         profile = extract_profile_name(text)
         if profile == self.current_profile.name:
             self.logText.setText(text)
+            self.logText.repaint()
+        else:
+            self.logText.setText('')
             self.logText.repaint()
 
     def _toggle_buttons(self, create_enabled=True):
@@ -192,6 +197,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             SettingsModel.key == 'previous_profile_id'
         ).execute()
         self.archiveTab.toggle_compact_button_visibility()
+        self.app.backup_progress_event.emit(self.current_profile.id, self.current_profile.last_status)
+        self.app.backup_log_event.emit("", {})
 
     def profile_clicked_action(self):
         if self.miscWidget.isVisible():
