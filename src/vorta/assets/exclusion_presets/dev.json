@@ -36,8 +36,8 @@
         "author": "Divi"
     },
     {
-        "name": "Visual Studio Code config and cache",
-        "slug": "vscode-config",
+        "name": "Visual Studio Code cache and config files",
+        "slug": "vscode-cache",
         "patterns": [
             "fm:*/.config/Code",
             "fm:*/.vscode/extensions/*"
@@ -54,7 +54,7 @@
             "fm:*/Android/Sdk",
             "fm:*/.AndroidStudio"
         ],
-        "tags": ["type:dev", "tool:android-studio"],
+        "tags": ["type:dev", "editor:android-studio", "os:linux"],
         "author": "shivansh02"
     }
 ]
