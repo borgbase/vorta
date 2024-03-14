@@ -5,7 +5,8 @@
         "patterns":
         [
             "fm:*/node_modules",
-            "fm:*/.npm"
+            "fm:*/.npm",
+            "fm:*/npm-global"
         ],
         "tags": ["type:dev", "lang:javascript", "os:linux", "os:darwin"],
         "author": "Divi"
@@ -33,5 +34,27 @@
         ],
         "tags": ["type:dev", "lang:rust", "os:linux", "os:darwin"],
         "author": "Divi"
+    },
+    {
+        "name": "Visual Studio Code config and cache",
+        "slug": "vscode-config",
+        "patterns": [
+            "fm:*/.config/Code",
+            "fm:*/.vscode/extensions/*"
+        ],
+        "tags": ["type:editor", "editor:vscode", "os:linux"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Android Studio Artefacts",
+        "slug": "android-studio",
+        "patterns": [
+            "fm:*/.android",
+            "fm:*/.gradle",
+            "fm:*/Android/Sdk",
+            "fm:*/.AndroidStudio"
+        ],
+        "tags": ["type:dev", "tool:android-studio"],
+        "author": "shivansh02"
     }
 ]
