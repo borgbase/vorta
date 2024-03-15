@@ -15,7 +15,13 @@ from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 import psutil
 from PyQt6 import QtCore
 from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
-from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
+    QApplication,
+    QFileDialog,
+    QSystemTrayIcon,
+    QTreeView,
+)
 
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.log import logger
@@ -172,6 +178,9 @@ def choose_file_dialog(parent, title, want_folder=True):
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
         dialog.setOption(QFileDialog.Option.ShowDirsOnly)
+        list_view = dialog.findChild(QTreeView)
+        list_view.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+
     return dialog
 
 
