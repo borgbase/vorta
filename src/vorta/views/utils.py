@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 
 from PyQt6.QtGui import QIcon, QImage, QPixmap
@@ -49,3 +50,14 @@ def get_exclusion_presets():
                         'tags': preset['tags'],
                     }
     return allPresets
+
+
+def extract_profile_name(text):
+    pattern = r'\[([^]]+)\]'
+
+    match = re.search(pattern, text)
+
+    if match:
+        return match.group(1)
+    else:
+        return None
