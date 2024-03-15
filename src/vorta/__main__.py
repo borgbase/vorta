@@ -9,7 +9,7 @@ from peewee import SqliteDatabase
 from vorta import config
 from vorta._version import __version__
 from vorta.i18n import trans_late, translate
-from vorta.log import init_logger, logger
+from vorta.log import init_file_logging, init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
 from vorta.utils import DEFAULT_DIR_FLAG, parse_args
@@ -79,6 +79,7 @@ def main():
         },
     )
     init_db(sqlite_db)
+    init_file_logging()
 
     # Init app after database is available
     from vorta.application import VortaApp

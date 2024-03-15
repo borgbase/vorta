@@ -18,6 +18,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
     startup = trans_late('settings', 'Startup')
     information = trans_late('settings', 'Information')
     security = trans_late('settings', 'Security')
+    logging = trans_late('settings', 'Logging')
 
     # Default settings for all platforms.
     settings = [
@@ -97,6 +98,16 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'Try to replace file permissions when mounting an archive',
             ),
             'tooltip': trans_late('settings', 'Set owner to current user and umask to 0277'),
+        },
+        {
+            'key': 'enable_logging_to_file',
+            'value': True,
+            'type': 'checkbox',
+            'group': logging,
+            'label': trans_late('settings', 'Enable logging to file'),
+            'tooltip': trans_late(
+                'settings', 'When disabled, logging to a file will be turned off, and logs will not be saved in a file'
+            ),
         },
         {
             'key': 'previous_profile_id',
