@@ -1,10 +1,15 @@
-from vorta.store.models import RepoModel
+from vorta.borg.compact import BorgCompactJob
+from vorta.store.models import BackupProfileModel, RepoModel
 from vorta.utils import borg_compat, format_archive_name
 
 from .borg_job import BorgJob
 
 
 class BorgPruneJob(BorgJob):
+    def _set_status(self, text):
+        self.mountErrors.setText(text)
+        self.mountErrors.repaint()
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning old archives…')}")
@@ -21,6 +26,17 @@ class BorgPruneJob(BorgJob):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
+
+        # run compact if borg>=1.2
+        if borg_compat.check("COMPACT_SUBCOMMAND"):
+            profile = BackupProfileModel.get(id=self.params['profile_id'])
+            params = BorgCompactJob.prepare(profile)
+            if params['ok']:
+                job = BorgCompactJob(params['cmd'], params, profile.repo.id)
+                job.updated.connect(self._set_status)
+                self.app.jobs_manager.add_job(job)
+            else:
+                self._set_status(params['message'])
 
     @classmethod
     def prepare(cls, profile):
