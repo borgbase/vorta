@@ -61,6 +61,11 @@ class BorgInfoRepoJob(BorgJob):
             if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
                 new_repo.total_size = stats['total_size']
+
+                # Compressed Repository size only supported in borg v1.
+                if not borg_compat.check('V2'):
+                    new_repo.unique_csize = stats['unique_csize']
+
                 new_repo.unique_size = stats['unique_size']
                 new_repo.total_unique_chunks = stats['total_unique_chunks']
             if 'encryption' in result['data']:
