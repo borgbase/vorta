@@ -289,7 +289,7 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
     mock_result: Dict[str, Any] = {
         'params': {'repo_url': 'test_repo_url'},
         'returncode': response["return_code"],
-        'errors': [(0, 'test_error_message')] if response["return_code"] not in [0, 130] else None,
+        'errors': [{'level': 0, 'message': 'test_error_message'}] if response["return_code"] not in [0, 130] else None,
     }
 
     mock_exec = mocker.patch.object(QMessageBox, "exec")
