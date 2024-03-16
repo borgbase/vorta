@@ -183,11 +183,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         logger.info('step 1')
         self.archiveTab.populate_from_profile()
         logger.info('step 2')
-        self.repoTab.populate_from_profile()  # 1s
+        self.repoTab.populate_from_profile()
         logger.info('step 3')
         self.sourceTab.populate_from_profile()
         logger.info('step 4')
-        self.scheduleTab.populate_from_profile()  #1s
+        self.scheduleTab.populate_from_profile()
         logger.info('step 5')
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
