@@ -1,15 +1,13 @@
 import psutil
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from vorta.utils import (
-    SHELL_PATTERN_ELEMENT,
-    borg_compat,
-)
+from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
 
 SIZE_DECIMAL_DIGITS = 1
 
 
 class MountPointsWorker(QThread):
+
     signal = pyqtSignal(dict, list)
 
     def __init__(self, repo_url):
