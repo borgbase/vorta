@@ -56,5 +56,44 @@
         ],
         "tags": ["type:dev", "editor:android-studio", "os:linux"],
         "author": "shivansh02"
+    },
+    {
+        "name": "Jetbrains IDEs cache, config, path and logs",
+        "slug": "jetbrains",
+        "patterns": [
+            "fm:*/.config/JetBrains",
+            "fm:*/.cache/JetBrains",
+            "fm:*/.local/share/JetBrains"
+        ],
+        "tags": ["type:dev", "editor:jetbrains", "os:linux"],
+        "author": "SAMAD101"
+    },
+    {
+        "name": "AWS artefacts",
+        "slug": "aws-artefacts",
+        "patterns": [
+            "fm:*/.aws"
+        ],
+        "tags": ["type:dev", "cloud:aws", "os:linux", "os:darwin"],
+        "author": "SAMAD101"
+    },
+    {
+        "name": "Spotify cache and config files",
+        "slug": "spotify",
+        "patterns": [
+            "fm:*/.cache/spotify",
+            "fm:*/.config/spotify"
+        ],
+        "tags": ["type:media", "media:spotify", "os:linux"],
+        "author": "SAMAD101"
+    },
+    {
+        "name": "Docker artefacts",
+        "slug": "docker-artefacts",
+        "patterns": [
+            "fm:*/.docker"
+        ],
+        "tags": ["type:dev", "cloud:docker", "os:linux", "os:darwin"],
+        "author": "SAMAD101"
     }
 ]
