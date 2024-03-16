@@ -14,14 +14,10 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
-from vorta.views.workers.file_path_info_worker import FilePathInfoAsync
-from vorta.utils import (
-    choose_file_dialog,
-    get_asset,
-    pretty_bytes
-)
+from vorta.utils import choose_file_dialog, get_asset, pretty_bytes
 from vorta.views.exclude_dialog import ExcludeDialog
-from vorta.views.utils import get_colored_icon, SizeItem
+from vorta.views.utils import SizeItem, get_colored_icon
+from vorta.views.workers.file_path_info_worker import FilePathInfoAsync
 
 uifile = get_asset('UI/sourcetab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)

@@ -1,24 +1,25 @@
 import argparse
 import errno
-import math
 import getpass
+import math
 import os
 import re
 import socket
 import sys
-from datetime import datetime as dt, timedelta
+from datetime import datetime as dt
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from PyQt6 import QtCore
-from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal, Qt
-from PyQt6.QtWidgets import (QApplication, QFileDialog, QSystemTrayIcon,
-    QListWidgetItem, QTableWidgetItem)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QFileDialog,
+    QSystemTrayIcon,
+)
 
-from vorta.network_status.abc import NetworkStatusMonitor
 from vorta.borg._compatibility import BorgCompatibility
 from vorta.log import logger
-
+from vorta.network_status.abc import NetworkStatusMonitor
 
 # Used to store whether a user wanted to override the
 # default directory for the --development flag
@@ -98,13 +99,13 @@ def get_private_keys() -> List[str]:
     return available_private_keys
 
 
-
 Number = TypeVar("Number", int, float)
 
 
 def clamp(n: Number, min_: Number, max_: Number) -> Number:
     """Restrict the number n inside a range"""
     return min(max_, max(n, min_))
+
 
 def get_network_status_monitor():
     global _network_status_monitor
@@ -173,7 +174,6 @@ def get_asset(path):
         # we are running in a normal Python environment
         bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
     return os.path.join(bundle_dir, path)
-
 
 
 def parse_args():
@@ -257,7 +257,6 @@ def format_archive_name(profile, archive_name_tpl):
 
 
 SHELL_PATTERN_ELEMENT = re.compile(r'([?\[\]*])')
-
 
 
 def is_system_tray_available():

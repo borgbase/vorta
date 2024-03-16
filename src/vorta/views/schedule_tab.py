@@ -13,8 +13,8 @@ from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, EventLogModel, WifiSettingModel
 from vorta.utils import get_asset
-from vorta.views.workers.wifi_list_worker import WifiListWorker
 from vorta.views.utils import get_colored_icon
+from vorta.views.workers.wifi_list_worker import WifiListWorker
 
 uifile = get_asset('UI/scheduletab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
@@ -192,7 +192,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             else:
                 item.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.wifiListWidget.addItem(item)
-
 
     def draw_next_scheduled_backup(self):
         status = self.app.scheduler.next_job_for_profile(self.profile().id)

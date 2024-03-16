@@ -1,12 +1,10 @@
-
-
 import psutil
-from PyQt6.QtCore import QThread, Qt, pyqtSignal
-from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtCore import QThread, pyqtSignal
 
-from vorta.store.models import ArchiveModel, SettingsModel
-from vorta.views.utils import get_colored_icon, SizeItem
-from vorta.utils import borg_compat, pretty_bytes, find_best_unit_for_sizes, SHELL_PATTERN_ELEMENT
+from vorta.utils import (
+    SHELL_PATTERN_ELEMENT,
+    borg_compat,
+)
 
 SIZE_DECIMAL_DIGITS = 1
 

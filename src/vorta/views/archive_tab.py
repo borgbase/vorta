@@ -1,7 +1,7 @@
 import logging
 import sys
-from typing import Dict, Optional
 from datetime import timedelta
+from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
@@ -36,15 +36,15 @@ from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
+    find_best_unit_for_sizes,
     format_archive_name,
     get_asset,
     pretty_bytes,
-    find_best_unit_for_sizes
 )
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
-from vorta.views.utils import get_colored_icon, SizeItem
+from vorta.views.utils import SizeItem, get_colored_icon
 from vorta.views.workers.mount_points_worker import MountPointsWorker
 
 uifile = get_asset('UI/archivetab.ui')

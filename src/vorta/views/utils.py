@@ -2,8 +2,8 @@ import json
 import os
 import sys
 
-from PyQt6.QtGui import QIcon, QImage, QPixmap
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QImage, QPixmap
 from PyQt6.QtWidgets import QTableWidgetItem
 
 from vorta.utils import get_asset, uses_dark_mode

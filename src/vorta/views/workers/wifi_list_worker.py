@@ -1,11 +1,12 @@
-
 import logging
+
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from vorta.utils import get_network_status_monitor
 from vorta.store.models import WifiSettingModel
+from vorta.utils import get_network_status_monitor
 
 logger = logging.getLogger(__name__)
+
 
 class WifiListWorker(QThread):
     signal = pyqtSignal(list)

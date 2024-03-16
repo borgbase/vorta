@@ -1,16 +1,10 @@
-
-from datetime import datetime as dt, timedelta
-import unicodedata
-import os
-import sys
-import re
 import fnmatch
-import psutil
+import os
+import re
+import sys
+import unicodedata
 
-from PyQt6 import QtCore
-from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal, Qt
-from PyQt6.QtWidgets import (QApplication, QFileDialog, QSystemTrayIcon,
-    QListWidgetItem, QTableWidgetItem)
+from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 
 
 class FilePathInfoAsync(QThread):
@@ -37,6 +31,7 @@ def normalize_path(path):
     # HFS+ converts paths to a canonical form, so users shouldn't be required to enter an exact match.
     # Windows and Unix filesystems allow different forms, so users always have to enter an exact match.
     return unicodedata.normalize('NFD', path) if sys.platform == 'darwin' else path
+
 
 def get_path_datasize(path, exclude_patterns):
     file_info = QFileInfo(path)
