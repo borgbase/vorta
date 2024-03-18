@@ -180,15 +180,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if not backup_profile_id:
             return
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
-        logger.info('step 1')
         self.archiveTab.populate_from_profile()
-        logger.info('step 2')
         self.repoTab.populate_from_profile()
-        logger.info('step 3')
         self.sourceTab.populate_from_profile()
-        logger.info('step 4')
         self.scheduleTab.populate_from_profile()
-        logger.info('step 5')
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()

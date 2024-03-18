@@ -72,14 +72,12 @@ def init_db(qapp, qtbot, tmpdir_factory):
 
     qapp.jobs_manager.cancel_all_jobs()
     qapp.backup_finished_event.disconnect()
-    qapp.scheduler.schedule_changed.disconnect()
+    for worker in qapp.main_window.archiveTab.workers + qapp.main_window.scheduleTab.workers:
+        worker.quit()
+        worker.wait()
+        worker.exit()
     qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
-    for worker in qapp.main_window.archiveTab.workers:
-        worker.quit()
-        worker.exit()
-    for worker in qapp.main_window.scheduleTab.workers:
-        worker.quit()
-        worker.exit()
+    qapp.scheduler.schedule_changed.disconnect()
     mock_db.close()
 
 
