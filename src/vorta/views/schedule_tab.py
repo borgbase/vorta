@@ -86,6 +86,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.meteredNetworksCheckBox.stateChanged.connect(
             lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, not new_val)
         )
+        self.allowNewNetworksCheckBox.stateChanged.connect(
+            lambda new_val, attr='allow_new_networks': self.save_profile_attr(attr, new_val)
+        )
         self.postBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
         )
@@ -161,6 +164,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.missedBackupsCheckBox.setCheckState(
             QtCore.Qt.CheckState.Checked if profile.schedule_make_up_missed else QtCore.Qt.CheckState.Unchecked
         )
+        self.allowNewNetworksCheckBox.setChecked(profile.allow_new_networks)
         self.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
 
         self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
