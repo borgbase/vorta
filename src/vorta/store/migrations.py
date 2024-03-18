@@ -233,6 +233,22 @@ def run_migrations(current_schema, db_connection):
             current_schema,
             21,
             migrator.add_column(
+                ArchiveModel._meta.table_name,
+                'trigger',
+                pw.CharField(null=True),
+            ),
+        )
+
+    if current_schema.version < 22:
+        _apply_schema_update(
+            current_schema,
+            22,
+            migrator.add_column(
+                RepoModel._meta.table_name,
+                'name',
+                pw.CharField(default=''),
+            ),
+            migrator.add_column(
                 BackupProfileModel._meta.table_name,
                 'allow_new_networks',
                 pw.BooleanField(default=True),

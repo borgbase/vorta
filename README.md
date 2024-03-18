@@ -11,11 +11,9 @@
 <br>
 <br>
 
-🤝 **This project is part of the [Google Summer of Code](https://summerofcode.withgoogle.com/) 2023 program. Apply or learn more [here](https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas)!**
-
 Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft.
 
-![](https://files.qmax.us/vorta/screencast-8-small.gif)
+https://github.com/m3nu/vorta/assets/3916435/a622a148-5373-4ae0-87bc-4ca1d6f6202e
 
 ## Why is this great? 🤩
 
@@ -30,15 +28,16 @@ Learn more on [Vorta's website](https://vorta.borgbase.com).
 ## Installation
 Vorta should work on all platforms that support Qt and Borg. This includes macOS, Ubuntu, Debian, Fedora, Arch Linux and many others. Windows is currently not supported by Borg, but this may change in the future.
 
-See our website for [download links and and install instructions](https://vorta.borgbase.com/install).
+See our website for [download links and install instructions](https://vorta.borgbase.com/install).
 
 ## Connect and Contribute
 - To discuss everything around using, improving, packaging and translating Vorta, join the [discussion on Github](https://github.com/borgbase/vorta/discussions).
 - Report bugs by opening a new [Github issue](https://github.com/borgbase/vorta/issues/new/choose).
 - Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
+- We currently have students from the Google Summer Of Code 2023 Program contributing to this project.
 
 ## License and Credits
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.
-- Licensed under [GPLv3](LICENSE.txt). © 2018-2020 Manuel Riel and Vorta contributors
+- Licensed under [GPLv3](LICENSE.txt). © 2018-2023 Manuel Riel and Vorta contributors
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
-- Icons by [FontAwesome](https://fontawesome.com)
+- Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) and Material Design icons by Google (licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)). See the `src/vorta/assets/icons` folder for a copy of applicable licenses.

@@ -381,7 +381,6 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
 
         if not parsed_line:
             raise Exception("Couldn't parse diff output `{}`".format(line))
-            continue
 
         path = PurePath(parsed_line['path'])
         file_type = FileType.FILE

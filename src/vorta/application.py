@@ -173,8 +173,9 @@ class VortaApp(QtSingleApplication):
         """
         if 'version' in result['data']:
             borg_compat.set_version(result['data']['version'], result['data']['path'])
-            self.main_window.miscTab.set_borg_details(borg_compat.version, borg_compat.path)
+            self.main_window.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
             self.main_window.repoTab.toggle_available_compression()
+            self.main_window.archiveTab.toggle_compact_button_visibility()
             self.scheduler.reload_all_timers()  # Start timer after Borg version is set.
         else:
             self._alert_missing_borg()
@@ -307,11 +308,6 @@ class VortaApp(QtSingleApplication):
 
         Displays a `QMessageBox` with an error message depending on the
         return code of the `BorgJob`.
-
-        Parameters
-        ----------
-        repo_url : str
-            The url of the repo of concern
         """
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
@@ -324,7 +320,7 @@ class VortaApp(QtSingleApplication):
             # No fail
             logger.warning('VortaApp.check_failed_response was called with returncode 0')
         elif returncode == 130:
-            # Keyboard interupt
+            # Keyboard interrupt
             pass
         else:  # Real error
             # Create QMessageBox
@@ -343,7 +339,7 @@ class VortaApp(QtSingleApplication):
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)
                 signal = returncode - 128
-                text = self.tr('Repository data check for repo was killed by signal %s.') % (signal)
+                text = self.tr('Repository data check for repo was killed by signal %s.') % signal
                 infotext = self.tr('The process running the check job got a kill signal. Try again.')
             else:
                 # Real error

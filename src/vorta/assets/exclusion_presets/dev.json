@@ -1,0 +1,60 @@
+[
+    {
+        "name": "Node Modules and package manager cache",
+        "slug": "node-cache",
+        "patterns":
+        [
+            "fm:*/node_modules",
+            "fm:*/.npm",
+            "fm:*/npm-global"
+        ],
+        "tags": ["type:dev", "lang:javascript", "os:linux", "os:darwin"],
+        "author": "Divi"
+    },
+    {
+        "name": "Python cache and virtualenv",
+        "slug": "python-cache",
+        "patterns":
+        [
+            "fm:*/__pycache__",
+            "fm:*.pyc",
+            "fm:*.pyo",
+            "fm:*/.virtualenvs"
+        ],
+        "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
+        "author": "Divi"
+    },
+    {
+        "name": "Rust artefacts",
+        "slug": "rust-artefacts",
+        "patterns":
+        [
+            "fm:*/.cargo",
+            "fm:*/.rustup"
+        ],
+        "tags": ["type:dev", "lang:rust", "os:linux", "os:darwin"],
+        "author": "Divi"
+    },
+    {
+        "name": "Visual Studio Code cache and config files",
+        "slug": "vscode-cache",
+        "patterns": [
+            "fm:*/.config/Code",
+            "fm:*/.vscode/extensions/*"
+        ],
+        "tags": ["type:editor", "editor:vscode", "os:linux"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Android Studio Artefacts",
+        "slug": "android-studio",
+        "patterns": [
+            "fm:*/.android",
+            "fm:*/.gradle",
+            "fm:*/Android/Sdk",
+            "fm:*/.AndroidStudio"
+        ],
+        "tags": ["type:dev", "editor:android-studio", "os:linux"],
+        "author": "shivansh02"
+    }
+]
