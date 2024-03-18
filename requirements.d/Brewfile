@@ -4,6 +4,7 @@
 brew 'create-dmg'
 brew 'qt'
 brew 'hub'
+brew 'pre-commit'
 brew 'xmlstarlet'
 cask 'qt-creator'
 cask 'sparkle'

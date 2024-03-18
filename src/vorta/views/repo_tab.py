@@ -173,8 +173,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoEncryption.setText(na)
             self.repoEncryption.setToolTip(no_repo_selected)
 
-        self.repo_changed.emit()
-
     def init_ssh(self):
         keys = get_private_keys()
         self.sshComboBox.clear()
@@ -264,6 +262,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         profile.repo = self.repoSelector.currentData()
         profile.save()
         self.init_repo_stats()
+        self.repo_changed.emit()
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
@@ -276,10 +275,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
             self.repo_added.emit()
             self.init_repo_stats()
+            self.repo_changed.emit()
 
     def repo_unlink_action(self):
         profile = self.profile()
         self.init_repo_stats()
+        self.repo_changed.emit()
 
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
