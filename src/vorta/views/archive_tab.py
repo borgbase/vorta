@@ -273,7 +273,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             populateArchiveTableWorker.start()
             self.archiveTable.hideColumn(3)
 
-            archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
+            archives = list(profile.repo.archives.select().order_by(ArchiveModel.time.desc()))
 
             sorting = self.archiveTable.isSortingEnabled()
             self.archiveTable.setSortingEnabled(False)
@@ -307,12 +307,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
                     self.archiveTable.setItem(row, 5, item)
 
-        self.archiveTable.setRowCount(len(archives))
-        self.archiveTable.setSortingEnabled(sorting)
-        item = self.archiveTable.item(0, 0)
-        self.archiveTable.scrollToItem(item)
+            self.archiveTable.setRowCount(len(archives))
+            self.archiveTable.setSortingEnabled(sorting)
+            item = self.archiveTable.item(0, 0)
+            self.archiveTable.scrollToItem(item)
 
-        self.archiveTable.selectionModel().clearSelection()
+            self.archiveTable.selectionModel().clearSelection()
 
         if self.remaining_refresh_archives == 0:
             self._toggle_all_buttons(enabled=True)
