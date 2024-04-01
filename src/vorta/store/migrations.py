@@ -11,13 +11,14 @@ from .models import (
     BackupProfileModel,
     EventLogModel,
     RepoModel,
+    SchemaVersion,
     SettingsModel,
     SourceFileModel,
     WifiSettingModel,
 )
 
 
-def run_migrations(current_schema: Any, db_connection: SqliteDatabase):
+def run_migrations(current_schema: SchemaVersion, db_connection: SqliteDatabase):
     """
     Apply new schema versions to database.
 
