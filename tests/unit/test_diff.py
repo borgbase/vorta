@@ -6,14 +6,17 @@ import vorta.utils
 import vorta.views.archive_tab
 from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
 from PyQt6.QtWidgets import QMenu
+from vorta.store.models import ArchiveModel
 from vorta.views.diff_result import (
     ChangeType,
     DiffData,
+    DiffResultDialog,
     DiffTree,
     FileType,
     parse_diff_json,
     parse_diff_lines,
 )
+from vorta.views.partials.treemodel import FileTreeModel
 
 
 def setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_file="diff_archives"):
@@ -457,3 +460,19 @@ def test_archive_diff_json_parser(line, expected):
 
     assert item.path == PurePath(expected[0]).parts
     assert item.data == DiffData(*expected[1:])
+
+
+@pytest.mark.parametrize(
+    "selection, expected_mode, expected_bCollapseAllEnabled",
+    [
+        (0, FileTreeModel.DisplayMode.TREE, True),
+        (1, FileTreeModel.DisplayMode.SIMPLIFIED_TREE, True),
+        (2, FileTreeModel.DisplayMode.FLAT, False),
+    ],
+)
+def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAllEnabled):
+    dialog = DiffResultDialog(ArchiveModel(), ArchiveModel(), DiffTree())
+    dialog.change_display_mode(selection)
+
+    assert dialog.model.mode == expected_mode
+    assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
