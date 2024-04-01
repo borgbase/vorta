@@ -185,8 +185,10 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         """
         if selection == 0:
             mode = FileTreeModel.DisplayMode.TREE
+            self.bCollapseAll.setEnabled(True)
         elif selection == 1:
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
+            self.bCollapseAll.setEnabled(True)
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
