@@ -20,19 +20,17 @@ class ExceptionDetails:
     def get_os_details():
         uname_result = platform.uname()
         os_details = f"OS: {uname_result.system}\n"
-        os_details += f"Node Name: {uname_result.node}\n"
         os_details += f"Release: {uname_result.release}\n"
         os_details += f"Version: {uname_result.version}"
         return os_details
 
     @staticmethod
     def get_exception_details(exception):
-        os_details = ExceptionDetails.get_os_details()
-        details = os_details
-        details += "\nDate and Time: " + str(datetime.datetime.now())
+        details = ExceptionDetails.get_os_details()
+        details += "\nDate and Time: " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         details += "\nBorg Version: " + borg_compat.version
         details += "\nVorta Version: " + __version__
-        details += exception
+        details += "\n" + exception
         return details
 
 
