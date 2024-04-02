@@ -32,7 +32,7 @@ class ExceptionDetails:
         details += "\nDate and Time: " + str(datetime.datetime.now())
         details += "\nBorg Version: " + borg_compat.version
         details += "\nVorta Version: " + __version__
-        details += "\nLog:\n" + exception
+        details += exception
         return details
 
 
@@ -41,9 +41,11 @@ class ExceptionDialog(ExceptionDialogBase, ExceptionDialogUI):
         super().__init__()
         self.setupUi(self)
 
-        self.label_2.setOpenExternalLinks(True)
+        self.report_to_github_label.setOpenExternalLinks(True)
         self.ignoreButton.clicked.connect(self.close)
         self.copyButton.clicked.connect(self.copy_report_to_clipboard)
+
+        self.copyButton.setIcon(get_colored_icon('copy'))
 
         # Set crash details
         details = ExceptionDetails.get_exception_details(exception)
