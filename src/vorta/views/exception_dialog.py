@@ -54,5 +54,4 @@ class ExceptionDialog(ExceptionDialogBase, ExceptionDialogUI):
 
     def copy_report_to_clipboard(self):
         cb = QApplication.clipboard()
-        cb.clear(mode=cb.Mode.Clipboard)
         cb.setText(self.crashDetails.toPlainText(), mode=cb.Mode.Clipboard)
