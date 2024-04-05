@@ -14,6 +14,7 @@ from vorta.borg.check import BorgCheckJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
+from vorta.borg.compact import BorgCompactJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
@@ -473,6 +474,7 @@ class VortaScheduler(QtCore.QObject):
                     job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
                     self.app.jobs_manager.add_job(job)
 
+        # Check if a check job is needed
         validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = (
             EventLogModel.select()
@@ -487,6 +489,24 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
+                self.app.jobs_manager.add_job(job)
+        
+        # Check if a compact job is needed
+        compaction_cutoff = dt.now() - timedelta(days=7 * profile.compaction_weeks)
+        recent_compactions = (
+            EventLogModel.select()
+            .where(
+                (EventLogModel.subcommand == '--info')
+                & (EventLogModel.start_time > compaction_cutoff)
+                & (EventLogModel.repo_url == profile.repo.url)
+            )
+            .count()
+        )
+
+        if profile.compaction_on and recent_compactions == 0:
+            msg = BorgCompactJob.prepare(profile)
+            if msg['ok']:
+                job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)

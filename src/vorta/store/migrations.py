@@ -248,6 +248,16 @@ def run_migrations(current_schema, db_connection):
                 'name',
                 pw.CharField(default=''),
             ),
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'compaction_on',
+                pw.BooleanField(default=True),
+            ),
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'compaction_weeks',
+                pw.IntegerField(default=3),
+            ),
         )
 
 
