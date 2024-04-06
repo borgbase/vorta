@@ -1,2 +1,0 @@
-line-length = 120
-exclude = ["build", "dist", ".git", ".idea", ".cache", ".tox", ".eggs", "./src/vorta/__init__.py", ".direnv", "env"]
