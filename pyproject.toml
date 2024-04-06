@@ -10,5 +10,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 select = ["T", "I"]
-exclude = ["package"]
 fixable = ["I"]
+line-length = 120
+exclude = ["package", "build", "dist", ".git", ".idea", ".cache", ".tox", ".eggs", "./src/vorta/__init__.py", ".direnv", "env"]
