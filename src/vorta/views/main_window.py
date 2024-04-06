@@ -284,13 +284,18 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
         if self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole) == profile_id:
-            self.profileSelector.currentItem().setText(profile_name)
+            profile = self.profileSelector.takeItem(self.profileSelector.currentRow())
+            profile.setText(profile_name)
         # Profile is added
         else:
             profile = QListWidgetItem(profile_name)
             profile.setData(Qt.ItemDataRole.UserRole, profile_id)
-            self.profileSelector.addItem(profile)
-            self.profileSelector.setCurrentItem(profile)
+        # Insert the profile at the correct position
+        row = len(
+            [i for i in range(self.profileSelector.count()) if self.profileSelector.item(i).text() < profile.text()]
+        )
+        self.profileSelector.insertItem(row, profile)
+        self.profileSelector.setCurrentItem(profile)
 
     def toggle_misc_visibility(self):
         if self.miscWidget.isVisible():
