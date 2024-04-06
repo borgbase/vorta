@@ -430,32 +430,16 @@ class VortaScheduler(QtCore.QObject):
         profile_id = result['params']['profile'].id
 
         if result['returncode'] in [0, 1]:
-            try:
-                notifier.deliver(
-                    self.tr('Vorta Backup'),
-                    self.tr('Backup successful for %s.') % profile_name,
-                    level='info',
-                )
-                logger.info('Backup creation successful.')
-                # unpause scheduler
-                self.unpause(result['params']['profile_id'])
+            notifier.deliver(
+                self.tr('Vorta Backup'),
+                self.tr('Backup successful for %s.') % profile_name,
+                level='info',
+            )
+            logger.info('Backup creation successful.')
+            # unpause scheduler
+            self.unpause(result['params']['profile_id'])
 
-                self.post_backup_tasks(profile_id)
-                # Notify after successful post_backup_tasks
-                notifier.deliver(
-                    self.tr('Vorta Backup'),
-                    self.tr('Post Backup Tasks successful for %s' % profile_id),
-                    level='info',
-                )
-                logger.info('Post Backup Tasks successful for %s' % profile_id)
-            
-            except Exception as e:
-                # Handle exceptions if post_backup_tasks fails
-                notifier.deliver(
-                    self.tr('Vorta Backup'),
-                    self.tr('Error during post backup tasks for %s.') % profile_name,
-                    level='error',
-                )
+            self.post_backup_tasks(profile_id)
         else:
             notifier.deliver(
                 self.tr('Vorta Backup'),
@@ -475,6 +459,7 @@ class VortaScheduler(QtCore.QObject):
         Pruning and checking after successful backup.
         """
         profile = BackupProfileModel.get(id=profile_id)
+        notifier = VortaNotifications.pick()
         logger.info('Doing post-backup jobs for %s', profile.name)
         if profile.prune_on:
             msg = BorgPruneJob.prepare(profile)
@@ -505,6 +490,11 @@ class VortaScheduler(QtCore.QObject):
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)
+        notifier.deliver(
+            self.tr('Vorta Backup'),
+            self.tr('Post Backup Tasks successful for %s' % profile.name),
+            level='info',
+        )
 
     def remove_job(self, profile_id):
         if profile_id in self.timers:
