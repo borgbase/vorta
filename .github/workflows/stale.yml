@@ -6,10 +6,13 @@ on:
 jobs:
   stale:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/stale@v8
         with:
-          days-before-issue-stale: 60
+          days-before-issue-stale: 90
           days-before-pr-stale: -1
           days-before-issue-close: 7
           # days-before-pr-close: 10
