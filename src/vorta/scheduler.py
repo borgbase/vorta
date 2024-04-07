@@ -459,6 +459,7 @@ class VortaScheduler(QtCore.QObject):
         Pruning and checking after successful backup.
         """
         profile = BackupProfileModel.get(id=profile_id)
+        notifier = VortaNotifications.pick()
         logger.info('Doing post-backup jobs for %s', profile.name)
         if profile.prune_on:
             msg = BorgPruneJob.prepare(profile)
@@ -489,6 +490,11 @@ class VortaScheduler(QtCore.QObject):
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)
+        notifier.deliver(
+            self.tr('Vorta Backup'),
+            self.tr('Post Backup Tasks successful for %s' % profile.name),
+            level='info',
+        )
 
     def remove_job(self, profile_id):
         if profile_id in self.timers:
