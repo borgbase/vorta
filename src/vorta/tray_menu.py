@@ -59,7 +59,7 @@ class TrayMenu(QSystemTrayIcon):
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
             status.setText(self.tr('Next Task: %s') % next_task_time)
-            profiles = BackupProfileModel.select()
+            profiles = BackupProfileModel.select().order_by(BackupProfileModel.name)
             if profiles.count() > 1:
                 profile_menu = menu.addMenu(self.tr('Backup Now'))
                 for profile in profiles:

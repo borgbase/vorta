@@ -1,8 +1,15 @@
 import pytest
 import vorta.borg
 from PyQt6.QtCore import QModelIndex, Qt
-from vorta.views.extract_dialog import ExtractTree, FileData, FileType, parse_json_lines
-from vorta.views.partials.treemodel import FileSystemItem
+from vorta.store.models import ArchiveModel
+from vorta.views.extract_dialog import (
+    ExtractDialog,
+    ExtractTree,
+    FileData,
+    FileType,
+    parse_json_lines,
+)
+from vorta.views.partials.treemodel import FileSystemItem, FileTreeModel
 
 
 def prepare_borg(mocker, borg_json_output):
@@ -179,6 +186,18 @@ def test_selection():
 
     select(model, iab)
     assert a.data.checkstate == Qt.CheckState(1)
+
+
+@pytest.mark.parametrize(
+    "selection, expected_mode, expected_bCollapseAllEnabled",
+    [(0, FileTreeModel.DisplayMode.TREE, True), (1, FileTreeModel.DisplayMode.SIMPLIFIED_TREE, True)],
+)
+def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAllEnabled):
+    dialog = ExtractDialog(ArchiveModel(), ExtractTree())
+    dialog.change_display_mode(selection)
+
+    assert dialog.model.mode == expected_mode
+    assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
 
 
 @pytest.mark.parametrize(

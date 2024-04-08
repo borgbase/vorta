@@ -108,10 +108,13 @@ class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
         """
         if selection == 0:
             mode = FileTreeModel.DisplayMode.TREE
+            self.bCollapseAll.setEnabled(True)
         elif selection == 1:
             mode = FileTreeModel.DisplayMode.SIMPLIFIED_TREE
+            self.bCollapseAll.setEnabled(True)
         elif selection == 2:
             mode = FileTreeModel.DisplayMode.FLAT
+            self.bCollapseAll.setEnabled(False)
         else:
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
