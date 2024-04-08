@@ -1122,8 +1122,13 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
                 return False
             elif self.searchPattern.match == "ex" and search_string != search_item:
                 return False
-            elif self.searchPattern.match == "re" and not re.search(search_string, search_item):
-                return False
+            elif self.searchPattern.match == "re":
+                try:
+                    if not re.search(search_string, search_item):
+                        return False
+                except re.error:
+                    self.searchStringError.emit(True)
+                    return False
             elif self.searchPattern.match == "fm" and not fnmatch(search_item, search_string):
                 return False
 
