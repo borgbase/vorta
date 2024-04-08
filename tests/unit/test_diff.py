@@ -479,39 +479,47 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
 
 @pytest.mark.parametrize(
-    'search_string,expected_search_results',
+    'search_string,expected_search_results,emit_error',
     [
         # Normal "in" search
-        ('txt', ['hello.txt', 'file1.txt']),
+        ('txt', ['hello.txt', 'file1.txt'], False),
         # Ignore Case
-        ('HELLO.txt -i', ['hello.txt']),
-        ('HELLO.txt', []),
+        ('HELLO.txt -i', ['hello.txt'], False),
+        ('HELLO.txt', [], False),
         # Size Match
-        ('--size >=15MB', []),
-        ('--size >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
-        ('--size >1KB,<1MB --exclude-parents', ['hello.txt']),
+        ('--size >=15MB', [], False),
+        ('--size >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin'], False),
+        ('--size >1KB,<1MB --exclude-parents', ['hello.txt'], False),
         # Path Match Type
-        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt']),
-        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt']),
-        ('home/kali/vorta/source1/*.bin --path -m fm', ['notemptyfile.bin', 'emptyfile.bin']),
+        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt'], False),
+        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt'], False),
+        ('home/kali/vorta/source1/*.bin --path -m fm', ['notemptyfile.bin', 'emptyfile.bin'], False),
         # Regex Match Type
-        ("file[^/]*\\.txt|\\.bin -m re", ['file1.txt', 'notemptyfile.bin', 'emptyfile.bin']),
+        ("file[^/]*\\.txt|\\.bin -m re", ['file1.txt', 'notemptyfile.bin', 'emptyfile.bin'], False),
+        ("[ -m re", [], True),
         # Exact Match Type
-        ('hello', ['hello.txt']),
-        ('hello -m ex', []),
+        ('hello', ['hello.txt'], False),
+        ('hello -m ex', [], False),
         # Diff Specific Filters #
         # Balance Match
-        ('--balance >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
-        ('--balance >1KB,<1MB --exclude-parents', ['hello.txt']),
-        ('--balance >10GB', []),
+        ('--balance >1KB,<1MB', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin'], False),
+        ('--balance >1KB,<1MB --exclude-parents', ['hello.txt'], False),
+        ('--balance >10GB', [], False),
         # Change Type
-        ('--change A', ['notemptyfile.bin', 'emptyfile.bin']),
-        ('--change D', ['file1.txt']),
-        ('--change M', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin']),
+        ('--change A', ['notemptyfile.bin', 'emptyfile.bin'], False),
+        ('--change D', ['file1.txt'], False),
+        ('--change M', ['notemptyfile.bin', 'hello.txt', 'file1.txt', 'emptyfile.bin'], False),
     ],
 )
 def test_archive_diff_filters(
-    qtbot, mocker, borg_json_output, search_visible_items_in_tree, archive_env, search_string, expected_search_results
+    qtbot,
+    mocker,
+    borg_json_output,
+    search_visible_items_in_tree,
+    archive_env,
+    search_string,
+    expected_search_results,
+    emit_error,
 ):
     """
     Tests the supported search filters for the diff window.
@@ -561,4 +569,11 @@ def test_archive_diff_filters(
     expected_search_results.sort()
 
     assert filtered_items == expected_search_results
+
+    # Check if error is emitted
+    if emit_error:
+        assert tab._resultwindow.searchWidget.styleSheet() == 'QLineEdit { border: 2px solid red; }'
+    else:
+        assert tab._resultwindow.searchWidget.styleSheet() == ''
+
     vorta.utils.borg_compat.version = '1.1.0'

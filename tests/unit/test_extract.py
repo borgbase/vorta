@@ -201,36 +201,44 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
 
 @pytest.mark.parametrize(
-    'search_string,expected_search_results',
+    'search_string,expected_search_results,emit_error',
     [
         # Normal "in" search
-        ('txt', ['hello.txt', 'file1.txt', 'file.txt']),
+        ('txt', ['hello.txt', 'file1.txt', 'file.txt'], False),
         # Ignore Case
-        ('HELLO.txt -i', ['hello.txt']),
-        ('HELLO.txt', []),
+        ('HELLO.txt -i', ['hello.txt'], False),
+        ('HELLO.txt', [], False),
         # Size Match
-        ('--size >=15MB', []),
-        ('--size >9MB,<11MB', ['abigfile.pdf']),
-        ('--size >1KB,<4KB --exclude-parents', ['hello.txt']),
+        ('--size >=15MB', [], False),
+        ('--size >9MB,<11MB', ['abigfile.pdf'], False),
+        ('--size >1KB,<4KB --exclude-parents', ['hello.txt'], False),
         # Path Match Type
-        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt']),
-        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt', 'file.txt']),
+        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt'], False),
+        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt', 'file.txt'], False),
         # Regex Match Type
-        ("file[^/]*\\.txt|\\.pdf -m re", ['file1.txt', 'file.txt', 'abigfile.pdf']),
+        ("file[^/]*\\.txt|\\.pdf -m re", ['file1.txt', 'file.txt', 'abigfile.pdf'], False),
+        ("[ -m re", [], True),
         # Exact Match Type
-        ('hello', ['hello.txt']),
-        ('hello -m ex', []),
+        ('hello', ['hello.txt'], False),
+        ('hello -m ex', [], False),
         # Extract Specific Filters #
         # Date Filter
-        ('--last-modified >2025-01-01', ['file.txt']),
-        ('--last-modified <2025-01-01 --exclude-parents', ['hello.txt', 'file1.txt', 'abigfile.pdf']),
+        ('--last-modified >2025-01-01', ['file.txt'], False),
+        ('--last-modified <2025-01-01 --exclude-parents', ['hello.txt', 'file1.txt', 'abigfile.pdf'], False),
         # Health match
-        ('--unhealthy', ['abigfile.pdf']),
-        ('--healthy', ['hello.txt', 'file1.txt', 'file.txt', 'abigfile.pdf']),
+        ('--unhealthy', ['abigfile.pdf'], False),
+        ('--healthy', ['hello.txt', 'file1.txt', 'file.txt', 'abigfile.pdf'], False),
     ],
 )
 def test_archive_extract_filters(
-    qtbot, mocker, borg_json_output, search_visible_items_in_tree, archive_env, search_string, expected_search_results
+    qtbot,
+    mocker,
+    borg_json_output,
+    search_visible_items_in_tree,
+    archive_env,
+    search_string,
+    expected_search_results,
+    emit_error,
 ):
     """
     Tests the supported search filters for the extract window.
@@ -269,4 +277,11 @@ def test_archive_extract_filters(
     expected_search_results.sort()
 
     assert filtered_items == expected_search_results
+
+    # Check if error is emitted
+    if emit_error:
+        assert tab._window.searchWidget.styleSheet() == 'QLineEdit { border: 2px solid red; }'
+    else:
+        assert tab._window.searchWidget.styleSheet() == ''
+
     vorta.utils.borg_compat.version = '1.1.0'
