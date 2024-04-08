@@ -1090,11 +1090,6 @@ class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
         if not self.searchPattern:
             return True
 
-        # Match type "fm" is only available with path
-        if self.searchPattern.match == "fm" and not self.searchPattern.path:
-            self.searchStringError.emit(True)
-            return False
-
         model = self.sourceModel()
         item = model.index(sourceRow, 0, sourceParent).internalPointer()
 
