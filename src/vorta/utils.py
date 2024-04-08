@@ -19,8 +19,8 @@ from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
     QFileDialog,
+    QListView,
     QSystemTrayIcon,
-    QTreeView,
 )
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -178,8 +178,9 @@ def choose_file_dialog(parent, title, want_folder=True):
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
         dialog.setOption(QFileDialog.Option.ShowDirsOnly)
-        list_view = dialog.findChild(QTreeView)
-        list_view.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        list_view = dialog.findChild(QListView)
+        if list_view:
+            list_view.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
 
     return dialog
 
