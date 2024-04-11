@@ -3,17 +3,21 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to use for building macOS release'
+        description: 'Branch to use for building release'
         required: true
         default: 'master'
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.2.1'
+        default: '1.2.8'
+      macos_version:
+        description: 'macOS version for building'
+        required: true
+        default: 'macos-11'
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: ${{ github.event.inputs.macos_version }}
 
     steps:
     - name: Check out selected branch
