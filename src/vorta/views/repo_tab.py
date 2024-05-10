@@ -69,6 +69,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         self.populate_from_profile()  # needs init of ssh and compression items
 
+        # Compressed Repository size only supported in borg v1.
+        if borg_compat.check('V2'):
+            self.sizeCompressed.hide()
+            self.sizeCompressedLabel.hide()
+
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
         self.bAddRepo.setIcon(get_colored_icon("plus"))

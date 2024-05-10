@@ -36,7 +36,11 @@ class BorgCreateJob(BorgJob):
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
-                # repo.unique_csize = stats['unique_csize']
+
+                # Compressed Repository size only supported in borg v1.
+                if not borg_compat.check('V2'):
+                    repo.unique_csize = stats['unique_csize']
+
                 repo.unique_size = stats['unique_size']
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
