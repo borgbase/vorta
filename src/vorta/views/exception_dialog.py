@@ -50,7 +50,7 @@ class ExceptionDialog(ExceptionDialogBase, ExceptionDialogUI):
         self.crashDetails.setPlainText(details)
 
         # Set alert image
-        self.alertImage.setPixmap(get_colored_icon('alert', scaled_height=70, return_qpixmap=True))
+        self.alertImage.setPixmap(get_colored_icon('exclamation-triangle', scaled_height=75, return_qpixmap=True))
 
     def copy_report_to_clipboard(self):
         cb = QApplication.clipboard()
