@@ -248,6 +248,12 @@ def run_migrations(current_schema, db_connection):
                 'name',
                 pw.CharField(default=''),
             ),
+        )
+
+    if current_schema.version < 23:
+        _apply_schema_update(
+            current_schema,
+            23,
             migrator.add_column(
                 BackupProfileModel._meta.table_name,
                 'compaction_on',
