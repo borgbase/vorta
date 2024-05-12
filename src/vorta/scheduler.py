@@ -11,15 +11,14 @@ from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.borg.check import BorgCheckJob
+from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
-from vorta.borg.compact import BorgCompactJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
 from vorta.utils import borg_compat
-
 
 logger = logging.getLogger(__name__)
 
@@ -492,7 +491,7 @@ class VortaScheduler(QtCore.QObject):
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
                 self.app.jobs_manager.add_job(job)
 
-        compaction_cutoff = dt.now() - timedelta(minutes=7 * profile.compaction_weeks)
+        compaction_cutoff = dt.now() - timedelta(weeks=7 * profile.compaction_weeks)
         recent_compactions = (
             EventLogModel.select()
             .where(
@@ -502,8 +501,8 @@ class VortaScheduler(QtCore.QObject):
             )
             .count()
         )
-        
-        if profile.compaction_on and recent_compactions == 0:
+
+        if profile.compaction_on and recent_compactions == 0 and borg_compat.version >= 1.2:
             msg = BorgCompactJob.prepare(profile)
             if msg['ok']:
                 job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)

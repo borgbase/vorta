@@ -70,7 +70,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.validationCheckBox.toggled.connect(self.frameValidation.setEnabled)
         self.compactionCheckBox.toggled.connect(self.frameCompaction.setEnabled)
 
-
         # POPULATE with data
         self.populate_from_profile()
         self.set_icons()
@@ -163,7 +162,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         )
         self.validationWeeksCount.setValue(profile.validation_weeks)
 
-        #set borg compact options
+        # set borg compact options
         self.compactionCheckBox.setCheckState(
             QtCore.Qt.CheckState.Checked if profile.compaction_on else QtCore.Qt.CheckState.Unchecked
         )
