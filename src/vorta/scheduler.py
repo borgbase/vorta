@@ -5,6 +5,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
 
+from packaging import version
 from PyQt6 import QtCore, QtDBus
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
@@ -491,7 +492,7 @@ class VortaScheduler(QtCore.QObject):
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
                 self.app.jobs_manager.add_job(job)
 
-        compaction_cutoff = dt.now() - timedelta(weeks=7 * profile.compaction_weeks)
+        compaction_cutoff = dt.now() - timedelta(days=7 * profile.compaction_weeks)
         recent_compactions = (
             EventLogModel.select()
             .where(
@@ -502,7 +503,11 @@ class VortaScheduler(QtCore.QObject):
             .count()
         )
 
-        if profile.compaction_on and recent_compactions == 0 and borg_compat.version >= 1.2:
+        if (
+            profile.compaction_on
+            and recent_compactions == 0
+            and version.parse(borg_compat.version) >= version.parse("1.2")
+        ):
             msg = BorgCompactJob.prepare(profile)
             if msg['ok']:
                 job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)
