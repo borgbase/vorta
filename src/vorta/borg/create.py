@@ -162,6 +162,17 @@ class BorgCreateJob(BorgJob):
         ]
         cmd += extra_cmd_options
 
+        # Function to extend command with exclude-if-present patterns
+        if profile.exclude_if_present is not None:
+            patterns = []
+            for f in profile.exclude_if_present.split('\n'):
+                f = f.strip()
+                if f.startswith('[x]'):
+                    patterns.append(f[3:].strip())  # Remove the '[x]' prefix
+
+            if patterns:
+                cmd.extend(['--exclude-if-present'] + patterns)
+
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
         exclude_dirs = []
