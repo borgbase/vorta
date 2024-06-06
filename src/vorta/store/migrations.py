@@ -250,6 +250,17 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
+        if current_schema.version < 23:
+            _apply_schema_update(
+                current_schema,
+                23,
+                migrator.add_column_default(
+                    BackupProfileModel._meta.table_name,
+                    'exclude_if_present',
+                    pw.TextField(default=".nobackup .vortaignore"),
+                ),
+            )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
