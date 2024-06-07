@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.i18n import translate
+from vorta.log import toggle_file_logging
 from vorta.store.models import BackupProfileMixin, SettingsModel
 from vorta.store.settings import get_misc_settings
 from vorta.utils import get_asset, search
@@ -98,6 +99,9 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 cb.stateChanged.connect(lambda v, key=setting.key: self.save_setting(key, v))
                 if setting.key == 'enable_fixed_units':
                     cb.stateChanged.connect(self.refresh_archive.emit)
+
+                if setting.key == 'enable_logging_to_file':
+                    cb.stateChanged.connect(toggle_file_logging)
 
                 tb = ToolTipButton()
                 tb.setToolTip(setting.tooltip)
