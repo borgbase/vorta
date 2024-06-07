@@ -40,7 +40,7 @@ class VortaApp(QtSingleApplication):
     backup_finished_event = QtCore.pyqtSignal(dict)
     backup_cancelled_event = QtCore.pyqtSignal()
     backup_log_event = QtCore.pyqtSignal(str, dict)
-    backup_progress_event = QtCore.pyqtSignal(str)
+    backup_progress_event = QtCore.pyqtSignal(int, str)
     check_failed_event = QtCore.pyqtSignal(dict)
 
     def __init__(self, args_raw, single_app=False):
@@ -121,7 +121,7 @@ class VortaApp(QtSingleApplication):
                 translate('messages', msg['message']),
                 level='error',
             )
-            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', msg['message'])}")
+            self.backup_progress_event.emit(profile.id, f"[{profile.name}] {translate('messages', msg['message'])}")
             return None
 
     def open_main_window_action(self):
@@ -257,7 +257,7 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakJob.prepare(profile)
         if not params['ok']:
-            self.backup_progress_event.emit(f"[{profile.name}] {params['message']}")
+            self.backup_progress_event.emit(profile.id, f"[{profile.name}] {params['message']}")
             return
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
