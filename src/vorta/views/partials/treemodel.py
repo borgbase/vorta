@@ -2,10 +2,12 @@
 Implementation of a tree model for use with `QTreeView` based on (file) paths.
 
 """
-
+import argparse
 import bisect
 import enum
 import os.path as osp
+import re
+from fnmatch import fnmatch
 from functools import reduce
 from pathlib import PurePath
 from typing import Generic, List, Optional, Sequence, Tuple, TypeVar, Union, overload
@@ -18,6 +20,8 @@ from PyQt6.QtCore import (
     Qt,
     pyqtSignal,
 )
+
+from vorta.views.utils import compare_values_with_sign
 
 #: A representation of a path
 Path = Tuple[str, ...]
@@ -896,17 +900,60 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         return super().headerData(section, orientation, role)
 
 
-class FileTreeSortProxyModel(QSortFilterProxyModel):
+class FileTreeSortFilterProxyModel(QSortFilterProxyModel):
     """
-    Sort a FileTreeModel.
+    Sort and Filter a FileTreeModel.
     """
 
     sorted = pyqtSignal(int, Qt.SortOrder)
+    searchStringError = pyqtSignal(bool)
 
     def __init__(self, parent=None) -> None:
         """Init."""
         super().__init__(parent)
+
+        self.setRecursiveFilteringEnabled(True)
+        self.setAutoAcceptChildRows(True)
+
         self.folders_on_top = False
+        self.searchPattern = None
+
+    @staticmethod
+    def parse_size(size: str) -> Tuple[str, int]:
+        """
+        Parse the size string into a tuple of two values.
+        """
+
+        comparison_sign = ['<', '>', '<=', '>=', '=']
+        size_units = ['KB', 'MB', 'GB']
+
+        # TODO: Should we just use regex? ^([<>]=?|)(\d+(\.\d+)?)([KMG]B)?$
+        if not any(size.startswith(unit) for unit in comparison_sign):
+            raise argparse.ArgumentTypeError("Invalid size format. Supported comparison signs: <, >, <=, >=")
+
+        if not any(size.endswith(unit) for unit in size_units):
+            raise argparse.ArgumentTypeError("Invalid size format. Supported units: KB, MB, GB")
+
+        try:
+            unit = size[-2:]
+            if size[1] == '=':
+                return (size[:2], int(size[2:-2]) * 1024 ** (size_units.index(unit) + 1))
+            else:
+                return (size[0], int(size[1:-2]) * 1024 ** (size_units.index(unit) + 1))
+        except ValueError:
+            raise argparse.ArgumentTypeError("Invalid size format. Must be a number.")
+
+    @classmethod
+    def valid_size(cls, value: str) -> List[Tuple[str, int]]:
+        """Validate the size string."""
+        size = value.split(',')
+
+        if len(size) == 1:
+            return [cls.parse_size(size[0])]
+        elif len(size) == 2:
+            return [cls.parse_size(size[0]), cls.parse_size(size[1])]
+        else:
+            raise argparse.ArgumentTypeError("Invalid size format. Can only accept two values.")
 
     @overload
     def keepFoldersOnTop(self) -> bool:
@@ -963,7 +1010,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         raise NotImplementedError(
-            "Method `choose_data` of " + "FileTreeSortProxyModel" + " must be implemented by subclasses."
+            "Method `choose_data` of " + "FileTreeSortFilterProxyModel" + " must be implemented by subclasses."
         )
 
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
@@ -994,3 +1041,107 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         data1 = self.choose_data(left)
         data2 = self.choose_data(right)
         return data1 < data2
+
+    def setSearchString(self, pattern: str):
+        """
+        Set the pattern to filter for.
+        """
+
+        try:
+            self.searchPattern = self.parse_search_string(pattern)
+        except SystemExit:
+            self.searchStringError.emit(True)
+            return None
+
+        self.searchStringError.emit(False)
+        self.invalidateRowsFilter()
+
+    def get_parser(self):
+        """
+        Creates and returns the parser for the search string.
+        """
+        parser = argparse.ArgumentParser(description="Search files and folders based on various options.")
+        parser.add_argument("search_string", nargs="*", default=[], help="String to search in the name.")
+        parser.add_argument(
+            "-m", "--match", choices=["in", "ex", "re", "fm"], default=None, help="Type of match query."
+        )
+        parser.add_argument("-i", "--ignore-case", action="store_true", help="Ignore case.")
+        parser.add_argument("-p", "--path", action="store_true", help="Match by path.")
+        parser.add_argument("-s", "--size", type=FileTreeSortFilterProxyModel.valid_size, help="Match by size.")
+        parser.add_argument("--exclude-parents", action="store_true", help="Match only items without children.")
+
+        return parser
+
+    def parse_search_string(self, pattern: str):
+        """
+        Parse the search string into a list of tokens.
+
+        May raise `SystemExit`.
+        """
+
+        parser = self.get_parser()
+        return parser.parse_args(pattern.split())
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        item_path = path_to_str(item.path)
+        item_name = item.subpath
+
+        # Exclude Parents
+        if self.searchPattern.exclude_parents:
+            if item.children:
+                return False
+
+        # Set default values
+        if self.searchPattern.match is None:
+            self.searchPattern.match = "fm" if self.searchPattern.path else "in"
+
+        if self.searchPattern.path:
+            search_item = item_path
+        else:
+            search_item = item_name
+
+        if self.searchPattern.search_string:
+            search_string = " ".join(self.searchPattern.search_string)
+
+            # Ignore Case?
+            if self.searchPattern.ignore_case:
+                search_item = search_item.lower()
+                search_string = search_string.lower()
+
+            if self.searchPattern.match == "in" and search_string not in search_item:
+                return False
+            elif self.searchPattern.match == "ex" and search_string != search_item:
+                return False
+            elif self.searchPattern.match == "re":
+                try:
+                    if not re.search(search_string, search_item):
+                        return False
+                except re.error:
+                    self.searchStringError.emit(True)
+                    return False
+            elif self.searchPattern.match == "fm" and not fnmatch(search_item, search_string):
+                return False
+
+        if self.searchPattern.size:
+            # Diff view has size column corresponding to the changed_size while
+            # Extract view has size column corresponding to the size
+            if hasattr(item.data, 'changed_size'):
+                item_size = item.data.changed_size
+            else:
+                item_size = item.data.size
+
+            for filter_size in self.searchPattern.size:
+                if not compare_values_with_sign(item_size, filter_size[1], filter_size[0]):
+                    return False
+
+        return True

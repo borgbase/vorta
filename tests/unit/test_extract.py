@@ -30,6 +30,7 @@ default = {
     "linktarget": "",
     "flags": None,
     "mtime": "2022-05-13T14:33:57.305797",
+    "isomtime": "2023-08-17T00:00:00.000000",
     "size": 0,
 }
 
@@ -197,3 +198,90 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
     assert dialog.model.mode == expected_mode
     assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
+
+
+@pytest.mark.parametrize(
+    'search_string,expected_search_results,emit_error',
+    [
+        # Normal "in" search
+        ('txt', ['hello.txt', 'file1.txt', 'file.txt'], False),
+        # Ignore Case
+        ('HELLO.txt -i', ['hello.txt'], False),
+        ('HELLO.txt', [], False),
+        # Size Match
+        ('--size >=15MB', [], False),
+        ('--size >9MB,<11MB', ['abigfile.pdf'], False),
+        ('--size >1KB,<4KB --exclude-parents', ['hello.txt'], False),
+        # Path Match Type
+        ('home/kali/vorta/source1/hello.txt --path', ['hello.txt'], False),
+        ('home/kali/vorta/source1/file*.txt --path -m fm', ['file1.txt', 'file.txt'], False),
+        # Regex Match Type
+        ("file[^/]*\\.txt|\\.pdf -m re", ['file1.txt', 'file.txt', 'abigfile.pdf'], False),
+        ("[ -m re", [], True),
+        # Exact Match Type
+        ('hello', ['hello.txt'], False),
+        ('hello -m ex', [], False),
+        # Extract Specific Filters #
+        # Date Filter
+        ('--last-modified >2025-01-01', ['file.txt'], False),
+        ('--last-modified <2025-01-01 --exclude-parents', ['hello.txt', 'file1.txt', 'abigfile.pdf'], False),
+        # Health match
+        ('--unhealthy', ['abigfile.pdf'], False),
+        ('--healthy', ['hello.txt', 'file1.txt', 'file.txt', 'abigfile.pdf'], False),
+    ],
+)
+def test_archive_extract_filters(
+    qtbot,
+    mocker,
+    borg_json_output,
+    search_visible_items_in_tree,
+    archive_env,
+    search_string,
+    expected_search_results,
+    emit_error,
+):
+    """
+    Tests the supported search filters for the extract window.
+    """
+
+    vorta.utils.borg_compat.version = '1.2.4'
+
+    _, tab = archive_env
+    tab.archiveTable.selectRow(0)
+
+    stdout, stderr = borg_json_output('extract_archives_search')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    # click on extract button
+    qtbot.mouseClick(tab.bExtract, Qt.MouseButton.LeftButton)
+
+    # Wait for window to open
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab._window.treeView.model().rowCount(QModelIndex()) > 0, **pytest._wait_defaults)
+
+    tab._window.searchWidget.setText(search_string)
+    qtbot.mouseClick(tab._window.bSearch, Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(
+        lambda: (tab._window.treeView.model().rowCount(QModelIndex()) > 0) or (len(expected_search_results) == 0),
+        **pytest._wait_defaults,
+    )
+
+    proxy_model = tab._window.treeView.model()
+
+    filtered_items = search_visible_items_in_tree(proxy_model, QModelIndex())
+
+    # sort both lists to make sure the order is not important
+    filtered_items.sort()
+    expected_search_results.sort()
+
+    assert filtered_items == expected_search_results
+
+    # Check if error is emitted
+    if emit_error:
+        assert tab._window.searchWidget.styleSheet() == 'QLineEdit { border: 2px solid red; }'
+    else:
+        assert tab._window.searchWidget.styleSheet() == ''
+
+    vorta.utils.borg_compat.version = '1.1.0'
