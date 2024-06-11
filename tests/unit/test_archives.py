@@ -14,6 +14,9 @@ class MockFileDialog:
     def open(self, func):
         func()
 
+    def exec(self):
+        return 1
+
     def selectedFiles(self):
         return ['/tmp']
 
