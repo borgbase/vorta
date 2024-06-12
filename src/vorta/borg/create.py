@@ -170,8 +170,8 @@ class BorgCreateJob(BorgJob):
                 if f.startswith('[x]'):
                     patterns.append(f[3:].strip())  # Remove the '[x]' prefix
 
-            if patterns:
-                cmd.extend(['--exclude-if-present'] + patterns)
+            for pattern in patterns:
+                cmd.extend(['--exclude-if-present', pattern])
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
