@@ -222,7 +222,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
     def populate_preview_tab(self):
         preview = self.profile.get_combined_exclusion_string()
         if self.profile.exclude_if_present:
-            preview += '\n#Exclude if present'
+            preview += '\n# Exclude if present'
             for f in self.profile.exclude_if_present.split('\n'):
                 f = f.strip()
                 if f.startswith('[x]'):
