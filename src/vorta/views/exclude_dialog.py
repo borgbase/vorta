@@ -382,8 +382,18 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         patterns = []
         for row in range(self.excludeIfPresentModel.rowCount()):
             item = self.excludeIfPresentModel.item(row)
+            text = item.text().strip()
+
+            # Remove any existing prefix
+            if text.startswith('[x] '):
+                text = text[4:]
+            elif text.startswith('[] '):
+                text = text[3:]
+
+            # Add the correct prefix based on the check state
             prefix = '[x] ' if item.checkState() == Qt.CheckState.Checked else '[] '
-            patterns.append(prefix + item.text())
+            patterns.append(prefix + text)
+
         self.profile.exclude_if_present = '\n'.join(patterns)
         self.profile.save()
         self.populate_preview_tab()
