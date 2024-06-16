@@ -17,7 +17,9 @@
             "fm:*/__pycache__",
             "fm:*.pyc",
             "fm:*.pyo",
-            "fm:*/.virtualenvs"
+            "fm:*/.virtualenvs",
+            "fm:*/venv/*",
+            "fm:*/.venv/*"
         ],
         "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
         "author": "Divi"
@@ -103,5 +105,81 @@
         ],
         "tags": ["type:dev", "cloud:docker", "os:linux", "os:darwin"],
         "author": "SAMAD101"
+    },
+    {
+        "name": "Virtual Machine and Container Files",
+        "slug": "vm-container-files",
+        "patterns": [
+            "fm:*.vmdk",
+            "fm:*.vdi",
+            "fm:*.qcow2",
+            "fm:*.iso",
+            "fm:*/.docker/*",
+            "fm:*/.local/share/containers/*"
+        ],
+        "tags": ["type:vm", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Log Files",
+        "slug": "log-files",
+        "patterns": [
+            "fm:*.log",
+            "fm:*/logs/*"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Temporary Files",
+        "slug": "temp-files",
+        "patterns": [
+            "fm:*/.tmp",
+            "fm:*/temp",
+            "fm:*.swp",
+            "fm:*.bak"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "All Cache Files",
+        "slug": "cache-files",
+        "patterns": [
+            "fm:*/.cache",
+            "fm:*/Caches"
+        ],
+        "tags": [
+            "type:system","os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Media Files",
+        "slug": "media-files",
+        "patterns": [
+            "fm:*.mp3",
+            "fm:*.mp4",
+            "fm:*.mkv",
+            "fm:*.avi",
+            "fm:*.flac",
+            "fm:*.wav"
+        ],
+        "tags": [
+            "type:media", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Recycle Bin/Trash",
+        "slug": "recycle-bin-trash",
+        "patterns": [
+            "fm:*/.local/share/Trash/*",
+            "fm:*/.Trash/*",
+            "fm:*/.Trash-*/*"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+        "author": "shivansh02"
     }
 ]
