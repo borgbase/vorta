@@ -35,6 +35,7 @@
     "password": "Tr0ub4dor&3",
     "post_backup_cmd": "",
     "dont_run_on_metered_networks": true,
+    "allow_new_networks": true,
     "SourceFileModel": [
         {
             "dir": "/this/is/a/test/file",

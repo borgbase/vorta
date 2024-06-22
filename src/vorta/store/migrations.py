@@ -248,6 +248,11 @@ def run_migrations(current_schema, db_connection):
                 'name',
                 pw.CharField(default=''),
             ),
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'allow_new_networks',
+                pw.BooleanField(default=True),
+            ),
         )
 
 

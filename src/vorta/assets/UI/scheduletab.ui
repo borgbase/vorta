@@ -530,7 +530,7 @@
        <property name="verticalSpacing">
         <number>12</number>
        </property>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <property name="spacing">
           <number>4</number>
@@ -556,6 +556,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="allowNewNetworksCheckBox">
+         <property name="text">
+          <string>Allow new networks by default</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QCheckBox" name="meteredNetworksCheckBox">
