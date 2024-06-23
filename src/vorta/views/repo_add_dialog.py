@@ -199,8 +199,10 @@ class AddRepoWindow(RepoWindow):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
             self.passwordInput.set_validation_enabled(False)
+            self.passwordInput.set_visibility(False)
         else:
             self.passwordInput.set_validation_enabled(True)
+            self.passwordInput.set_visibility(True)
 
     def display_backend_warning(self):
         '''Display password backend message based off current keyring'''

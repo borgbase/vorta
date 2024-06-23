@@ -65,7 +65,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
         self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
         if self.current_profile is None:
-            self.current_profile = BackupProfileModel.select().order_by('name').first()
+            profiles = BackupProfileModel.select()
+            self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -161,7 +162,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         current_item = None
 
         # Add items to the QListWidget
-        for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
+        profiles = BackupProfileModel.select()
+        for profile in sorted(profiles, key=lambda p: (p.name.casefold(), p.name)):
             item = QListWidgetItem(profile.name)
             item.setData(Qt.ItemDataRole.UserRole, profile.id)
 
@@ -283,13 +285,22 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
         if self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole) == profile_id:
-            self.profileSelector.currentItem().setText(profile_name)
+            profile = self.profileSelector.takeItem(self.profileSelector.currentRow())
+            profile.setText(profile_name)
         # Profile is added
         else:
             profile = QListWidgetItem(profile_name)
             profile.setData(Qt.ItemDataRole.UserRole, profile_id)
-            self.profileSelector.addItem(profile)
-            self.profileSelector.setCurrentItem(profile)
+        # Insert the profile at the correct position
+        # Both the casefolded and the original name are used as the key to keep the order stable
+        profile_key = (profile.text().casefold(), profile.text())
+        row = 0
+        for i in range(self.profileSelector.count()):
+            item_name = self.profileSelector.item(i).text()
+            if (item_name.casefold(), item_name) < profile_key:
+                row += 1
+        self.profileSelector.insertItem(row, profile)
+        self.profileSelector.setCurrentItem(profile)
 
     def toggle_misc_visibility(self):
         if self.miscWidget.isVisible():

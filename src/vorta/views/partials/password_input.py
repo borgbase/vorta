@@ -170,3 +170,9 @@ class PasswordInput(QObject):
         self.add_form_to_layout(form_layout)
         widget.setLayout(form_layout)
         return widget
+
+    def set_visibility(self, visible: bool) -> None:
+        self._label_password.setVisible(visible)
+        self._label_confirm.setVisible(visible)
+        self.passwordLineEdit.setVisible(visible)
+        self.confirmLineEdit.setVisible(visible)
