@@ -40,10 +40,17 @@
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage/",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Session Storage/",
             "fm:*/.config/BraveSoftware/Brave-Browser/Safe Browsing/",
-            "fm:*/.config/BraveSoftware/Brave-Browser/ShaderCache/"
+            "fm:*/.config/BraveSoftware/Brave-Browser/ShaderCache/",
+            "fm:*/.var/app/com.brave.Browser/cache/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/*/Feature Engagement Tracker/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/*/Local Storage/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/*/Session Storage/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/Safe Browsing/",
+            "fm:*/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser/ShaderCache/"
         ],
         "tags": ["application:brave", "type:browser", "os:linux"],
-        "author": "Divi"
+        "author": "Divi, Renner0E"
     },
     {
         "name": "Mozilla Firefox cache and config files",
