@@ -63,9 +63,24 @@
             "fm:*/.mozilla/firefox/*/XPC.mfasl",
             "fm:*/.mozilla/firefox/*/xpti.dat",
             "fm:*/.mozilla/firefox/*/compreg.dat",
-            "fm:*/.mozilla/firefox/*/pluginreg.dat"
+            "fm:*/.mozilla/firefox/*/pluginreg.dat",
+            "fm:*/.var/app/org.mozilla.firefox/cache",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/minidumps",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/.parentlock",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/urlclassifier3.sqlite",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/blocklist.xml",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/extensions.sqlite",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/extensions.sqlite-journal",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/extensions.rdf",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/extensions.ini",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/extensions.cache",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/XUL.mfasl",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/XPC.mfasl",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/xpti.dat",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/compreg.dat",
+            "fm:*/.var/app/org.mozilla.firefox/.mozilla/firefox/*/pluginreg.dat"
         ],
         "tags": ["application:firefox", "type:browser", "os:linux"],
-        "author": "Divi"
+        "author": "Divi, Renner0E"
     }
 ]
