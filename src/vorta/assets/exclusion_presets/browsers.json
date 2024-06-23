@@ -9,12 +9,20 @@
             "fm:*/.config/chromium/*/Service Worker/CacheStorage",
             "fm:*/.config/chromium/*/Application Cache",
             "fm:*/.config/chromium/*/History Index *",
+            "fm:*/.config/chromium/*/ShaderCache",
+            "fm:*/.var/app/org.chromium/cache",
+            "fm:*/.var/app/org.chromium/config/chromium/*/Local Storage",
+            "fm:*/.var/app/org.chromium/config/chromium/*/Session Storage",
+            "fm:*/.var/app/org.chromium/config/chromium/*/Service Worker/CacheStorage",
+            "fm:*/.var/app/org.chromium/config/chromium/*/Application Cache",
+            "fm:*/.var/app/org.chromium/config/chromium/*/ShaderCache",
+            "fm:*/.var/app/org.chromium/config/chromium/*/History Index *",
             "fm:*/snap/chromium/common/.cache",
             "fm:*/snap/chromium/*/.config/chromium/*/Service Worker/CacheStorage",
             "fm:*/snap/chromium/*/.local/share/"
         ],
         "tags":["application:chromium", "type:browser", "os:linux"],
-        "author": "Divi"
+        "author": "Divi, Renner0E"
     },
     {
         "name": "Google Chrome cache and config files",
