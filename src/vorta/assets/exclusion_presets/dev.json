@@ -82,10 +82,12 @@
         "slug": "spotify",
         "patterns": [
             "fm:*/.cache/spotify",
-            "fm:*/.config/spotify"
+            "fm:*/.config/spotify",
+            "fm:*/.var/app/com.spotify.Client/cache",
+            "fm:*/.var/app/com.spotify.Client/config/spotify"
         ],
         "tags": ["type:media", "media:spotify", "os:linux"],
-        "author": "SAMAD101"
+        "author": "SAMAD101, Renner0E"
     },
     {
         "name": "Flatpak Builder cache",
