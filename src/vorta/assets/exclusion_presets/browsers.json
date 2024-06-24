@@ -2,7 +2,7 @@
     {
         "name": "Chromium cache and config files",
         "slug": "chromium-cache",
-        "patterns":[
+        "patterns": [
             "fm:*/.config/chromium/*/Application Cache",
             "fm:*/.config/chromium/*/History Index *",
             "fm:*/.config/chromium/*/Local Storage",
@@ -30,7 +30,7 @@
     {
         "name": "Google Chrome cache and config files",
         "slug": "google-chrome-cache",
-        "patterns":[
+        "patterns": [
             "fm:*/.cache/google-chrome",
             "fm:*/.cache/google-chrome-unstable",
             "fm:*/.config/google-chrome-unstable/*/Application Cache",
@@ -70,7 +70,7 @@
     {
         "name": "Brave cache and config files",
         "slug": "brave-cache",
-        "patterns":[
+        "patterns": [
             "fm:*/.cache/BraveSoftware/",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Feature Engagement Tracker",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Local Storage",
@@ -96,7 +96,7 @@
     {
         "name": "Mozilla Firefox cache and config files",
         "slug": "firefox-cache",
-        "patterns":[
+        "patterns": [
             "fm:*/.cache/mozilla/firefox",
             "fm:*/.mozilla/firefox/*/.parentlock",
             "fm:*/.mozilla/firefox/*/Cache",

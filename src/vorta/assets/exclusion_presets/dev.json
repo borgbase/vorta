@@ -2,8 +2,7 @@
     {
         "name": "Node Modules and package manager cache",
         "slug": "node-cache",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/node_modules",
             "fm:*/.npm",
             "fm:*/npm-global"
@@ -14,8 +13,7 @@
     {
         "name": "Python cache and virtualenv",
         "slug": "python-cache",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/__pycache__",
             "fm:*.pyc",
             "fm:*.pyo",
@@ -27,8 +25,7 @@
     {
         "name": "Rust artefacts",
         "slug": "rust-artefacts",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/.cargo",
             "fm:*/.rustup"
         ],
