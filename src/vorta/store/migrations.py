@@ -257,7 +257,7 @@ def run_migrations(current_schema, db_connection):
                 migrator.add_column_default(
                     BackupProfileModel._meta.table_name,
                     'exclude_if_present',
-                    pw.TextField(default="[] .nobackup\n[] .vortaignore"),
+                    pw.TextField(default="[] .nobackup\n[] CACHEDIR.TAG"),
                 ),
             )
 

@@ -79,7 +79,7 @@ class BackupProfileModel(BaseModel):
     ssh_key = pw.CharField(default=None, null=True)
     compression = pw.CharField(default='lz4')
     exclude_patterns = pw.TextField(null=True)
-    exclude_if_present = pw.TextField(null=True, default="[] .nobackup\n[] .vortaignore")
+    exclude_if_present = pw.TextField(null=True, default="[] .nobackup\n[] CACHEDIR.TAG")
     schedule_mode = pw.CharField(default='off')
     schedule_interval_count = pw.IntegerField(default=3)
     schedule_interval_unit = pw.CharField(default='hours')
