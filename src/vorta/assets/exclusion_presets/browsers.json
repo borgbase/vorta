@@ -31,12 +31,13 @@
         "name": "Google Chrome cache and config files",
         "slug": "google-chrome-cache",
         "patterns":[
-            "fm:*/.config/google-chrome/ShaderCache",
-            "fm:*/.config/google-chrome/*/Local Storage",
-            "fm:*/.config/google-chrome/*/Session Storage",
+            "fm:*/.cache/google-chrome",
             "fm:*/.config/google-chrome/*/Application Cache",
             "fm:*/.config/google-chrome/*/History Index *",
-            "fm:*/.config/google-chrome/*/Service Worker/CacheStorage"
+            "fm:*/.config/google-chrome/*/Local Storage",
+            "fm:*/.config/google-chrome/*/Service Worker/CacheStorage",
+            "fm:*/.config/google-chrome/*/Session Storage",
+            "fm:*/.config/google-chrome/ShaderCache"
         ],
         "tags": ["application:chrome", "type:browser", "os:linux"],
         "author": "Divi"
@@ -45,6 +46,7 @@
         "name": "Brave cache and config files",
         "slug": "brave-cache",
         "patterns":[
+            "fm:*/.cache/BraveSoftware/",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Feature Engagement Tracker",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Local Storage",
             "fm:*/.config/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage",
@@ -70,6 +72,7 @@
         "name": "Mozilla Firefox cache and config files",
         "slug": "firefox-cache",
         "patterns":[
+            "fm:*/.cache/mozilla/firefox",
             "fm:*/.mozilla/firefox/*/.parentlock",
             "fm:*/.mozilla/firefox/*/Cache",
             "fm:*/.mozilla/firefox/*/XPC.mfasl",
