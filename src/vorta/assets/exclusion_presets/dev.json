@@ -96,6 +96,15 @@
         "author": "Renner0E"
     },
     {
+        "name": "Flatpak Builder cache",
+        "slug": "flatpak-builder",
+        "patterns": [
+            "fm:*.flatpak-builder"
+        ],
+        "tags": ["type:dev", "os:linux"],
+        "author": "Renner0E"
+    },
+    {
         "name": "Docker artefacts",
         "slug": "docker-artefacts",
         "patterns": [
