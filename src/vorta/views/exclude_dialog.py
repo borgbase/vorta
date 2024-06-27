@@ -398,10 +398,24 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile.save()
         self.populate_preview_tab()
 
+    def normalize_exclude_if_present_patterns(self):
+        '''
+        Ensure all patterns in exclude_if_present start with either [x] or [].
+        '''
+        patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
+        normalized_patterns = []
+        for pattern in patterns:
+            if not pattern.startswith('[x]') and not pattern.startswith('[]'):
+                pattern = '[x] ' + pattern
+            normalized_patterns.append(pattern)
+        self.profile.exclude_if_present = '\n'.join(normalized_patterns)
+        self.profile.save()
+
     def populate_exclude_if_present_patterns(self):
         '''
         Populate the 'Exclude If Present' list from the profile.
         '''
+        self.normalize_exclude_if_present_patterns()
         patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
         for pattern in patterns:
             item = QStandardItem()
@@ -411,10 +425,6 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
                 item.setCheckState(Qt.CheckState.Checked)
             elif pattern.startswith('[]'):
                 item.setText(pattern[3:])
-                item.setCheckable(True)
-                item.setCheckState(Qt.CheckState.Unchecked)
-            else:
-                item.setText(pattern)
                 item.setCheckable(True)
                 item.setCheckState(Qt.CheckState.Unchecked)
             self.excludeIfPresentModel.appendRow(item)
