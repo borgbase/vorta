@@ -12,7 +12,7 @@ from enum import Enum
 import peewee as pw
 from playhouse import signals
 
-from vorta.utils import slugify
+from vorta.store.utils import slugify
 from vorta.views.utils import get_exclusion_presets
 
 DB = pw.Proxy()

@@ -260,8 +260,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile {} imported.').format(profile.name),
             )
             self.repoTab.populate_from_profile()
-            self.scheduleTab.populate_logs()
-            self.scheduleTab.populate_wifi()
+            self.scheduleTab.populate_from_profile()
             self.miscTab.populate()
             self.populate_profile_selector()
 

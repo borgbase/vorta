@@ -2,9 +2,45 @@ import json
 import os
 import sys
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QImage, QPixmap
+from PyQt6.QtWidgets import QTableWidgetItem
 
 from vorta.utils import get_asset, uses_dark_mode
+
+
+class SizeItem(QTableWidgetItem):
+    def __init__(self, s):
+        super().__init__(s)
+        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
+
+    def __lt__(self, other):
+        if other.text() == '':
+            return False
+        elif self.text() == '':
+            return True
+        else:
+            return sort_sizes([self.text(), other.text()]) == [
+                self.text(),
+                other.text(),
+            ]
+
+
+def sort_sizes(size_list):
+    """Sorts sizes with extensions. Assumes that size is already in largest unit possible"""
+    final_list = []
+    for suffix in [" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]:
+        sub_list = [
+            float(size[: -len(suffix)])
+            for size in size_list
+            if size.endswith(suffix) and size[: -len(suffix)][-1].isnumeric()
+        ]
+        sub_list.sort()
+        final_list += [(str(size) + suffix) for size in sub_list]
+        # Skip additional loops
+        if len(final_list) == len(size_list):
+            break
+    return final_list
 
 
 def get_colored_icon(icon_name, scaled_height=128, return_qpixmap=False):
