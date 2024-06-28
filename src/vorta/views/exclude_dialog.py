@@ -1,6 +1,6 @@
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
-from PyQt6.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtGui import QCursor, QStandardItem, QStandardItemModel
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
@@ -85,8 +85,12 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.bRemovePattern.setIcon(get_colored_icon('minus'))
         self.bPreviewCopy.clicked.connect(self.copy_preview_to_clipboard)
         self.bPreviewCopy.setIcon(get_colored_icon('copy'))
-        self.bAddPattern.clicked.connect(self.add_pattern)
+        self.bAddPattern.clicked.connect(self.add_pattern_custom_exclusion)
         self.bAddPattern.setIcon(get_colored_icon('plus'))
+        self.bAddPatternExcludeIfPresent.setIcon(get_colored_icon('plus'))
+        self.bAddPatternExcludeIfPresent.clicked.connect(self.add_pattern_exclude_if_present)
+        self.bRemovePatternExcludeIfPresent.setIcon(get_colored_icon('minus'))
+        self.bRemovePatternExcludeIfPresent.clicked.connect(self.remove_pattern_exclude_if_present)
 
         # help text
         self.customPresetsHelpText.setOpenExternalLinks(True)
@@ -114,11 +118,33 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
                 "This is a preview of the patterns that will be used to exclude files and folders from the backup.",
             )
         )
+        self.excludeIfPresentHelpText.setText(
+            translate(
+                "ExcludeIfPresentHelp",
+                "Folders that contain the following files will be excluded from backups.",
+            )
+        )
+
+        # Add the Exclude If Present tab
+        self.excludeIfPresentModel = MandatoryInputItemModel(profile=profile)
+        self.excludeIfPresentList.setModel(self.excludeIfPresentModel)
+        self.excludeIfPresentList.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.excludeIfPresentList.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.excludeIfPresentList.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.excludeIfPresentList.setAlternatingRowColors(True)
+        self.excludeIfPresentListDelegate = QStyledItemDelegate()
+        self.excludeIfPresentList.setItemDelegate(self.excludeIfPresentListDelegate)
+        self.excludeIfPresentListDelegate.closeEditor.connect(self.exclude_if_present_pattern_editing_finished)
+        self.excludeIfPresentList.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.excludeIfPresentList.customContextMenuRequested.connect(self.exclude_if_present_context_menu)
+
+        self.excludeIfPresentModel.itemChanged.connect(self.exclude_if_present_item_changed)
 
         self.populate_custom_exclusions_list()
         self.populate_presets_list()
         self.populate_raw_exclusions_text()
         self.populate_preview_tab()
+        self.populate_exclude_if_present_patterns()
 
     def populate_custom_exclusions_list(self):
         user_excluded_patterns = {
@@ -134,37 +160,41 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
             self.customExclusionsModel.appendRow(item)
 
-    def custom_exclusions_context_menu(self, pos):
-        # index under cursor
-        index = self.customExclusionsList.indexAt(pos)
+    def create_context_menu(self, list_widget, remove_method, toggle_method=None):
+        pos = list_widget.viewport().mapFromGlobal(QCursor.pos())
+        index = list_widget.indexAt(pos)
         if not index.isValid():
             return
 
-        selected_rows = self.customExclusionsList.selectedIndexes()
+        selected_rows = list_widget.selectedIndexes()
 
         if selected_rows and index not in selected_rows:
-            return  # popup only for selected items
+            return
 
-        menu = QMenu(self.customExclusionsList)
+        menu = QMenu(list_widget)
         menu.addAction(
             get_colored_icon('copy'),
             self.tr('Copy'),
             lambda: QApplication.clipboard().setText(index.data()),
         )
 
-        # Remove and Toggle can work with multiple items selected
         menu.addAction(
             get_colored_icon('minus'),
             self.tr('Remove'),
-            lambda: self.remove_pattern(index if not selected_rows else None),
-        )
-        menu.addAction(
-            get_colored_icon('check-circle'),
-            self.tr('Toggle'),
-            lambda: self.toggle_custom_pattern(index if not selected_rows else None),
+            lambda: remove_method(index if not selected_rows else None),
         )
 
-        menu.popup(self.customExclusionsList.viewport().mapToGlobal(pos))
+        if toggle_method:
+            menu.addAction(
+                get_colored_icon('check-circle'),
+                self.tr('Toggle'),
+                lambda: toggle_method(index if not selected_rows else None),
+            )
+
+        menu.popup(list_widget.viewport().mapToGlobal(pos))
+
+    def custom_exclusions_context_menu(self, pos):
+        self.create_context_menu(self.customExclusionsList, self.remove_pattern, self.toggle_custom_pattern)
 
     def populate_presets_list(self):
         for preset_slug in self.allPresets.keys():
@@ -190,8 +220,14 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             self.rawExclusionsText.setPlainText(raw_excludes)
 
     def populate_preview_tab(self):
-        excludes = self.profile.get_combined_exclusion_string()
-        self.exclusionsPreviewText.setPlainText(excludes)
+        preview = self.profile.get_combined_exclusion_string()
+        if self.profile.exclude_if_present:
+            preview += '\n# Exclude if present'
+            for f in self.profile.exclude_if_present.split('\n'):
+                f = f.strip()
+                if f.startswith('[x]'):
+                    preview += '\n' + f[3:].strip()
+        self.exclusionsPreviewText.setPlainText(preview)
 
     def copy_preview_to_clipboard(self):
         cb = QApplication.clipboard()
@@ -242,29 +278,35 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             else:
                 item.setCheckState(Qt.CheckState.Checked)
 
-    def add_pattern(self):
+    def add_pattern(self, list_widget, model):
         '''
         Add an empty item to the list in editable mode.
         Don't add an item if the user is already editing an item.
         '''
-        if self.customExclusionsList.state() == QAbstractItemView.State.EditingState:
+        if list_widget.state() == QAbstractItemView.State.EditingState:
             return
         item = QStandardItem('')
         item.setCheckable(True)
         item.setCheckState(Qt.CheckState.Checked)
-        self.customExclusionsList.model().appendRow(item)
-        self.customExclusionsList.edit(item.index())
-        self.customExclusionsList.scrollToBottom()
+        model.appendRow(item)
+        list_widget.edit(item.index())
+        list_widget.scrollToBottom()
 
-    def custom_pattern_editing_finished(self, editor):
+    def add_pattern_custom_exclusion(self):
+        self.add_pattern(self.customExclusionsList, self.customExclusionsModel)
+
+    def text_editing_finished(self, model):
         '''
         Go through all items in the list and if any of them are empty, remove them.
         Handles the case where the user presses the escape key to cancel editing.
         '''
-        for row in range(self.customExclusionsModel.rowCount()):
-            item = self.customExclusionsModel.item(row)
+        for row in range(model.rowCount()):
+            item = model.item(row)
             if item.text() == '':
-                self.customExclusionsModel.removeRow(row)
+                model.removeRow(row)
+
+    def custom_pattern_editing_finished(self, editor):
+        self.text_editing_finished(self.customExclusionsModel)
 
     def custom_item_changed(self, item):
         '''
@@ -309,6 +351,83 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             )
 
         self.populate_preview_tab()
+
+    def exclude_if_present_item_changed(self, item):
+        self.save_exclude_if_present_patterns()
+
+    def exclude_if_present_context_menu(self, pos):
+        self.create_context_menu(self.excludeIfPresentList, self.remove_pattern_exclude_if_present)
+
+    def remove_pattern_exclude_if_present(self, index=None):
+        if not index:
+            indexes = self.excludeIfPresentList.selectedIndexes()
+            for index in reversed(sorted(indexes)):
+                self.excludeIfPresentModel.removeRow(index.row())
+        else:
+            self.excludeIfPresentModel.removeRow(index.row())
+        self.save_exclude_if_present_patterns()
+
+    def add_pattern_exclude_if_present(self):
+        self.add_pattern(self.excludeIfPresentList, self.excludeIfPresentModel)
+        self.save_exclude_if_present_patterns()
+
+    def exclude_if_present_pattern_editing_finished(self, editor):
+        self.text_editing_finished(self.customExclusionsModel)
+        self.save_exclude_if_present_patterns()
+
+    def save_exclude_if_present_patterns(self):
+        '''
+        Save Exclude If Present files to profile.
+        '''
+        patterns = []
+        for row in range(self.excludeIfPresentModel.rowCount()):
+            item = self.excludeIfPresentModel.item(row)
+            text = item.text().strip()
+
+            # Remove any existing prefix
+            if text.startswith('[x] '):
+                text = text[4:]
+            elif text.startswith('[] '):
+                text = text[3:]
+
+            # Add the correct prefix based on the check state
+            prefix = '[x] ' if item.checkState() == Qt.CheckState.Checked else '[] '
+            patterns.append(prefix + text)
+
+        self.profile.exclude_if_present = '\n'.join(patterns)
+        self.profile.save()
+        self.populate_preview_tab()
+
+    def normalize_exclude_if_present_patterns(self):
+        '''
+        Ensure all patterns in exclude_if_present start with either [x] or [].
+        '''
+        patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
+        normalized_patterns = []
+        for pattern in patterns:
+            if not pattern.startswith('[x]') and not pattern.startswith('[]'):
+                pattern = '[x] ' + pattern
+            normalized_patterns.append(pattern)
+        self.profile.exclude_if_present = '\n'.join(normalized_patterns)
+        self.profile.save()
+
+    def populate_exclude_if_present_patterns(self):
+        '''
+        Populate the 'Exclude If Present' list from the profile.
+        '''
+        self.normalize_exclude_if_present_patterns()
+        patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
+        for pattern in patterns:
+            item = QStandardItem()
+            if pattern.startswith('[x]'):
+                item.setText(pattern[4:])
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Checked)
+            elif pattern.startswith('[]'):
+                item.setText(pattern[3:])
+                item.setCheckable(True)
+                item.setCheckState(Qt.CheckState.Unchecked)
+            self.excludeIfPresentModel.appendRow(item)
 
     def raw_exclusions_saved(self):
         '''
