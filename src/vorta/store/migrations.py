@@ -250,6 +250,22 @@ def run_migrations(current_schema, db_connection):
             ),
         )
 
+    if current_schema.version < 23:
+        _apply_schema_update(
+            current_schema,
+            23,
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'compaction_on',
+                pw.BooleanField(default=True),
+            ),
+            migrator.add_column(
+                BackupProfileModel._meta.table_name,
+                'compaction_weeks',
+                pw.IntegerField(default=3),
+            ),
+        )
+
 
 def _apply_schema_update(current_schema, version_after, *operations):
     with DB.atomic():
