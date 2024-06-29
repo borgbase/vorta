@@ -90,6 +90,8 @@ class BackupProfileModel(BaseModel):
     schedule_make_up_missed = pw.BooleanField(default=True)
     validation_on = pw.BooleanField(default=True)
     validation_weeks = pw.IntegerField(default=3)
+    compaction_on = pw.BooleanField(default=False)
+    compaction_weeks = pw.IntegerField(default=3)
     prune_on = pw.BooleanField(default=False)
     prune_hour = pw.IntegerField(default=2)
     prune_day = pw.IntegerField(default=7)

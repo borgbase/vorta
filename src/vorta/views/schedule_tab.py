@@ -63,10 +63,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.framePeriodic.setEnabled(False)
         self.frameDaily.setEnabled(False)
         self.frameValidation.setEnabled(False)
+        self.frameCompaction.setEnabled(False)
 
         self.scheduleIntervalRadio.toggled.connect(self.framePeriodic.setEnabled)
         self.scheduleFixedRadio.toggled.connect(self.frameDaily.setEnabled)
         self.validationCheckBox.toggled.connect(self.frameValidation.setEnabled)
+        self.compactionCheckBox.toggled.connect(self.frameCompaction.setEnabled)
 
         # POPULATE with data
         self.populate_from_profile()
@@ -104,6 +106,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         )
         self.validationWeeksCount.valueChanged.connect(
             lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val)
+        )
+        self.compactionCheckBox.stateChanged.connect(
+            lambda new_val, attr='compaction_on': self.save_profile_attr(attr, new_val)
+        )
+        self.compactionWeeksCount.valueChanged.connect(
+            lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
         )
 
         # Connect to schedule update
@@ -153,6 +161,12 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             QtCore.Qt.CheckState.Checked if profile.validation_on else QtCore.Qt.CheckState.Unchecked
         )
         self.validationWeeksCount.setValue(profile.validation_weeks)
+
+        # set borg compact options
+        self.compactionCheckBox.setCheckState(
+            QtCore.Qt.CheckState.Checked if profile.compaction_on else QtCore.Qt.CheckState.Unchecked
+        )
+        self.compactionWeeksCount.setValue(profile.compaction_weeks)
 
         # Other checkbox options
         self.pruneCheckBox.setCheckState(

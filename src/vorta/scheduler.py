@@ -5,18 +5,21 @@ from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
 
+from packaging import version
 from PyQt6 import QtCore, QtDBus
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.borg.check import BorgCheckJob
+from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.utils import borg_compat
 
 logger = logging.getLogger(__name__)
 
@@ -487,6 +490,27 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
+                self.app.jobs_manager.add_job(job)
+
+        compaction_cutoff = dt.now() - timedelta(days=7 * profile.compaction_weeks)
+        recent_compactions = (
+            EventLogModel.select()
+            .where(
+                (EventLogModel.subcommand == '--info')
+                & (EventLogModel.start_time > compaction_cutoff)
+                & (EventLogModel.repo_url == profile.repo.url)
+            )
+            .count()
+        )
+
+        if (
+            profile.compaction_on
+            and recent_compactions == 0
+            and version.parse(borg_compat.version) >= version.parse("1.2")
+        ):
+            msg = BorgCompactJob.prepare(profile)
+            if msg['ok']:
+                job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)
