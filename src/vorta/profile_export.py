@@ -130,6 +130,8 @@ class ProfileExport:
         # Set the profile ids to be match new profile
         for source in self._profile_dict['SourceFileModel']:
             source['profile'] = self.id
+        # Delete existing Sources to avoid duplicates
+        SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
