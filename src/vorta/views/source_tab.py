@@ -86,6 +86,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.setSortingEnabled(True)
         self.sourceFilesWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.sourceFilesWidget.customContextMenuRequested.connect(self.sourceitem_contextmenu)
+        self.sourceFilesWidget.setAlternatingRowColors(True)
 
         # Prepare add button
         self.addMenu = QMenu(self.addButton)
