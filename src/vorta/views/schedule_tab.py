@@ -1,13 +1,14 @@
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QDateTime, QLocale, Qt
-from PyQt6.QtWidgets import QApplication, QListWidgetItem
+from PyQt6.QtCore import QDateTime, QLocale
+from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
-from vorta.store.models import BackupProfileMixin, WifiSettingModel
-from vorta.utils import get_asset, get_sorted_wifis
+from vorta.store.models import BackupProfileMixin
+from vorta.utils import get_asset
 from vorta.views.log_panel import LogTableWidget
+from vorta.views.networks_panel import NetworksPanel
 from vorta.views.shell_commands_panel import ShellCommandsPanel
 from vorta.views.utils import get_colored_icon
 
@@ -30,6 +31,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.init_log_panel()
         self.init_shell_commands_panel()
+        self.init_networks_panel()
 
         self.populate_from_profile()
         self.set_icons()
@@ -44,10 +46,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
         # Network and shell commands events
-        self.meteredNetworksCheckBox.stateChanged.connect(
-            lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, not new_val)
-        )
-
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
         )
@@ -74,6 +72,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.shellCommandsPanel = ShellCommandsPanel(self)
         self.shellCommandsLayout.addWidget(self.shellCommandsPanel)
         self.shellCommandsPanel.show()
+
+    def init_networks_panel(self):
+        self.networksPanel = NetworksPanel(self)
+        self.networksLayout.addWidget(self.networksPanel)  # Add this line to attach the NetworksPanel to its layout
+        self.networksPanel.show()
 
     def on_scheduler_change(self, _):
         profile = self.profile()
@@ -124,7 +127,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.missedBackupsCheckBox.setCheckState(
             QtCore.Qt.CheckState.Checked if profile.schedule_make_up_missed else QtCore.Qt.CheckState.Unchecked
         )
-        self.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
+        self.networksPanel.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
 
         if profile.repo:
             self.shellCommandsPanel.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
@@ -132,7 +135,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         else:
             self.shellCommandsPanel.createCmdLineEdit.setEnabled(False)
 
-        self.populate_wifi()
         self.logTableWidget.populate_logs()
         self.draw_next_scheduled_backup()
 
@@ -151,24 +153,6 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         self.nextBackupDateTimeLabel.setText(text)
         self.nextBackupDateTimeLabel.repaint()
-
-    def populate_wifi(self):
-        self.wifiListWidget.clear()
-        for wifi in get_sorted_wifis(self.profile()):
-            item = QListWidgetItem()
-            item.setText(wifi.ssid)
-            item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
-            if wifi.allowed:
-                item.setCheckState(QtCore.Qt.CheckState.Checked)
-            else:
-                item.setCheckState(QtCore.Qt.CheckState.Unchecked)
-            self.wifiListWidget.addItem(item)
-        self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
-
-    def save_wifi_item(self, item):
-        db_item = WifiSettingModel.get(ssid=item.text(), profile=self.profile().id)
-        db_item.allowed = item.checkState() == Qt.CheckState.Checked
-        db_item.save()
 
     def save_profile_attr(self, attr, new_value):
         profile = self.profile()
