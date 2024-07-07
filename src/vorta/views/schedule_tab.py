@@ -1,13 +1,14 @@
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale, Qt
-from PyQt6.QtWidgets import QApplication, QListWidgetItem, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QListWidgetItem
 
 from vorta import application
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin, WifiSettingModel
 from vorta.utils import get_asset, get_sorted_wifis
-from vorta.views.logtablewidget import LogTableWidget
+from vorta.views.log_panel import LogTableWidget
+from vorta.views.shell_commands_panel import ShellCommandsPanel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/scheduletab.ui')
@@ -27,10 +28,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
             'fixed': self.scheduleFixedRadio,
         }
 
-        self.logTableWidget = LogTableWidget(self)
-
-        self.logTableLayout.addWidget(self.logTableWidget)
-        self.logTableWidget.show()
+        self.init_log_panel()
+        self.init_shell_commands_panel()
 
         self.populate_from_profile()
         self.set_icons()
@@ -48,15 +47,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.meteredNetworksCheckBox.stateChanged.connect(
             lambda new_val, attr='dont_run_on_metered_networks': self.save_profile_attr(attr, not new_val)
         )
-        self.postBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.preBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.createCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
-        )
+
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
         )
@@ -73,6 +64,16 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
 
         # Connect to palette change
         self.app.paletteChanged.connect(lambda p: self.set_icons())
+
+    def init_log_panel(self):
+        self.logTableWidget = LogTableWidget(self)
+        self.logTableLayout.addWidget(self.logTableWidget)
+        self.logTableWidget.show()
+
+    def init_shell_commands_panel(self):
+        self.shellCommandsPanel = ShellCommandsPanel(self)
+        self.shellCommandsLayout.addWidget(self.shellCommandsPanel)
+        self.shellCommandsPanel.show()
 
     def on_scheduler_change(self, _):
         profile = self.profile()
@@ -125,13 +126,11 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         )
         self.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
 
-        self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
-        self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
         if profile.repo:
-            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
-            self.createCmdLineEdit.setEnabled(True)
+            self.shellCommandsPanel.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
+            self.shellCommandsPanel.createCmdLineEdit.setEnabled(True)
         else:
-            self.createCmdLineEdit.setEnabled(False)
+            self.shellCommandsPanel.createCmdLineEdit.setEnabled(False)
 
         self.populate_wifi()
         self.logTableWidget.populate_logs()

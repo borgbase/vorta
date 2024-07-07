@@ -1,14 +1,11 @@
-from PyQt6 import QtCore, uic
+from PyQt6 import uic
 from PyQt6.QtWidgets import (
     QAbstractItemView,
-    QApplication,
     QHeaderView,
     QTableWidgetItem,
-    QWidget,
 )
 
 from vorta import config
-from vorta.i18n import get_locale
 from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
 

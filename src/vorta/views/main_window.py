@@ -260,7 +260,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile {} imported.').format(profile.name),
             )
             self.repoTab.populate_from_profile()
-            self.scheduleTab.populate_logs()
+            self.scheduleTab.logTableWidget.populate_logs()
             self.scheduleTab.populate_wifi()
             self.miscTab.populate()
             self.populate_profile_selector()
@@ -323,7 +323,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_finished_event(self):
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
-        self.scheduleTab.populate_logs()
+        self.scheduleTab.logTableWidget.populate_logs()
 
         if not self.app.jobs_manager.is_worker_running() and (
             self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
