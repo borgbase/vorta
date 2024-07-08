@@ -36,6 +36,21 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.populate_from_profile()
         self.set_icons()
 
+        # Scheduler intervals we know
+        self.scheduleIntervalUnit.addItem(self.tr('Minutes'), 'minutes')
+        self.scheduleIntervalUnit.addItem(self.tr('Hours'), 'hours')
+        self.scheduleIntervalUnit.addItem(self.tr('Days'), 'days')
+        self.scheduleIntervalUnit.addItem(self.tr('Weeks'), 'weeks')
+
+        # Enable/Disable entries on button state changed
+        self.framePeriodic.setEnabled(False)
+        self.frameDaily.setEnabled(False)
+        self.frameValidation.setEnabled(False)
+
+        self.scheduleIntervalRadio.toggled.connect(self.framePeriodic.setEnabled)
+        self.scheduleFixedRadio.toggled.connect(self.frameDaily.setEnabled)
+        self.validationCheckBox.toggled.connect(self.frameValidation.setEnabled)
+
         self.app.backup_finished_event.connect(self.logTableWidget.populate_logs)
 
         # Scheduler events
