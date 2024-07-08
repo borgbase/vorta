@@ -835,6 +835,20 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QToolButton" name="preBackupScriptEditorButton">
+              <property name="toolTip">
+               <string> Open Pre-backup script editor</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -871,6 +885,20 @@
               </property>
               <property name="placeholderText">
                <string>echo &quot;Backup of $repo_url ended with $returncode.&quot;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="postBackupScriptEditorButton">
+              <property name="toolTip">
+               <string> Open Post-backup script editor</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
               </property>
              </widget>
             </item>
