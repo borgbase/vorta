@@ -261,7 +261,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             )
             self.repoTab.populate_from_profile()
             self.scheduleTab.logTableWidget.populate_logs()
-            self.scheduleTab.populate_wifi()
+            self.scheduleTab.networksPanel.populate_wifi()
             self.miscTab.populate()
             self.populate_profile_selector()
 
