@@ -2,6 +2,7 @@ import enum
 import json
 import logging
 import re
+import webbrowser
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import List, Optional, Tuple
@@ -10,26 +11,24 @@ from PyQt6 import uic
 from PyQt6.QtCore import (
     QDateTime,
     QLocale,
-    QMimeData,
     QModelIndex,
-    QPoint,
     Qt,
     QThread,
-    QUrl,
 )
-from PyQt6.QtGui import QColor, QKeySequence, QShortcut
-from PyQt6.QtWidgets import QApplication, QHeaderView, QMenu, QTreeView
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QHeaderView
 
 from vorta.store.models import SettingsModel
 from vorta.utils import get_asset, pretty_bytes, uses_dark_mode
+from vorta.views.partials.file_dialog import BaseFileDialog
 from vorta.views.partials.treemodel import (
     FileSystemItem,
     FileTreeModel,
-    FileTreeSortProxyModel,
+    FileTreeSortFilterProxyModel,
     path_to_str,
     relative_path,
 )
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import compare_values_with_sign, get_colored_icon
 
 uifile = get_asset('UI/diffresult.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
@@ -65,120 +64,39 @@ class ParseThread(QThread):
             parse_diff_lines(lines, self.model)
 
 
-class DiffResultDialog(DiffResultBase, DiffResultUI):
+class DiffResultDialog(BaseFileDialog, DiffResultBase, DiffResultUI):
     """Display the results of `borg diff`."""
 
-    def __init__(self, archive_newer, archive_older, model: 'DiffTree'):
-        """Init."""
-        super().__init__()
-        self.setupUi(self)
+    def __init__(self, archive_newer, archive_older, model):
+        super().__init__(model)
 
-        self.model = model
-        self.model.setParent(self)
-
-        self.treeView: QTreeView
-        self.treeView.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-        self.treeView.setAlternatingRowColors(True)
-        self.treeView.setTextElideMode(Qt.TextElideMode.ElideMiddle)  # to better see name of paths
-
-        # custom context menu
-        self.treeView.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.treeView.customContextMenuRequested.connect(self.treeview_context_menu)
-
-        # shortcuts
-        shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
-        shortcut_copy.activated.connect(self.diff_item_copy)
-
-        # add sort proxy model
-        self.sortproxy = DiffSortProxyModel(self)
-        self.sortproxy.setSourceModel(self.model)
-        self.treeView.setModel(self.sortproxy)
-        self.sortproxy.sorted.connect(self.slot_sorted)
-
-        self.treeView.setSortingEnabled(True)
-
-        # header
         header = self.treeView.header()
         header.setStretchLastSection(False)  # stretch only first section
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
 
-        # signals
-
         self.archiveNameLabel_1.setText(f'{archive_newer.name}')
         self.archiveNameLabel_2.setText(f'{archive_older.name}')
 
-        self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
-        diff_result_display_mode = SettingsModel.get(key='diff_files_display_mode').str_value
-        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
-        self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
-        self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
+        self.bHelp.clicked.connect(lambda: webbrowser.open('https://vorta.borgbase.com/usage/search/'))
 
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
+    def get_sort_proxy_model(self):
+        """Return the sort proxy model for the tree view."""
+        return DiffSortFilterProxyModel(self)
 
-        self.set_icons()
-
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+    def get_diff_result_display_mode(self):
+        return SettingsModel.get(key='diff_files_display_mode').str_value
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
+        self.bSearch.setIcon(get_colored_icon('search'))
+        self.bHelp.setIcon(get_colored_icon('help-about'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(2, get_colored_icon("view-list-details"))
-
-    def treeview_context_menu(self, pos: QPoint):
-        """Display a context menu for `treeView`."""
-        index = self.treeView.indexAt(pos)
-        if not index.isValid():
-            # popup only for items
-            return
-
-        menu = QMenu(self.treeView)
-
-        menu.addAction(
-            get_colored_icon('copy'),
-            self.tr("Copy"),
-            lambda: self.diff_item_copy(index),
-        )
-
-        if self.model.getMode() != self.model.DisplayMode.FLAT:
-            menu.addSeparator()
-            menu.addAction(
-                get_colored_icon('angle-down-solid'),
-                self.tr("Expand recursively"),
-                lambda: self.treeView.expandRecursively(index),
-            )
-
-        menu.popup(self.treeView.viewport().mapToGlobal(pos))
-
-    def diff_item_copy(self, index: QModelIndex = None):
-        """
-        Copy a diff item path to the clipboard.
-
-        Copies the first selected item if no index is specified.
-        """
-        if index is None or (not index.isValid()):
-            indexes = self.treeView.selectionModel().selectedRows()
-
-            if not indexes:
-                return
-
-            index = indexes[0]
-
-        index = self.sortproxy.mapToSource(index)
-        item: DiffItem = index.internalPointer()
-        path = PurePath('/', *item.path)
-
-        data = QMimeData()
-        data.setUrls([QUrl(path.as_uri())])
-        data.setText(str(path))
-
-        QApplication.clipboard().setMimeData(data)
 
     def change_display_mode(self, selection: int):
         """
@@ -205,13 +123,6 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         ).execute()
 
         self.model.setMode(mode)
-
-    def slot_sorted(self, column, order):
-        """React the tree view being sorted."""
-        # reveal selection
-        selectedRows = self.treeView.selectionModel().selectedRows()
-        if selectedRows:
-            self.treeView.scrollTo(selectedRows[0])
 
 
 # ---- Output parsing --------------------------------------------------------
@@ -488,10 +399,52 @@ def size_to_byte(significand: str, unit: str) -> int:
 # ---- Sorting ---------------------------------------------------------------
 
 
-class DiffSortProxyModel(FileTreeSortProxyModel):
+class DiffSortFilterProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a DiffTree model.
     """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    def get_parser(self):
+        """Add Diff view specific arguments to the parser."""
+        parser = super().get_parser()
+        parser.add_argument(
+            "-b", "--balance", type=FileTreeSortFilterProxyModel.valid_size, help="Match by balance size."
+        )
+        parser.add_argument("-c", "--change", choices=["A", "D", "M"], help="Only available in Diff View.")
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.balance:
+            item_balance = item.data.size
+
+            for filter_balance in self.searchPattern.balance:
+                if not compare_values_with_sign(item_balance, filter_balance[1], filter_balance[0]):
+                    return False
+
+        if self.searchPattern.change:
+            item_change = item.data.change_type.short()
+
+            if item_change != self.searchPattern.change:
+                return False
+
+        return True
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""

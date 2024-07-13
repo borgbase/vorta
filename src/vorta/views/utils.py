@@ -49,3 +49,19 @@ def get_exclusion_presets():
                         'tags': preset['tags'],
                     }
     return allPresets
+
+
+def compare_values_with_sign(item_value: int, filter_value: int, comparison_sign: str) -> bool:
+    """
+    Compare two values with a comparison sign.
+    """
+    if comparison_sign == '<':
+        return item_value < filter_value
+    elif comparison_sign == '>':
+        return item_value > filter_value
+    elif comparison_sign == '<=':
+        return item_value <= filter_value
+    elif comparison_sign == '>=':
+        return item_value >= filter_value
+    elif comparison_sign == '=':
+        return item_value == filter_value

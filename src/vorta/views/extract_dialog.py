@@ -1,39 +1,37 @@
+import argparse
 import enum
 import json
 import logging
+import webbrowser
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from PyQt6 import uic
 from PyQt6.QtCore import (
     QDateTime,
     QLocale,
-    QMimeData,
     QModelIndex,
-    QPoint,
     Qt,
     QThread,
-    QUrl,
 )
-from PyQt6.QtGui import QColor, QKeySequence, QShortcut
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
-    QApplication,
     QDialogButtonBox,
     QHeaderView,
-    QMenu,
     QPushButton,
 )
 
 from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
-from vorta.views.utils import get_colored_icon
+from vorta.views.partials.file_dialog import BaseFileDialog
+from vorta.views.utils import compare_values_with_sign, get_colored_icon
 
 from .partials.treemodel import (
     FileSystemItem,
     FileTreeModel,
-    FileTreeSortProxyModel,
+    FileTreeSortFilterProxyModel,
     path_to_str,
     relative_path,
 )
@@ -64,70 +62,43 @@ class ParseThread(QThread):
         parse_json_lines(lines, self.model)
 
 
-class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
+class ExtractDialog(BaseFileDialog, ExtractDialogBase, ExtractDialogUI):
     """
     Show the contents of an archive and allow choosing what to extract.
     """
 
     def __init__(self, archive, model):
         """Init."""
-        super().__init__()
-        self.setupUi(self)
-
-        self.model = model
-        self.model.setParent(self)
-
-        view = self.treeView
-        view.setAlternatingRowColors(True)
-        view.setUniformRowHeights(True)  # Allows for scrolling optimizations.
-
-        # custom context menu
-        self.treeView.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.treeView.customContextMenuRequested.connect(self.treeview_context_menu)
-
-        # add sort proxy model
-        self.sortproxy = ExtractSortProxyModel(self)
-        self.sortproxy.setSourceModel(self.model)
-        view.setModel(self.sortproxy)
-        self.sortproxy.sorted.connect(self.slot_sorted)
-
-        view.setSortingEnabled(True)
+        super().__init__(model)
 
         # header
-        header = view.header()
+        header = self.treeView.header()
         header.setStretchLastSection(False)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
 
-        # shortcuts
-        shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.treeView)
-        shortcut_copy.activated.connect(self.copy_item)
-
         # add extract button to button box
         self.extractButton = QPushButton(self)
         self.extractButton.setObjectName("extractButton")
         self.extractButton.setText(self.tr("Extract"))
-
         self.buttonBox.addButton(self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole)
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
-        diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
 
-        # connect signals
-        self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
-        self.comboBoxDisplayMode.setCurrentIndex(int(diff_result_display_mode))
-        self.bFoldersOnTop.toggled.connect(self.sortproxy.keepFoldersOnTop)
-        self.bCollapseAll.clicked.connect(self.treeView.collapseAll)
-
+        self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.rejected.connect(self.close)
-        self.buttonBox.accepted.connect(self.accept)
 
-        self.set_icons()
+        self.bHelp.clicked.connect(lambda: webbrowser.open('https://vorta.borgbase.com/usage/search/'))
 
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+    def get_sort_proxy_model(self):
+        """Get the sort proxy model for this dialog."""
+        return ExtractSortFilterProxyModel()
+
+    def get_diff_result_display_mode(self):
+        """Get the display mode for this dialog."""
+        return SettingsModel.get(key='extract_files_display_mode').str_value
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -139,41 +110,12 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
+        self.bSearch.setIcon(get_colored_icon('search'))
         self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+        self.bHelp.setIcon(get_colored_icon('help-about'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
-
-    def slot_sorted(self, column, order):
-        """React to the tree view being sorted."""
-        # reveal selection
-        selectedRows = self.treeView.selectionModel().selectedRows()
-        if selectedRows:
-            self.treeView.scrollTo(selectedRows[0])
-
-    def copy_item(self, index: QModelIndex = None):
-        """
-        Copy an item path to the clipboard.
-
-        Copies the first selected item if no index is specified.
-        """
-        if index is None or (not index.isValid()):
-            indexes = self.treeView.selectionModel().selectedRows()
-
-            if not indexes:
-                return
-
-            index = indexes[0]
-
-        index = self.sortproxy.mapToSource(index)
-        item: ExtractFileItem = index.internalPointer()
-        path = PurePath('/', *item.path)
-
-        data = QMimeData()
-        data.setUrls([QUrl(path.as_uri())])
-        data.setText(str(path))
-
-        QApplication.clipboard().setMimeData(data)
 
     def change_display_mode(self, selection: int):
         """
@@ -197,27 +139,6 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         ).execute()
 
         self.model.setMode(mode)
-
-    def treeview_context_menu(self, pos: QPoint):
-        """Display a context menu for `treeView`."""
-        index = self.treeView.indexAt(pos)
-        if not index.isValid():
-            # popup only for items
-            return
-
-        menu = QMenu(self.treeView)
-
-        menu.addAction(get_colored_icon('copy'), self.tr("Copy"), lambda: self.copy_item(index))
-
-        if self.model.getMode() != self.model.DisplayMode.FLAT:
-            menu.addSeparator()
-            menu.addAction(
-                get_colored_icon('angle-down-solid'),
-                self.tr("Expand recursively"),
-                lambda: self.treeView.expandRecursively(index),
-            )
-
-        menu.popup(self.treeView.viewport().mapToGlobal(pos))
 
 
 def parse_json_lines(lines, model: "ExtractTree"):
@@ -256,10 +177,99 @@ def parse_json_lines(lines, model: "ExtractTree"):
 # ---- Sorting ---------------------------------------------------------------
 
 
-class ExtractSortProxyModel(FileTreeSortProxyModel):
+class ExtractSortFilterProxyModel(FileTreeSortFilterProxyModel):
     """
     Sort a ExtractTree model.
     """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+
+    @staticmethod
+    def parse_date(value: str) -> Tuple[str, datetime]:
+        """
+        Parse the date string into a tuple of two values.
+        """
+
+        comparison_sign = ['<', '>', '<=', '>=', '=']
+
+        if not any(value.startswith(unit) for unit in comparison_sign):
+            raise argparse.ArgumentTypeError("Invalid date format. Supported comparison signs: <, >, <=, >=, =")
+
+        if value[1] == '=':
+            date = value[2:]
+            sign = value[:2]
+        else:
+            date = value[1:]
+            sign = value[:1]
+
+        try:
+            date = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            raise argparse.ArgumentTypeError("Invalid date format. Must be YYYY-MM-DD.")
+
+        return (sign, date)
+
+    @classmethod
+    def valid_date_range(cls, value: str) -> List[Tuple[str, datetime]]:
+        """Parse the date range string."""
+        date = value.split(',')
+
+        if len(date) == 1:
+            return [cls.parse_date(date[0])]
+        elif len(date) == 2:
+            return [
+                cls.parse_date(date[0]),
+                cls.parse_date(date[1]),
+            ]
+        else:
+            raise argparse.ArgumentTypeError("Invalid date format. Can only accept two values.")
+
+    def get_parser(self):
+        """Add Extract view specific arguments to the parser."""
+        parser = super().get_parser()
+
+        health_group = parser.add_mutually_exclusive_group()
+        health_group.add_argument(
+            "--healthy", default=None, action="store_true", dest="healthy", help="Match only healthy items."
+        )
+        health_group.add_argument(
+            "--unhealthy", default=None, action="store_false", dest="healthy", help="Match only unhealthy items."
+        )
+
+        parser.add_argument(
+            "--last-modified",
+            type=self.valid_date_range,
+            help="Match by last modified date.",
+        )
+
+        return parser
+
+    def filterAcceptsRow(self, sourceRow: int, sourceParent: QModelIndex) -> bool:
+        """
+        Return whether the row should be accepted.
+        """
+
+        if not self.searchPattern:
+            return True
+
+        if not super().filterAcceptsRow(sourceRow, sourceParent):
+            return False
+
+        model = self.sourceModel()
+        item = model.index(sourceRow, 0, sourceParent).internalPointer()
+
+        if self.searchPattern.healthy is not None:
+            return item.data.health == self.searchPattern.healthy
+
+        if self.searchPattern.last_modified:
+            item_last_modified = item.data.last_modified
+
+            for filter_last_modified in self.searchPattern.last_modified:
+                if not compare_values_with_sign(item_last_modified, filter_last_modified[1], filter_last_modified[0]):
+                    return False
+
+        return True
 
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""

@@ -1,0 +1,5 @@
+{"changes": [{"new_ctime": "2023-09-25T15:15:45.857656", "old_ctime": "2023-08-08T13:29:52.873997", "type": "ctime"}, {"new_mtime": "2023-09-25T15:15:45.857656", "old_mtime": "2023-08-08T13:29:52.873997", "type": "mtime"}], "path": "home/kali/vorta/source1"}
+{"changes": [{"added": 5061, "removed": 2530, "type": "modified"}, {"new_ctime": "2023-09-25T15:15:03.824651", "old_ctime": "2023-08-08T13:29:52.873997", "type": "ctime"}, {"new_mtime": "2023-09-25T15:15:03.824651", "old_mtime": "2023-08-08T13:29:52.869997", "type": "mtime"}], "path": "home/kali/vorta/source1/hello.txt"}
+{"changes": [{"size": 0, "type": "added"}], "path": "home/kali/vorta/source1/emptyfile.bin"}
+{"changes": [{"size": 56, "type": "added"}], "path": "home/kali/vorta/source1/notemptyfile.bin"}
+{"changes": [{"size": 0, "type": "removed"}], "path": "home/kali/vorta/source1/file1.txt"}
