@@ -80,7 +80,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
-        self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.scheduleTab.schedulePage.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 

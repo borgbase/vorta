@@ -5,15 +5,21 @@ from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
 
-class ShellCommandsPanel(QWidget, BackupProfileMixin):
+class ShellCommandsPage(QWidget, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
-        uifile = get_asset('UI/shellcommandspanel.ui')
+        uifile = get_asset('UI/shellcommandspage.ui')
         uic.loadUi(uifile, self)
 
         self.preBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'preBackupCmdLineEdit')
         self.postBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'postBackupCmdLineEdit')
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
+        profile = self.profile()
+        if profile.repo:
+            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
+            self.createCmdLineEdit.setEnabled(True)
+        else:
+            self.shellCommandsPage.createCmdLineEdit.setEnabled(False)
 
         self.setup_connections()
 
