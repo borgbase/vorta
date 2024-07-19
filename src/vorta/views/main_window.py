@@ -80,7 +80,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
-        self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.scheduleTab.schedulePage.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
@@ -110,8 +110,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # OS-specific startup options:
         if not get_network_status_monitor().is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
-            self.scheduleTab.wifiListLabel.hide()
-            self.scheduleTab.wifiListWidget.hide()
+            self.scheduleTab.networksPage.wifiListLabel.hide()
+            self.scheduleTab.networksPage.wifiListWidget.hide()
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
 
@@ -185,7 +185,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.archiveTab.populate_from_profile()
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
-        self.scheduleTab.populate_from_profile()
+        self.scheduleTab.schedulePage.populate_from_profile()
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
@@ -260,8 +260,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile {} imported.').format(profile.name),
             )
             self.repoTab.populate_from_profile()
-            self.scheduleTab.populate_logs()
-            self.scheduleTab.populate_wifi()
+            self.scheduleTab.logPage.populate_logs()
+            self.scheduleTab.networksPage.populate_wifi()
             self.miscTab.populate()
             self.populate_profile_selector()
 
@@ -323,7 +323,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_finished_event(self):
         self.archiveTab.populate_from_profile()
         self.repoTab.init_repo_stats()
-        self.scheduleTab.populate_logs()
+        self.scheduleTab.logPage.populate_logs()
 
         if not self.app.jobs_manager.is_worker_running() and (
             self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
