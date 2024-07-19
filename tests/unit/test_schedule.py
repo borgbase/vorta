@@ -21,7 +21,7 @@ def clockmock(monkeypatch):
 
 def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     main = qapp.main_window
-    tab = main.scheduleTab
+    tab = main.scheduleTab.schedulePage
 
     # setup
     time_now = dt(2020, 5, 6, 4, 30)

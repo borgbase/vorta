@@ -19,7 +19,7 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
             self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
             self.createCmdLineEdit.setEnabled(True)
         else:
-            self.shellCommandsPage.createCmdLineEdit.setEnabled(False)
+            self.createCmdLineEdit.setEnabled(False)
 
         self.setup_connections()
 
