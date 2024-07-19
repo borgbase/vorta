@@ -47,7 +47,7 @@ class NetworksPage(NetworksBase, NetworksUI, BackupProfileMixin):
                 self.wifiListWidget.addItem(item)
 
     def save_wifi_item(self, item):
-        profile = self.parent()
+        profile = self.profile()
         if profile:
             db_item = WifiSettingModel.get(ssid=item.text(), profile=profile.id)
             db_item.allowed = item.checkState() == Qt.CheckState.Checked

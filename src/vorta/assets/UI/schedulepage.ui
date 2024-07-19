@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LogTableWidget</class>
+ <class>SchedulePage</class>
     <widget class="QWidget" name="schedule">
         <property name="geometry">
         <rect>

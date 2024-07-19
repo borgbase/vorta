@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication
 from vorta import application
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
-from vorta.views.log_page import LogPanel
+from vorta.views.log_page import LogPage
 from vorta.views.networks_page import NetworksPage
 from vorta.views.schedule_page import SchedulePage
 from vorta.views.shell_commands_page import ShellCommandsPage
@@ -21,29 +21,29 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.app: application.VortaApp = QApplication.instance()
         self.toolBox.setCurrentIndex(0)
         self.set_icons()
-        self.init_log_panel()
-        self.init_shell_commands_panel()
-        self.init_networks_panel()
-        self.init_schedule_panel()
+        self.init_log_page()
+        self.init_shell_commands_page()
+        self.init_networks_page()
+        self.init_schedule_page()
 
-        self.app.backup_finished_event.connect(self.logTableWidget.populate_logs)
+        self.app.backup_finished_event.connect(self.logPage.populate_logs)
 
-    def init_log_panel(self):
-        self.logTableWidget = LogPanel(self)
-        self.logLayout.addWidget(self.logTableWidget)
-        self.logTableWidget.show()
+    def init_log_page(self):
+        self.logPage = LogPage(self)
+        self.logLayout.addWidget(self.logPage)
+        self.logPage.show()
 
-    def init_shell_commands_panel(self):
-        self.shellCommandsPanel = ShellCommandsPage(self)
-        self.shellCommandsLayout.addWidget(self.shellCommandsPanel)
-        self.shellCommandsPanel.show()
+    def init_shell_commands_page(self):
+        self.shellCommandsPage = ShellCommandsPage(self)
+        self.shellCommandsLayout.addWidget(self.shellCommandsPage)
+        self.shellCommandsPage.show()
 
-    def init_networks_panel(self):
-        self.networksPanel = NetworksPage(self)
-        self.networksLayout.addWidget(self.networksPanel)
-        self.networksPanel.show()
+    def init_networks_page(self):
+        self.networksPage = NetworksPage(self)
+        self.networksLayout.addWidget(self.networksPage)
+        self.networksPage.show()
 
-    def init_schedule_panel(self):
+    def init_schedule_page(self):
         self.schedulePage = SchedulePage(self)
         self.scheduleLayout.addWidget(self.schedulePage)
         self.schedulePage.show()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LogTableWidget</class>
- <widget class="QWidget" name="LogTableWidget">
+ <class>LogPage</class>
+ <widget class="QWidget" name="LogPage">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableWidget" name="logTableWidget">
+    <widget class="QTableWidget" name="logPage">
      <property name="font">
       <font>
        <pointsize>11</pointsize>

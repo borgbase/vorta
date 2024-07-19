@@ -21,20 +21,20 @@ class LogTableColumn:
     ReturnCode = 4
 
 
-class LogPanel(LogTableBase, LogTableUI):
+class LogPage(LogTableBase, LogTableUI):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.init_ui()
 
     def init_ui(self):
-        self.logTableWidget.setAlternatingRowColors(True)
-        header = self.logTableWidget.horizontalHeader()
+        self.logPage.setAlternatingRowColors(True)
+        header = self.logPage.horizontalHeader()
         header.setVisible(True)
         [header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents) for i in range(5)]
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-        self.logTableWidget.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.logTableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.logPage.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.logPage.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.logLink.setText(
             f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
@@ -46,14 +46,14 @@ class LogPanel(LogTableBase, LogTableUI):
     def populate_logs(self):
         event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]
 
-        sorting = self.logTableWidget.isSortingEnabled()
-        self.logTableWidget.setSortingEnabled(False)
-        self.logTableWidget.setRowCount(len(event_logs))
+        sorting = self.logPage.isSortingEnabled()
+        self.logPage.setSortingEnabled(False)
+        self.logPage.setRowCount(len(event_logs))
         for row, log_line in enumerate(event_logs):
             formatted_time = log_line.start_time.strftime('%Y-%m-%d %H:%M')
-            self.logTableWidget.setItem(row, LogTableColumn.Time, QTableWidgetItem(formatted_time))
-            self.logTableWidget.setItem(row, LogTableColumn.Category, QTableWidgetItem(log_line.category))
-            self.logTableWidget.setItem(row, LogTableColumn.Subcommand, QTableWidgetItem(log_line.subcommand))
-            self.logTableWidget.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
-            self.logTableWidget.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
-        self.logTableWidget.setSortingEnabled(sorting)
+            self.logPage.setItem(row, LogTableColumn.Time, QTableWidgetItem(formatted_time))
+            self.logPage.setItem(row, LogTableColumn.Category, QTableWidgetItem(log_line.category))
+            self.logPage.setItem(row, LogTableColumn.Subcommand, QTableWidgetItem(log_line.subcommand))
+            self.logPage.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
+            self.logPage.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
+        self.logPage.setSortingEnabled(sorting)

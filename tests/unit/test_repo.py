@@ -251,7 +251,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert RepoModel.get(id=1).unique_size == 15520474
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
-    assert main.scheduleTab.logTableWidget.logTableWidget.rowCount() == 1
+    assert main.scheduleTab.logPage.logPage.rowCount() == 1
 
 
 @pytest.mark.parametrize(
