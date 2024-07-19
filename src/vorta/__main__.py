@@ -8,36 +8,29 @@ from peewee import SqliteDatabase
 # because we will be overriding the modules variables
 from vorta import config
 from vorta._version import __version__
-from vorta.i18n import trans_late, translate
 from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
 from vorta.utils import DEFAULT_DIR_FLAG, parse_args
+from vorta.views.exception_dialog import ExceptionDialog
 
 
 def main():
     def exception_handler(type, value, tb):
         from traceback import format_exception
 
-        from PyQt6.QtWidgets import QMessageBox
-
         logger.critical(
             "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new/choose",
             exc_info=(type, value, tb),
         )
         full_exception = ''.join(format_exception(type, value, tb))
-        title = trans_late('app', 'Fatal Error')
-        error_message = trans_late(
-            'app',
-            'Uncaught exception, please file a report with this text at\n'
-            'https://github.com/borgbase/vorta/issues/new\n',
-        )
+
         if app:
-            QMessageBox.critical(
-                None,
-                translate('app', title),
-                translate('app', error_message) + full_exception,
-            )
+            exception_dialog = ExceptionDialog(full_exception)
+            exception_dialog.show()
+            exception_dialog.raise_()
+            exception_dialog.activateWindow()
+            exception_dialog.exec()
         else:
             # Crashed before app startup, cannot translate
             sys.exit(1)
