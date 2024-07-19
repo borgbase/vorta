@@ -110,8 +110,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # OS-specific startup options:
         if not get_network_status_monitor().is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
-            self.scheduleTab.wifiListLabel.hide()
-            self.scheduleTab.wifiListWidget.hide()
+            self.scheduleTab.networksPage.wifiListLabel.hide()
+            self.scheduleTab.networksPage.wifiListWidget.hide()
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
 
