@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QCheckBox, QLabel, QListWidget, QListWidgetItem
 from vorta.store.models import BackupProfileMixin, WifiSettingModel
 from vorta.utils import get_asset, get_sorted_wifis
 
-uifile = get_asset('UI/networkspage.ui')
+uifile = get_asset('UI/networks_page.ui')
 NetworksUI, NetworksBase = uic.loadUiType(uifile)
 
 

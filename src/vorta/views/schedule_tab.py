@@ -10,7 +10,7 @@ from vorta.views.schedule_page import SchedulePage
 from vorta.views.shell_commands_page import ShellCommandsPage
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/scheduletab.ui')
+uifile = get_asset('UI/schedule_tab.ui')
 ScheduleUI, ScheduleBase = uic.loadUiType(uifile)
 
 

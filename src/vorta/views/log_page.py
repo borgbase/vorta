@@ -9,7 +9,7 @@ from vorta import config
 from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/logpage.ui')
+uifile = get_asset('UI/log_page.ui')
 LogTableUI, LogTableBase = uic.loadUiType(uifile)
 
 

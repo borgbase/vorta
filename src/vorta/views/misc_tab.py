@@ -19,7 +19,7 @@ from vorta.utils import get_asset, search
 from vorta.views.partials.tooltip_button import ToolTipButton
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/misctab.ui')
+uifile = get_asset('UI/misc_tab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
