@@ -34,7 +34,7 @@ from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
-uifile = get_asset('UI/mainwindow.ui')
+uifile = get_asset('UI/main_window.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

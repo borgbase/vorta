@@ -7,7 +7,7 @@ from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/schedulepage.ui')
+uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
 

@@ -13,9 +13,9 @@ from vorta.utils import get_asset
 from ..notifications import VortaNotifications
 from ..profile_export import ProfileExport
 
-uifile_import = get_asset('UI/exportwindow.ui')
+uifile_import = get_asset('UI/export_window.ui')
 ExportWindowUI, ExportWindowBase = uic.loadUiType(uifile_import)
-uifile_export = get_asset('UI/importwindow.ui')
+uifile_export = get_asset('UI/import_window.ui')
 ImportWindowUI, ImportWindowBase = uic.loadUiType(uifile_export)
 logger = logging.getLogger(__name__)
 

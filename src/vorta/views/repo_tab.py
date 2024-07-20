@@ -12,7 +12,7 @@ from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
 
-uifile = get_asset('UI/repotab.ui')
+uifile = get_asset('UI/repo_tab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 

@@ -123,77 +123,77 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="69"/>
+        <location filename="../../assets/UI/repo_add.ui" line="69"/>
         <source>General</source>
         <translation>Algemeen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="95"/>
+        <location filename="../../assets/UI/repo_add.ui" line="95"/>
         <source>Initialize New Backup Repository</source>
         <translation>Nieuwe back-uprepo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="102"/>
+        <location filename="../../assets/UI/repo_add.ui" line="102"/>
         <source>Repository URL:</source>
         <translation>Repo-url:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="124"/>
+        <location filename="../../assets/UI/repo_add.ui" line="124"/>
         <source>Choose a local folder</source>
         <translation>Kies een lokale map</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="141"/>
+        <location filename="../../assets/UI/repo_add.ui" line="141"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="138"/>
+        <location filename="../../assets/UI/repo_add.ui" line="138"/>
         <source>Choose a remote repository</source>
         <translation>Kies een externe opslagruimte</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="154"/>
+        <location filename="../../assets/UI/repo_add.ui" line="154"/>
         <source>Borg passphrase:</source>
         <translation>Borg-toegangszin:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="181"/>
+        <location filename="../../assets/UI/repo_add.ui" line="181"/>
         <source>Confirm passphrase:</source>
         <translation>Toegangszin bevestigen:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="188"/>
+        <location filename="../../assets/UI/repo_add.ui" line="188"/>
         <source>TextLabel</source>
         <translation>Tekstlabel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="196"/>
+        <location filename="../../assets/UI/repo_add.ui" line="196"/>
         <source>Advanced</source>
         <translation>Geavanceerd</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="217"/>
+        <location filename="../../assets/UI/repo_add.ui" line="217"/>
         <source>SSH Key:</source>
         <translation>SSH-sleutel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="231"/>
+        <location filename="../../assets/UI/repo_add.ui" line="231"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Automatisch genereren (standaard)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="239"/>
+        <location filename="../../assets/UI/repo_add.ui" line="239"/>
         <source>Encryption:</source>
         <translation>Versleuteling:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="256"/>
+        <location filename="../../assets/UI/repo_add.ui" line="256"/>
         <source>Extra Borg Arguments:</source>
         <translation>Opdrachtregelopties:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="117"/>
+        <location filename="../../assets/UI/repo_add.ui" line="117"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation type="unfinished"/>
     </message>
@@ -617,37 +617,37 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="25"/>
+        <location filename="../../assets/UI/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-toegangszin:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="32"/>
+        <location filename="../../assets/UI/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Voer een toegangszin in</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="56"/>
+        <location filename="../../assets/UI/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Bestaand profiel overschrijven</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="63"/>
+        <location filename="../../assets/UI/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Bestaande instellingen overschrijven</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="12"/>
+        <location filename="../../assets/UI/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Profiel toevoegen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="35"/>
+        <location filename="../../assets/UI/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Back-upprofiel toevoegen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="56"/>
+        <location filename="../../assets/UI/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
 &lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
 &lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
@@ -658,157 +658,157 @@
 &lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="87"/>
+        <location filename="../../assets/UI/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Profielnaam:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="14"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Selecteer te vergelijken archieven</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="25"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Selecteer twee archieven</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="60"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="65"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="70"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
         <source>Duration</source>
         <translation>Duur</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="75"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Aankoppelpunt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="80"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
         <source>Name</source>
         <translation>Naam</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="106"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="113"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
         <source>Diff</source>
         <translation>Verschil tonen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="14"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Selecteer uit te pakken bestanden</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="25"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archief:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="38"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="65"/>
+        <location filename="../../assets/UI/diff_result.ui" line="65"/>
         <source>Keep folders on top when sorting</source>
         <translation>Toon mappen altijd bovenaan</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="81"/>
+        <location filename="../../assets/UI/diff_result.ui" line="81"/>
         <source>Set display mode of diff view</source>
         <translation>Stel de weergavemodus van vergelijkingen in</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="88"/>
+        <location filename="../../assets/UI/diff_result.ui" line="88"/>
         <source>Tree</source>
         <translation>Boomweergave</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="93"/>
+        <location filename="../../assets/UI/diff_result.ui" line="93"/>
         <source>Tree, simplified</source>
         <translation>Vereenvoudigde boomweergave</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="109"/>
+        <location filename="../../assets/UI/diff_result.ui" line="109"/>
         <source>Collapse All</source>
         <translation>Alles inklappen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exportwindow.ui" line="23"/>
+        <location filename="../../assets/UI/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Voeg de Borg-toegangszin toe aan de export. Gebruik is op eigen risico!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exportwindow.ui" line="26"/>
+        <location filename="../../assets/UI/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Borg-toegangszin delen tijdens exporteren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="14"/>
+        <location filename="../../assets/UI/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Resultaat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="28"/>
+        <location filename="../../assets/UI/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="42"/>
+        <location filename="../../assets/UI/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="98"/>
+        <location filename="../../assets/UI/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Platte weergave</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="42"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>SSH-sleutel genereren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="54"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Sleutelformaat:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="71"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Sleutellengte:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="93"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 of 4096 voor RSA, 384 of 521 voor ECDSA. Vaste waarde voor Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Meer informatie&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="106"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Uitvoerbestand:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="121"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Pas dit niet aan als je wilt dat ssh de sleutel automatisch detecteert.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="68"/>
+        <location filename="../../assets/UI/diff_result.ui" line="68"/>
         <source>Folders First</source>
         <translation type="unfinished"/>
     </message>
@@ -1062,517 +1062,517 @@
 <context>
     <name>Form</name>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="14"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="14"/>
         <source>Form</source>
         <translation>Formulier</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="51"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="51"/>
         <source>Schedule</source>
         <translation>Tijdschema</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="76"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="76"/>
         <source>Backup schedule:</source>
         <translation>Back-upschema:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="83"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="83"/>
         <source>Manual only</source>
         <translation>Handmatig</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="98"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="98"/>
         <source>Backup periodically</source>
         <translation>Periodiek</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="401"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="401"/>
         <source>Interval:</source>
         <translation>Tijdspanne:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="191"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="191"/>
         <source>Backup daily</source>
         <translation>Dagelijks</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="238"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="238"/>
         <source>Time:</source>
         <translation>Tijdstip:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="285"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="285"/>
         <source>Missed backups:</source>
         <translation>Overgeslagen back-ups:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="298"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="298"/>
         <source>Run missed backups on startup or wakeup</source>
         <translation>Overgeslagen back-ups alsnog maken na opstarten of ontwaken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="325"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="325"/>
         <source>Autopruning:</source>
         <translation>Automatisch verwijderen:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="332"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="332"/>
         <source>Prune after each backup</source>
         <translation>Na elke back-up</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="339"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="339"/>
         <source>Validation:</source>
         <translation>Controle:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="354"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="354"/>
         <source>Validate repository data</source>
         <translation>Controleer de repogegevens</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="437"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="437"/>
         <source>weeks</source>
         <translation>weken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="489"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="489"/>
         <source>Next Backup:</source>
         <translation>Volgende back-up:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="496"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="496"/>
         <source>None scheduled</source>
         <translation>Niks ingepland</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="527"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="527"/>
         <source>Networks</source>
         <translation>Netwerken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="544"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="544"/>
         <source>Allowed Networks:</source>
         <translation>Toegestane netwerken:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="563"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="563"/>
         <source>Run backups over metered networks</source>
         <translation>Back-ups uitvoeren op netwerken met beperkte data</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="582"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="582"/>
         <source>Log</source>
         <translation>Logboek</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="604"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="604"/>
         <source>Time</source>
         <translation>Tijdstip</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="609"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="609"/>
         <source>Category</source>
         <translation>Categorie</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="614"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="614"/>
         <source>Subcommand</source>
         <translation>Subopdracht</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="619"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="619"/>
         <source>Repository</source>
         <translation>Repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="624"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="624"/>
         <source>Returncode</source>
         <translation>Terugkoppelingscode</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="641"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="641"/>
         <source>Shell Commands</source>
         <translation>Shell-opdrachten</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="659"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="659"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Voer aangepaste shellopdrachten uit, voor en na de back-up. De daadwerkelijke back-up and na-back-upopdrachten worden alléén uitgevoerd als de opdracht voorafgaand aan de back-up geen foutmelding geeft (terugkoppelcode 0). Beschikbare variabelen: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="683"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="683"/>
         <source>Pre-backup:</source>
         <translation>Voorafgaand:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="711"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="711"/>
         <source>echo &quot;Before backup of $repo_url&quot;</source>
         <translation>echo ‘Alvorens $repo_url te back-uppen’</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="731"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="731"/>
         <source>Post-backup:</source>
         <translation>Nadien:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="750"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="750"/>
         <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
         <translation>echo ‘Het backuppen van $repo_url is voltooid met $returncode.’</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="771"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="771"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opdrachtregelopties voor &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. De toegestane opties zijn te vinden in de &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;borg-documentatie&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="793"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="793"/>
         <source>--dry-run --noflags</source>
         <translation>--dry-run --noflags</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="65"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="65"/>
         <source>Repository:</source>
         <translation>Repo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="95"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="95"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wil je eenvoudige, veilige back-uphosting? Probeer dan eens &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="247"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="247"/>
         <source>Copy to clipboard</source>
         <translation>Kopiëren naar klembord</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="131"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="131"/>
         <source>Select Backup Destination</source>
         <translation>Kies een back-upbestemming</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="139"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="139"/>
         <source>Unlink repository without deleting it.</source>
         <translation>Ontkoppel de repo zonder deze te verwijderen.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="206"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="206"/>
         <source>SSH Key:</source>
         <translation>SSH-sleutel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="268"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="268"/>
         <source>Compression:</source>
         <translation>Compressie:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="311"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="311"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Hulp omtrent compressietypes&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="368"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="368"/>
         <source>Encryption:</source>
         <translation>Versleuteling:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="398"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="398"/>
         <source>Original Size:</source>
         <translation>Oorspronkelijke grootte:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="412"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="412"/>
         <source>Deduplicated Size:</source>
         <translation>Grootte na uitpakken:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="426"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="426"/>
         <source>Compressed Size:</source>
         <translation>Grootte na inpakken:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="41"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="41"/>
         <source>Archives</source>
         <translation>Archieven</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="54"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="54"/>
         <source>Refresh archive list</source>
         <translation>Archieflijst herladen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="74"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="74"/>
         <source>Check the consistency of the repository</source>
         <translation>Controleer de integriteit van de repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="77"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="77"/>
         <source>Check</source>
         <translation>Controleren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="87"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="87"/>
         <source>Prune the archives in this repository</source>
         <translation>Archieven in deze repo vernietigen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="90"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="90"/>
         <source>Prune</source>
         <translation>Vernietigen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="100"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="100"/>
         <source>Optimize disk space by defragmenting the repository</source>
         <translation>Optimaliseer de schijfruimte door de repo te defragmenteren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="103"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="103"/>
         <source>Compact</source>
         <translation>Comprimeren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="153"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="153"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="96"/>
+        <location filename="../../assets/UI/source_tab.ui" line="96"/>
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="163"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="163"/>
         <source>Duration</source>
         <translation>Duur</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="168"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="168"/>
         <source>Mount Point</source>
         <translation>Aankoppelpunt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="173"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="173"/>
         <source>Name</source>
         <translation>Naam</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="210"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="210"/>
         <source>Refresh selected archive</source>
         <translation>Gekozen archief verversen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="213"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="213"/>
         <source>Refresh</source>
         <translation>Herladen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="248"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="248"/>
         <source>Extract selected archive</source>
         <translation>Gekozen archief uitpakken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="251"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="251"/>
         <source>Extract…</source>
         <translation>Uitpakken…</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="267"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="267"/>
         <source>Rename selected archive</source>
         <translation>Archiefnaam wijzigen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="270"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="270"/>
         <source>Rename…</source>
         <translation>Naam wijzigen…</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="302"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="302"/>
         <source>Compare two archives</source>
         <translation>Twee archieven vergelijken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="305"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="305"/>
         <source>Diff</source>
         <translation>Verschil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="321"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="321"/>
         <source>Delete selected archive(s)</source>
         <translation>Geselecteerde archieven verwijderen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="324"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="324"/>
         <source>Delete</source>
         <translation>Verwijderen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="347"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="347"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Archieven kunnen alleen worden aangekoppeld met &amp;quot;FUSE voor macOS&amp;quot; - &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Downloaden&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="366"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="366"/>
         <source>Prune Options and Archive Naming</source>
         <translation>Opties omtrent vernietigen en archiefnamen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="381"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="381"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Met vernietigen verwijder je oude archieven. Je kunt het aantal uurlijkse, dagelijkse, etc. te behouden archieven bepalen. Meestal willen gebruikers meer nieuwere en minder oudere archieven behouden.&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;Meer informatie&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="415"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="415"/>
         <source>Hourly:</source>
         <translation>Ieder uur:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="551"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="551"/>
         <source>Use -1 for unlimited</source>
         <translation>Gebruik -1 voor oneindig</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="448"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="448"/>
         <source>Daily:</source>
         <translation>Iedere dag:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="481"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="481"/>
         <source>Weekly:</source>
         <translation>Iedere week:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="511"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="511"/>
         <source>Monthly:</source>
         <translation>Iedere maand:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="541"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="541"/>
         <source>Annual:</source>
         <translation>Ieder jaar:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="578"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="578"/>
         <source>No matter what, keep all archives of the last:</source>
         <translation>Behoud alle archieven van de afgelopen:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="591"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="591"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
         <translation>24u, 1d, 52w, 12m, 1j</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="678"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="678"/>
         <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
         <translation>Beschikbare variabelen: hostname, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="624"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="624"/>
         <source>{hostname}-{profile_slug}-</source>
         <translation>{hostname}-{profile_slug}-</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="637"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="637"/>
         <source>Prune Prefix:</source>
         <translation>Vernietigingsvoorvoegsel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="681"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="681"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
         <translation>{hostname}-{profile_slug}-{momenteel:%Y-%m-%d-%H%M%S}</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="694"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="694"/>
         <source>Archive Name:</source>
         <translation>Archiefnaam:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="56"/>
+        <location filename="../../assets/UI/source_tab.ui" line="56"/>
         <source>Source Folders and Files to Back Up:</source>
         <translation>Te back-uppen bronmappen en -bestanden:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="91"/>
+        <location filename="../../assets/UI/source_tab.ui" line="91"/>
         <source>Path</source>
         <translation>Locatie</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="101"/>
+        <location filename="../../assets/UI/source_tab.ui" line="101"/>
         <source>File Count</source>
         <translation>Aantal bestanden</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="111"/>
+        <location filename="../../assets/UI/source_tab.ui" line="111"/>
         <source>Recalculate source size and file count</source>
         <translation>Brongrootte en aantal bestanden herberekenen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="131"/>
+        <location filename="../../assets/UI/source_tab.ui" line="131"/>
         <source>Add sources</source>
         <translation>Bronnen toevoegen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="141"/>
+        <location filename="../../assets/UI/source_tab.ui" line="141"/>
         <source>Remove the selected source</source>
         <translation>Gekozen bron verwijderen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="158"/>
+        <location filename="../../assets/UI/source_tab.ui" line="158"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Uitsluitpatronen (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;meer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="168"/>
+        <location filename="../../assets/UI/source_tab.ui" line="168"/>
         <source>Exclude If Present (exclude folders with these files):</source>
         <translation>Uitsluiten, indien aanwezig (bestanden met de volgende bestanden uitsluiten):</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="187"/>
+        <location filename="../../assets/UI/source_tab.ui" line="187"/>
         <source>E.g. */.cache</source>
         <translation>Bijv. **/.cache</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="203"/>
+        <location filename="../../assets/UI/source_tab.ui" line="203"/>
         <source>E.g. .nobackup</source>
         <translation>Bijv. geenbackup</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="70"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="70"/>
         <source>Vorta Version:</source>
         <translation>Vorta-versie:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="77"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="77"/>
         <source>0.0</source>
         <translation>0.0</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="87"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="87"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Bug melden&lt;/span&gt;&lt;/a&gt; |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="97"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="97"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Logboek&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="133"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="133"/>
         <source>Borg Version:</source>
         <translation>Borg-versie:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="140"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="140"/>
         <source>1.1.8</source>
         <translation>1.1.8</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="147"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="147"/>
         <source>/usr/bin/borg</source>
         <translation>/usr/bin/borg</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="585"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="585"/>
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
         <translation type="unfinished"/>
     </message>

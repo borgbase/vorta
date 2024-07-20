@@ -123,77 +123,77 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="69"/>
+        <location filename="../../assets/UI/repo_add.ui" line="69"/>
         <source>General</source>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="95"/>
+        <location filename="../../assets/UI/repo_add.ui" line="95"/>
         <source>Initialize New Backup Repository</source>
         <translation>Initialisiere Neues Backup-Repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="102"/>
+        <location filename="../../assets/UI/repo_add.ui" line="102"/>
         <source>Repository URL:</source>
         <translation>Repository-URL:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="124"/>
+        <location filename="../../assets/UI/repo_add.ui" line="124"/>
         <source>Choose a local folder</source>
         <translation>Ein lokales Verzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="141"/>
+        <location filename="../../assets/UI/repo_add.ui" line="141"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="138"/>
+        <location filename="../../assets/UI/repo_add.ui" line="138"/>
         <source>Choose a remote repository</source>
         <translation>Ein entferntes Repository auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="154"/>
+        <location filename="../../assets/UI/repo_add.ui" line="154"/>
         <source>Borg passphrase:</source>
         <translation>Kennwort für Borgrepository:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="181"/>
+        <location filename="../../assets/UI/repo_add.ui" line="181"/>
         <source>Confirm passphrase:</source>
         <translation>Passwort bestätigen:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="188"/>
+        <location filename="../../assets/UI/repo_add.ui" line="188"/>
         <source>TextLabel</source>
         <translation>Textfeld</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="196"/>
+        <location filename="../../assets/UI/repo_add.ui" line="196"/>
         <source>Advanced</source>
         <translation>Erweitert</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="217"/>
+        <location filename="../../assets/UI/repo_add.ui" line="217"/>
         <source>SSH Key:</source>
         <translation>SSH-Schlüssel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="231"/>
+        <location filename="../../assets/UI/repo_add.ui" line="231"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>SSH-Schlüssel automatisch auswählen (Standardeinstellung)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="239"/>
+        <location filename="../../assets/UI/repo_add.ui" line="239"/>
         <source>Encryption:</source>
         <translation>Verschlüsselung:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="256"/>
+        <location filename="../../assets/UI/repo_add.ui" line="256"/>
         <source>Extra Borg Arguments:</source>
         <translation>Extra Optionen für Borg Kommando:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repoadd.ui" line="117"/>
+        <location filename="../../assets/UI/repo_add.ui" line="117"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
@@ -502,37 +502,37 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="25"/>
+        <location filename="../../assets/UI/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-Passwort:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="32"/>
+        <location filename="../../assets/UI/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Kennwort eingeben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="56"/>
+        <location filename="../../assets/UI/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Bestehendes Profil überschreiben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/importwindow.ui" line="63"/>
+        <location filename="../../assets/UI/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Bestehende Einstellungen überschreiben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="12"/>
+        <location filename="../../assets/UI/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="35"/>
+        <location filename="../../assets/UI/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Backup-Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="56"/>
+        <location filename="../../assets/UI/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
 &lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
 &lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
@@ -541,157 +541,157 @@
 &lt;p&gt;Alle Profile können dieselben Repositorys und dieselben &lt;span style=&quot; font-style:italic;&quot;&gt;SSH&lt;/span&gt;-Schlüssel verwenden. Der Reiter &lt;span style=&quot; font-style:italic;&quot;&gt;Allgemein&lt;/span&gt; legt Profil übergreifend die globalen Programmeinstellungen fest.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profileadd.ui" line="87"/>
+        <location filename="../../assets/UI/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Profilname:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="14"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Zu vergleichende Archive auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="25"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Wähle zwei Archive aus</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="60"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="65"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="70"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
         <source>Duration</source>
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="75"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Einhängepunkt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="80"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="106"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffdialog.ui" line="113"/>
+        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
         <source>Diff</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="14"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Zu extrahierende Dateien auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="25"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archiv:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extractdialog.ui" line="38"/>
+        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="65"/>
+        <location filename="../../assets/UI/diff_result.ui" line="65"/>
         <source>Keep folders on top when sorting</source>
         <translation>Sortiere Ordner immer über Dateien ein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="81"/>
+        <location filename="../../assets/UI/diff_result.ui" line="81"/>
         <source>Set display mode of diff view</source>
         <translation>Stelle den Darstellungsmodus der Diff-Ansicht ein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="88"/>
+        <location filename="../../assets/UI/diff_result.ui" line="88"/>
         <source>Tree</source>
         <translation>Baum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="93"/>
+        <location filename="../../assets/UI/diff_result.ui" line="93"/>
         <source>Tree, simplified</source>
         <translation>Baum, vereinfacht</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="109"/>
+        <location filename="../../assets/UI/diff_result.ui" line="109"/>
         <source>Collapse All</source>
         <translation>Alle einklappen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exportwindow.ui" line="23"/>
+        <location filename="../../assets/UI/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Borgpasswort dem Export beifügen. Vorsicht wegen Datendiebstahls!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exportwindow.ui" line="26"/>
+        <location filename="../../assets/UI/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Borg-Passwort mitexportieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="14"/>
+        <location filename="../../assets/UI/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="28"/>
+        <location filename="../../assets/UI/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="42"/>
+        <location filename="../../assets/UI/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="98"/>
+        <location filename="../../assets/UI/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Flach</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="42"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>SSH-Schlüssel erzeugen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="54"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Schlüssel-Format:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="71"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Schlüssel-Länge:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="93"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 oder 4096 für RSA, 384 oder 521 für ECDSA. Fest für Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mehr&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="106"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Ausgabe-Datei:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sshadd.ui" line="121"/>
+        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Behalten Sie dies bei, wenn SSH den Schlüssel automatisch finden soll.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diffresult.ui" line="68"/>
+        <location filename="../../assets/UI/diff_result.ui" line="68"/>
         <source>Folders First</source>
         <translation>Ordner zuerst</translation>
     </message>
@@ -945,517 +945,517 @@
 <context>
     <name>Form</name>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="14"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="14"/>
         <source>Form</source>
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="51"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="51"/>
         <source>Schedule</source>
         <translation>Planung</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="76"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="76"/>
         <source>Backup schedule:</source>
         <translation>Sicherungszeitplan:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="83"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="83"/>
         <source>Manual only</source>
         <translation>Ausschließlich manuell</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="98"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="98"/>
         <source>Backup periodically</source>
         <translation>Periodische Datensicherung</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="401"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="401"/>
         <source>Interval:</source>
         <translation>Intervall:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="191"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="191"/>
         <source>Backup daily</source>
         <translation>Tägliche Datensicherung</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="238"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="238"/>
         <source>Time:</source>
         <translation>Uhrzeit:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="285"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="285"/>
         <source>Missed backups:</source>
         <translation>Verpasste Sicherungstermine:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="298"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="298"/>
         <source>Run missed backups on startup or wakeup</source>
         <translation>Verpasste Datensicherungen beim Starten oder Aufwachen nachholen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="325"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="325"/>
         <source>Autopruning:</source>
         <translation>Automatisches Ausdünnen:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="332"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="332"/>
         <source>Prune after each backup</source>
         <translation>Alte Archive nach jeder Sicherung ausdünnen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="339"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="339"/>
         <source>Validation:</source>
         <translation>Validierung:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="354"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="354"/>
         <source>Validate repository data</source>
         <translation>Repositorydaten überprüfen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="437"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="437"/>
         <source>weeks</source>
         <translation>Wochen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="489"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="489"/>
         <source>Next Backup:</source>
         <translation>Nächstes Backup:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="496"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="496"/>
         <source>None scheduled</source>
         <translation>Nicht angesetzt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="527"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="527"/>
         <source>Networks</source>
         <translation>Netzwerke</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="544"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="544"/>
         <source>Allowed Networks:</source>
         <translation>Erlaubte Netzwerke:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="563"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="563"/>
         <source>Run backups over metered networks</source>
         <translation>Datensicherung über kostenpflichtige Netzwerke durchführen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="582"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="582"/>
         <source>Log</source>
         <translation>Protokoll</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="604"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="604"/>
         <source>Time</source>
         <translation>Zeit</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="609"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="609"/>
         <source>Category</source>
         <translation>Kategorie</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="614"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="614"/>
         <source>Subcommand</source>
         <translation>Unter-Kommando</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="619"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="619"/>
         <source>Repository</source>
         <translation>Repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="624"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="624"/>
         <source>Returncode</source>
         <translation>Returncode</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="641"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="641"/>
         <source>Shell Commands</source>
         <translation>Shell-Kommandos</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="659"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="659"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eigene Shell-Befehle vor und nach jeder Sicherung ausführen. Die eigentliche Datensicherung sowie das Aufrufen des Postsicherungskommandos geschieht nur, wenn das Präsicherungskommando ohne Fehler beendet wurde (return code 0). Verfügbare Platzhalter: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="683"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="683"/>
         <source>Pre-backup:</source>
         <translation>Vor der Sicherung:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="711"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="711"/>
         <source>echo &quot;Before backup of $repo_url&quot;</source>
         <translation>echo &quot;Vor der Sicherung nach $repo_url&quot;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="731"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="731"/>
         <source>Post-backup:</source>
         <translation>Nach der Sicherung:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="750"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="750"/>
         <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
         <translation>echo &quot;Sicherung nach $repo_url mit $returncode beendet.&quot;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="771"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="771"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zusätzliche Argumente für &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Mögliche Parameter werden in der &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Borg-Dokumentation&lt;/span&gt;&lt;/a&gt;erklärt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/scheduletab.ui" line="793"/>
+        <location filename="../../assets/UI/schedule_tab.ui" line="793"/>
         <source>--dry-run --noflags</source>
         <translation>--dry-run --noflags</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="65"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="65"/>
         <source>Repository:</source>
         <translation>Repository:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="95"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="95"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Probieren Sie &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt; für einfaches und sicheres Hosting von Datensicherungen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="247"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="247"/>
         <source>Copy to clipboard</source>
         <translation>In die Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="131"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="131"/>
         <source>Select Backup Destination</source>
         <translation>Wähle Datensicherungs-Ziel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="139"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="139"/>
         <source>Unlink repository without deleting it.</source>
         <translation>Repository abkoppeln, ohne es zu löschen.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="206"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="206"/>
         <source>SSH Key:</source>
         <translation>SSH-Schlüssel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="268"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="268"/>
         <source>Compression:</source>
         <translation>Kompression:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="311"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="311"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Mehr Informationen über Komprimierungsverfahren&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="368"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="368"/>
         <source>Encryption:</source>
         <translation>Verschlüsselung:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="398"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="398"/>
         <source>Original Size:</source>
         <translation>Ursprüngliche Größe:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="412"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="412"/>
         <source>Deduplicated Size:</source>
         <translation>Deduplizierte Größe:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repotab.ui" line="426"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="426"/>
         <source>Compressed Size:</source>
         <translation>Komprimierte Größe:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="41"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="41"/>
         <source>Archives</source>
         <translation>Archive</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="54"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="54"/>
         <source>Refresh archive list</source>
         <translation>Archivliste aktualisieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="74"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="74"/>
         <source>Check the consistency of the repository</source>
         <translation>Konsistenz des Repositorys überprüfen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="77"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="77"/>
         <source>Check</source>
         <translation>Prüfen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="87"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="87"/>
         <source>Prune the archives in this repository</source>
         <translation>Archive des Repositorys ausdünnen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="90"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="90"/>
         <source>Prune</source>
         <translation>Ausdünnen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="100"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="100"/>
         <source>Optimize disk space by defragmenting the repository</source>
         <translation>Speicherbedarf des Repositorys durch Defragmentierung optimieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="103"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="103"/>
         <source>Compact</source>
         <translation>Optimieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="153"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="153"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="96"/>
+        <location filename="../../assets/UI/source_tab.ui" line="96"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="163"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="163"/>
         <source>Duration</source>
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="168"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="168"/>
         <source>Mount Point</source>
         <translation>Einhängepunkt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="173"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="173"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="210"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="210"/>
         <source>Refresh selected archive</source>
         <translation>Metadaten des ausgewählten Archivs aktualisieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="213"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="213"/>
         <source>Refresh</source>
         <translation>Auffrischen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="248"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="248"/>
         <source>Extract selected archive</source>
         <translation>Ausgewähltes Archiv entpacken</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="251"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="251"/>
         <source>Extract…</source>
         <translation>Entpacken…</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="267"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="267"/>
         <source>Rename selected archive</source>
         <translation>Ausgewähltes Archiv umbenennen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="270"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="270"/>
         <source>Rename…</source>
         <translation>Umbenennen…</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="302"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="302"/>
         <source>Compare two archives</source>
         <translation>Zwei Archive vergleichen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="305"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="305"/>
         <source>Diff</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="321"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="321"/>
         <source>Delete selected archive(s)</source>
         <translation>Ausgewählte(s) Archiv(e) endgültig entfernen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="324"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="324"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="347"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="347"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Um Archive einzuhängen, installiere &amp;quot;FUSE für macOS&amp;quot; von &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;hier&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="366"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="366"/>
         <source>Prune Options and Archive Naming</source>
         <translation>Ausdünnungs-Optionen und Archiv-Namensgebung</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="381"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="381"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ausdünnen entfernt ältere Archive. Sie können die Anzahl der stündlichen, täglichen, etc. Archive wählen, die Sie behalten möchten. Üblicherweise werden Sie mehr neue und weniger alte Archive behalten. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mehr&lt;/span&gt;&lt;/a&gt; lesen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="415"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="415"/>
         <source>Hourly:</source>
         <translation>Stündlich:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="551"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="551"/>
         <source>Use -1 for unlimited</source>
         <translation>Keine Begrenzung bei einem Wert von -1</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="448"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="448"/>
         <source>Daily:</source>
         <translation>Täglich:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="481"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="481"/>
         <source>Weekly:</source>
         <translation>Wöchentlich:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="511"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="511"/>
         <source>Monthly:</source>
         <translation>Monatlich:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="541"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="541"/>
         <source>Annual:</source>
         <translation>Jährlich:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="578"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="578"/>
         <source>No matter what, keep all archives of the last:</source>
         <translation>Außerdem, behalte alle Archive der letzten:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="591"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="591"/>
         <source>24H, 1d, 52w, 12m, 1y</source>
         <translation>24H, 1d, 52w, 12m, 1y</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="678"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="678"/>
         <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
         <translation>Verfügbare Variablen: hostname, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="624"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="624"/>
         <source>{hostname}-{profile_slug}-</source>
         <translation>{hostname}-{profile_slug}-</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="637"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="637"/>
         <source>Prune Prefix:</source>
         <translation>Ausdünnungs-Präfix:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="681"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="681"/>
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
         <translation>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="694"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="694"/>
         <source>Archive Name:</source>
         <translation>Archiv-Name:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="56"/>
+        <location filename="../../assets/UI/source_tab.ui" line="56"/>
         <source>Source Folders and Files to Back Up:</source>
         <translation>Zu sichernde Quell-Ordner und -Dateien:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="91"/>
+        <location filename="../../assets/UI/source_tab.ui" line="91"/>
         <source>Path</source>
         <translation>Pfad</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="101"/>
+        <location filename="../../assets/UI/source_tab.ui" line="101"/>
         <source>File Count</source>
         <translation>Anzahl Dateien</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="111"/>
+        <location filename="../../assets/UI/source_tab.ui" line="111"/>
         <source>Recalculate source size and file count</source>
         <translation>Ausgangsgröße und Dateianzahl erneut berechnen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="131"/>
+        <location filename="../../assets/UI/source_tab.ui" line="131"/>
         <source>Add sources</source>
         <translation>Datenquellen hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="141"/>
+        <location filename="../../assets/UI/source_tab.ui" line="141"/>
         <source>Remove the selected source</source>
         <translation>Ausgewählte Datenquelle entfernen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="158"/>
+        <location filename="../../assets/UI/source_tab.ui" line="158"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ausschluss-Muster (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;mehr&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="168"/>
+        <location filename="../../assets/UI/source_tab.ui" line="168"/>
         <source>Exclude If Present (exclude folders with these files):</source>
         <translation>Ausschließen, Wenn Vorhanden (schließe Ordner mit diesen Dateien aus):</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="187"/>
+        <location filename="../../assets/UI/source_tab.ui" line="187"/>
         <source>E.g. */.cache</source>
         <translation>z.B. */.cache</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/sourcetab.ui" line="203"/>
+        <location filename="../../assets/UI/source_tab.ui" line="203"/>
         <source>E.g. .nobackup</source>
         <translation>Zum Beispiel .nobackup</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="70"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="70"/>
         <source>Vorta Version:</source>
         <translation>Vorta Version:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="77"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="77"/>
         <source>0.0</source>
         <translation>0.0</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="87"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="87"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Melden&lt;/span&gt;&lt;/a&gt; eines Fehlers)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="97"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="97"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="133"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="133"/>
         <source>Borg Version:</source>
         <translation>Borg Version:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="140"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="140"/>
         <source>1.1.8</source>
         <translation>1.1.8</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/misctab.ui" line="147"/>
+        <location filename="../../assets/UI/misc_tab.ui" line="147"/>
         <source>/usr/bin/borg</source>
         <translation>/usr/bin/borg</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/archivetab.ui" line="585"/>
+        <location filename="../../assets/UI/archive_tab.ui" line="585"/>
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
         <translation>“&lt;int&gt;&lt;char&gt;”, wobei Zeichen eines der folgenden Einheiten sein muss: “H”, “d”, “w”, “m”, “y”</translation>
     </message>
