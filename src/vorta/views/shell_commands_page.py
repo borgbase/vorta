@@ -8,7 +8,7 @@ from vorta.utils import get_asset
 class ShellCommandsPage(QWidget, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
-        uifile = get_asset('UI/shellcommandspage.ui')
+        uifile = get_asset('UI/shell_commands_page.ui')
         uic.loadUi(uifile, self)
 
         self.preBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'preBackupCmdLineEdit')

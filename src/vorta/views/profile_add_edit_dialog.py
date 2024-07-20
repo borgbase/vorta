@@ -5,7 +5,7 @@ from vorta.i18n import trans_late, translate
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/profileadd.ui')
+uifile = get_asset('UI/profile_add.ui')
 AddProfileUI, AddProfileBase = uic.loadUiType(uifile)
 
 

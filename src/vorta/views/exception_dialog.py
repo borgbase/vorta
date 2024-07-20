@@ -11,7 +11,7 @@ from vorta.views.utils import get_colored_icon
 from ..utils import get_asset
 
 # Load UI file
-uifile = get_asset('UI/exceptiondialog.ui')
+uifile = get_asset('UI/exception_dialog.ui')
 ExceptionDialogUI, ExceptionDialogBase = uic.loadUiType(uifile)
 
 

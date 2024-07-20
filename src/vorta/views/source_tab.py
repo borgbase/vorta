@@ -24,7 +24,7 @@ from vorta.utils import (
 from vorta.views.exclude_dialog import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/sourcetab.ui')
+uifile = get_asset('UI/source_tab.ui')
 SourceUI, SourceBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

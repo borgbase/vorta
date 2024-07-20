@@ -18,7 +18,7 @@ from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/repoadd.ui')
+uifile = get_asset('UI/repo_add.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 

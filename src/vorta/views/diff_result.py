@@ -31,7 +31,7 @@ from vorta.views.partials.treemodel import (
 )
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/diffresult.ui')
+uifile = get_asset('UI/diff_result.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

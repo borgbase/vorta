@@ -9,7 +9,7 @@ from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/abouttab.ui')
+uifile = get_asset('UI/about_tab.ui')
 AboutTabUI, AboutTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

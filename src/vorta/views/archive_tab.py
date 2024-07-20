@@ -48,7 +48,7 @@ from vorta.views.extract_dialog import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/archivetab.ui')
+uifile = get_asset('UI/archive_tab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
