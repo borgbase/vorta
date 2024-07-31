@@ -37,7 +37,6 @@ from vorta.utils import (
     borg_compat,
     choose_file_dialog,
     find_best_unit_for_sizes,
-    format_archive_name,
     get_asset,
     get_mount_points,
     pretty_bytes,
@@ -45,6 +44,7 @@ from vorta.utils import (
 from vorta.views import diff_result, extract_dialog
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
+from vorta.views.prune_options_page import PruneOptionsPage
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
@@ -77,6 +77,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.menu = None
         self.app = app
         self.toolBox.setCurrentIndex(0)
+        self.init_prune_options_page()
         self.repoactions_enabled = True
         self.renamed_archive_original_name = None
         self.remaining_refresh_archives = (
@@ -139,12 +140,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bDiff.clicked.connect(self.diff_action)
         self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
 
-        self.archiveNameTemplate.textChanged.connect(
-            lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key)
-        )
-        self.prunePrefixTemplate.textChanged.connect(
-            lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key)
-        )
+        # self.archiveNameTemplate.textChanged.connect(
+        #     lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key)
+        # )
+        # self.prunePrefixTemplate.textChanged.connect(
+        #     lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key)
+        # )
 
         self.populate_from_profile()
         self.selected_archives = None  # TODO: remove unused variable
@@ -152,6 +153,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         # Connect to palette change
         self.app.paletteChanged.connect(lambda p: self.set_icons())
+
+    def init_prune_options_page(self):
+        self.pruneOptionsPage = PruneOptionsPage(self)
+        self.pruneLayout.addWidget(self.pruneOptionsPage)
+        self.pruneOptionsPage.show()
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""
@@ -238,7 +244,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.on_selection_change()
 
     def populate_from_profile(self):
-        """Populate archive list and prune settings from profile."""
+        """Populate archive list from profile."""
         profile = self.profile()
         if profile.repo is not None:
             # get mount points
@@ -312,16 +318,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
-        self.archiveNameTemplate.setText(profile.new_archive_name)
-        self.prunePrefixTemplate.setText(profile.prune_prefix)
+        # self.archiveNameTemplate.setText(profile.new_archive_name)
+        # self.prunePrefixTemplate.setText(profile.prune_prefix)
 
         # Populate pruning options from database
-        profile = self.profile()
-        for i in self.prune_intervals:
-            getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
-            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
-        self.prune_keep_within.setText(profile.prune_keep_within)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+        # profile = self.profile()
+        # for i in self.prune_intervals:
+        #     getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
+        #     getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+        # self.prune_keep_within.setText(profile.prune_keep_within)
+        # self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
     def on_selection_change(self, selected=None, deselected=None):
         """
@@ -423,19 +429,19 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         QApplication.clipboard().setMimeData(data)
 
-    def save_archive_template(self, tpl, key):
-        profile = self.profile()
-        try:
-            preview = self.tr('Preview: %s') % format_archive_name(profile, tpl)
-            setattr(profile, key, tpl)
-            profile.save()
-        except Exception:
-            preview = self.tr('Error in archive name template.')
+    # def save_archive_template(self, tpl, key):
+    #     profile = self.profile()
+    #     try:
+    #         preview = self.tr('Preview: %s') % format_archive_name(profile, tpl)
+    #         setattr(profile, key, tpl)
+    #         profile.save()
+    #     except Exception:
+    #         preview = self.tr('Error in archive name template.')
 
-        if key == 'new_archive_name':
-            self.archiveNamePreview.setText(preview)
-        else:
-            self.prunePrefixPreview.setText(preview)
+    #     if key == 'new_archive_name':
+    #         self.archiveNamePreview.setText(preview)
+    #     else:
+    #         self.prunePrefixPreview.setText(preview)
 
     def check_action(self):
         params = BorgCheckJob.prepare(self.profile())
@@ -724,12 +730,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         else:
             self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(mount_point))
 
-    def save_prune_setting(self, new_value=None):
-        profile = self.profile()
-        for i in self.prune_intervals:
-            setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
-        profile.prune_keep_within = self.prune_keep_within.text()
-        profile.save()
+    # def save_prune_setting(self, new_value=None):
+    #     profile = self.profile()
+    #     for i in self.prune_intervals:
+    #         setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
+    #     profile.prune_keep_within = self.prune_keep_within.text()
+    #     profile.save()
 
     def extract_action(self):
         """
