@@ -71,7 +71,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
-        self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
+        self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app).archivePage
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
         self.miscTab = MiscTab(self.SettingsTabSlot)
         self.aboutTab = AboutTab(self.AboutTabSlot)
