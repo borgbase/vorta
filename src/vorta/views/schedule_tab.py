@@ -25,6 +25,7 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.init_shell_commands_page()
         self.init_networks_page()
         self.init_schedule_page()
+        self.app.paletteChanged.connect(lambda p: self.set_icons())
 
         self.app.backup_finished_event.connect(self.logPage.populate_logs)
 
