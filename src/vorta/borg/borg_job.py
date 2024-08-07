@@ -113,16 +113,19 @@ class BorgJob(JobInterface, BackupProfileMixin):
         return self.site_id
 
     def cancel(self):
-        logger.debug("Cancel job on site %s", self.site_id)
+        logger.debug("Cancelling job on site %s", self.site_id)
         if self.process is not None:
-            self.process.send_signal(signal.SIGINT)
+            self.terminate_process(self.process)
+
+    def terminate_process(self, process):
+        process.send_signal(signal.SIGINT)
+        try:
+            process.wait(timeout=3)
+        except TimeoutExpired:
             try:
-                self.process.wait(timeout=3)
-            except TimeoutExpired:
-                try:
-                    os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
-                except ProcessLookupError:
-                    pass
+                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+            except ProcessLookupError:
+                pass
 
     @classmethod
     def prepare(cls, profile):
