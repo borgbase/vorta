@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import Path
 
 from PyQt6 import QtCore, uic
@@ -47,6 +48,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setWindowTitle('Vorta for Borg Backup')
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
+        if sys.platform.startswith('linux'):
+            self.app.setDesktopFileName('com.borgbase.Vorta')
         self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
