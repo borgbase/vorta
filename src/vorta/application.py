@@ -224,7 +224,9 @@ class VortaApp(QtSingleApplication):
         """
         msgid = context.get('msgid')
         if msgid == 'LockTimeout':
-            profile = BackupProfileModel.get(name=context['profile_name'])
+            profile = BackupProfileModel.get_or_none(name=context['profile_name'])
+            if profile is None:  # Repo may not yet exist in DB.
+                return
             repo_url = context.get('repo_url')
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))
