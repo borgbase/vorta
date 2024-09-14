@@ -9,11 +9,11 @@ on:
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.2.8'
+        default: '1.4.0'
       macos_version:
         description: 'macOS version for building'
         required: true
-        default: 'macos-11'
+        default: 'macos-12'
 
 jobs:
   build:
@@ -71,8 +71,8 @@ jobs:
     #   timeout-minutes: 15
 
     - name: Upload build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Vorta.dmg
         path: dist/Vorta.dmg
-        retention-days: 10
+        retention-days: 60
