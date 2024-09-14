@@ -6,4 +6,4 @@ Type=Application
 Icon=com.borgbase.Vorta
 Categories=Utility;Archiving;Qt;
 Keywords=borg;
-StartupWMClass=vorta
+StartupWMClass=python3
