@@ -79,10 +79,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
             'value': True,
             'type': 'checkbox',
             'group': security,
-            'label': trans_late(
-                'settings',
-                'Store repository passwords in system keychain, if available',
-            ),
+            'label': trans_late('settings', 'Store repository passwords in system keychain, if available'),
             'tooltip': trans_late(
                 'settings', "Otherwise Vorta's configuration database stores the password in plaintext."
             ),
