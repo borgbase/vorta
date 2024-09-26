@@ -104,6 +104,7 @@ class BackupProfileModel(BaseModel):
     pre_backup_cmd = pw.CharField(default='')
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
+    last_status = pw.CharField(default='', null=True)
 
     def refresh(self):
         return type(self).get(self._pk_expr())
