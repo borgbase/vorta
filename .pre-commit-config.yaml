@@ -56,12 +56,6 @@ repos:
   #           py39,
   #         ]
 
-  # check pep8 conformity using flake8
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-
 # configuration for the pre-commit.ci bot
 # only relevant when actually using the bot
 ci:
