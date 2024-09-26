@@ -30,6 +30,7 @@ codesign --verify --force --verbose --deep \
 rm -rf $APP_BUNDLE.dmg
 create-dmg \
   --volname "Vorta Installer" \
+  --filesystem APFS \
   --window-size 410 300 \
   --icon-size 100 \
   --icon "Vorta.app" 70 150 \
