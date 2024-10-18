@@ -137,10 +137,11 @@ jobs:
         run: echo $PKG_CONFIG_PATH && make test-integration
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
           python: ${{ matrix.python-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS, python
+          version: v0.7.3  # workaround on Intel macs (GH Actions)
