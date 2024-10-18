@@ -11,8 +11,8 @@ if [[ "$event_name" == "workflow_dispatch" ]] || [[ "$branch_name" == "master" ]
     echo '{
       "python-version": ["3.9", "3.10", "3.11"],
       "os": ["ubuntu-22.04", "macos-14"],
-      "borg-version": ["1.1.18", "1.2.4", "1.4.0", "2.0.0b5"],
-      "exclude": [{"borg-version": "2.0.0b5", "python-version": "3.8"}]
+      "borg-version": ["1.1.18", "1.2.8", "1.4.0", "2.0.0b12"],
+      "exclude": [{"borg-version": "2.0.0b12", "python-version": "3.8"}]
     }' | jq -c . > matrix-integration.json
 
 elif [[ "$event_name" == "push" ]] || [[ "$event_name" == "pull_request" ]]; then
