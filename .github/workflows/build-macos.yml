@@ -31,12 +31,12 @@ jobs:
       run: |
         brew install --cask sparkle
         brew install create-dmg
-        pip3 install --upgrade pip
-        pip3 install -r dev.txt
+        pip3 install --break-system-packages --upgrade pip
+        pip3 install --break-system-packages -r dev.txt
       working-directory: requirements.d
     - name: Install Vorta
       run: |
-        pip3 install .
+        pip3 install --break-system-packages .
     - name: Package with PyInstaller
       run: |
         pyinstaller --clean --noconfirm package/vorta.spec
