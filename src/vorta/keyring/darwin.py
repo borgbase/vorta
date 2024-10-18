@@ -1,4 +1,4 @@
-# flake8: noqa
+# ruff: noqa
 
 """
 A dirty objc implementation to access the macOS Keychain. Because the
@@ -7,11 +7,14 @@ objc modules.
 
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
+
 import logging
 import sys
 from ctypes import c_char
+
 import objc
 from Foundation import NSBundle
+
 from .abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -47,14 +50,14 @@ class VortaDarwinKeyring(VortaKeyring):
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
 
-        SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
-        SecKeychainItemRef = objc.registerCFSignature(
+        objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
+        objc.registerCFSignature(
             'SecKeychainItemRef',
             b'^{OpaqueSecKeychainItemRef=}',
             SecKeychainItemGetTypeID(),
         )
 
-        PassBuffRef = objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
+        objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
 
         # Get the login keychain
         result, login_keychain = SecKeychainOpen(b'login.keychain', None)
@@ -81,7 +84,12 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        (result, password_length, password_buffer, keychain_item,) = SecKeychainFindGenericPassword(
+        (
+            result,
+            password_length,
+            password_buffer,
+            keychain_item,
+        ) = SecKeychainFindGenericPassword(
             self.login_keychain,
             len(service),
             service.encode(),

@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+
 from vorta.network_status import darwin
 
 

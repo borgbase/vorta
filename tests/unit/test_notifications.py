@@ -1,9 +1,10 @@
 import sys
 
 import pytest
+from PyQt6 import QtDBus
+
 import vorta.borg
 import vorta.notifications
-from PyQt6 import QtDBus
 
 
 @pytest.mark.skipif(sys.platform != 'linux', reason="DBus notifications only on Linux")

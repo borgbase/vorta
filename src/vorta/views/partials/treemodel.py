@@ -909,12 +909,10 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         self.folders_on_top = False
 
     @overload
-    def keepFoldersOnTop(self) -> bool:
-        ...
+    def keepFoldersOnTop(self) -> bool: ...
 
     @overload
-    def keepFoldersOnTop(self, value: bool) -> bool:
-        ...
+    def keepFoldersOnTop(self, value: bool) -> bool: ...
 
     def keepFoldersOnTop(self, value=None) -> bool:
         """

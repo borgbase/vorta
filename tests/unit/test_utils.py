@@ -2,6 +2,7 @@ import sys
 import uuid
 
 import pytest
+
 from vorta.keyring.abc import VortaKeyring
 from vorta.utils import (
     find_best_unit_for_sizes,

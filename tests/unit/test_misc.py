@@ -4,10 +4,11 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-import vorta.store.models
 from PyQt6 import QtCore
 from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import QCheckBox, QFormLayout, QMessageBox
+
+import vorta.store.models
 from vorta.store.models import SettingsModel
 
 

@@ -22,9 +22,9 @@ jobs:
           python-version: 3.11
           pre-commit: true
 
-      - name: Test formatting with Flake8, ruff and Black
+      - name: Test formatting with ruff
         shell: bash
-        run: make lint
+        run: pre-commit run --all-files --show-diff-on-failure
 
   prepare-matrix:
     runs-on: ubuntu-latest

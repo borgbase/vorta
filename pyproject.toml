@@ -1,14 +1,23 @@
-[tool.black]
-line-length = 120
-skip-string-normalization = true
-target-version = ['py39']
-include = "(src/vorta/|tests).*.py$"
-
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.ruff]
-select = ["T", "I"]
-exclude = ["package"]
-fixable = ["I"]
+line-length = 120
+# exclude = ["package", "build", "dist", ".git", ".idea", ".cache", ".tox", ".eggs", "./src/vorta/__init__.py", ".direnv", "env"]
+include = ["src/**/*.py", "tests/**/*.py"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # Error
+    "F",  # pyflakes
+    "I",  # isort
+    "W",  # Warning
+    "YTT", # flake8-2020
+]
+ignore = [
+    "F401",
+]
+
+[tool.ruff.format]
+quote-style = "preserve"

@@ -1,11 +1,12 @@
 from pathlib import PurePath
 
 import pytest
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtWidgets import QMenu
+
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
-from PyQt6.QtWidgets import QMenu
 from vorta.store.models import ArchiveModel
 from vorta.views.diff_result import (
     ChangeType,

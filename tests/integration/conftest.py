@@ -2,11 +2,12 @@ import os
 import subprocess
 
 import pytest
+from peewee import SqliteDatabase
+from pkg_resources import parse_version
+
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from peewee import SqliteDatabase
-from pkg_resources import parse_version
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,

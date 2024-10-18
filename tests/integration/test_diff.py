@@ -3,10 +3,11 @@ These tests compare the output of the diff command with the expected output.
 """
 
 import pytest
+from pkg_resources import parse_version
+
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from pkg_resources import parse_version
 from vorta.borg.diff import BorgDiffJob
 from vorta.views.diff_result import (
     ChangeType,

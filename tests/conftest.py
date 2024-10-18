@@ -2,10 +2,11 @@ import os
 import sys
 
 import pytest
+from peewee import SqliteDatabase
+
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from peewee import SqliteDatabase
 
 
 def pytest_configure(config):

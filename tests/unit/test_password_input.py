@@ -1,5 +1,6 @@
 import pytest
 from PyQt6.QtWidgets import QFormLayout, QWidget
+
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 
 

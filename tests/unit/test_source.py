@@ -1,7 +1,8 @@
 import pytest
-import vorta.views
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
+
+import vorta.views
 from vorta.views.main_window import MainWindow
 from vorta.views.source_tab import SourceTab
 

@@ -469,7 +469,6 @@ def extract_mount_points_v1(proc, repo_url):
 
     for idx, parameter in enumerate(proc.cmdline()):
         if parameter.startswith(repo_url):
-
             if len(proc.cmdline()) > idx + 1:
                 mount_point = proc.cmdline()[idx + 1]
 

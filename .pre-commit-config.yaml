@@ -29,17 +29,19 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.257"
+    rev: v0.7.0
     hooks:
+      # Run the linter.
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+      # Run the formatter.
+      - id: ruff-format
 
   # format python files
-  - repo: https://github.com/psf/black
-    rev: 22.12.0
-    hooks:
-      - id: black
-        files: ^(src/vorta/|tests)
+  # - repo: https://github.com/psf/black
+  #   rev: 22.12.0
+  #   hooks:
+  #     - id: black
+  #       files: ^(src/vorta/|tests)
 
   # # run black on code embedded in docstrings
   # - repo: https://github.com/asottile/blacken-docs
@@ -55,12 +57,6 @@ repos:
   #           --target-version,
   #           py39,
   #         ]
-
-  # check pep8 conformity using flake8
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
 
 # configuration for the pre-commit.ci bot
 # only relevant when actually using the bot
