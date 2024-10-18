@@ -4,6 +4,7 @@ Test backup creation
 
 import pytest
 from PyQt6 import QtCore
+
 from vorta.store.models import ArchiveModel, EventLogModel
 
 

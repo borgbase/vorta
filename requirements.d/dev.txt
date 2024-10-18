@@ -1,6 +1,4 @@
-black==22.*
 coverage
-flake8
 macholib
 nox
 pkgconfig

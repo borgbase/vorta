@@ -135,7 +135,7 @@
         ],
         "tags": ["application:firefox", "type:browser", "os:linux"],
         "author": "Divi, Renner0E"
-    }
+    },
     {
         "name": "Mozilla Firefox Snap cache and config files",
         "slug": "firefox-snap-cache",

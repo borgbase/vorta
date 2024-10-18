@@ -2,11 +2,12 @@ from collections import namedtuple
 
 import psutil
 import pytest
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMenu
+
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from PyQt6 import QtCore
-from PyQt6.QtWidgets import QMenu
 from vorta.store.models import ArchiveModel, BackupProfileModel
 
 
