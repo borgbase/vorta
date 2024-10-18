@@ -1,6 +1,7 @@
 import pytest
-import vorta.borg
 from PyQt6.QtCore import QModelIndex, Qt
+
+import vorta.borg
 from vorta.store.models import ArchiveModel
 from vorta.views.extract_dialog import (
     ExtractDialog,

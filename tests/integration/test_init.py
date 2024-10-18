@@ -6,11 +6,12 @@ import os
 from pathlib import PurePath
 
 import pytest
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMessageBox
+
 import vorta.borg
 import vorta.utils
 import vorta.views.repo_add_dialog
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMessageBox
 
 LONG_PASSWORD = 'long-password-long'
 TEST_REPO_NAME = 'TEST - REPONAME'

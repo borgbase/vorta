@@ -154,7 +154,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             .order_by(ExclusionModel.name)
         }
 
-        for (exclude, enabled) in user_excluded_patterns.items():
+        for exclude, enabled in user_excluded_patterns.items():
             item = QStandardItem(exclude)
             item.setCheckable(True)
             item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)

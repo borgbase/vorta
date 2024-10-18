@@ -7,6 +7,7 @@ objc modules.
 
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
+
 import logging
 import sys
 from ctypes import c_char
@@ -83,7 +84,12 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
-        (result, password_length, password_buffer, keychain_item,) = SecKeychainFindGenericPassword(
+        (
+            result,
+            password_length,
+            password_buffer,
+            keychain_item,
+        ) = SecKeychainFindGenericPassword(
             self.login_keychain,
             len(service),
             service.encode(),

@@ -31,7 +31,6 @@ def open_app_at_startup(enabled=True):
     while on Linux it adds a .desktop file at ~/.config/autostart
     """
     if sys.platform == 'darwin':
-
         url = NSURL.alloc().initFileURLWithPath_(APP_PATH)
         login_items = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListSessionLoginItems, None)
         props = NSDictionary.dictionaryWithObject_forKey_(True, kLSSharedFileListItemHidden)

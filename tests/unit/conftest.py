@@ -2,10 +2,11 @@ import os
 from datetime import datetime as dt
 
 import pytest
+from peewee import SqliteDatabase
+
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from peewee import SqliteDatabase
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
