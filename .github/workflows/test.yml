@@ -51,7 +51,7 @@ jobs:
 
   test-unit:
     needs: prepare-matrix
-    timeout-minutes: 20
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
