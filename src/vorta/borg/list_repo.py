@@ -25,7 +25,7 @@ class BorgListRepoJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         if borg_compat.check('V2'):
-            cmd = ['borg', 'rlist', '--info', '--log-json', '--json', '-r']
+            cmd = ['borg', 'repo-list', '--info', '--log-json', '--json', '-r']
         else:
             cmd = ['borg', 'list', '--info', '--log-json', '--json']
         cmd.append(f'{profile.repo.url}')
