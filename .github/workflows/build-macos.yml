@@ -40,7 +40,7 @@ jobs:
     - name: Package with PyInstaller
       run: |
         pyinstaller --clean --noconfirm package/vorta.spec
-        cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+        cp -R /opt/homebrew/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macos1012.tgz
         tar xvf borg-macos1012.tgz -C dist/Vorta.app/Contents/Resources/
         cd dist && zip -rq --symlinks Vorta.zip Vorta.app
