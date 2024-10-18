@@ -42,6 +42,9 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="v0.10.0-beta1" date="2024-10-18" urgency="low">
+        <description></description>
+    </release>
     <release version="v0.9.1" date="2024-01-10" urgency="low">
       <description>
         <ul>
