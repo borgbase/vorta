@@ -270,3 +270,15 @@ class BackupProfileMixin:
 
     def profile(self):
         return BackupProfileModel.get(id=self.window().current_profile.id)
+
+
+class FailedRepoModel(BaseModel):
+    """A single failed repo with unique URL."""
+
+    url = pw.CharField(unique=True)
+    name = pw.CharField(default='')
+    extra_borg_arguments = pw.CharField(default='')
+    ssh_key = pw.CharField(default='')
+
+    class Meta:
+        database = DB
