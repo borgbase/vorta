@@ -7,7 +7,7 @@ MIN_BORG_FOR_FEATURE = {
     'DIFF_JSON_LINES': parse_version('1.1.16'),
     'COMPACT_SUBCOMMAND': parse_version('1.2.0a1'),
     'V122': parse_version('1.2.2'),
-    'V2': parse_version('2.0.0b1'),
+    'V2': parse_version('2.0.0b10'),
     # add new version-checks here.
 }
 
