@@ -60,7 +60,7 @@ def generate_appcast_xml(releases, include_prereleases=False):
         sparkle_version = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'version'))
         sparkle_version.text = release['tag_name'][1:]
 
-        sparkle_releasenotes = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'releaseNotesLink'))
+        sparkle_releasenotes = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'fullReleaseNotesLink'))
         sparkle_releasenotes.text = release['html_url']
 
         # Add enclosure for attached assets (assuming one main asset per release)
