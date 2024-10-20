@@ -9,13 +9,13 @@
       <title>v0.9.1</title>
       <description><![CDATA[<p>This is the first release of our 0.9 branch. Work on this started in early 2023 and many new features and improvements were implemented since then. For details see previous pre-releases. Here just some highlights:</p>
 <ul>
-<li>Profile Sidebar and New Setting Interface by @bigtedde in https://github.com/borgbase/vorta/pull/1809</li>
-<li>Exclude GUI by @diivi in https://github.com/borgbase/vorta/pull/1846</li>
-<li>Use Qt6 for the interface. https://github.com/borgbase/vorta/pull/1685, by @i1sm3ky</li>
+<li>Profile Sidebar and New Setting Interface by @bigtedde in <a href="https://github.com/borgbase/vorta/pull/1809" rel="nofollow">https://github.com/borgbase/vorta/pull/1809</a></li>
+<li>Exclude GUI by @diivi in <a href="https://github.com/borgbase/vorta/pull/1846" rel="nofollow">https://github.com/borgbase/vorta/pull/1846</a></li>
+<li>Use Qt6 for the interface. <a href="https://github.com/borgbase/vorta/pull/1685" rel="nofollow">https://github.com/borgbase/vorta/pull/1685</a>, by @i1sm3ky</li>
 <li>Integration testing with Borg and increased coverage by @jetchirag and @bigtedde</li>
 </ul>
 <p>Thanks again to everyone who took the time to contribute either bug reports, code or translations. 🙏</p>
-<p>https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</p>]]></description>
+<p><a href="https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80" rel="nofollow">https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</a></p>]]></description>
       <pubDate>2024-01-10T13:26:55Z</pubDate>
       <sparkle:version>0.9.1</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1</sparkle:fullReleaseNotesLink>
@@ -49,14 +49,14 @@ d024597 Disable Archive tab buttons during backup. By @sunny775 (#1587)
 c4d16e2 Fixes math error for negative size in diff view in archive tab
 6bc5321 Add link to the logs folder in borg warnings (#1609)
 961e0b5 Migrate from appdirs to platformdirs (#1617)
-b01fa10 Replace print with logging in application.py (#1612)
+b01fa10 Replace print with logging in <a href="http://application.py" rel="nofollow">application.py</a> (#1612)
 a00ed62 Fix detecting whether sources are configured (#1613)
 618a1fe Add tooltips to settings. (#1521)
 bcc126b (real-yfprojects/master) Improve size column readability in archives tab (#1598)
 a048dad Allow copying the public part of the first SSH key
 0cf9f0b Modify pre-commit config file using autoupdate (#1601)
 f1e1ea4 Update type of <code>debug_enabled</code> input.
-35d9a3b Adjust dev files for borgbase/vorta.borgbase.com#32 (#1585)
+35d9a3b Adjust dev files for borgbase/<a href="http://vorta.borgbase.com" rel="nofollow">vorta.borgbase.com</a>#32 (#1585)
 1b27b9b Allow creating an SSH key when bootstrapping Vorta
 ffafcee Correctly supply prune pattern for borg &gt;=1.2.2 (#1565)
 a4ab7e7 Specify build system (minor) (#1580)
@@ -138,10 +138,10 @@ ddcd3c7 (real-yfprojects/profile-sidebar, real-yfprojects/master) Update <code>a
 496acfd Enhance community docs and bug reporting. By @real-yfprojects  (#1419)
 17cf810 Add pull request template.
 be194d9 Add CONTRIBUTING file.
-3b40ce8 Create feature_request.md
+3b40ce8 Create <a href="http://feature_request.md" rel="nofollow">feature_request.md</a>
 52b1e65 Create bug_form.yaml
 ff0b888 Create config.yml
-fd2d2d6 Update bug_report.md
+fd2d2d6 Update <a href="http://bug_report.md" rel="nofollow">bug_report.md</a>
 62ba92a Log the error when parsing a file in <code>~/.ssh</code> fails. (#1410)
 4e06b6d Hide SSH dropdown for local repos. By @real-yfprojects (#1407)
 8b36a63 Add badges to <code>README.md</code>. (#1406)
@@ -215,7 +215,7 @@ not be available everywhere:</p>
 <li>Don't schedule if no repo is set. By @real-yfprojects (#1288)</li>
 <li>Hotfix for right-click archive menu. By @real-yfprojects (#1285)</li>
 </ul>
-<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</p>]]></description>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</a></p>]]></description>
       <pubDate>2022-05-24T06:20:09Z</pubDate>
       <sparkle:version>0.8.5</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.5</sparkle:fullReleaseNotesLink>
@@ -225,7 +225,7 @@ not be available everywhere:</p>
       <title>v0.8.4</title>
       <description><![CDATA[<p>This version brings an updated interface and scheduler, contributed by @real-yfprojects as
 well as many other improvements. Thanks to everyone who contributed!</p>
-<p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif" /></p>
+<p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif"></p>
 <p>Major changes:</p>
 <ul>
 <li>Improve UX and HIG-conformity. By @real-yfprojects (#1176)</li>
@@ -318,7 +318,7 @@ see previous pre-releases for detailed changes. Main changes:</p>
 @phihos and @rblenis. Also special thanks to @bastiencyr for a number of bug fixes.</p>
 <p>You can now import and export settings related to a single profile to JSON. The same
 JSON can be used to bootstrap a new Vorta installation. E.g. to set up a device via
-MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/settings/">docs</a>.</p>
+MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/settings/" rel="nofollow">docs</a>.</p>
 <p>New features:</p>
 <ul>
 <li>Import/export settings (or bootstrap with default config). By @phihos (#955)</li>
@@ -346,7 +346,7 @@ MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/se
     </item>
     <item>
       <title>v0.7.5</title>
-      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859">some issues</a> Linux
+      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859" rel="nofollow">some issues</a> Linux
 users have reported with their keychain. With this release</p>
 <ul>
 <li>You can disable the system keychain and just keep the repo 

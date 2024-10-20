@@ -12,55 +12,55 @@
 <p>To install with pip: <code>pip install vorta==0.10.0b1</code></p>
 <h2>What's Changed</h2>
 <ul>
-<li>Fix issue after Qt6 migration to save allowed Wifis by @m3nu in https://github.com/borgbase/vorta/pull/1903</li>
-<li>Update appdata.xml by @Hofer-Julian in https://github.com/borgbase/vorta/pull/1885</li>
-<li>Detect metered connections for macos when connected to an iOS Personal Hotspot by @jramnani in https://github.com/borgbase/vorta/pull/1902</li>
-<li>Add developer name to appdata by @Hofer-Julian in https://github.com/borgbase/vorta/pull/1922</li>
-<li>Fix/about dialogue grammar and yr by @shivansh02 in https://github.com/borgbase/vorta/pull/1936</li>
-<li>Fix/loglink moved below logs table by @shivansh02 in https://github.com/borgbase/vorta/pull/1939</li>
-<li>VSC and android exclusion patterns by @shivansh02 in https://github.com/borgbase/vorta/pull/1967</li>
-<li>Disabled "Collapse" button in "Flat" view by @AdwaitSalankar in https://github.com/borgbase/vorta/pull/1855</li>
-<li>Sort profiles in the Backup Now tray menu by @Parnassius in https://github.com/borgbase/vorta/pull/1899</li>
-<li>Add some more exclusion presets by @SAMAD101 in https://github.com/borgbase/vorta/pull/1970</li>
-<li>Notify after post_backup_tasks #1632 by @TheLazron in https://github.com/borgbase/vorta/pull/1940</li>
-<li>Keep the profile list sorted when creating/renaming profiles by @Parnassius in https://github.com/borgbase/vorta/pull/1986</li>
-<li>hide password field if encryption is none by @shivansh02 in https://github.com/borgbase/vorta/pull/2011</li>
-<li>add flatpak builder cache exclude preset by @Renner0E in https://github.com/borgbase/vorta/pull/2020</li>
-<li>add a bunch of cache folders to exclude presets mainly for flatpak browsers by @Renner0E in https://github.com/borgbase/vorta/pull/2027</li>
-<li>delete duplicate entry of flatpak builder cache by @Renner0E in https://github.com/borgbase/vorta/pull/2028</li>
-<li>Exclude If Present by @shivansh02 in https://github.com/borgbase/vorta/pull/2016</li>
-<li>Compaction Scheduling by @shivansh02 in https://github.com/borgbase/vorta/pull/1981</li>
-<li>Remove duplicate sources on profile import by @shivansh02 in https://github.com/borgbase/vorta/pull/2017</li>
-<li>Update Log path in Issue Template by @shivansh02 in https://github.com/borgbase/vorta/pull/2032</li>
-<li>Sources table UI updated to match Archives table by @shivansh02 in https://github.com/borgbase/vorta/pull/2034</li>
-<li>Add misc exclusion patterns by @shivansh02 in https://github.com/borgbase/vorta/pull/2021</li>
-<li>Improved Exception Dialog with Copy Paste by @shivansh02 in https://github.com/borgbase/vorta/pull/1977</li>
-<li>Schedule tab refactoring by @shivansh02 in https://github.com/borgbase/vorta/pull/2035</li>
-<li>.ui files changed to snake_case by @shivansh02 in https://github.com/borgbase/vorta/pull/2042</li>
-<li>Refactor get_mount_points by @shivansh02 in https://github.com/borgbase/vorta/pull/2044</li>
-<li>palette_changed connection moved to schedule_tab by @shivansh02 in https://github.com/borgbase/vorta/pull/2050</li>
-<li>Fix generic window icon on Wayland by @Parnassius in https://github.com/borgbase/vorta/pull/2068</li>
-<li>Catch case of none-existant profile from logs by @m3nu in https://github.com/borgbase/vorta/pull/2073</li>
-<li>Fixed missing icons in GNOME Overview and GNOME Dock by @topas-rec in https://github.com/borgbase/vorta/pull/2052</li>
-<li>l10n - make string translatable (syntax fix) by @p-bo in https://github.com/borgbase/vorta/pull/2078</li>
-<li>Fix macOS build action by @m3nu in https://github.com/borgbase/vorta/pull/2076</li>
-<li>Exclusion presets: add Firefox Snap Cache by @Chaikney in https://github.com/borgbase/vorta/pull/2086</li>
-<li>Add mask-based tray icon for macOS by @alecdwm in https://github.com/borgbase/vorta/pull/2091</li>
-<li>Replacement of flake8 with Ruff by @SAMAD101 in https://github.com/borgbase/vorta/pull/1980</li>
+<li>Fix issue after Qt6 migration to save allowed Wifis by @m3nu in <a href="https://github.com/borgbase/vorta/pull/1903" rel="nofollow">https://github.com/borgbase/vorta/pull/1903</a></li>
+<li>Update appdata.xml by @Hofer-Julian in <a href="https://github.com/borgbase/vorta/pull/1885" rel="nofollow">https://github.com/borgbase/vorta/pull/1885</a></li>
+<li>Detect metered connections for macos when connected to an iOS Personal Hotspot by @jramnani in <a href="https://github.com/borgbase/vorta/pull/1902" rel="nofollow">https://github.com/borgbase/vorta/pull/1902</a></li>
+<li>Add developer name to appdata by @Hofer-Julian in <a href="https://github.com/borgbase/vorta/pull/1922" rel="nofollow">https://github.com/borgbase/vorta/pull/1922</a></li>
+<li>Fix/about dialogue grammar and yr by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/1936" rel="nofollow">https://github.com/borgbase/vorta/pull/1936</a></li>
+<li>Fix/loglink moved below logs table by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/1939" rel="nofollow">https://github.com/borgbase/vorta/pull/1939</a></li>
+<li>VSC and android exclusion patterns by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/1967" rel="nofollow">https://github.com/borgbase/vorta/pull/1967</a></li>
+<li>Disabled "Collapse" button in "Flat" view by @AdwaitSalankar in <a href="https://github.com/borgbase/vorta/pull/1855" rel="nofollow">https://github.com/borgbase/vorta/pull/1855</a></li>
+<li>Sort profiles in the Backup Now tray menu by @Parnassius in <a href="https://github.com/borgbase/vorta/pull/1899" rel="nofollow">https://github.com/borgbase/vorta/pull/1899</a></li>
+<li>Add some more exclusion presets by @SAMAD101 in <a href="https://github.com/borgbase/vorta/pull/1970" rel="nofollow">https://github.com/borgbase/vorta/pull/1970</a></li>
+<li>Notify after post_backup_tasks #1632 by @TheLazron in <a href="https://github.com/borgbase/vorta/pull/1940" rel="nofollow">https://github.com/borgbase/vorta/pull/1940</a></li>
+<li>Keep the profile list sorted when creating/renaming profiles by @Parnassius in <a href="https://github.com/borgbase/vorta/pull/1986" rel="nofollow">https://github.com/borgbase/vorta/pull/1986</a></li>
+<li>hide password field if encryption is none by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2011" rel="nofollow">https://github.com/borgbase/vorta/pull/2011</a></li>
+<li>add flatpak builder cache exclude preset by @Renner0E in <a href="https://github.com/borgbase/vorta/pull/2020" rel="nofollow">https://github.com/borgbase/vorta/pull/2020</a></li>
+<li>add a bunch of cache folders to exclude presets mainly for flatpak browsers by @Renner0E in <a href="https://github.com/borgbase/vorta/pull/2027" rel="nofollow">https://github.com/borgbase/vorta/pull/2027</a></li>
+<li>delete duplicate entry of flatpak builder cache by @Renner0E in <a href="https://github.com/borgbase/vorta/pull/2028" rel="nofollow">https://github.com/borgbase/vorta/pull/2028</a></li>
+<li>Exclude If Present by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2016" rel="nofollow">https://github.com/borgbase/vorta/pull/2016</a></li>
+<li>Compaction Scheduling by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/1981" rel="nofollow">https://github.com/borgbase/vorta/pull/1981</a></li>
+<li>Remove duplicate sources on profile import by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2017" rel="nofollow">https://github.com/borgbase/vorta/pull/2017</a></li>
+<li>Update Log path in Issue Template by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2032" rel="nofollow">https://github.com/borgbase/vorta/pull/2032</a></li>
+<li>Sources table UI updated to match Archives table by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2034" rel="nofollow">https://github.com/borgbase/vorta/pull/2034</a></li>
+<li>Add misc exclusion patterns by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2021" rel="nofollow">https://github.com/borgbase/vorta/pull/2021</a></li>
+<li>Improved Exception Dialog with Copy Paste by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/1977" rel="nofollow">https://github.com/borgbase/vorta/pull/1977</a></li>
+<li>Schedule tab refactoring by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2035" rel="nofollow">https://github.com/borgbase/vorta/pull/2035</a></li>
+<li>.ui files changed to snake_case by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2042" rel="nofollow">https://github.com/borgbase/vorta/pull/2042</a></li>
+<li>Refactor get_mount_points by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2044" rel="nofollow">https://github.com/borgbase/vorta/pull/2044</a></li>
+<li>palette_changed connection moved to schedule_tab by @shivansh02 in <a href="https://github.com/borgbase/vorta/pull/2050" rel="nofollow">https://github.com/borgbase/vorta/pull/2050</a></li>
+<li>Fix generic window icon on Wayland by @Parnassius in <a href="https://github.com/borgbase/vorta/pull/2068" rel="nofollow">https://github.com/borgbase/vorta/pull/2068</a></li>
+<li>Catch case of none-existant profile from logs by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2073" rel="nofollow">https://github.com/borgbase/vorta/pull/2073</a></li>
+<li>Fixed missing icons in GNOME Overview and GNOME Dock by @topas-rec in <a href="https://github.com/borgbase/vorta/pull/2052" rel="nofollow">https://github.com/borgbase/vorta/pull/2052</a></li>
+<li>l10n - make string translatable (syntax fix) by @p-bo in <a href="https://github.com/borgbase/vorta/pull/2078" rel="nofollow">https://github.com/borgbase/vorta/pull/2078</a></li>
+<li>Fix macOS build action by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2076" rel="nofollow">https://github.com/borgbase/vorta/pull/2076</a></li>
+<li>Exclusion presets: add Firefox Snap Cache by @Chaikney in <a href="https://github.com/borgbase/vorta/pull/2086" rel="nofollow">https://github.com/borgbase/vorta/pull/2086</a></li>
+<li>Add mask-based tray icon for macOS by @alecdwm in <a href="https://github.com/borgbase/vorta/pull/2091" rel="nofollow">https://github.com/borgbase/vorta/pull/2091</a></li>
+<li>Replacement of flake8 with Ruff by @SAMAD101 in <a href="https://github.com/borgbase/vorta/pull/1980" rel="nofollow">https://github.com/borgbase/vorta/pull/1980</a></li>
 </ul>
 <h2>New Contributors</h2>
 <ul>
-<li>@jramnani made their first contribution in https://github.com/borgbase/vorta/pull/1902</li>
-<li>@shivansh02 made their first contribution in https://github.com/borgbase/vorta/pull/1936</li>
-<li>@Parnassius made their first contribution in https://github.com/borgbase/vorta/pull/1899</li>
-<li>@TheLazron made their first contribution in https://github.com/borgbase/vorta/pull/1940</li>
-<li>@Renner0E made their first contribution in https://github.com/borgbase/vorta/pull/2020</li>
-<li>@topas-rec made their first contribution in https://github.com/borgbase/vorta/pull/2052</li>
-<li>@p-bo made their first contribution in https://github.com/borgbase/vorta/pull/2078</li>
-<li>@Chaikney made their first contribution in https://github.com/borgbase/vorta/pull/2086</li>
-<li>@alecdwm made their first contribution in https://github.com/borgbase/vorta/pull/2091</li>
+<li>@jramnani made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1902" rel="nofollow">https://github.com/borgbase/vorta/pull/1902</a></li>
+<li>@shivansh02 made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1936" rel="nofollow">https://github.com/borgbase/vorta/pull/1936</a></li>
+<li>@Parnassius made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1899" rel="nofollow">https://github.com/borgbase/vorta/pull/1899</a></li>
+<li>@TheLazron made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1940" rel="nofollow">https://github.com/borgbase/vorta/pull/1940</a></li>
+<li>@Renner0E made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2020" rel="nofollow">https://github.com/borgbase/vorta/pull/2020</a></li>
+<li>@topas-rec made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2052" rel="nofollow">https://github.com/borgbase/vorta/pull/2052</a></li>
+<li>@p-bo made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2078" rel="nofollow">https://github.com/borgbase/vorta/pull/2078</a></li>
+<li>@Chaikney made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2086" rel="nofollow">https://github.com/borgbase/vorta/pull/2086</a></li>
+<li>@alecdwm made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2091" rel="nofollow">https://github.com/borgbase/vorta/pull/2091</a></li>
 </ul>
-<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1</p>]]></description>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1</a></p>]]></description>
       <pubDate>2024-10-18T11:16:56Z</pubDate>
       <sparkle:version>0.10.0-beta1</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.0-beta1</sparkle:fullReleaseNotesLink>
@@ -70,13 +70,13 @@
       <title>v0.9.1</title>
       <description><![CDATA[<p>This is the first release of our 0.9 branch. Work on this started in early 2023 and many new features and improvements were implemented since then. For details see previous pre-releases. Here just some highlights:</p>
 <ul>
-<li>Profile Sidebar and New Setting Interface by @bigtedde in https://github.com/borgbase/vorta/pull/1809</li>
-<li>Exclude GUI by @diivi in https://github.com/borgbase/vorta/pull/1846</li>
-<li>Use Qt6 for the interface. https://github.com/borgbase/vorta/pull/1685, by @i1sm3ky</li>
+<li>Profile Sidebar and New Setting Interface by @bigtedde in <a href="https://github.com/borgbase/vorta/pull/1809" rel="nofollow">https://github.com/borgbase/vorta/pull/1809</a></li>
+<li>Exclude GUI by @diivi in <a href="https://github.com/borgbase/vorta/pull/1846" rel="nofollow">https://github.com/borgbase/vorta/pull/1846</a></li>
+<li>Use Qt6 for the interface. <a href="https://github.com/borgbase/vorta/pull/1685" rel="nofollow">https://github.com/borgbase/vorta/pull/1685</a>, by @i1sm3ky</li>
 <li>Integration testing with Borg and increased coverage by @jetchirag and @bigtedde</li>
 </ul>
 <p>Thanks again to everyone who took the time to contribute either bug reports, code or translations. 🙏</p>
-<p>https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</p>]]></description>
+<p><a href="https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80" rel="nofollow">https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</a></p>]]></description>
       <pubDate>2024-01-10T13:26:55Z</pubDate>
       <sparkle:version>0.9.1</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1</sparkle:fullReleaseNotesLink>
@@ -97,16 +97,16 @@
 </ul>
 <h2>What's Changed</h2>
 <ul>
-<li>Loosen platformdirs dependency by @stefanor in https://github.com/borgbase/vorta/pull/1843</li>
-<li>Backup settings.db before migrations by @AdwaitSalankar in https://github.com/borgbase/vorta/pull/1848</li>
-<li>Exclude GUI by @diivi in https://github.com/borgbase/vorta/pull/1846</li>
+<li>Loosen platformdirs dependency by @stefanor in <a href="https://github.com/borgbase/vorta/pull/1843" rel="nofollow">https://github.com/borgbase/vorta/pull/1843</a></li>
+<li>Backup settings.db before migrations by @AdwaitSalankar in <a href="https://github.com/borgbase/vorta/pull/1848" rel="nofollow">https://github.com/borgbase/vorta/pull/1848</a></li>
+<li>Exclude GUI by @diivi in <a href="https://github.com/borgbase/vorta/pull/1846" rel="nofollow">https://github.com/borgbase/vorta/pull/1846</a></li>
 </ul>
 <h2>New Contributors</h2>
 <ul>
-<li>@stefanor made their first contribution in https://github.com/borgbase/vorta/pull/1843</li>
-<li>@AdwaitSalankar made their first contribution in https://github.com/borgbase/vorta/pull/1848</li>
+<li>@stefanor made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1843" rel="nofollow">https://github.com/borgbase/vorta/pull/1843</a></li>
+<li>@AdwaitSalankar made their first contribution in <a href="https://github.com/borgbase/vorta/pull/1848" rel="nofollow">https://github.com/borgbase/vorta/pull/1848</a></li>
 </ul>
-<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3</p>]]></description>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3</a></p>]]></description>
       <pubDate>2023-11-30T07:23:45Z</pubDate>
       <sparkle:version>0.9.1-beta3</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1-beta3</sparkle:fullReleaseNotesLink>
@@ -116,14 +116,14 @@
       <title>v0.9.1-beta2</title>
       <description><![CDATA[<p>This is the second (or third) beta release of our upcoming 0.9 branch.</p>
 <p>Main changes are a revamped interface and improved tests, by our Google Summer of Code contributor, @bigtedde.</p>
-<p><img alt="276890775-218fc3ee-68a8-40bc-a30b-39e7e58b7a39" src="https://github.com/borgbase/vorta/assets/3916435/3202ac19-9505-4ae8-92d2-02502e4a3657" /></p>
+<p><img alt="276890775-218fc3ee-68a8-40bc-a30b-39e7e58b7a39" src="https://github.com/borgbase/vorta/assets/3916435/3202ac19-9505-4ae8-92d2-02502e4a3657"></p>
 <h2>What's Changed</h2>
 <ul>
-<li>PR: Complete Unit Test cleanup/parametrization/coverage increases by @bigtedde in https://github.com/borgbase/vorta/pull/1787</li>
-<li>PR: Implement Profile Sidebar and New Setting Interface by @bigtedde in https://github.com/borgbase/vorta/pull/1809</li>
-<li>Update notarization for use with notarytool by @m3nu in https://github.com/borgbase/vorta/pull/1831</li>
+<li>PR: Complete Unit Test cleanup/parametrization/coverage increases by @bigtedde in <a href="https://github.com/borgbase/vorta/pull/1787" rel="nofollow">https://github.com/borgbase/vorta/pull/1787</a></li>
+<li>PR: Implement Profile Sidebar and New Setting Interface by @bigtedde in <a href="https://github.com/borgbase/vorta/pull/1809" rel="nofollow">https://github.com/borgbase/vorta/pull/1809</a></li>
+<li>Update notarization for use with notarytool by @m3nu in <a href="https://github.com/borgbase/vorta/pull/1831" rel="nofollow">https://github.com/borgbase/vorta/pull/1831</a></li>
 </ul>
-<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2</p>]]></description>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2</a></p>]]></description>
       <pubDate>2023-10-27T13:15:16Z</pubDate>
       <sparkle:version>0.9.1-beta2</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1-beta2</sparkle:fullReleaseNotesLink>
@@ -131,11 +131,11 @@
     </item>
     <item>
       <title>v0.9.1-beta1</title>
-      <description><![CDATA[<p>I'm proud to release the second beta version of our new 0.9 branch. With <a href="https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas">Google Summer of Code</a> at full steam over the summer, the team got a lot done, with a <a href="https://github.com/borgbase/vorta/pull/1742">few</a> <a href="https://github.com/borgbase/vorta/pull/1809">major</a> <a href="https://github.com/borgbase/vorta/pull/1749">features</a> still pending for the next beta.</p>
+      <description><![CDATA[<p>I'm proud to release the second beta version of our new 0.9 branch. With <a href="https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas" rel="nofollow">Google Summer of Code</a> at full steam over the summer, the team got a lot done, with a <a href="https://github.com/borgbase/vorta/pull/1742" rel="nofollow">few</a> <a href="https://github.com/borgbase/vorta/pull/1809" rel="nofollow">major</a> <a href="https://github.com/borgbase/vorta/pull/1749" rel="nofollow">features</a> still pending for the next beta.</p>
 <p>Thanks are also due to our mentors, who guided contributors while working on their pull requests. 👏 @real-yfprojects @Hofer-Julian </p>
-<p>Please share your feedback <a href="https://github.com/borgbase/vorta/issues/1823">here</a>, so we can keep improving this branch until the final release.</p>
+<p>Please share your feedback <a href="https://github.com/borgbase/vorta/issues/1823" rel="nofollow">here</a>, so we can keep improving this branch until the final release.</p>
 <h3>Breaking changes</h3>
-<p>This Vorta version ships with Borg 1.2.6 (when using our macOS app), which fixes an issue with data authentication. So you may get an error saying "Data integrity error: Archive authentication did not verify". In that case, at a minimum, if you trust the repository, you need to run the following upgrade steps. Full details are described in <a href="https://github.com/borgbackup/borg/blob/1.2.6/docs/changes.rst#pre-125-archives-spoofing-vulnerability-cve-2023-36811">Borg's release notes</a>:</p>
+<p>This Vorta version ships with Borg 1.2.6 (when using our macOS app), which fixes an issue with data authentication. So you may get an error saying "Data integrity error: Archive authentication did not verify". In that case, at a minimum, if you trust the repository, you need to run the following upgrade steps. Full details are described in <a href="https://github.com/borgbackup/borg/blob/1.2.6/docs/changes.rst#pre-125-archives-spoofing-vulnerability-cve-2023-36811" rel="nofollow">Borg's release notes</a>:</p>
 <ol>
 <li>Copy the repository URL. You can do this in Vorta's <em>Repository</em> tab using the <em>Copy to clipboard</em> button next to the repository selector.</li>
 <li>Ensure you have the repo passphrase ready. Vorta would keep it in the OS' keychain usually.</li>
@@ -198,7 +198,7 @@ f0a5a362 ci: Add ruff including print checks
     <item>
       <title>v0.9.0</title>
       <description><![CDATA[<p>This is the first pre-release of the 0.9 branch that uses PyQt6 under the hood.</p>
-<p>To test on macOS, use the attached build, which also includes Borg 1.2.4. To test on Linux, see our <a href="https://vorta.borgbase.com/contributing/#testing-the-current-development-version">developer guide</a>.</p>
+<p>To test on macOS, use the attached build, which also includes Borg 1.2.4. To test on Linux, see our <a href="https://vorta.borgbase.com/contributing/#testing-the-current-development-version" rel="nofollow">developer guide</a>.</p>
 <p>Thanks to @i1sm3ky and @real-yfprojects for making this happen.</p>]]></description>
       <pubDate>2023-04-17T10:47:45Z</pubDate>
       <sparkle:version>0.9.0</sparkle:version>
@@ -233,14 +233,14 @@ d024597 Disable Archive tab buttons during backup. By @sunny775 (#1587)
 c4d16e2 Fixes math error for negative size in diff view in archive tab
 6bc5321 Add link to the logs folder in borg warnings (#1609)
 961e0b5 Migrate from appdirs to platformdirs (#1617)
-b01fa10 Replace print with logging in application.py (#1612)
+b01fa10 Replace print with logging in <a href="http://application.py" rel="nofollow">application.py</a> (#1612)
 a00ed62 Fix detecting whether sources are configured (#1613)
 618a1fe Add tooltips to settings. (#1521)
 bcc126b (real-yfprojects/master) Improve size column readability in archives tab (#1598)
 a048dad Allow copying the public part of the first SSH key
 0cf9f0b Modify pre-commit config file using autoupdate (#1601)
 f1e1ea4 Update type of <code>debug_enabled</code> input.
-35d9a3b Adjust dev files for borgbase/vorta.borgbase.com#32 (#1585)
+35d9a3b Adjust dev files for borgbase/<a href="http://vorta.borgbase.com" rel="nofollow">vorta.borgbase.com</a>#32 (#1585)
 1b27b9b Allow creating an SSH key when bootstrapping Vorta
 ffafcee Correctly supply prune pattern for borg &gt;=1.2.2 (#1565)
 a4ab7e7 Specify build system (minor) (#1580)
@@ -322,10 +322,10 @@ ddcd3c7 (real-yfprojects/profile-sidebar, real-yfprojects/master) Update <code>a
 496acfd Enhance community docs and bug reporting. By @real-yfprojects  (#1419)
 17cf810 Add pull request template.
 be194d9 Add CONTRIBUTING file.
-3b40ce8 Create feature_request.md
+3b40ce8 Create <a href="http://feature_request.md" rel="nofollow">feature_request.md</a>
 52b1e65 Create bug_form.yaml
 ff0b888 Create config.yml
-fd2d2d6 Update bug_report.md
+fd2d2d6 Update <a href="http://bug_report.md" rel="nofollow">bug_report.md</a>
 62ba92a Log the error when parsing a file in <code>~/.ssh</code> fails. (#1410)
 4e06b6d Hide SSH dropdown for local repos. By @real-yfprojects (#1407)
 8b36a63 Add badges to <code>README.md</code>. (#1406)
@@ -399,7 +399,7 @@ not be available everywhere:</p>
 <li>Don't schedule if no repo is set. By @real-yfprojects (#1288)</li>
 <li>Hotfix for right-click archive menu. By @real-yfprojects (#1285)</li>
 </ul>
-<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</p>]]></description>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</a></p>]]></description>
       <pubDate>2022-05-24T06:20:09Z</pubDate>
       <sparkle:version>0.8.5</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.5</sparkle:fullReleaseNotesLink>
@@ -409,7 +409,7 @@ not be available everywhere:</p>
       <title>v0.8.4</title>
       <description><![CDATA[<p>This version brings an updated interface and scheduler, contributed by @real-yfprojects as
 well as many other improvements. Thanks to everyone who contributed!</p>
-<p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif" /></p>
+<p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif"></p>
 <p>Major changes:</p>
 <ul>
 <li>Improve UX and HIG-conformity. By @real-yfprojects (#1176)</li>
@@ -502,7 +502,7 @@ see previous pre-releases for detailed changes. Main changes:</p>
 @phihos and @rblenis. Also special thanks to @bastiencyr for a number of bug fixes.</p>
 <p>You can now import and export settings related to a single profile to JSON. The same
 JSON can be used to bootstrap a new Vorta installation. E.g. to set up a device via
-MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/settings/">docs</a>.</p>
+MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/settings/" rel="nofollow">docs</a>.</p>
 <p>New features:</p>
 <ul>
 <li>Import/export settings (or bootstrap with default config). By @phihos (#955)</li>
@@ -530,7 +530,7 @@ MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/se
     </item>
     <item>
       <title>v0.7.5</title>
-      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859">some issues</a> Linux
+      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859" rel="nofollow">some issues</a> Linux
 users have reported with their keychain. With this release</p>
 <ul>
 <li>You can disable the system keychain and just keep the repo 

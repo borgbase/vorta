@@ -52,7 +52,12 @@ def generate_appcast_xml(releases, include_prereleases=False):
         item_title.text = release['tag_name']
 
         item_description = ET.SubElement(item, "description")
-        item_description.text = ET.CDATA(markdown.markdown(release.get("body", "No release notes available")))
+        item_description.text = ET.CDATA(
+            markdown.markdown(
+                release.get("body", "No release notes available"),
+                extensions=["mdx_linkify"]
+            )
+        )
 
         pub_date = ET.SubElement(item, "pubDate")
         pub_date.text = release["published_at"]
