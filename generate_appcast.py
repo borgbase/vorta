@@ -54,10 +54,16 @@ def generate_appcast_xml(releases, include_prereleases=False):
         pub_date = ET.SubElement(item, "pubDate")
         pub_date.text = release["published_at"]
 
+        sparkle_version = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'version'))
+        sparkle_version.text = release['tag_name'][1:]
+
+        sparkle_releasenotes = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'releaseNotesLink'))
+        sparkle_releasenotes.text = release['html_url']
+
         # Add enclosure for attached assets (assuming one main asset per release)
         for asset in release.get("assets", []):
             enclosure = ET.SubElement(item, "enclosure", url=asset['browser_download_url'], length=str(asset['size']), type=asset['content_type'])
-            enclosure.set(ET.QName(nsmap['sparkle'], 'version'), release['tag_name'][1:])
+            # enclosure.set(ET.QName(nsmap['sparkle'], 'version'), release['tag_name'][1:])
             break  # Include only one main file per release, remove break for multiple
 
     # Convert the XML tree to a nicely formatted string
