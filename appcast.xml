@@ -1,4 +1,501 @@
----
-release_only: true
----
-{%include appcast.inc %}
+<?xml version="1.0" ?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>Vorta Updates</title>
+        <link>https://borgbase.github.io/vorta/appcast.xml</link>
+        <description>Latest updates for the app.</description>
+        <language>en</language>
+        <item>
+            <title>v0.9.1</title>
+            <description><![CDATA[<p>This is the first release of our 0.9 branch. Work on this started in early 2023 and many new features and improvements were implemented since then. For details see previous pre-releases. Here just some highlights:</p>
+<ul>
+<li>Profile Sidebar and New Setting Interface by @bigtedde in https://github.com/borgbase/vorta/pull/1809</li>
+<li>Exclude GUI by @diivi in https://github.com/borgbase/vorta/pull/1846</li>
+<li>Use Qt6 for the interface. https://github.com/borgbase/vorta/pull/1685, by @i1sm3ky</li>
+<li>Integration testing with Borg and increased coverage by @jetchirag and @bigtedde</li>
+</ul>
+<p>Thanks again to everyone who took the time to contribute either bug reports, code or translations. 🙏</p>
+<p>https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</p>]]></description>
+            <pubDate>2024-01-10T13:26:55Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1/Vorta-0.9.1.dmg" length="44508913" type="application/octet-stream" sparkle:version="v0.9.1"/>
+        </item>
+        <item>
+            <title>v0.8.12</title>
+            <description><![CDATA[<p>Removes a leftover dependency of <code>paramiko</code>. Rest same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.8.11">v0.8.11</a></p>]]></description>
+            <pubDate>2023-04-10T07:52:39Z</pubDate>
+        </item>
+        <item>
+            <title>v0.8.11</title>
+            <description><![CDATA[<p>This release includes a large number of smaller improvements by our Google Summer of Code contributors and others.</p>
+<p>This will also be the last larger update of the 0.8 branch. Work will continue in the 0.9 branch that uses the next version 6 of the Qt framework.</p>
+<h3>Some highlights:</h3>
+<ul>
+<li>Retain sort settings in extract, diff and source views. (By @diivi and @jetchirag )</li>
+<li>Setting to disable <em>Full disk access</em> check on macOS (By @bigtedde)</li>
+<li>Support new Borg diff types (By @henry-spanka)</li>
+<li>Remove Paramiko dependency (By @diivi)</li>
+<li>Migrate from appdirs to platformdirs (By @ganeshrevadi)</li>
+<li>Add tooltips to many settings in <em>Misc</em> tab (By @real-yfprojects)</li>
+<li>Allow adding a SSH key when no repo was added yet (By @tobast)</li>
+</ul>
+<h3>Changes in details</h3>
+<p>b51b1ef Save list view as setting. By @diivi (#1621)
+828e029 Use <code>pf</code> pattern format for extract. By @real-yfprojects (#1625)
+6d5e738 Retain source tab sort settings. By @jetchirag (#1649)
+a64493d Setting for Full Disk Access check. By @bigtedde (#1653)
+e3451ed Handle ctime and mtime diff changes (#1675)
+f407032 Revert "Added --content-only flag for borg 1.2.4 in diff view"
+e0fe766 Added --content-only flag for borg 1.2.4 in diff view
+d024597 Disable Archive tab buttons during backup. By @sunny775 (#1587)
+3ebb078 feat: add profile name to log messages (#1637)
+1f12782 Remove paramiko dependency (#1606)
+c4d16e2 Fixes math error for negative size in diff view in archive tab
+6bc5321 Add link to the logs folder in borg warnings (#1609)
+961e0b5 Migrate from appdirs to platformdirs (#1617)
+b01fa10 Replace print with logging in application.py (#1612)
+a00ed62 Fix detecting whether sources are configured (#1613)
+618a1fe Add tooltips to settings. (#1521)
+bcc126b (real-yfprojects/master) Improve size column readability in archives tab (#1598)
+a048dad Allow copying the public part of the first SSH key
+0cf9f0b Modify pre-commit config file using autoupdate (#1601)
+f1e1ea4 Update type of <code>debug_enabled</code> input.
+35d9a3b Adjust dev files for borgbase/vorta.borgbase.com#32 (#1585)
+1b27b9b Allow creating an SSH key when bootstrapping Vorta
+ffafcee Correctly supply prune pattern for borg &gt;=1.2.2 (#1565)
+a4ab7e7 Specify build system (minor) (#1580)
+7886354 Remove pip install dependency. By @abdeoliveira (#1578)</p>]]></description>
+            <pubDate>2023-04-09T13:56:05Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.11/vorta-0.8.11.dmg" length="46329987" type="application/octet-stream" sparkle:version="v0.8.11"/>
+        </item>
+        <item>
+            <title>v0.8.10</title>
+            <description><![CDATA[<p>This is a larger release and is mostly the work of @real-yfprojects. Kudos to him and other contributors for all the great improvements! 🙌</p>
+<p><strong>Major changes:</strong>
+- Add Borg v2 compatibility (based on beta4). By @real-yfprojects and @m3nu 
+- Improve Linux desktop tray behavior. By @real-yfprojects 
+- Improve <code>check</code> and <code>extract</code> commands. By @endumiuz
+- Fix blocking issue with temp file when extracting files @real-yfprojects </p>
+<p><strong>Changes in detail:</strong>
+2e589a0 Update translations (and Transifex config)
+696c3fb Migrate to <code>--match-archives</code> in mount point detection.
+5e04638 Specify archive using <code>-a</code> for borg v2 <code>mount</code>.
+b4a7c54 Move umount logic from <code>archive_tab.py</code> into existing <code>BorgUmountJob</code>. By @real-yfprojects (#1404)
+e275215 Specify the use of a <code>sh:</code>-style pattern when pruning with borg v2.
+ba5c7c5 Move rename logic for arguments into <code>BorgRenameJob</code>.
+f9d1260 Remove compression field. Don't store timezone in db.
+2b2d61b Implement borg v2 compatibility for most commands.
+fa3a6cf Add borg v2 compatibility item.
+78ec74a Fix tray menu on XFCE.
+a6f7577 Fix dynamic colouring.
+c620c0d (real-yfprojects/master) Handle empty path in <code>FileTreeModel.addItem</code>. (#1552)
+ef297bb Avoid autostart warning when autostart disabled (#1549)
+66340bc Add support for <code>--paths-from-command</code> to extra borg arguments. (#1538)
+bf9285a Fix typo in issue bug template
+cb4e3a1 Update usage of deprecated features in test.yml. (#1539)
+cace077 Run <code>borg compact</code> with the <code>--progress</code> option
+84fdbe5 Pass int to <code>QPoint</code> constructor.
+b80e617 Change label <code>Folders On Top</code> to <code>Folders First</code> in Extract and Diff view.
+7e7abaf Catch <code>ProcessLookupError</code> in <code>BorgJob.cancel</code>. (#1520)
+225e84f Show progress on repo check (#1513)
+6779bae Use new ssh://-style URL format as placeholder and in test (#1473)
+667f3b3 Restart timers after hibernation/sleep (#1511) By @fixmeee
+b072496 Populate repo info from profile after populating dropdowns.
+031a498 Don't close temp file before running <code>borg extract</code>.
+648c916 Update flatpak install rule, remove flatpak folder. By @Hofer-Julian</p>]]></description>
+            <pubDate>2023-01-22T12:07:17Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.10/vorta-0.8.10.dmg" length="50434914" type="application/octet-stream" sparkle:version="v0.8.10"/>
+        </item>
+        <item>
+            <title>v0.8.9</title>
+            <description><![CDATA[<p>This is a bugfix release on top of v0.8.8. It includes a fix for the Extract
+feature, pins Pyobjc for macOS to the latest stable version and adds
+new translations for Dutch.</p>
+<p>722a841 Supply repository and archive name to borg in <code>BorgListArchiveJob</code>.
+14a1de8 Add missing brackets fixing <code>BorgListArchiveJob</code>.
+99eb287 Add Dutch language update
+7550ae5 Pin pyobjc to v8 branch</p>]]></description>
+            <pubDate>2022-11-05T19:32:16Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.9/vorta-0.8.9.dmg" length="47477762" type="application/octet-stream" sparkle:version="v0.8.9"/>
+        </item>
+        <item>
+            <title>v0.8.8</title>
+            <description><![CDATA[<p>This version adds compatibility for Borg v1.2.2 and addresses several smaller
+UI bugs.</p>
+<p>Thanks to @real-yfprojects for contributing most of the improvements and to @marco44 for
+making his first contribution.</p>
+<p>b95da02 Fix sorting of diff results.
+c5034e1 Remove legacy <code>tree_view</code> (tree model) implementation.
+2126ef7 Remove <em>unset</em> repository value from combobox when a repo is selected.
+14d5878 Replace <code>--prefix</code> with <code>-a</code> for borg v1.2.2 also.
+0188b75 Use <code>isomtime</code> instead of <code>mtime</code> from borg v1.2.2 on.
+ceb1a3b Add compatibility feature <code>V122</code>.
+055338a Link to report form chooser for critical errors. (#1451)
+ddcd3c7 (real-yfprojects/profile-sidebar, real-yfprojects/master) Update <code>actions/checkout</code> to v3. (#1433)
+93307d2 Add default <code>unset</code> value to repo combobox. By @real-yfprojects (#1429)
+496acfd Enhance community docs and bug reporting. By @real-yfprojects  (#1419)
+17cf810 Add pull request template.
+be194d9 Add CONTRIBUTING file.
+3b40ce8 Create feature_request.md
+52b1e65 Create bug_form.yaml
+ff0b888 Create config.yml
+fd2d2d6 Update bug_report.md
+62ba92a Log the error when parsing a file in <code>~/.ssh</code> fails. (#1410)
+4e06b6d Hide SSH dropdown for local repos. By @real-yfprojects (#1407)
+8b36a63 Add badges to <code>README.md</code>. (#1406)
+af311c9 Improve tooltips in archive tab. By @real-yfprojects (#1401)
+ca497f8 Run hooks on the code base.
+63b2eb1 Configure pre-commit hooks and configure black for tests also.
+b80e01c Create .git-blame-ignore-revs (#1395)
+ceb04d7  Move linting to the top in test.yml (#1391)
+b6a24de Apply automatic formatting
+7c97f79 Add config files for autmatic formatting
+94e7664 Cleanup temp files. By @marco44 (#1384)
+8a94457 Add spaces after <code>assert</code> and enhance git py diff. By @real-yfprojects (#1385)
+d8e4a93 Improve the extract and diff dialog. By @real-yfprojects (#1219)
+56de55e (real-yfprojects/sort-diff-result, sort-diff-result-2) Add icons to display mode combobox.
+cbc0780 Add icon for <code>folder on top</code> button.
+372b710 Improve extract dialog GUI.
+e7772f5 Add sorting to ExtractDialog.
+7eedd39 Implement extracting exactly the selected files.
+71af54f Use new treemodel for extract dialog.
+71aed9b Keep GUI responsive while processing diff results.
+bdbc172 Open <code>DiffResultDialog</code> as a normal dialog instead of a sheet.
+7003d69 Update <code>diffresult.ui</code> with new features and prettyfy it.
+c8ba273 Use new treemodel for diff view.
+3cd9404 Implement fresh TreeModel for TreeViews.
+33639ae Add missing Qt dependency for tests (#1376)
+fd88d7f Fix seconds and microseconds for fixed schedule and fix scheduling for the same day. (#1368)
+305db92 Log json diff line parsing errors. By @real-yfprojects (#1369)</p>]]></description>
+            <pubDate>2022-11-04T10:15:15Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.8/vorta-0.8.8.dmg" length="47476131" type="application/octet-stream" sparkle:version="v0.8.8"/>
+        </item>
+        <item>
+            <title>v0.8.7</title>
+            <description><![CDATA[<p>This is a bugfix release to improve support for Borg 1.2.1. Changes in detail:</p>
+<ul>
+<li>Deal with new archive_progress key (#1353)</li>
+<li>Raise <code>ValueError</code> in case of unknown change type in diff json. By @real-yfprojects (#1350)</li>
+<li>Fix unlink action when repo combobox is empty. By @real-yfprojects (#1342)</li>
+<li>Show date of next backup. By @tal66 (#1319)</li>
+</ul>]]></description>
+            <pubDate>2022-06-17T05:01:39Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.7/vorta-0.8.7.dmg" length="47092718" type="application/octet-stream" sparkle:version="v0.8.7"/>
+        </item>
+        <item>
+            <title>v0.8.6</title>
+            <description><![CDATA[<p>This bugfix release addresses a single issue with a PyQt version that may
+not be available everywhere:</p>
+<ul>
+<li>Remove call to <code>QTranslator.language()</code> in <code>get_locale</code>. (#1316)</li>
+</ul>]]></description>
+            <pubDate>2022-05-26T04:00:58Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.6/vorta-0.8.6.dmg" length="47016894" type="application/octet-stream" sparkle:version="v0.8.6"/>
+        </item>
+        <item>
+            <title>v0.8.5</title>
+            <description><![CDATA[<p>This is a bugfix release to address issues discovered after the previous release:</p>
+<ul>
+<li>Fix macOS Archive settings form sizing (#1311)</li>
+<li>Fix copying the current repo to the clipboard. By @real-yfprojects (#1313)</li>
+<li>Determine source files for translations dynamically. By @real-yfprojects (#1309)</li>
+<li>Remove leftovers in repo selector (#1308)</li>
+<li>Pause scheduling temporarily on failures. By @real-yfprojects (#1299)</li>
+<li>Only schedule backup after a manual run, improve labels. @real-yfprojects (#1302)</li>
+<li>Select and delete multiple archives. By @real-yfprojects (#1307)</li>
+<li>Preserve last creation log per profile for scheduler. By @real-yfprojects (#1296)</li>
+<li>Don't schedule if no repo is set. By @real-yfprojects (#1288)</li>
+<li>Hotfix for right-click archive menu. By @real-yfprojects (#1285)</li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</p>]]></description>
+            <pubDate>2022-05-24T06:20:09Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.5/vorta-0.8.5.dmg" length="46957306" type="application/octet-stream" sparkle:version="v0.8.5"/>
+        </item>
+        <item>
+            <title>v0.8.4</title>
+            <description><![CDATA[<p>This version brings an updated interface and scheduler, contributed by @real-yfprojects as
+well as many other improvements. Thanks to everyone who contributed!</p>
+<p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif" /></p>
+<p>Major changes:</p>
+<ul>
+<li>Improve UX and HIG-conformity. By @real-yfprojects (#1176)</li>
+<li>Rewrite scheduler logic. By @real-yfprojects (#1204) </li>
+</ul>
+<p>Other improvements:</p>
+<ul>
+<li>Change default returncode for log. By @real-yfprojects (#1193)</li>
+<li>Update next backup time label. By @real-yfprojects (#1180)</li>
+<li>Support new borg compact command (#1205)</li>
+<li>Change keyring label to improve UX on Gnome. By @real-yfprojects (#1181)</li>
+<li>Add missing translate strings. By @delfino-nunez (#1229)</li>
+<li>Fix setting a timer value too large for C++ int. (#1230)</li>
+<li>Add missing translation marking. By @delfino-nunez (#1240)</li>
+<li>Use accept-new for host keys. By @delfino-nunez (#1238)</li>
+<li>Properly set dialog titles. By @delfino-nunez (#1246)</li>
+<li>Use fnmatch for exclude patterns. By @real-yfprojects (#1253)</li>
+<li>Add a button to mount full repository. By @real-yfprojects (#1257)</li>
+<li>Clarify enable_background_question label. By @real-yfprojects (#1262)</li>
+<li>Improve SecretStorage locking behavior. By @Aeysol (#1255)</li>
+<li>Set repo stats to N/A after delete or prune. By @real-yfprojects (#1251)</li>
+<li>Improve keyring logging. By @real-yfprojects (#1263) </li>
+<li>Better diff selection without extra dialog. By @real-yfprojects (#1235)</li>
+<li>Add support for special file types in borg diff output. By @real-yfprojects (#1265)</li>
+</ul>]]></description>
+            <pubDate>2022-05-06T12:39:57Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.4/vorta-0.8.4.dmg" length="47039883" type="application/octet-stream" sparkle:version="v0.8.4"/>
+        </item>
+        <item>
+            <title>v0.8.3</title>
+            <description><![CDATA[<p>This is a maintenance release to address smaller issues and upgrade dependencies:</p>
+<ul>
+<li>Distinguish different errors in case borg check failed. By @real-yfprojects (#1163)</li>
+<li>Close SVG files after reading. By @hroncok (#1135)</li>
+<li>Shows folder sizes in diff view. By @skrap (#1156)</li>
+<li>Ignore encoding errors in Wifi names (darwin) (#1158)</li>
+<li>Upgrade llfuse for Flatpak (#1179)</li>
+<li>Bump macOS updater to Sparkle 2.0 (#1186)</li>
+<li>Minor test fixes (#1150, #1147, #1146)</li>
+</ul>]]></description>
+            <pubDate>2022-01-27T12:46:11Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream" sparkle:version="v0.8.3"/>
+        </item>
+        <item>
+            <title>v0.8.2</title>
+            <description><![CDATA[<p>This is the first stable release for the v0.8 branch. Please
+see previous pre-releases for detailed changes. Main changes:</p>
+<ul>
+<li>Refactor Borg job scheduling. By @bastiencyr</li>
+<li>Remove APScheduler dependency and use QTimer directly</li>
+<li>Python 3.10 compatibility</li>
+</ul>]]></description>
+            <pubDate>2021-11-27T17:05:32Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream" sparkle:version="v0.8.2"/>
+        </item>
+        <item>
+            <title>v0.7.8</title>
+            <description><![CDATA[<p>Minor release to update translations and address small bugs. The next release will be 0.8 and will include larger changes:</p>
+<ul>
+<li>Fix double call to on_user_click. By @olivierlemoal (#1031)</li>
+<li>Handle malformed .vorta-init.json on import. Fixes #1053. By @phihos</li>
+</ul>]]></description>
+            <pubDate>2021-08-26T10:30:41Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.8/vorta-0.7.8.dmg" length="45425500" type="application/octet-stream" sparkle:version="v0.7.8"/>
+        </item>
+        <item>
+            <title>v0.7.7</title>
+            <description><![CDATA[<p>This is a bugfix release, which addresses the following issues:</p>
+<ul>
+<li>Remove PyQt5 pinning. Fixes #1011 </li>
+<li>Fix for diff command. By @bastiencyr. Fixes #1016</li>
+<li>Update translations. Add SK .ts file. Fixes #1013</li>
+</ul>]]></description>
+            <pubDate>2021-06-21T06:38:07Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.7/vorta-0.7.7.dmg" length="45353976" type="application/octet-stream" sparkle:version="v0.7.7"/>
+        </item>
+        <item>
+            <title>v0.7.6</title>
+            <description><![CDATA[<p>This release adds a number of bug fixes, as well as two new features developed by
+@phihos and @rblenis. Also special thanks to @bastiencyr for a number of bug fixes.</p>
+<p>You can now import and export settings related to a single profile to JSON. The same
+JSON can be used to bootstrap a new Vorta installation. E.g. to set up a device via
+MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/settings/">docs</a>.</p>
+<p>New features:</p>
+<ul>
+<li>Import/export settings (or bootstrap with default config). By @phihos (#955)</li>
+<li>Add support for 'diff --json-lines'. By @rblenis (#909)</li>
+</ul>
+<p>Bugfixes and refinements:</p>
+<ul>
+<li>Alert when deleting last profile. By @bastiencyr. (#1006)</li>
+<li>Add /opt/homebrew/bin to PATH. Fixes #1001 (#1002)</li>
+<li>Put folders first in diff/extract. Fixes #915. By @bastiencyr (#999)</li>
+<li>Skip sizing folders on permission error. Fixes #968 (#969)</li>
+<li>Called set_progress() on wrong class. (#965)</li>
+<li>Fix color for eye icon when masking password (#959)</li>
+<li>Refuse to add inaccessible folders, warn on inaccessible files during backup (#951)</li>
+<li>Check for full disk access on macOS (#952)</li>
+<li>Open window on left-click on Linux. Fixes #938 (#945)</li>
+<li>Fix issue #940 - KeyError in get_dict_from_list. By @rblenis (#947)</li>
+<li>Correctly rename profile in dropdown. Fixes #943 (#944)</li>
+<li>Fix 'list --json-lines' command when only a single result line is output. By @rblenis (#910)</li>
+</ul>]]></description>
+            <pubDate>2021-06-08T15:32:18Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.6/vorta-0.7.6.dmg" length="45347584" type="application/octet-stream" sparkle:version="v0.7.6"/>
+        </item>
+        <item>
+            <title>v0.7.5</title>
+            <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859">some issues</a> Linux
+users have reported with their keychain. With this release</p>
+<ul>
+<li>You can disable the system keychain and just keep the repo 
+  passphrase in Vorta's settings DB (slightly less secure)</li>
+<li>Keyring is now picked by assigning a score. So it will 
+  prioritized KWallet on KDE and Secret Storage on Gnome.</li>
+</ul>
+<h3>Other improvements</h3>
+<ul>
+<li>Use json mode to list archive files. By @rblenis (#885)</li>
+<li>Add untranslated strings. By @samuel-w (#902)</li>
+</ul>]]></description>
+            <pubDate>2021-03-03T04:17:49Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.5/vorta-0.7.5.dmg" length="47113299" type="application/x-diskcopy" sparkle:version="v0.7.5"/>
+        </item>
+        <item>
+            <title>v0.7.4</title>
+            <description><![CDATA[<p>This is a maintenance release to address some widespread issues
+related to different Linux keychains. It also adds Swedish as
+translation, as well as updates to existing translations.</p>
+<h3>New features</h3>
+<ul>
+<li>Add option to refresh individual archives. By @rblenis (#878)</li>
+</ul>
+<h3>Bug fixes and improvements</h3>
+<ul>
+<li>Fix log table sorting. By @rblenis (#881)</li>
+<li>Improve kwallet verification. By @samuel-w (#889)</li>
+<li>Remove failing SSH key check (#887)</li>
+<li>Avoid segfault when quitting (#877)</li>
+</ul>]]></description>
+            <pubDate>2021-02-26T03:46:08Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.4/vorta-0.7.4.dmg" length="47103648" type="application/octet-stream" sparkle:version="v0.7.4"/>
+        </item>
+        <item>
+            <title>v0.7.3</title>
+            <description><![CDATA[<p>This release adds support for two more Borg commands (rename and break-lock), as well as a
+slightly revamped Archive tab. We also updated macOS Wifi support and fixed numberous bugs.</p>
+<h3>Possible Breaking Changes</h3>
+<ul>
+<li>This removes the <code>profile_slug</code> from the default archive name and prefix. This change only applies to <strong>new backup profiles</strong>. So if you use the same repo for multiple projects on the same hostname, be sure to check your prune prefix as well. The new default archive name is: <code>{hostname}-{now:%Y-%m-%d-%H%M%S}</code></li>
+</ul>
+<h3>New Features</h3>
+<ul>
+<li>Add mount option override checkbox. By @samuel-w (#682)</li>
+<li>Add custom options to borg create command. By @samuel-w (#677)</li>
+<li>Add rename action. By @samuel-w and @m3nu (#864)</li>
+<li>Give option to break repository lock. By @samuel-w (#863)</li>
+</ul>
+<h3>Bugfixes</h3>
+<ul>
+<li>Remove support for deprecated macOS XML wifi list. (#868)</li>
+<li>Catch more possible SSH key parsing errors. (#789)</li>
+<li>Improve cancelling Borg process (#786)</li>
+<li>Add QTimer to ensure background jobs are scheduled correctly. (#780)</li>
+<li>Fix corrupted archive table list during refresh if sorting is enabled. By @rblenis (#784)</li>
+</ul>]]></description>
+            <pubDate>2021-02-18T07:38:53Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.3/vorta-0.7.3.dmg" length="47074218" type="application/octet-stream" sparkle:version="v0.7.3"/>
+        </item>
+        <item>
+            <title>v0.7.2</title>
+            <description><![CDATA[<p>This release adds a lot of detailed improvements, mostly contributed by our newest
+maintainer @samuel-w.</p>
+<p>A selection of the main changes:</p>
+<ul>
+<li>Renable buttons on cancel. By @samuel-w (#772)</li>
+<li>Allow pasting files/folders from file manager, set model defaults (#759)</li>
+<li>Add option to disable exit dialog. By @samuel-w (#681)</li>
+<li>Allow only one profile with --create. By @samuel-w (#744)</li>
+<li>Improved password handling and transparency. By @samuel-w (#550)</li>
+<li>Fix file selector dialog (#764)</li>
+<li>Fix label colour not changing on dark mode change. By @samuel-w (#757)</li>
+<li>Cleanup database at exit, use write-ahead logging. By @samuel-w (#696)</li>
+<li>Sort files in Extract dialog alphabetically. By @samuel-w (#741)</li>
+<li>Update check message on completion. By @samuel-w (#672)</li>
+<li>Give error message on unmount failure. By @samuel-w (#668)</li>
+<li>Improve exception handling. By @samuel-w (#628)</li>
+<li>Ensure system keychain is unlocked before using it. By @samuel-w (#607)</li>
+<li>Create backups from command line using existing profiles. By @samuel-w (#556)</li>
+<li>Diff: better color of added and removed text. By @samuel-w (#649)</li>
+<li>Add KWallet support. By @samuel-w (#540)</li>
+<li>Correctly sort archives by size. By @samuel-w (#729)</li>
+<li>Refactoring: remove last exec_, add tests, retain archive deletion message. By @samuel-w (#722)</li>
+<li>Refactor add and rename to not use exec_. By @samuel-w (#721)</li>
+<li>Improve autostart test. By @samuel-w (#720)</li>
+<li>Limit network checking to only remote repos. By @samuel-w (#701)</li>
+<li>Re-enable SSH host key checking for all operations except when adding repo (#717)</li>
+<li>Add valid copyright header to Johan Rade's work. By @sten0 (#716)</li>
+<li>Display number of files and sizes in source tab. By @XXXBold (#617)</li>
+<li>Translate category labels for log output. By @samuel-w (#683)</li>
+<li>Fix crash when window is closed while thread running. By @samuel-w  (#685)</li>
+<li>Reuse existing window when bringing to front. (#674)</li>
+<li>Set icon through code (#676)</li>
+<li>Show dialog on copy failure. By @samuel-w (#647)</li>
+<li>Get keyring at runtime. By @samuel-w (#635)</li>
+<li>Save correct window size. By @samuel-w (#661)</li>
+<li>Properly catch DBusException. By @samuel-w (#670)</li>
+<li>Set application name (#666)</li>
+<li>Set all icons to same height (#660)</li>
+<li>Replace Borg version with install method in bug report (#657)</li>
+<li>Reduce icon memory usage. By @samuel-w (#656)</li>
+<li>Cancel Borg thread at end of test. (#648)</li>
+</ul>]]></description>
+            <pubDate>2021-01-31T08:30:24Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.2/vorta-0.7.2.dmg" length="46740454" type="application/x-diskcopy" sparkle:version="v0.7.2"/>
+        </item>
+        <item>
+            <title>v0.7.1</title>
+            <description><![CDATA[<p>This is a bugfix release for several new features contained in v0.7.0:</p>
+<ul>
+<li>Fix crash when GUI is opened via tray icon while a backup is running. By @samuel-w</li>
+<li>Use single tray icon for light and dark themes. By @samuel-w</li>
+<li>Use naked en locale instead of en_US. Fixes #623 (#626)</li>
+<li>Remove 'Backup in progress' when re-opening window (#627) by @samuel-w</li>
+<li>Avoid formatting date and time twice. Fixes #624 (#625)</li>
+<li>Handle DBusException in NetworkManagerMonitor (#636) by @ktosiek</li>
+<li>Initialize the network status monitor lazily (#634) by @ktosiek</li>
+</ul>]]></description>
+            <pubDate>2020-09-10T05:53:40Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.1/vorta-0.7.1.dmg" length="41990072" type="application/octet-stream" sparkle:version="v0.7.1"/>
+        </item>
+        <item>
+            <title>v0.7.0</title>
+            <description><![CDATA[<p>Our largest release ever with a long list of incremental improvements by many great contributors. Thanks to all of them!</p>
+<ul>
+<li>Proper dark style support and removal of style hacks</li>
+<li>Prevent duplicate repos from being added. Fixes #473</li>
+<li>New setting to store previously selected profile. Fixes #241</li>
+<li>Add error message when Borg binary is missing. Fixes #333</li>
+<li>Notify of errors after system tray backup run. Fixes #105</li>
+<li>Linux Desktop file: fix syntax, enhance Categories, add a Keyword. By @sten0</li>
+<li>Fix parsing "changed link" lines. By @ktosiek</li>
+<li>Add paste button for source paths. By @samuel-w</li>
+<li>Prevent profiles from sharing the same name. Fixes #512. By @samuel-w</li>
+<li>Add copy button for repository URLs/paths. Fixes #409. By @samuel-w</li>
+<li>Move socket file from state-dir to tmp-dir. Fixes #513</li>
+<li>Save main window state before closing. By @Hofer-Julian</li>
+<li>Parse owner changes in borg diff results. By @ktosiek</li>
+<li>Fix tests for PyQt 5.15 on Linux. By @samuel-w</li>
+<li>Refactor Linux autostart by @samuel-w</li>
+<li>Add correct icon for notifications on Linux. By @Hofer-Julian</li>
+<li>Newer macOS deploy target for detecting dark mode. Fixes #575</li>
+<li>Enable multiselection on source list by @XXXBold</li>
+<li>Allow selection of multiple files by @samuel-w for #593</li>
+<li>Prevent running backups on metered network. By @ktosiek</li>
+<li>Add autosorting for source list. By @samuel-w</li>
+<li>Use dt.now everywhere. By @samuel-w</li>
+<li>Improved progress updates. By @SergioRAgostinho</li>
+</ul>]]></description>
+            <pubDate>2020-09-06T07:43:33Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.0/vorta-0.7.0.dmg" length="41982691" type="application/octet-stream" sparkle:version="v0.7.0"/>
+        </item>
+        <item>
+            <title>v0.6.26</title>
+            <description><![CDATA[<ul>
+<li>Fixes some issues when no known Wifis are available on macOS. #429</li>
+<li>Starts with the correct window size for high-res displays on Linux. By @SamuelBenard</li>
+<li>Test- and linting fixes.</li>
+</ul>]]></description>
+            <pubDate>2020-05-26T03:59:18Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.26/vorta-0.6.26.dmg" length="40809190" type="application/octet-stream" sparkle:version="v0.6.26"/>
+        </item>
+        <item>
+            <title>v0.6.24</title>
+            <description><![CDATA[<ul>
+<li>Notarize macOS release (includes notarized Borg)</li>
+<li>Add Czech and Finnish translations. Thanks to Pavel Borecki and Jiri Grönroos!</li>
+<li>Simplify startup behavior. Run in foreground by default (used by Flatpak and macOS). Use <code>--daemonize</code> to start in background.</li>
+</ul>]]></description>
+            <pubDate>2020-03-03T06:05:27Z</pubDate>
+            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.24/vorta-0.6.24.dmg" length="41070111" type="application/octet-stream" sparkle:version="v0.6.24"/>
+        </item>
+    </channel>
+</rss>
