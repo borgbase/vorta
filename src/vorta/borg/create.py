@@ -27,12 +27,12 @@ class BorgCreateJob(BorgJob):
                     'time': dt.fromisoformat(result['data']['archive']['start']).replace(tzinfo=None),
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
-                    'size': result['data']['archive']['stats']['deduplicated_size'],
+                    'size': result['data']['archive']['stats'].get('deduplicated_size', 0),
                     'trigger': result['params'].get('category', 'user'),
                 },
             )
             new_archive.save()
-            if 'cache' in result['data'] and created:
+            if created and 'cache' in result['data'] and 'stats' in result['data']['cache']:
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
