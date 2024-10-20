@@ -23,8 +23,6 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
             'fixed': self.scheduleFixedRadio,
         }
 
-        self.populate_from_profile()
-
         self.scheduleIntervalUnit.addItem(self.tr('Minutes'), 'minutes')
         self.scheduleIntervalUnit.addItem(self.tr('Hours'), 'hours')
         self.scheduleIntervalUnit.addItem(self.tr('Days'), 'days')
@@ -64,6 +62,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         )
 
         self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
+        self.populate_from_profile()
 
     def on_scheduler_change(self, _):
         profile = self.profile()
