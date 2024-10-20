@@ -24,6 +24,7 @@ def generate_appcast_xml(releases, include_prereleases=False):
         'sparkle': "http://www.andymatuschak.org/xml-namespaces/sparkle",
         'dc': "http://purl.org/dc/elements/1.1/"
     }
+    # ET.register_namespace('sparkle', "http://www.andymatuschak.org/xml-namespaces/sparkle")
     rss = ET.Element("rss", version="2.0", nsmap=nsmap)
     channel = ET.SubElement(rss, "channel")
 
@@ -56,18 +57,16 @@ def generate_appcast_xml(releases, include_prereleases=False):
         # Add enclosure for attached assets (assuming one main asset per release)
         for asset in release.get("assets", []):
             enclosure = ET.SubElement(item, "enclosure", url=asset['browser_download_url'], length=str(asset['size']), type=asset['content_type'])
-            enclosure.set(f"{{{nsmap['sparkle']}}}version", release['tag_name'])
+            enclosure.set(ET.QName(nsmap['sparkle'], 'version'), release['tag_name'][1:])
             break  # Include only one main file per release, remove break for multiple
 
     # Convert the XML tree to a nicely formatted string
-    xml_str = ET.tostring(rss, encoding="utf-8", method="xml")
-    parsed = minidom.parseString(xml_str)
-    return parsed.toprettyxml(indent="    ")
+    return ET.tostring(rss, pretty_print=True, xml_declaration=True, encoding="UTF-8")
 
 # Function to handle the creation of the appcast XML file
 def write_appcast_to_file(appcast_xml, filename):
     with open(filename, "w") as file:
-        file.write(appcast_xml)
+        file.write(appcast_xml.decode('utf-8'))
     print(f"Appcast XML written to {filename}")
 
 

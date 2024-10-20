@@ -1,13 +1,13 @@
-<?xml version="1.0" ?>
+<?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
-    <channel>
-        <title>Vorta Updates</title>
-        <link>https://borgbase.github.io/vorta/appcast-pre.xml</link>
-        <description>Latest updates for the app.</description>
-        <language>en</language>
-        <item>
-            <title>v0.10.0-beta1</title>
-            <description><![CDATA[<p>Overdue release that combines many bug fixes, refactoring and maintenance tasks in particular by our Google Summer of Code student, @shivansh02.</p>
+  <channel>
+    <title>Vorta Updates</title>
+    <link>https://borgbase.github.io/vorta/appcast-pre.xml</link>
+    <description>Latest updates for the app.</description>
+    <language>en</language>
+    <item>
+      <title>v0.10.0-beta1</title>
+      <description><![CDATA[<p>Overdue release that combines many bug fixes, refactoring and maintenance tasks in particular by our Google Summer of Code student, @shivansh02.</p>
 <p><strong>For macOS there is an Intel and Arm64 version attached. If you're on Apple Silicon, use the arm64 version, which will open much faster.</strong></p>
 <p>To install with pip: <code>pip install vorta==0.10.0b1</code></p>
 <h2>What's Changed</h2>
@@ -61,12 +61,12 @@
 <li>@alecdwm made their first contribution in https://github.com/borgbase/vorta/pull/2091</li>
 </ul>
 <p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1</p>]]></description>
-            <pubDate>2024-10-18T11:16:56Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0-beta1/Vorta-0.10.0-beta1_arm64.dmg" length="46078394" type="application/x-apple-diskimage" sparkle:version="v0.10.0-beta1"/>
-        </item>
-        <item>
-            <title>v0.9.1</title>
-            <description><![CDATA[<p>This is the first release of our 0.9 branch. Work on this started in early 2023 and many new features and improvements were implemented since then. For details see previous pre-releases. Here just some highlights:</p>
+      <pubDate>2024-10-18T11:16:56Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0-beta1/Vorta-0.10.0-beta1_arm64.dmg" length="46078394" type="application/x-apple-diskimage" sparkle:version="0.10.0-beta1"/>
+    </item>
+    <item>
+      <title>v0.9.1</title>
+      <description><![CDATA[<p>This is the first release of our 0.9 branch. Work on this started in early 2023 and many new features and improvements were implemented since then. For details see previous pre-releases. Here just some highlights:</p>
 <ul>
 <li>Profile Sidebar and New Setting Interface by @bigtedde in https://github.com/borgbase/vorta/pull/1809</li>
 <li>Exclude GUI by @diivi in https://github.com/borgbase/vorta/pull/1846</li>
@@ -75,12 +75,12 @@
 </ul>
 <p>Thanks again to everyone who took the time to contribute either bug reports, code or translations. 🙏</p>
 <p>https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</p>]]></description>
-            <pubDate>2024-01-10T13:26:55Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1/Vorta-0.9.1.dmg" length="44508913" type="application/octet-stream" sparkle:version="v0.9.1"/>
-        </item>
-        <item>
-            <title>v0.9.1-beta3</title>
-            <description><![CDATA[<p>We are almost ready for the first 0.9 release. This beta finally merges the new GUI to better manage file exclusions by @diivi. Some things you can now do around exclusions:</p>
+      <pubDate>2024-01-10T13:26:55Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1/Vorta-0.9.1.dmg" length="44508913" type="application/octet-stream" sparkle:version="0.9.1"/>
+    </item>
+    <item>
+      <title>v0.9.1-beta3</title>
+      <description><![CDATA[<p>We are almost ready for the first 0.9 release. This beta finally merges the new GUI to better manage file exclusions by @diivi. Some things you can now do around exclusions:</p>
 <ul>
 <li>We ship exclusion presets for common use cases. Currently there are just a few, but we hope to add more over time. PRs welcome, if you have good exclusion lists around a specific topic.</li>
 <li>Add your own exclusions and enable/disable them individually</li>
@@ -103,12 +103,12 @@
 <li>@AdwaitSalankar made their first contribution in https://github.com/borgbase/vorta/pull/1848</li>
 </ul>
 <p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3</p>]]></description>
-            <pubDate>2023-11-30T07:23:45Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta3/Vorta-v0.9.1-beta3.dmg" length="46116863" type="application/octet-stream" sparkle:version="v0.9.1-beta3"/>
-        </item>
-        <item>
-            <title>v0.9.1-beta2</title>
-            <description><![CDATA[<p>This is the second (or third) beta release of our upcoming 0.9 branch.</p>
+      <pubDate>2023-11-30T07:23:45Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta3/Vorta-v0.9.1-beta3.dmg" length="46116863" type="application/octet-stream" sparkle:version="0.9.1-beta3"/>
+    </item>
+    <item>
+      <title>v0.9.1-beta2</title>
+      <description><![CDATA[<p>This is the second (or third) beta release of our upcoming 0.9 branch.</p>
 <p>Main changes are a revamped interface and improved tests, by our Google Summer of Code contributor, @bigtedde.</p>
 <p><img alt="276890775-218fc3ee-68a8-40bc-a30b-39e7e58b7a39" src="https://github.com/borgbase/vorta/assets/3916435/3202ac19-9505-4ae8-92d2-02502e4a3657" /></p>
 <h2>What's Changed</h2>
@@ -118,12 +118,12 @@
 <li>Update notarization for use with notarytool by @m3nu in https://github.com/borgbase/vorta/pull/1831</li>
 </ul>
 <p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2</p>]]></description>
-            <pubDate>2023-10-27T13:15:16Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta2/Vorta-v0.9.1-beta2.dmg" length="46729547" type="application/octet-stream" sparkle:version="v0.9.1-beta2"/>
-        </item>
-        <item>
-            <title>v0.9.1-beta1</title>
-            <description><![CDATA[<p>I'm proud to release the second beta version of our new 0.9 branch. With <a href="https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas">Google Summer of Code</a> at full steam over the summer, the team got a lot done, with a <a href="https://github.com/borgbase/vorta/pull/1742">few</a> <a href="https://github.com/borgbase/vorta/pull/1809">major</a> <a href="https://github.com/borgbase/vorta/pull/1749">features</a> still pending for the next beta.</p>
+      <pubDate>2023-10-27T13:15:16Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta2/Vorta-v0.9.1-beta2.dmg" length="46729547" type="application/octet-stream" sparkle:version="0.9.1-beta2"/>
+    </item>
+    <item>
+      <title>v0.9.1-beta1</title>
+      <description><![CDATA[<p>I'm proud to release the second beta version of our new 0.9 branch. With <a href="https://github.com/borgbase/vorta/wiki/Google-Summer-of-Code-2023-Ideas">Google Summer of Code</a> at full steam over the summer, the team got a lot done, with a <a href="https://github.com/borgbase/vorta/pull/1742">few</a> <a href="https://github.com/borgbase/vorta/pull/1809">major</a> <a href="https://github.com/borgbase/vorta/pull/1749">features</a> still pending for the next beta.</p>
 <p>Thanks are also due to our mentors, who guided contributors while working on their pull requests. 👏 @real-yfprojects @Hofer-Julian </p>
 <p>Please share your feedback <a href="https://github.com/borgbase/vorta/issues/1823">here</a>, so we can keep improving this branch until the final release.</p>
 <h3>Breaking changes</h3>
@@ -182,25 +182,25 @@ f0a5a362 ci: Add ruff including print checks
 20b7b493 hostname and fqdn template var consistent with Borg (#1697)
 7535f92a (tag: v0.9.0) PyQt6 Upgrade (#1685)
 8571ef6c Remove paramiko from dependencies</p>]]></description>
-            <pubDate>2023-09-27T11:18:06Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta1/vorta-v0.9.1-beta1.dmg" length="46552081" type="application/octet-stream" sparkle:version="v0.9.1-beta1"/>
-        </item>
-        <item>
-            <title>v0.9.0</title>
-            <description><![CDATA[<p>This is the first pre-release of the 0.9 branch that uses PyQt6 under the hood.</p>
+      <pubDate>2023-09-27T11:18:06Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta1/vorta-v0.9.1-beta1.dmg" length="46552081" type="application/octet-stream" sparkle:version="0.9.1-beta1"/>
+    </item>
+    <item>
+      <title>v0.9.0</title>
+      <description><![CDATA[<p>This is the first pre-release of the 0.9 branch that uses PyQt6 under the hood.</p>
 <p>To test on macOS, use the attached build, which also includes Borg 1.2.4. To test on Linux, see our <a href="https://vorta.borgbase.com/contributing/#testing-the-current-development-version">developer guide</a>.</p>
 <p>Thanks to @i1sm3ky and @real-yfprojects for making this happen.</p>]]></description>
-            <pubDate>2023-04-17T10:47:45Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.0/vorta-0.9.0.dmg" length="45550876" type="application/octet-stream" sparkle:version="v0.9.0"/>
-        </item>
-        <item>
-            <title>v0.8.12</title>
-            <description><![CDATA[<p>Removes a leftover dependency of <code>paramiko</code>. Rest same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.8.11">v0.8.11</a></p>]]></description>
-            <pubDate>2023-04-10T07:52:39Z</pubDate>
-        </item>
-        <item>
-            <title>v0.8.11</title>
-            <description><![CDATA[<p>This release includes a large number of smaller improvements by our Google Summer of Code contributors and others.</p>
+      <pubDate>2023-04-17T10:47:45Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.0/vorta-0.9.0.dmg" length="45550876" type="application/octet-stream" sparkle:version="0.9.0"/>
+    </item>
+    <item>
+      <title>v0.8.12</title>
+      <description><![CDATA[<p>Removes a leftover dependency of <code>paramiko</code>. Rest same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.8.11">v0.8.11</a></p>]]></description>
+      <pubDate>2023-04-10T07:52:39Z</pubDate>
+    </item>
+    <item>
+      <title>v0.8.11</title>
+      <description><![CDATA[<p>This release includes a large number of smaller improvements by our Google Summer of Code contributors and others.</p>
 <p>This will also be the last larger update of the 0.8 branch. Work will continue in the 0.9 branch that uses the next version 6 of the Qt framework.</p>
 <h3>Some highlights:</h3>
 <ul>
@@ -238,12 +238,12 @@ f1e1ea4 Update type of <code>debug_enabled</code> input.
 ffafcee Correctly supply prune pattern for borg &gt;=1.2.2 (#1565)
 a4ab7e7 Specify build system (minor) (#1580)
 7886354 Remove pip install dependency. By @abdeoliveira (#1578)</p>]]></description>
-            <pubDate>2023-04-09T13:56:05Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.11/vorta-0.8.11.dmg" length="46329987" type="application/octet-stream" sparkle:version="v0.8.11"/>
-        </item>
-        <item>
-            <title>v0.8.10</title>
-            <description><![CDATA[<p>This is a larger release and is mostly the work of @real-yfprojects. Kudos to him and other contributors for all the great improvements! 🙌</p>
+      <pubDate>2023-04-09T13:56:05Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.11/vorta-0.8.11.dmg" length="46329987" type="application/octet-stream" sparkle:version="0.8.11"/>
+    </item>
+    <item>
+      <title>v0.8.10</title>
+      <description><![CDATA[<p>This is a larger release and is mostly the work of @real-yfprojects. Kudos to him and other contributors for all the great improvements! 🙌</p>
 <p><strong>Major changes:</strong>
 - Add Borg v2 compatibility (based on beta4). By @real-yfprojects and @m3nu 
 - Improve Linux desktop tray behavior. By @real-yfprojects 
@@ -276,24 +276,24 @@ b80e617 Change label <code>Folders On Top</code> to <code>Folders First</code> i
 b072496 Populate repo info from profile after populating dropdowns.
 031a498 Don't close temp file before running <code>borg extract</code>.
 648c916 Update flatpak install rule, remove flatpak folder. By @Hofer-Julian</p>]]></description>
-            <pubDate>2023-01-22T12:07:17Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.10/vorta-0.8.10.dmg" length="50434914" type="application/octet-stream" sparkle:version="v0.8.10"/>
-        </item>
-        <item>
-            <title>v0.8.9</title>
-            <description><![CDATA[<p>This is a bugfix release on top of v0.8.8. It includes a fix for the Extract
+      <pubDate>2023-01-22T12:07:17Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.10/vorta-0.8.10.dmg" length="50434914" type="application/octet-stream" sparkle:version="0.8.10"/>
+    </item>
+    <item>
+      <title>v0.8.9</title>
+      <description><![CDATA[<p>This is a bugfix release on top of v0.8.8. It includes a fix for the Extract
 feature, pins Pyobjc for macOS to the latest stable version and adds
 new translations for Dutch.</p>
 <p>722a841 Supply repository and archive name to borg in <code>BorgListArchiveJob</code>.
 14a1de8 Add missing brackets fixing <code>BorgListArchiveJob</code>.
 99eb287 Add Dutch language update
 7550ae5 Pin pyobjc to v8 branch</p>]]></description>
-            <pubDate>2022-11-05T19:32:16Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.9/vorta-0.8.9.dmg" length="47477762" type="application/octet-stream" sparkle:version="v0.8.9"/>
-        </item>
-        <item>
-            <title>v0.8.8</title>
-            <description><![CDATA[<p>This version adds compatibility for Borg v1.2.2 and addresses several smaller
+      <pubDate>2022-11-05T19:32:16Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.9/vorta-0.8.9.dmg" length="47477762" type="application/octet-stream" sparkle:version="0.8.9"/>
+    </item>
+    <item>
+      <title>v0.8.8</title>
+      <description><![CDATA[<p>This version adds compatibility for Borg v1.2.2 and addresses several smaller
 UI bugs.</p>
 <p>Thanks to @real-yfprojects for contributing most of the improvements and to @marco44 for
 making his first contribution.</p>
@@ -340,34 +340,34 @@ c8ba273 Use new treemodel for diff view.
 33639ae Add missing Qt dependency for tests (#1376)
 fd88d7f Fix seconds and microseconds for fixed schedule and fix scheduling for the same day. (#1368)
 305db92 Log json diff line parsing errors. By @real-yfprojects (#1369)</p>]]></description>
-            <pubDate>2022-11-04T10:15:15Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.8/vorta-0.8.8.dmg" length="47476131" type="application/octet-stream" sparkle:version="v0.8.8"/>
-        </item>
-        <item>
-            <title>v0.8.7</title>
-            <description><![CDATA[<p>This is a bugfix release to improve support for Borg 1.2.1. Changes in detail:</p>
+      <pubDate>2022-11-04T10:15:15Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.8/vorta-0.8.8.dmg" length="47476131" type="application/octet-stream" sparkle:version="0.8.8"/>
+    </item>
+    <item>
+      <title>v0.8.7</title>
+      <description><![CDATA[<p>This is a bugfix release to improve support for Borg 1.2.1. Changes in detail:</p>
 <ul>
 <li>Deal with new archive_progress key (#1353)</li>
 <li>Raise <code>ValueError</code> in case of unknown change type in diff json. By @real-yfprojects (#1350)</li>
 <li>Fix unlink action when repo combobox is empty. By @real-yfprojects (#1342)</li>
 <li>Show date of next backup. By @tal66 (#1319)</li>
 </ul>]]></description>
-            <pubDate>2022-06-17T05:01:39Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.7/vorta-0.8.7.dmg" length="47092718" type="application/octet-stream" sparkle:version="v0.8.7"/>
-        </item>
-        <item>
-            <title>v0.8.6</title>
-            <description><![CDATA[<p>This bugfix release addresses a single issue with a PyQt version that may
+      <pubDate>2022-06-17T05:01:39Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.7/vorta-0.8.7.dmg" length="47092718" type="application/octet-stream" sparkle:version="0.8.7"/>
+    </item>
+    <item>
+      <title>v0.8.6</title>
+      <description><![CDATA[<p>This bugfix release addresses a single issue with a PyQt version that may
 not be available everywhere:</p>
 <ul>
 <li>Remove call to <code>QTranslator.language()</code> in <code>get_locale</code>. (#1316)</li>
 </ul>]]></description>
-            <pubDate>2022-05-26T04:00:58Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.6/vorta-0.8.6.dmg" length="47016894" type="application/octet-stream" sparkle:version="v0.8.6"/>
-        </item>
-        <item>
-            <title>v0.8.5</title>
-            <description><![CDATA[<p>This is a bugfix release to address issues discovered after the previous release:</p>
+      <pubDate>2022-05-26T04:00:58Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.6/vorta-0.8.6.dmg" length="47016894" type="application/octet-stream" sparkle:version="0.8.6"/>
+    </item>
+    <item>
+      <title>v0.8.5</title>
+      <description><![CDATA[<p>This is a bugfix release to address issues discovered after the previous release:</p>
 <ul>
 <li>Fix macOS Archive settings form sizing (#1311)</li>
 <li>Fix copying the current repo to the clipboard. By @real-yfprojects (#1313)</li>
@@ -381,12 +381,12 @@ not be available everywhere:</p>
 <li>Hotfix for right-click archive menu. By @real-yfprojects (#1285)</li>
 </ul>
 <p><strong>Full Changelog</strong>: https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</p>]]></description>
-            <pubDate>2022-05-24T06:20:09Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.5/vorta-0.8.5.dmg" length="46957306" type="application/octet-stream" sparkle:version="v0.8.5"/>
-        </item>
-        <item>
-            <title>v0.8.4</title>
-            <description><![CDATA[<p>This version brings an updated interface and scheduler, contributed by @real-yfprojects as
+      <pubDate>2022-05-24T06:20:09Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.5/vorta-0.8.5.dmg" length="46957306" type="application/octet-stream" sparkle:version="0.8.5"/>
+    </item>
+    <item>
+      <title>v0.8.4</title>
+      <description><![CDATA[<p>This version brings an updated interface and scheduler, contributed by @real-yfprojects as
 well as many other improvements. Thanks to everyone who contributed!</p>
 <p><img alt="" src="https://files.qmax.us/vorta/screencast-8-small.gif" /></p>
 <p>Major changes:</p>
@@ -414,12 +414,12 @@ well as many other improvements. Thanks to everyone who contributed!</p>
 <li>Better diff selection without extra dialog. By @real-yfprojects (#1235)</li>
 <li>Add support for special file types in borg diff output. By @real-yfprojects (#1265)</li>
 </ul>]]></description>
-            <pubDate>2022-05-06T12:39:57Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.4/vorta-0.8.4.dmg" length="47039883" type="application/octet-stream" sparkle:version="v0.8.4"/>
-        </item>
-        <item>
-            <title>v0.8.3</title>
-            <description><![CDATA[<p>This is a maintenance release to address smaller issues and upgrade dependencies:</p>
+      <pubDate>2022-05-06T12:39:57Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.4/vorta-0.8.4.dmg" length="47039883" type="application/octet-stream" sparkle:version="0.8.4"/>
+    </item>
+    <item>
+      <title>v0.8.3</title>
+      <description><![CDATA[<p>This is a maintenance release to address smaller issues and upgrade dependencies:</p>
 <ul>
 <li>Distinguish different errors in case borg check failed. By @real-yfprojects (#1163)</li>
 <li>Close SVG files after reading. By @hroncok (#1135)</li>
@@ -429,24 +429,24 @@ well as many other improvements. Thanks to everyone who contributed!</p>
 <li>Bump macOS updater to Sparkle 2.0 (#1186)</li>
 <li>Minor test fixes (#1150, #1147, #1146)</li>
 </ul>]]></description>
-            <pubDate>2022-01-27T12:46:11Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream" sparkle:version="v0.8.3"/>
-        </item>
-        <item>
-            <title>v0.8.2</title>
-            <description><![CDATA[<p>This is the first stable release for the v0.8 branch. Please
+      <pubDate>2022-01-27T12:46:11Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream" sparkle:version="0.8.3"/>
+    </item>
+    <item>
+      <title>v0.8.2</title>
+      <description><![CDATA[<p>This is the first stable release for the v0.8 branch. Please
 see previous pre-releases for detailed changes. Main changes:</p>
 <ul>
 <li>Refactor Borg job scheduling. By @bastiencyr</li>
 <li>Remove APScheduler dependency and use QTimer directly</li>
 <li>Python 3.10 compatibility</li>
 </ul>]]></description>
-            <pubDate>2021-11-27T17:05:32Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream" sparkle:version="v0.8.2"/>
-        </item>
-        <item>
-            <title>v0.8.1</title>
-            <description><![CDATA[<p>This is the next pre-release of our 0.8 branch, which includes larger under-the-hood improvements. Changes since the last release:</p>
+      <pubDate>2021-11-27T17:05:32Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream" sparkle:version="0.8.2"/>
+    </item>
+    <item>
+      <title>v0.8.1</title>
+      <description><![CDATA[<p>This is the next pre-release of our 0.8 branch, which includes larger under-the-hood improvements. Changes since the last release:</p>
 <ul>
 <li>Use native threading module in job_manager. (#1096)</li>
 <li>Fix next_job timer logic. By @jayeclark (#1100)</li>
@@ -457,11 +457,11 @@ see previous pre-releases for detailed changes. Main changes:</p>
 <li>Refactor: Split up vorta/models.py (#1112)</li>
 <li>Notify on failed repo checks (#1113)</li>
 </ul>]]></description>
-            <pubDate>2021-11-17T11:08:47Z</pubDate>
-        </item>
-        <item>
-            <title>v0.8.0</title>
-            <description><![CDATA[<p>This major release improves the way Borg jobs are handled. It also adds support for Python 3.10 and removes our dependency on APScheduler. This is a pre-release and some bugs in this branch aren't addressed yet.</p>
+      <pubDate>2021-11-17T11:08:47Z</pubDate>
+    </item>
+    <item>
+      <title>v0.8.0</title>
+      <description><![CDATA[<p>This major release improves the way Borg jobs are handled. It also adds support for Python 3.10 and removes our dependency on APScheduler. This is a pre-release and some bugs in this branch aren't addressed yet.</p>
 <p>Changes in detail:</p>
 <ul>
 <li>Implement multiple queues. By @bastiencyr (#1045)</li>
@@ -471,32 +471,32 @@ see previous pre-releases for detailed changes. Main changes:</p>
 <li>Increases the maximum allowed number in prune keep. By @lstrz (#1089)</li>
 <li>Always handle autosave setting when saving SettingsModel. By @phihos (#1093)</li>
 </ul>]]></description>
-            <pubDate>2021-11-04T10:52:17Z</pubDate>
-        </item>
-        <item>
-            <title>v0.7.8</title>
-            <description><![CDATA[<p>Minor release to update translations and address small bugs. The next release will be 0.8 and will include larger changes:</p>
+      <pubDate>2021-11-04T10:52:17Z</pubDate>
+    </item>
+    <item>
+      <title>v0.7.8</title>
+      <description><![CDATA[<p>Minor release to update translations and address small bugs. The next release will be 0.8 and will include larger changes:</p>
 <ul>
 <li>Fix double call to on_user_click. By @olivierlemoal (#1031)</li>
 <li>Handle malformed .vorta-init.json on import. Fixes #1053. By @phihos</li>
 </ul>]]></description>
-            <pubDate>2021-08-26T10:30:41Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.8/vorta-0.7.8.dmg" length="45425500" type="application/octet-stream" sparkle:version="v0.7.8"/>
-        </item>
-        <item>
-            <title>v0.7.7</title>
-            <description><![CDATA[<p>This is a bugfix release, which addresses the following issues:</p>
+      <pubDate>2021-08-26T10:30:41Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.8/vorta-0.7.8.dmg" length="45425500" type="application/octet-stream" sparkle:version="0.7.8"/>
+    </item>
+    <item>
+      <title>v0.7.7</title>
+      <description><![CDATA[<p>This is a bugfix release, which addresses the following issues:</p>
 <ul>
 <li>Remove PyQt5 pinning. Fixes #1011 </li>
 <li>Fix for diff command. By @bastiencyr. Fixes #1016</li>
 <li>Update translations. Add SK .ts file. Fixes #1013</li>
 </ul>]]></description>
-            <pubDate>2021-06-21T06:38:07Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.7/vorta-0.7.7.dmg" length="45353976" type="application/octet-stream" sparkle:version="v0.7.7"/>
-        </item>
-        <item>
-            <title>v0.7.6</title>
-            <description><![CDATA[<p>This release adds a number of bug fixes, as well as two new features developed by
+      <pubDate>2021-06-21T06:38:07Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.7/vorta-0.7.7.dmg" length="45353976" type="application/octet-stream" sparkle:version="0.7.7"/>
+    </item>
+    <item>
+      <title>v0.7.6</title>
+      <description><![CDATA[<p>This release adds a number of bug fixes, as well as two new features developed by
 @phihos and @rblenis. Also special thanks to @bastiencyr for a number of bug fixes.</p>
 <p>You can now import and export settings related to a single profile to JSON. The same
 JSON can be used to bootstrap a new Vorta installation. E.g. to set up a device via
@@ -521,12 +521,12 @@ MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/se
 <li>Correctly rename profile in dropdown. Fixes #943 (#944)</li>
 <li>Fix 'list --json-lines' command when only a single result line is output. By @rblenis (#910)</li>
 </ul>]]></description>
-            <pubDate>2021-06-08T15:32:18Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.6/vorta-0.7.6.dmg" length="45347584" type="application/octet-stream" sparkle:version="v0.7.6"/>
-        </item>
-        <item>
-            <title>v0.7.5</title>
-            <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859">some issues</a> Linux
+      <pubDate>2021-06-08T15:32:18Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.6/vorta-0.7.6.dmg" length="45347584" type="application/octet-stream" sparkle:version="0.7.6"/>
+    </item>
+    <item>
+      <title>v0.7.5</title>
+      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859">some issues</a> Linux
 users have reported with their keychain. With this release</p>
 <ul>
 <li>You can disable the system keychain and just keep the repo 
@@ -539,12 +539,12 @@ users have reported with their keychain. With this release</p>
 <li>Use json mode to list archive files. By @rblenis (#885)</li>
 <li>Add untranslated strings. By @samuel-w (#902)</li>
 </ul>]]></description>
-            <pubDate>2021-03-03T04:17:49Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.5/vorta-0.7.5.dmg" length="47113299" type="application/x-diskcopy" sparkle:version="v0.7.5"/>
-        </item>
-        <item>
-            <title>v0.7.4</title>
-            <description><![CDATA[<p>This is a maintenance release to address some widespread issues
+      <pubDate>2021-03-03T04:17:49Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.5/vorta-0.7.5.dmg" length="47113299" type="application/x-diskcopy" sparkle:version="0.7.5"/>
+    </item>
+    <item>
+      <title>v0.7.4</title>
+      <description><![CDATA[<p>This is a maintenance release to address some widespread issues
 related to different Linux keychains. It also adds Swedish as
 translation, as well as updates to existing translations.</p>
 <h3>New features</h3>
@@ -558,12 +558,12 @@ translation, as well as updates to existing translations.</p>
 <li>Remove failing SSH key check (#887)</li>
 <li>Avoid segfault when quitting (#877)</li>
 </ul>]]></description>
-            <pubDate>2021-02-26T03:46:08Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.4/vorta-0.7.4.dmg" length="47103648" type="application/octet-stream" sparkle:version="v0.7.4"/>
-        </item>
-        <item>
-            <title>v0.7.3</title>
-            <description><![CDATA[<p>This release adds support for two more Borg commands (rename and break-lock), as well as a
+      <pubDate>2021-02-26T03:46:08Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.4/vorta-0.7.4.dmg" length="47103648" type="application/octet-stream" sparkle:version="0.7.4"/>
+    </item>
+    <item>
+      <title>v0.7.3</title>
+      <description><![CDATA[<p>This release adds support for two more Borg commands (rename and break-lock), as well as a
 slightly revamped Archive tab. We also updated macOS Wifi support and fixed numberous bugs.</p>
 <h3>Possible Breaking Changes</h3>
 <ul>
@@ -584,12 +584,12 @@ slightly revamped Archive tab. We also updated macOS Wifi support and fixed numb
 <li>Add QTimer to ensure background jobs are scheduled correctly. (#780)</li>
 <li>Fix corrupted archive table list during refresh if sorting is enabled. By @rblenis (#784)</li>
 </ul>]]></description>
-            <pubDate>2021-02-18T07:38:53Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.3/vorta-0.7.3.dmg" length="47074218" type="application/octet-stream" sparkle:version="v0.7.3"/>
-        </item>
-        <item>
-            <title>v0.7.2</title>
-            <description><![CDATA[<p>This release adds a lot of detailed improvements, mostly contributed by our newest
+      <pubDate>2021-02-18T07:38:53Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.3/vorta-0.7.3.dmg" length="47074218" type="application/octet-stream" sparkle:version="0.7.3"/>
+    </item>
+    <item>
+      <title>v0.7.2</title>
+      <description><![CDATA[<p>This release adds a lot of detailed improvements, mostly contributed by our newest
 maintainer @samuel-w.</p>
 <p>A selection of the main changes:</p>
 <ul>
@@ -631,12 +631,12 @@ maintainer @samuel-w.</p>
 <li>Reduce icon memory usage. By @samuel-w (#656)</li>
 <li>Cancel Borg thread at end of test. (#648)</li>
 </ul>]]></description>
-            <pubDate>2021-01-31T08:30:24Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.2/vorta-0.7.2.dmg" length="46740454" type="application/x-diskcopy" sparkle:version="v0.7.2"/>
-        </item>
-        <item>
-            <title>v0.7.1</title>
-            <description><![CDATA[<p>This is a bugfix release for several new features contained in v0.7.0:</p>
+      <pubDate>2021-01-31T08:30:24Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.2/vorta-0.7.2.dmg" length="46740454" type="application/x-diskcopy" sparkle:version="0.7.2"/>
+    </item>
+    <item>
+      <title>v0.7.1</title>
+      <description><![CDATA[<p>This is a bugfix release for several new features contained in v0.7.0:</p>
 <ul>
 <li>Fix crash when GUI is opened via tray icon while a backup is running. By @samuel-w</li>
 <li>Use single tray icon for light and dark themes. By @samuel-w</li>
@@ -646,12 +646,12 @@ maintainer @samuel-w.</p>
 <li>Handle DBusException in NetworkManagerMonitor (#636) by @ktosiek</li>
 <li>Initialize the network status monitor lazily (#634) by @ktosiek</li>
 </ul>]]></description>
-            <pubDate>2020-09-10T05:53:40Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.1/vorta-0.7.1.dmg" length="41990072" type="application/octet-stream" sparkle:version="v0.7.1"/>
-        </item>
-        <item>
-            <title>v0.7.0</title>
-            <description><![CDATA[<p>Our largest release ever with a long list of incremental improvements by many great contributors. Thanks to all of them!</p>
+      <pubDate>2020-09-10T05:53:40Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.1/vorta-0.7.1.dmg" length="41990072" type="application/octet-stream" sparkle:version="0.7.1"/>
+    </item>
+    <item>
+      <title>v0.7.0</title>
+      <description><![CDATA[<p>Our largest release ever with a long list of incremental improvements by many great contributors. Thanks to all of them!</p>
 <ul>
 <li>Proper dark style support and removal of style hacks</li>
 <li>Prevent duplicate repos from being added. Fixes #473</li>
@@ -677,28 +677,28 @@ maintainer @samuel-w.</p>
 <li>Use dt.now everywhere. By @samuel-w</li>
 <li>Improved progress updates. By @SergioRAgostinho</li>
 </ul>]]></description>
-            <pubDate>2020-09-06T07:43:33Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.0/vorta-0.7.0.dmg" length="41982691" type="application/octet-stream" sparkle:version="v0.7.0"/>
-        </item>
-        <item>
-            <title>v0.6.26</title>
-            <description><![CDATA[<ul>
+      <pubDate>2020-09-06T07:43:33Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.0/vorta-0.7.0.dmg" length="41982691" type="application/octet-stream" sparkle:version="0.7.0"/>
+    </item>
+    <item>
+      <title>v0.6.26</title>
+      <description><![CDATA[<ul>
 <li>Fixes some issues when no known Wifis are available on macOS. #429</li>
 <li>Starts with the correct window size for high-res displays on Linux. By @SamuelBenard</li>
 <li>Test- and linting fixes.</li>
 </ul>]]></description>
-            <pubDate>2020-05-26T03:59:18Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.26/vorta-0.6.26.dmg" length="40809190" type="application/octet-stream" sparkle:version="v0.6.26"/>
-        </item>
-        <item>
-            <title>v0.6.24</title>
-            <description><![CDATA[<ul>
+      <pubDate>2020-05-26T03:59:18Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.26/vorta-0.6.26.dmg" length="40809190" type="application/octet-stream" sparkle:version="0.6.26"/>
+    </item>
+    <item>
+      <title>v0.6.24</title>
+      <description><![CDATA[<ul>
 <li>Notarize macOS release (includes notarized Borg)</li>
 <li>Add Czech and Finnish translations. Thanks to Pavel Borecki and Jiri Grönroos!</li>
 <li>Simplify startup behavior. Run in foreground by default (used by Flatpak and macOS). Use <code>--daemonize</code> to start in background.</li>
 </ul>]]></description>
-            <pubDate>2020-03-03T06:05:27Z</pubDate>
-            <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.24/vorta-0.6.24.dmg" length="41070111" type="application/octet-stream" sparkle:version="v0.6.24"/>
-        </item>
-    </channel>
+      <pubDate>2020-03-03T06:05:27Z</pubDate>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.24/vorta-0.6.24.dmg" length="41070111" type="application/octet-stream" sparkle:version="0.6.24"/>
+    </item>
+  </channel>
 </rss>
