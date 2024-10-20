@@ -1,3 +1,4 @@
-requests
-markdown
 lxml
+markdown
+mdx_linkify
+requests
