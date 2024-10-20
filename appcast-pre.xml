@@ -206,13 +206,6 @@ f0a5a362 ci: Add ruff including print checks
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.0/vorta-0.9.0.dmg" length="45550876" type="application/octet-stream"/>
     </item>
     <item>
-      <title>v0.8.12</title>
-      <description><![CDATA[<p>Removes a leftover dependency of <code>paramiko</code>. Rest same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.8.11">v0.8.11</a></p>]]></description>
-      <pubDate>2023-04-10T07:52:39Z</pubDate>
-      <sparkle:version>0.8.12</sparkle:version>
-      <sparkle:releaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.12</sparkle:releaseNotesLink>
-    </item>
-    <item>
       <title>v0.8.11</title>
       <description><![CDATA[<p>This release includes a large number of smaller improvements by our Google Summer of Code contributors and others.</p>
 <p>This will also be the last larger update of the 0.8 branch. Work will continue in the 0.9 branch that uses the next version 6 of the Qt framework.</p>
@@ -477,39 +470,6 @@ see previous pre-releases for detailed changes. Main changes:</p>
       <sparkle:version>0.8.2</sparkle:version>
       <sparkle:releaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.2</sparkle:releaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.8.1</title>
-      <description><![CDATA[<p>This is the next pre-release of our 0.8 branch, which includes larger under-the-hood improvements. Changes since the last release:</p>
-<ul>
-<li>Use native threading module in job_manager. (#1096)</li>
-<li>Fix next_job timer logic. By @jayeclark (#1100)</li>
-<li>Remove jobs if scheduler setting is changed. (#1105)</li>
-<li>Remove jobs before deleting profile (#1107)</li>
-<li>Make sure correct sources are removed (#1110)</li>
-<li>Address DB Locking issues (#1109)</li>
-<li>Refactor: Split up vorta/models.py (#1112)</li>
-<li>Notify on failed repo checks (#1113)</li>
-</ul>]]></description>
-      <pubDate>2021-11-17T11:08:47Z</pubDate>
-      <sparkle:version>0.8.1</sparkle:version>
-      <sparkle:releaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.1</sparkle:releaseNotesLink>
-    </item>
-    <item>
-      <title>v0.8.0</title>
-      <description><![CDATA[<p>This major release improves the way Borg jobs are handled. It also adds support for Python 3.10 and removes our dependency on APScheduler. This is a pre-release and some bugs in this branch aren't addressed yet.</p>
-<p>Changes in detail:</p>
-<ul>
-<li>Implement multiple queues. By @bastiencyr (#1045)</li>
-<li>Show backup size with excludes applied. By @freder (#961)</li>
-<li>Remove APScheduler dependency, Python 3.10 support (#1086)</li>
-<li>Add tooltip containing path name. By @XXXBold (#1072)</li>
-<li>Increases the maximum allowed number in prune keep. By @lstrz (#1089)</li>
-<li>Always handle autosave setting when saving SettingsModel. By @phihos (#1093)</li>
-</ul>]]></description>
-      <pubDate>2021-11-04T10:52:17Z</pubDate>
-      <sparkle:version>0.8.0</sparkle:version>
-      <sparkle:releaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.0</sparkle:releaseNotesLink>
     </item>
     <item>
       <title>v0.7.8</title>

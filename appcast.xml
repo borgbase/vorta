@@ -22,13 +22,6 @@
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1/Vorta-0.9.1.dmg" length="44508913" type="application/octet-stream"/>
     </item>
     <item>
-      <title>v0.8.12</title>
-      <description><![CDATA[<p>Removes a leftover dependency of <code>paramiko</code>. Rest same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.8.11">v0.8.11</a></p>]]></description>
-      <pubDate>2023-04-10T07:52:39Z</pubDate>
-      <sparkle:version>0.8.12</sparkle:version>
-      <sparkle:releaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.12</sparkle:releaseNotesLink>
-    </item>
-    <item>
       <title>v0.8.11</title>
       <description><![CDATA[<p>This release includes a large number of smaller improvements by our Google Summer of Code contributors and others.</p>
 <p>This will also be the last larger update of the 0.8 branch. Work will continue in the 0.9 branch that uses the next version 6 of the Qt framework.</p>

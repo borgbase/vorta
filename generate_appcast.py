@@ -43,6 +43,9 @@ def generate_appcast_xml(releases, include_prereleases=False):
         if not include_prereleases and release['prerelease']:
             continue  # Skip pre-releases if not requested
 
+        if len(release.get("assets", [])) == 0:
+            continue  # Skip if there is not enclosure
+
         item = ET.SubElement(channel, "item")
 
         item_title = ET.SubElement(item, "title")
@@ -62,8 +65,7 @@ def generate_appcast_xml(releases, include_prereleases=False):
 
         # Add enclosure for attached assets (assuming one main asset per release)
         for asset in release.get("assets", []):
-            enclosure = ET.SubElement(item, "enclosure", url=asset['browser_download_url'], length=str(asset['size']), type=asset['content_type'])
-            # enclosure.set(ET.QName(nsmap['sparkle'], 'version'), release['tag_name'][1:])
+            ET.SubElement(item, "enclosure", url=asset['browser_download_url'], length=str(asset['size']), type=asset['content_type'])
             break  # Include only one main file per release, remove break for multiple
 
     # Convert the XML tree to a nicely formatted string
