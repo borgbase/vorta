@@ -18,6 +18,7 @@ def get_misc_settings() -> List[Dict[str, str]]:
     startup = trans_late('settings', 'Startup')
     information = trans_late('settings', 'Information')
     security = trans_late('settings', 'Security')
+    updates = trans_late('settings', 'Updates')
 
     # Default settings for all platforms.
     settings = [
@@ -144,13 +145,17 @@ def get_misc_settings() -> List[Dict[str, str]]:
                 'key': 'check_for_updates',
                 'value': True,
                 'type': 'checkbox',
+                'group': updates,
                 'label': trans_late('settings', 'Check for updates on startup'),
+                'tooltip': trans_late('settings', 'Uses Sparkle to find new updates published on Github.'),
             },
             {
                 'key': 'updates_include_beta',
                 'value': False,
                 'type': 'checkbox',
+                'group': updates,
                 'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
+                'tooltip': trans_late('settings', 'Needs Vorta restart to apply.'),
             },
             {
                 'key': 'check_full_disk_access',
