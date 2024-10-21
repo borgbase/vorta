@@ -2,8 +2,8 @@ import os
 import subprocess
 
 import pytest
+from packaging.version import Version
 from peewee import SqliteDatabase
-from pkg_resources import parse_version
 
 import vorta
 import vorta.application
@@ -45,7 +45,7 @@ def borg_version():
     # test window does not automatically set borg version
     borg_compat.set_version(borg_version, borg_compat.path)
 
-    parsed_borg_version = parse_version(borg_version)
+    parsed_borg_version = Version(borg_version)
     return borg_version, parsed_borg_version
 
 
@@ -54,7 +54,7 @@ def create_test_repo(tmpdir_factory, borg_version):
     repo_path = tmpdir_factory.mktemp('repo')
     source_files_dir = tmpdir_factory.mktemp('borg_src')
 
-    is_borg_v2 = borg_version[1] >= parse_version('2.0.0b1')
+    is_borg_v2 = borg_version[1] >= Version('2.0.0b1')
 
     if is_borg_v2:
         subprocess.run(['borg', '-r', str(repo_path), 'rcreate', '--encryption=none'], check=True)
@@ -225,7 +225,7 @@ def min_borg_version(borg_version, request):
     if request.node.get_closest_marker('min_borg_version'):
         parsed_borg_version = borg_version[1]
 
-        if parsed_borg_version < parse_version(request.node.get_closest_marker('min_borg_version').args[0]):
+        if parsed_borg_version < Version(request.node.get_closest_marker('min_borg_version').args[0]):
             pytest.skip(
                 'skipped due to borg version requirement for test: {}'.format(
                     request.node.get_closest_marker('min_borg_version').args[0]
