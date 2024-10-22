@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import Qt
@@ -75,6 +76,10 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 spacer = QSpacerItem(20, 4, vPolicy=QSizePolicy.Policy.Fixed)
                 self.checkboxLayout.setItem(i, QFormLayout.ItemRole.LabelRole, spacer)
                 i += 1
+
+            # Skip Update settings on non-darwin
+            if sys.platform != 'darwin' and group.group == 'Updates':
+                continue
 
             # add label for next group
             label = QLabel()

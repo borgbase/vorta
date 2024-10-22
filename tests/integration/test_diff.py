@@ -3,7 +3,7 @@ These tests compare the output of the diff command with the expected output.
 """
 
 import pytest
-from pkg_resources import parse_version
+from packaging.version import Version
 
 import vorta.borg
 import vorta.utils
@@ -343,7 +343,7 @@ def test_archive_diff_lines(
 ):
     """Test that the diff lines are parsed correctly for supported borg versions"""
     parsed_borg_version = borg_version[1]
-    supports_fifo = parsed_borg_version > parse_version("1.1.18")
+    supports_fifo = parsed_borg_version > Version("1.1.18")
     supports_chrdev = create_test_repo[2]
 
     params = BorgDiffJob.prepare(
@@ -372,8 +372,8 @@ def test_archive_diff_lines(
         item
         for item in expected
         if (
-            ("min_version" not in item or parse_version(item["min_version"]) <= parsed_borg_version)
-            and ("max_version" not in item or parse_version(item["max_version"]) >= parsed_borg_version)
+            ("min_version" not in item or Version(item["min_version"]) <= parsed_borg_version)
+            and ("max_version" not in item or Version(item["max_version"]) >= parsed_borg_version)
             and (item["data"]["file_type"] != FileType.FIFO or supports_fifo)
             and (item["data"]["file_type"] != FileType.CHRDEV or supports_chrdev)
         )
