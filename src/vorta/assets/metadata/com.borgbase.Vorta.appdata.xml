@@ -44,9 +44,7 @@
   <releases>
     <release version="v0.10.0" date="2024-11-10" urgency="low">
       <description>
-        <p>See <a href="https://github.com/borgbase/vorta/releases">Github</a>
-            for detailed release notes.
-        </p>
+        See Github for detailed release notes: github.com/borgbase/vorta/releases
       </description>
     </release>
   </releases>

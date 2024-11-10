@@ -69,6 +69,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           install-nox: true
 
+      - name: Validate Flatpak manifest
+        if: runner.os == 'Linux'
+        shell: bash
+        run: appstreamcli validate ./src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
+
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
