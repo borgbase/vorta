@@ -6,6 +6,20 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.10.1</title>
+      <description><![CDATA[<p>Fixes several build issues with macOS and Flatpak. The application itself is the same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.10.0" rel="nofollow">v0.10.0</a>.</p>
+<h2>What's Changed</h2>
+<ul>
+<li>build: Explicitly set Python version for macOS builds by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2123" rel="nofollow">https://github.com/borgbase/vorta/pull/2123</a></li>
+<li>Build and packaging fixes by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2126" rel="nofollow">https://github.com/borgbase/vorta/pull/2126</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.0...v0.10.1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.0...v0.10.1</a></p>]]></description>
+      <pubDate>2024-11-10T17:48:32Z</pubDate>
+      <sparkle:version>0.10.1</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.1/Vorta-v0.10.1-arm.dmg" length="46059443" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.10.0</title>
       <description><![CDATA[<p>Overdue release that combines many bug fixes, refactoring and maintenance tasks in particular by our Google Summer of Code student, @shivansh02.</p>
 <p>This adds the feedback we got since releasing v0.10.0-beta1. Thanks to everyone who contributed since then!</p>
@@ -584,18 +598,6 @@ maintainer @samuel-w.</p>
       <sparkle:version>0.7.0</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.0</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.0/vorta-0.7.0.dmg" length="41982691" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.6.26</title>
-      <description><![CDATA[<ul>
-<li>Fixes some issues when no known Wifis are available on macOS. #429</li>
-<li>Starts with the correct window size for high-res displays on Linux. By @SamuelBenard</li>
-<li>Test- and linting fixes.</li>
-</ul>]]></description>
-      <pubDate>2020-05-26T03:59:18Z</pubDate>
-      <sparkle:version>0.6.26</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.6.26</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.6.26/vorta-0.6.26.dmg" length="40809190" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
