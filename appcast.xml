@@ -76,7 +76,7 @@
       <pubDate>2024-11-10T08:40:32Z</pubDate>
       <sparkle:version>0.10.0</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.0</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0/Vorta-v0.10.0.dmg" length="46055868" type="application/x-apple-diskimage"/>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0/Vorta-v0.10.0-arm.dmg" length="46055868" type="application/x-apple-diskimage"/>
     </item>
     <item>
       <title>v0.9.1</title>
