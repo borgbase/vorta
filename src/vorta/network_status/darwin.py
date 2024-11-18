@@ -11,6 +11,11 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 class DarwinNetworkStatus(NetworkStatusMonitor):
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
+
+        # If there is no Wifi at all.
+        if interface is None:
+            return False
+
         network: Optional[CWNetwork] = interface.lastNetworkJoined()
 
         if network:
