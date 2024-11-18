@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from threading import Thread
 from typing import Any, Dict, List, Tuple
 
 from PyQt6 import QtCore
@@ -42,6 +43,9 @@ class VortaApp(QtSingleApplication):
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
+    create_backup_event = QtCore.pyqtSignal()
+    pre_backup_event = QtCore.pyqtSignal(int)
+    post_backup_event = QtCore.pyqtSignal(int, bool)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)
@@ -84,6 +88,9 @@ class VortaApp(QtSingleApplication):
         self.message_received_event.connect(self.message_received_event_response)
         self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
+        self.create_backup_event.connect(lambda: Thread(target=self.create_backup_action).start())
+        self.pre_backup_event.connect(self.pre_backup_event_response)
+        self.post_backup_event.connect(self.post_backup_event_response)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
         if sys.platform == 'darwin':
@@ -94,7 +101,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            self.create_backup_action(profile_id=profile.id)
+            Thread(target=self.create_backup_action, kwargs={'profile_id': profile.id}).start()
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 
@@ -110,7 +117,7 @@ class VortaApp(QtSingleApplication):
             profile_id = self.main_window.current_profile.id
 
         profile = BackupProfileModel.get(id=profile_id)
-        msg = BorgCreateJob.prepare(profile)
+        msg = BorgCreateJob.prepare(profile, app=self)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             self.jobs_manager.add_job(job)
@@ -145,6 +152,13 @@ class VortaApp(QtSingleApplication):
     def backup_cancelled_event_response(self):
         self.jobs_manager.cancel_all_jobs()
         self.tray.set_tray_icon()
+
+    def pre_backup_event_response(self, pid):
+        self.tray.set_tray_icon(active=True)
+
+    def post_backup_event_response(self, pid, active=False):
+        if not active:
+            self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):
         if message == "open main window":

@@ -53,7 +53,7 @@ class BorgCreateJob(BorgJob):
                 self.app.backup_log_event.emit('', {})
                 self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
 
-    def progress_event(self, fmt):
+    def progress_event(self, fmt=None):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
     def started_event(self):
@@ -63,12 +63,13 @@ class BorgCreateJob(BorgJob):
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
+        self.pre_post_backup_cmd(self.params, context='post_backup_cmd', app=self.app, returncode=result['returncode'])
 
     @classmethod
-    def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
-        cmd = getattr(params['profile'], cmd)
+    def pre_post_backup_cmd(cls, params, context='pre_backup_cmd', app=None, returncode=0):
+        cmd = getattr(params['profile'], context)
         if cmd:
+            profile_name = getattr(params['profile'], 'name')
             env = {
                 **os.environ.copy(),
                 'repo_url': params['repo'].url,
@@ -76,13 +77,20 @@ class BorgCreateJob(BorgJob):
                 'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode),
             }
-            proc = subprocess.run(cmd, shell=True, env=env)
+            proc = subprocess.Popen(cmd, shell=True, env=env)
+            if context.startswith('pre'):
+                app.backup_progress_event.emit(f"[{profile_name}] {trans_late('messages', 'Waiting to start backup')}")
+                app.pre_backup_event.emit(proc.pid)
+            else:
+                app.post_backup_event.emit(proc.pid, True)
+            proc.wait()
+            app.post_backup_event.emit(None, False)
             return proc.returncode
         else:
             return 0  # 0 if no command was run.
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, app=None):
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.
@@ -133,7 +141,7 @@ class BorgCreateJob(BorgJob):
         ret['repo'] = profile.repo
 
         # Run user-supplied pre-backup command
-        if cls.pre_post_backup_cmd(ret) != 0:
+        if cls.pre_post_backup_cmd(ret, app=app) != 0:
             ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
             return ret
 

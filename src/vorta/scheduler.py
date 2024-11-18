@@ -301,7 +301,7 @@ class VortaScheduler(QtCore.QObject):
                             profile.name,
                             profile_id,
                         )
-                        self.create_backup(profile_id)
+                        threading.Thread(target=self.create_backup, args=(profile_id,)).start()
                     finally:
                         self.lock.acquire()  # with-statement will try to release
 
@@ -337,7 +337,7 @@ class VortaScheduler(QtCore.QObject):
                 timer = QTimer()
                 timer.setSingleShot(True)
                 timer.setInterval(int(timer_ms))
-                timer.timeout.connect(lambda: self.create_backup(profile_id))
+                timer.timeout.connect(lambda: threading.Thread(target=self.create_backup, args=(profile_id,)).start())
                 timer.start()
 
                 self.timers[profile_id] = {
@@ -410,7 +410,7 @@ class VortaScheduler(QtCore.QObject):
                 self.tr('Starting background backup for %s.') % profile.name,
                 level='info',
             )
-            msg = BorgCreateJob.prepare(profile)
+            msg = BorgCreateJob.prepare(profile, app=self.app)
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'
