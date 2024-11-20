@@ -149,6 +149,6 @@
             "fm:*/.var/app/org.mozilla.firefox/cache"
         ],
         "tags": ["application:firefox", "type:browser", "os:linux"],
-        "author": "Divi, Renner0E"
+        "author": "Divi, Renner0E, chaikney"
     }
 ]
