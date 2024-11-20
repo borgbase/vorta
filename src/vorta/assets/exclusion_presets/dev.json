@@ -138,11 +138,12 @@
             "fm:*/.tmp",
             "fm:*/temp",
             "fm:*.swp",
-            "fm:*.bak"
+            "fm:*.bak",
+            "fm:*.part"
         ],
         "tags": [
             "type:system", "os:linux", "os:darwin"],
-        "author": "shivansh02"
+        "author": "shivansh02, Renner0E"
     },
     {
         "name": "All Cache Files",
