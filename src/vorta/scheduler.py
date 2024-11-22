@@ -19,7 +19,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
-from vorta.utils import borg_compat
+from vorta.utils import borg_compat, AsyncRunner
 
 logger = logging.getLogger(__name__)
 
@@ -389,6 +389,7 @@ class VortaScheduler(QtCore.QObject):
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))
 
+    @AsyncRunner
     def create_backup(self, profile_id):
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
@@ -410,7 +411,7 @@ class VortaScheduler(QtCore.QObject):
                 self.tr('Starting background backup for %s.') % profile.name,
                 level='info',
             )
-            msg = BorgCreateJob.prepare(profile)
+            msg = BorgCreateJob.prepare(profile, app=self.app)
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'

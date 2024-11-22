@@ -14,7 +14,7 @@ from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 import psutil
 from PyQt6 import QtCore
-from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
+from PyQt6.QtCore import QFileInfo, QObject, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
 from vorta.borg._compatibility import BorgCompatibility
@@ -29,6 +29,58 @@ NONMETRIC_UNITS = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
 
 borg_compat = BorgCompatibility()
 _network_status_monitor = None
+
+
+class AsyncRunner(QObject):
+    '''
+    Wrapper to run functions asynchronously from GUI thread, based on
+    https://gist.github.com/andgineer/026a617528c5740da24ec984ac282ee6#file-universal_decorator-py
+
+    NB Only apply it to void functions, otherwise return values will be lost.
+    '''
+    runner_thread = None
+
+    def __init__(self, orig_func):
+        super(AsyncRunner, self).__init__()
+        self.orig_func = orig_func
+        self.__name__ = "AsyncRunner"
+
+    def __call__(self, *args):
+        return self.orig_func(*args)
+
+    def __get__(self, wrapped_instance, owner):
+        return AsyncRunner.Helper(self, wrapped_instance)
+
+    class Helper(QObject):
+        def __init__(self, decorator_instance, wrapped_instance):
+            super(AsyncRunner.Helper, self).__init__()
+            self.decorator_instance = decorator_instance
+            self.wrapped_instance = wrapped_instance
+
+        def __call__(self, *args, **kwargs):
+            self.runner = AsyncRunner.Runner(self.decorator_instance, self.wrapped_instance, *args, **kwargs)
+            self.runner.finished.connect(self.runner_finished)
+            self.runner.start()
+
+        def runner_finished(self):
+            self.runner.wait(100)
+            self.runner = None
+
+    class Runner(QtCore.QThread):
+        def __init__(self, decorator_instance, wrapped_instance, *args, **kwargs):
+            QtCore.QThread.__init__(self)
+            self.decorator_instance = decorator_instance
+            self.wrapped_instance = wrapped_instance
+            self.args = args
+            self.kwargs = kwargs
+
+        def run(self):
+            self.decorator_instance(self.wrapped_instance, *self.args, **self.kwargs)
+<<<<<<< HEAD
+            self.terminate()
+            self.wait()
+=======
+>>>>>>> d7d1488 (Fixes #2120 (ammended))
 
 
 class FilePathInfoAsync(QThread):

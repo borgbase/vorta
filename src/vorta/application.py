@@ -20,7 +20,7 @@ from vorta.scheduler import VortaScheduler
 from vorta.store.connection import cleanup_db
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
-from vorta.utils import borg_compat, parse_args
+from vorta.utils import borg_compat, parse_args, AsyncRunner
 from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -42,6 +42,8 @@ class VortaApp(QtSingleApplication):
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
+    pre_backup_event = QtCore.pyqtSignal(int)
+    post_backup_event = QtCore.pyqtSignal(int, bool)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)
@@ -84,6 +86,8 @@ class VortaApp(QtSingleApplication):
         self.message_received_event.connect(self.message_received_event_response)
         self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
+        self.pre_backup_event.connect(self.pre_backup_event_response)
+        self.post_backup_event.connect(self.post_backup_event_response)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
         if sys.platform == 'darwin':
@@ -105,12 +109,13 @@ class VortaApp(QtSingleApplication):
         del self.tray
         cleanup_db()
 
-    def create_backup_action(self, profile_id=None):
+    @AsyncRunner
+    def create_backup_action(self, profile_id=None, app=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 
         profile = BackupProfileModel.get(id=profile_id)
-        msg = BorgCreateJob.prepare(profile)
+        msg = BorgCreateJob.prepare(profile, app=self)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             self.jobs_manager.add_job(job)
@@ -145,6 +150,13 @@ class VortaApp(QtSingleApplication):
     def backup_cancelled_event_response(self):
         self.jobs_manager.cancel_all_jobs()
         self.tray.set_tray_icon()
+
+    def pre_backup_event_response(self, pid):
+        self.tray.set_tray_icon(active=True)
+
+    def post_backup_event_response(self, pid, active=False):
+        if not active:
+            self.tray.set_tray_icon()
 
     def message_received_event_response(self, message):
         if message == "open main window":

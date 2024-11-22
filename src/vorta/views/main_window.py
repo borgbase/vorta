@@ -99,6 +99,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_log_event.connect(self.set_log)
         self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
+        self.app.pre_backup_event.connect(self.pre_backup_event)
+        self.app.post_backup_event.connect(self.post_backup_event)
 
         # Init profile list
         self.populate_profile_selector()
@@ -338,6 +340,17 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self._toggle_buttons(create_enabled=True)
         self.set_log(self.tr('Task cancelled'))
         self.archiveTab.cancel_action()
+
+    def pre_backup_event(self, pid):
+        self._toggle_buttons(create_enabled=False)
+        self.set_log(self.tr(f"Running pre backup commands [PID: {pid}]"))
+
+    def post_backup_event(self, pid, active=True):
+        if active:
+            self.set_log(self.tr(f"Running post backup commands [PID: {pid}]"))
+        else:
+            self._toggle_buttons(create_enabled=True)
+            self.set_log('')
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
