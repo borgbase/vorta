@@ -58,9 +58,13 @@ class AsyncRunner(QObject):
             self.wrapped_instance = wrapped_instance
 
         def __call__(self, *args, **kwargs):
-            global runner_thread
-            runner_thread = AsyncRunner.Runner(self.decorator_instance, self.wrapped_instance, *args, **kwargs)
-            runner_thread.start()
+            self.runner = AsyncRunner.Runner(self.decorator_instance, self.wrapped_instance, *args, **kwargs)
+            self.runner.finished.connect(self.runner_finished)
+            self.runner.start()
+
+        def runner_finished(self):
+            self.runner.wait(100)
+            self.runner = None
 
     class Runner(QtCore.QThread):
         def __init__(self, decorator_instance, wrapped_instance, *args, **kwargs):
@@ -72,8 +76,11 @@ class AsyncRunner(QObject):
 
         def run(self):
             self.decorator_instance(self.wrapped_instance, *self.args, **self.kwargs)
+<<<<<<< HEAD
             self.terminate()
             self.wait()
+=======
+>>>>>>> d7d1488 (Fixes #2120 (ammended))
 
 
 class FilePathInfoAsync(QThread):
