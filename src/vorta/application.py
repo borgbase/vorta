@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 from pathlib import Path
-from threading import Thread
 from typing import Any, Dict, List, Tuple
 
 from PyQt6 import QtCore
@@ -21,7 +20,7 @@ from vorta.scheduler import VortaScheduler
 from vorta.store.connection import cleanup_db
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
-from vorta.utils import borg_compat, parse_args
+from vorta.utils import borg_compat, parse_args, AsyncRunner
 from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -43,7 +42,6 @@ class VortaApp(QtSingleApplication):
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
-    create_backup_event = QtCore.pyqtSignal()
     pre_backup_event = QtCore.pyqtSignal(int)
     post_backup_event = QtCore.pyqtSignal(int, bool)
 
@@ -88,7 +86,6 @@ class VortaApp(QtSingleApplication):
         self.message_received_event.connect(self.message_received_event_response)
         self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
-        self.create_backup_event.connect(lambda: Thread(target=self.create_backup_action).start())
         self.pre_backup_event.connect(self.pre_backup_event_response)
         self.post_backup_event.connect(self.post_backup_event_response)
         self.aboutToQuit.connect(self.quit_app_action)
@@ -101,7 +98,7 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
-            Thread(target=self.create_backup_action, kwargs={'profile_id': profile.id}).start()
+            self.create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
 
@@ -112,7 +109,8 @@ class VortaApp(QtSingleApplication):
         del self.tray
         cleanup_db()
 
-    def create_backup_action(self, profile_id=None):
+    @AsyncRunner
+    def create_backup_action(self, profile_id=None, app=None):
         if not profile_id:
             profile_id = self.main_window.current_profile.id
 

@@ -88,7 +88,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
         self.miscButton.clicked.connect(self.toggle_misc_visibility)
-        self.createStartBtn.clicked.connect(self.app.create_backup_event.emit)
+        self.createStartBtn.clicked.connect(self.app.create_backup_action)
         self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
         QShortcut(QKeySequence("Ctrl+W"), self).activated.connect(self.on_close_window)

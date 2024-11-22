@@ -19,7 +19,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
-from vorta.utils import borg_compat
+from vorta.utils import borg_compat, AsyncRunner
 
 logger = logging.getLogger(__name__)
 
@@ -301,7 +301,7 @@ class VortaScheduler(QtCore.QObject):
                             profile.name,
                             profile_id,
                         )
-                        threading.Thread(target=self.create_backup, args=(profile_id,)).start()
+                        self.create_backup(profile_id)
                     finally:
                         self.lock.acquire()  # with-statement will try to release
 
@@ -337,7 +337,7 @@ class VortaScheduler(QtCore.QObject):
                 timer = QTimer()
                 timer.setSingleShot(True)
                 timer.setInterval(int(timer_ms))
-                timer.timeout.connect(lambda: threading.Thread(target=self.create_backup, args=(profile_id,)).start())
+                timer.timeout.connect(lambda: self.create_backup(profile_id))
                 timer.start()
 
                 self.timers[profile_id] = {
@@ -389,6 +389,7 @@ class VortaScheduler(QtCore.QObject):
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))
 
+    @AsyncRunner
     def create_backup(self, profile_id):
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
