@@ -13,14 +13,14 @@ class BorgExtractJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Downloading files from archive…')}"
+            self.params['profile_id'], f"[{self.params['profile_name']}] {self.tr('Downloading files from archive…')}"
         )
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
+            self.params['profile_id'], f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
         )
 
     @classmethod

@@ -7,12 +7,16 @@ from .borg_job import BorgJob
 class BorgInfoArchiveJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive…')}")
+        self.app.backup_progress_event.emit(
+            self.params['profile_id'], f"[{self.params['profile_name']}] {self.tr('Refreshing archive…')}"
+        )
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}")
+        self.app.backup_progress_event.emit(
+            self.params['profile_id'], f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}"
+        )
 
     @classmethod
     def prepare(cls, profile, archive_name):

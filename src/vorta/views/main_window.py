@@ -23,7 +23,7 @@ from vorta.utils import (
     is_system_tray_available,
 )
 from vorta.views.partials.loading_button import LoadingButton
-from vorta.views.utils import get_colored_icon
+from vorta.views.utils import extract_profile_name, get_colored_icon
 
 from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
@@ -139,13 +139,22 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileDeleteButton.setIcon(get_colored_icon('minus'))
         self.miscButton.setIcon(get_colored_icon('settings_wheel'))
 
-    def set_progress(self, text=''):
-        self.progressText.setText(text)
-        self.progressText.repaint()
+    def set_progress(self, profile_id, text=''):
+        profile = BackupProfileModel.get_by_id(profile_id)
+        profile.last_status = text
+        profile.save()
+        if profile.name == self.current_profile.name:
+            self.progressText.setText(text)
+            self.progressText.repaint()
 
     def set_log(self, text=''):
-        self.logText.setText(text)
-        self.logText.repaint()
+        profile = extract_profile_name(text)
+        if profile == self.current_profile.name:
+            self.logText.setText(text)
+            self.logText.repaint()
+        else:
+            self.logText.setText('')
+            self.logText.repaint()
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
@@ -197,6 +206,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             SettingsModel.key == 'previous_profile_id'
         ).execute()
         self.archiveTab.toggle_compact_button_visibility()
+        self.app.backup_progress_event.emit(self.current_profile.id, self.current_profile.last_status)
+        self.app.backup_log_event.emit("", {})
 
     def profile_clicked_action(self):
         if self.miscWidget.isVisible():
