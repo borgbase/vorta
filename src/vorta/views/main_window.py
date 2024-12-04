@@ -260,10 +260,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile import successful!'),
                 self.tr('Profile {} imported.').format(profile.name),
             )
-            # self.repoTab.populate_from_profile()
-            # self.scheduleTab.logPage.populate_logs()
-            # self.scheduleTab.networksPage.populate_wifi()
-            # self.miscTab.populate()
             self.populate_profile_selector()
             self.app.profile_changed_event.emit()
 
