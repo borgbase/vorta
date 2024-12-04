@@ -63,11 +63,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.set_icons()
-
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-
         self.populate_from_profile()  # needs init of ssh and compression items
+
+        # Connect to events
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))

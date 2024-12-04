@@ -1,6 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import (
     QAbstractItemView,
+    QApplication,
     QHeaderView,
     QTableWidgetItem,
 )
@@ -26,6 +27,7 @@ class LogPage(LogTableBase, LogTableUI):
         super().__init__(parent)
         self.setupUi(self)
         self.init_ui()
+        QApplication.instance().profile_changed_event.connect(self.populate_logs)
 
     def init_ui(self):
         self.logPage.setAlternatingRowColors(True)
