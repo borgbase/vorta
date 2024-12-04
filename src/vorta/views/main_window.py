@@ -184,16 +184,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         backup_profile_id = profile.data(Qt.ItemDataRole.UserRole) if profile else None
         if not backup_profile_id:
             return
+
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
-        self.app.profile_changed_event.emit()
-        # self.archiveTab.populate_from_profile()
-        # self.repoTab.populate_from_profile()
-        # self.sourceTab.populate_from_profile()
-        # self.scheduleTab.schedulePage.populate_from_profile()
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
-        # self.archiveTab.toggle_compact_button_visibility()
+
+        self.app.profile_changed_event.emit()
 
     def profile_clicked_action(self):
         if self.miscWidget.isVisible():
