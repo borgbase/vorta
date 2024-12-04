@@ -14,14 +14,24 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.preBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'preBackupCmdLineEdit')
         self.postBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'postBackupCmdLineEdit')
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
+        self.populate_from_profile()
+        self.setup_connections()
+
+    def populate_from_profile(self):
         profile = self.profile()
         if profile.repo:
             self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
             self.createCmdLineEdit.setEnabled(True)
+
+            self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
+            self.preBackupCmdLineEdit.setEnabled(True)
+
+            self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
+            self.postBackupCmdLineEdit.setEnabled(True)
         else:
             self.createCmdLineEdit.setEnabled(False)
-
-        self.setup_connections()
+            self.preBackupCmdLineEdit.setEnabled(False)
+            self.postBackupCmdLineEdit.setEnabled(False)
 
     def setup_connections(self):
         self.preBackupCmdLineEdit.textEdited.connect(
