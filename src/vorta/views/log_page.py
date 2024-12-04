@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta import config
-from vorta.store.models import EventLogModel
+from vorta.store.models import BackupProfileMixin, EventLogModel
 from vorta.utils import get_asset
 
 uifile = get_asset('UI/log_page.ui')
@@ -22,7 +22,7 @@ class LogTableColumn:
     ReturnCode = 4
 
 
-class LogPage(LogTableBase, LogTableUI):
+class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -46,7 +46,13 @@ class LogPage(LogTableBase, LogTableUI):
         self.populate_logs()
 
     def populate_logs(self):
-        event_logs = [s for s in EventLogModel.select().order_by(EventLogModel.start_time.desc())]
+        profile = self.profile()
+        event_logs = [
+            s
+            for s in EventLogModel.select()
+            .where(EventLogModel.profile == profile.id)
+            .order_by(EventLogModel.start_time.desc())
+        ]
 
         sorting = self.logPage.isSortingEnabled()
         self.logPage.setSortingEnabled(False)

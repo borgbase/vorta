@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QLineEdit, QWidget
+from PyQt6.QtWidgets import QApplication, QLineEdit, QWidget
 
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
@@ -16,6 +16,8 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
         self.populate_from_profile()
         self.setup_connections()
+
+        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
 
     def populate_from_profile(self):
         profile = self.profile()
