@@ -15,8 +15,16 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.postBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'postBackupCmdLineEdit')
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
         self.populate_from_profile()
-        self.setup_connections()
 
+        self.preBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val)
+        )
+        self.postBackupCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
+        )
+        self.createCmdLineEdit.textEdited.connect(
+            lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
+        )
         QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
 
     def populate_from_profile(self):
@@ -34,17 +42,6 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
             self.createCmdLineEdit.setEnabled(False)
             self.preBackupCmdLineEdit.setEnabled(False)
             self.postBackupCmdLineEdit.setEnabled(False)
-
-    def setup_connections(self):
-        self.preBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.postBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.createCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
-        )
 
     def save_profile_attr(self, attr, new_value):
         profile = self.profile()
