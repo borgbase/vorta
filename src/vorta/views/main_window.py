@@ -189,7 +189,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.repoTab.populate_from_profile()
         self.sourceTab.populate_from_profile()
         self.scheduleTab.schedulePage.populate_from_profile()
+        self.scheduleTab.networksPage.populate_wifi()
+        self.scheduleTab.networksPage.setup_connections()
         self.scheduleTab.shellCommandsPage.populate_from_profile()
+
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
