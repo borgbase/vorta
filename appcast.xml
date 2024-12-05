@@ -6,6 +6,27 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.10.2</title>
+      <description><![CDATA[<p>This release addresses a number of annoying bugs mainly related to switching profiles and refreshing related data.</p>
+<p>We also use more Qt Signals while changing profiles, which may make changing profiles feel snappier in situations with many archives.</p>
+<h2>What's Changed</h2>
+<ul>
+<li>Avoid checking for metered network, if there is no wifi by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2141" rel="nofollow">https://github.com/borgbase/vorta/pull/2141</a></li>
+<li>Workaround to load right language by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2148" rel="nofollow">https://github.com/borgbase/vorta/pull/2148</a></li>
+<li>Ensure pre/post-backup cmds are populated by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2153" rel="nofollow">https://github.com/borgbase/vorta/pull/2153</a></li>
+<li>Update network settings on profile change by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2160" rel="nofollow">https://github.com/borgbase/vorta/pull/2160</a></li>
+<li>Use events instead of calling child widgets by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2161" rel="nofollow">https://github.com/borgbase/vorta/pull/2161</a></li>
+<li>Assume newer Borg version, in case check runs after first backup. by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2163" rel="nofollow">https://github.com/borgbase/vorta/pull/2163</a></li>
+<li>move exclude patterns for snap firefox to all the other firefox packages by @renner0e in <a href="https://github.com/borgbase/vorta/pull/2146" rel="nofollow">https://github.com/borgbase/vorta/pull/2146</a></li>
+<li>Ensure no empty exclude-if-present is added by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2136" rel="nofollow">https://github.com/borgbase/vorta/pull/2136</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.1...v0.10.2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.1...v0.10.2</a></p>]]></description>
+      <pubDate>2024-12-05T14:21:30Z</pubDate>
+      <sparkle:version>0.10.2</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.2</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.2/Vorta-v0.10.2-arm.dmg" length="46556159" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.10.1</title>
       <description><![CDATA[<p>Fixes several build issues with macOS and Flatpak. The application itself is the same as <a href="https://github.com/borgbase/vorta/releases/tag/v0.10.0" rel="nofollow">v0.10.0</a>.</p>
 <h2>What's Changed</h2>
@@ -565,39 +586,6 @@ maintainer @samuel-w.</p>
       <sparkle:version>0.7.1</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.1/vorta-0.7.1.dmg" length="41990072" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.0</title>
-      <description><![CDATA[<p>Our largest release ever with a long list of incremental improvements by many great contributors. Thanks to all of them!</p>
-<ul>
-<li>Proper dark style support and removal of style hacks</li>
-<li>Prevent duplicate repos from being added. Fixes #473</li>
-<li>New setting to store previously selected profile. Fixes #241</li>
-<li>Add error message when Borg binary is missing. Fixes #333</li>
-<li>Notify of errors after system tray backup run. Fixes #105</li>
-<li>Linux Desktop file: fix syntax, enhance Categories, add a Keyword. By @sten0</li>
-<li>Fix parsing "changed link" lines. By @ktosiek</li>
-<li>Add paste button for source paths. By @samuel-w</li>
-<li>Prevent profiles from sharing the same name. Fixes #512. By @samuel-w</li>
-<li>Add copy button for repository URLs/paths. Fixes #409. By @samuel-w</li>
-<li>Move socket file from state-dir to tmp-dir. Fixes #513</li>
-<li>Save main window state before closing. By @Hofer-Julian</li>
-<li>Parse owner changes in borg diff results. By @ktosiek</li>
-<li>Fix tests for PyQt 5.15 on Linux. By @samuel-w</li>
-<li>Refactor Linux autostart by @samuel-w</li>
-<li>Add correct icon for notifications on Linux. By @Hofer-Julian</li>
-<li>Newer macOS deploy target for detecting dark mode. Fixes #575</li>
-<li>Enable multiselection on source list by @XXXBold</li>
-<li>Allow selection of multiple files by @samuel-w for #593</li>
-<li>Prevent running backups on metered network. By @ktosiek</li>
-<li>Add autosorting for source list. By @samuel-w</li>
-<li>Use dt.now everywhere. By @samuel-w</li>
-<li>Improved progress updates. By @SergioRAgostinho</li>
-</ul>]]></description>
-      <pubDate>2020-09-06T07:43:33Z</pubDate>
-      <sparkle:version>0.7.0</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.0</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.0/vorta-0.7.0.dmg" length="41982691" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
