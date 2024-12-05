@@ -44,8 +44,9 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
 
         self.populate()
 
-        # Connect to palette change
+        # Connect to events
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        QApplication.instance().profile_changed_event.connect(self.populate)
 
     def populate(self):
         """
