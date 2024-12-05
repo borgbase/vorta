@@ -152,8 +152,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         # Connect to palette change
         self.app.paletteChanged.connect(lambda p: self.set_icons())
+        self.app.backup_finished_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.toggle_compact_button_visibility)
+        self.app.backup_cancelled_event.connect(self.cancel_action)
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""

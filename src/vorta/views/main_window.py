@@ -319,10 +319,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_log('')
 
     def backup_finished_event(self):
-        self.archiveTab.populate_from_profile()
-        self.repoTab.init_repo_stats()
-        self.scheduleTab.logPage.populate_logs()
-
         if not self.app.jobs_manager.is_worker_running() and (
             self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
         ):  # Either the refresh is done or this is the last archive to refresh.
@@ -332,7 +328,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_log(self.tr('Task cancelled'))
-        self.archiveTab.cancel_action()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel

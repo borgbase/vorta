@@ -27,6 +27,7 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(self)
         self.init_ui()
+        QApplication.instance().backup_finished_event.connect(self.populate_logs)
         QApplication.instance().profile_changed_event.connect(self.populate_logs)
 
     def init_ui(self):
