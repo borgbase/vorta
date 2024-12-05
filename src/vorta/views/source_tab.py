@@ -106,12 +106,13 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.bExclude.clicked.connect(self.show_exclude_dialog)
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-
         # Populate
         self.populate_from_profile()
         self.set_icons()
+
+        # Listen for events
+        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
 
     def set_icons(self):
         "Used when changing between light- and dark mode"

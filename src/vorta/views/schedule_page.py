@@ -64,6 +64,9 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
         self.populate_from_profile()
 
+        # Listen for events
+        self.app.profile_changed_event.connect(self.populate_from_profile)
+
     def on_scheduler_change(self, _):
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
