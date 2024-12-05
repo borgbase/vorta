@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QLineEdit, QWidget
+from PyQt6.QtWidgets import QApplication, QLineEdit, QWidget
 
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
@@ -14,16 +14,8 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.preBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'preBackupCmdLineEdit')
         self.postBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'postBackupCmdLineEdit')
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
-        profile = self.profile()
-        if profile.repo:
-            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
-            self.createCmdLineEdit.setEnabled(True)
-        else:
-            self.createCmdLineEdit.setEnabled(False)
+        self.populate_from_profile()
 
-        self.setup_connections()
-
-    def setup_connections(self):
         self.preBackupCmdLineEdit.textEdited.connect(
             lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val)
         )
@@ -33,6 +25,23 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.createCmdLineEdit.textEdited.connect(
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
         )
+        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
+
+    def populate_from_profile(self):
+        profile = self.profile()
+        if profile.repo:
+            self.createCmdLineEdit.setText(profile.repo.create_backup_cmd)
+            self.createCmdLineEdit.setEnabled(True)
+
+            self.preBackupCmdLineEdit.setText(profile.pre_backup_cmd)
+            self.preBackupCmdLineEdit.setEnabled(True)
+
+            self.postBackupCmdLineEdit.setText(profile.post_backup_cmd)
+            self.postBackupCmdLineEdit.setEnabled(True)
+        else:
+            self.createCmdLineEdit.setEnabled(False)
+            self.preBackupCmdLineEdit.setEnabled(False)
+            self.postBackupCmdLineEdit.setEnabled(False)
 
     def save_profile_attr(self, attr, new_value):
         profile = self.profile()
