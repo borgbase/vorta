@@ -19,7 +19,7 @@ class BorgCompatibility:
     to customize Borg commands by version in the future.
     """
 
-    version = "1.1.0"
+    version = "1.1.4"
     path = ""
 
     def set_version(self, version, path):
