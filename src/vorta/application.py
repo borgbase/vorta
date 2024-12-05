@@ -42,6 +42,7 @@ class VortaApp(QtSingleApplication):
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
+    profile_changed_event = QtCore.pyqtSignal()
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)

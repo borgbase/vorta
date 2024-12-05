@@ -1,6 +1,6 @@
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QCheckBox, QLabel, QListWidget, QListWidgetItem
+from PyQt6.QtWidgets import QApplication, QCheckBox, QLabel, QListWidget, QListWidgetItem
 
 from vorta.store.models import BackupProfileMixin, WifiSettingModel
 from vorta.utils import get_asset, get_sorted_wifis
@@ -18,12 +18,12 @@ class NetworksPage(NetworksBase, NetworksUI, BackupProfileMixin):
         self.meteredNetworksCheckBox: QCheckBox = self.findChild(QCheckBox, 'meteredNetworksCheckBox')
         self.wifiListWidget: QListWidget = self.findChild(QListWidget, 'wifiListWidget')
 
-        self.populate_wifi()
-        self.setup_connections()
-
-    def setup_connections(self):
+        # Connect signals
         self.meteredNetworksCheckBox.stateChanged.connect(self.on_metered_networks_state_changed)
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
+        QApplication.instance().profile_changed_event.connect(self.populate_wifi)
+
+        self.populate_wifi()
 
     def on_metered_networks_state_changed(self, state):
         profile = self.profile()
