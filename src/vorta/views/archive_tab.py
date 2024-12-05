@@ -150,7 +150,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
 
-        # Connect to palette change
+        # Connect to events
         self.app.paletteChanged.connect(lambda p: self.set_icons())
         self.app.backup_finished_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.populate_from_profile)
