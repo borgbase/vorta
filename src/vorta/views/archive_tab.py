@@ -151,7 +151,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.set_icons()
 
         # Connect to events
-        self.app.paletteChanged.connect(lambda p: self.set_icons())
+        self.app.paletteChanged.connect(self.set_icons)
+        self.app.paletteChanged.connect(self.populate_from_profile)
         self.app.backup_finished_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.toggle_compact_button_visibility)
