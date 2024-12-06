@@ -191,6 +191,9 @@ def choose_file_dialog(tmpdir):
         def open(self, func):
             func()
 
+        def exec(self):
+            return 1
+
         def selectedFiles(self):
             if self.subdirectory:
                 return [str(tmpdir.join(self.subdirectory))]
