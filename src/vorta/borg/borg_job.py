@@ -207,7 +207,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
         # More info at https://github.com/borgbase/vorta/issues/2100
         # Set the path to also find homebrew installs of Borg, and avoid falling back to the embedded binary.
         if sys.platform == 'darwin':
-            os.environ["PATH"]="/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin"
+            os.environ["PATH"]+=":/opt/homebrew/bin"
         # Now continue looking for the borg binary to use
         borg_in_path = shutil.which('borg')
 
