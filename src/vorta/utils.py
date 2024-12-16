@@ -76,11 +76,6 @@ class AsyncRunner(QObject):
 
         def run(self):
             self.decorator_instance(self.wrapped_instance, *self.args, **self.kwargs)
-<<<<<<< HEAD
-            self.terminate()
-            self.wait()
-=======
->>>>>>> d7d1488 (Fixes #2120 (ammended))
 
 
 class FilePathInfoAsync(QThread):
