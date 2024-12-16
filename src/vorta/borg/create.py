@@ -1,4 +1,5 @@
 import os
+import shlex
 import subprocess
 import tempfile
 from datetime import datetime as dt
@@ -102,8 +103,8 @@ class BorgCreateJob(BorgJob):
         suffix_command = []
         if profile.repo.create_backup_cmd:
             s1, sep, s2 = profile.repo.create_backup_cmd.partition('-- ')
-            extra_cmd_options = s1.split()
-            suffix_command = (sep + s2).split()
+            extra_cmd_options = shlex.split(s1)
+            suffix_command = shlex.split(sep + s2)
 
         if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
