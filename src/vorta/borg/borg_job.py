@@ -234,7 +234,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 profile=self.params.get('profile_id', None),
             )
             log_entry.save()
-            logger.info('Running command %s', ' '.join(self.cmd))
+            cmd_log_tmp = [s.replace(" ", "\\ ") for s in self.cmd]  # escape whitespace - for logs
+            logger.info('Running command %s', ' '.join(cmd_log_tmp))
+            del cmd_log_tmp
 
         p = Popen(
             self.cmd,
