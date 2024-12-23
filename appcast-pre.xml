@@ -6,6 +6,26 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.10.3</title>
+      <description><![CDATA[<p>This release fixes a new issue on macOS preventing Vorta from finding external Borg versions, as well as an issue with parsing pre- and post backup commands. Big Thank You to the users who helped report and resolve those!</p>
+<p>As usual, this release also includes updated translations. If you'd like to help translate Vorta into your own language, see our <a href="https://vorta.borgbase.com/contributing/translations/" rel="nofollow">language docs</a>.</p>
+<h2>What's Changed</h2>
+<ul>
+<li>Override $PATH for MacOS to find native homebrew borg binaries (#2100) by @greigdp in <a href="https://github.com/borgbase/vorta/pull/2166" rel="nofollow">https://github.com/borgbase/vorta/pull/2166</a></li>
+<li>Fix whitespace error: use of shlex.split instead of .split() (fix #2164) by @goebbe in <a href="https://github.com/borgbase/vorta/pull/2171" rel="nofollow">https://github.com/borgbase/vorta/pull/2171</a></li>
+</ul>
+<h2>New Contributors</h2>
+<ul>
+<li>@greigdp made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2166" rel="nofollow">https://github.com/borgbase/vorta/pull/2166</a></li>
+<li>@goebbe made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2171" rel="nofollow">https://github.com/borgbase/vorta/pull/2171</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.2...v0.10.3" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.2...v0.10.3</a></p>]]></description>
+      <pubDate>2024-12-23T10:53:51Z</pubDate>
+      <sparkle:version>0.10.3</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.3</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.3/Vorta-v0.10.3-arm.dmg" length="47042665" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.10.2</title>
       <description><![CDATA[<p>This release addresses a number of annoying bugs mainly related to switching profiles and refreshing related data.</p>
 <p>We also use more Qt Signals while changing profiles, which may make changing profiles feel snappier in situations with many archives.</p>
@@ -753,23 +773,6 @@ maintainer @samuel-w.</p>
       <sparkle:version>0.7.2</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.2</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.2/vorta-0.7.2.dmg" length="46740454" type="application/x-diskcopy"/>
-    </item>
-    <item>
-      <title>v0.7.1</title>
-      <description><![CDATA[<p>This is a bugfix release for several new features contained in v0.7.0:</p>
-<ul>
-<li>Fix crash when GUI is opened via tray icon while a backup is running. By @samuel-w</li>
-<li>Use single tray icon for light and dark themes. By @samuel-w</li>
-<li>Use naked en locale instead of en_US. Fixes #623 (#626)</li>
-<li>Remove 'Backup in progress' when re-opening window (#627) by @samuel-w</li>
-<li>Avoid formatting date and time twice. Fixes #624 (#625)</li>
-<li>Handle DBusException in NetworkManagerMonitor (#636) by @ktosiek</li>
-<li>Initialize the network status monitor lazily (#634) by @ktosiek</li>
-</ul>]]></description>
-      <pubDate>2020-09-10T05:53:40Z</pubDate>
-      <sparkle:version>0.7.1</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.1</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.1/vorta-0.7.1.dmg" length="41990072" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
