@@ -26,6 +26,13 @@ class NetworkStatusMonitor:
         """Is the network status really available, and not just a dummy implementation?"""
         return type(self) is not NetworkStatusMonitor
 
+    def is_network_active(self) -> bool:
+        """Is there an active network connection.
+
+        True signals that the network is up. The internet may still not be reachable though.
+        """
+        raise NotImplementedError()
+
     def is_network_metered(self) -> bool:
         """Is the currently connected network a metered connection?"""
         raise NotImplementedError()

@@ -25,6 +25,10 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
 
+    def is_network_active(self):
+        # Not yet implemented
+        return True
+
     def get_current_wifi(self) -> Optional[str]:
         """
         Get current SSID or None if Wi-Fi is off.

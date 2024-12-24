@@ -25,6 +25,13 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to check if network is metered, assuming it isn't")
             return False
 
+    def is_network_active(self):
+        try:
+            return self._nm.get_connectivity_state() is not NMConnectivityState.NONE
+        except DBusException:
+            logger.exception("Failed to check connectivity state. Assuming connected")
+            return True
+
     def get_current_wifi(self) -> Optional[str]:
         # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
         # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
@@ -126,6 +133,9 @@ class NetworkManagerDBusAdapter(QObject):
             return False
         return True
 
+    def get_connectivity_state(self) -> 'NMConnectivityState':
+        return NMConnectivityState(read_dbus_property(self._nm, 'Connectivity'))
+
     def get_primary_connection_path(self) -> Optional[str]:
         return read_dbus_property(self._nm, 'PrimaryConnection')
 
@@ -186,3 +196,13 @@ class NMDeviceType(Enum):
     # Only the types we care about
     UNKNOWN = 0
     WIFI = 2
+
+
+class NMConnectivityState(Enum):
+    """https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMConnectivityState"""
+
+    UNKNOWN = 0
+    NONE = 1
+    PORTAL = 2
+    LIMITED = 3
+    FULL = 4
