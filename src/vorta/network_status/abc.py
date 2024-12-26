@@ -54,6 +54,9 @@ class SystemWifiInfo(NamedTuple):
 class NullNetworkStatusMonitor(NetworkStatusMonitor):
     """Dummy implementation, in case we don't have one for current platform."""
 
+    def is_network_active(self):
+        return True
+
     def is_network_status_available(self):
         return False
 
