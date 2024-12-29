@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Any, List, Mapping, NamedTuple, Optional
 
 from PyQt6 import QtDBus
-from PyQt6.QtCore import QObject, QVersionNumber
+from PyQt6.QtCore import QObject, QVersionNumber, pyqtSignal, pyqtSlot
 
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 class NetworkManagerMonitor(NetworkStatusMonitor):
     def __init__(self, nm_adapter: 'NetworkManagerDBusAdapter' = None):
+        super().__init__()
         self._nm = nm_adapter or NetworkManagerDBusAdapter.get_system_nm_adapter()
+        self._nm.network_status_changed.connect(self.network_status_changed)
 
     def is_network_metered(self) -> bool:
         try:
@@ -105,10 +107,17 @@ class NetworkManagerDBusAdapter(QObject):
 
     BUS_NAME = 'org.freedesktop.NetworkManager'
     NM_PATH = '/org/freedesktop/NetworkManager'
+    INTERFACE_NAME = 'org.freedesktop.NetworkManager'
+    SIGNAL_NAME = 'StateChanged'
+
+    network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
 
     def __init__(self, parent, bus):
         super().__init__(parent)
         self._bus = bus
+        self._bus.connect(
+            self.BUS_NAME, self.NM_PATH, self.INTERFACE_NAME, self.SIGNAL_NAME, 'u', self.networkStateChanged
+        )
         self._nm = self._get_iface(self.NM_PATH, 'org.freedesktop.NetworkManager')
 
     @classmethod
@@ -120,6 +129,12 @@ class NetworkManagerDBusAdapter(QObject):
         if not nm_adapter.isValid():
             raise UnsupportedException("Can't connect to NetworkManager")
         return nm_adapter
+
+    @pyqtSlot("unsigned int")
+    def networkStateChanged(self, state):
+        logger.debug(f'network state changed: {state}')
+        # https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
+        self.network_status_changed.emit(state >= 60)
 
     def isValid(self):
         if not self._nm.isValid():

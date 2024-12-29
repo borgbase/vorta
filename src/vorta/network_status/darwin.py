@@ -9,6 +9,9 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
+    def __init__(self):
+        super().__init__()
+
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
 

@@ -59,15 +59,13 @@ class VortaScheduler(QtCore.QObject):
         self.qt_timer.setInterval(15 * 60 * 1000)
         self.qt_timer.start()
 
-        # Network backup profiles that are waiting on the network
-        self.network_deferred_timer = QTimer()
-        self.network_deferred_timer.timeout.connect(self.create_backup_if_net_up)
-        self.network_deferred_timer.setInterval(5 * 1000)  # Short interval for the network to come up
-        # Don't start until its actually needed
-        self.network_deferred_profiles: List[str] = []
-
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
+
+        # Connect to network manager to to monitor that network status
+        self.net_status = get_network_status_monitor()
+        self.net_status.network_status_changed.connect(self.networkStatusChanged)
+        self._net_up = self.net_status.is_network_active()
 
         # connect to `systemd-logind` to receive sleep/resume events
         # The signal `PrepareForSleep` will be emitted before and after hibernation.
@@ -88,26 +86,14 @@ class VortaScheduler(QtCore.QObject):
             logger.debug("Got login suspend/resume notification")
             self.reload_all_timers()
 
-    def create_backup_if_net_up(self):
-        nm = get_network_status_monitor()
-        if nm.is_network_active():
-            # Cancel the timer
-            self.network_deferred_timer.stop()
-            logger.info("the network is active, dispatching waiting jobs")
-            # create_backup will add to waiting_network if the network goes down again
-            # flip ahead of time here in case that happens
-            waiting = self.network_deferred_profiles
-            self.network_deferred_profiles = []
-            for profile_id in waiting:
-                self.create_backup(profile_id)
-        else:
-            logger.debug("there are jobs waiting on the network, but it is not yet up")
-
-    def defer_backup(self, profile_id):
-        if not self.network_deferred_profiles:
-            # Nothing is currently waiting so start the timer
-            self.network_deferred_timer.start()
-        self.network_deferred_profiles.append(profile_id)
+    @QtCore.pyqtSlot(bool)
+    def networkStatusChanged(self, up: bool):
+        reload = self._net_up != up
+        self._net_up = up
+        logger.debug(f"network status up={up}")
+        if reload:
+            logger.info("updating shcedule due to network status change")
+            self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
         scope = self.__class__.__name__
@@ -321,7 +307,7 @@ class VortaScheduler(QtCore.QObject):
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
-                if profile.schedule_make_up_missed:
+                if profile.schedule_make_up_missed and self._net_up:
                     self.lock.release()
                     try:
                         logger.debug(
@@ -334,6 +320,8 @@ class VortaScheduler(QtCore.QObject):
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
+                else:
+                    logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
 
                 # calculate next time from now
                 if profile.schedule_mode == 'interval':
@@ -389,7 +377,15 @@ class VortaScheduler(QtCore.QObject):
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
-            self.set_timer_for_profile(profile.id)
+            # Only set a timer for the profile if the network is actually up
+            if profile.repo is None:
+                logger.debug("nothing scheduled for %s because of unset repo", profile.id)
+            elif not profile.repo.is_remote_repo() or self._net_up:
+                logger.debug("scheduling %s", profile.id)
+                self.set_timer_for_profile(profile.id)
+            else:
+                logger.debug("Network is down, not scheduling %s", profile.id)
+                self.remove_job(profile.id)
 
     def next_job(self):
         now = dt.now()
@@ -423,15 +419,6 @@ class VortaScheduler(QtCore.QObject):
 
         if profile is None:
             logger.info('Profile not found. Maybe deleted?')
-            return
-
-        if profile.repo.is_remote_repo() and not get_network_status_monitor().is_network_active():
-            logger.info(
-                'repo %s is remote and there is no active network connection, deferring backup for %s',
-                profile.repo.name,
-                profile.name,
-            )
-            self.defer_backup(profile_id)
             return
 
         # Skip if a job for this profile (repo) is already in progress
@@ -558,12 +545,6 @@ class VortaScheduler(QtCore.QObject):
         )
 
     def remove_job(self, profile_id):
-        if profile_id in self.network_deferred_profiles:
-            self.network_deferred_profiles.remove(profile_id)
-            # If nothing is waiting cancel the timer
-            if not self.network_deferred_profiles:
-                self.network_deferred_timer.stop()
-
         if profile_id in self.timers:
             qtimer = self.timers[profile_id].get('qtt')
             if qtimer is not None:

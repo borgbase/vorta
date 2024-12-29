@@ -2,8 +2,10 @@ import sys
 from datetime import datetime
 from typing import List, NamedTuple, Optional
 
+from PyQt6.QtCore import QObject, pyqtSignal
 
-class NetworkStatusMonitor:
+
+class NetworkStatusMonitor(QObject):
     @classmethod
     def get_network_status_monitor(cls) -> 'NetworkStatusMonitor':
         if sys.platform == 'darwin':
@@ -21,6 +23,11 @@ class NetworkStatusMonitor:
                 return NetworkManagerMonitor()
             except (UnsupportedException, DBusException):
                 return NullNetworkStatusMonitor()
+
+    network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
     def is_network_status_available(self):
         """Is the network status really available, and not just a dummy implementation?"""
@@ -53,6 +60,9 @@ class SystemWifiInfo(NamedTuple):
 
 class NullNetworkStatusMonitor(NetworkStatusMonitor):
     """Dummy implementation, in case we don't have one for current platform."""
+
+    def __init__(self):
+        super().__init__()
 
     def is_network_active(self):
         return True
