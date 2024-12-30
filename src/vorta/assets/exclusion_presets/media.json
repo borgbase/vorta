@@ -1,0 +1,43 @@
+[
+    {
+        "name": "Media Files",
+        "slug": "media-files",
+        "patterns": [
+            "fm:*.3g2",
+            "fm:*.3gp",
+            "fm:*.aac",
+            "fm:*.avi",
+            "fm:*.f4a",
+            "fm:*.f4b",
+            "fm:*.f4p",
+            "fm:*.f4v",
+            "fm:*.flac",
+            "fm:*.flv",
+            "fm:*.m2ts",
+            "fm:*.m4a",
+            "fm:*.m4p",
+            "fm:*.m4v",
+            "fm:*.mkv",
+            "fm:*.mov",
+            "fm:*.movie",
+            "fm:*.mp2",
+            "fm:*.mp3",
+            "fm:*.mp4",
+            "fm:*.mpeg",
+            "fm:*.mpg",
+            "fm:*.mts",
+            "fm:*.ogg",
+            "fm:*.opus",
+            "fm:*.qt",
+            "fm:*.svi",
+            "fm:*.vob",
+            "fm:*.wav",
+            "fm:*.webm",
+            "fm:*.wmv",
+            "fm:*.yuv"
+        ],
+        "tags": [
+            "type:media", "os:linux", "os:darwin"],
+            "author": "shivansh02, Renner0E"
+    }
+]
