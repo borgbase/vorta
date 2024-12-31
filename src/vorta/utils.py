@@ -6,6 +6,7 @@ import math
 import os
 import re
 import socket
+import subprocess
 import sys
 import unicodedata
 from datetime import datetime as dt
@@ -416,14 +417,27 @@ def format_archive_name(profile, archive_name_tpl):
     """
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
+    fqdn = _getfqdn(hostname)
+    borg_version = os.getenv("BORG_VERSION")
+    if not borg_version:
+        borg_version = subprocess.run(['borg', '--version'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        borg_version = borg_version.split(' ')[1]
+    borg_version_tuple = tuple(borg_version.split("."))
     available_vars = {
         'hostname': hostname,
-        'fqdn': _getfqdn(hostname),
+        'fqdn': fqdn,
+        'reverse-fqdn': ".".join(reversed(fqdn.split("."))),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
         'utc_now': dt.utcnow(),
+        'utcnow': dt.utcnow(),
         'user': getpass.getuser(),
+        'pid': os.getpid(),
+        'borgversion': borg_version,
+        'borgmajor': "%s" % borg_version_tuple[:1],
+        'borgminor': "%s.%s" % borg_version_tuple[:2],
+        'borgpatch': "%s.%s.%s" % borg_version_tuple[:3],
     }
     return archive_name_tpl.format(**available_vars)
 
