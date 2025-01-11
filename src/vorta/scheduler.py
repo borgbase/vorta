@@ -84,6 +84,8 @@ class VortaScheduler(QtCore.QObject):
     def loginSuspendNotify(self, suspend: bool):
         if not suspend:
             logger.debug("Got login suspend/resume notification")
+            # Defensively refetch in case the network status didn't arrive
+            self._net_up = self.net_status.is_network_active()
             self.reload_all_timers()
 
     @QtCore.pyqtSlot(bool)
