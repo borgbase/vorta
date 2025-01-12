@@ -77,18 +77,6 @@
         "author": "SAMAD101"
     },
     {
-        "name": "Spotify cache and config files",
-        "slug": "spotify",
-        "patterns": [
-            "fm:*/.cache/spotify",
-            "fm:*/.config/spotify",
-            "fm:*/.var/app/com.spotify.Client/cache",
-            "fm:*/.var/app/com.spotify.Client/config/spotify"
-        ],
-        "tags": ["type:media", "media:spotify", "os:linux"],
-        "author": "SAMAD101, Renner0E"
-    },
-    {
         "name": "Flatpak Builder cache",
         "slug": "flatpak-builder",
         "patterns": [
@@ -126,57 +114,6 @@
         "patterns": [
             "fm:*.log",
             "fm:*/logs/*"
-        ],
-        "tags": [
-            "type:system", "os:linux", "os:darwin"],
-        "author": "shivansh02"
-    },
-    {
-        "name": "Temporary Files",
-        "slug": "temp-files",
-        "patterns": [
-            "fm:*/.tmp",
-            "fm:*/temp",
-            "fm:*.swp",
-            "fm:*.bak"
-        ],
-        "tags": [
-            "type:system", "os:linux", "os:darwin"],
-        "author": "shivansh02"
-    },
-    {
-        "name": "All Cache Files",
-        "slug": "cache-files",
-        "patterns": [
-            "fm:*/.cache",
-            "fm:*/Caches"
-        ],
-        "tags": [
-            "type:system","os:linux", "os:darwin"],
-        "author": "shivansh02"
-    },
-    {
-        "name": "Media Files",
-        "slug": "media-files",
-        "patterns": [
-            "fm:*.mp3",
-            "fm:*.mp4",
-            "fm:*.mkv",
-            "fm:*.avi",
-            "fm:*.flac",
-            "fm:*.wav"
-        ],
-        "tags": [
-            "type:media", "os:linux", "os:darwin"],
-        "author": "shivansh02"
-    },
-    {
-        "name": "Recycle Bin/Trash",
-        "slug": "recycle-bin-trash",
-        "patterns": [
-            "fm:*/.local/share/Trash/*",
-            "fm:*/.Trash/*",
-            "fm:*/.Trash-*/*"
         ],
         "tags": [
             "type:system", "os:linux", "os:darwin"],
