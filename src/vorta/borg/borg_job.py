@@ -234,21 +234,15 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 profile=self.params.get('profile_id', None),
             )
             log_entry.save()
-            logger.info('borg command arguments: %s', self.cmd)
 
-            # logs: Provide a shell command approximation.
+            # logs: put arguments with special strings in quotation marks
+            quote_strings = [' ', '*', '?', 're:']
             cmd_tmp = self.cmd[:]
-            special_strings = [' ', '*', '?', 're:']
             for i, arg in enumerate(cmd_tmp):
-                if any(specialstr in arg for specialstr in special_strings):
-                    if ('re:' in arg) and ('=' in arg) and (arg.find('=') < arg.find('re:')):
-                        cmd_tmp[i] = arg.replace("=", "='", 1)  # add quote after first "="
-                    elif ('re:' not in arg) and ('=' in arg):
-                        cmd_tmp[i] = arg.replace("=", "='", 1)
-                    else:
-                        cmd_tmp[i] = arg.replace(arg, "'" + arg)  # add quote at start
-                    cmd_tmp[i] += "'"  # add quote at the end
-            logger.info('shell command approximation: %s', ' '.join(cmd_tmp))
+                if any(quotestr in arg for quotestr in quote_strings):
+                    cmd_tmp[i] = arg.replace(arg, "'" + arg + "'")  # add quote
+
+            logger.info('Running command: %s', ' '.join(cmd_tmp))
             del cmd_tmp
 
         p = Popen(
