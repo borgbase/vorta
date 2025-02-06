@@ -39,7 +39,7 @@ class VortaKeyring:
 
     def get_backend_warning(self):
         if self.is_system:
-            return trans_late('utils', 'Storing password in your password manager.')
+            return trans_late('utils', 'This passphrase is required to access your backup.')
         else:
             return trans_late('utils', 'Saving password with Vorta settings.')
 
