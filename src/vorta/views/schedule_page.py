@@ -44,6 +44,8 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
+        self.validationCheckBox.stateChanged.connect(self.on_validation_change)
+
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
         )
@@ -71,6 +73,8 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
+                self.on_validation_change()
+
                 profile.schedule_mode = label
                 profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
                 profile.schedule_interval_count = self.scheduleIntervalCount.value()
@@ -83,6 +87,14 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()
+
+    def on_validation_change(self):
+        """Updates the minimum value of the validation week counter based on the schedule interval"""
+        if self.validationCheckBox.isChecked() and self.scheduleIntervalUnit.currentData() == 'weeks':
+            self.validationWeeksCount.setValue(self.scheduleIntervalCount.value())
+            self.validationWeeksCount.setMinimum(self.scheduleIntervalCount.value())
+        else:
+            self.validationWeeksCount.setMinimum(1)
 
     def populate_from_profile(self):
         profile = self.profile()
