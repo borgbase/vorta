@@ -90,7 +90,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
     def on_validation_change(self):
         """Ensures validation interval is not smaller than the backup interval."""
-        if self.validationCheckBox.isChecked():
+        if self.validationCheckBox.isChecked() and self.scheduleIntervalRadio.isChecked():
             backup_unit = self.scheduleIntervalUnit.currentData()
             backup_value = self.scheduleIntervalCount.value()
 
