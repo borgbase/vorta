@@ -89,10 +89,27 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.draw_next_scheduled_backup()
 
     def on_validation_change(self):
-        """Updates the minimum value of the validation week counter based on the schedule interval"""
-        if self.validationCheckBox.isChecked() and self.scheduleIntervalUnit.currentData() == 'weeks':
-            self.validationWeeksCount.setValue(self.scheduleIntervalCount.value())
-            self.validationWeeksCount.setMinimum(self.scheduleIntervalCount.value())
+        """Ensures validation interval is not smaller than the backup interval."""
+        if self.validationCheckBox.isChecked():
+            backup_unit = self.scheduleIntervalUnit.currentData()
+            backup_value = self.scheduleIntervalCount.value()
+
+            # Backup interval to weeks conversion
+            if backup_unit == 'weeks':
+                min_validation_weeks = backup_value
+            elif backup_unit == 'days':
+                min_validation_weeks = backup_value / 7
+            elif backup_unit == 'hours':
+                min_validation_weeks = backup_value / (7 * 24)
+            elif backup_unit == 'minutes':
+                min_validation_weeks = backup_value / (7 * 24 * 60)
+            else:
+                min_validation_weeks = 1  # Default case, should not happen
+
+            # Set the validation weeks count
+            min_validation_weeks = max(1, int(min_validation_weeks))  # Ensures minimum 1 week
+            self.validationWeeksCount.setValue(min_validation_weeks)
+            self.validationWeeksCount.setMinimum(min_validation_weeks)
         else:
             self.validationWeeksCount.setMinimum(1)
 
