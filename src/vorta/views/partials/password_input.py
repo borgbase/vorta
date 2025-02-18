@@ -9,7 +9,9 @@ from vorta.views.utils import get_colored_icon
 
 
 class PasswordLineEdit(QLineEdit):
-    def __init__(self, *, parent: Optional[QWidget] = None, show_visibility_button: bool = True) -> None:
+    def __init__(
+        self, *, parent: Optional[QWidget] = None, show_visibility_button: bool = True, placeholder_text: str = ""
+    ) -> None:
         super().__init__(parent)
 
         self._show_visibility_button = show_visibility_button
@@ -17,6 +19,7 @@ class PasswordLineEdit(QLineEdit):
         self._visible = False
 
         self.setEchoMode(QLineEdit.EchoMode.Password)
+        self.setPlaceholderText(placeholder_text)
 
         if self._show_visibility_button:
             self.showHideAction = QAction(self.tr("Show password"), self)
@@ -84,8 +87,8 @@ class PasswordInput(QObject):
             self._label_confirm = QLabel(self.tr("Confirm passphrase:"))
 
         # Create password line edits
-        self.passwordLineEdit = PasswordLineEdit()
-        self.confirmLineEdit = PasswordLineEdit()
+        self.passwordLineEdit = PasswordLineEdit(placeholder_text=self.tr("Enter new encryption passphrase"))
+        self.confirmLineEdit = PasswordLineEdit(placeholder_text=self.tr("Confirm new encryption passphrase"))
         self.validation_label = QLabel("")
 
         self.passwordLineEdit.editingFinished.connect(self.on_editing_finished)
