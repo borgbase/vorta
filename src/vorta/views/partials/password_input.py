@@ -19,7 +19,8 @@ class PasswordLineEdit(QLineEdit):
         self._visible = False
 
         self.setEchoMode(QLineEdit.EchoMode.Password)
-        self.setPlaceholderText(placeholder_text)
+        if placeholder_text:
+            self.setPlaceholderText(placeholder_text)
 
         if self._show_visibility_button:
             self.showHideAction = QAction(self.tr("Show password"), self)
