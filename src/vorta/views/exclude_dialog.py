@@ -97,7 +97,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.customPresetsHelpText.setText(
             translate(
                 "CustomPresetsHelp",
-                "Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the <a href=\"https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns\">documentation</a>. To add multiple patterns at once, use the \"Raw\" tab.",  # noqa: E501
+                "Exclude files and folders from the backup using file name pattern matching (fnmatch) by default. For details on exclusions, see the <a href=\"https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns\">documentation</a>. To add multiple patterns at once, use the \"Raw\" tab.",  # noqa: E501
             )
         )
         self.exclusionPresetsHelpText.setText(
