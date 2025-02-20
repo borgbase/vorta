@@ -232,7 +232,7 @@ class ExistingRepoWindow(RepoWindow):
         self.setWindowTitle("Add Existing Repository")
 
         self.passwordLabel = QLabel(self.tr('Password:'))
-        self.passwordInput = PasswordLineEdit()
+        self.passwordInput = PasswordLineEdit(placeholder_text=self.tr("Enter the encryption passphrase"))
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
     def set_password(self, URL):
