@@ -303,8 +303,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     new_source.save()
 
         msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
-        dialog = choose_file_dialog(self, msg, want_folder=want_folder)
-        dialog.open(receive)
+
+        dialog = choose_file_dialog(self, msg, want_folder)
+        dialog.exec()
+        receive()
 
     def source_copy(self, index=None):
         """
