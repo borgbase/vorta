@@ -233,7 +233,7 @@
      <item>
       <widget class="QLabel" name="noteLabel">
        <property name="text">
-        <string>NOTE: Keep the passphrase safe in another secure location as well</string>
+        <string>NOTE: Keep a backup of your passphrase in a separate location.</string>
        </property>
       </widget>
      </item>
