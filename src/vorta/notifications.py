@@ -89,7 +89,8 @@ class DBusNotifications(VortaNotifications):
         text = msg
         actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.Type.QStringList.value)
         hint = {'urgency': self.URGENCY[level]}
-        time = 5000  # milliseconds for display timeout
+        # milliseconds for display timeout
+        time = 0 if level == 'error' else 5000  # 0 -> no timeout for errors
 
         bus = QtDBus.QDBusConnection.sessionBus()
         notify = QtDBus.QDBusInterface(item, path, interface, bus)
@@ -118,4 +119,4 @@ class DBusNotifications(VortaNotifications):
         if self.notifications_suppressed(level):
             return
 
-        self._dbus_notify(title, text)
+        self._dbus_notify(title, text, level=level)
