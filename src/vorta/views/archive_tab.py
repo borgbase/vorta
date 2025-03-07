@@ -65,21 +65,6 @@ class IconDelegate(QStyledItemDelegate):
         option.decorationSize = option.rect.size() - QtCore.QSize(0, 10)
 
 
-# delegate to catch the ESC key press event in the editor
-class EscKeyDelegate(QStyledItemDelegate):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.parent = parent
-
-    def eventFilter(self, editor, event):
-        if event.type() == QtCore.QEvent.Type.KeyPress:
-            if event.key() == QtCore.Qt.Key.Key_Escape:
-                self.parent.is_editing = False  # reset edit state
-                editor.close()  # come out of editor mode
-                return True
-        return super().eventFilter(editor, event)
-
-
 class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
@@ -127,10 +112,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
-        self.archiveTable.cellChanged.connect(self.cell_changed)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
+        edit_delegate = self.archiveTable.itemDelegate()
+        edit_delegate.closeEditor.connect(self.on_editing_finished)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.archiveTable)
@@ -139,10 +125,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         # single and double selection feature
         self.archiveTable.setSelectionMode(QTableView.SelectionMode.ExtendedSelection)
         self.archiveTable.selectionModel().selectionChanged.connect(self.on_selection_change)
-
-        # set the ESC-key delegate for the archiveTable
-        esc_key_delegate = EscKeyDelegate(self.archiveTable)
-        self.archiveTable.setItemDelegate(esc_key_delegate)
 
         # connect archive actions
         self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
@@ -851,6 +833,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
             self.archiveTable.editItem(item)
 
+    def on_editing_finished(self, editor, hint):
+        """Called when the user finishes editing a cell (By pressing Enter or clicking away)."""
+        if not self.is_editing:
+            return
+
+        row = self.archiveTable.currentRow()
+        column = self.archiveTable.currentColumn()
+
+        self.cell_changed(row, column)
+
     def cell_changed(self, row, column):
         # return if this is not a name change
         if column != 4 or not self.is_editing:
@@ -861,16 +853,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
 
         # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
-        if new_name == self.renamed_archive_original_name or not self.renamed_archive_original_name:
+        if new_name == self.renamed_archive_original_name:
             self.is_editing = False
             return
 
+        # if new name is blank, revert to the original name
         if not new_name:
             item.setText(self.renamed_archive_original_name)
             self._set_status(self.tr('Archive name cannot be blank.'))
             self.is_editing = False
             return
 
+        # check if the new name already exists
         new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
         if new_name_exists is not None:
             self._set_status(self.tr('An archive with this name already exists.'))
@@ -881,6 +875,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)
         if not params['ok']:
             self._set_status(params['message'])
+            self.is_editing = False
+            return
 
         job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
