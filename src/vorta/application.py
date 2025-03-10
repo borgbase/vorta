@@ -113,7 +113,9 @@ class VortaApp(QtSingleApplication):
         profile = BackupProfileModel.get(id=profile_id)
 
         if getattr(profile, 'pre_backup_cmd'):
-            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', 'Running Pre-backup Command...')}")
+            self.backup_progress_event.emit(
+                f"[{profile.name}] {translate('messages', 'Running Pre-backup Command...')}"
+            )
 
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
