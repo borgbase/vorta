@@ -878,6 +878,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.is_editing = False
             return
 
+        self._set_status(self.tr('Renaming archive...'))
         job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
         job.result.connect(self.rename_result)
