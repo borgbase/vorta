@@ -121,7 +121,8 @@ def get_directory_size(dir_path, exclude_patterns):
                     if not is_excluded:
                         data_size_filtered += stat.st_size
                         seen_filtered.add(stat.st_ino)
-            except (FileNotFoundError, PermissionError):
+            except (FileNotFoundError, PermissionError, OSError):
+                # OSError is thrown when the file path name exceeds the maximum length allowed by the operating system
                 continue
 
     files_count_filtered = len(seen_filtered)
