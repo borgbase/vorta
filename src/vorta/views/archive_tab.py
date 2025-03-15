@@ -647,7 +647,8 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
                     self.app.jobs_manager.add_job(job)
 
         dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.open(receive)
+        dialog.exec()
+        receive()
 
     def mount_result(self, result):
         if result['returncode'] == 0:
