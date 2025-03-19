@@ -22,7 +22,12 @@ class BorgDeleteJob(BorgJob):
 
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
+        if result['returncode'] == 0:
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
+        else:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] {self.tr('Archive delete has failed.')}"
+            )
 
     @classmethod
     def prepare(cls, profile, archives: List[str]):

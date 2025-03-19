@@ -310,6 +310,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
                             error_msg = stderr
+                            self.app.backup_progress_event.emit(
+                                f"[{self.params['profile_name']}] `{' '.join(self.cmd)}` has failed."
+                            )
                             logger.warning(msg)
 
             if p.poll() is not None:
