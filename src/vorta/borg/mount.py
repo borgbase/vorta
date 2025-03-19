@@ -1,6 +1,8 @@
 import logging
 import os
 
+from vorta import config
+from vorta.i18n import translate
 from vorta.store.models import SettingsModel
 from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
 
@@ -12,6 +14,21 @@ logger = logging.getLogger(__name__)
 class BorgMountJob(BorgJob):
     def started_event(self):
         self.updated.emit(self.tr('Mounting archive into folder…'))
+
+    def finished_event(self, result):
+        self.app.backup_finished_event.emit(result)
+        self.result.emit(result)
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgMountJob', 'Mount command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
+            )
 
     @classmethod
     def prepare(cls, profile, archive: str = None):

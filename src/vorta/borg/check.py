@@ -26,9 +26,9 @@ class BorgCheckJob(BorgJob):
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] "
-                + translate('RepoCheckJob', 'Repo check failed. See the <a href="{0}">logs</a> for details.').format(
-                    config.LOG_DIR.as_uri()
-                )
+                + translate(
+                    'RepoCheckJob', 'Repo check command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
             )
             self.app.check_failed_event.emit(result)
         else:

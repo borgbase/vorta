@@ -1,5 +1,7 @@
 from typing import List
 
+from vorta import config
+from vorta.i18n import translate
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
@@ -22,12 +24,15 @@ class BorgDeleteJob(BorgJob):
 
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        if result['returncode'] == 0:
-            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
-        else:
+        if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] {self.tr('Archive delete has failed.')}"
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgDeleteJob', 'Delete command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
             )
+        else:
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
 
     @classmethod
     def prepare(cls, profile, archives: List[str]):

@@ -300,19 +300,16 @@ class BorgJob(JobInterface, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
                             error_msg = stderr
-                            self.app.backup_progress_event.emit(
-                                f"[{self.params['profile_name']}] `{' '.join(self.cmd)}` has failed."
-                            )
                             logger.warning(msg)
 
             if p.poll() is not None:
