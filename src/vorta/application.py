@@ -21,6 +21,7 @@ from vorta.store.connection import cleanup_db
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
+from vorta.views.exception_dialog import ExceptionDialog
 from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ class VortaApp(QtSingleApplication):
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
     profile_changed_event = QtCore.pyqtSignal()
+    error_signal = QtCore.pyqtSignal(str)
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)
@@ -86,6 +88,7 @@ class VortaApp(QtSingleApplication):
         self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
+        self.error_signal.connect(self.show_exception_dialog)
         self.set_borg_details_action()
         if sys.platform == 'darwin':
             self.check_darwin_permissions()
@@ -156,6 +159,13 @@ class VortaApp(QtSingleApplication):
                 logger.warning("Cannot run while backups are already running")
             else:
                 self.create_backups_cmdline(message)
+
+    def show_exception_dialog(self, error_msg):
+        exception_dialog = ExceptionDialog(error_msg)
+        exception_dialog.show()
+        exception_dialog.raise_()
+        exception_dialog.activateWindow()
+        exception_dialog.exec()
 
     # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):

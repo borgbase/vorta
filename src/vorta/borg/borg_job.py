@@ -263,6 +263,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 return ''
 
         stdout = []
+        error_msg = None
         while True:
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
@@ -308,13 +309,16 @@ class BorgJob(JobInterface, BackupProfileMixin):
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                            error_msg = stderr
                             logger.warning(msg)
 
             if p.poll() is not None:
                 time.sleep(0.1)
                 stdout.append(read_async(p.stdout))
                 break
+
+        if error_msg:
+            self.app.error_signal.emit(error_msg)
 
         result = {
             'params': self.params,
