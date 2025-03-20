@@ -2,6 +2,9 @@ import os.path
 
 import psutil
 
+from vorta import config
+from vorta.i18n import translate
+
 from ..i18n import trans_late
 from .borg_job import BorgJob
 
@@ -9,6 +12,17 @@ from .borg_job import BorgJob
 class BorgUmountJob(BorgJob):
     def started_event(self):
         self.updated.emit(self.tr('Unmounting archive…'))
+
+    def finished_event(self, result):
+        self.app.backup_finished_event.emit(result)
+        self.result.emit(result)
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgMountJob', 'Umount command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
 
     @classmethod
     def prepare(cls, profile, mount_point, archive_name=None):
