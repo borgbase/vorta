@@ -25,10 +25,6 @@ class BorgMountJob(BorgJob):
                     'BorgMountJob', 'Mount command has failed. See the <a href="{0}">logs</a> for details.'
                 ).format(config.LOG_DIR.as_uri())
             )
-        else:
-            self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
-            )
 
     @classmethod
     def prepare(cls, profile, archive: str = None):

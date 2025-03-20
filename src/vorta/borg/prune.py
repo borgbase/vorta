@@ -22,7 +22,6 @@ class BorgPruneJob(BorgJob):
 
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] "
@@ -31,7 +30,7 @@ class BorgPruneJob(BorgJob):
                 ).format(config.LOG_DIR.as_uri())
             )
         else:
-            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning completed.')}")
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
 
     @classmethod
     def prepare(cls, profile):
