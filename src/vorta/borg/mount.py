@@ -16,7 +16,6 @@ class BorgMountJob(BorgJob):
         self.updated.emit(self.tr('Mounting archive into folder…'))
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         if result['returncode'] != 0:
             self.app.backup_progress_event.emit(
