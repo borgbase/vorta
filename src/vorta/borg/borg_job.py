@@ -317,7 +317,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 stdout.append(read_async(p.stdout))
                 break
 
-        if error_msg:
+        if error_msg and self.process.returncode != 0:
             self.app.error_signal.emit(error_msg)
 
         result = {
