@@ -40,73 +40,41 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <property name="leftMargin">
-       <number>14</number>
-      </property>
-      <property name="rightMargin">
-       <number>14</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Repository:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="indent">
-         <number>0</number>
-        </property>
-        <property name="buddy">
-         <cstring>repoSelector</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <layout class="QGridLayout" name="gridLayout_2" columnminimumwidth="1,0,0,0">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="horizontalSpacing">
-         <number>6</number>
-        </property>
-        <property name="verticalSpacing">
-         <number>1</number>
-        </property>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="openExternalLinks">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Repository:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
            <bool>true</bool>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QToolButton" name="copyURLbutton">
-          <property name="toolTip">
-           <string>Copy to clipboard</string>
+          <property name="indent">
+           <number>0</number>
+          </property>
+          <property name="buddy">
+           <cstring>repoSelector</cstring>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
+        <item row="0" column="1">
          <widget class="QComboBox" name="repoSelector">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -134,19 +102,46 @@
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QToolButton" name="repoRemoveToolbutton">
-          <property name="toolTip">
-           <string>Unlink repository without deleting it.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
          <widget class="QToolButton" name="bAddRepo">
           <property name="text">
            <string/>
           </property>
           <property name="popupMode">
            <enum>QToolButton::InstantPopup</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QToolButton" name="repoRemoveToolbutton">
+          <property name="toolTip">
+           <string>Unlink repository without deleting it.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QToolButton" name="copyURLbutton">
+          <property name="toolTip">
+           <string>Copy to clipboard</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QToolButton" name="bRepoUtil">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

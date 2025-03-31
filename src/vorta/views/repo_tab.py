@@ -36,6 +36,13 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         self.bAddRepo.setMenu(self.menuAddRepo)
 
+        # init repo util button
+        self.menuRepoUtil = QMenu(self.bRepoUtil)
+
+        self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase)
+
+        self.bRepoUtil.setMenu(self.menuRepoUtil)
+
         # note: it is hard to describe these algorithms with attributes like low/medium/high
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
         # on the input data. so we just tell what we know for sure.
@@ -73,6 +80,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
         self.bAddRepo.setIcon(get_colored_icon("plus"))
+        self.bRepoUtil.setIcon(get_colored_icon("settings_wheel"))
         self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
@@ -328,3 +336,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             data.setText(url)
 
         QApplication.clipboard().setMimeData(data)
+
+    def repo_change_passphrase(self):
+        pass
