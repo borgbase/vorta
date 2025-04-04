@@ -64,7 +64,9 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     tab = main.repoTab
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
-    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
+    # Assuming unlink action is the 1st in submenu
+    tab.menuRepoUtil.actions()[0].trigger()
+
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
