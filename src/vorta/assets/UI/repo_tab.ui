@@ -43,6 +43,43 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="4">
+         <widget class="QToolButton" name="bRepoUtil">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QToolButton" name="copyURLbutton">
+          <property name="toolTip">
+           <string>Copy to clipboard</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QToolButton" name="bAddRepo">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="sizePolicy">
@@ -99,50 +136,6 @@
             <string>Select Backup Destination</string>
            </property>
           </item>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QToolButton" name="bAddRepo">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="popupMode">
-           <enum>QToolButton::InstantPopup</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QToolButton" name="repoRemoveToolbutton">
-          <property name="toolTip">
-           <string>Unlink repository without deleting it.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QToolButton" name="copyURLbutton">
-          <property name="toolTip">
-           <string>Copy to clipboard</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QToolButton" name="bRepoUtil">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="popupMode">
-           <enum>QToolButton::InstantPopup</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
        </layout>
@@ -452,7 +445,6 @@
  </widget>
  <tabstops>
   <tabstop>repoSelector</tabstop>
-  <tabstop>repoRemoveToolbutton</tabstop>
   <tabstop>copyURLbutton</tabstop>
   <tabstop>sshComboBox</tabstop>
   <tabstop>sshKeyToClipboardButton</tabstop>
