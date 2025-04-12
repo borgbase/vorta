@@ -417,14 +417,23 @@ def format_archive_name(profile, archive_name_tpl):
     """
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
+    borg_version = borg_compat.get_version()[0]  # Getting only borg version
+    borg_version_tuple = tuple(borg_version.split("."))
     available_vars = {
+        "pid": os.getpid(),
         'hostname': hostname,
         'fqdn': _getfqdn(hostname),
+        "reverse-fqdn": ".".join(reversed(_getfqdn(hostname).split("."))),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
         'utc_now': dt.utcnow(),
+        'utcnow': dt.utcnow(),
         'user': getpass.getuser(),
+        'borgversion': borg_version,
+        'borgmajor': "%s" % borg_version_tuple[:1],
+        'borgminor': "%s.%s" % borg_version_tuple[:2],
+        'borgpatch': "%s.%s.%s" % borg_version_tuple[:3],
     }
     return archive_name_tpl.format(**available_vars)
 
