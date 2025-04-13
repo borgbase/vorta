@@ -9,6 +9,7 @@ import socket
 import sys
 import unicodedata
 from datetime import datetime as dt
+from datetime import timezone as tz
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
@@ -427,8 +428,8 @@ def format_archive_name(profile, archive_name_tpl):
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
-        'utc_now': dt.now(dt.timezone.utc),
-        'utcnow': dt.now(dt.timezone.utc),
+        'utc_now': dt.now(tz.utc),
+        'utcnow': dt.now(tz.utc),
         'user': getpass.getuser(),
         'borgversion': borg_version,
         'borgmajor': "%s" % borg_version_tuple[:1],
