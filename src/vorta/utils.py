@@ -8,6 +8,7 @@ import re
 import socket
 import sys
 import unicodedata
+import uuid
 from datetime import datetime as dt
 from datetime import timezone as tz
 from functools import reduce
@@ -431,6 +432,7 @@ def format_archive_name(profile, archive_name_tpl):
         'utc_now': dt.now(tz.utc),
         'utcnow': dt.now(tz.utc),
         'user': getpass.getuser(),
+        "uuid4": str(uuid.uuid4()),
         'borgversion': borg_version,
         'borgmajor': "%s" % borg_version_tuple[:1],
         'borgminor': "%s.%s" % borg_version_tuple[:2],
