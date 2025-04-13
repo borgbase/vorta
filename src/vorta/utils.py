@@ -8,7 +8,9 @@ import re
 import socket
 import sys
 import unicodedata
+import uuid
 from datetime import datetime as dt
+from datetime import timezone as tz
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
@@ -417,14 +419,24 @@ def format_archive_name(profile, archive_name_tpl):
     """
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
+    borg_version = borg_compat.get_version()[0]  # Getting only borg version
+    borg_version_tuple = tuple(borg_version.split("."))
     available_vars = {
+        "pid": os.getpid(),
         'hostname': hostname,
         'fqdn': _getfqdn(hostname),
+        "reverse-fqdn": ".".join(reversed(_getfqdn(hostname).split("."))),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
-        'utc_now': dt.utcnow(),
+        'utc_now': dt.now(tz.utc),
+        'utcnow': dt.now(tz.utc),
         'user': getpass.getuser(),
+        "uuid4": str(uuid.uuid4()),
+        'borgversion': borg_version,
+        'borgmajor': "%s" % borg_version_tuple[:1],
+        'borgminor': "%s.%s" % borg_version_tuple[:2],
+        'borgpatch': "%s.%s.%s" % borg_version_tuple[:3],
     }
     return archive_name_tpl.format(**available_vars)
 
