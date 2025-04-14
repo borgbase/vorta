@@ -42,18 +42,6 @@ class BorgCreateJob(BorgJob):
                 repo.total_unique_chunks = stats['total_unique_chunks']
                 repo.save()
 
-            if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(
-                    f"[{self.params['profile_name']}] "
-                    + translate(
-                        'BorgCreateJob',
-                        'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                    ).format(config.LOG_DIR.as_uri())
-                )
-            else:
-                self.app.backup_log_event.emit('', {})
-                self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
-
     def progress_event(self, fmt):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
@@ -64,7 +52,17 @@ class BorgCreateJob(BorgJob):
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgCreateJob', 'Backup finished with errors. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_log_event.emit('', {})
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
+            self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
 
     @classmethod
     def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
