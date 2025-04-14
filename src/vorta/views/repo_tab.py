@@ -25,7 +25,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.setupUi(parent)
 
         # Populate dropdowns
-        self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
         # init repo add button
@@ -35,6 +34,18 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
+
+        # init repo util button
+        self.menuRepoUtil = QMenu(self.bRepoUtil)
+
+        self.menuRepoUtil.addAction(self.tr("Unlink Repository…"), self.repo_unlink_action).setIcon(
+            get_colored_icon("unlink")
+        )
+        self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase).setIcon(
+            get_colored_icon("key")
+        )
+
+        self.bRepoUtil.setMenu(self.menuRepoUtil)
 
         # note: it is hard to describe these algorithms with attributes like low/medium/high
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
@@ -73,7 +84,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
         self.bAddRepo.setIcon(get_colored_icon("plus"))
-        self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
+        self.bRepoUtil.setIcon(get_colored_icon("ellipsis-v"))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
 
@@ -328,3 +339,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             data.setText(url)
 
         QApplication.clipboard().setMimeData(data)
+
+    def repo_change_passphrase(self):
+        pass
