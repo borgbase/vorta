@@ -16,7 +16,6 @@ Vorta is a backup client for macOS and Linux desktops. It integrates the mighty 
 https://github.com/m3nu/vorta/assets/3916435/a622a148-5373-4ae0-87bc-4ca1d6f6202e
 
 ## Why is this great? 🤩
-
 - **Encrypted, deduplicated and compressed backups** using [Borg](https://borgbackup.readthedocs.io) as backend.
 - **No vendor lock-in** – back up to local drives, your own server or [BorgBase](https://www.borgbase.com), a hosting service for Borg backups.
 - **Open source** – free to use, modify, improve and audit.
@@ -41,3 +40,8 @@ See our website for [download links and install instructions](https://vorta.borg
 - Licensed under [GPLv3](LICENSE.txt). © 2018-2023 Manuel Riel and Vorta contributors
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
 - Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) and Material Design icons by Google (licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)). See the `src/vorta/assets/icons` folder for a copy of applicable licenses.
+
+## Additional Support
+The team's work is also supported by the below services:
+
+<a href="https://1password.com/"><img src="https://files.pf7.net/vorta/1Password_wordmark_blue_2023.png" align="left" height="40"></a> <a href="https://termius.com/"><img src="https://files.pf7.net/vorta/termius-logo-362-black.png" align="left" height="40"></a>
