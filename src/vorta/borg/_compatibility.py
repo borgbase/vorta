@@ -29,3 +29,7 @@ class BorgCompatibility:
 
     def check(self, feature_name):
         return Version(self.version) >= MIN_BORG_FOR_FEATURE[feature_name]
+
+    def get_version(self):
+        """Returns the version and path of the Borg binary."""
+        return self.version, self.path
