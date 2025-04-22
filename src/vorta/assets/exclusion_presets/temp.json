@@ -18,16 +18,16 @@
         "slug": "cache-files",
         "patterns": [
             "fm:*/.cache",
-            "fm:*/Caches"
-            "fm:*/.var/app/*/cache"
-            "fm:*/.var/app/*/Cache"
-            "fm:*/.var/app/*/Code Cache"
-            "fm:*/.var/app/*/DawnCache"
-            "fm:*/.var/app/*/GPUCache"
-            "fm:*/.var/app/*/CacheStorage"
-            "fm:*/.var/app/*/ScriptCache"
-            "fm:*/.var/app/*/.ld.so"
-            "fm:*/.var/app/*/tmp/*
+            "fm:*/Caches",
+            "fm:*/.var/app/*/cache",
+            "fm:*/.var/app/*/Cache",
+            "fm:*/.var/app/*/Code Cache",
+            "fm:*/.var/app/*/DawnCache",
+            "fm:*/.var/app/*/GPUCache",
+            "fm:*/.var/app/*/CacheStorage",
+            "fm:*/.var/app/*/ScriptCache",
+            "fm:*/.var/app/*/.ld.so",
+            "fm:*/.var/app/*/tmp/*"
         ],
         "tags": [
             "type:system","os:linux", "os:darwin"],
