@@ -240,7 +240,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
             cmd_tmp = self.cmd[:]
             for i, arg in enumerate(cmd_tmp):
                 if any(quotestr in arg for quotestr in quote_strings):
-                    cmd_tmp[i] = "'" + arg + "'"     # add quotes
+                    cmd_tmp[i] = "'" + arg + "'"  # add quotes
 
             logger.info('Running command: %s', ' '.join(cmd_tmp))
             del cmd_tmp
