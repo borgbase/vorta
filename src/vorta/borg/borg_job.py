@@ -235,15 +235,15 @@ class BorgJob(JobInterface, BackupProfileMixin):
             )
             log_entry.save()
 
-            # logs: put arguments with special strings in quotation marks
+            # logs: put cmd arguments with special strings in quotation marks
             quote_strings = [' ', '*', '?', 're:']
-            cmd_tmp = self.cmd[:]
-            for i, arg in enumerate(cmd_tmp):
+            cmd_args_to_log = self.cmd[:]
+            for i, arg in enumerate(cmd_args_to_log):
                 if any(quotestr in arg for quotestr in quote_strings):
-                    cmd_tmp[i] = "'" + arg + "'"  # add quotes
+                    cmd_args_to_log[i] = "'" + arg + "'"  # add quotes
 
-            logger.info('Running command: %s', ' '.join(cmd_tmp))
-            del cmd_tmp
+            logger.info('Running command: %s', ' '.join(cmd_args_to_log))
+            del cmd_args_to_log
 
         p = Popen(
             self.cmd,
