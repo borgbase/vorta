@@ -1,3 +1,5 @@
+from vorta import config
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat
 
@@ -12,7 +14,17 @@ class BorgInfoArchiveJob(BorgJob):
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}")
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgInfoArchiveJob', 'Info command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}"
+            )
 
     @classmethod
     def prepare(cls, profile, archive_name):
