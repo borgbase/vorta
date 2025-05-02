@@ -1,6 +1,7 @@
 import os
 import uuid
 from typing import Any, Dict
+from unittest.mock import MagicMock
 
 import pytest
 from PyQt6 import QtCore
@@ -308,3 +309,51 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         mock_icon.assert_called_with(response["icon"])
         assert response["error"] in mock_text.call_args[0][0]
         assert response["info"] in mock_info.call_args[0][0]
+
+
+def test_repo_change_passphrase_action(qapp, qtbot, mocker):
+    """Test that the ChangeBorgPassphraseWindow is opened and the signal is connected."""
+    main = qapp.main_window
+    tab = main.repoTab
+
+    mock_window = mocker.patch('vorta.views.repo_tab.ChangeBorgPassphraseWindow')
+    mock_instance = mock_window.return_value
+    mock_instance.change_borg_passphrase = MagicMock()
+
+    tab.repo_change_passphrase_action()
+
+    mock_window.assert_called_once_with(tab.profile())
+    mock_instance.setParent.assert_called_once_with(tab, QtCore.Qt.WindowType.Sheet)
+    mock_instance.open.assert_called_once()
+
+    mock_instance.change_borg_passphrase.connect.assert_called_once_with(tab._handle_passphrase_change_result)
+
+
+@pytest.mark.parametrize(
+    "result, expected_title, expected_text",
+    [
+        (
+            {"returncode": 0},
+            "Passphrase Changed",
+            "The borg passphrase was successfully changed.",
+        ),
+        (
+            {"returncode": 1},
+            "Passphrase Change Failed",
+            "Unable to change the repository passphrase. Please try again.",
+        ),
+    ],
+)
+def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_title, expected_text):
+    """Test the _handle_passphrase_change_result method for both success and failure cases."""
+    main = qapp.main_window
+    tab = main.repoTab
+
+    mock_msgbox = mocker.patch('vorta.views.repo_tab.QMessageBox', autospec=True)
+    mock_instance = mock_msgbox.return_value
+
+    tab._handle_passphrase_change_result(result)
+
+    mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
+    mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
+    mock_instance.show.assert_called_once()

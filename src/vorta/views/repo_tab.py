@@ -9,6 +9,7 @@ from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
+from .repo_change_passphrase import ChangeBorgPassphraseWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
 
@@ -41,7 +42,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.menuRepoUtil.addAction(self.tr("Unlink Repository…"), self.repo_unlink_action).setIcon(
             get_colored_icon("unlink")
         )
-        self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase).setIcon(
+        self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase_action).setIcon(
             get_colored_icon("key")
         )
 
@@ -340,5 +341,25 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         QApplication.clipboard().setMimeData(data)
 
-    def repo_change_passphrase(self):
-        pass
+    def repo_change_passphrase_action(self):
+        window = ChangeBorgPassphraseWindow(self.profile())
+        self._window = window  # For tests
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
+        window.open()
+
+    def _handle_passphrase_change_result(self, result):
+        """Handle the result of the passphrase change action."""
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        if result['returncode'] == 0:
+            msg.setWindowTitle(self.tr("Passphrase Changed"))
+            msg.setText(self.tr("The borg passphrase was successfully changed."))
+        else:
+            msg.setWindowTitle(self.tr("Passphrase Change Failed"))
+            msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
+
+        msg.show()
