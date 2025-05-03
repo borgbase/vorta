@@ -342,7 +342,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         QApplication.clipboard().setMimeData(data)
 
     def repo_change_passphrase_action(self):
-        if self.profile().repo.encryption.startswith('repokey'):
+        if not self.profile().repo.encryption.startswith('repokey'):
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.setParent(self, QtCore.Qt.WindowType.Sheet)
