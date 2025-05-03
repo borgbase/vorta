@@ -311,22 +311,23 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         assert response["info"] in mock_info.call_args[0][0]
 
 
-def test_repo_change_passphrase_action(qapp, qtbot, mocker):
+def test_repo_change_passphrase_action(qapp, mocker):
     """Test that the ChangeBorgPassphraseWindow is opened and the signal is connected."""
-    main = qapp.main_window
-    tab = main.repoTab
+    tab = qapp.main_window.repoTab
 
-    mock_window = mocker.patch('vorta.views.repo_tab.ChangeBorgPassphraseWindow')
-    mock_instance = mock_window.return_value
-    mock_instance.change_borg_passphrase = MagicMock()
+    mock_profile = MagicMock()
+    mock_profile.repo.encryption = 'repokey-blake2'
+    tab.profile = MagicMock(return_value=mock_profile)
+
+    mock_window_cls = mocker.patch('vorta.views.repo_tab.ChangeBorgPassphraseWindow')
+    mock_window = mock_window_cls.return_value
 
     tab.repo_change_passphrase_action()
 
-    mock_window.assert_called_once_with(tab.profile())
-    mock_instance.setParent.assert_called_once_with(tab, QtCore.Qt.WindowType.Sheet)
-    mock_instance.open.assert_called_once()
-
-    mock_instance.change_borg_passphrase.connect.assert_called_once_with(tab._handle_passphrase_change_result)
+    mock_window_cls.assert_called_once_with(mock_profile)
+    mock_window.setParent.assert_called_once_with(tab, QtCore.Qt.WindowType.Sheet)
+    mock_window.open.assert_called_once()
+    mock_window.change_borg_passphrase.connect.assert_called_once_with(tab._handle_passphrase_change_result)
 
 
 @pytest.mark.parametrize(
