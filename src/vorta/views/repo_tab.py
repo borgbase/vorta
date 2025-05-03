@@ -342,8 +342,17 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         QApplication.clipboard().setMimeData(data)
 
     def repo_change_passphrase_action(self):
+        if self.profile().repo.encryption.startswith('repokey'):
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("Invalid Encryption Type"))
+            msg.setText(self.tr("Unable to change the repository passphrase. Encryption type must be repokey."))
+            msg.show()
+            return
+
         window = ChangeBorgPassphraseWindow(self.profile())
-        self._window = window  # For tests
+        self._window = window
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         window.change_borg_passphrase.connect(self._handle_passphrase_change_result)

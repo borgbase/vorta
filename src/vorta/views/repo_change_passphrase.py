@@ -57,4 +57,4 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
             self.change_borg_passphrase.emit(result)
             self.accept()
         else:
-            self._set_status(self.tr('Unable to change Borg passphrase.'))
+            self._set_status(self.tr('Unable to change the borg passphrase.'))
