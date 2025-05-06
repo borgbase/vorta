@@ -14,6 +14,8 @@ from vorta.store.models import (
 )
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 
+from PyQt6.QtCore import QCoreApplication
+
 from .borg_job import BorgJob
 
 
@@ -77,7 +79,12 @@ class BorgCreateJob(BorgJob):
                 'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode),
             }
-            proc = subprocess.run(cmd, shell=True, env=env)
+            proc = subprocess.Popen(cmd, shell=True, env=env)
+
+            while proc.poll() is None:
+                # Preventing GUI freezing while running pre-backup command
+                QCoreApplication.processEvents()
+
             return proc.returncode
         else:
             return 0  # 0 if no command was run.
