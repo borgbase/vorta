@@ -279,7 +279,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
             if stderr:
                 for line in stderr.split('\n'):
                     try:
-                        parsed = json.loads(line)
+                        parsed: dict = json.loads(line)
 
                         if parsed['type'] == 'log_message':
                             context = {
@@ -296,7 +296,8 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
                             if level_int >= logging.WARNING:
                                 # Append log to list of error messages
-                                error_messages.append((level_int, parsed["message"]))
+                                parsed['level'] = level_int
+                                error_messages.append(parsed)
 
                         elif parsed['type'] == 'file_status':
                             self.app.backup_log_event.emit(
