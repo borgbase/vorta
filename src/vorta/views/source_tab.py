@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
 )
 
+from vorta.filedialog import VortaFileSelector
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
 from vorta.utils import (
     FilePathInfoAsync,
@@ -89,18 +90,20 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.setAlternatingRowColors(True)
 
         # Prepare add button
-        self.addMenu = QMenu(self.addButton)
-        self.addFilesAction = self.addMenu.addAction(self.tr("Files"), lambda: self.source_add(want_folder=False))
-        self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"), lambda: self.source_add(want_folder=True))
-        self.pasteAction = self.addMenu.addAction(self.tr("Paste"), self.paste_text)
+        # NOTE: Replaced with QPushButton
+        # self.addMenu = QMenu(self.addButton)
+        # self.addFilesAction = self.addMenu.addAction(self.tr("Files"), lambda: self.source_add(want_folder=False))
+        # self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"), lambda: self.source_add(want_folder=True))
+        # # self.pasteAction = self.addMenu.addAction(self.tr("Paste"), self.paste_text)
 
-        self.addButton.setMenu(self.addMenu)
+        # self.addButton.setMenu(self.addMenu)
 
         # shortcuts
         shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
 
         # Connect signals
+        self.addButton.clicked.connect(self.show_source_dialog)
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
         self.bExclude.clicked.connect(self.show_exclude_dialog)
@@ -119,9 +122,9 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
-        self.addFilesAction.setIcon(get_colored_icon('file'))
-        self.addFoldersAction.setIcon(get_colored_icon('folder'))
-        self.pasteAction.setIcon(get_colored_icon('paste'))
+        # self.addFilesAction.setIcon(get_colored_icon('file'))
+        # self.addFoldersAction.setIcon(get_colored_icon('folder'))
+        # self.pasteAction.setIcon(get_colored_icon('paste'))
 
         for row in range(self.sourceFilesWidget.rowCount()):
             path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
@@ -291,6 +294,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         def receive():
             dirs = dialog.selectedFiles()
             for dir in dirs:
+                # TODO: Add this permission check in the new file dialog
                 if not os.access(dir, os.R_OK):
                     msg = QMessageBox()
                     msg.setText(self.tr(f"You don't have read access to {dir}."))
@@ -350,23 +354,32 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self._window = window  # for testing
         window.show()
 
-    def paste_text(self):
-        sources = QApplication.clipboard().text().splitlines()
-        invalidSources = ""
-        for source in sources:
-            if len(source) > 0:  # Ignore empty newlines
-                if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
-                    source = source[7:]
-                if not os.path.exists(source):
-                    invalidSources = invalidSources + "\n" + source
-                else:
-                    new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
-                    if created:
-                        self.add_source_to_table(new_source)
-                        new_source.save()
+    def show_source_dialog(self):
+        print("Opening Vorta File Dialog...")
+        paths = VortaFileSelector.get_paths(self, 'Select files and folders to include as sources:')
+        if paths:
+            print("Selected paths:")
+            for path in paths:
+                print(path)
 
-        if len(invalidSources) != 0:  # Check if any invalid paths
-            msg = QMessageBox()
-            msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
-            self._msg = msg  # for testing
-            msg.exec()
+    # NOTE: Comment out this function, maybe add it in the future if needed
+    # def paste_text(self):
+    #     sources = QApplication.clipboard().text().splitlines()
+    #     invalidSources = ""
+    #     for source in sources:
+    #         if len(source) > 0:  # Ignore empty newlines
+    #             if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
+    #                 source = source[7:]
+    #             if not os.path.exists(source):
+    #                 invalidSources = invalidSources + "\n" + source
+    #             else:
+    #                 new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
+    #                 if created:
+    #                     self.add_source_to_table(new_source)
+    #                     new_source.save()
+
+    #     if len(invalidSources) != 0:  # Check if any invalid paths
+    #         msg = QMessageBox()
+    #         msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
+    #         self._msg = msg  # for testing
+    #         msg.exec()
