@@ -29,15 +29,20 @@ class VortaFileDialog(QDialog):
         # Home button
         self.btnHome = QPushButton()
         self.btnHome.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        path_layout.addWidget(self.btnHome)
         self.btnHome.setIcon(get_colored_icon('home'))
-
+        # Up button
+        self.btnUp = QPushButton()
+        self.btnUp.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.btnUp.setIcon(get_colored_icon('folder-on-top'))
         # Path bar
         self.path_bar = QLineEdit()
-        path_layout.addWidget(self.path_bar)
         self.path_bar.setText(QDir.homePath())
         self.path_bar.textChanged.connect(self.path_changed)
 
+        # Path bar layout
+        path_layout.addWidget(self.btnHome)
+        path_layout.addWidget(self.path_bar)
+        path_layout.addWidget(self.btnUp)
         layout.addLayout(path_layout)
 
         self.label = QLabel(self.tr(title))
@@ -68,7 +73,9 @@ class VortaFileDialog(QDialog):
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
 
-        self.btnHome.clicked.connect(self.goto_home)
+        # Button connections
+        self.btnHome.clicked.connect(self.go_home)
+        self.btnUp.clicked.connect(self.go_up)
 
     def selected_paths(self):
         indexes = self.tree.selectionModel().selectedIndexes()
@@ -77,8 +84,7 @@ class VortaFileDialog(QDialog):
             if index.column() == 0:
                 path = self.model.filePath(index)
                 paths.append(path)
-        # Remove duplicate paths
-        return list(set(paths))
+        return list(set(paths))  # remove duplicates
 
     def path_changed(self):
         path = self.path_bar.text()
@@ -89,8 +95,18 @@ class VortaFileDialog(QDialog):
         else:
             self.path_bar.setStyleSheet("background-color: #ffcccc")
 
-    def goto_home(self):
+    def go_home(self):
         self.path_bar.setText(QDir.homePath())
+
+    def go_up(self):
+        current_path = self.path_bar.text()
+        parent_path = os.path.dirname(current_path.rstrip(os.sep))
+
+        # Prevent going above the root directory
+        if not parent_path or not os.path.exists(parent_path):
+            return
+
+        self.path_bar.setText(parent_path)
 
 
 class VortaFileSelector:
