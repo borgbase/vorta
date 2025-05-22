@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QSizePolicy,
     QTreeView,
@@ -83,6 +84,14 @@ class VortaFileDialog(QDialog):
         for index in indexes:
             if index.column() == 0:
                 path = self.model.filePath(index)
+                # Check for read access
+                if not os.access(path, os.R_OK):
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Icon.Warning)
+                    msg.setWindowTitle(self.tr("Permission Denied"))
+                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.exec()
+                    return
                 paths.append(path)
         return list(set(paths))  # remove duplicates
 

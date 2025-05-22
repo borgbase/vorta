@@ -361,6 +361,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
             print("Selected paths:")
             for path in paths:
                 print(path)
+                new_source, created = SourceFileModel.get_or_create(dir=path, profile=self.profile())
+                if created:
+                    self.add_source_to_table(new_source)
+                    new_source.save()
 
     # NOTE: Comment out this function, maybe add it in the future if needed
     # def paste_text(self):
