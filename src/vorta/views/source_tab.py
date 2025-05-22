@@ -89,16 +89,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.customContextMenuRequested.connect(self.sourceitem_contextmenu)
         self.sourceFilesWidget.setAlternatingRowColors(True)
 
-        # Prepare add button
-        # NOTE: Replaced with QPushButton
-        # self.addMenu = QMenu(self.addButton)
-        # self.addFilesAction = self.addMenu.addAction(self.tr("Files"), lambda: self.source_add(want_folder=False))
-        # self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"), lambda: self.source_add(want_folder=True))
-        # # self.pasteAction = self.addMenu.addAction(self.tr("Paste"), self.paste_text)
-
-        # self.addButton.setMenu(self.addMenu)
-
-        # shortcuts
+        # Shortcuts
         shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
 
@@ -122,9 +113,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
-        # self.addFilesAction.setIcon(get_colored_icon('file'))
-        # self.addFoldersAction.setIcon(get_colored_icon('folder'))
-        # self.pasteAction.setIcon(get_colored_icon('paste'))
 
         for row in range(self.sourceFilesWidget.rowCount()):
             path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
@@ -366,7 +354,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                     self.add_source_to_table(new_source)
                     new_source.save()
 
-    # NOTE: Comment out this function, maybe add it in the future if needed
+    # NOTE: This function is temporarily disabled.
+    # Reason: This paste option has been removed as part of the addition of new File Dialog.
+    # This function is no longer used. Kept here for reference or possible future use.
+
     # def paste_text(self):
     #     sources = QApplication.clipboard().text().splitlines()
     #     invalidSources = ""
