@@ -94,7 +94,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         shortcut_copy.activated.connect(self.source_copy)
 
         # Connect signals
-        self.addButton.clicked.connect(self.show_source_dialog)
+        self.addButton.clicked.connect(self.source_add)
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
         self.bExclude.clicked.connect(self.show_exclude_dialog)
@@ -278,25 +278,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for row in range(0, row_count):
             self.update_path_info(row)  # Update data for each entry
 
-    def source_add(self, want_folder):
-        def receive():
-            dirs = dialog.selectedFiles()
-            for dir in dirs:
-                # TODO: Add this permission check in the new file dialog
-                if not os.access(dir, os.R_OK):
-                    msg = QMessageBox()
-                    msg.setText(self.tr(f"You don't have read access to {dir}."))
-                    msg.exec()
-                    return
-
-                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
+    def source_add(self):
+        # Selected paths from file dialog
+        paths = VortaFileSelector.get_paths(self, 'Select files and folders to include as sources:')
+        if paths:
+            for path in paths:
+                # Add sources to the table
+                new_source, created = SourceFileModel.get_or_create(dir=path, profile=self.profile())
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
-
-        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
-        dialog = choose_file_dialog(self, msg, want_folder=want_folder)
-        dialog.open(receive)
 
     def source_copy(self, index=None):
         """
@@ -342,19 +333,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self._window = window  # for testing
         window.show()
 
-    def show_source_dialog(self):
-        print("Opening Vorta File Dialog...")
-        paths = VortaFileSelector.get_paths(self, 'Select files and folders to include as sources:')
-        if paths:
-            print("Selected paths:")
-            for path in paths:
-                print(path)
-                new_source, created = SourceFileModel.get_or_create(dir=path, profile=self.profile())
-                if created:
-                    self.add_source_to_table(new_source)
-                    new_source.save()
-
-    # NOTE: This function is temporarily disabled.
+    # NOTE: This function is temporarily removed.
     # Reason: This paste option has been removed as part of the addition of new File Dialog.
     # This function is no longer used. Kept here for reference or possible future use.
 

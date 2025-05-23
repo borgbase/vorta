@@ -91,7 +91,7 @@ class VortaFileDialog(QDialog):
                     msg.setWindowTitle(self.tr("Permission Denied"))
                     msg.setText(self.tr(f"You don't have read access to {path}."))
                     msg.exec()
-                    return
+                    return []
                 paths.append(path)
         return list(set(paths))  # remove duplicates
 
