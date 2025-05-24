@@ -3,6 +3,7 @@ import os
 from PyQt6.QtCore import QDir
 from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QDialog,
     QDialogButtonBox,
     QHBoxLayout,
@@ -26,7 +27,11 @@ class VortaFileDialog(QDialog):
 
         layout = QVBoxLayout(self)
         path_layout = QHBoxLayout()
+        bottom_layout = QHBoxLayout()
 
+        # Show hidden files checkbox
+        self.showHidden = QCheckBox(self.tr('Show hidden files'))
+        self.showHidden.stateChanged.connect(self.show_hidden_files)
         # Home button
         self.btnHome = QPushButton()
         self.btnHome.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -72,9 +77,12 @@ class VortaFileDialog(QDialog):
         buttons.button(QDialogButtonBox.StandardButton.Ok).setText("Add")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
-        layout.addWidget(buttons)
 
-        # Button connections
+        bottom_layout.addWidget(self.showHidden)
+        bottom_layout.addWidget(buttons)
+        layout.addLayout(bottom_layout)
+
+        # Connections
         self.btnHome.clicked.connect(self.go_home)
         self.btnUp.clicked.connect(self.go_up)
 
@@ -116,6 +124,12 @@ class VortaFileDialog(QDialog):
             return
 
         self.path_bar.setText(parent_path)
+
+    def show_hidden_files(self, state):
+        if state:
+            self.model.setFilter(QDir.Filter.AllEntries | QDir.Filter.NoDotAndDotDot | QDir.Filter.Hidden)
+        else:
+            self.model.setFilter(QDir.Filter.AllEntries | QDir.Filter.NoDotAndDotDot)
 
 
 class VortaFileSelector:
