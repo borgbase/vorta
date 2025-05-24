@@ -1,6 +1,6 @@
 import os
 
-from PyQt6.QtCore import QDir
+from PyQt6.QtCore import QDir, Qt
 from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtWidgets import (
     QCheckBox,
@@ -22,6 +22,9 @@ from vorta.views.utils import get_colored_icon
 class VortaFileDialog(QDialog):
     def __init__(self, parent=None, window_title='Vorta File Dialog', title='Select files and folders:'):
         super().__init__(parent)
+        if parent:
+            self.setParent(parent, Qt.WindowType.Sheet)
+
         self.setWindowTitle(self.tr(window_title))
         self.resize(600, 400)
 
