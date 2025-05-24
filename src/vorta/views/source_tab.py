@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import PurePath
 
 from PyQt6 import QtCore, QtGui, uic
@@ -9,7 +8,6 @@ from PyQt6.QtWidgets import (
     QApplication,
     QHeaderView,
     QMenu,
-    QMessageBox,
     QTableWidgetItem,
 )
 
@@ -17,7 +15,6 @@ from vorta.filedialog import VortaFileSelector
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
 from vorta.utils import (
     FilePathInfoAsync,
-    choose_file_dialog,
     get_asset,
     pretty_bytes,
     sort_sizes,
@@ -280,7 +277,10 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
     def source_add(self):
         # Selected paths from file dialog
-        paths = VortaFileSelector.get_paths(self, 'Select files and folders to include as sources:')
+        file_dialog = VortaFileSelector(
+            self, window_title='Add Files and Folders', title='Select files and folders to include as sources:'
+        )
+        paths = file_dialog.get_paths()
         if paths:
             for path in paths:
                 # Add sources to the table

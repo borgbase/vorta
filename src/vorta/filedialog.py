@@ -20,9 +20,9 @@ from vorta.views.utils import get_colored_icon
 
 
 class VortaFileDialog(QDialog):
-    def __init__(self, parent=None, title='Select files and folders:'):
+    def __init__(self, parent=None, window_title='Vorta File Dialog', title='Select files and folders:'):
         super().__init__(parent)
-        self.setWindowTitle(self.tr('Add Files and Folders'))
+        self.setWindowTitle(self.tr(window_title))
         self.resize(600, 400)
 
         layout = QVBoxLayout(self)
@@ -133,9 +133,13 @@ class VortaFileDialog(QDialog):
 
 
 class VortaFileSelector:
-    @staticmethod
-    def get_paths(parent=None, title='Select files and folders:'):
-        dialog = VortaFileDialog(parent, title)
+    def __init__(self, parent=None, window_title='Vorta File Dialog', title='Select files and folders:'):
+        self.parent = parent
+        self.title = title
+        self.window_title = window_title
+
+    def get_paths(self):
+        dialog = VortaFileDialog(self.parent, self.window_title, self.title)
         if dialog.exec():
             return dialog.selected_paths()
         return []

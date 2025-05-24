@@ -16,7 +16,7 @@ def file_dialog(qapp):
 
 def test_dialog_initial_state(file_dialog):
     """Verify the dialog initializes with correct defaults."""
-    assert file_dialog.windowTitle() == "Add Files and Folders"
+    assert file_dialog.windowTitle() == "Vorta File Dialog"
     assert file_dialog.path_bar.text() == QDir.homePath()
     assert file_dialog.tree.model() == file_dialog.model
     assert file_dialog.tree.rootIndex() == file_dialog.model.index(QDir.homePath())
@@ -81,21 +81,23 @@ def test_path_changed_invalid(file_dialog, qtbot):
 
 
 def test_file_selector_get_paths(mocker):
-    """Test the static selector method with successful selection."""
+    """Test the instance selector method with successful selection."""
     mock_dialog = mocker.patch('vorta.filedialog.VortaFileDialog')
     mock_instance = mock_dialog.return_value
     mock_instance.exec.return_value = True
     mock_instance.selected_paths.return_value = ["/test/path"]
 
-    paths = VortaFileSelector.get_paths()
+    selector = VortaFileSelector()
+    paths = selector.get_paths()
     assert paths == ["/test/path"]
 
 
 def test_file_selector_cancel(mocker):
-    """Test the static selector method when cancelled."""
+    """Test the instance selector method when cancelled."""
     mock_dialog = mocker.patch('vorta.filedialog.VortaFileDialog')
     mock_instance = mock_dialog.return_value
     mock_instance.exec.return_value = False
 
-    paths = VortaFileSelector.get_paths()
+    selector = VortaFileSelector()
+    paths = selector.get_paths()
     assert paths == []
