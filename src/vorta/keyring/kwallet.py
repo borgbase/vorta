@@ -61,6 +61,12 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     def try_unlock(self):
         wallet_name = self.get_result("networkWallet")
+        if not wallet_name or not isinstance(wallet_name, str) or wallet_name.strip() == "":
+            logger.error(
+                "KWallet: Could not determine a valid wallet name from 'networkWallet'. Aborting unlock attempt."
+            )
+            self.handle = -2
+            return
         wId = QVariant(0)
         wId.convert(QMetaType(QMetaType.Type.LongLong.value))
         output = self.get_result("open", args=[wallet_name, wId, 'vorta-repo'])
