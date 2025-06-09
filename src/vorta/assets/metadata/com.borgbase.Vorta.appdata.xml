@@ -4,7 +4,7 @@
   <id>com.borgbase.Vorta</id>
   <name>Vorta</name>
   <summary>Backup client</summary>
-  <developer>
+  <developer id="com.borgbase">
     <name>Vorta contributors</name>
   </developer>
   <metadata_license>CC0-1.0</metadata_license>
