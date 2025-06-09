@@ -1,24 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <component type="desktop-application">
+  <!--Created with jdAppStreamEdit 9.2-->
   <id>com.borgbase.Vorta</id>
-  <launchable type="desktop-id">com.borgbase.Vorta.desktop</launchable>
-  <developer_name>Vorta contributors</developer_name>
   <name>Vorta</name>
-  <project_license>GPL-3.0</project_license>
-  <metadata_license>CC0-1.0</metadata_license>
-  <content_rating type="oars-1.1">
-    <content_attribute id="money-purchasing">mild</content_attribute>
-  </content_rating>
   <summary>Backup client</summary>
+  <developer>
+    <name>Vorta contributors</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
   <description>
-    <p>
-      Vorta is a backup client for macOS and Linux desktops.
+    <p>Vorta is a backup client for macOS and Linux desktops.
       It integrates the mighty BorgBackup with your desktop environment
-      to protect your data from disk failure, ransomware and theft.
-    </p>
-    <p>
-      Why is this great?
-    </p>
+      to protect your data from disk failure, ransomware and theft.</p>
+    <p>Why is this great?</p>
     <ul>
       <li>Encrypted, deduplicated and compressed backups using Borg as backend.</li>
       <li>No vendor lock-in – back up to local drives, your own server or BorgBase, a hosting service for Borg backups.</li>
@@ -29,27 +24,35 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image height="637" width="800">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-1-Repository.png</image>
+      <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-1-Repository.png</image>
     </screenshot>
     <screenshot type="default">
-      <image height="637" width="800">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-2-Sources.png</image>
+      <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-2-Sources.png</image>
     </screenshot>
     <screenshot type="default">
-      <image height="637" width="800">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-3-Schedule.png</image>
+      <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-3-Schedule.png</image>
     </screenshot>
     <screenshot type="default">
-      <image height="637" width="800">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-4-Archives.png</image>
+      <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-4-Archives.png</image>
     </screenshot>
   </screenshots>
   <releases>
-    <release version="v0.10.3" date="2024-12-23" urgency="low">
+    <release version="v0.10.3" date="2024-12-23" type="stable" urgency="low">
       <description>
         See Github for detailed release notes: github.com/borgbase/vorta/releases
       </description>
     </release>
   </releases>
-  <url type="bugtracker">https://github.com/borgbase/vorta/issues</url>
-  <url type="help">https://vorta.borgbase.com/usage/</url>
   <url type="homepage">https://vorta.borgbase.com/</url>
+  <url type="bugtracker">https://github.com/borgbase/vorta/issues</url>
+  <url type="faq">https://vorta.borgbase.com/faq/</url>
+  <url type="help">https://vorta.borgbase.com/usage/</url>
+  <url type="donation">https://www.borgbackup.org/support/fund.html</url>
   <url type="translate">https://www.transifex.com/borgbase/vorta/</url>
+  <url type="vcs-browser">https://github.com/borgbase/vorta</url>
+  <url type="contribute">https://vorta.borgbase.com/contributing/</url>
+  <content_rating type="oars-1.1">
+    <content_attribute id="money-purchasing">mild</content_attribute>
+  </content_rating>
+  <launchable type="desktop-id">com.borgbase.Vorta.desktop</launchable>
 </component>
