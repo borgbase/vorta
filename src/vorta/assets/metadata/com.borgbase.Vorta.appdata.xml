@@ -48,7 +48,7 @@
   <url type="faq">https://vorta.borgbase.com/faq/</url>
   <url type="help">https://vorta.borgbase.com/usage/</url>
   <url type="donation">https://www.borgbackup.org/support/fund.html</url>
-  <url type="translate">https://www.transifex.com/borgbase/vorta/</url>
+  <url type="translate">https://explore.transifex.com/borgbase/vorta/</url>
   <url type="vcs-browser">https://github.com/borgbase/vorta</url>
   <url type="contribute">https://vorta.borgbase.com/contributing/</url>
   <content_rating type="oars-1.1">
