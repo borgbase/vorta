@@ -77,7 +77,7 @@ class BorgCreateJob(BorgJob):
                 'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode),
             }
-            proc = subprocess.run(cmd, shell=True, env=env)
+            proc = subprocess.run([cmd], env=env) if os.path.isfile(cmd) else subprocess.run(cmd, shell=True, env=env)
             return proc.returncode
         else:
             return 0  # 0 if no command was run.
