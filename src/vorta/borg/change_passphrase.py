@@ -69,6 +69,8 @@ class BorgChangePassJob(BorgJob):
             # Change passphrase in keyring
             repo = RepoModel.get(url=result['params']['repo_url'])
             if repo.encryption != 'none':
+                # Delete old passphrase before setting new one (required for macOS)
+                self.keyring.delete_password('vorta-repo', repo.url)
                 self.keyring.set_password(
                     'vorta-repo',
                     repo.url,
