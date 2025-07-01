@@ -2,6 +2,7 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QLabel
 
 from vorta.borg.change_passphrase import BorgChangePassJob
+from vorta.keyring.abc import VortaKeyring
 from vorta.utils import get_asset
 from vorta.views.partials.password_input import PasswordInput
 
@@ -54,6 +55,11 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
     def run_result(self, result):
         self.saveButton.setEnabled(True)
         if result['returncode'] == 0:
+            repo_url = self.profile.repo.url if self.profile.repo else None
+            if repo_url:
+                # Update the keyring with the new passphrase
+                new_pass = self.passwordInput.passwordLineEdit.text()
+                VortaKeyring.get_keyring().set_password('vorta-repo', repo_url, new_pass)
             self.change_borg_passphrase.emit(result)
             self.accept()
         else:
