@@ -345,6 +345,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         if not self.profile().repo.encryption.startswith('repokey'):
             msg = QMessageBox()
             msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
             msg.setParent(self, QtCore.Qt.WindowType.Sheet)
             msg.setWindowTitle(self.tr("Invalid Encryption Type"))
             msg.setText(self.tr("Unable to change the repository passphrase. Encryption type must be repokey."))
@@ -365,9 +366,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         if result['returncode'] == 0:
+            msg.setIcon(QMessageBox.Icon.Information)
             msg.setWindowTitle(self.tr("Passphrase Changed"))
             msg.setText(self.tr("The borg passphrase was successfully changed."))
         else:
+            msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle(self.tr("Passphrase Change Failed"))
             msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
 
