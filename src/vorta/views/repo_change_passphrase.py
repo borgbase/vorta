@@ -25,8 +25,8 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
 
         self.passwordInput = PasswordInput()
 
+        self.repoDataFormLayout.addRow("", self.title)  # Add title inside the form
         self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
-        self.repoDataFormLayout.insertRow(0, "", self.title)  # Add title inside the form
 
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Update"))
