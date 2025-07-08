@@ -46,6 +46,22 @@ class VortaSecretStorageKeyring(VortaKeyring):
             )
             logger.debug(f"Saved password for repo {repo_url}")
 
+    def delete_password(self, service, repo_url):
+        if self.is_unlocked:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            attributes = {
+                'application': 'Vorta',
+                'service': service,
+                'repo_url': repo_url,
+            }
+            items = list(self.collection.search_items(attributes))
+            for item in items:
+                try:
+                    item.delete()
+                    logger.debug(f"Deleted password for repo {repo_url}")
+                except Exception as e:
+                    logger.debug(f"Failed to delete password for repo {repo_url}: {e}")
+
     def get_password(self, service, repo_url):
         """
         Retrieve a password from the underlying store. Return None if not found.
