@@ -72,6 +72,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
+        self.is_editing = False  # track if the cell edit was completed or canceled
         self.mount_points = {}  # mapping of archive name to mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
@@ -111,10 +112,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
-        self.archiveTable.cellChanged.connect(self.cell_changed)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
+        edit_delegate = self.archiveTable.itemDelegate()
+        edit_delegate.closeEditor.connect(self.on_editing_finished)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.archiveTable)
@@ -827,12 +829,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if column == 4:
             item = self.archiveTable.item(row, column)
             self.renamed_archive_original_name = item.text()
+            self.is_editing = True
             item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
             self.archiveTable.editItem(item)
 
+    def on_editing_finished(self, editor, hint):
+        """Called when the user finishes editing a cell (By pressing Enter or clicking away)."""
+        if not self.is_editing:
+            return
+
+        row = self.archiveTable.currentRow()
+        column = self.archiveTable.currentColumn()
+
+        self.cell_changed(row, column)
+
     def cell_changed(self, row, column):
         # return if this is not a name change
-        if column != 4:
+        if column != 4 or not self.is_editing:
             return
 
         item = self.archiveTable.item(row, column)
@@ -840,29 +853,38 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
 
         # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
-        if new_name == self.renamed_archive_original_name or not self.renamed_archive_original_name:
+        if new_name == self.renamed_archive_original_name:
+            self.is_editing = False
             return
 
+        # if new name is blank, revert to the original name
         if not new_name:
             item.setText(self.renamed_archive_original_name)
             self._set_status(self.tr('Archive name cannot be blank.'))
+            self.is_editing = False
             return
 
+        # check if the new name already exists
         new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
         if new_name_exists is not None:
             self._set_status(self.tr('An archive with this name already exists.'))
             item.setText(self.renamed_archive_original_name)
+            self.is_editing = False
             return
 
         params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)
         if not params['ok']:
             self._set_status(params['message'])
+            self.is_editing = False
+            return
 
+        self._set_status(self.tr('Renaming archive...'))
         job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
         job.result.connect(self.rename_result)
         self._toggle_all_buttons(False)
         self.app.jobs_manager.add_job(job)
+        self.is_editing = False
 
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
