@@ -53,6 +53,13 @@
           </spacer>
          </item>
          <item>
+          <widget class="QToolButton" name="bOpenExcludeFD">
+           <property name="text">
+            <string>Exclude Files/Folders</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="bAddPattern"/>
          </item>
          <item>
