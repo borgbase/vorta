@@ -55,6 +55,12 @@ class VortaKeyring:
         """
         raise NotImplementedError
 
+    def delete_password(self, service, repo_url):
+        """
+        Delete a password from the underlying store. No error if not found.
+        """
+        raise NotImplementedError
+
     @property
     def is_system(self):
         """
