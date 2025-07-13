@@ -25,6 +25,16 @@ class VortaDBKeyring(VortaKeyring):
 
         logger.debug(f"Saved password for repo {repo_url}")
 
+    def delete_password(self, service, repo_url):
+        from vorta.store.models import RepoPassword
+
+        try:
+            keyring_entry = RepoPassword.get(url=repo_url)
+            keyring_entry.delete_instance()
+            logger.debug(f"Deleted password for repo {repo_url}")
+        except peewee.DoesNotExist:
+            logger.debug(f"No password to delete for repo {repo_url}")
+
     def get_password(self, service, repo_url):
         from vorta.store.models import RepoPassword
 
