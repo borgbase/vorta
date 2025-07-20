@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import List
+
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QCursor, QStandardItem, QStandardItemModel
@@ -444,12 +447,38 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             return True
         return QObject.eventFilter(self, source, event)
 
+    def make_exclude_pattern_from_path(self, paths: List[str]):
+        '''
+        Create an exclusion pattern from a list of given paths.
+        '''
+        patterns = []
+        for path in paths:
+            if Path(path).is_file():
+                pattern = "fm:*" + path
+                patterns.append(pattern)
+            else:  # folder
+                pattern = "fm:*" + path + "/*"
+                patterns.append(pattern)
+        return patterns
+
     def open_exclude_filedialog(self):
         file_dialog = VortaFileSelector(
             self, window_title='Exclude Files and Folders', title='Select files and folders to exclude:'
         )
         paths = file_dialog.get_paths()  # Selected paths from file dialog
         if paths:
-            for path in paths:
-                # Add items to the list
-                print(path)
+            patterns = self.make_exclude_pattern_from_path(paths)
+            for pattern in patterns:
+                # Check if the path already exists in the model
+                if not ExclusionModel.get_or_none(name=pattern, profile=self.profile):
+                    # Create a new item in the list
+                    item = QStandardItem(pattern)
+                    item.setCheckable(True)
+                    item.setCheckState(Qt.CheckState.Checked)
+                    self.customExclusionsModel.appendRow(item)
+
+                    # Add the item to database
+                    ExclusionModel.create(
+                        name=pattern, source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
+                    )
+            self.populate_preview_tab()
