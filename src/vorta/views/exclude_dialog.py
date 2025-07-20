@@ -1,14 +1,9 @@
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QCursor, QStandardItem, QStandardItemModel
-from PyQt6.QtWidgets import (
-    QAbstractItemView,
-    QApplication,
-    QMenu,
-    QMessageBox,
-    QStyledItemDelegate,
-)
+from PyQt6.QtWidgets import QAbstractItemView, QApplication, QMenu, QMessageBox, QStyledItemDelegate
 
+from vorta.filedialog import VortaFileSelector
 from vorta.i18n import translate
 from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
@@ -87,6 +82,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.bPreviewCopy.setIcon(get_colored_icon('copy'))
         self.bAddPattern.clicked.connect(self.add_pattern_custom_exclusion)
         self.bAddPattern.setIcon(get_colored_icon('plus'))
+        self.bOpenExcludeFD.clicked.connect(self.open_exclude_filedialog)
         self.bAddPatternExcludeIfPresent.setIcon(get_colored_icon('plus'))
         self.bAddPatternExcludeIfPresent.clicked.connect(self.add_pattern_exclude_if_present)
         self.bRemovePatternExcludeIfPresent.setIcon(get_colored_icon('minus'))
@@ -447,3 +443,13 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             self.remove_pattern()
             return True
         return QObject.eventFilter(self, source, event)
+
+    def open_exclude_filedialog(self):
+        file_dialog = VortaFileSelector(
+            self, window_title='Exclude Files and Folders', title='Select files and folders to exclude:'
+        )
+        paths = file_dialog.get_paths()  # Selected paths from file dialog
+        if paths:
+            for path in paths:
+                # Add items to the list
+                print(path)
