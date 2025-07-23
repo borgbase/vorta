@@ -447,18 +447,15 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             return True
         return QObject.eventFilter(self, source, event)
 
-    def make_exclude_pattern_from_path(self, paths: List[str]):
+    def make_exclude_pattern_from_path(self, paths: List[str]) -> List[str]:
         '''
-        Create an exclusion pattern from a list of given paths.
+        Create exclusion patterns from a list of given paths.
         '''
         patterns = []
+        # Both files and folders use the same pattern format (fm:*/name),
+        # confirmed through testing to correctly exclude them during backup creation.
         for path in paths:
-            if Path(path).is_file():
-                pattern = "fm:*" + path
-                patterns.append(pattern)
-            else:  # folder
-                pattern = "fm:*" + path + "/*"
-                patterns.append(pattern)
+            patterns.append(f"fm:*/{Path(path).name}")
         return patterns
 
     def open_exclude_filedialog(self):
