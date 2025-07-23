@@ -53,6 +53,13 @@
           </spacer>
          </item>
          <item>
+          <widget class="QToolButton" name="bOpenExcludeFD">
+           <property name="text">
+            <string>Exclude Files/Folders</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="bAddPattern"/>
          </item>
          <item>
@@ -97,46 +104,46 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_5">
-    <attribute name="title">
-        <string>Exclude If Present</string>
-    </attribute>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-            <widget class="QLabel" name="excludeIfPresentHelpText">
-                <property name="wordWrap">
-                    <bool>true</bool>
-                </property>
-            </widget>
-        </item>
-        <item>
-            <widget class="QListView" name="excludeIfPresentList"/>
-        </item>
-        <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-                <item>
-                    <spacer name="horizontalSpacer_5">
-                        <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </item>
-                <item>
-                    <widget class="QToolButton" name="bAddPatternExcludeIfPresent"/>
-                </item>
-                <item>
-                    <widget class="QToolButton" name="bRemovePatternExcludeIfPresent"/>
-                </item>
-            </layout>
-        </item>
-    </layout>
-</widget>
-<widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Exclude If Present</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="excludeIfPresentHelpText">
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListView" name="excludeIfPresentList"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QToolButton" name="bAddPatternExcludeIfPresent"/>
+         </item>
+         <item>
+          <widget class="QToolButton" name="bRemovePatternExcludeIfPresent"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>Preview</string>
       </attribute>
