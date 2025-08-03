@@ -301,7 +301,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         '''
         for row in range(model.rowCount()):
             item = model.item(row)
-            if item.text() == '':
+            if item is not None and item.text() == '':
                 model.removeRow(row)
 
     def custom_pattern_editing_finished(self, editor):
