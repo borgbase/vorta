@@ -46,6 +46,7 @@ class VortaDarwinKeyring(VortaKeyring):
                 b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}',
             ),
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
+            ('SecKeychainItemDelete', b'i^{OpaqueSecKeychainItemRef=}'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
@@ -67,6 +68,9 @@ class VortaDarwinKeyring(VortaKeyring):
         if not self.login_keychain:
             self._set_keychain()
 
+        # Delete existing password (required for macOS)
+        self.delete_password(service, repo_url)
+
         SecKeychainAddGenericPassword(
             self.login_keychain,
             len(service.encode()),
@@ -79,6 +83,31 @@ class VortaDarwinKeyring(VortaKeyring):
         )
 
         logger.debug(f"Saved password for repo {repo_url}")
+
+    def delete_password(self, service, repo_url):
+        if not self.login_keychain:
+            self._set_keychain()
+        try:
+            result, password_length, password_buffer, keychain_item = SecKeychainFindGenericPassword(
+                self.login_keychain,
+                len(service),
+                service.encode(),
+                len(repo_url),
+                repo_url.encode(),
+                None,
+                None,
+                None,
+            )
+            if result == 0 and keychain_item:
+                del_result = SecKeychainItemDelete(keychain_item)
+                if del_result == 0:
+                    logger.debug(f"Deleted password for repo {repo_url}")
+                else:
+                    logger.debug(
+                        f"Failed to delete password for repo {repo_url}, SecKeychainItemDelete returned {del_result}"
+                    )
+        except Exception as e:
+            logger.debug(f"No password to delete for repo {repo_url}: {e}")
 
     def get_password(self, service, repo_url):
         if not self.login_keychain:
