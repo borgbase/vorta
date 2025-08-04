@@ -301,7 +301,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         '''
         for row in range(model.rowCount()):
             item = model.item(row)
-            if item is not None and item.text() == '':
+            if item is not None and item.text().strip() == '':
                 model.removeRow(row)
 
     def custom_pattern_editing_finished(self, editor):
@@ -371,7 +371,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.save_exclude_if_present_patterns()
 
     def exclude_if_present_pattern_editing_finished(self, editor):
-        self.text_editing_finished(self.customExclusionsModel)
+        self.text_editing_finished(self.excludeIfPresentModel)
         self.save_exclude_if_present_patterns()
 
     def save_exclude_if_present_patterns(self):
