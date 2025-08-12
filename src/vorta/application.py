@@ -161,6 +161,13 @@ class VortaApp(QtSingleApplication):
                 self.create_backups_cmdline(message)
 
     def show_exception_dialog(self, error_msg):
+        # Skip showing the exception dialog for KeyboardInterrupt to prevent test from pausing
+        # (requiring manual intervention) caused by pytest cleanup of borg during excecution.
+        #
+        # Using membership check because converting the error to an Exception class alone cannot determine
+        # if it was a KeyboardInterrupt.
+        if "KeyboardInterrupt" in error_msg:
+            return
         exception_dialog = ExceptionDialog(error_msg)
         exception_dialog.show()
         exception_dialog.raise_()

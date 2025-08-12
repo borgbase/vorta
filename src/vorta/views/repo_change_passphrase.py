@@ -50,8 +50,7 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
                 self._set_status(params['message'])
 
     def _set_status(self, text):
-        self.errorText.setText(text)
-        self.errorText.repaint()
+        self.passwordInput.set_error_label(text)
 
     def run_result(self, result):
         self.saveButton.setEnabled(True)
