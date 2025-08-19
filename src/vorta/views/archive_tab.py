@@ -946,7 +946,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             for archive in archives:
                 for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchFlag.MatchExactly):
                     self.archiveTable.removeRow(entry.row())
-                ArchiveModel.get(name=archive).delete_instance()
+                archive_obj = ArchiveModel.get_or_none(name=archive)
+                if archive_obj:
+                    archive_obj.delete_instance()
 
         self._toggle_all_buttons(True)
 
