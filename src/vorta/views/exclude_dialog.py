@@ -312,18 +312,19 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         When the user checks or unchecks an item, update the database.
         When the user adds a new item, add it to the database.
         '''
-        if not ExclusionModel.get_or_none(
-            name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
-        ):
-            ExclusionModel.create(
+        if item.text().strip():  # Ensure the item text is not empty before adding to DB
+            if not ExclusionModel.get_or_none(
                 name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
-            )
+            ):
+                ExclusionModel.create(
+                    name=item.text(), source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
+                )
 
-        ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
-            ExclusionModel.name == item.text(),
-            ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
-            ExclusionModel.profile == self.profile,
-        ).execute()
+            ExclusionModel.update(enabled=item.checkState() == Qt.CheckState.Checked).where(
+                ExclusionModel.name == item.text(),
+                ExclusionModel.source == ExclusionModel.SourceFieldOptions.CUSTOM.value,
+                ExclusionModel.profile == self.profile,
+            ).execute()
 
         self.populate_preview_tab()
 
