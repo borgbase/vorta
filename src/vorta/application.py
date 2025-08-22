@@ -76,7 +76,7 @@ class VortaApp(QtSingleApplication):
 
         if getattr(args, 'daemonize', False):
             pass
-        elif SettingsModel.get(key='foreground').value:
+        elif SettingsModel.get(key='foreground').value or not self.tray.isSystemTrayAvailable():
             self.open_main_window_action()
 
         self.backup_started_event.connect(self.backup_started_event_response)
