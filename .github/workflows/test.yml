@@ -51,7 +51,7 @@ jobs:
 
   test-unit:
     needs: prepare-matrix
-    timeout-minutes: 60  # macos tests are very slow
+    timeout-minutes: 120  # macos tests are very slow
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
