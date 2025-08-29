@@ -456,7 +456,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         # Both files and folders use the same pattern format (fm:*/name),
         # confirmed through testing to correctly exclude them during backup creation.
         for path in paths:
-            patterns.append(f"fm:*/{Path(path).name}")
+            patterns.append(f"pf:{path}")
         return patterns
 
     def open_exclude_filedialog(self):
