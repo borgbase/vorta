@@ -1,14 +1,12 @@
+from pathlib import Path
+from typing import List
+
 from PyQt6 import uic
 from PyQt6.QtCore import QModelIndex, QObject, Qt
 from PyQt6.QtGui import QCursor, QStandardItem, QStandardItemModel
-from PyQt6.QtWidgets import (
-    QAbstractItemView,
-    QApplication,
-    QMenu,
-    QMessageBox,
-    QStyledItemDelegate,
-)
+from PyQt6.QtWidgets import QAbstractItemView, QApplication, QMenu, QMessageBox, QStyledItemDelegate
 
+from vorta.filedialog import VortaFileSelector
 from vorta.i18n import translate
 from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
@@ -87,6 +85,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.bPreviewCopy.setIcon(get_colored_icon('copy'))
         self.bAddPattern.clicked.connect(self.add_pattern_custom_exclusion)
         self.bAddPattern.setIcon(get_colored_icon('plus'))
+        self.bOpenExcludeFD.clicked.connect(self.open_exclude_filedialog)
         self.bAddPatternExcludeIfPresent.setIcon(get_colored_icon('plus'))
         self.bAddPatternExcludeIfPresent.clicked.connect(self.add_pattern_exclude_if_present)
         self.bRemovePatternExcludeIfPresent.setIcon(get_colored_icon('minus'))
@@ -302,7 +301,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         '''
         for row in range(model.rowCount()):
             item = model.item(row)
-            if item.text() == '':
+            if item is not None and item.text().strip() == '':
                 model.removeRow(row)
 
     def custom_pattern_editing_finished(self, editor):
@@ -373,7 +372,7 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.save_exclude_if_present_patterns()
 
     def exclude_if_present_pattern_editing_finished(self, editor):
-        self.text_editing_finished(self.customExclusionsModel)
+        self.text_editing_finished(self.excludeIfPresentModel)
         self.save_exclude_if_present_patterns()
 
     def save_exclude_if_present_patterns(self):
@@ -448,3 +447,36 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
             self.remove_pattern()
             return True
         return QObject.eventFilter(self, source, event)
+
+    def make_exclude_pattern_from_path(self, paths: List[str]) -> List[str]:
+        '''
+        Create exclusion patterns from a list of given paths.
+        '''
+        patterns = []
+        # Both files and folders use the same pattern format (fm:*/name),
+        # confirmed through testing to correctly exclude them during backup creation.
+        for path in paths:
+            patterns.append(f"pf:{path}")
+        return patterns
+
+    def open_exclude_filedialog(self):
+        file_dialog = VortaFileSelector(
+            self, window_title='Exclude Files and Folders', title='Select files and folders to exclude:'
+        )
+        paths = file_dialog.get_paths()  # Selected paths from file dialog
+        if paths:
+            patterns = self.make_exclude_pattern_from_path(paths)
+            for pattern in patterns:
+                # Check if the path already exists in the model
+                if not ExclusionModel.get_or_none(name=pattern, profile=self.profile):
+                    # Create a new item in the list
+                    item = QStandardItem(pattern)
+                    item.setCheckable(True)
+                    item.setCheckState(Qt.CheckState.Checked)
+                    self.customExclusionsModel.appendRow(item)
+
+                    # Add the item to database
+                    ExclusionModel.create(
+                        name=pattern, source=ExclusionModel.SourceFieldOptions.CUSTOM.value, profile=self.profile
+                    )
+            self.populate_preview_tab()
