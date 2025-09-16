@@ -427,7 +427,7 @@
                <number>-1</number>
               </property>
               <property name="maximum">
-               <number>9999</number>
+               <number>65535</number>
               </property>
              </widget>
             </item>
@@ -460,7 +460,7 @@
                <number>-1</number>
               </property>
               <property name="maximum">
-               <number>999</number>
+               <number>65535</number>
               </property>
              </widget>
             </item>
@@ -492,6 +492,9 @@
               <property name="minimum">
                <number>-1</number>
               </property>
+              <property name="maximum">
+               <number>65535</number>
+              </property>
              </widget>
             </item>
             <item>
@@ -521,6 +524,9 @@
               </property>
               <property name="minimum">
                <number>-1</number>
+              </property>
+              <property name="maximum">
+               <number>65535</number>
               </property>
              </widget>
             </item>
@@ -554,6 +560,9 @@
               </property>
               <property name="minimum">
                <number>-1</number>
+              </property>
+              <property name="maximum">
+               <number>65535</number>
               </property>
              </widget>
             </item>
