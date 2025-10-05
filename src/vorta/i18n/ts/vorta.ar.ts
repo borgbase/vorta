@@ -149,277 +149,287 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="9"/>
+        <location filename="../../assets/UI/repo_add.ui" line="14"/>
         <source>Add Repository</source>
         <translation>أضف مستودعا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="64"/>
+        <location filename="../../assets/UI/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>عامّ</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="90"/>
+        <location filename="../../assets/UI/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>تهيئة مستودع النسخ الاحتياطي الجديد</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="97"/>
+        <location filename="../../assets/UI/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>عنوان URL للمستودع:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="112"/>
+        <location filename="../../assets/UI/repo_add.ui" line="82"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="119"/>
+        <location filename="../../assets/UI/repo_add.ui" line="89"/>
         <source>Choose a local folder</source>
         <translation>اختر مجلدًا محليًا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="136"/>
+        <location filename="../../assets/UI/repo_add.ui" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="133"/>
+        <location filename="../../assets/UI/repo_add.ui" line="103"/>
         <source>Choose a remote repository</source>
         <translation>اختر مستودعًا بعيدًا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="149"/>
+        <location filename="../../assets/UI/repo_add.ui" line="119"/>
         <source>Repository Name:</source>
         <translation>اسم المستودع:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="156"/>
+        <location filename="../../assets/UI/repo_add.ui" line="126"/>
         <source>Macbook Pro Office (optional)</source>
         <translation>ماك بوك برو المكتبي (اختياري)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="171"/>
+        <location filename="../../assets/UI/repo_add.ui" line="141"/>
         <source>Advanced</source>
         <translation>متقدّم</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="192"/>
+        <location filename="../../assets/UI/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
         <translation>مفتاح SSH :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="206"/>
+        <location filename="../../assets/UI/repo_add.ui" line="176"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>اختيار مفتاح SSH تلقائيًا (افتراضي)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="214"/>
+        <location filename="../../assets/UI/repo_add.ui" line="184"/>
         <source>Extra Borg Arguments:</source>
         <translation>وسيطات بورغ الإضافية:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_add.ui" line="236"/>
+        <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="186"/>
+        <location filename="../../views/archive_tab.py" line="193"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="206"/>
+        <location filename="../../views/archive_tab.py" line="213"/>
         <source>Action cancelled.</source>
         <translation>ألغي الإجراء.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="253"/>
+        <location filename="../../views/archive_tab.py" line="260"/>
         <source>Archives for {}</source>
         <translation>أرشيفات لـ {}</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="293"/>
+        <location filename="../../views/archive_tab.py" line="300"/>
         <source>Scheduled</source>
         <translation>المجدول</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="297"/>
+        <location filename="../../views/archive_tab.py" line="304"/>
         <source>User initiated</source>
         <translation>بدأ المستخدم</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="312"/>
+        <location filename="../../views/archive_tab.py" line="319"/>
         <source>Archives</source>
         <translation>أرشيفات</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="354"/>
+        <location filename="../../views/archive_tab.py" line="361"/>
         <source>(borg already running)</source>
         <translation>(بورغ قيد التشغيل بالفعل)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="364"/>
+        <location filename="../../views/archive_tab.py" line="371"/>
         <source>(Select minimum one archive)</source>
         <translation>(اختر أرشيفًا واحدًا على الأقل)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="376"/>
+        <location filename="../../views/archive_tab.py" line="383"/>
         <source>(Select two archives)</source>
         <translation>(اختر أرشيفين)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="391"/>
+        <location filename="../../views/archive_tab.py" line="398"/>
         <source>(Select exactly one archive)</source>
         <translation>(اختر أرشيفًا واحدًا بالضبط)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="429"/>
+        <location filename="../../views/archive_tab.py" line="436"/>
         <source>Preview: %s</source>
         <translation>المعاينة: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="433"/>
+        <location filename="../../views/archive_tab.py" line="440"/>
         <source>Error in archive name template.</source>
         <translation>خطأ في قالب اسم الأرشيف.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="491"/>
+        <location filename="../../views/archive_tab.py" line="498"/>
         <source>Pruning finished.</source>
         <translation>انتهى التقليم.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="538"/>
+        <location filename="../../views/archive_tab.py" line="545"/>
         <source>Refreshed archives.</source>
         <translation>الأرشيفات المحدثة.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="605"/>
+        <location filename="../../views/archive_tab.py" line="612"/>
         <source>Unmount</source>
         <translation>إلغاء التحميل</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="590"/>
+        <location filename="../../views/archive_tab.py" line="597"/>
         <source>Unmount the selected archive from the file system</source>
         <translation>ألغ تحميل الأرشيف المحدد من نظام الملفات</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="609"/>
+        <location filename="../../views/archive_tab.py" line="616"/>
         <source>Mount…</source>
         <translation>تحميل...</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="595"/>
+        <location filename="../../views/archive_tab.py" line="602"/>
         <source>Mount the selected archive as a folder in the file system</source>
         <translation>حمّل الأرشيف المحدد كمجلد في نظام الملفات</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="606"/>
+        <location filename="../../views/archive_tab.py" line="613"/>
         <source>Unmount the repository from the file system</source>
         <translation>ألغ تحميل المستودع من نظام الملفات</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="611"/>
+        <location filename="../../views/archive_tab.py" line="618"/>
         <source>Mount the repository as a folder in the file system</source>
         <translation>ثبّت المستودع كمجلد في نظام الملفات</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="644"/>
+        <location filename="../../views/archive_tab.py" line="651"/>
         <source>Choose Mount Point</source>
         <translation>اختر نقطة التحميل</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="649"/>
+        <location filename="../../views/archive_tab.py" line="656"/>
         <source>Mounted successfully.</source>
         <translation>تم التحميل بنجاح.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="708"/>
+        <location filename="../../views/archive_tab.py" line="715"/>
         <source>Un-mounted successfully.</source>
         <translation>تم إلغاء التحميل بنجاح.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="725"/>
+        <location filename="../../views/archive_tab.py" line="732"/>
         <source>Unmounting failed. Make sure no programs are using {}</source>
         <translation>فشل إلغاء التحميل. تأكد من عدم وجود برامج تستخدم {}</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="759"/>
+        <location filename="../../views/archive_tab.py" line="766"/>
         <source>Select an archive to restore first.</source>
         <translation>حدد أرشيفًا لاستعادته أولاً.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="767"/>
+        <location filename="../../views/archive_tab.py" line="774"/>
         <source>Processing archive contents</source>
         <translation>معالجة محتويات الأرشيف</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="790"/>
+        <location filename="../../views/archive_tab.py" line="797"/>
         <source>Choose Extraction Point</source>
         <translation>اختر نقطة الاستخراج</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="843"/>
+        <location filename="../../views/archive_tab.py" line="863"/>
         <source>Archive name cannot be blank.</source>
         <translation>اسم الأرشيف الجديد:</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="848"/>
+        <location filename="../../views/archive_tab.py" line="870"/>
         <source>An archive with this name already exists.</source>
         <translation>يوجد أرشيف بهذا الاسم بالفعل.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="873"/>
+        <location filename="../../views/archive_tab.py" line="900"/>
         <source>Yes</source>
         <translation>نعم</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="874"/>
+        <location filename="../../views/archive_tab.py" line="901"/>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="888"/>
+        <location filename="../../views/archive_tab.py" line="915"/>
         <source>No archive selected</source>
         <translation>لم يُحدّد أي أرشيف</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="897"/>
+        <location filename="../../views/archive_tab.py" line="924"/>
         <source>Are you sure you want to delete all the selected archives?</source>
         <translation>هل أنت متأكد أنك تريد حذف جميع الأرشيفات المحددة؟</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="899"/>
+        <location filename="../../views/archive_tab.py" line="926"/>
         <source>Are you sure you want to delete the selected archive?</source>
         <translation>هل أنت متأكد أنك تريد حذف الأرشيف المحدد؟</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="900"/>
+        <location filename="../../views/archive_tab.py" line="927"/>
         <source>Confirm deletion</source>
         <translation>تأكيد الحذف</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="913"/>
+        <location filename="../../views/archive_tab.py" line="940"/>
         <source>Archives deleted.</source>
         <translation>تم حذف الأرشيفات.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="915"/>
+        <location filename="../../views/archive_tab.py" line="942"/>
         <source>Archive deleted.</source>
         <translation>تم حذف الأرشيف.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="975"/>
+        <location filename="../../views/archive_tab.py" line="1004"/>
         <source>Processing diff results.</source>
         <translation>معالجة نتائج الفُرُوق.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="999"/>
+        <location filename="../../views/archive_tab.py" line="1028"/>
         <source>Archive renamed.</source>
         <translation>تمت إعادة تسمية الأرشيف.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="1016"/>
+        <location filename="../../views/archive_tab.py" line="1045"/>
         <source>(This feature needs Borg 1.2.0 or higher)</source>
         <translation>(تحتاج هذه الميزة إلى بورغ 1.2.0 أو أعلى)</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="881"/>
+        <source>Renaming archive...</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -449,7 +459,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="339"/>
+        <location filename="../../borg/borg_job.py" line="354"/>
         <source>Task started</source>
         <translation>بدأت المهمة</translation>
     </message>
@@ -488,6 +498,42 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../borg/umount.py" line="11"/>
         <source>Unmounting archive…</source>
         <translation>جارٍ إلغاء تحميل الأرشيف…</translation>
+    </message>
+</context>
+<context>
+    <name>ChangeBorgPassphraseWindow</name>
+    <message>
+        <location filename="../../views/repo_change_passphrase.py" line="19"/>
+        <source>Change Passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_change_passphrase.py" line="29"/>
+        <source>Repository:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_change_passphrase.py" line="33"/>
+        <source>Update</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_change_passphrase.py" line="62"/>
+        <source>Unable to change the borg passphrase.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>ChangeRepositoryPass</name>
+    <message>
+        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <source>Change the borg passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -549,22 +595,22 @@ https://github.com/borgbase/vorta/issues/new
         <translation>مخصّص</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="67"/>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="74"/>
         <source>Presets</source>
         <translation>الإعدادات المسبقة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="84"/>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="91"/>
         <source>Raw</source>
         <translation>خام</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="141"/>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="148"/>
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="172"/>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>انسخ إلى الحافظة</translation>
     </message>
@@ -739,9 +785,14 @@ https://github.com/borgbase/vorta/issues/new
         <translation>تقرير الأعطال:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="101"/>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>استبعد إذا كان موجودا</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
+        <source>Exclude Files/Folders</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -841,17 +892,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="175"/>
+        <location filename="../../views/exclude_dialog.py" line="174"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="181"/>
+        <location filename="../../views/exclude_dialog.py" line="180"/>
         <source>Remove</source>
         <translation>إزالة</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="188"/>
+        <location filename="../../views/exclude_dialog.py" line="187"/>
         <source>Toggle</source>
         <translation>تبديل</translation>
     </message>
@@ -872,6 +923,11 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../views/repo_add_dialog.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>كلمة مرور مملوءة تلقائيا من مدير كلمات المرور.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <source>Enter the encryption passphrase</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1041,62 +1097,57 @@ https://github.com/borgbase/vorta/issues/new
         <translation>أوامر شل</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="65"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="98"/>
         <source>Repository:</source>
         <translation>مستودع:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="95"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="66"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;لاستضافة للنسخ الاحتياطي بسيطة وآمنة، جرّب &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;بورغ بيز&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="247"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="235"/>
         <source>Copy to clipboard</source>
         <translation>نسخ إلى الحافظة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="131"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="136"/>
         <source>Select Backup Destination</source>
         <translation>حدد وجهة النسخ الاحتياطي</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="139"/>
-        <source>Unlink repository without deleting it.</source>
-        <translation>ألغ ربط المستودع دون حذفه.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="206"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="194"/>
         <source>SSH Key:</source>
         <translation>مفتاح SSH:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="268"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="256"/>
         <source>Compression:</source>
         <translation>ضغط:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="311"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="299"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;مساعدة في أنواع الضغط&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="368"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="356"/>
         <source>Encryption:</source>
         <translation>التشفير:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="398"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="386"/>
         <source>Original Size:</source>
         <translation>الحجم الأصلي:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="412"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="400"/>
         <source>Deduplicated Size:</source>
         <translation>الحجم المكرر:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="426"/>
+        <location filename="../../assets/UI/repo_tab.ui" line="414"/>
         <source>Compressed Size:</source>
         <translation>الحجم المضغوط:</translation>
     </message>
@@ -1497,62 +1548,62 @@ https://github.com/borgbase/vorta/issues/new
         <translation>استيراد من ملف...</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="215"/>
+        <location filename="../../views/main_window.py" line="213"/>
         <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
         <translation>هل أنت متأكد أنك تريد حذف الملف الشخصي &apos;{}&apos;؟</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="216"/>
+        <location filename="../../views/main_window.py" line="214"/>
         <source>Confirm deletion</source>
         <translation>تأكيد الحذف</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="231"/>
+        <location filename="../../views/main_window.py" line="229"/>
         <source>Cannot delete the last profile.</source>
         <translation>لا يمكن حذف ملف التعريف الأخير.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="260"/>
+        <location filename="../../views/main_window.py" line="258"/>
         <source>Profile import successful!</source>
         <translation>تم استيراد الملف الشخصي بنجاح!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="260"/>
+        <location filename="../../views/main_window.py" line="258"/>
         <source>Profile {} imported.</source>
         <translation>تم استيراد ملف التعريف {}.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="271"/>
+        <location filename="../../views/main_window.py" line="266"/>
         <source>Load profile</source>
         <translation>تحميل ملف التعريف</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="271"/>
+        <location filename="../../views/main_window.py" line="266"/>
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json)؛؛جميع الملفات (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="281"/>
+        <location filename="../../views/main_window.py" line="276"/>
         <source>Failed to import profile</source>
         <translation>فشل استيراد الملف الشخصي</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="339"/>
+        <location filename="../../views/main_window.py" line="330"/>
         <source>Task cancelled</source>
         <translation>تم إلغاء المهمة</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="356"/>
+        <location filename="../../views/main_window.py" line="346"/>
         <source>Should Vorta continue to run in the background?</source>
         <translation>هل يجب أن يستمر ڤورتا في العمل في الخلفية؟</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="366"/>
+        <location filename="../../views/main_window.py" line="356"/>
         <source>Quit</source>
         <translation>خروج</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="367"/>
+        <location filename="../../views/main_window.py" line="357"/>
         <source>Don&apos;t show this again</source>
         <translation>لا تظهر هذا مرة أخرى</translation>
     </message>
@@ -1653,40 +1704,50 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>PasswordInput</name>
     <message>
-        <location filename="../../views/partials/password_input.py" line="83"/>
+        <location filename="../../views/partials/password_input.py" line="87"/>
         <source>Enter passphrase:</source>
         <translation>أدخل عبارة المرور:</translation>
     </message>
     <message>
-        <location filename="../../views/partials/password_input.py" line="84"/>
+        <location filename="../../views/partials/password_input.py" line="88"/>
         <source>Confirm passphrase:</source>
         <translation>أكّد عبارة المرور:</translation>
     </message>
     <message>
-        <location filename="../../views/partials/password_input.py" line="140"/>
+        <location filename="../../views/partials/password_input.py" line="144"/>
         <source>Passwords must be identical and at least {0} characters long.</source>
         <translation>يجب أن تكون كلمات المرور متطابقة وأن يبلغ طولها {0} حرفًا على الأقل.</translation>
     </message>
     <message>
-        <location filename="../../views/partials/password_input.py" line="147"/>
+        <location filename="../../views/partials/password_input.py" line="151"/>
         <source>Passwords must be identical.</source>
         <translation>يجب أن تكون كلمات المرور متطابقة.</translation>
     </message>
     <message>
-        <location filename="../../views/partials/password_input.py" line="150"/>
+        <location filename="../../views/partials/password_input.py" line="154"/>
         <source>Passwords must be at least {0} characters long.</source>
         <translation>يجب أن تتكون كلمات المرور من {0} حرفًا على الأقل.</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="91"/>
+        <source>Enter new encryption passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="92"/>
+        <source>Confirm new encryption passphrase</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>PasswordLineEdit</name>
     <message>
-        <location filename="../../views/partials/password_input.py" line="52"/>
+        <location filename="../../views/partials/password_input.py" line="56"/>
         <source>Show password</source>
         <translation>عرض كلمة المرور</translation>
     </message>
     <message>
-        <location filename="../../views/partials/password_input.py" line="48"/>
+        <location filename="../../views/partials/password_input.py" line="52"/>
         <source>Hide password</source>
         <translation>إخفاء كلمة المرور</translation>
     </message>
@@ -1697,6 +1758,11 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../borg/check.py" line="27"/>
         <source>Repo check failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
         <translation>فشل التحقق من المستودع. انظر &lt;a href=&quot;{0}&quot;&gt;السجلات&lt;/a&gt; للتفاصيل .</translation>
+    </message>
+    <message>
+        <location filename="../../borg/change_passphrase.py" line="28"/>
+        <source>Passphrase change failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1712,95 +1778,135 @@ https://github.com/borgbase/vorta/issues/new
         <translation>مستودع موجود…</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="44"/>
+        <location filename="../../views/repo_tab.py" line="56"/>
         <source>LZ4 (modern, default)</source>
         <translation>LZ4 (حديث، افتراضي)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="45"/>
+        <location filename="../../views/repo_tab.py" line="57"/>
         <source>Zstandard Level 3 (modern)</source>
         <translation>Zstandard المستوى 3 (حديث)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="46"/>
+        <location filename="../../views/repo_tab.py" line="58"/>
         <source>Zstandard Level 8 (modern)</source>
         <translation>Zstandard المستوى 8 (حديث)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="52"/>
+        <location filename="../../views/repo_tab.py" line="64"/>
         <source>ZLIB Level 6 (auto, legacy)</source>
         <translation>ZLIB المستوى 6 (تلقائي، قديم)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="53"/>
+        <location filename="../../views/repo_tab.py" line="65"/>
         <source>LZMA Level 6 (auto, legacy)</source>
         <translation>LZMA المستوى 6 (تلقائي، قديم)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="54"/>
+        <location filename="../../views/repo_tab.py" line="66"/>
         <source>No Compression</source>
         <translation>لا يوجد ضغط</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="81"/>
+        <location filename="../../views/repo_tab.py" line="94"/>
         <source>No repository selected</source>
         <translation>لم يُحدّد أي مستودع</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="112"/>
+        <location filename="../../views/repo_tab.py" line="125"/>
         <source>N/A</source>
         <comment>Not available.</comment>
         <translation>غير متوفر</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="113"/>
+        <location filename="../../views/repo_tab.py" line="126"/>
         <source>Select a repository first.</source>
         <translation>حدد المستودع أولاً.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="114"/>
+        <location filename="../../views/repo_tab.py" line="127"/>
         <source>Try refreshing the metadata of any archive.</source>
         <translation>حاول تحديث البيانات الوصفية لأي أرشيف.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="181"/>
+        <location filename="../../views/repo_tab.py" line="194"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>اختيار مفتاح SSH تلقائيًا (افتراضي)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="209"/>
+        <location filename="../../views/repo_tab.py" line="222"/>
         <source>Error during key generation. Exited with code {exit_code}.</source>
         <translation>حدث خطأ أثناء إنشاء المفتاح. خروج بالرمز {exit_code}.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="226"/>
+        <location filename="../../views/repo_tab.py" line="239"/>
         <source>Public Key Copied to Clipboard</source>
         <translation>تم نسخ المفتاح العام إلى الحافظة</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="227"/>
+        <location filename="../../views/repo_tab.py" line="240"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
         <translation>تم نسخ مفتاح SSH العام المحدد إلى الحافظة. استخدمه لإعداد أذونات المستودع عن بعد.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="234"/>
+        <location filename="../../views/repo_tab.py" line="247"/>
         <source>Could not find public key.</source>
         <translation>تعذر العثور على المفتاح العام.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="236"/>
+        <location filename="../../views/repo_tab.py" line="249"/>
         <source>Select a public key from the dropdown first.</source>
         <translation>حدد مفتاحًا عامًا من القائمة المنسدلة أولاً.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="304"/>
+        <location filename="../../views/repo_tab.py" line="317"/>
         <source>Repository was Unlinked</source>
         <translation>تم إلغاء ربط المستودع</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="305"/>
+        <location filename="../../views/repo_tab.py" line="318"/>
         <source>You can always connect it again later.</source>
         <translation>يمكنك دائمًا توصيله مرة أخرى لاحقًا.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="42"/>
+        <source>Unlink Repository…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="45"/>
+        <source>Change Passphrase…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="350"/>
+        <source>Invalid Encryption Type</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="351"/>
+        <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="370"/>
+        <source>Passphrase Changed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="371"/>
+        <source>The borg passphrase was successfully changed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="374"/>
+        <source>Passphrase Change Failed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="375"/>
+        <source>Unable to change the repository passphrase. Please try again.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1887,27 +1993,27 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SchedulePage</name>
     <message>
-        <location filename="../../views/schedule_page.py" line="28"/>
+        <location filename="../../views/schedule_page.py" line="26"/>
         <source>Minutes</source>
         <translation>دقائق</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="29"/>
+        <location filename="../../views/schedule_page.py" line="27"/>
         <source>Hours</source>
         <translation>ساعات</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="30"/>
+        <location filename="../../views/schedule_page.py" line="28"/>
         <source>Days</source>
         <translation>أيام</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="31"/>
+        <location filename="../../views/schedule_page.py" line="29"/>
         <source>Weeks</source>
         <translation>أسابيع</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="120"/>
+        <location filename="../../views/schedule_page.py" line="122"/>
         <source>Run a manual backup first</source>
         <translation>أجر نسخة احتياطية يدوية أولاً</translation>
     </message>
@@ -2048,54 +2154,19 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SourceTab</name>
     <message>
-        <location filename="../../views/source_tab.py" line="93"/>
-        <source>Files</source>
-        <translation>ملفات</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="94"/>
-        <source>Folders</source>
-        <translation>مجلدات</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="95"/>
-        <source>Paste</source>
-        <translation>لصق</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="144"/>
+        <location filename="../../views/source_tab.py" line="133"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/source_tab.py" line="149"/>
+        <location filename="../../views/source_tab.py" line="138"/>
         <source>Remove</source>
         <translation>حذف</translation>
     </message>
     <message>
-        <location filename="../../views/source_tab.py" line="206"/>
+        <location filename="../../views/source_tab.py" line="195"/>
         <source>Calculating…</source>
         <translation>جارٍ الحساب…</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="295"/>
-        <source>You don&apos;t have read access to {dir}.</source>
-        <translation>ليس لديك حق الوصول للقراءة إلى {dir}.</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="304"/>
-        <source>Choose directory to back up</source>
-        <translation>اختر الدليل لعمل نسخة احتياطية</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="304"/>
-        <source>Choose file(s) to back up</source>
-        <translation>اختر ملف (ات) لإجراء نسخ احتياطي لها</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="369"/>
-        <source>Some of your sources are invalid:</source>
-        <translation>بعض مصادرك غير صالحة:</translation>
     </message>
 </context>
 <context>
@@ -2134,119 +2205,137 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="119"/>
+        <location filename="../../application.py" line="126"/>
         <source>Vorta Backup</source>
         <translation>ڤورتا للنسخ الاحتياطي</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="186"/>
+        <location filename="../../application.py" line="193"/>
         <source>No Borg Binary Found</source>
         <translation>لم يُعثر على بورغ ثنائي</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="187"/>
+        <location filename="../../application.py" line="194"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>لم يتمكن ڤورتا من تحديد موقع بورغ للنسخ الاحتياطي الثنائي القابل للاستخدام.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="209"/>
+        <location filename="../../application.py" line="216"/>
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>تحتاج ڤورتا إلى الوصول الكامل إلى القرص لإجراء عمليات النسخ الاحتياطي الكاملة</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="210"/>
+        <location filename="../../application.py" line="217"/>
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
         <translation>دون ذلك، لن تتمكن من الوصول إلى بعض الملفات وقد ينتهي بك الأمر بنسخة احتياطية غير كاملة. يرجى تعيين &lt;b&gt;إذن الوصول الكامل إلى القرص&lt;/b&gt; لـ ڤورتا في &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt; تفضيلات النظام &gt; الأمان والخصوصية&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="232"/>
+        <location filename="../../application.py" line="239"/>
         <source>Repository In Use</source>
         <translation>المستودع قيد الاستخدام</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="234"/>
+        <location filename="../../application.py" line="241"/>
         <source>Abort</source>
         <translation>إحباط</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="235"/>
+        <location filename="../../application.py" line="242"/>
         <source>Continue</source>
         <translation>أكمل</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="237"/>
+        <location filename="../../application.py" line="244"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
         <translation>قد يكون المستودع الموجود في {repo_url} قيد الاستخدام في مكان آخر.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="238"/>
+        <location filename="../../application.py" line="245"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
         <translation>اكسر القفل فقط إذا كنت متأكدًا من عدم وصول أي عملية بورغ أخرى على أي جهاز إلى المستودع. إحباط أو كسر القفل؟</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="250"/>
+        <location filename="../../application.py" line="257"/>
         <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
         <translation>ليس لديك إذن للوصول إلى المستودع الموجود على {repo_url}. احصل عليه وحاول مرة أخرى.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="255"/>
+        <location filename="../../application.py" line="262"/>
         <source>No Repository Permissions</source>
         <translation>لا توجد أذونات مستودع</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
+        <location filename="../../application.py" line="290"/>
         <source>Failed to import profile</source>
         <translation>فشل استيراد الملف الشخصي</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
+        <location filename="../../application.py" line="290"/>
         <source>Failed to import a profile from {}:</source>
         <translation>فشل استيراد ملف تعريف من {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
+        <location filename="../../application.py" line="290"/>
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>فكر في إزالة هذا الملف أو إصلاحه للتخلص من هذه الرسالة.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="297"/>
+        <location filename="../../application.py" line="304"/>
         <source>Profile import successful!</source>
         <translation>تم استيراد الملف الشخصي بنجاح!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="297"/>
+        <location filename="../../application.py" line="304"/>
         <source>Profile {} imported.</source>
         <translation>تم استيراد ملف التعريف {}.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="332"/>
+        <location filename="../../application.py" line="339"/>
         <source>Repo Check Failed</source>
         <translation>فشل فحص المستودع</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="337"/>
+        <location filename="../../application.py" line="344"/>
         <source>Borg exited with warning status (rc 1). See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
         <translation>خرج بورغ بحالة تحذير (rc 1). انظر &lt;a href=&quot;{0}&quot;&gt;السجلات&lt;/a&gt; للتفاصيل .</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="344"/>
+        <location filename="../../application.py" line="351"/>
         <source>Repository data check for repo was killed by signal %s.</source>
         <translation>تم إيقاف عملية التحقق من بيانات المستودع بواسطة الإشارة %s.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="345"/>
+        <location filename="../../application.py" line="352"/>
         <source>The process running the check job got a kill signal. Try again.</source>
         <translation>حصلت عملية تشغيل مهمة الفحص على إشارة قتل. حاول ثانية.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="348"/>
+        <location filename="../../application.py" line="355"/>
         <source>Repository data check for repo %s failed. Error code %s</source>
         <translation>فشل التحقق من بيانات المستودع  %s. رموز الخطأ</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="353"/>
+        <location filename="../../application.py" line="360"/>
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
         <translation>فكر في إصلاح المستودع أو إعادة إنشائه قريبًا لتجنب فقدان البيانات.</translation>
+    </message>
+</context>
+<context>
+    <name>VortaFileDialog</name>
+    <message>
+        <location filename="../../filedialog.py" line="36"/>
+        <source>Show hidden files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../filedialog.py" line="102"/>
+        <source>Permission Denied</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../filedialog.py" line="103"/>
+        <source>You don&apos;t have read access to {path}.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -2310,32 +2399,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>إصدار بورغ الخاص بك قديم جدًا. &gt;=1.1.0 مطلوب.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="109"/>
+        <location filename="../../borg/create.py" line="112"/>
         <source>Add some folders to back up first.</source>
         <translation>أضف بعض المجلدات لعمل نسخة احتياطية أولاً.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="121"/>
+        <location filename="../../borg/create.py" line="124"/>
         <source>Current Wifi is not allowed.</source>
         <translation>خدمة الواي فاي الحالية غير مسموح بها.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="129"/>
+        <location filename="../../borg/create.py" line="132"/>
         <source>Not running backup over metered connection.</source>
         <translation>عدم تشغيل النسخ الاحتياطي عبر اتصال محدود.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="137"/>
+        <location filename="../../borg/create.py" line="140"/>
         <source>Pre-backup command returned non-zero exit code.</source>
         <translation>أعاد أمر النسخ الاحتياطي المسبق رمز خروج غير صفري.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="141"/>
+        <location filename="../../borg/create.py" line="144"/>
         <source>Repo folder not mounted or moved.</source>
         <translation>مجلد المستودع لم يُحمّل أو يُنقل.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="210"/>
+        <location filename="../../borg/create.py" line="214"/>
         <source>Starting backup…</source>
         <translation>جارٍ بدء النسخ الاحتياطي…</translation>
     </message>
@@ -2368,74 +2457,89 @@ https://github.com/borgbase/vorta/issues/new
         <translation>حماية</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="29"/>
+        <location filename="../../store/settings.py" line="30"/>
         <source>Display notifications when background tasks fail</source>
         <translation>عرض الإخطارات عندما تفشل مهام الخلفية</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="36"/>
+        <location filename="../../store/settings.py" line="37"/>
         <source>Notify about successful background tasks</source>
         <translation>إعلام حول مهام الخلفية الناجحة</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="43"/>
+        <location filename="../../store/settings.py" line="44"/>
         <source>Automatically start Vorta at login</source>
         <translation>بدء تشغيل ڤورتا تلقائيًا عند تسجيل الدخول</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="44"/>
+        <location filename="../../store/settings.py" line="45"/>
         <source>Add Vorta to the systems autostart list</source>
         <translation>أضف ڤورتا إلى قائمة التشغيل التلقائي للأنظمة</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="51"/>
+        <location filename="../../store/settings.py" line="52"/>
         <source>Show main window of Vorta on launch</source>
         <translation>إظهار النافذة الرئيسية لـ ڤورتا عند الإطلاق</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="62"/>
+        <location filename="../../store/settings.py" line="63"/>
         <source>Get statistics of file/folder when added</source>
         <translation>احصل على إحصائيات الملف/المجلد عند إضافته</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="63"/>
+        <location filename="../../store/settings.py" line="64"/>
         <source>When adding a new source, calculate its size and the number of files.</source>
         <translation>عند إضافة مصدر جديد، احسب حجمه وعدد الملفات.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="70"/>
+        <location filename="../../store/settings.py" line="71"/>
         <source>Use the same unit of measurement for archive sizes</source>
         <translation>استخدم وحدةَ القياس عينها لأحجام الأرشيف</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="83"/>
+        <location filename="../../store/settings.py" line="84"/>
         <source>Otherwise Vorta&apos;s configuration database stores the password in plaintext.</source>
         <translation>بخلاف ذلك، تقوم قاعدة بيانات تكوين ڤورتا بتخزين كلمة المرور في نص عادي.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="96"/>
+        <location filename="../../store/settings.py" line="97"/>
         <source>Set owner to current user and umask to 0277</source>
         <translation>اضبط المالك على المستخدم الحالي وumask على 0277</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="147"/>
+        <location filename="../../store/settings.py" line="149"/>
         <source>Check for updates on startup</source>
         <translation>التحقق من وجود تحديثات عند بدء التشغيل</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="153"/>
+        <location filename="../../store/settings.py" line="157"/>
         <source>Include pre-release versions when checking for updates</source>
         <translation>ضمّن إصدارات ما قبل النشر عند التحقق من وجود تحديثات</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="164"/>
+        <location filename="../../store/settings.py" line="169"/>
         <source>Alerts user when full disk access permission has not been provided</source>
         <translation>ينبه المستخدم عندما لا يتوفر إذن الوصول الكامل إلى القرص</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="82"/>
+        <location filename="../../store/settings.py" line="83"/>
         <source>Store repository passwords in system keychain, if available</source>
         <translation>خزّن كلمات مرور المستودع في سلسلة مفاتيح النظام، إذا كانت متوفرة</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="21"/>
+        <source>Updates</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="150"/>
+        <source>Uses Sparkle to find new updates published on Github.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="158"/>
+        <source>Needs Vorta restart to apply.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
