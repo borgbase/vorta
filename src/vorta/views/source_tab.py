@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import PurePath
 
 from PyQt6 import QtCore, QtGui, uic
@@ -9,14 +8,13 @@ from PyQt6.QtWidgets import (
     QApplication,
     QHeaderView,
     QMenu,
-    QMessageBox,
     QTableWidgetItem,
 )
 
+from vorta.filedialog import VortaFileSelector
 from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
 from vorta.utils import (
     FilePathInfoAsync,
-    choose_file_dialog,
     get_asset,
     pretty_bytes,
     sort_sizes,
@@ -88,19 +86,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.sourceFilesWidget.customContextMenuRequested.connect(self.sourceitem_contextmenu)
         self.sourceFilesWidget.setAlternatingRowColors(True)
 
-        # Prepare add button
-        self.addMenu = QMenu(self.addButton)
-        self.addFilesAction = self.addMenu.addAction(self.tr("Files"), lambda: self.source_add(want_folder=False))
-        self.addFoldersAction = self.addMenu.addAction(self.tr("Folders"), lambda: self.source_add(want_folder=True))
-        self.pasteAction = self.addMenu.addAction(self.tr("Paste"), self.paste_text)
-
-        self.addButton.setMenu(self.addMenu)
-
-        # shortcuts
+        # Shortcuts
         shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
 
         # Connect signals
+        self.addButton.clicked.connect(self.source_add)
         self.removeButton.clicked.connect(self.source_remove)
         self.updateButton.clicked.connect(self.sources_update)
         self.bExclude.clicked.connect(self.show_exclude_dialog)
@@ -119,9 +110,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
-        self.addFilesAction.setIcon(get_colored_icon('file'))
-        self.addFoldersAction.setIcon(get_colored_icon('folder'))
-        self.pasteAction.setIcon(get_colored_icon('paste'))
 
         for row in range(self.sourceFilesWidget.rowCount()):
             path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
@@ -287,24 +275,19 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         for row in range(0, row_count):
             self.update_path_info(row)  # Update data for each entry
 
-    def source_add(self, want_folder):
-        def receive():
-            dirs = dialog.selectedFiles()
-            for dir in dirs:
-                if not os.access(dir, os.R_OK):
-                    msg = QMessageBox()
-                    msg.setText(self.tr(f"You don't have read access to {dir}."))
-                    msg.exec()
-                    return
-
-                new_source, created = SourceFileModel.get_or_create(dir=dir, profile=self.profile())
+    def source_add(self):
+        # Selected paths from file dialog
+        file_dialog = VortaFileSelector(
+            self, window_title='Add Files and Folders', title='Select files and folders to include as sources:'
+        )
+        paths = file_dialog.get_paths()
+        if paths:
+            for path in paths:
+                # Add sources to the table
+                new_source, created = SourceFileModel.get_or_create(dir=path, profile=self.profile())
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
-
-        msg = self.tr("Choose directory to back up") if want_folder else self.tr("Choose file(s) to back up")
-        dialog = choose_file_dialog(self, msg, want_folder=want_folder)
-        dialog.open(receive)
 
     def source_copy(self, index=None):
         """
@@ -350,23 +333,27 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self._window = window  # for testing
         window.show()
 
-    def paste_text(self):
-        sources = QApplication.clipboard().text().splitlines()
-        invalidSources = ""
-        for source in sources:
-            if len(source) > 0:  # Ignore empty newlines
-                if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
-                    source = source[7:]
-                if not os.path.exists(source):
-                    invalidSources = invalidSources + "\n" + source
-                else:
-                    new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
-                    if created:
-                        self.add_source_to_table(new_source)
-                        new_source.save()
+    # NOTE: This function is temporarily removed.
+    # Reason: This paste option has been removed as part of the addition of new File Dialog.
+    # This function is no longer used. Kept here for reference or possible future use.
 
-        if len(invalidSources) != 0:  # Check if any invalid paths
-            msg = QMessageBox()
-            msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
-            self._msg = msg  # for testing
-            msg.exec()
+    # def paste_text(self):
+    #     sources = QApplication.clipboard().text().splitlines()
+    #     invalidSources = ""
+    #     for source in sources:
+    #         if len(source) > 0:  # Ignore empty newlines
+    #             if source.startswith('file://'):  # Allow pasting multiple files/folders copied from file manager
+    #                 source = source[7:]
+    #             if not os.path.exists(source):
+    #                 invalidSources = invalidSources + "\n" + source
+    #             else:
+    #                 new_source, created = SourceFileModel.get_or_create(dir=source, profile=self.profile())
+    #                 if created:
+    #                     self.add_source_to_table(new_source)
+    #                     new_source.save()
+
+    #     if len(invalidSources) != 0:  # Check if any invalid paths
+    #         msg = QMessageBox()
+    #         msg.setText(self.tr("Some of your sources are invalid:") + invalidSources)
+    #         self._msg = msg  # for testing
+    #         msg.exec()

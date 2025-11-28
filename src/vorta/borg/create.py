@@ -4,14 +4,11 @@ import subprocess
 import tempfile
 from datetime import datetime as dt
 
+from PyQt6.QtCore import QCoreApplication
+
 from vorta import config
 from vorta.i18n import trans_late, translate
-from vorta.store.models import (
-    ArchiveModel,
-    RepoModel,
-    SourceFileModel,
-    WifiSettingModel,
-)
+from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 
 from .borg_job import BorgJob
@@ -62,9 +59,9 @@ class BorgCreateJob(BorgJob):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup started.')}")
 
     def finished_event(self, result):
+        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
 
     @classmethod
     def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
@@ -77,7 +74,12 @@ class BorgCreateJob(BorgJob):
                 'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode),
             }
-            proc = subprocess.run(cmd, shell=True, env=env)
+            proc = subprocess.Popen(cmd, shell=True, env=env)
+
+            while proc.poll() is None:
+                # Preventing GUI freezing while running pre-backup command
+                QCoreApplication.processEvents()
+
             return proc.returncode
         else:
             return 0  # 0 if no command was run.
