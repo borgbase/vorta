@@ -221,7 +221,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation type="unfinished"/>
+        <translation>POZNÁMKA: Uchovávejte zálohu své heslové fráze na jiném místě.</translation>
     </message>
 </context>
 <context>
@@ -429,7 +429,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="881"/>
         <source>Renaming archive...</source>
-        <translation type="unfinished"/>
+        <translation>Přejmenovávání archivu…</translation>
     </message>
 </context>
 <context>
@@ -505,22 +505,22 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Změnit heslovou frázi</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
-        <translation type="unfinished"/>
+        <translation>Repozitář:</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
-        <translation type="unfinished"/>
+        <translation>Aktualizovat</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
-        <translation type="unfinished"/>
+        <translation>Nebylo možné změnit borg heslovou frázi.</translation>
     </message>
 </context>
 <context>
@@ -528,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Změnit borg heslovou frázi</translation>
     </message>
     <message>
         <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation type="unfinished"/>
+        <translation>POZNÁMKA: Uchovávejte zálohu své heslové fráze na jiném místě.</translation>
     </message>
 </context>
 <context>
@@ -792,7 +792,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
         <source>Exclude Files/Folders</source>
-        <translation type="unfinished"/>
+        <translation>Vynechat soubory/složky</translation>
     </message>
 </context>
 <context>
@@ -927,7 +927,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_add_dialog.py" line="235"/>
         <source>Enter the encryption passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Zadejte šifrovací heslovou frázi</translation>
     </message>
 </context>
 <context>
@@ -1731,12 +1731,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/partials/password_input.py" line="91"/>
         <source>Enter new encryption passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Nadejte novou šifrovací heslovou frázi</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="92"/>
         <source>Confirm new encryption passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Potvrďte zadání nové heslové fráze</translation>
     </message>
 </context>
 <context>
@@ -1762,7 +1762,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/change_passphrase.py" line="28"/>
         <source>Passphrase change failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation type="unfinished"/>
+        <translation>Změna heslové fráze se nezdařila. Podrobnosti naleznete v &lt;a href=&quot;{0}&quot;&gt;záznamech událostí&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -1871,42 +1871,42 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_tab.py" line="42"/>
         <source>Unlink Repository…</source>
-        <translation type="unfinished"/>
+        <translation>Odpojit repozitář…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="45"/>
         <source>Change Passphrase…</source>
-        <translation type="unfinished"/>
+        <translation>Změnit heslovou frázi…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="350"/>
         <source>Invalid Encryption Type</source>
-        <translation type="unfinished"/>
+        <translation>Neplatný typ šifrování</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="351"/>
         <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
-        <translation type="unfinished"/>
+        <translation>Nebylo možné změnit heslovou frázi repozitáře. Je třeba, by typ šifrování byl repokey.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="370"/>
         <source>Passphrase Changed</source>
-        <translation type="unfinished"/>
+        <translation>Heslová fráze změněna</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="371"/>
         <source>The borg passphrase was successfully changed.</source>
-        <translation type="unfinished"/>
+        <translation>Borg heslová fráze byla úspěšně změněna.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="374"/>
         <source>Passphrase Change Failed</source>
-        <translation type="unfinished"/>
+        <translation>Změna heslové fráze se nezdařila</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="375"/>
         <source>Unable to change the repository passphrase. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>Nebylo možné změnit heslovou frázi repozitáře. Zkuste to znovu.</translation>
     </message>
 </context>
 <context>
@@ -2325,17 +2325,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../filedialog.py" line="36"/>
         <source>Show hidden files</source>
-        <translation type="unfinished"/>
+        <translation>Zobrazit skryté soubory</translation>
     </message>
     <message>
         <location filename="../../filedialog.py" line="102"/>
         <source>Permission Denied</source>
-        <translation type="unfinished"/>
+        <translation>Oprávnění odepřeno</translation>
     </message>
     <message>
         <location filename="../../filedialog.py" line="103"/>
         <source>You don&apos;t have read access to {path}.</source>
-        <translation type="unfinished"/>
+        <translation>Nemáte přístup pro čtení do {path}.</translation>
     </message>
 </context>
 <context>
@@ -2529,17 +2529,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="21"/>
         <source>Updates</source>
-        <translation type="unfinished"/>
+        <translation>Atkualizace</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="150"/>
         <source>Uses Sparkle to find new updates published on Github.</source>
-        <translation type="unfinished"/>
+        <translation>K zjišťování nových aktualizací (zveřejňovaných na portálu Github) používá framework Sparkle.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="158"/>
         <source>Needs Vorta restart to apply.</source>
-        <translation type="unfinished"/>
+        <translation>Aby se uplatnilo, je třeba Vorta restartovat.</translation>
     </message>
 </context>
 <context>
