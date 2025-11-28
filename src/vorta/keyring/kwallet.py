@@ -74,6 +74,16 @@ class VortaKWallet5Keyring(VortaKeyring):
         )
         logger.debug(f"Saved password for repo {repo_url}")
 
+    def delete_password(self, service, repo_url):
+        try:
+            self.get_result(
+                "removeEntry",
+                args=[self.handle, self.folder_name, repo_url, service],
+            )
+            logger.debug(f"Deleted password for repo {repo_url}")
+        except Exception as e:
+            logger.debug(f"No password to delete for repo {repo_url}: {e}")
+
     def get_password(self, service, repo_url):
         """Retrieve a password from the KWallet.
 
