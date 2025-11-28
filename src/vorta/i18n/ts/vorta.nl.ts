@@ -510,7 +510,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
-        <translation type="unfinished"/>
+        <translation>Repository:</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="33"/>

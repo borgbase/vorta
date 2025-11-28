@@ -37,7 +37,7 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="v0.11.0-beta1" date="2025-10-05" type="beta" urgency="low">
+    <release version="v0.11.0" date="2025-11-28" type="stable" urgency="medium">
       <description>
         See Github for detailed release notes: github.com/borgbase/vorta/releases
       </description>

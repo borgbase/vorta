@@ -206,7 +206,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
-        <translation>SSH-Schlüssel:</translation>
+        <translation>SSH-Key:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="176"/>
@@ -239,7 +239,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="260"/>
         <source>Archives for {}</source>
-        <translation>Archive für {}</translation>
+        <translation>Archive auf {}</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="300"/>
@@ -429,7 +429,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="881"/>
         <source>Renaming archive...</source>
-        <translation type="unfinished"/>
+        <translation>Archiv wird umbenannt...</translation>
     </message>
 </context>
 <context>
@@ -505,12 +505,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Kennwort ändern</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
-        <translation type="unfinished"/>
+        <translation>Repository:</translation>
     </message>
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="33"/>
@@ -520,7 +520,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
-        <translation type="unfinished"/>
+        <translation>Änderung des Borg Kennworts fehlgeschlagen.</translation>
     </message>
 </context>
 <context>
@@ -528,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
-        <translation type="unfinished"/>
+        <translation>Borg Kennwort ändern</translation>
     </message>
     <message>
         <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation type="unfinished"/>
+        <translation>Hinweis: Bewahre eine Kopie des Kennworts separat auf.</translation>
     </message>
 </context>
 <context>
@@ -790,7 +790,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
         <source>Exclude Files/Folders</source>
-        <translation type="unfinished"/>
+        <translation>Dateien/Ordner ausschließen</translation>
     </message>
 </context>
 <context>
@@ -866,12 +866,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/diff_result.py" line="877"/>
         <source>modified</source>
-        <translation>modifiziert</translation>
+        <translation>verändert</translation>
     </message>
     <message>
         <location filename="../../views/diff_result.py" line="879"/>
         <source>removed</source>
-        <translation>gelöscht</translation>
+        <translation>entfernt</translation>
     </message>
     <message>
         <location filename="../../views/diff_result.py" line="881"/>
@@ -1077,7 +1077,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="61"/>
         <source>Networks</source>
-        <translation>Netzwerke</translation>
+        <translation>Netze</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="76"/>
@@ -1117,7 +1117,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="194"/>
         <source>SSH Key:</source>
-        <translation>SSH-Schlüssel:</translation>
+        <translation>SSH-Key:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="256"/>
@@ -1127,7 +1127,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="299"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Mehr Informationen über Komprimierungsverfahren&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>Weitere Informationen&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="356"/>
@@ -1217,7 +1217,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="175"/>
         <source>Trigger</source>
-        <translation>Auslöser</translation>
+        <translation>Trigger</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="212"/>
@@ -1292,7 +1292,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="553"/>
         <source>Use -1 for unlimited</source>
-        <translation>Keine Begrenzung bei einem Wert von -1</translation>
+        <translation>Benutze -1 für unbegrenzt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="450"/>
@@ -1793,12 +1793,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_tab.py" line="64"/>
         <source>ZLIB Level 6 (auto, legacy)</source>
-        <translation>ZLIB Level 6 (automatisch, legacy)</translation>
+        <translation>ZLIB Level 6 (automatisch, veraltet)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="65"/>
         <source>LZMA Level 6 (auto, legacy)</source>
-        <translation>LZMA Level 6 (automatisch, legacy)</translation>
+        <translation>LZMA Level 6 (automatisch, veraltet)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="66"/>
@@ -1965,7 +1965,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/ssh_dialog.py" line="43"/>
         <source>RSA (Legacy)</source>
-        <translation>RSA (alt)</translation>
+        <translation>RSA (veraltet)</translation>
     </message>
     <message>
         <location filename="../../views/ssh_dialog.py" line="44"/>
@@ -2038,7 +2038,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="66"/>
         <source>Backup periodically</source>
-        <translation type="unfinished"/>
+        <translation>Regelmäßige Datensicherung</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="479"/>
@@ -2048,12 +2048,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="159"/>
         <source>Backup daily</source>
-        <translation type="unfinished"/>
+        <translation>Tägliche Datensicherung</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="206"/>
         <source>Time:</source>
-        <translation>Zeit:</translation>
+        <translation>Uhrzeit:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="253"/>
@@ -2063,17 +2063,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="266"/>
         <source>Run missed backups on startup or wakeup</source>
-        <translation type="unfinished"/>
+        <translation>Verpasste Backups beim Systemstart oder Aufwachen nachholen </translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="293"/>
         <source>Autopruning:</source>
-        <translation type="unfinished"/>
+        <translation>Automatisches Ausdünnen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="300"/>
         <source>Prune after each backup</source>
-        <translation type="unfinished"/>
+        <translation>Nach jedem Backup ausdünnen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="307"/>
@@ -2083,7 +2083,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="322"/>
         <source>Validate repository data</source>
-        <translation type="unfinished"/>
+        <translation>Repositorydaten überprüfen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="515"/>
@@ -2093,7 +2093,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="417"/>
         <source>Compaction:</source>
-        <translation>Optimierung</translation>
+        <translation>Optimierung:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="432"/>
@@ -2111,7 +2111,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="14"/>
         <source>Shell Commands</source>
-        <translation type="unfinished"/>
+        <translation>Shell-Befehle</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="32"/>
@@ -2136,7 +2136,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="123"/>
         <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
-        <translation type="unfinished"/>
+        <translation>echo &quot;Sicherung nach $repo_url mit $returncode beendet.&quot;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
@@ -2215,7 +2215,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="194"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
-        <translation>Vorta konnte keine ausführbare Borg Backup Datei finden. </translation>
+        <translation>Vorta konnte keine benutzbare Kopie von Borg Backup finden.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="216"/>
@@ -2323,17 +2323,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../filedialog.py" line="36"/>
         <source>Show hidden files</source>
-        <translation type="unfinished"/>
+        <translation>Versteckte Dateien anzeigen</translation>
     </message>
     <message>
         <location filename="../../filedialog.py" line="102"/>
         <source>Permission Denied</source>
-        <translation type="unfinished"/>
+        <translation>Zugriff verweigert</translation>
     </message>
     <message>
         <location filename="../../filedialog.py" line="103"/>
         <source>You don&apos;t have read access to {path}.</source>
-        <translation type="unfinished"/>
+        <translation>Du hast keinen Lesezugriff auf {path}.</translation>
     </message>
 </context>
 <context>
@@ -2527,7 +2527,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="21"/>
         <source>Updates</source>
-        <translation type="unfinished"/>
+        <translation>Updates</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="150"/>
@@ -2537,7 +2537,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="158"/>
         <source>Needs Vorta restart to apply.</source>
-        <translation type="unfinished"/>
+        <translation>Vorta muss für die Anwendung dieser Änderung neugestartet werden</translation>
     </message>
 </context>
 <context>
