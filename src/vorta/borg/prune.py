@@ -1,3 +1,5 @@
+from vorta import config
+from vorta.i18n import translate
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, format_archive_name
 
@@ -20,7 +22,15 @@ class BorgPruneJob(BorgJob):
 
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgPruneJob', 'Prune command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
 
     @classmethod
     def prepare(cls, profile):
