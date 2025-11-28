@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
+    <width>516</width>
     <height>426</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Custom</string>
+       <string>Exclude Patterns</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
