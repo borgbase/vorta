@@ -7,3 +7,4 @@ exclude src/vorta/i18n/qm/vorta.en.qm
 recursive-exclude tests *
 global-exclude *.DS_Store
 global-exclude *.egg-info
+global-exclude *.gitkeep
