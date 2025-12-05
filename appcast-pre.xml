@@ -6,6 +6,110 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.0</title>
+      <description><![CDATA[<p>After 2 months of testing we are ready to release the next major version of Vorta. Much of this was contributed by our Google Summer of Code student, @VandalByte. A big thanks to him for all his work over the summer.</p>
+<h2>Highlights:</h2>
+<ul>
+<li>Change passphrase feature (#2224) — Users can now change their repository passphrase directly from Vorta's UI, eliminating the need to drop to the command line for this common security operation. This was a long-requested feature dating back to issue #303.</li>
+<li>Unified file selector (#2237) — Replaces the confusing dual-dialog approach (separate dialogs for files vs folders) with a single tree-view selector that supports multi-selection for both. This addresses a longstanding UX pain point caused by Qt limitations.</li>
+<li>Fix GUI freezing during pre-backup commands (#2214) — Pre-backup scripts that took more than a few seconds would freeze the entire interface until completion. The backup now runs asynchronously, keeping the UI responsive.</li>
+</ul>
+<h2>All changes</h2>
+<ul>
+<li>add exclude patterns for most common media files and .part files by @renner0e in <a href="https://github.com/borgbase/vorta/pull/2145" rel="nofollow">https://github.com/borgbase/vorta/pull/2145</a></li>
+<li>remove setuptools from install_requires by @dotlambda in <a href="https://github.com/borgbase/vorta/pull/2187" rel="nofollow">https://github.com/borgbase/vorta/pull/2187</a></li>
+<li>Improved GUI to clarify the passphrase field by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2208" rel="nofollow">https://github.com/borgbase/vorta/pull/2208</a></li>
+<li>Notification timeout removed for critical errors by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2210" rel="nofollow">https://github.com/borgbase/vorta/pull/2210</a></li>
+<li>Skip reading file size if path name is too long by @twilight39 in <a href="https://github.com/borgbase/vorta/pull/2215" rel="nofollow">https://github.com/borgbase/vorta/pull/2215</a></li>
+<li>Add missing placeholder keys by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2227" rel="nofollow">https://github.com/borgbase/vorta/pull/2227</a></li>
+<li>Add 1pass and terminus logos by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2228" rel="nofollow">https://github.com/borgbase/vorta/pull/2228</a></li>
+<li>logs: put borg arguments within quotation marks when they contain special strings by @goebbe in <a href="https://github.com/borgbase/vorta/pull/2190" rel="nofollow">https://github.com/borgbase/vorta/pull/2190</a></li>
+<li>Re-arrange tasks to get correct finished event by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2235" rel="nofollow">https://github.com/borgbase/vorta/pull/2235</a></li>
+<li>Add a new unified file selector by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2237" rel="nofollow">https://github.com/borgbase/vorta/pull/2237</a></li>
+<li>Fix broken transifex link by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2250" rel="nofollow">https://github.com/borgbase/vorta/pull/2250</a></li>
+<li>feat: refresh metadata by @renner0e in <a href="https://github.com/borgbase/vorta/pull/2247" rel="nofollow">https://github.com/borgbase/vorta/pull/2247</a></li>
+<li>Add the change passphrase feature by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2224" rel="nofollow">https://github.com/borgbase/vorta/pull/2224</a></li>
+<li>Adding Flatpak app caches to "All Cache Files" exclusion preset. by @CScallops in <a href="https://github.com/borgbase/vorta/pull/2232" rel="nofollow">https://github.com/borgbase/vorta/pull/2232</a></li>
+<li>Add exclude pattern for Java development artefacts by @MrMinemeet in <a href="https://github.com/borgbase/vorta/pull/2262" rel="nofollow">https://github.com/borgbase/vorta/pull/2262</a></li>
+<li>Fix bug with incorrect renaming of archives after aborting edit by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2213" rel="nofollow">https://github.com/borgbase/vorta/pull/2213</a></li>
+<li>Fix the blank entry in the Custom exclusion by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2268" rel="nofollow">https://github.com/borgbase/vorta/pull/2268</a></li>
+<li>Fix GUI Freezing while running pre-backup command by @ahmedhosssam in <a href="https://github.com/borgbase/vorta/pull/2214" rel="nofollow">https://github.com/borgbase/vorta/pull/2214</a></li>
+<li>If there's no system tray, at least show a window. by @daym in <a href="https://github.com/borgbase/vorta/pull/2205" rel="nofollow">https://github.com/borgbase/vorta/pull/2205</a></li>
+<li>Add file dialog to exclude patterns by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2252" rel="nofollow">https://github.com/borgbase/vorta/pull/2252</a></li>
+<li>packaging: exclude .gitkeep files by @hydrargyrum in <a href="https://github.com/borgbase/vorta/pull/2290" rel="nofollow">https://github.com/borgbase/vorta/pull/2290</a></li>
+<li>Increase archive_tag.ui maximum keep_ limit. by @max-foss in <a href="https://github.com/borgbase/vorta/pull/2282" rel="nofollow">https://github.com/borgbase/vorta/pull/2282</a></li>
+<li>Issue/2198 fix by @gargolito in <a href="https://github.com/borgbase/vorta/pull/2242" rel="nofollow">https://github.com/borgbase/vorta/pull/2242</a></li>
+</ul>
+<h2>New Contributors</h2>
+<ul>
+<li>@dotlambda made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2187" rel="nofollow">https://github.com/borgbase/vorta/pull/2187</a></li>
+<li>@VandalByte made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2208" rel="nofollow">https://github.com/borgbase/vorta/pull/2208</a></li>
+<li>@twilight39 made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2215" rel="nofollow">https://github.com/borgbase/vorta/pull/2215</a></li>
+<li>@CScallops made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2232" rel="nofollow">https://github.com/borgbase/vorta/pull/2232</a></li>
+<li>@MrMinemeet made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2262" rel="nofollow">https://github.com/borgbase/vorta/pull/2262</a></li>
+<li>@ahmedhosssam made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2214" rel="nofollow">https://github.com/borgbase/vorta/pull/2214</a></li>
+<li>@daym made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2205" rel="nofollow">https://github.com/borgbase/vorta/pull/2205</a></li>
+<li>@hydrargyrum made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2290" rel="nofollow">https://github.com/borgbase/vorta/pull/2290</a></li>
+<li>@max-foss made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2282" rel="nofollow">https://github.com/borgbase/vorta/pull/2282</a></li>
+<li>@gargolito made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2242" rel="nofollow">https://github.com/borgbase/vorta/pull/2242</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0</a></p>]]></description>
+      <pubDate>2025-11-28T13:01:27Z</pubDate>
+      <sparkle:version>0.11.0</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.0</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0/Vorta-v0.11.0-arm.dmg" length="45379995" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
+      <title>v0.11.0-beta1</title>
+      <description><![CDATA[<p>Beta-release before our next major version.</p>
+<h2>Highlights</h2>
+<ul>
+<li>Add change passphrase feature (e4064b4e) by @VandalByte - Adds UI and functionality to change repository passphrases directly within Vorta.</li>
+<li>Add file dialog to exclude patterns (801f356f) by @VandalByte - Adds file browser to visually select files/folders for backup exclusion instead of manual path entry.</li>
+<li>Always show window if no system tray (1082a26f) by @daym - Ensures Vorta window remains accessible on systems without system tray support.</li>
+<li>Avoid GUI freezing during pre-backup command (919211cd) by @ahmedhosssam - Runs pre-backup commands asynchronously to prevent GUI from becoming unresponsive.</li>
+<li>No timeout for errors (0a316e7a) by @VandalByte - Makes error notifications persistent until manually dismissed to prevent missing critical errors.</li>
+</ul>
+<h2>What's Changed</h2>
+<ul>
+<li>add exclude patterns for most common media files and .part files by @renner0e in <a href="https://github.com/borgbase/vorta/pull/2145" rel="nofollow">https://github.com/borgbase/vorta/pull/2145</a></li>
+<li>remove setuptools from install_requires by @dotlambda in <a href="https://github.com/borgbase/vorta/pull/2187" rel="nofollow">https://github.com/borgbase/vorta/pull/2187</a></li>
+<li>Improved GUI to clarify the passphrase field by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2208" rel="nofollow">https://github.com/borgbase/vorta/pull/2208</a></li>
+<li>Notification timeout removed for critical errors by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2210" rel="nofollow">https://github.com/borgbase/vorta/pull/2210</a></li>
+<li>Skip reading file size if path name is too long by @twilight39 in <a href="https://github.com/borgbase/vorta/pull/2215" rel="nofollow">https://github.com/borgbase/vorta/pull/2215</a></li>
+<li>Add missing placeholder keys by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2227" rel="nofollow">https://github.com/borgbase/vorta/pull/2227</a></li>
+<li>Add 1pass and terminus logos by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2228" rel="nofollow">https://github.com/borgbase/vorta/pull/2228</a></li>
+<li>logs: put borg arguments within quotation marks when they contain special strings by @goebbe in <a href="https://github.com/borgbase/vorta/pull/2190" rel="nofollow">https://github.com/borgbase/vorta/pull/2190</a></li>
+<li>Re-arrange tasks to get correct finished event by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2235" rel="nofollow">https://github.com/borgbase/vorta/pull/2235</a></li>
+<li>Add a new unified file selector by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2237" rel="nofollow">https://github.com/borgbase/vorta/pull/2237</a></li>
+<li>Fix broken transifex link by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2250" rel="nofollow">https://github.com/borgbase/vorta/pull/2250</a></li>
+<li>feat: refresh metadata by @renner0e in <a href="https://github.com/borgbase/vorta/pull/2247" rel="nofollow">https://github.com/borgbase/vorta/pull/2247</a></li>
+<li>Add the change passphrase feature by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2224" rel="nofollow">https://github.com/borgbase/vorta/pull/2224</a></li>
+<li>Adding Flatpak app caches to "All Cache Files" exclusion preset. by @CScallops in <a href="https://github.com/borgbase/vorta/pull/2232" rel="nofollow">https://github.com/borgbase/vorta/pull/2232</a></li>
+<li>Add exclude pattern for Java development artefacts by @MrMinemeet in <a href="https://github.com/borgbase/vorta/pull/2262" rel="nofollow">https://github.com/borgbase/vorta/pull/2262</a></li>
+<li>Fix bug with incorrect renaming of archives after aborting edit by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2213" rel="nofollow">https://github.com/borgbase/vorta/pull/2213</a></li>
+<li>Fix the blank entry in the Custom exclusion by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2268" rel="nofollow">https://github.com/borgbase/vorta/pull/2268</a></li>
+<li>Fix GUI Freezing while running pre-backup command by @ahmedhosssam in <a href="https://github.com/borgbase/vorta/pull/2214" rel="nofollow">https://github.com/borgbase/vorta/pull/2214</a></li>
+<li>If there's no system tray, at least show a window. by @daym in <a href="https://github.com/borgbase/vorta/pull/2205" rel="nofollow">https://github.com/borgbase/vorta/pull/2205</a></li>
+<li>Add file dialog to exclude patterns by @VandalByte in <a href="https://github.com/borgbase/vorta/pull/2252" rel="nofollow">https://github.com/borgbase/vorta/pull/2252</a></li>
+</ul>
+<h2>New Contributors</h2>
+<ul>
+<li>@dotlambda made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2187" rel="nofollow">https://github.com/borgbase/vorta/pull/2187</a></li>
+<li>@VandalByte made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2208" rel="nofollow">https://github.com/borgbase/vorta/pull/2208</a></li>
+<li>@twilight39 made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2215" rel="nofollow">https://github.com/borgbase/vorta/pull/2215</a></li>
+<li>@CScallops made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2232" rel="nofollow">https://github.com/borgbase/vorta/pull/2232</a></li>
+<li>@MrMinemeet made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2262" rel="nofollow">https://github.com/borgbase/vorta/pull/2262</a></li>
+<li>@ahmedhosssam made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2214" rel="nofollow">https://github.com/borgbase/vorta/pull/2214</a></li>
+<li>@daym made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2205" rel="nofollow">https://github.com/borgbase/vorta/pull/2205</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0-beta1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0-beta1</a></p>]]></description>
+      <pubDate>2025-10-05T15:46:17Z</pubDate>
+      <sparkle:version>0.11.0-beta1</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.0-beta1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0-beta1/Vorta-v0.11.0-beta1-arm.dmg" length="45233619" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.10.3</title>
       <description><![CDATA[<p>This release fixes a new issue on macOS preventing Vorta from finding external Borg versions, as well as an issue with parsing pre- and post backup commands. Big Thank You to the users who helped report and resolve those!</p>
 <p>As usual, this release also includes updated translations. If you'd like to help translate Vorta into your own language, see our <a href="https://vorta.borgbase.com/contributing/translations/" rel="nofollow">language docs</a>.</p>
@@ -696,83 +800,6 @@ translation, as well as updates to existing translations.</p>
       <sparkle:version>0.7.4</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.4</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.4/vorta-0.7.4.dmg" length="47103648" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.3</title>
-      <description><![CDATA[<p>This release adds support for two more Borg commands (rename and break-lock), as well as a
-slightly revamped Archive tab. We also updated macOS Wifi support and fixed numberous bugs.</p>
-<h3>Possible Breaking Changes</h3>
-<ul>
-<li>This removes the <code>profile_slug</code> from the default archive name and prefix. This change only applies to <strong>new backup profiles</strong>. So if you use the same repo for multiple projects on the same hostname, be sure to check your prune prefix as well. The new default archive name is: <code>{hostname}-{now:%Y-%m-%d-%H%M%S}</code></li>
-</ul>
-<h3>New Features</h3>
-<ul>
-<li>Add mount option override checkbox. By @samuel-w (#682)</li>
-<li>Add custom options to borg create command. By @samuel-w (#677)</li>
-<li>Add rename action. By @samuel-w and @m3nu (#864)</li>
-<li>Give option to break repository lock. By @samuel-w (#863)</li>
-</ul>
-<h3>Bugfixes</h3>
-<ul>
-<li>Remove support for deprecated macOS XML wifi list. (#868)</li>
-<li>Catch more possible SSH key parsing errors. (#789)</li>
-<li>Improve cancelling Borg process (#786)</li>
-<li>Add QTimer to ensure background jobs are scheduled correctly. (#780)</li>
-<li>Fix corrupted archive table list during refresh if sorting is enabled. By @rblenis (#784)</li>
-</ul>]]></description>
-      <pubDate>2021-02-18T07:38:53Z</pubDate>
-      <sparkle:version>0.7.3</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.3</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.3/vorta-0.7.3.dmg" length="47074218" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.2</title>
-      <description><![CDATA[<p>This release adds a lot of detailed improvements, mostly contributed by our newest
-maintainer @samuel-w.</p>
-<p>A selection of the main changes:</p>
-<ul>
-<li>Renable buttons on cancel. By @samuel-w (#772)</li>
-<li>Allow pasting files/folders from file manager, set model defaults (#759)</li>
-<li>Add option to disable exit dialog. By @samuel-w (#681)</li>
-<li>Allow only one profile with --create. By @samuel-w (#744)</li>
-<li>Improved password handling and transparency. By @samuel-w (#550)</li>
-<li>Fix file selector dialog (#764)</li>
-<li>Fix label colour not changing on dark mode change. By @samuel-w (#757)</li>
-<li>Cleanup database at exit, use write-ahead logging. By @samuel-w (#696)</li>
-<li>Sort files in Extract dialog alphabetically. By @samuel-w (#741)</li>
-<li>Update check message on completion. By @samuel-w (#672)</li>
-<li>Give error message on unmount failure. By @samuel-w (#668)</li>
-<li>Improve exception handling. By @samuel-w (#628)</li>
-<li>Ensure system keychain is unlocked before using it. By @samuel-w (#607)</li>
-<li>Create backups from command line using existing profiles. By @samuel-w (#556)</li>
-<li>Diff: better color of added and removed text. By @samuel-w (#649)</li>
-<li>Add KWallet support. By @samuel-w (#540)</li>
-<li>Correctly sort archives by size. By @samuel-w (#729)</li>
-<li>Refactoring: remove last exec_, add tests, retain archive deletion message. By @samuel-w (#722)</li>
-<li>Refactor add and rename to not use exec_. By @samuel-w (#721)</li>
-<li>Improve autostart test. By @samuel-w (#720)</li>
-<li>Limit network checking to only remote repos. By @samuel-w (#701)</li>
-<li>Re-enable SSH host key checking for all operations except when adding repo (#717)</li>
-<li>Add valid copyright header to Johan Rade's work. By @sten0 (#716)</li>
-<li>Display number of files and sizes in source tab. By @XXXBold (#617)</li>
-<li>Translate category labels for log output. By @samuel-w (#683)</li>
-<li>Fix crash when window is closed while thread running. By @samuel-w  (#685)</li>
-<li>Reuse existing window when bringing to front. (#674)</li>
-<li>Set icon through code (#676)</li>
-<li>Show dialog on copy failure. By @samuel-w (#647)</li>
-<li>Get keyring at runtime. By @samuel-w (#635)</li>
-<li>Save correct window size. By @samuel-w (#661)</li>
-<li>Properly catch DBusException. By @samuel-w (#670)</li>
-<li>Set application name (#666)</li>
-<li>Set all icons to same height (#660)</li>
-<li>Replace Borg version with install method in bug report (#657)</li>
-<li>Reduce icon memory usage. By @samuel-w (#656)</li>
-<li>Cancel Borg thread at end of test. (#648)</li>
-</ul>]]></description>
-      <pubDate>2021-01-31T08:30:24Z</pubDate>
-      <sparkle:version>0.7.2</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.2</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.2/vorta-0.7.2.dmg" length="46740454" type="application/x-diskcopy"/>
     </item>
   </channel>
 </rss>
