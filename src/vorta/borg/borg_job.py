@@ -270,6 +270,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 return ''
 
         stdout = []
+        error_msg = None
         while True:
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
@@ -306,22 +307,25 @@ class BorgJob(JobInterface, BackupProfileMixin):
                             self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
                         msg = line.strip()
                         if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                            error_msg = stderr
                             logger.warning(msg)
 
             if p.poll() is not None:
                 time.sleep(0.1)
                 stdout.append(read_async(p.stdout))
                 break
+
+        if error_msg and self.process.returncode != 0:
+            self.app.error_signal.emit(error_msg)
 
         result = {
             'params': self.params,
