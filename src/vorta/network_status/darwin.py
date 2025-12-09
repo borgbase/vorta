@@ -95,16 +95,18 @@ def call_ipconfig_getpacket(bsd_device):
 
 
 def call_networksetup_listallhardwareports():
-    cmd = ['networksetup', '-listallhardwareports']
+    cmd = ['/usr/sbin/networksetup', '-listallhardwareports']
     try:
         return subprocess.check_output(cmd)
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         logger.debug("Command %s failed", ' '.join(cmd))
+        return b''
 
 
 def call_networksetup_listpreferredwirelessnetworks(interface) -> str:
     command = ['/usr/sbin/networksetup', '-listpreferredwirelessnetworks', interface]
     try:
         return subprocess.check_output(command).decode(encoding='utf-8')
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         logger.debug("Command %s failed", " ".join(command))
+        return ''
