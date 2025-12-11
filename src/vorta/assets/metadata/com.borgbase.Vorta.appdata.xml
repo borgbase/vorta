@@ -25,21 +25,25 @@
   <screenshots>
     <screenshot type="default">
       <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-1-Repository.png</image>
+      <caption>Repository configuration</caption>
     </screenshot>
-    <screenshot type="default">
+    <screenshot>
       <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-2-Sources.png</image>
+      <caption>Source folder selection</caption>
     </screenshot>
-    <screenshot type="default">
+    <screenshot>
       <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-3-Schedule.png</image>
+      <caption>Backup scheduling</caption>
     </screenshot>
-    <screenshot type="default">
+    <screenshot>
       <image type="source" width="1000" height="678">https://raw.githubusercontent.com/borgbase/vorta/master/src/vorta/assets/metadata/Screenshot-4-Archives.png</image>
+      <caption>Archive browser</caption>
     </screenshot>
   </screenshots>
   <releases>
     <release version="v0.11.0" date="2025-11-28" type="stable" urgency="medium">
       <description>
-        See Github for detailed release notes: github.com/borgbase/vorta/releases
+        <p>See Github for detailed release notes: github.com/borgbase/vorta/releases</p>
       </description>
     </release>
   </releases>
