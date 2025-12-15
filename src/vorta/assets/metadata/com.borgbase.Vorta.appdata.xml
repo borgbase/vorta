@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <component type="desktop-application">
   <!--Created with jdAppStreamEdit 9.2-->
   <id>com.borgbase.Vorta</id>
@@ -41,7 +41,7 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="v0.11.0" date="2025-11-28" type="stable" urgency="medium">
+    <release version="v0.11.1" date="2025-12-15" type="stable" urgency="medium">
       <description>
         <p>See Github for detailed release notes: github.com/borgbase/vorta/releases</p>
       </description>
