@@ -9,7 +9,7 @@ on:
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.4.0'
+        default: '1.4.3'
       macos_version:
         description: 'macOS version for building'
         required: true
@@ -48,10 +48,14 @@ jobs:
         pip3 install --break-system-packages .
     - name: Package with PyInstaller
       run: |
+        if [ "$(uname -m)" = "arm64" ]; then BORG_BINARY="borg-macos-14-arm64-gh"; else BORG_BINARY="borg-macos-13-x86_64-gh"; fi
         pyinstaller --clean --noconfirm package/vorta.spec
         cp -R $(brew --prefix)/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macos1012.tgz
-        tar xvf borg-macos1012.tgz -C dist/Vorta.app/Contents/Resources/
+        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_BINARY}
+        xattr -dr com.apple.quarantine ./${BORG_BINARY}
+        chmod +x ./${BORG_BINARY}
+        mkdir -p dist/Vorta.app/Contents/Resources/borg-dir
+        mv ./${BORG_BINARY} dist/Vorta.app/Contents/Resources/borg-dir/borg.exe
         cd dist && zip -rq --symlinks Vorta.zip Vorta.app
 
     - name: Codesign executable
@@ -82,6 +86,6 @@ jobs:
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: Vorta.dmg
+        name: Vorta-${{ runner.arch == 'ARM64' && 'arm64' || 'x86_64' }}.dmg
         path: dist/Vorta.dmg
         retention-days: 60
