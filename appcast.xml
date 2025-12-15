@@ -6,6 +6,22 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.1</title>
+      <description><![CDATA[<p>This release improves the packaging and release process.</p>
+<h2>What's Changed</h2>
+<ul>
+<li>fix: use absolute path for networksetup binary on macOS by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2309" rel="nofollow">https://github.com/borgbase/vorta/pull/2309</a></li>
+<li>Fix appstream validation errors in metainfo file by @Hofer-Julian in <a href="https://github.com/borgbase/vorta/pull/2310" rel="nofollow">https://github.com/borgbase/vorta/pull/2310</a></li>
+<li>Use new borg release naming by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2314" rel="nofollow">https://github.com/borgbase/vorta/pull/2314</a></li>
+</ul>
+<p><strong>macOS Intel builds</strong>: Due to available Github runners the Intel build can only be done on macOS 15, which is the last macOS version with Intel support.</p>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.11.0...v0.11.1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.11.0...v0.11.1</a></p>]]></description>
+      <pubDate>2025-12-15T15:12:48Z</pubDate>
+      <sparkle:version>0.11.1</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.1/Vorta-v0.11.1-arm.dmg" length="48201686" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.0</title>
       <description><![CDATA[<p>After 2 months of testing we are ready to release the next major version of Vorta. Much of this was contributed by our Google Summer of Code student, @VandalByte. A big thanks to him for all his work over the summer.</p>
 <h2>Highlights:</h2>
@@ -57,7 +73,7 @@
       <pubDate>2025-11-28T13:01:27Z</pubDate>
       <sparkle:version>0.11.0</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.0</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0/Vorta-v0.11.0-arm.dmg" length="45379995" type="application/x-apple-diskimage"/>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0/Vorta-v0.11.0-arm.dmg" length="45384722" type="application/x-apple-diskimage"/>
     </item>
     <item>
       <title>v0.10.3</title>
@@ -545,27 +561,6 @@ users have reported with their keychain. With this release</p>
       <sparkle:version>0.7.5</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.5</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.5/vorta-0.7.5.dmg" length="47113299" type="application/x-diskcopy"/>
-    </item>
-    <item>
-      <title>v0.7.4</title>
-      <description><![CDATA[<p>This is a maintenance release to address some widespread issues
-related to different Linux keychains. It also adds Swedish as
-translation, as well as updates to existing translations.</p>
-<h3>New features</h3>
-<ul>
-<li>Add option to refresh individual archives. By @rblenis (#878)</li>
-</ul>
-<h3>Bug fixes and improvements</h3>
-<ul>
-<li>Fix log table sorting. By @rblenis (#881)</li>
-<li>Improve kwallet verification. By @samuel-w (#889)</li>
-<li>Remove failing SSH key check (#887)</li>
-<li>Avoid segfault when quitting (#877)</li>
-</ul>]]></description>
-      <pubDate>2021-02-26T03:46:08Z</pubDate>
-      <sparkle:version>0.7.4</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.4</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.4/vorta-0.7.4.dmg" length="47103648" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
