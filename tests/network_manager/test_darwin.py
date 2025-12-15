@@ -1,6 +1,10 @@
+import sys
 from unittest.mock import MagicMock
 
 import pytest
+
+if sys.platform != 'darwin':
+    pytest.skip("Skipping darwin-only network tests", allow_module_level=True)
 
 from vorta.network_status import darwin
 
