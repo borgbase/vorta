@@ -54,8 +54,8 @@ jobs:
         curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_BINARY}
         xattr -dr com.apple.quarantine ./${BORG_BINARY}
         chmod +x ./${BORG_BINARY}
-        mkdir -p dist/Vorta.app/Contents/Resources/borg.dir
-        mv ./${BORG_BINARY} dist/Vorta.app/Contents/Resources/borg.dir/borg.exe
+        mkdir -p dist/Vorta.app/Contents/Resources/borg-dir
+        mv ./${BORG_BINARY} dist/Vorta.app/Contents/Resources/borg-dir/borg.exe
         cd dist && zip -rq --symlinks Vorta.zip Vorta.app
 
     - name: Codesign executable
