@@ -1,3 +1,6 @@
+import logging
+from functools import partial
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
 from PyQt6.QtWidgets import QApplication
@@ -7,6 +10,8 @@ from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
@@ -39,10 +44,10 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.compactionCheckBox.toggled.connect(self.frameCompaction.setEnabled)
 
         for label, obj in self.schedulerRadioMapping.items():
-            obj.clicked.connect(self.on_scheduler_change)
-        self.scheduleIntervalCount.valueChanged.connect(self.on_scheduler_change)
-        self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
-        self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
+            obj.clicked.connect(partial(self.on_scheduler_change, 'clicked'))
+        self.scheduleIntervalCount.valueChanged.connect(partial(self.on_scheduler_change, 'intervalCount'))
+        self.scheduleIntervalUnit.currentIndexChanged.connect(partial(self.on_scheduler_change, 'intervalUnit'))
+        self.scheduleFixedTime.timeChanged.connect(partial(self.on_scheduler_change, 'fixedTime'))
 
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
@@ -67,8 +72,16 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         # Listen for events
         self.app.profile_changed_event.connect(self.populate_from_profile)
 
-    def on_scheduler_change(self, _):
+    def on_scheduler_change(self, src, _):
         profile = self.profile()
+        logger.debug(
+            'sc pre (%s) profile %s (%s): %d %d',
+            src,
+            profile,
+            profile.schedule_mode,
+            profile.schedule_fixed_hour,
+            profile.schedule_fixed_minute,
+        )
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 profile.schedule_mode = label
@@ -81,6 +94,14 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
                 )
                 profile.save()
 
+        logger.debug(
+            'sc post (%s) profile %s (%s): %d %d',
+            src,
+            profile,
+            profile.schedule_mode,
+            profile.schedule_fixed_hour,
+            profile.schedule_fixed_minute,
+        )
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()
 
