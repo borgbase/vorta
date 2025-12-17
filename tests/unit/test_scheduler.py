@@ -204,8 +204,6 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     ],
 )
 def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
-    scheduler = VortaScheduler()
-
     time = dt(2020, 5, 4, 0, 0) + now
     clockmock.now.return_value = time
 
@@ -227,7 +225,9 @@ def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, 
     )
     event.save()
 
-    qapp.scheduler = scheduler
+    # This is what triggers schedule reload in app init,
+    # so simulate it as closely as we can
+    qapp.set_borg_details_action()
     window_load()
     print(profile.schedule_mode)
 
