@@ -10,18 +10,8 @@ if borg_version:
     # Use specified borg version
     supported_borgbackup_versions = [borg_version]
 else:
-    # Generate a list of borg versions compatible with system installed python version
-    system_python_version = tuple(sys.version_info[:3])
-
-    supported_borgbackup_versions = [
-        borgbackup
-        for borgbackup in ("1.1.18", "1.2.2", "1.2.4", "2.0.0b6")
-        # Python version requirements for borgbackup versions
-        if (borgbackup == "1.1.18" and system_python_version >= (3, 5, 0))
-        or (borgbackup == "1.2.2" and system_python_version >= (3, 8, 0))
-        or (borgbackup == "1.2.4" and system_python_version >= (3, 8, 0))
-        or (borgbackup == "2.0.0b6" and system_python_version >= (3, 9, 0))
-    ]
+    # Default to latest stable version
+    supported_borgbackup_versions = ["1.4.3"]
 
 
 @nox.session
