@@ -4,6 +4,7 @@ from pathlib import Path
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtCore import pyqtSignal as Signal
 from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
@@ -42,6 +43,8 @@ logger = logging.getLogger(__name__)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
+    loaded = Signal()
+
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
@@ -128,6 +131,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
 
         self.set_icons()
+        self.loaded.emit()
 
     def on_close_window(self):
         self.close()

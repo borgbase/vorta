@@ -10,6 +10,7 @@ import vorta.borg
 import vorta.scheduler
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.views.main_window import MainWindow
 
 PROFILE_NAME = 'Default'
 FIXED_SCHEDULE = 'fixed'
@@ -191,3 +192,51 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
 
     scheduler.set_timer_for_profile(profile.id)
     assert scheduler.timers[profile.id]['dt'] == expected
+
+
+@mark.parametrize(
+    "now, hour, minute, time_since_last_run, expect_catchup",
+    [
+        (td(hours=9), 18, 00, td(hours=12), False),
+        (td(hours=9), 18, 00, td(hours=20), True),
+        (td(hours=20), 18, 00, td(hours=2), False),
+        (td(hours=20), 18, 00, td(hours=4), True),
+    ],
+)
+def test_missed_startup(qapp, qtbot, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 4, 0, 0) + now
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = hour
+    profile.schedule_fixed_minute = minute
+    profile.save()
+
+    last_time = time - time_since_last_run
+    event = EventLogModel(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_time,
+        end_time=last_time,
+    )
+    event.save()
+
+    qapp.main_window.deleteLater()
+    del qapp.main_window
+    qapp.main_window = MainWindow(qapp)
+    scheduler.reload_all_timers()
+    print(profile.schedule_mode)
+
+    qtbot.waitSignal(qapp.main_window.loaded)
+
+    num_events = EventLogModel.select().count()
+    if expect_catchup:
+        assert num_events == 2
+    else:
+        assert num_events == 1
