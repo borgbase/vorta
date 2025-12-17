@@ -102,7 +102,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.set_icons()
 
         # Listen for events
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
         QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
 
     def set_icons(self):
@@ -119,6 +120,12 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 path_item.setIcon(get_colored_icon('folder'))
             else:
                 path_item.setIcon(get_colored_icon('file'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):

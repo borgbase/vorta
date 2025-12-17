@@ -1,6 +1,6 @@
 export VORTA_SRC := src/vorta
 export APPSTREAM_METADATA := src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
-VERSION := $(shell python -c "from src.vorta._version import __version__; print(__version__)")
+VERSION := $(shell uv run python -c "from src.vorta._version import __version__; print(__version__)")
 
 .PHONY : help clean lint test
 .DEFAULT_GOAL := help
@@ -16,7 +16,7 @@ clean:
 	rm -rf dist/*
 
 dist/Vorta.app:  ## Build macOS app locally (without Borg)
-	pyinstaller --clean --noconfirm package/vorta.spec
+	uv run pyinstaller --clean --noconfirm package/vorta.spec
 	cp -R ${HOMEBREW}/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
 	rm -rf build/vorta dist/vorta
 
@@ -33,8 +33,8 @@ github-release: dist/Vorta.dmg  ## Add new Github release and attach macOS DMG
 	git checkout master
 
 pypi-release: translations-to-qm  ## Upload new release to PyPi
-	python setup.py sdist
-	twine upload dist/vorta-${VERSION}.tar.gz
+	uv run python -m build --sdist
+	uv run twine upload dist/vorta-${VERSION}.tar.gz
 
 bump-version:  ## Tag new version. First set new version number in src/vorta/_version.py
 	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${APPSTREAM_METADATA}
@@ -64,16 +64,16 @@ flatpak-install: translations-to-qm
 	install -D src/vorta/assets/metadata/com.borgbase.Vorta.desktop ${FLATPAK_DEST}/share/applications/com.borgbase.Vorta.desktop
 
 lint:
-	pre-commit run --all-files --show-diff-on-failure
+	uv run pre-commit run --all-files --show-diff-on-failure
 
 test:
-	nox -- --cov=vorta
+	uv run nox -- --cov=vorta
 
 test-unit:
-	nox -- --cov=vorta tests/unit
+	uv run nox -- --cov=vorta tests/unit
 
 test-integration:
-	nox -- --cov=vorta tests/integration
+	uv run nox -- --cov=vorta tests/integration
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
