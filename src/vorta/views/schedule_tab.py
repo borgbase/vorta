@@ -25,7 +25,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.init_shell_commands_page()
         self.init_networks_page()
         self.init_schedule_page()
-        self.app.paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = self.app.paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
         self.app.backup_finished_event.connect(self.logPage.populate_logs)
 
@@ -54,3 +55,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.toolBox.setItemIcon(1, get_colored_icon('wifi'))
         self.toolBox.setItemIcon(2, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
+
+    def _on_destroyed(self):
+        try:
+            self.app.paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass

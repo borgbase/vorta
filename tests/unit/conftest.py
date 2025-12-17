@@ -70,6 +70,12 @@ def init_db(qapp, qtbot, tmpdir_factory):
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
+    # Disconnect signals before destroying main_window to avoid "deleted object" errors
+    try:
+        qapp.scheduler.schedule_changed.disconnect()
+    except TypeError:
+        pass
+
     qapp.main_window.deleteLater()
     del qapp.main_window
     qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
