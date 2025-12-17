@@ -1,5 +1,6 @@
 import logging
 from functools import partial
+from typing import Callable
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
@@ -14,6 +15,41 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
+
+
+class ScheduleUpdater:
+    def __init__(self, update_cb: Callable):
+        self.update_cb = update_cb
+        self.initialized = {
+            "intervalUnit": False,
+            "intervalCount": False,
+            "mode": False,
+            "fixedTime": False,
+        }
+
+    def intervalUnit(self):
+        self.initialized['intervalUnit'] = True
+        self.update()
+
+    def intervalCount(self):
+        self.initialized['intervalCount'] = True
+        self.update()
+
+    def mode(self):
+        self.initialized['mode'] = True
+        self.update()
+
+    def fixedTime(self):
+        self.initialized['fixedTime'] = True
+        self.update()
+
+    def update(self):
+        if not all(self.initialized.values()):
+            logger.debug("Skipping profile update until all fields are initialized")
+            return
+
+        logger.debug("Updating profile due to field change")
+        self.update_cb()
 
 
 class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
@@ -43,11 +79,12 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.validationCheckBox.toggled.connect(self.frameValidation.setEnabled)
         self.compactionCheckBox.toggled.connect(self.frameCompaction.setEnabled)
 
+        self.scheduleUpdater = ScheduleUpdater(self.populate_to_profile)
         for label, obj in self.schedulerRadioMapping.items():
-            obj.clicked.connect(partial(self.on_scheduler_change, 'clicked'))
-        self.scheduleIntervalCount.valueChanged.connect(partial(self.on_scheduler_change, 'intervalCount'))
-        self.scheduleIntervalUnit.currentIndexChanged.connect(partial(self.on_scheduler_change, 'intervalUnit'))
-        self.scheduleFixedTime.timeChanged.connect(partial(self.on_scheduler_change, 'fixedTime'))
+            obj.toggled.connect(self.scheduleUpdater.mode)
+        self.scheduleIntervalCount.valueChanged.connect(self.scheduleUpdater.intervalCount)
+        self.scheduleIntervalUnit.currentIndexChanged.connect(self.scheduleUpdater.intervalUnit)
+        self.scheduleFixedTime.timeChanged.connect(self.scheduleUpdater.fixedTime)
 
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
@@ -72,7 +109,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         # Listen for events
         self.app.profile_changed_event.connect(self.populate_from_profile)
 
-    def on_scheduler_change(self, src, _):
+    def populate_to_profile(self):
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
