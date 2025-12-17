@@ -198,9 +198,9 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     "now, hour, minute, time_since_last_run, expect_catchup",
     [
         (td(hours=9), 18, 00, td(hours=12), False),
-        (td(hours=9), 18, 00, td(hours=20), True),
+        (td(hours=9), 18, 00, td(hours=36), True),
         (td(hours=20), 18, 00, td(hours=2), False),
-        (td(hours=20), 18, 00, td(hours=4), True),
+        (td(hours=20), 18, 00, td(hours=24), True),
     ],
 )
 def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
