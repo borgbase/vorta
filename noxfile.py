@@ -14,7 +14,7 @@ else:
     supported_borgbackup_versions = ["1.4.3"]
 
 
-@nox.session
+@nox.session(venv_backend="uv")
 @nox.parametrize("borgbackup", supported_borgbackup_versions)
 def run_tests(session, borgbackup):
     # install borgbackup
@@ -28,9 +28,8 @@ def run_tests(session, borgbackup):
     else:
         session.install(f"borgbackup[pyfuse3]=={borgbackup}")
 
-    # install dependencies
-    session.install("-r", "requirements.d/dev.txt")
-    session.install("-e", ".")
+    # install dev dependencies and package
+    session.install("-e", ".[test]")
 
     # check versions
     cli_version = session.run("borg", "--version", silent=True).strip()

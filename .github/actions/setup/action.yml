@@ -1,5 +1,5 @@
 name: Setup
-description: Sets up python and pre-commit
+description: Sets up Python with uv and pre-commit
 
 # note:
 # this is a local composite action
@@ -14,7 +14,7 @@ inputs:
   python-version:
     description: The python version to install
     required: true
-    default: "3.10"
+    default: "3.12"
   install-nox:
     description: Whether nox shall be installed
     required: false
@@ -22,40 +22,27 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
     - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-
-    - name: Get pip cache dir
       shell: bash
-      id: pip-cache
-      run: |
-        echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - name: pip cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg', 'requirements.d/**') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      run: uv python install ${{ inputs.python-version }}
 
-    - name: Install pre-commit
+    - name: Install dependencies
       shell: bash
-      run: pip install pre-commit
-
-    - name: Install nox
-      if: ${{ inputs.install-nox }}
-      shell: bash
-      run: pip install nox
+      run: uv sync --group dev
 
     - name: Hash python version
-      if: ${{ inputs.setup-pre-commit }}
+      if: ${{ inputs.pre-commit }}
       shell: bash
       run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
 
     - name: Caching for Pre-Commit
-      if: ${{ inputs.setup-pre-commit }}
+      if: ${{ inputs.pre-commit }}
       uses: actions/cache@v3
       with:
         path: ~/.cache/pre-commit
