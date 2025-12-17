@@ -85,14 +85,15 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 profile.schedule_mode = label
-                profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
-                profile.schedule_interval_count = self.scheduleIntervalCount.value()
-                qtime = self.scheduleFixedTime.time()
-                profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
-                    qtime.hour(),
-                    qtime.minute(),
-                )
-                profile.save()
+
+        profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
+        profile.schedule_interval_count = self.scheduleIntervalCount.value()
+        qtime = self.scheduleFixedTime.time()
+        profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
+            qtime.hour(),
+            qtime.minute(),
+        )
+        profile.save()
 
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()
