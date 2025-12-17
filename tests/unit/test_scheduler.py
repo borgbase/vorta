@@ -203,7 +203,7 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
         (td(hours=20), 18, 00, td(hours=4), True),
     ],
 )
-def test_missed_startup(qapp, qtbot, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
+def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
     scheduler = VortaScheduler()
 
     time = dt(2020, 5, 4, 0, 0) + now
@@ -227,10 +227,8 @@ def test_missed_startup(qapp, qtbot, clockmock, now, hour, minute, time_since_la
     )
     event.save()
 
-    qapp.main_window.deleteLater()
-    del qapp.main_window
-    qapp.main_window = MainWindow(qapp)
-    scheduler.reload_all_timers()
+    qapp.scheduler = scheduler
+    window_load()
     print(profile.schedule_mode)
 
     qtbot.waitSignal(qapp.main_window.loaded)
