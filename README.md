@@ -39,6 +39,18 @@ See our website for [download links and install instructions](https://vorta.borg
 
 Vorta uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
+### Quick Try
+
+To quickly try the latest development version without cloning:
+
+```bash
+uvx --from git+https://github.com/borgbase/vorta vorta
+```
+
+### Full Setup
+
+For development work, clone the repository:
+
 ```bash
 # Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
