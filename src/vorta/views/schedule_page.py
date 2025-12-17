@@ -61,7 +61,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
             lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
         )
 
-        self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
+        self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
         self.populate_from_profile()
 
         # Listen for events
@@ -110,7 +110,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
         self.draw_next_scheduled_backup()
 
-    def draw_next_scheduled_backup(self):
+    def draw_next_scheduled_backup(self, pid=None):
         status = self.app.scheduler.next_job_for_profile(self.profile().id)
         if status.type in (
             ScheduleStatusType.SCHEDULED,
