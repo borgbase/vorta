@@ -74,14 +74,6 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
     def on_scheduler_change(self, src, _):
         profile = self.profile()
-        logger.debug(
-            'sc pre (%s) profile %s (%s): %d %d',
-            src,
-            profile,
-            profile.schedule_mode,
-            profile.schedule_fixed_hour,
-            profile.schedule_fixed_minute,
-        )
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 profile.schedule_mode = label
@@ -94,14 +86,6 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
                 )
                 profile.save()
 
-        logger.debug(
-            'sc post (%s) profile %s (%s): %d %d',
-            src,
-            profile,
-            profile.schedule_mode,
-            profile.schedule_fixed_hour,
-            profile.schedule_fixed_minute,
-        )
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()
 

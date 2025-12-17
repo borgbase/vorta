@@ -292,13 +292,7 @@ class VortaScheduler(QtCore.QObject):
                 # unknown schedule mode
                 raise ValueError("Unknown schedule mode '{}'".format(profile.schedule_mode))
 
-            logger.debug('last_time: %s', last_time)
-            logger.debug(
-                'next time (pre-check): %s (%d %d)',
-                next_time,
-                profile.schedule_fixed_hour,
-                profile.schedule_fixed_minute,
-            )
+            logger.debug('Last run time: %s', last_time)
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
@@ -336,12 +330,6 @@ class VortaScheduler(QtCore.QObject):
                     if next_time <= dt.now():
                         # time for today has passed, schedule for tomorrow
                         next_time += timedelta(days=1)
-                logger.debug(
-                    'next time (post-check): %s (%d %d)',
-                    next_time,
-                    profile.schedule_fixed_hour,
-                    profile.schedule_fixed_minute,
-                )
 
             # start QTimer
             timer_ms = (next_time - dt.now()).total_seconds() * 1000
