@@ -121,7 +121,8 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.set_icons()
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
@@ -130,6 +131,12 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(2, get_colored_icon("view-list-details"))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def treeview_context_menu(self, pos: QPoint):
         """Display a context menu for `treeView`."""

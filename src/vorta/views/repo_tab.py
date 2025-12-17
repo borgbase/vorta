@@ -78,7 +78,8 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.populate_from_profile()  # needs init of ssh and compression items
 
         # Connect to events
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
         QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
         QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
 
@@ -88,6 +89,12 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.bRepoUtil.setIcon(get_colored_icon("ellipsis-v"))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def set_repos(self):
         self.repoSelector.clear()

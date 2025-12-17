@@ -58,7 +58,11 @@ class VortaDarwinKeyring(VortaKeyring):
             SecKeychainItemGetTypeID(),
         )
 
-        objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
+        try:
+            objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
+        except objc.error:
+            # Type already registered (can happen in tests or when module is reloaded)
+            pass
 
         # Get the login keychain
         result, login_keychain = SecKeychainOpen(b'login.keychain', None)
