@@ -225,16 +225,18 @@ def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, 
     )
     event.save()
 
-    # This is what triggers schedule reload in app init,
-    # so simulate it as closely as we can
-    qapp.set_borg_details_action()
+    # We have to replace the scheduler because of shared state (namely, pauses)
+    # We also reload because app init does that (via `set_borg_details_result`)
+    qapp.scheduler = VortaScheduler()
+    qapp.scheduler.reload_all_timers()
     window_load()
     print(profile.schedule_mode)
 
     qtbot.waitSignal(qapp.main_window.loaded)
 
-    num_events = EventLogModel.select().count()
+    event_times = [log.start_time for log in EventLogModel.select()]
+
     if expect_catchup:
-        assert num_events == 2
+        assert len(event_times) == 2
     else:
-        assert num_events == 1
+        assert len(event_times) == 1
