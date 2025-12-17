@@ -27,8 +27,9 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(self)
         self.init_ui()
-        QApplication.instance().backup_finished_event.connect(self.populate_logs)
-        QApplication.instance().profile_changed_event.connect(self.populate_logs)
+        self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.populate_logs)
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(self.populate_logs)
+        self.destroyed.connect(self._on_destroyed)
 
     def init_ui(self):
         self.logPage.setAlternatingRowColors(True)
@@ -66,3 +67,13 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
             self.logPage.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
             self.logPage.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
         self.logPage.setSortingEnabled(sorting)
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().backup_finished_event.disconnect(self._backup_finished_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
