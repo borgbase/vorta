@@ -50,7 +50,7 @@ from vorta.views.diff_result import (
                         "change_type": ChangeType.MODIFIED,
                         "modified": None,
                     },
-                    "min_version": "2.0.0b1",
+                    "min_version": "1.4.1",
                 },
                 {
                     "subpath": "chrdev",
