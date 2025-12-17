@@ -1,6 +1,4 @@
 import logging
-from functools import partial
-from typing import Callable
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
@@ -12,7 +10,6 @@ from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
@@ -46,10 +43,10 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.compactionCheckBox.toggled.connect(self.frameCompaction.setEnabled)
 
         for label, obj in self.schedulerRadioMapping.items():
-            obj.toggled.connect(self.populate_to_profile)
-        self.scheduleIntervalCount.valueChanged.connect(self.populate_to_profile)
-        self.scheduleIntervalUnit.currentIndexChanged.connect(self.populate_to_profile)
-        self.scheduleFixedTime.timeChanged.connect(self.populate_to_profile)
+            obj.clicked.connect(self.on_scheduler_change)
+        self.scheduleIntervalCount.valueChanged.connect(self.on_scheduler_change)
+        self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
+        self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
         self.missedBackupsCheckBox.stateChanged.connect(
             lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
@@ -75,9 +72,9 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         # Listen for events
         self.app.profile_changed_event.connect(self.populate_from_profile)
 
-    def populate_to_profile(self):
+    def on_scheduler_change(self, _):
+        # Wait until we've populated fields _from_ the schedule before populating them back
         if not self.hasPopulatedScheduleFields:
-            logger.debug("Skipping schedule update until fields are initialized")
             return
 
         logger.debug("Updating schedule due to field change")

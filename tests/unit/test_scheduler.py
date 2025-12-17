@@ -10,7 +10,6 @@ import vorta.borg
 import vorta.scheduler
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel
-from vorta.views.main_window import MainWindow
 
 PROFILE_NAME = 'Default'
 FIXED_SCHEDULE = 'fixed'
@@ -231,9 +230,8 @@ def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, 
     qapp.scheduler = VortaScheduler()
     qapp.scheduler.reload_all_timers()
     window_load()
-    print(profile.schedule_mode)
 
-    qtbot.waitSignal(qapp.main_window.loaded)
+    qtbot.waitSignal(qapp.main_window.loaded, **pytest._wait_defaults)
 
     event_times = [log.start_time for log in EventLogModel.select()]
 

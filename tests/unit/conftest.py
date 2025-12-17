@@ -33,7 +33,11 @@ models = [
 ]
 
 
-def load_window(qapp):
+def load_window(qapp: vorta.application.VortaApp):
+    """
+    Reload the main window of the given application
+    Used to repopulate fields after loading mock data
+    """
     qapp.main_window.deleteLater()
     del qapp.main_window
     qapp.main_window = MainWindow(qapp)
