@@ -32,7 +32,6 @@ from vorta.views.diff_result import (
                         "modified": None,
                     },
                     "min_version": "1.2.4",
-                    "max_version": "1.4.0",
                 },
                 {
                     "subpath": "file",
@@ -43,6 +42,15 @@ from vorta.views.diff_result import (
                     },
                     "min_version": "1.2.4",
                     "max_version": "1.4.0",
+                },
+                {
+                    "subpath": "file",
+                    "data": {
+                        "file_type": FileType.FILE,
+                        "change_type": ChangeType.MODIFIED,
+                        "modified": None,
+                    },
+                    "min_version": "1.4.1",
                 },
                 {
                     "subpath": "chrdev",
@@ -91,7 +99,6 @@ from vorta.views.diff_result import (
                         "modified": None,
                     },
                     "min_version": "1.2.4",
-                    "max_version": "1.4.0",
                 },
                 {
                     "subpath": "dir",
@@ -191,7 +198,6 @@ from vorta.views.diff_result import (
                         "change_type": ChangeType.MODIFIED,
                     },
                     "min_version": "1.2.4",
-                    "max_version": "1.4.0",
                 },
                 {
                     "subpath": "chrdev",
@@ -276,7 +282,6 @@ from vorta.views.diff_result import (
                         "change_type": ChangeType.MODIFIED,
                     },
                     "min_version": "1.2.4",
-                    "max_version": "1.4.0",
                 },
                 {
                     "subpath": "chrdev1",
@@ -326,7 +331,6 @@ from vorta.views.diff_result import (
                         "change_type": ChangeType.MODIFIED,
                     },
                     "min_version": "1.2.4",
-                    "max_version": "1.4.0",
                 },
             ],
         ),
