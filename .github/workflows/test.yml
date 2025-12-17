@@ -19,7 +19,7 @@ jobs:
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
-          python-version: 3.11
+          python-version: 3.12
           pre-commit: true
 
       - name: Test formatting with ruff
