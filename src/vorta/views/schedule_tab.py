@@ -26,9 +26,8 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
         self.init_networks_page()
         self.init_schedule_page()
         self._palette_connection = self.app.paletteChanged.connect(lambda p: self.set_icons())
+        self._backup_finished_connection = self.app.backup_finished_event.connect(self.logPage.populate_logs)
         self.destroyed.connect(self._on_destroyed)
-
-        self.app.backup_finished_event.connect(self.logPage.populate_logs)
 
     def init_log_page(self):
         self.logPage = LogPage(self)
@@ -59,5 +58,9 @@ class ScheduleTab(ScheduleBase, ScheduleUI, BackupProfileMixin):
     def _on_destroyed(self):
         try:
             self.app.paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            self.app.backup_finished_event.disconnect(self._backup_finished_connection)
         except (TypeError, RuntimeError):
             pass

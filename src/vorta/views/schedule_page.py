@@ -68,7 +68,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.populate_from_profile()
 
         # Listen for events
-        self.app.profile_changed_event.connect(self.populate_from_profile)
+        self._profile_changed_connection = self.app.profile_changed_event.connect(self.populate_from_profile)
 
     def on_scheduler_change(self, _):
         profile = self.profile()
@@ -116,6 +116,10 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
     def _on_destroyed(self):
         try:
             self.app.scheduler.schedule_changed.disconnect(self._schedule_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            self.app.profile_changed_event.disconnect(self._profile_changed_connection)
         except (TypeError, RuntimeError):
             pass
 

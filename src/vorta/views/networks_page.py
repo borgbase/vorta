@@ -21,7 +21,8 @@ class NetworksPage(NetworksBase, NetworksUI, BackupProfileMixin):
         # Connect signals
         self.meteredNetworksCheckBox.stateChanged.connect(self.on_metered_networks_state_changed)
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
-        QApplication.instance().profile_changed_event.connect(self.populate_wifi)
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(self.populate_wifi)
+        self.destroyed.connect(self._on_destroyed)
 
         self.populate_wifi()
 
@@ -58,3 +59,9 @@ class NetworksPage(NetworksBase, NetworksUI, BackupProfileMixin):
         if profile:
             setattr(profile, attr, new_value)
             profile.save()
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass

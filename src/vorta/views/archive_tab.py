@@ -148,6 +148,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key)
         )
 
+        # Connect prune setting signals (only once in init, not in populate_from_profile)
+        for i in self.prune_intervals:
+            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+
         self.populate_from_profile()
         self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
@@ -334,9 +339,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         for i in self.prune_intervals:
             getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
-            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.setText(profile.prune_keep_within)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
     def on_selection_change(self, selected=None, deselected=None):
         """

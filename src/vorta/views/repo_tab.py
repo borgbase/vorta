@@ -79,9 +79,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         # Connect to events
         self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
+            self.populate_from_profile
+        )
+        self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
         self.destroyed.connect(self._on_destroyed)
-        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
-        QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
@@ -93,6 +95,14 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def _on_destroyed(self):
         try:
             QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().backup_finished_event.disconnect(self._backup_finished_connection)
         except (TypeError, RuntimeError):
             pass
 
