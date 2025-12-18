@@ -48,14 +48,13 @@ jobs:
         pip3 install --break-system-packages .
     - name: Package with PyInstaller
       run: |
-        if [ "$(uname -m)" = "arm64" ]; then BORG_BINARY="borg-macos-14-arm64-gh"; else BORG_BINARY="borg-macos-13-x86_64-gh"; fi
+        if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-14-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-13-x86_64-gh.tgz"; fi
         pyinstaller --clean --noconfirm package/vorta.spec
         cp -R $(brew --prefix)/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_BINARY}
-        xattr -dr com.apple.quarantine ./${BORG_BINARY}
-        chmod +x ./${BORG_BINARY}
-        mkdir -p dist/Vorta.app/Contents/Resources/borg-dir
-        mv ./${BORG_BINARY} dist/Vorta.app/Contents/Resources/borg-dir/borg.exe
+        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_ARCHIVE}
+        tar -xzf ./${BORG_ARCHIVE}
+        xattr -dr com.apple.quarantine ./borg-dir
+        mv ./borg-dir dist/Vorta.app/Contents/Resources/
         cd dist && zip -rq --symlinks Vorta.zip Vorta.app
 
     - name: Codesign executable
