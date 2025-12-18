@@ -29,10 +29,13 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ github.event.inputs.branch }}
-    - name: Set up Python ${{ inputs.python_version }}
-      uses: actions/setup-python@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: ${{ inputs.python_version }}
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+    - name: Set up Python ${{ inputs.python_version }}
+      run: uv python install ${{ inputs.python_version }}
     - name: Install system dependencies
       run: |
         brew install openssl readline xz
@@ -40,16 +43,11 @@ jobs:
       run: |
         brew install --cask sparkle
         brew install create-dmg
-        pip3 install --break-system-packages --upgrade pip setuptools wheel
-        pip3 install --break-system-packages -r dev.txt
-      working-directory: requirements.d
-    - name: Install Vorta
-      run: |
-        pip3 install --break-system-packages .
+        uv sync --group dev
     - name: Package with PyInstaller
       run: |
         if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-14-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-13-x86_64-gh.tgz"; fi
-        pyinstaller --clean --noconfirm package/vorta.spec
+        uv run pyinstaller --clean --noconfirm package/vorta.spec
         cp -R $(brew --prefix)/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
         curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_ARCHIVE}
         tar -xzf ./${BORG_ARCHIVE}
@@ -74,7 +72,7 @@ jobs:
         security unlock-keychain -p 123 build.keychain
         security import certificate.p12 -k build.keychain -A -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k 123 build.keychain
-        python3 ../package/fix_app_qt_folder_names_for_codesign.py Vorta.app
+        uv run python ../package/fix_app_qt_folder_names_for_codesign.py Vorta.app
         sh ../package/macos-package-app.sh
 
     # - name: Setup tmate session
