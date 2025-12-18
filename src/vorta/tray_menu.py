@@ -22,7 +22,8 @@ class TrayMenu(QSystemTrayIcon):
         self.build_menu()
 
         self.activated.connect(self.on_activation)
-        self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
+        self._palette_connection = self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
+        self.destroyed.connect(self._on_destroyed)
         self.setVisible(True)
         self.show()
 
@@ -90,3 +91,9 @@ class TrayMenu(QSystemTrayIcon):
             icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
             icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
+
+    def _on_destroyed(self):
+        try:
+            self.app.paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
