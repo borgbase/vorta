@@ -1,6 +1,5 @@
 import logging
 import os
-from enum import Enum
 
 from PyQt6 import QtDBus
 from PyQt6.QtCore import QMetaType, QVariant
@@ -11,29 +10,6 @@ from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
-
-
-class KWalletResult(Enum):
-    """Enum representing the possible results from KWallet operations."""
-
-    INVALID = 0
-    SUCCESS = 1
-    FAILURE = 2
-
-    @staticmethod
-    def from_variant(variant):
-        """Convert a QVariant to a KWalletResult.
-
-        Args:
-            variant: The QVariant to convert.
-
-        Returns:
-            KWalletResult: The corresponding KWalletResult value.
-        """
-        try:
-            return KWalletResult(variant)
-        except ValueError:
-            return KWalletResult.INVALID
 
 
 class VortaKWallet5Keyring(VortaKeyring):
@@ -57,7 +33,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             QtDBus.QDBusConnection.sessionBus(),
         )
         self.handle = -1
-        if not (self.iface.isValid() and self.get_result("isEnabled") is KWalletResult.SUCCESS):
+        if not (self.iface.isValid() and self.get_result("isEnabled") is True):
             raise KWalletNotAvailableException
 
     def set_password(self, service, repo_url, password):
@@ -95,9 +71,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             str or None: The retrieved password, or None if not found.
         """
         if not (
-            self.is_unlocked
-            and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service])
-            is KWalletResult.SUCCESS
+            self.is_unlocked and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service])
         ):
             return None
         password = self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
@@ -105,14 +79,14 @@ class VortaKWallet5Keyring(VortaKeyring):
         return password
 
     def get_result(self, method, args=[]):
-        """Call a DBus method and process the result.
+        """Call a DBus method and return the raw result.
 
         Args:
             method: The DBus method to call.
             args: The arguments to pass to the method.
 
         Returns:
-            KWalletResult: The result of the DBus call.
+            The raw result from the DBus call, or None on error.
         """
         if args:
             result = self.iface.callWithArgumentList(QtDBus.QDBus.CallMode.AutoDetect, method, args)
@@ -121,9 +95,10 @@ class VortaKWallet5Keyring(VortaKeyring):
 
         if result.type() == QDBusMessage.MessageType.ErrorMessage:
             logger.error(translate("KWallet", f"Method '{method}' returned an error message."))
-            return KWalletResult.INVALID
+            return None
 
-        return KWalletResult.from_variant(result.arguments())
+        arguments = result.arguments()
+        return arguments[0] if arguments else None
 
     @property
     def is_unlocked(self):
@@ -142,7 +117,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             ValueError: If the wallet name is invalid or unlocking fails.
         """
         wallet_name = self.get_result("networkWallet")
-        if wallet_name == KWalletResult.INVALID:
+        if wallet_name is None:
             wallet_name, ok = QInputDialog.getText(
                 None,
                 translate("KWallet", "Create Wallet"),
@@ -161,14 +136,14 @@ class VortaKWallet5Keyring(VortaKeyring):
         wId = QVariant(0)
         wId.convert(QMetaType(QMetaType.Type.LongLong.value))
         output = self.get_result("open", args=[wallet_name, wId, "vorta-repo"])
-        if output == KWalletResult.INVALID:
+        if output is None:
             logger.error(translate("KWallet", "Failed to open wallet. Aborting unlock attempt."))
             self.handle = -2
             return
 
         try:
-            self.handle = int(output.value)
-        except ValueError:  # For when kwallet is disabled or dbus otherwise broken
+            self.handle = int(output)
+        except (ValueError, TypeError):  # For when kwallet is disabled or dbus otherwise broken
             self.handle = -2
 
     @classmethod
