@@ -44,7 +44,8 @@ def test_set_password(kwallet_keyring):
         )
 
 
-def test_get_password(kwallet_keyring):
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_get_password(mock_dialog, kwallet_keyring):
     wId = QVariant(0)
 
     with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
@@ -70,16 +71,20 @@ def test_get_password(kwallet_keyring):
         assert password == 'test_password'
 
 
-def test_get_password_not_found(kwallet_keyring):
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_get_password_not_found(mock_dialog, kwallet_keyring):
     kwallet_keyring.iface.callWithArgumentList.return_value.arguments.return_value = [False]
 
     password = kwallet_keyring.get_password('test_service', 'test_repo')
     assert password is None
 
 
-def test_try_unlock(kwallet_keyring):
-    kwallet_keyring.iface.call.return_value.arguments.return_value = ['test_wallet']
-    kwallet_keyring.iface.callWithArgumentList.return_value.arguments.return_value = [42]
-
-    kwallet_keyring.try_unlock()
-    assert kwallet_keyring.handle > 0
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_try_unlock(mock_dialog, kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = [
+            'test_wallet',  # networkWallet
+            42,  # open (wallet handle)
+        ]
+        kwallet_keyring.try_unlock()
+        assert kwallet_keyring.handle == 42
