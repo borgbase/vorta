@@ -3,10 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-if sys.platform != 'darwin':
-    pytest.skip("Skipping darwin-only network tests", allow_module_level=True)
+pytestmark = pytest.mark.skipif(sys.platform != 'darwin', reason="macOS only")
 
-from vorta.network_status import darwin
+from vorta.network_status import darwin  # noqa: E402
 
 
 def test_get_current_wifi_when_wifi_is_on(mocker):
