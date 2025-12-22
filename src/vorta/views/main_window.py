@@ -217,7 +217,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
-            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            msg = self.tr("Are you sure you want to delete profile '{}'?").format(to_delete.name)
             reply = QMessageBox.question(
                 self,
                 self.tr("Confirm deletion"),
