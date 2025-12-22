@@ -30,7 +30,7 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
 
     # Work around
     # because already 'deleted' scheduletabs are still connected to the signal
-    qapp.scheduler.schedule_changed.connect(lambda *args: tab.draw_next_scheduled_backup())
+    qapp.scheduler.schedule_changed.connect(tab.draw_next_scheduled_backup)
 
     # Test
     qtbot.mouseClick(tab.scheduleOffRadio, QtCore.Qt.MouseButton.LeftButton)
