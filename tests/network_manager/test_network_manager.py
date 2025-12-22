@@ -1,10 +1,13 @@
+import sys
 from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
 
-from vorta.network_status.abc import SystemWifiInfo
-from vorta.network_status.network_manager import (
+pytestmark = pytest.mark.skipif(sys.platform != 'linux', reason="Linux only")
+
+from vorta.network_status.abc import SystemWifiInfo  # noqa: E402
+from vorta.network_status.network_manager import (  # noqa: E402
     ActiveConnectionInfo,
     DBusException,
     NetworkManagerDBusAdapter,
