@@ -37,8 +37,8 @@ class ScheduleStatus(NamedTuple):
 
 
 class VortaScheduler(QtCore.QObject):
-    #: The schedule for the profile with the given id changed.
-    schedule_changed = QtCore.pyqtSignal(int)
+    #: The schedule for a profile changed.
+    schedule_changed = QtCore.pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -222,13 +222,13 @@ class VortaScheduler(QtCore.QObject):
                     profile_id,
                 )
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             logger.info('Setting timer for profile %s', profile_id)
@@ -267,7 +267,7 @@ class VortaScheduler(QtCore.QObject):
                 )
                 self.timers[profile_id] = {'type': ScheduleStatusType.NO_PREVIOUS_BACKUP}
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             # calculate next scheduled time
@@ -356,7 +356,7 @@ class VortaScheduler(QtCore.QObject):
                 }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
-        self.schedule_changed.emit(profile_id)
+        self.schedule_changed.emit()
 
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
