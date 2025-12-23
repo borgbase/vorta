@@ -981,6 +981,8 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         if self.folders_on_top:
             item1 = left.internalPointer()
             item2 = right.internalPointer()
+            if item1 is None or item2 is None:
+                return False
             ch1 = bool(len(item1.children))
             ch2 = bool(len(item2.children))
 

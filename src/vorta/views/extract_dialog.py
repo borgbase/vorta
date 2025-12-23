@@ -271,6 +271,8 @@ class ExtractSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: ExtractFileItem = index.internalPointer()
+        if item is None or item.data is None:
+            return ""
         column = index.column()
 
         if column == 0:
