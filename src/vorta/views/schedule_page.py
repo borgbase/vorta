@@ -61,9 +61,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
             lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
         )
 
-        self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(
-            lambda pid: self.draw_next_scheduled_backup()
-        )
+        self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
         self.destroyed.connect(self._on_destroyed)
         self.populate_from_profile()
 
