@@ -503,6 +503,8 @@ class DiffSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: DiffItem = index.internalPointer()
+        if item is None or item.data is None:
+            return ""
         column = index.column()
 
         if column == 0:
