@@ -2,6 +2,8 @@ import tempfile
 
 from PyQt6.QtCore import QModelIndex, Qt
 
+from vorta import config
+from vorta.i18n import translate
 from vorta.utils import borg_compat
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
@@ -19,9 +21,17 @@ class BorgExtractJob(BorgJob):
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
-        )
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgExtractJob', 'Extract command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
+            )
 
     @classmethod
     def prepare(cls, profile, archive_name, model: ExtractTree, destination_folder):

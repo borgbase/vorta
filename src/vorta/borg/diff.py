@@ -1,3 +1,5 @@
+from vorta import config
+from vorta.i18n import translate
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
@@ -12,10 +14,18 @@ class BorgDiffJob(BorgJob):
 
     def finished_event(self, result):
         self.app.backup_finished_event.emit(result)
-        self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}"
-        )
         self.result.emit(result)
+        if result['returncode'] != 0:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] "
+                + translate(
+                    'BorgDiffJob', 'Diff command has failed. See the <a href="{0}">logs</a> for details.'
+                ).format(config.LOG_DIR.as_uri())
+            )
+        else:
+            self.app.backup_progress_event.emit(
+                f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}"
+            )
 
     @classmethod
     def prepare(cls, profile, archive_name_1, archive_name_2):

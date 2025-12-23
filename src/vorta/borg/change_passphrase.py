@@ -28,10 +28,9 @@ class BorgChangePassJob(BorgJob):
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] "
                 + translate(
-                    'RepoCheckJob', 'Passphrase change failed. See the <a href="{0}">logs</a> for details.'
+                    'BorgChangePassphraseJob', 'Passphrase change failed. See the <a href="{0}">logs</a> for details.'
                 ).format(config.LOG_DIR.as_uri())
             )
-            self.app.check_failed_event.emit(result)
         else:
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Passphrase changed.')}")
 
