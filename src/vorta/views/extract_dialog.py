@@ -229,6 +229,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
 def parse_json_lines(lines, model: "ExtractTree"):
     """Parse json output of `borg list`."""
+    items = []
     for item in lines:
         path = PurePath(item["path"])
 
@@ -252,12 +253,14 @@ def parse_json_lines(lines, model: "ExtractTree"):
             item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
         )
 
-        model.addItem(
+        items.append(
             (
                 path,
                 FileData(file_type, size, mode, user, group, health, modified, source_path),
             )
         )
+
+    model.addItems(items)
 
 
 # ---- Sorting ---------------------------------------------------------------

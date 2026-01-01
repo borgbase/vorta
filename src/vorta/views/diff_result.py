@@ -226,6 +226,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
 
 def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
     """Parse the json output from `borg diff`."""
+    items = []
     for item in diffs:
         path = PurePath(item['path'])
         file_type = FileType.FILE
@@ -320,7 +321,7 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
             else:
                 raise Exception('Unknown change type: {}'.format(change['type']))
 
-        model.addItem(
+        items.append(
             (
                 path,
                 DiffData(
@@ -336,6 +337,8 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                 ),
             )
         )
+
+    model.addItems(items)
 
 
 # re pattern
@@ -383,6 +386,7 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
     the amount of `added` and `removed` bytes.
 
     """
+    items = []
     for line in lines:
         if not line:
             continue
@@ -458,8 +462,8 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
                 if parsed_line['mode']:
                     mode_change = (parsed_line['old_mode'], parsed_line['new_mode'])
 
-        # add change to model
-        model.addItem(
+        # add change to items list
+        items.append(
             (
                 path,
                 DiffData(
@@ -473,6 +477,8 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
                 ),
             )
         )
+
+    model.addItems(items)
 
 
 def size_to_byte(significand: str, unit: str) -> int:
