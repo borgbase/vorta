@@ -29,7 +29,7 @@ jobs:
 
       - name: Test formatting with ruff
         shell: bash
-        run: pre-commit run --all-files --show-diff-on-failure
+        run: uv run pre-commit run --all-files --show-diff-on-failure
 
   prepare-matrix:
     runs-on: ubuntu-latest

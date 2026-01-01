@@ -25,7 +25,10 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.createCmdLineEdit.textEdited.connect(
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
         )
-        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
+            self.populate_from_profile
+        )
+        self.destroyed.connect(self._on_destroyed)
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -52,3 +55,9 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         repo = self.profile().repo
         setattr(repo, attr, new_value)
         repo.save()
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass

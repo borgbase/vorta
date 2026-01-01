@@ -35,6 +35,40 @@ See our website for [download links and install instructions](https://vorta.borg
 - Want to contribute to Vorta? Great! See our [contributor guide](https://vorta.borgbase.com/contributing/) on how to help out with coding, translation and packaging.
 - We currently have students from the Google Summer Of Code 2023 Program contributing to this project.
 
+## Development
+
+Vorta uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
+### Quick Try
+
+To quickly try the latest development version without cloning:
+
+```bash
+uvx --from git+https://github.com/borgbase/vorta vorta
+```
+
+### Full Setup
+
+For development work, clone the repository:
+
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Clone and setup
+git clone https://github.com/borgbase/vorta.git
+cd vorta
+uv sync
+
+# Run Vorta
+uv run vorta
+
+# Run tests
+uv run pytest
+```
+
+See the [contributor guide](https://vorta.borgbase.com/contributing/) for more details.
+
 ## License and Credits
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.
 - Licensed under [GPLv3](LICENSE.txt). © 2018-2023 Manuel Riel and Vorta contributors

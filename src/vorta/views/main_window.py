@@ -128,7 +128,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
         self.loaded.emit()
@@ -142,6 +143,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('minus'))
         self.miscButton.setIcon(get_colored_icon('settings_wheel'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def set_progress(self, text=''):
         self.progressText.setText(text)
@@ -214,7 +221,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
-            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            msg = self.tr("Are you sure you want to delete profile '{}'?").format(to_delete.name)
             reply = QMessageBox.question(
                 self,
                 self.tr("Confirm deletion"),

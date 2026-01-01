@@ -65,12 +65,13 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
             lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
         )
 
-        self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
+        self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
+        self.destroyed.connect(self._on_destroyed)
         self.populate_from_profile()
         self.hasPopulatedScheduleFields = True
 
         # Listen for events
-        self.app.profile_changed_event.connect(self.populate_from_profile)
+        self._profile_changed_connection = self.app.profile_changed_event.connect(self.populate_from_profile)
 
     def on_scheduler_change(self, _):
         # Wait until we've populated fields _from_ the schedule before populating them back
@@ -120,6 +121,16 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         )
 
         self.draw_next_scheduled_backup()
+
+    def _on_destroyed(self):
+        try:
+            self.app.scheduler.schedule_changed.disconnect(self._schedule_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            self.app.profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def draw_next_scheduled_backup(self):
         status = self.app.scheduler.next_job_for_profile(self.profile().id)

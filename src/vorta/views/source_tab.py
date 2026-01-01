@@ -102,8 +102,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.set_icons()
 
         # Listen for events
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-        QApplication.instance().profile_changed_event.connect(self.populate_from_profile)
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
+            self.populate_from_profile
+        )
+        self.destroyed.connect(self._on_destroyed)
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
@@ -119,6 +122,16 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 path_item.setIcon(get_colored_icon('folder'))
             else:
                 path_item.setIcon(get_colored_icon('file'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):

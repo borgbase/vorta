@@ -66,6 +66,11 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     )
     vorta.store.connection.init_db(mock_db)
 
+    # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
+    keyring_setting = SettingsModel.get(key='use_system_keyring')
+    keyring_setting.value = False
+    keyring_setting.save()
+
     default_profile = BackupProfileModel(name='Default')
     default_profile.save()
 
@@ -86,6 +91,12 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
 
     source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
+
+    # Disconnect signals before destroying main_window to avoid "deleted object" errors
+    try:
+        qapp.scheduler.schedule_changed.disconnect()
+    except TypeError:
+        pass
 
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
