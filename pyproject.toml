@@ -41,6 +41,7 @@ test = ["pytest", "pytest-qt", "pytest-mock", "pytest-cov"]
 
 [dependency-groups]
 dev = [
+    "build>=1.2.2.post1",
     "coverage",
     "macholib",
     "nox",
