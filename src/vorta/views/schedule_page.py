@@ -1,3 +1,5 @@
+import logging
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
 from PyQt6.QtWidgets import QApplication
@@ -7,6 +9,7 @@ from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
+logger = logging.getLogger(__name__)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
@@ -16,6 +19,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         super().__init__(parent)
         self.app = QApplication.instance()
         self.setupUi(self)
+        self.hasPopulatedScheduleFields = False
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
@@ -61,25 +65,33 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
             lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
         )
 
-        self.app.scheduler.schedule_changed.connect(lambda pid: self.draw_next_scheduled_backup())
+        self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
+        self.destroyed.connect(self._on_destroyed)
         self.populate_from_profile()
+        self.hasPopulatedScheduleFields = True
 
         # Listen for events
-        self.app.profile_changed_event.connect(self.populate_from_profile)
+        self._profile_changed_connection = self.app.profile_changed_event.connect(self.populate_from_profile)
 
     def on_scheduler_change(self, _):
+        # Wait until we've populated fields _from_ the schedule before populating them back
+        if not self.hasPopulatedScheduleFields:
+            return
+
+        logger.debug("Updating schedule due to field change")
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 profile.schedule_mode = label
-                profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
-                profile.schedule_interval_count = self.scheduleIntervalCount.value()
-                qtime = self.scheduleFixedTime.time()
-                profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
-                    qtime.hour(),
-                    qtime.minute(),
-                )
-                profile.save()
+
+        profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
+        profile.schedule_interval_count = self.scheduleIntervalCount.value()
+        qtime = self.scheduleFixedTime.time()
+        profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
+            qtime.hour(),
+            qtime.minute(),
+        )
+        profile.save()
 
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()
@@ -109,6 +121,16 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         )
 
         self.draw_next_scheduled_backup()
+
+    def _on_destroyed(self):
+        try:
+            self.app.scheduler.schedule_changed.disconnect(self._schedule_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            self.app.profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def draw_next_scheduled_backup(self):
         status = self.app.scheduler.next_job_for_profile(self.profile().id)

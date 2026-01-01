@@ -8,6 +8,7 @@ MIN_BORG_FOR_FEATURE = {
     "COMPACT_SUBCOMMAND": Version("1.2.0a1"),
     "V122": Version("1.2.2"),
     "V2": Version("2.0.0b10"),
+    'CHANGE_PASSPHRASE': Version('1.1.0'),
     # add new version-checks here.
 }
 
@@ -28,3 +29,7 @@ class BorgCompatibility:
 
     def check(self, feature_name):
         return Version(self.version) >= MIN_BORG_FOR_FEATURE[feature_name]
+
+    def get_version(self):
+        """Returns the version and path of the Borg binary."""
+        return self.version, self.path

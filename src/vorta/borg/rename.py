@@ -5,6 +5,10 @@ from .borg_job import BorgJob
 
 
 class BorgRenameJob(BorgJob):
+    def started_event(self):
+        self.app.backup_started_event.emit()
+        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Renaming archive…')}")
+
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 
@@ -36,3 +40,5 @@ class BorgRenameJob(BorgJob):
             renamed_archive = ArchiveModel.get(name=result['params']['old_archive_name'], repo=repo)
             renamed_archive.name = result['params']['new_archive_name']
             renamed_archive.save()
+
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive renamed.')}")

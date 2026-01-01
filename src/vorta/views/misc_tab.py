@@ -45,7 +45,8 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.populate()
 
         # Connect to events
-        QApplication.instance().paletteChanged.connect(self.set_icons)
+        self._palette_connection = QApplication.instance().paletteChanged.connect(self.set_icons)
+        self.destroyed.connect(self._on_destroyed)
 
     def populate(self):
         """
@@ -126,6 +127,12 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         """Set or update the icons in this view."""
         for button in self.tooltip_buttons:
             button.setIcon(get_colored_icon('help-about'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)

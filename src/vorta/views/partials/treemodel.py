@@ -342,22 +342,43 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
     def addItems(self, items: List[FileSystemItemLike[T]]):
         """
-        Add file system items to the model.
+        Add file system items to the model (batched).
 
-        This method can be used for populating the model.
-        Calls `addItem` for each item.
+        This method wraps all additions in a single model reset,
+        making it much more efficient than calling `addItem` repeatedly.
 
         Parameters
         ----------
         items : List[FileSystemItemLike]
             The items.
         """
+        if not items:
+            return
+
+        self.beginResetModel()
         for item in items:
-            self.addItem(item)
+            self._addItemInternal(item)
+        self.endResetModel()
 
     def addItem(self, item: FileSystemItemLike[T]):
         """
         Add a file system item to the model.
+
+        For adding multiple items, use `addItems()` instead as it
+        batches the model reset for better performance.
+
+        Parameters
+        ----------
+        item : FileSystemItemLike
+            The item.
+        """
+        self.beginResetModel()
+        self._addItemInternal(item)
+        self.endResetModel()
+
+    def _addItemInternal(self, item: FileSystemItemLike[T]):
+        """
+        Internal: add item without signaling model reset.
 
         Parameters
         ----------
@@ -373,8 +394,6 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         if not path:
             return  # empty path (e.g. `.`) can't be added
 
-        self.beginResetModel()
-
         def child(tup, subpath):
             fsi, i = tup
             i += 1
@@ -383,8 +402,6 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         fsi, dummy = reduce(child, path[:-1], (self.root, 0))
 
         self._addChild(fsi, path, path[-1], data)
-
-        self.endResetModel()
 
     def _addChild(
         self, item: FileSystemItem[T], path: PathLike, path_part: str, data: Optional[T]
@@ -981,6 +998,8 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
         if self.folders_on_top:
             item1 = left.internalPointer()
             item2 = right.internalPointer()
+            if item1 is None or item2 is None:
+                return False
             ch1 = bool(len(item1.children))
             ch2 = bool(len(item2.children))
 

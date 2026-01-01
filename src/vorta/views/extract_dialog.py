@@ -127,7 +127,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.set_icons()
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
     def retranslateUi(self, dialog):
         """Retranslate strings in ui."""
@@ -143,6 +144,12 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def slot_sorted(self, column, order):
         """React to the tree view being sorted."""
@@ -222,6 +229,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
 def parse_json_lines(lines, model: "ExtractTree"):
     """Parse json output of `borg list`."""
+    items = []
     for item in lines:
         path = PurePath(item["path"])
 
@@ -245,12 +253,14 @@ def parse_json_lines(lines, model: "ExtractTree"):
             item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
         )
 
-        model.addItem(
+        items.append(
             (
                 path,
                 FileData(file_type, size, mode, user, group, health, modified, source_path),
             )
         )
+
+    model.addItems(items)
 
 
 # ---- Sorting ---------------------------------------------------------------
@@ -264,6 +274,8 @@ class ExtractSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: ExtractFileItem = index.internalPointer()
+        if item is None or item.data is None:
+            return ""
         column = index.column()
 
         if column == 0:
