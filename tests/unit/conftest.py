@@ -33,8 +33,30 @@ models = [
 ]
 
 
+def load_window(qapp: vorta.application.VortaApp):
+    """
+    Reload the main window of the given application
+    Used to repopulate fields after loading mock data
+    """
+    qapp.main_window.deleteLater()
+    del qapp.main_window
+    qapp.main_window = MainWindow(qapp)
+
+
+@pytest.fixture
+def window_load(qapp):
+    """
+    A function to call to load fixture data into the app window.
+
+    This is normally done by init_db, but if this fixture is used,
+    the window load will be skipped to allow the test to load
+    further data before then calling the returned function
+    """
+    return lambda: load_window(qapp)
+
+
 @pytest.fixture(scope='function', autouse=True)
-def init_db(qapp, qtbot, tmpdir_factory):
+def init_db(qapp, qtbot, tmpdir_factory, request):
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -76,9 +98,11 @@ def init_db(qapp, qtbot, tmpdir_factory):
     except TypeError:
         pass
 
-    qapp.main_window.deleteLater()
-    del qapp.main_window
-    qapp.main_window = MainWindow(qapp)  # Re-open main window to apply mock data in UI
+    # Reload the window to apply the mock data
+    # If this test has the `window_load` fixture,
+    # it is responsible for calling this instead
+    if 'window_load' not in request.fixturenames:
+        load_window(qapp)
 
     yield
 
