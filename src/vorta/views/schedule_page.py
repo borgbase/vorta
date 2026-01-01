@@ -1,3 +1,5 @@
+import logging
+
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QDateTime, QLocale
 from PyQt6.QtWidgets import QApplication
@@ -7,6 +9,7 @@ from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
+logger = logging.getLogger(__name__)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
@@ -16,6 +19,7 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         super().__init__(parent)
         self.app = QApplication.instance()
         self.setupUi(self)
+        self.hasPopulatedScheduleFields = False
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
@@ -64,23 +68,30 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
         self.destroyed.connect(self._on_destroyed)
         self.populate_from_profile()
+        self.hasPopulatedScheduleFields = True
 
         # Listen for events
         self._profile_changed_connection = self.app.profile_changed_event.connect(self.populate_from_profile)
 
     def on_scheduler_change(self, _):
+        # Wait until we've populated fields _from_ the schedule before populating them back
+        if not self.hasPopulatedScheduleFields:
+            return
+
+        logger.debug("Updating schedule due to field change")
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
             if obj.isChecked():
                 profile.schedule_mode = label
-                profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
-                profile.schedule_interval_count = self.scheduleIntervalCount.value()
-                qtime = self.scheduleFixedTime.time()
-                profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
-                    qtime.hour(),
-                    qtime.minute(),
-                )
-                profile.save()
+
+        profile.schedule_interval_unit = self.scheduleIntervalUnit.currentData()
+        profile.schedule_interval_count = self.scheduleIntervalCount.value()
+        qtime = self.scheduleFixedTime.time()
+        profile.schedule_fixed_hour, profile.schedule_fixed_minute = (
+            qtime.hour(),
+            qtime.minute(),
+        )
+        profile.save()
 
         self.app.scheduler.set_timer_for_profile(profile.id)
         self.draw_next_scheduled_backup()

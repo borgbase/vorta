@@ -196,6 +196,7 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
+        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
         if profile is None:  # profile doesn't exist any more.
             return
 
@@ -290,6 +291,8 @@ class VortaScheduler(QtCore.QObject):
             else:
                 # unknown schedule mode
                 raise ValueError("Unknown schedule mode '{}'".format(profile.schedule_mode))
+
+            logger.debug('Last run time: %s', last_time)
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
