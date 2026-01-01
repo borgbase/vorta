@@ -5,18 +5,21 @@ from datetime import datetime as dt
 from datetime import timedelta
 from typing import Dict, NamedTuple, Optional, Tuple, Union
 
+from packaging import version
 from PyQt6 import QtCore, QtDBus
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.borg.check import BorgCheckJob
+from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.utils import borg_compat
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +37,8 @@ class ScheduleStatus(NamedTuple):
 
 
 class VortaScheduler(QtCore.QObject):
-    #: The schedule for the profile with the given id changed.
-    schedule_changed = QtCore.pyqtSignal(int)
+    #: The schedule for a profile changed.
+    schedule_changed = QtCore.pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -193,6 +196,7 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
+        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
         if profile is None:  # profile doesn't exist any more.
             return
 
@@ -219,13 +223,13 @@ class VortaScheduler(QtCore.QObject):
                     profile_id,
                 )
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             logger.info('Setting timer for profile %s', profile_id)
@@ -264,7 +268,7 @@ class VortaScheduler(QtCore.QObject):
                 )
                 self.timers[profile_id] = {'type': ScheduleStatusType.NO_PREVIOUS_BACKUP}
                 # Emit signal so that e.g. the GUI can react to the new schedule
-                self.schedule_changed.emit(profile_id)
+                self.schedule_changed.emit()
                 return
 
             # calculate next scheduled time
@@ -287,6 +291,8 @@ class VortaScheduler(QtCore.QObject):
             else:
                 # unknown schedule mode
                 raise ValueError("Unknown schedule mode '{}'".format(profile.schedule_mode))
+
+            logger.debug('Last run time: %s', last_time)
 
             # handle missing of a scheduled time
             if next_time <= dt.now():
@@ -353,7 +359,7 @@ class VortaScheduler(QtCore.QObject):
                 }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
-        self.schedule_changed.emit(profile_id)
+        self.schedule_changed.emit()
 
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
@@ -487,6 +493,27 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:
                 job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
+                self.app.jobs_manager.add_job(job)
+
+        compaction_cutoff = dt.now() - timedelta(days=7 * profile.compaction_weeks)
+        recent_compactions = (
+            EventLogModel.select()
+            .where(
+                (EventLogModel.subcommand == '--info')
+                & (EventLogModel.start_time > compaction_cutoff)
+                & (EventLogModel.repo_url == profile.repo.url)
+            )
+            .count()
+        )
+
+        if (
+            profile.compaction_on
+            and recent_compactions == 0
+            and version.parse(borg_compat.version) >= version.parse("1.2")
+        ):
+            msg = BorgCompactJob.prepare(profile)
+            if msg['ok']:
+                job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)
                 self.app.jobs_manager.add_job(job)
 
         logger.info('Finished background task for profile %s', profile.name)

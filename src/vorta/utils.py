@@ -8,7 +8,9 @@ import re
 import socket
 import sys
 import unicodedata
+import uuid
 from datetime import datetime as dt
+from datetime import timezone as tz
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
@@ -121,7 +123,8 @@ def get_directory_size(dir_path, exclude_patterns):
                     if not is_excluded:
                         data_size_filtered += stat.st_size
                         seen_filtered.add(stat.st_ino)
-            except (FileNotFoundError, PermissionError):
+            except (FileNotFoundError, PermissionError, OSError):
+                # OSError is thrown when the file path name exceeds the maximum length allowed by the operating system
                 continue
 
     files_count_filtered = len(seen_filtered)
@@ -416,14 +419,24 @@ def format_archive_name(profile, archive_name_tpl):
     """
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
+    borg_version = borg_compat.get_version()[0]  # Getting only borg version
+    borg_version_tuple = tuple(borg_version.split("."))
     available_vars = {
+        "pid": os.getpid(),
         'hostname': hostname,
         'fqdn': _getfqdn(hostname),
+        "reverse-fqdn": ".".join(reversed(_getfqdn(hostname).split("."))),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
-        'utc_now': dt.utcnow(),
+        'utc_now': dt.now(tz.utc),
+        'utcnow': dt.now(tz.utc),
         'user': getpass.getuser(),
+        "uuid4": str(uuid.uuid4()),
+        'borgversion': borg_version,
+        'borgmajor': "%s" % borg_version_tuple[:1],
+        'borgminor': "%s.%s" % borg_version_tuple[:2],
+        'borgpatch': "%s.%s.%s" % borg_version_tuple[:3],
     }
     return archive_name_tpl.format(**available_vars)
 
@@ -431,57 +444,72 @@ def format_archive_name(profile, archive_name_tpl):
 SHELL_PATTERN_ELEMENT = re.compile(r'([?\[\]*])')
 
 
+def is_mount_command(proc):
+    try:
+        name = proc.name()
+        if name == 'borg' or name.startswith('python'):
+            if 'mount' in proc.cmdline():
+                return True
+    except (psutil.ZombieProcess, psutil.AccessDenied, psutil.NoSuchProcess):
+        pass
+    return False
+
+
+def extract_mount_points_v2(proc, repo_url):
+    mount_points = {}
+    repo_mounts = []
+
+    cmd = proc.cmdline()
+    if repo_url in cmd:
+        i = cmd.index(repo_url)
+        if len(cmd) > i + 1:
+            mount_point = cmd[i + 1]
+
+            ao = '-a' in cmd
+            if ao or '--match-archives' in cmd:
+                i = cmd.index('-a' if ao else '--match-archives')
+                if len(cmd) >= i + 1 and not SHELL_PATTERN_ELEMENT.search(cmd[i + 1]):
+                    mount_points[mount_point] = cmd[i + 1]
+            else:
+                repo_mounts.append(mount_point)
+
+    return mount_points, repo_mounts
+
+
+def extract_mount_points_v1(proc, repo_url):
+    mount_points = {}
+    repo_mounts = []
+
+    for idx, parameter in enumerate(proc.cmdline()):
+        if parameter.startswith(repo_url):
+            if len(proc.cmdline()) > idx + 1:
+                mount_point = proc.cmdline()[idx + 1]
+
+                if parameter[len(repo_url) :].startswith('::'):
+                    archive_name = parameter[len(repo_url) + 2 :]
+                    mount_points[archive_name] = mount_point
+                else:
+                    repo_mounts.append(mount_point)
+
+    return mount_points, repo_mounts
+
+
 def get_mount_points(repo_url):
     mount_points = {}
     repo_mounts = []
+
     for proc in psutil.process_iter():
-        try:
-            name = proc.name()
-            if name == 'borg' or name.startswith('python'):
-                if 'mount' not in proc.cmdline():
-                    continue
-
-                if borg_compat.check('V2'):
-                    # command line syntax:
-                    # `borg mount -r <repo> <mountpoint> <path> (-a <archive_pattern>)`
-                    cmd = proc.cmdline()
-                    if repo_url in cmd:
-                        i = cmd.index(repo_url)
-                        if len(cmd) > i + 1:
-                            mount_point = cmd[i + 1]
-
-                            # Archive mount?
-                            ao = '-a' in cmd
-                            if ao or '--match-archives' in cmd:
-                                i = cmd.index('-a' if ao else '--match-archives')
-                                if len(cmd) >= i + 1 and not SHELL_PATTERN_ELEMENT.search(cmd[i + 1]):
-                                    mount_points[mount_point] = cmd[i + 1]
-                            else:
-                                repo_mounts.append(mount_point)
-                else:
-                    for idx, parameter in enumerate(proc.cmdline()):
-                        if parameter.startswith(repo_url):
-                            # mount from this repo
-
-                            # The borg mount command specifies that the mount_point
-                            # parameter comes after the archive name
-                            if len(proc.cmdline()) > idx + 1:
-                                mount_point = proc.cmdline()[idx + 1]
-
-                                # archive or full mount?
-                                if parameter[len(repo_url) :].startswith('::'):
-                                    archive_name = parameter[len(repo_url) + 2 :]
-                                    mount_points[archive_name] = mount_point
-                                    break
-                                else:
-                                    # repo mount point
-                                    repo_mounts.append(mount_point)
-
-        except (psutil.ZombieProcess, psutil.AccessDenied, psutil.NoSuchProcess):
-            # Getting process details may fail (e.g. zombie process on macOS)
-            # or because the process is owned by another user.
-            # Also see https://github.com/giampaolo/psutil/issues/783
+        if not is_mount_command(proc):
             continue
+
+        if borg_compat.check('V2'):
+            v2_mount_points, v2_repo_mounts = extract_mount_points_v2(proc, repo_url)
+            mount_points.update(v2_mount_points)
+            repo_mounts.extend(v2_repo_mounts)
+        else:
+            v1_mount_points, v1_repo_mounts = extract_mount_points_v1(proc, repo_url)
+            mount_points.update(v1_mount_points)
+            repo_mounts.extend(v1_repo_mounts)
 
     return mount_points, repo_mounts
 

@@ -1,6 +1,7 @@
 import os
+import sys
 
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QImage, QPixmap
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from vorta.store.models import BackupProfileModel
@@ -21,7 +22,8 @@ class TrayMenu(QSystemTrayIcon):
         self.build_menu()
 
         self.activated.connect(self.on_activation)
-        self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
+        self._palette_connection = self.app.paletteChanged.connect(lambda p: self.set_tray_icon())
+        self.destroyed.connect(self._on_destroyed)
         self.setVisible(True)
         self.show()
 
@@ -59,10 +61,10 @@ class TrayMenu(QSystemTrayIcon):
             cancel_action.triggered.connect(self.app.backup_cancelled_event.emit)
         else:
             status.setText(self.tr('Next Task: %s') % next_task_time)
-            profiles = BackupProfileModel.select().order_by(BackupProfileModel.name)
+            profiles = BackupProfileModel.select()
             if profiles.count() > 1:
                 profile_menu = menu.addMenu(self.tr('Backup Now'))
-                for profile in profiles:
+                for profile in sorted(profiles, key=lambda p: (p.name.casefold(), p.name)):
                     new_item = profile_menu.addAction(profile.name)
                     new_item.triggered.connect(lambda state, i=profile.id: self.app.create_backup_action(i))
             else:
@@ -77,8 +79,21 @@ class TrayMenu(QSystemTrayIcon):
 
     def set_tray_icon(self, active=False):
         """
-        Use white tray icon, when on Gnome or in dark mode. Otherwise use dark icon.
+        Use white tray icon, when on Gnome or in dark mode.
+        Use mask tray icon when on macOS.
+        Otherwise use dark icon.
         """
-        icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
-        icon = QIcon(get_asset(icon_name))
+        if sys.platform == 'darwin':
+            icon_name = f"icons/hdd-o{'-active' if active else ''}-mask.svg"
+            icon = QIcon(QPixmap(QImage.fromData(open(get_asset(icon_name), 'rb').read()).scaledToHeight(128)))
+            icon.setIsMask(True)
+        else:
+            icon_name = f"icons/hdd-o{'-active' if active else ''}.png"
+            icon = QIcon(get_asset(icon_name))
         self.setIcon(icon)
+
+    def _on_destroyed(self):
+        try:
+            self.app.paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass

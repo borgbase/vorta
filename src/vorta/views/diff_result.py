@@ -31,7 +31,7 @@ from vorta.views.partials.treemodel import (
 )
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/diffresult.ui')
+uifile = get_asset('UI/diff_result.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
@@ -121,7 +121,8 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.set_icons()
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
@@ -130,6 +131,12 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(2, get_colored_icon("view-list-details"))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def treeview_context_menu(self, pos: QPoint):
         """Display a context menu for `treeView`."""
@@ -219,6 +226,7 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
 
 def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
     """Parse the json output from `borg diff`."""
+    items = []
     for item in diffs:
         path = PurePath(item['path'])
         file_type = FileType.FILE
@@ -313,7 +321,7 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
             else:
                 raise Exception('Unknown change type: {}'.format(change['type']))
 
-        model.addItem(
+        items.append(
             (
                 path,
                 DiffData(
@@ -329,6 +337,8 @@ def parse_diff_json(diffs: List[dict], model: 'DiffTree'):
                 ),
             )
         )
+
+    model.addItems(items)
 
 
 # re pattern
@@ -376,6 +386,7 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
     the amount of `added` and `removed` bytes.
 
     """
+    items = []
     for line in lines:
         if not line:
             continue
@@ -451,8 +462,8 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
                 if parsed_line['mode']:
                     mode_change = (parsed_line['old_mode'], parsed_line['new_mode'])
 
-        # add change to model
-        model.addItem(
+        # add change to items list
+        items.append(
             (
                 path,
                 DiffData(
@@ -466,6 +477,8 @@ def parse_diff_lines(lines: List[str], model: 'DiffTree'):
                 ),
             )
         )
+
+    model.addItems(items)
 
 
 def size_to_byte(significand: str, unit: str) -> int:
@@ -496,6 +509,8 @@ class DiffSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: DiffItem = index.internalPointer()
+        if item is None or item.data is None:
+            return ""
         column = index.column()
 
         if column == 0:

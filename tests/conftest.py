@@ -2,10 +2,11 @@ import os
 import sys
 
 import pytest
+from peewee import SqliteDatabase
+
 import vorta
 import vorta.application
 import vorta.borg.jobs_manager
-from peewee import SqliteDatabase
 
 
 def pytest_configure(config):
@@ -26,6 +27,11 @@ def qapp(tmpdir_factory):
         cfg = vorta.store.models.SettingsModel.get(key='check_full_disk_access')
         cfg.value = False
         cfg.save()
+
+    # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
+    keyring_setting = vorta.store.models.SettingsModel.get(key='use_system_keyring')
+    keyring_setting.value = False
+    keyring_setting.save()
 
     from vorta.application import VortaApp
 

@@ -53,7 +53,7 @@ body:
     id: version
     attributes:
       label: Version of Vorta
-      description: Vorta and Borg versions can be found in Main Window > Misc Tab.
+      description: Vorta and Borg versions can be found in Main Window > Settings/About > About Tab.
     validations:
       required: true
 
@@ -75,7 +75,7 @@ body:
     id: borg
     attributes:
       label: Version of Borg
-      description: Vorta and Borg versions can be found in Main Window > Misc Tab.
+      description: Vorta and Borg versions can be found in Main Window > Settings/About > About Tab.
 
   - type: textarea
     id: logs
@@ -83,7 +83,7 @@ body:
       label: Logs
       description: |
         Logs are very important for most issues. Please paste them down below. *(No need for backticks)*
-        They can be found in Main Window > Misc Tab > Log.
+        They can be found in Main Window > Settings/About > About Tab.
         Logs are more helpful if you include (exactly) the logs that were produced during the steps you described above.
       placeholder: paste logs here
       render: pytb

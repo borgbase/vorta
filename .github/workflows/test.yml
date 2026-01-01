@@ -2,6 +2,7 @@ name: Test
 
 on:
   push:
+    branches: [master]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -11,6 +12,10 @@ on:
         required: false
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,12 +24,12 @@ jobs:
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
-          python-version: 3.11
+          python-version: 3.12
           pre-commit: true
 
-      - name: Test formatting with Flake8, ruff and Black
+      - name: Test formatting with ruff
         shell: bash
-        run: make lint
+        run: uv run pre-commit run --all-files --show-diff-on-failure
 
   prepare-matrix:
     runs-on: ubuntu-latest
@@ -51,7 +56,7 @@ jobs:
 
   test-unit:
     needs: prepare-matrix
-    timeout-minutes: 20
+    timeout-minutes: 120  # macos tests are very slow
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -68,6 +73,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           install-nox: true
+
+      - name: Validate Flatpak manifest
+        if: runner.os == 'Linux'
+        shell: bash
+        run: appstreamcli validate ./src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
@@ -137,10 +147,11 @@ jobs:
         run: echo $PKG_CONFIG_PATH && make test-integration
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           OS: ${{ runner.os }}
           python: ${{ matrix.python-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS, python
+          version: v0.7.3  # workaround on Intel macs (GH Actions)

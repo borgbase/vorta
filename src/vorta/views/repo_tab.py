@@ -9,10 +9,11 @@ from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
+from .repo_change_passphrase import ChangeBorgPassphraseWindow
 from .ssh_dialog import SSHAddWindow
 from .utils import get_colored_icon
 
-uifile = get_asset('UI/repotab.ui')
+uifile = get_asset('UI/repo_tab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
@@ -25,7 +26,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.setupUi(parent)
 
         # Populate dropdowns
-        self.repoRemoveToolbutton.clicked.connect(self.repo_unlink_action)
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
         # init repo add button
@@ -35,6 +35,18 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
+
+        # init repo util button
+        self.menuRepoUtil = QMenu(self.bRepoUtil)
+
+        self.menuRepoUtil.addAction(self.tr("Unlink Repository…"), self.repo_unlink_action).setIcon(
+            get_colored_icon("unlink")
+        )
+        self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase_action).setIcon(
+            get_colored_icon("key")
+        )
+
+        self.bRepoUtil.setMenu(self.menuRepoUtil)
 
         # note: it is hard to describe these algorithms with attributes like low/medium/high
         # compression or speed on a unified scale. this is not 1-dimensional and also depends
@@ -63,18 +75,36 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.set_icons()
-
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-
         self.populate_from_profile()  # needs init of ssh and compression items
+
+        # Connect to events
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
+            self.populate_from_profile
+        )
+        self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
+        self.destroyed.connect(self._on_destroyed)
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
         self.bAddRepo.setIcon(get_colored_icon("plus"))
-        self.repoRemoveToolbutton.setIcon(get_colored_icon('unlink'))
+        self.bRepoUtil.setIcon(get_colored_icon("ellipsis-v"))
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
+        except (TypeError, RuntimeError):
+            pass
+        try:
+            QApplication.instance().backup_finished_event.disconnect(self._backup_finished_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def set_repos(self):
         self.repoSelector.clear()
@@ -327,3 +357,38 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             data.setText(url)
 
         QApplication.clipboard().setMimeData(data)
+
+    def repo_change_passphrase_action(self):
+        if not self.profile().repo.encryption.startswith('repokey'):
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("Invalid Encryption Type"))
+            msg.setText(self.tr("Unable to change the repository passphrase. Encryption type must be repokey."))
+            msg.show()
+            return
+
+        window = ChangeBorgPassphraseWindow(self.profile())
+        self._window = window
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
+        window.open()
+
+    def _handle_passphrase_change_result(self, result):
+        """Handle the result of the passphrase change action."""
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        if result['returncode'] == 0:
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle(self.tr("Passphrase Changed"))
+            msg.setText(self.tr("The borg passphrase was successfully changed."))
+        else:
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle(self.tr("Passphrase Change Failed"))
+            msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
+
+        msg.show()

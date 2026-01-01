@@ -4,9 +4,10 @@ from functools import wraps
 from unittest.mock import MagicMock
 
 import pytest
+from pytest import mark
+
 import vorta.borg
 import vorta.scheduler
-from pytest import mark
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel
 
@@ -190,3 +191,51 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
 
     scheduler.set_timer_for_profile(profile.id)
     assert scheduler.timers[profile.id]['dt'] == expected
+
+
+@mark.parametrize(
+    "now, hour, minute, time_since_last_run, expect_catchup",
+    [
+        (td(hours=9), 18, 00, td(hours=12), False),
+        (td(hours=9), 18, 00, td(hours=24), False),
+        (td(hours=9), 18, 00, td(hours=36), True),
+        (td(hours=20), 18, 00, td(hours=2), False),
+        (td(hours=20), 18, 00, td(hours=24), True),
+    ],
+)
+def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
+    time = dt(2020, 5, 4, 0, 0) + now
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = hour
+    profile.schedule_fixed_minute = minute
+    profile.save()
+
+    last_time = time - time_since_last_run
+    event = EventLogModel(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_time,
+        end_time=last_time,
+    )
+    event.save()
+
+    # We have to replace the scheduler because of shared state (namely, pauses)
+    # We also reload because app init does that (via `set_borg_details_result`)
+    qapp.scheduler = VortaScheduler()
+    qapp.scheduler.reload_all_timers()
+    window_load()
+
+    qtbot.waitSignal(qapp.main_window.loaded, **pytest._wait_defaults)
+
+    event_times = [log.start_time for log in EventLogModel.select()]
+
+    if expect_catchup:
+        assert len(event_times) == 2
+    else:
+        assert len(event_times) == 1

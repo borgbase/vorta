@@ -1,6 +1,7 @@
 """
 internationalisation (i18n) support code
 """
+
 import logging
 import os
 
@@ -64,7 +65,9 @@ def init_translations(app):
 
     qm_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'qm'))
     ui_langs = locale.uiLanguages()
-    succeeded = translator.load(locale, 'vorta', prefix='.', directory=qm_path)  # e.g. vorta/i18n/qm/vorta.de_DE.qm
+    succeeded = translator.load(
+        QLocale(ui_langs[0]), 'vorta', prefix='.', directory=qm_path
+    )  # e.g. vorta/i18n/qm/vorta.de_DE.qm
     if succeeded:
         app.installTranslator(translator)
     logger.debug('Loading translation %s for %r.' % ('succeeded' if succeeded else 'failed', ui_langs))

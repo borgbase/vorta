@@ -1,4 +1,4 @@
-# flake8: noqa
+# ruff: noqa
 
 """
 A dirty objc implementation to access the macOS Keychain. Because the
@@ -7,11 +7,14 @@ objc modules.
 
 Adapted from https://gist.github.com/apettinen/5dc7bf1f6a07d148b2075725db6b1950
 """
+
 import logging
 import sys
 from ctypes import c_char
+
 import objc
 from Foundation import NSBundle
+
 from .abc import VortaKeyring
 
 logger = logging.getLogger(__name__)
@@ -43,18 +46,23 @@ class VortaDarwinKeyring(VortaKeyring):
                 b'i@I*I*o^Io^^{OpaquePassBuff}o^^{OpaqueSecKeychainItemRef}',
             ),
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
+            ('SecKeychainItemDelete', b'i^{OpaqueSecKeychainItemRef=}'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
 
-        SecKeychainRef = objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
-        SecKeychainItemRef = objc.registerCFSignature(
+        objc.registerCFSignature('SecKeychainRef', b'^{OpaqueSecKeychainRef=}', SecKeychainGetTypeID())
+        objc.registerCFSignature(
             'SecKeychainItemRef',
             b'^{OpaqueSecKeychainItemRef=}',
             SecKeychainItemGetTypeID(),
         )
 
-        PassBuffRef = objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
+        try:
+            objc.createOpaquePointerType('PassBuffRef', b'^{OpaquePassBuff=}', None)
+        except objc.error:
+            # Type already registered (can happen in tests or when module is reloaded)
+            pass
 
         # Get the login keychain
         result, login_keychain = SecKeychainOpen(b'login.keychain', None)
@@ -63,6 +71,9 @@ class VortaDarwinKeyring(VortaKeyring):
     def set_password(self, service, repo_url, password):
         if not self.login_keychain:
             self._set_keychain()
+
+        # Delete existing password (required for macOS)
+        self.delete_password(service, repo_url)
 
         SecKeychainAddGenericPassword(
             self.login_keychain,
@@ -77,11 +88,41 @@ class VortaDarwinKeyring(VortaKeyring):
 
         logger.debug(f"Saved password for repo {repo_url}")
 
+    def delete_password(self, service, repo_url):
+        if not self.login_keychain:
+            self._set_keychain()
+        try:
+            result, password_length, password_buffer, keychain_item = SecKeychainFindGenericPassword(
+                self.login_keychain,
+                len(service),
+                service.encode(),
+                len(repo_url),
+                repo_url.encode(),
+                None,
+                None,
+                None,
+            )
+            if result == 0 and keychain_item:
+                del_result = SecKeychainItemDelete(keychain_item)
+                if del_result == 0:
+                    logger.debug(f"Deleted password for repo {repo_url}")
+                else:
+                    logger.debug(
+                        f"Failed to delete password for repo {repo_url}, SecKeychainItemDelete returned {del_result}"
+                    )
+        except Exception as e:
+            logger.debug(f"No password to delete for repo {repo_url}: {e}")
+
     def get_password(self, service, repo_url):
         if not self.login_keychain:
             self._set_keychain()
 
-        (result, password_length, password_buffer, keychain_item,) = SecKeychainFindGenericPassword(
+        (
+            result,
+            password_length,
+            password_buffer,
+            keychain_item,
+        ) = SecKeychainFindGenericPassword(
             self.login_keychain,
             len(service),
             service.encode(),

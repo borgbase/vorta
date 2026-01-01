@@ -2,8 +2,7 @@
     {
         "name": "Node Modules and package manager cache",
         "slug": "node-cache",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/node_modules",
             "fm:*/.npm",
             "fm:*/npm-global"
@@ -14,12 +13,13 @@
     {
         "name": "Python cache and virtualenv",
         "slug": "python-cache",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/__pycache__",
             "fm:*.pyc",
             "fm:*.pyo",
-            "fm:*/.virtualenvs"
+            "fm:*/.virtualenvs",
+            "fm:*/venv/*",
+            "fm:*/.venv/*"
         ],
         "tags": ["type:dev", "lang:python", "os:linux", "os:darwin"],
         "author": "Divi"
@@ -27,8 +27,7 @@
     {
         "name": "Rust artefacts",
         "slug": "rust-artefacts",
-        "patterns":
-        [
+        "patterns": [
             "fm:*/.cargo",
             "fm:*/.rustup"
         ],
@@ -78,14 +77,13 @@
         "author": "SAMAD101"
     },
     {
-        "name": "Spotify cache and config files",
-        "slug": "spotify",
+        "name": "Flatpak Builder cache",
+        "slug": "flatpak-builder",
         "patterns": [
-            "fm:*/.cache/spotify",
-            "fm:*/.config/spotify"
+            "fm:*.flatpak-builder"
         ],
-        "tags": ["type:media", "media:spotify", "os:linux"],
-        "author": "SAMAD101"
+        "tags": ["type:dev", "os:linux"],
+        "author": "Renner0E"
     },
     {
         "name": "Docker artefacts",
@@ -95,5 +93,41 @@
         ],
         "tags": ["type:dev", "cloud:docker", "os:linux", "os:darwin"],
         "author": "SAMAD101"
+    },
+    {
+        "name": "Virtual Machine and Container Files",
+        "slug": "vm-container-files",
+        "patterns": [
+            "fm:*.vmdk",
+            "fm:*.vdi",
+            "fm:*.qcow2",
+            "fm:*.iso",
+            "fm:*/.docker/*",
+            "fm:*/.local/share/containers/*"
+        ],
+        "tags": ["type:vm", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Log Files",
+        "slug": "log-files",
+        "patterns": [
+            "fm:*.log",
+            "fm:*/logs/*"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+    {
+        "name": "Java Development Artefacts",
+        "slug": "java-development-artefacts",
+        "patterns": [
+            "fm:*/.jdk/*",
+            "fm:*/.m2/*",
+            "fm:*/.gradle/*"
+        ],
+        "tags": ["type:dev", "lang:java", "os:linux", "os:darwin"],
+        "author": "MrMinemeet"
     }
 ]

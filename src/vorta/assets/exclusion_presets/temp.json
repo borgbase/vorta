@@ -1,0 +1,48 @@
+[
+    {
+        "name": "Temporary Files",
+        "slug": "temp-files",
+        "patterns": [
+            "fm:*/.tmp",
+            "fm:*/temp",
+            "fm:*.swp",
+            "fm:*.bak",
+            "fm:*.part"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+            "author": "shivansh02, Renner0E"
+    },
+        {
+        "name": "All Cache Files",
+        "slug": "cache-files",
+        "patterns": [
+            "fm:*/.cache",
+            "fm:*/Caches",
+            "fm:*/.var/app/*/cache",
+            "fm:*/.var/app/*/Cache",
+            "fm:*/.var/app/*/Code Cache",
+            "fm:*/.var/app/*/DawnCache",
+            "fm:*/.var/app/*/GPUCache",
+            "fm:*/.var/app/*/CacheStorage",
+            "fm:*/.var/app/*/ScriptCache",
+            "fm:*/.var/app/*/.ld.so",
+            "fm:*/.var/app/*/tmp/*"
+        ],
+        "tags": [
+            "type:system","os:linux", "os:darwin"],
+        "author": "shivansh02"
+    },
+        {
+        "name": "Recycle Bin/Trash",
+        "slug": "recycle-bin-trash",
+        "patterns": [
+            "fm:*/.local/share/Trash/*",
+            "fm:*/.Trash/*",
+            "fm:*/.Trash-*/*"
+        ],
+        "tags": [
+            "type:system", "os:linux", "os:darwin"],
+        "author": "shivansh02"
+    }
+]

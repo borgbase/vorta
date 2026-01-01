@@ -3,8 +3,9 @@ from datetime import timedelta
 from unittest.mock import MagicMock
 
 import pytest
-import vorta.scheduler
 from PyQt6 import QtCore
+
+import vorta.scheduler
 from vorta.application import VortaApp
 from vorta.store.models import BackupProfileModel, EventLogModel
 
@@ -21,7 +22,7 @@ def clockmock(monkeypatch):
 
 def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     main = qapp.main_window
-    tab = main.scheduleTab
+    tab = main.scheduleTab.schedulePage
 
     # setup
     time_now = dt(2020, 5, 6, 4, 30)
@@ -29,7 +30,7 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
 
     # Work around
     # because already 'deleted' scheduletabs are still connected to the signal
-    qapp.scheduler.schedule_changed.connect(lambda *args: tab.draw_next_scheduled_backup())
+    qapp.scheduler.schedule_changed.connect(tab.draw_next_scheduled_backup)
 
     # Test
     qtbot.mouseClick(tab.scheduleOffRadio, QtCore.Qt.MouseButton.LeftButton)

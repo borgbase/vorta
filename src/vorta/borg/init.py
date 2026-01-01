@@ -10,7 +10,6 @@ class BorgInitJob(BorgJob):
 
     @classmethod
     def prepare(cls, params):
-
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
             999,
@@ -34,7 +33,7 @@ class BorgInitJob(BorgJob):
         if borg_compat.check('V2'):
             cmd = [
                 "borg",
-                "rcreate",
+                "repo-create",
                 "--info",
                 "--log-json",
                 f"--encryption={params['encryption']}",

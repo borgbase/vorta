@@ -1,16 +1,14 @@
 import os
+import shlex
 import subprocess
 import tempfile
 from datetime import datetime as dt
 
+from PyQt6.QtCore import QCoreApplication
+
 from vorta import config
 from vorta.i18n import trans_late, translate
-from vorta.store.models import (
-    ArchiveModel,
-    RepoModel,
-    SourceFileModel,
-    WifiSettingModel,
-)
+from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 
 from .borg_job import BorgJob
@@ -27,12 +25,12 @@ class BorgCreateJob(BorgJob):
                     'time': dt.fromisoformat(result['data']['archive']['start']).replace(tzinfo=None),
                     'repo': result['params']['repo_id'],
                     'duration': result['data']['archive']['duration'],
-                    'size': result['data']['archive']['stats']['deduplicated_size'],
+                    'size': result['data']['archive']['stats'].get('deduplicated_size', 0),
                     'trigger': result['params'].get('category', 'user'),
                 },
             )
             new_archive.save()
-            if 'cache' in result['data'] and created:
+            if created and 'cache' in result['data'] and 'stats' in result['data']['cache']:
                 stats = result['data']['cache']['stats']
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
@@ -61,9 +59,9 @@ class BorgCreateJob(BorgJob):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup started.')}")
 
     def finished_event(self, result):
+        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
 
     @classmethod
     def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
@@ -76,7 +74,12 @@ class BorgCreateJob(BorgJob):
                 'profile_slug': params['profile'].slug(),
                 'returncode': str(returncode),
             }
-            proc = subprocess.run(cmd, shell=True, env=env)
+            proc = subprocess.Popen(cmd, shell=True, env=env)
+
+            while proc.poll() is None:
+                # Preventing GUI freezing while running pre-backup command
+                QCoreApplication.processEvents()
+
             return proc.returncode
         else:
             return 0  # 0 if no command was run.
@@ -102,8 +105,8 @@ class BorgCreateJob(BorgJob):
         suffix_command = []
         if profile.repo.create_backup_cmd:
             s1, sep, s2 = profile.repo.create_backup_cmd.partition('-- ')
-            extra_cmd_options = s1.split()
-            suffix_command = (sep + s2).split()
+            extra_cmd_options = shlex.split(s1)
+            suffix_command = shlex.split(sep + s2)
 
         if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
@@ -161,6 +164,18 @@ class BorgCreateJob(BorgJob):
             profile.compression,
         ]
         cmd += extra_cmd_options
+
+        # Function to extend command with exclude-if-present patterns
+        if profile.exclude_if_present is not None:
+            patterns = []
+            for f in profile.exclude_if_present.split('\n'):
+                f = f.strip()
+                if f.startswith('[x]'):
+                    patterns.append(f[3:].strip())  # Remove the '[x]' prefix
+
+            for pattern in patterns:
+                if pattern.strip():
+                    cmd.extend(['--exclude-if-present', pattern])
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py

@@ -18,7 +18,7 @@ from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/repoadd.ui')
+uifile = get_asset('UI/repo_add.ui')
 AddRepoUI, AddRepoBase = uic.loadUiType(uifile)
 
 
@@ -199,8 +199,10 @@ class AddRepoWindow(RepoWindow):
         '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
             self.passwordInput.set_validation_enabled(False)
+            self.passwordInput.set_visibility(False)
         else:
             self.passwordInput.set_validation_enabled(True)
+            self.passwordInput.set_visibility(True)
 
     def display_backend_warning(self):
         '''Display password backend message based off current keyring'''
@@ -230,7 +232,7 @@ class ExistingRepoWindow(RepoWindow):
         self.setWindowTitle("Add Existing Repository")
 
         self.passwordLabel = QLabel(self.tr('Password:'))
-        self.passwordInput = PasswordLineEdit()
+        self.passwordInput = PasswordLineEdit(placeholder_text=self.tr("Enter the encryption passphrase"))
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
     def set_password(self, URL):

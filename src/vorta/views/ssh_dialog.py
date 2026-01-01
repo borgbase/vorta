@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
 from ..utils import get_asset
 
-uifile = get_asset('UI/sshadd.ui')
+uifile = get_asset('UI/ssh_add.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 

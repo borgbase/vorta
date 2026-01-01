@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import Qt
@@ -19,7 +20,7 @@ from vorta.utils import get_asset, search
 from vorta.views.partials.tooltip_button import ToolTipButton
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/misctab.ui')
+uifile = get_asset('UI/misc_tab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
@@ -43,8 +44,9 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
 
         self.populate()
 
-        # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        # Connect to events
+        self._palette_connection = QApplication.instance().paletteChanged.connect(self.set_icons)
+        self.destroyed.connect(self._on_destroyed)
 
     def populate(self):
         """
@@ -75,6 +77,10 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
                 spacer = QSpacerItem(20, 4, vPolicy=QSizePolicy.Policy.Fixed)
                 self.checkboxLayout.setItem(i, QFormLayout.ItemRole.LabelRole, spacer)
                 i += 1
+
+            # Skip Update settings on non-darwin
+            if sys.platform != 'darwin' and group.group == 'Updates':
+                continue
 
             # add label for next group
             label = QLabel()
@@ -121,6 +127,12 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         """Set or update the icons in this view."""
         for button in self.tooltip_buttons:
             button.setIcon(get_colored_icon('help-about'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)

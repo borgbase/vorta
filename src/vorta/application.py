@@ -42,6 +42,7 @@ class VortaApp(QtSingleApplication):
     backup_log_event = QtCore.pyqtSignal(str, dict)
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
+    profile_changed_event = QtCore.pyqtSignal()
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)
@@ -75,7 +76,7 @@ class VortaApp(QtSingleApplication):
 
         if getattr(args, 'daemonize', False):
             pass
-        elif SettingsModel.get(key='foreground').value:
+        elif SettingsModel.get(key='foreground').value or not self.tray.isSystemTrayAvailable():
             self.open_main_window_action()
 
         self.backup_started_event.connect(self.backup_started_event_response)
@@ -110,6 +111,12 @@ class VortaApp(QtSingleApplication):
             profile_id = self.main_window.current_profile.id
 
         profile = BackupProfileModel.get(id=profile_id)
+
+        if getattr(profile, 'pre_backup_cmd'):
+            self.backup_progress_event.emit(
+                f"[{profile.name}] {translate('messages', 'Running Pre-backup Command...')}"
+            )
+
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
             job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
@@ -224,7 +231,9 @@ class VortaApp(QtSingleApplication):
         """
         msgid = context.get('msgid')
         if msgid == 'LockTimeout':
-            profile = BackupProfileModel.get(name=context['profile_name'])
+            profile = BackupProfileModel.get_or_none(name=context['profile_name'])
+            if profile is None:  # Repo may not yet exist in DB.
+                return
             repo_url = context.get('repo_url')
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))

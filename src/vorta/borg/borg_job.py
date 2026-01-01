@@ -203,7 +203,13 @@ class BorgJob(JobInterface, BackupProfileMixin):
     @classmethod
     def prepare_bin(cls):
         """Find packaged borg binary. Prefer globally installed."""
-
+        # On MacOS, the PATH environment variable does not seem to be set when run as a pyinstaller binary.
+        # More info at https://github.com/borgbase/vorta/issues/2100
+        # Set the path to also find homebrew installs of Borg, and avoid falling back to the embedded binary.
+        if sys.platform == 'darwin':
+            current_path = os.environ.get("PATH", "/usr/bin:/bin")
+            os.environ["PATH"] = f"{current_path}:/opt/homebrew/bin:/usr/local/bin"
+        # Now continue looking for the borg binary to use
         borg_in_path = shutil.which('borg')
 
         if borg_in_path:
@@ -228,7 +234,16 @@ class BorgJob(JobInterface, BackupProfileMixin):
                 profile=self.params.get('profile_id', None),
             )
             log_entry.save()
-            logger.info('Running command %s', ' '.join(self.cmd))
+
+            # logs: put cmd arguments with special strings in quotation marks
+            quote_strings = [' ', '*', '?', 're:']
+            cmd_args_to_log = self.cmd[:]
+            for i, arg in enumerate(cmd_args_to_log):
+                if any(quotestr in arg for quotestr in quote_strings):
+                    cmd_args_to_log[i] = "'" + arg + "'"  # add quotes
+
+            logger.info('Running command: %s', ' '.join(cmd_args_to_log))
+            del cmd_args_to_log
 
         p = Popen(
             self.cmd,
@@ -294,7 +309,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
                                 f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
                                 f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed['deduplicated_size'])}"  # noqa: E501
+                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:

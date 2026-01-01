@@ -3,23 +3,39 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to use for building macOS release'
+        description: 'Branch to use for building release'
         required: true
         default: 'master'
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.2.1'
+        default: '1.4.3'
+      macos_version:
+        description: 'macOS version for building'
+        required: true
+        default: 'macos-14'
+      python_version:
+        description: 'Python version for building'
+        required: true
+        default: '3.12'
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: ${{ github.event.inputs.macos_version }}
+    timeout-minutes: 120
 
     steps:
     - name: Check out selected branch
       uses: actions/checkout@v3
       with:
         ref: ${{ github.event.inputs.branch }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+    - name: Set up Python ${{ inputs.python_version }}
+      run: uv python install ${{ inputs.python_version }}
     - name: Install system dependencies
       run: |
         brew install openssl readline xz
@@ -27,19 +43,16 @@ jobs:
       run: |
         brew install --cask sparkle
         brew install create-dmg
-        pip3 install --upgrade pip
-        pip3 install -r dev.txt
-      working-directory: requirements.d
-    - name: Install Vorta
-      run: |
-        pip3 install .
+        uv sync --group dev
     - name: Package with PyInstaller
       run: |
-        pyinstaller --clean --noconfirm package/vorta.spec
-        cp -R /usr/local/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/borg-macos64.tgz
-        tar xvf borg-macos64.tgz -C dist/Vorta.app/Contents/Resources/
-        cd dist && zip -rq --symlinks Vorta.zip Vorta.app
+        if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-14-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-13-x86_64-gh.tgz"; fi
+        uv run pyinstaller --clean --noconfirm package/vorta.spec
+        cp -R $(brew --prefix)/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_ARCHIVE}
+        tar -xzf ./${BORG_ARCHIVE}
+        xattr -dr com.apple.quarantine ./borg-dir
+        mv ./borg-dir dist/Vorta.app/Contents/Resources/
 
     - name: Codesign executable
       continue-on-error: false
@@ -58,8 +71,17 @@ jobs:
         security unlock-keychain -p 123 build.keychain
         security import certificate.p12 -k build.keychain -A -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k 123 build.keychain
-        python3 ../package/fix_app_qt_folder_names_for_codesign.py Vorta.app
+        uv run python ../package/fix_app_qt_folder_names_for_codesign.py Vorta.app
         sh ../package/macos-package-app.sh
+
+    - name: Rename DMG
+      id: rename
+      run: |
+        VERSION=$(uv run python -c "from src.vorta._version import __version__; print(__version__)")
+        if [ "$(uname -m)" = "arm64" ]; then ARCH="arm"; else ARCH="intel"; fi
+        DMG_NAME="Vorta-v${VERSION}-${ARCH}.dmg"
+        mv dist/Vorta.dmg "dist/${DMG_NAME}"
+        echo "dmg_name=${DMG_NAME}" >> $GITHUB_OUTPUT
 
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v3
@@ -67,8 +89,8 @@ jobs:
     #   timeout-minutes: 15
 
     - name: Upload build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: Vorta.dmg
-        path: dist/Vorta.dmg
-        retention-days: 10
+        name: ${{ steps.rename.outputs.dmg_name }}
+        path: dist/Vorta-v*-*.dmg
+        retention-days: 60

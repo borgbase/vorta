@@ -1,11 +1,13 @@
 import os
 import uuid
 from typing import Any, Dict
+from unittest.mock import MagicMock
 
 import pytest
-import vorta.borg.borg_job
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
+
+import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
 
@@ -63,7 +65,9 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     tab = main.repoTab
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
 
-    qtbot.mouseClick(tab.repoRemoveToolbutton, QtCore.Qt.MouseButton.LeftButton)
+    # Assuming unlink action is the 1st in submenu
+    tab.menuRepoUtil.actions()[0].trigger()
+
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
@@ -251,7 +255,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
     assert RepoModel.get(id=1).unique_size == 15520474
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 3
-    assert main.scheduleTab.logTableWidget.rowCount() == 1
+    assert main.scheduleTab.logPage.logPage.rowCount() == 1
 
 
 @pytest.mark.parametrize(
@@ -305,3 +309,52 @@ def test_repo_check_failed_response(qapp, qtbot, mocker, response):
         mock_icon.assert_called_with(response["icon"])
         assert response["error"] in mock_text.call_args[0][0]
         assert response["info"] in mock_info.call_args[0][0]
+
+
+def test_repo_change_passphrase_action(qapp, mocker):
+    """Test that the ChangeBorgPassphraseWindow is opened and the signal is connected."""
+    tab = qapp.main_window.repoTab
+
+    mock_profile = MagicMock()
+    mock_profile.repo.encryption = 'repokey-blake2'
+    tab.profile = MagicMock(return_value=mock_profile)
+
+    mock_window_cls = mocker.patch('vorta.views.repo_tab.ChangeBorgPassphraseWindow')
+    mock_window = mock_window_cls.return_value
+
+    tab.repo_change_passphrase_action()
+
+    mock_window_cls.assert_called_once_with(mock_profile)
+    mock_window.setParent.assert_called_once_with(tab, QtCore.Qt.WindowType.Sheet)
+    mock_window.open.assert_called_once()
+    mock_window.change_borg_passphrase.connect.assert_called_once_with(tab._handle_passphrase_change_result)
+
+
+@pytest.mark.parametrize(
+    "result, expected_title, expected_text",
+    [
+        (
+            {"returncode": 0},
+            "Passphrase Changed",
+            "The borg passphrase was successfully changed.",
+        ),
+        (
+            {"returncode": 1},
+            "Passphrase Change Failed",
+            "Unable to change the repository passphrase. Please try again.",
+        ),
+    ],
+)
+def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_title, expected_text):
+    """Test the _handle_passphrase_change_result method for both success and failure cases."""
+    main = qapp.main_window
+    tab = main.repoTab
+
+    mock_msgbox = mocker.patch('vorta.views.repo_tab.QMessageBox', autospec=True)
+    mock_instance = mock_msgbox.return_value
+
+    tab._handle_passphrase_change_result(result)
+
+    mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
+    mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
+    mock_instance.show.assert_called_once()

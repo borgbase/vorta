@@ -6,11 +6,12 @@ import os
 from pathlib import PurePath
 
 import pytest
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMessageBox
+
 import vorta.borg
 import vorta.utils
 import vorta.views.repo_add_dialog
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMessageBox
 
 LONG_PASSWORD = 'long-password-long'
 TEST_REPO_NAME = 'TEST - REPONAME'
@@ -68,7 +69,10 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
     current_repo_path = vorta.store.models.RepoModel.select().first().url
 
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
-    qtbot.mouseClick(main.repoTab.repoRemoveToolbutton, Qt.MouseButton.LeftButton)
+
+    # Assuming unlink action is the first in submenu
+    tab.menuRepoUtil.actions()[0].trigger()
+
     qtbot.waitUntil(
         lambda: tab.repoSelector.count() == 1 and tab.repoSelector.currentText() == "No repository selected",
         **pytest._wait_defaults,

@@ -48,7 +48,7 @@ from vorta.views.extract_dialog import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset('UI/archivetab.ui')
+uifile = get_asset('UI/archive_tab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
@@ -72,6 +72,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         """Init."""
         super().__init__(parent)
         self.setupUi(parent)
+        self.is_editing = False  # track if the cell edit was completed or canceled
         self.mount_points = {}  # mapping of archive name to mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
@@ -111,10 +112,11 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
         self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
-        self.archiveTable.cellChanged.connect(self.cell_changed)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
+        edit_delegate = self.archiveTable.itemDelegate()
+        edit_delegate.closeEditor.connect(self.on_editing_finished)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.archiveTable)
@@ -146,12 +148,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             lambda tpl, key='prune_prefix': self.save_archive_template(tpl, key)
         )
 
+        # Connect prune setting signals (only once in init, not in populate_from_profile)
+        for i in self.prune_intervals:
+            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
+        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+
         self.populate_from_profile()
         self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
 
-        # Connect to palette change
-        self.app.paletteChanged.connect(lambda p: self.set_icons())
+        # Connect to events
+        self._palette_conn_1 = self.app.paletteChanged.connect(self.set_icons)
+        self._palette_conn_2 = self.app.paletteChanged.connect(self.populate_from_profile)
+        self.destroyed.connect(self._on_destroyed)
+        self.app.backup_finished_event.connect(self.populate_from_profile)
+        self.app.profile_changed_event.connect(self.populate_from_profile)
+        self.app.profile_changed_event.connect(self.toggle_compact_button_visibility)
+        self.app.backup_cancelled_event.connect(self.cancel_action)
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""
@@ -169,6 +182,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.bmountarchive_refresh(icon_only=True)
         self.bmountrepo_refresh()
+
+    def _on_destroyed(self):
+        try:
+            self.app.paletteChanged.disconnect(self._palette_conn_1)
+            self.app.paletteChanged.disconnect(self._palette_conn_2)
+        except (TypeError, RuntimeError):
+            pass
 
     @pyqtSlot(QPoint)
     def archiveitem_contextmenu(self, pos: QPoint):
@@ -319,9 +339,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
         for i in self.prune_intervals:
             getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
-            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.setText(profile.prune_keep_within)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
     def on_selection_change(self, selected=None, deselected=None):
         """
@@ -822,12 +840,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         if column == 4:
             item = self.archiveTable.item(row, column)
             self.renamed_archive_original_name = item.text()
+            self.is_editing = True
             item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
             self.archiveTable.editItem(item)
 
+    def on_editing_finished(self, editor, hint):
+        """Called when the user finishes editing a cell (By pressing Enter or clicking away)."""
+        if not self.is_editing:
+            return
+
+        row = self.archiveTable.currentRow()
+        column = self.archiveTable.currentColumn()
+
+        self.cell_changed(row, column)
+
     def cell_changed(self, row, column):
         # return if this is not a name change
-        if column != 4:
+        if column != 4 or not self.is_editing:
             return
 
         item = self.archiveTable.item(row, column)
@@ -835,29 +864,38 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         profile = self.profile()
 
         # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
-        if new_name == self.renamed_archive_original_name or not self.renamed_archive_original_name:
+        if new_name == self.renamed_archive_original_name:
+            self.is_editing = False
             return
 
+        # if new name is blank, revert to the original name
         if not new_name:
             item.setText(self.renamed_archive_original_name)
             self._set_status(self.tr('Archive name cannot be blank.'))
+            self.is_editing = False
             return
 
+        # check if the new name already exists
         new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
         if new_name_exists is not None:
             self._set_status(self.tr('An archive with this name already exists.'))
             item.setText(self.renamed_archive_original_name)
+            self.is_editing = False
             return
 
         params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)
         if not params['ok']:
             self._set_status(params['message'])
+            self.is_editing = False
+            return
 
+        self._set_status(self.tr('Renaming archive...'))
         job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
         job.result.connect(self.rename_result)
         self._toggle_all_buttons(False)
         self.app.jobs_manager.add_job(job)
+        self.is_editing = False
 
     def row_of_archive(self, archive_name):
         items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
@@ -919,7 +957,9 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             for archive in archives:
                 for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchFlag.MatchExactly):
                     self.archiveTable.removeRow(entry.row())
-                ArchiveModel.get(name=archive).delete_instance()
+                archive_obj = ArchiveModel.get_or_none(name=archive)
+                if archive_obj:
+                    archive_obj.delete_instance()
 
         self._toggle_all_buttons(True)
 

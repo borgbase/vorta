@@ -4,6 +4,7 @@ Test backup creation
 
 import pytest
 from PyQt6 import QtCore
+
 from vorta.store.models import ArchiveModel, EventLogModel
 
 
@@ -19,4 +20,4 @@ def test_create(qapp, qtbot, archive_env):
     assert ArchiveModel.select().count() == 7
     assert main.createStartBtn.isEnabled()
     assert main.archiveTab.archiveTable.rowCount() == 7
-    assert main.scheduleTab.logTableWidget.rowCount() == 2
+    assert main.scheduleTab.logPage.logPage.rowCount() == 2

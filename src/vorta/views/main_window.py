@@ -1,8 +1,10 @@
 import logging
+import sys
 from pathlib import Path
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtCore import pyqtSignal as Signal
 from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
@@ -34,19 +36,23 @@ from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
-uifile = get_asset('UI/mainwindow.ui')
+uifile = get_asset('UI/main_window.ui')
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
 
 
 class MainWindow(MainWindowBase, MainWindowUI):
+    loaded = Signal()
+
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Vorta for Borg Backup')
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
+        if sys.platform.startswith('linux'):
+            self.app.setDesktopFileName('com.borgbase.Vorta')
         self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
@@ -65,7 +71,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         prev_profile_id = SettingsModel.get(key='previous_profile_id')
         self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
         if self.current_profile is None:
-            self.current_profile = BackupProfileModel.select().order_by('name').first()
+            profiles = BackupProfileModel.select()
+            self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -79,7 +86,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
-        self.repoTab.repo_changed.connect(self.scheduleTab.populate_from_profile)
+        self.repoTab.repo_changed.connect(self.scheduleTab.schedulePage.populate_from_profile)
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
@@ -109,8 +116,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # OS-specific startup options:
         if not get_network_status_monitor().is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
-            self.scheduleTab.wifiListLabel.hide()
-            self.scheduleTab.wifiListWidget.hide()
+            self.scheduleTab.networksPage.wifiListLabel.hide()
+            self.scheduleTab.networksPage.wifiListWidget.hide()
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
 
@@ -121,9 +128,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
 
         # Connect to palette change
-        QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
+        self.loaded.emit()
 
     def on_close_window(self):
         self.close()
@@ -134,6 +143,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
         self.profileDeleteButton.setIcon(get_colored_icon('minus'))
         self.miscButton.setIcon(get_colored_icon('settings_wheel'))
+
+    def _on_destroyed(self):
+        try:
+            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
+        except (TypeError, RuntimeError):
+            pass
 
     def set_progress(self, text=''):
         self.progressText.setText(text)
@@ -161,7 +176,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         current_item = None
 
         # Add items to the QListWidget
-        for profile in BackupProfileModel.select().order_by(BackupProfileModel.name):
+        profiles = BackupProfileModel.select()
+        for profile in sorted(profiles, key=lambda p: (p.name.casefold(), p.name)):
             item = QListWidgetItem(profile.name)
             item.setData(Qt.ItemDataRole.UserRole, profile.id)
 
@@ -179,15 +195,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
         backup_profile_id = profile.data(Qt.ItemDataRole.UserRole) if profile else None
         if not backup_profile_id:
             return
+
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
-        self.archiveTab.populate_from_profile()
-        self.repoTab.populate_from_profile()
-        self.sourceTab.populate_from_profile()
-        self.scheduleTab.populate_from_profile()
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
             SettingsModel.key == 'previous_profile_id'
         ).execute()
-        self.archiveTab.toggle_compact_button_visibility()
+
+        self.app.profile_changed_event.emit()
 
     def profile_clicked_action(self):
         if self.miscWidget.isVisible():
@@ -207,7 +221,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
-            msg = self.tr("Are you sure you want to delete profile '{}'?".format(to_delete.name))
+            msg = self.tr("Are you sure you want to delete profile '{}'?").format(to_delete.name)
             reply = QMessageBox.question(
                 self,
                 self.tr("Confirm deletion"),
@@ -257,11 +271,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 self.tr('Profile import successful!'),
                 self.tr('Profile {} imported.').format(profile.name),
             )
-            self.repoTab.populate_from_profile()
-            self.scheduleTab.populate_logs()
-            self.scheduleTab.populate_wifi()
-            self.miscTab.populate()
             self.populate_profile_selector()
+            self.app.profile_changed_event.emit()
 
         filename = QFileDialog.getOpenFileName(
             self,
@@ -284,13 +295,22 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
         if self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole) == profile_id:
-            self.profileSelector.currentItem().setText(profile_name)
+            profile = self.profileSelector.takeItem(self.profileSelector.currentRow())
+            profile.setText(profile_name)
         # Profile is added
         else:
             profile = QListWidgetItem(profile_name)
             profile.setData(Qt.ItemDataRole.UserRole, profile_id)
-            self.profileSelector.addItem(profile)
-            self.profileSelector.setCurrentItem(profile)
+        # Insert the profile at the correct position
+        # Both the casefolded and the original name are used as the key to keep the order stable
+        profile_key = (profile.text().casefold(), profile.text())
+        row = 0
+        for i in range(self.profileSelector.count()):
+            item_name = self.profileSelector.item(i).text()
+            if (item_name.casefold(), item_name) < profile_key:
+                row += 1
+        self.profileSelector.insertItem(row, profile)
+        self.profileSelector.setCurrentItem(profile)
 
     def toggle_misc_visibility(self):
         if self.miscWidget.isVisible():
@@ -310,10 +330,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.set_log('')
 
     def backup_finished_event(self):
-        self.archiveTab.populate_from_profile()
-        self.repoTab.init_repo_stats()
-        self.scheduleTab.populate_logs()
-
         if not self.app.jobs_manager.is_worker_running() and (
             self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
         ):  # Either the refresh is done or this is the last archive to refresh.
@@ -323,7 +339,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
         self.set_log(self.tr('Task cancelled'))
-        self.archiveTab.cancel_action()
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
