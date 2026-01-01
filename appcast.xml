@@ -6,6 +6,39 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.2</title>
+      <description><![CDATA[<p>Vorta v0.11.2 is a maintenance release focused on stability and modernization. Key highlights include:</p>
+<ul>
+<li>Bug fixes: Resolved KWallet password retrieval issues, fixed tree model crashes and performance problems, and corrected schedule initialization timing</li>
+<li>Packaging modernization: Migrated to uv for modern Python packaging</li>
+<li>Code quality: Added missing signal cleanup handlers and removed unused parameters</li>
+<li>macOS: Reverted to using borg-dir binary for improved compatibility</li>
+<li>Testing: Fixed failing tests and improved cross-platform test coverage</li>
+</ul>
+<p>Welcome to new contributor @cincodenada!</p>
+<h2>What's Changed</h2>
+<ul>
+<li>Bump test versions, fix failing tests by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2322" rel="nofollow">https://github.com/borgbase/vorta/pull/2322</a></li>
+<li>Modernize packaging, use uv by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2323" rel="nofollow">https://github.com/borgbase/vorta/pull/2323</a></li>
+<li>refactor: add missing signal cleanup handlers in view classes by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2324" rel="nofollow">https://github.com/borgbase/vorta/pull/2324</a></li>
+<li>Revert to using borg-dir binary on macos by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2325" rel="nofollow">https://github.com/borgbase/vorta/pull/2325</a></li>
+<li>Skip darwin tests on non-darwin platforms by @cincodenada in <a href="https://github.com/borgbase/vorta/pull/2319" rel="nofollow">https://github.com/borgbase/vorta/pull/2319</a></li>
+<li>refactor: remove unused profile_id from schedule_changed signal by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2330" rel="nofollow">https://github.com/borgbase/vorta/pull/2330</a></li>
+<li>KWallet password retrieval broken by incorrect get_result() return type by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2328" rel="nofollow">https://github.com/borgbase/vorta/pull/2328</a></li>
+<li>bug: fix tree model pointer exception and performance by @m3nu in <a href="https://github.com/borgbase/vorta/pull/2333" rel="nofollow">https://github.com/borgbase/vorta/pull/2333</a></li>
+<li>fix: Delay updating schedule until after fields have been initialized by @cincodenada in <a href="https://github.com/borgbase/vorta/pull/2317" rel="nofollow">https://github.com/borgbase/vorta/pull/2317</a></li>
+</ul>
+<h2>New Contributors</h2>
+<ul>
+<li>@cincodenada made their first contribution in <a href="https://github.com/borgbase/vorta/pull/2319" rel="nofollow">https://github.com/borgbase/vorta/pull/2319</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.11.1...v0.11.2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.11.1...v0.11.2</a></p>]]></description>
+      <pubDate>2026-01-01T18:32:00Z</pubDate>
+      <sparkle:version>0.11.2</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.2</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.2/Vorta-v0.11.2-arm.dmg" length="48510183" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.1</title>
       <description><![CDATA[<p>This release improves the packaging and release process.</p>
 <h2>What's Changed</h2>
@@ -541,26 +574,6 @@ MDM. More about this feature in the <a href="https://vorta.borgbase.com/usage/se
       <sparkle:version>0.7.6</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.6</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.6/vorta-0.7.6.dmg" length="45347584" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.5</title>
-      <description><![CDATA[<p>This is a maintenance release to address <a href="https://github.com/borgbase/vorta/discussions/859" rel="nofollow">some issues</a> Linux
-users have reported with their keychain. With this release</p>
-<ul>
-<li>You can disable the system keychain and just keep the repo 
-  passphrase in Vorta's settings DB (slightly less secure)</li>
-<li>Keyring is now picked by assigning a score. So it will 
-  prioritized KWallet on KDE and Secret Storage on Gnome.</li>
-</ul>
-<h3>Other improvements</h3>
-<ul>
-<li>Use json mode to list archive files. By @rblenis (#885)</li>
-<li>Add untranslated strings. By @samuel-w (#902)</li>
-</ul>]]></description>
-      <pubDate>2021-03-03T04:17:49Z</pubDate>
-      <sparkle:version>0.7.5</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.5</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.5/vorta-0.7.5.dmg" length="47113299" type="application/x-diskcopy"/>
     </item>
   </channel>
 </rss>
