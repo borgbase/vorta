@@ -43,7 +43,10 @@ test = ["pytest", "pytest-qt", "pytest-mock", "pytest-cov"]
 dev = [
     "build>=1.2.2.post1",
     "coverage",
+    "lxml>=6.0.2",
     "macholib",
+    "markdown>=3.7",
+    "mdx-linkify>=2.1",
     "nox",
     "pkgconfig",
     "pre-commit",
