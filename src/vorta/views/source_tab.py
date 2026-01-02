@@ -206,7 +206,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
         self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
         self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
-        getDir = FilePathInfoAsync(path, self.profile().exclude_patterns)
+        getDir = FilePathInfoAsync(path, self.profile().get_combined_exclusion_string())
         getDir.signal.connect(self.set_path_info)
         getDir.setObjectName(path)
         self.updateThreads.append(getDir)  # this is ugly, is there a better way to keep the thread object?
