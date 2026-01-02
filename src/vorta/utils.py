@@ -43,7 +43,7 @@ class FilePathInfoAsync(QThread):
         self.exclude_patterns = []
         for _line in (exclude_patterns_str or '').splitlines():
             line = _line.strip()
-            if line != '':
+            if line != '' and not line.startswith("#"):
                 self.exclude_patterns.append(line)
 
     def run(self):
