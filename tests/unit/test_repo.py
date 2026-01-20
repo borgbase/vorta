@@ -71,9 +71,10 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
 
-    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
-    # -1 is the repo id in this test
-    qtbot.waitUntil(lambda: 'Select a backup repository first.' in main.progressText.text(), **pytest._wait_defaults)
+    # Directly call create_backup_action and wait for signal
+    with qtbot.waitSignal(qapp.backup_progress_event, timeout=5000):
+        qapp.create_backup_action()
+
     assert 'Select a backup repository first.' in main.progressText.text()
 
 
