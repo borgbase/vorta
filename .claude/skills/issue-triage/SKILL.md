@@ -15,6 +15,7 @@ Use this policy to classify, label, and manage GitHub issues for the Vorta proje
 3. **Issues already addressed** - close with explanation
 4. **Borg feature requests** - mark as `status:wontfix` with comment directing to BorgBackup
 5. **Issues needing testing on specific systems** - mark as `help wanted`
+6. **Support requests** - try to respond if issue is less than 60 days old. Close support requests after 90 days. Mark `type:support`.
 
 ## Available Labels
 
