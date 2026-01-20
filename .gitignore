@@ -1,6 +1,7 @@
 .DS_Store
 .idea/
-.claude/
+.claude/*
+!.claude/skills/
 bin/
 build/
 dist/
