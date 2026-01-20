@@ -95,6 +95,8 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
+                return
+            logger.info(f"Queueing backup for profile '{profile_name}'")
             self.create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
@@ -157,11 +159,8 @@ class VortaApp(QtSingleApplication):
         if message == "open main window":
             self.open_main_window_action()
         elif message.startswith("create"):
-            message = message[7:]  # Remove create
-            if self.jobs_manager.is_worker_running():
-                logger.warning("Cannot run while backups are already running")
-            else:
-                self.create_backups_cmdline(message)
+            profile_name = message[7:]  # Remove "create " prefix
+            self.create_backups_cmdline(profile_name)
 
     # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
