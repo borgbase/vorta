@@ -237,14 +237,14 @@ class VortaApp(QtSingleApplication):
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))
             msg.setIcon(QMessageBox.Icon.Critical)
-            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.ButtonRole.RejectRole)
-            msg.addButton(self.tr("Continue"), QMessageBox.ButtonRole.AcceptRole)
-            msg.setDefaultButton(abortButton)
+            cancelButton = msg.addButton(self.tr("Cancel"), QMessageBox.ButtonRole.RejectRole)
+            msg.addButton(self.tr("Break the lock"), QMessageBox.ButtonRole.AcceptRole)
+            msg.setDefaultButton(cancelButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(
                 self.tr(
                     "Only break the lock if you are certain no other Borg process "
-                    "on any machine is accessing the repository. Abort or break the lock?"
+                    "on any machine is accessing the repository. Cancel or break the lock?"
                 )
             )
             msg.accepted.connect(lambda: self.break_lock(profile))
