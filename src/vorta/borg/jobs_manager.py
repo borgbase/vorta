@@ -57,6 +57,7 @@ class SiteWorker(threading.Thread):
                 self.current_job = job
                 logger.debug("Start job on site: %s", job.repo_id())
                 job.run()
+                self.current_job = None
                 logger.debug("Finish job for site: %s", job.repo_id())
             except queue.Empty:
                 if job is not None:
@@ -84,14 +85,20 @@ class JobsManager:
 
         If site is None, check if there is any worker active for any site (repo).
         If site is not None, only check if there is a worker active for the given site (repo).
+
+        Note: We check both is_alive() and current_job because the backup_finished_event
+        signal is emitted from within job.run(), before the thread exits. By checking
+        current_job (which is cleared after job.run() returns), we avoid the race condition
+        where the thread is still alive but the job has finished.
         """
         if site is not None:
             if site in self.workers:
-                if self.workers[site].is_alive():
+                worker = self.workers[site]
+                if worker.is_alive() and worker.current_job is not None:
                     return True
         else:
             for _, worker in self.workers.items():
-                if worker.is_alive():
+                if worker.is_alive() and worker.current_job is not None:
                     return True
         return False
 
@@ -131,6 +138,7 @@ class JobsManager:
                         except queue.Empty:
                             continue
                         self.jobs[site_id].task_done()
-                worker.current_job.cancel()
+                if worker.current_job is not None:
+                    worker.current_job.cancel()
 
         logger.info("Finished cancelling all jobs")
