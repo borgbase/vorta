@@ -118,5 +118,16 @@
         "tags": [
             "type:system", "os:linux", "os:darwin"],
         "author": "shivansh02"
+    },
+    {
+        "name": "Java Development Artefacts",
+        "slug": "java-development-artefacts",
+        "patterns": [
+            "fm:*/.jdk/*",
+            "fm:*/.m2/*",
+            "fm:*/.gradle/*"
+        ],
+        "tags": ["type:dev", "lang:java", "os:linux", "os:darwin"],
+        "author": "MrMinemeet"
     }
 ]

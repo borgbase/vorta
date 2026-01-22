@@ -2,6 +2,7 @@ name: Test
 
 on:
   push:
+    branches: [master]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -11,6 +12,10 @@ on:
         required: false
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,12 +24,12 @@ jobs:
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
-          python-version: 3.11
+          python-version: 3.12
           pre-commit: true
 
       - name: Test formatting with ruff
         shell: bash
-        run: pre-commit run --all-files --show-diff-on-failure
+        run: uv run pre-commit run --all-files --show-diff-on-failure
 
   prepare-matrix:
     runs-on: ubuntu-latest
@@ -51,7 +56,7 @@ jobs:
 
   test-unit:
     needs: prepare-matrix
-    timeout-minutes: 60  # macos tests are very slow
+    timeout-minutes: 120  # macos tests are very slow
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

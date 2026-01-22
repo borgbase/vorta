@@ -28,6 +28,11 @@ def qapp(tmpdir_factory):
         cfg.value = False
         cfg.save()
 
+    # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
+    keyring_setting = vorta.store.models.SettingsModel.get(key='use_system_keyring')
+    keyring_setting.value = False
+    keyring_setting.save()
+
     from vorta.application import VortaApp
 
     qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.

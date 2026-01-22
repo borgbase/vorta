@@ -8,7 +8,9 @@ import re
 import socket
 import sys
 import unicodedata
+import uuid
 from datetime import datetime as dt
+from datetime import timezone as tz
 from functools import reduce
 from typing import Any, Callable, Iterable, List, Optional, Tuple, TypeVar
 
@@ -41,7 +43,7 @@ class FilePathInfoAsync(QThread):
         self.exclude_patterns = []
         for _line in (exclude_patterns_str or '').splitlines():
             line = _line.strip()
-            if line != '':
+            if line != '' and not line.startswith("#"):
                 self.exclude_patterns.append(line)
 
     def run(self):
@@ -121,7 +123,8 @@ def get_directory_size(dir_path, exclude_patterns):
                     if not is_excluded:
                         data_size_filtered += stat.st_size
                         seen_filtered.add(stat.st_ino)
-            except (FileNotFoundError, PermissionError):
+            except (FileNotFoundError, PermissionError, OSError):
+                # OSError is thrown when the file path name exceeds the maximum length allowed by the operating system
                 continue
 
     files_count_filtered = len(seen_filtered)
@@ -416,14 +419,24 @@ def format_archive_name(profile, archive_name_tpl):
     """
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
+    borg_version = borg_compat.get_version()[0]  # Getting only borg version
+    borg_version_tuple = tuple(borg_version.split("."))
     available_vars = {
+        "pid": os.getpid(),
         'hostname': hostname,
         'fqdn': _getfqdn(hostname),
+        "reverse-fqdn": ".".join(reversed(_getfqdn(hostname).split("."))),
         'profile_id': profile.id,
         'profile_slug': profile.slug(),
         'now': dt.now(),
-        'utc_now': dt.utcnow(),
+        'utc_now': dt.now(tz.utc),
+        'utcnow': dt.now(tz.utc),
         'user': getpass.getuser(),
+        "uuid4": str(uuid.uuid4()),
+        'borgversion': borg_version,
+        'borgmajor': "%s" % borg_version_tuple[:1],
+        'borgminor': "%s.%s" % borg_version_tuple[:2],
+        'borgpatch': "%s.%s.%s" % borg_version_tuple[:3],
     }
     return archive_name_tpl.format(**available_vars)
 
