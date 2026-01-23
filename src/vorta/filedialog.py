@@ -92,6 +92,21 @@ class VortaFileDialog(QDialog):
     def selected_paths(self):
         indexes = self.tree.selectionModel().selectedIndexes()
         paths = []
+
+        # If no tree selection, use the path bar text as the selection
+        if not indexes:
+            path = self.path_bar.text()
+            if path and os.path.exists(path):
+                if not os.access(path, os.R_OK):
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Icon.Warning)
+                    msg.setWindowTitle(self.tr("Permission Denied"))
+                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.exec()
+                    return []
+                return [path]
+            return []
+
         for index in indexes:
             if index.column() == 0:
                 path = self.model.filePath(index)
