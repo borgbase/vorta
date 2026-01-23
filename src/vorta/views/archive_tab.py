@@ -383,15 +383,21 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.setRowCount(0)
             self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
+            t = _t("else_branch", t)
 
         self.archiveNameTemplate.setText(profile.new_archive_name)
+        t = _t("archiveNameTemplate.setText", t)
         self.prunePrefixTemplate.setText(profile.prune_prefix)
+        t = _t("prunePrefixTemplate.setText", t)
 
         # Populate pruning options from database
         profile = self.profile()
+        t = _t("profile() again", t)
         for i in self.prune_intervals:
             getattr(self, f'prune_{i}').setValue(getattr(profile, f'prune_{i}'))
+        t = _t("prune_intervals loop", t)
         self.prune_keep_within.setText(profile.prune_keep_within)
+        t = _t("prune_keep_within.setText", t)
 
     def on_selection_change(self, selected=None, deselected=None):
         """
