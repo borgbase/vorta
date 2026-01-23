@@ -46,17 +46,33 @@ class MainWindow(MainWindowBase, MainWindowUI):
     loaded = Signal()
 
     def __init__(self, parent=None):
+        # Debug timing for CI investigation
+        import time
+
+        def _t(label, start=None):
+            if not getattr(sys, '_called_from_test', False):
+                return time.time()
+            now = time.time()
+            if start:
+                print(f"[MainWindow] {label}: {now - start:.3f}s", flush=True)
+            return now
+
+        t = _t("start")
         super().__init__()
+        t = _t("super().__init__", t)
         self.setupUi(self)
+        t = _t("setupUi", t)
         self.setWindowTitle('Vorta for Borg Backup')
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
+        t = _t("setWindowIcon", t)
         if sys.platform.startswith('linux'):
             self.app.setDesktopFileName('com.borgbase.Vorta')
         self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
+        t = _t("LoadingButton", t)
 
         # set log label height to two lines
         fontmetrics: QFontMetrics = self.logText.fontMetrics()
@@ -73,14 +89,21 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if self.current_profile is None:
             profiles = BackupProfileModel.select()
             self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
+        t = _t("profile_setup", t)
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
+        t = _t("RepoTab", t)
         self.sourceTab = SourceTab(self.sourceTabSlot)
+        t = _t("SourceTab", t)
         self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
+        t = _t("ArchiveTab", t)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
+        t = _t("ScheduleTab", t)
         self.miscTab = MiscTab(self.SettingsTabSlot)
+        t = _t("MiscTab", t)
         self.aboutTab = AboutTab(self.AboutTabSlot)
+        t = _t("AboutTab", t)
         self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.miscWidget.hide()
         self.tabWidget.setCurrentIndex(0)
@@ -102,9 +125,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.backup_log_event.connect(self.set_log)
         self.app.backup_progress_event.connect(self.set_progress)
         self.app.backup_cancelled_event.connect(self.backup_cancelled_event)
+        t = _t("signal_connections", t)
 
         # Init profile list
         self.populate_profile_selector()
+        t = _t("populate_profile_selector", t)
         self.profileSelector.itemClicked.connect(self.profile_clicked_action)
         self.profileSelector.currentItemChanged.connect(self.profile_selection_changed_action)
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
@@ -114,12 +139,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
 
         # OS-specific startup options:
+        t = _t("before_network_check", t)
         if not get_network_status_monitor().is_network_status_available():
             # Hide Wifi-rule section in schedule tab.
             self.scheduleTab.networksPage.wifiListLabel.hide()
             self.scheduleTab.networksPage.wifiListWidget.hide()
             self.scheduleTab.page_2.hide()
             self.scheduleTab.toolBox.removeItem(1)
+        t = _t("network_status_check", t)
 
         # Connect to existing thread.
         if self.app.jobs_manager.is_worker_running():
@@ -132,7 +159,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
+        t = _t("set_icons", t)
         self.loaded.emit()
+        _t("__init__ complete", t)
 
     def on_close_window(self):
         self.close()
