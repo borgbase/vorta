@@ -46,6 +46,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
     loaded = Signal()
 
     def __init__(self, parent=None):
+        print("DEBUG: MainWindow.__init__ starting", flush=True)
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Vorta for Borg Backup')
@@ -75,10 +76,13 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
 
         # Load tab models
+        print("DEBUG: MainWindow - creating tabs", flush=True)
         self.repoTab = RepoTab(self.repoTabSlot)
         self.sourceTab = SourceTab(self.sourceTabSlot)
         self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
+        print("DEBUG: MainWindow - creating ScheduleTab", flush=True)
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
+        print("DEBUG: MainWindow - ScheduleTab created", flush=True)
         self.miscTab = MiscTab(self.SettingsTabSlot)
         self.aboutTab = AboutTab(self.AboutTabSlot)
         self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
@@ -114,7 +118,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
 
         # OS-specific startup options:
+        print("DEBUG: MainWindow - checking network status", flush=True)
         if not get_network_status_monitor().is_network_status_available():
+            print("DEBUG: MainWindow - network status not available, hiding wifi", flush=True)
             # Hide Wifi-rule section in schedule tab.
             self.scheduleTab.networksPage.wifiListLabel.hide()
             self.scheduleTab.networksPage.wifiListWidget.hide()
@@ -132,6 +138,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
+        print("DEBUG: MainWindow.__init__ complete", flush=True)
         self.loaded.emit()
 
     def on_close_window(self):

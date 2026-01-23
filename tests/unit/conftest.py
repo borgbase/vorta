@@ -68,13 +68,18 @@ def load_window(qapp: vorta.application.VortaApp):
     Reload the main window of the given application.
     Used to repopulate fields after loading mock data.
     """
+    print("DEBUG: load_window() called", flush=True)
     qapp.main_window.deleteLater()
+    print("DEBUG: deleteLater called, processing events", flush=True)
     # Process events to ensure the old window is fully destroyed before creating the new one.
     # Without this, deleteLater() is asynchronous and the old window's signal connections
     # may still be active when the new window is created, causing state pollution.
     QCoreApplication.processEvents()
+    print("DEBUG: events processed, deleting main_window", flush=True)
     del qapp.main_window
+    print("DEBUG: Creating new MainWindow", flush=True)
     qapp.main_window = MainWindow(qapp)
+    print("DEBUG: New MainWindow created", flush=True)
 
 
 @pytest.fixture
@@ -91,6 +96,7 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
+    print("DEBUG: init_db fixture starting", flush=True)
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -99,6 +105,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
         },
     )
     vorta.store.connection.init_db(mock_db)
+    print("DEBUG: DB initialized, setting up test data", flush=True)
 
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
@@ -134,8 +141,10 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
     # it is responsible for calling this instead
+    print("DEBUG: About to call load_window", flush=True)
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
+    print("DEBUG: init_db setup complete", flush=True)
 
     yield
 
