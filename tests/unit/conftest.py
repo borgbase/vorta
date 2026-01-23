@@ -225,9 +225,13 @@ def archive_env(qapp, qtbot):
     """
     Common setup for unit tests involving the archive tab.
     """
+    print("DEBUG archive_env: starting", flush=True)
     main: MainWindow = qapp.main_window
     tab: ArchiveTab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
+    print("DEBUG archive_env: calling populate_from_profile", flush=True)
     tab.populate_from_profile()
+    print("DEBUG archive_env: calling waitUntil", flush=True)
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
+    print("DEBUG archive_env: complete", flush=True)
     return main, tab
