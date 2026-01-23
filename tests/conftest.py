@@ -14,6 +14,12 @@ def pytest_configure(config):
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
 
+    # Patch _getfqdn to avoid slow DNS lookups on CI.
+    # This is more targeted than mocking socket.getaddrinfo globally.
+    import vorta.utils
+
+    vorta.utils._getfqdn = lambda name="": name.strip() or 'localhost'
+
 
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory):
