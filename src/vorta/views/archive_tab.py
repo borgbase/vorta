@@ -188,6 +188,18 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""
+        # Debug timing for CI investigation
+        import time
+
+        def _t(label, start=None):
+            if not getattr(sys, '_called_from_test', False):
+                return time.time()
+            now = time.time()
+            if start:
+                print(f"[set_icons] {label}: {now - start:.3f}s", flush=True)
+            return now
+
+        t = _t("start")
         self.bCheck.setIcon(get_colored_icon('check-circle'))
         self.bDiff.setIcon(get_colored_icon('stream-solid'))
         self.bPrune.setIcon(get_colored_icon('cut'))
@@ -199,9 +211,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.bRename.setIcon(get_colored_icon('edit'))
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
+        t = _t("get_colored_icons", t)
 
         self.bmountarchive_refresh(icon_only=True)
+        t = _t("bmountarchive_refresh", t)
         self.bmountrepo_refresh()
+        t = _t("bmountrepo_refresh", t)
 
     def _on_destroyed(self):
         try:
@@ -279,10 +294,24 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def populate_from_profile(self):
         """Populate archive list and prune settings from profile."""
+        # Debug timing for CI investigation
+        import time
+
+        def _t(label, start=None):
+            if not getattr(sys, '_called_from_test', False):
+                return time.time()
+            now = time.time()
+            if start:
+                print(f"[populate_from_profile] {label}: {now - start:.3f}s", flush=True)
+            return now
+
+        t = _t("start")
         profile = self.profile()
+        t = _t("profile()", t)
         if profile.repo is not None:
             # get mount points
             self.mount_points, repo_mount_points = get_mount_points(profile.repo.url)
+            t = _t("get_mount_points", t)
             if repo_mount_points:
                 self.repo_mount_point = repo_mount_points[0]
 
@@ -293,6 +322,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.toolBox.setItemText(0, self.tr('Archives for {}').format(repo_name))
 
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
+            t = _t("archives_query", t)
 
             # if no archive's name can be found in self.mount_points, then hide the mount point column
             if not any(a.name in self.mount_points for a in archives):
@@ -342,10 +372,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             self.archiveTable.setSortingEnabled(sorting)
             item = self.archiveTable.item(0, 0)
             self.archiveTable.scrollToItem(item)
+            t = _t("table_populate", t)
 
             self.archiveTable.selectionModel().clearSelection()
             if self.remaining_refresh_archives == 0:
                 self._toggle_all_buttons(enabled=True)
+            t = _t("toggle_buttons", t)
         else:
             self.mount_points = {}
             self.archiveTable.setRowCount(0)
