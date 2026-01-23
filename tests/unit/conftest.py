@@ -93,6 +93,7 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
+    print("DEBUG init_db: fixture starting", flush=True)
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
