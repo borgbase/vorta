@@ -315,11 +315,7 @@ def get_sorted_wifis(profile):
     from vorta.store.models import WifiSettingModel
 
     # Pull networks known to OS and all other backup profiles
-    # Skip system WiFi enumeration during tests to avoid CoreWLAN hangs on headless CI
-    if getattr(sys, '_called_from_test', False):
-        system_wifis = []
-    else:
-        system_wifis = get_network_status_monitor().get_known_wifis()
+    system_wifis = get_network_status_monitor().get_known_wifis()
     from_other_profiles = WifiSettingModel.select().where(WifiSettingModel.profile != profile.id).execute()
 
     for wifi in list(from_other_profiles) + system_wifis:
@@ -499,11 +495,6 @@ def extract_mount_points_v1(proc, repo_url):
 
 
 def get_mount_points(repo_url):
-    # Skip process enumeration during tests - psutil.process_iter() is slow on macOS CI
-    # and tests don't have borg mount processes anyway
-    if getattr(sys, '_called_from_test', False):
-        return {}, []
-
     mount_points = {}
     repo_mounts = []
 

@@ -1,4 +1,5 @@
 import os
+import socket
 import sys
 
 import pytest
@@ -8,11 +9,25 @@ import vorta
 import vorta.application
 import vorta.borg.jobs_manager
 
+# Store original getaddrinfo before any mocking
+_original_getaddrinfo = socket.getaddrinfo
+
 
 def pytest_configure(config):
     sys._called_from_test = True
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
+
+    # Mock socket.getaddrinfo globally to avoid slow DNS lookups on CI.
+    # The _getfqdn() function in utils.py uses this for archive name templates,
+    # and DNS lookups can timeout (10s each) on macOS CI runners.
+    def fast_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        # For AI_CANONNAME requests (used by _getfqdn), return hostname as canonical name
+        if flags & socket.AI_CANONNAME:
+            return [(socket.AF_INET, socket.SOCK_DGRAM, 0, host, ('127.0.0.1', 0))]
+        return _original_getaddrinfo(host, port, family, type, proto, flags)
+
+    socket.getaddrinfo = fast_getaddrinfo
 
 
 @pytest.fixture(scope='session')
