@@ -45,6 +45,7 @@ class VortaApp(QtSingleApplication):
     profile_changed_event = QtCore.pyqtSignal()
 
     def __init__(self, args_raw, single_app=False):
+        print("DEBUG: VortaApp.__init__ starting", flush=True)
         super().__init__(str(APP_ID), args_raw)
         args = parse_args()
         if self.isRunning():
@@ -62,17 +63,25 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
+        print("DEBUG: Creating JobsManager", flush=True)
         self.jobs_manager = JobsManager()
+        print("DEBUG: Creating VortaScheduler", flush=True)
         self.scheduler = VortaScheduler()
+        print("DEBUG: VortaScheduler created", flush=True)
 
         self.setApplicationName("Vorta")
 
         # Import profile from ~/.vorta-init.json or add empty "Default" profile.
+        print("DEBUG: Calling bootstrap_profile", flush=True)
         self.bootstrap_profile()
+        print("DEBUG: bootstrap_profile done", flush=True)
 
         # Prepare tray and main window
+        print("DEBUG: Creating TrayMenu", flush=True)
         self.tray = TrayMenu(self)
+        print("DEBUG: Creating MainWindow", flush=True)
         self.main_window = MainWindow(self)
+        print("DEBUG: MainWindow created", flush=True)
 
         if getattr(args, 'daemonize', False):
             pass

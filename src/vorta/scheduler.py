@@ -66,7 +66,9 @@ class VortaScheduler(QtCore.QObject):
         # connect to `systemd-logind` to receive sleep/resume events
         # The signal `PrepareForSleep` will be emitted before and after hibernation.
         # Skip during tests to avoid D-Bus hangs in CI
+        print("DEBUG: VortaScheduler.__init__ - checking _called_from_test", flush=True)
         if not getattr(sys, '_called_from_test', False):
+            print("DEBUG: VortaScheduler - about to access systemBus", flush=True)
             service = "org.freedesktop.login1"
             path = "/org/freedesktop/login1"
             interface = "org.freedesktop.login1.Manager"

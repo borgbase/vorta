@@ -35,7 +35,9 @@ def qapp(tmpdir_factory):
 
     from vorta.application import VortaApp
 
+    print("DEBUG: About to create VortaApp", flush=True)
     qapp = VortaApp([])  # Only init QApplication once to avoid segfaults while testing.
+    print("DEBUG: VortaApp created successfully", flush=True)
 
     yield qapp
     mock_db.close()
