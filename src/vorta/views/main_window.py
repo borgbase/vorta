@@ -132,7 +132,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
+        print("DEBUG MainWindow: about to emit loaded signal", flush=True)
         self.loaded.emit()
+        print("DEBUG MainWindow: __init__ complete", flush=True)
 
     def on_close_window(self):
         self.close()

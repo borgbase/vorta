@@ -68,12 +68,15 @@ def load_window(qapp: vorta.application.VortaApp):
     Reload the main window of the given application.
     Used to repopulate fields after loading mock data.
     """
+    print("DEBUG load_window: starting", flush=True)
     qapp.main_window.deleteLater()
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
     # Use a small sleep instead to allow deleteLater to be processed.
     time.sleep(0.1)
     del qapp.main_window
+    print("DEBUG load_window: creating new MainWindow", flush=True)
     qapp.main_window = MainWindow(qapp)
+    print("DEBUG load_window: complete", flush=True)
 
 
 @pytest.fixture
@@ -136,6 +139,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
 
+    print("DEBUG init_db: load_window complete, yielding to test", flush=True)
     yield
 
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
