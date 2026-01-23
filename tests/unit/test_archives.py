@@ -26,13 +26,18 @@ def test_prune_intervals(qapp, qtbot):
     main = qapp.main_window
     print("DEBUG test_prune_intervals: got main_window", flush=True)
     tab = main.archiveTab
+    print("DEBUG test_prune_intervals: got archiveTab", flush=True)
     profile = BackupProfileModel.get(id=1)
+    print("DEBUG test_prune_intervals: got profile", flush=True)
 
     for i in prune_intervals:
+        print(f"DEBUG test_prune_intervals: setting prune_{i}", flush=True)
         getattr(tab, f'prune_{i}').setValue(9)
+        print("DEBUG test_prune_intervals: calling save_prune_setting", flush=True)
         tab.save_prune_setting(None)
         profile = profile.refresh()
         assert getattr(profile, f'prune_{i}') == 9
+    print("DEBUG test_prune_intervals: complete", flush=True)
 
 
 def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
