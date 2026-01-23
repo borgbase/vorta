@@ -1,8 +1,10 @@
 import os
+import time
 from datetime import datetime as dt
 
 import pytest
 from peewee import SqliteDatabase
+from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 import vorta
 import vorta.application
@@ -20,6 +22,34 @@ from vorta.store.models import (
 )
 from vorta.views.main_window import ArchiveTab, MainWindow
 
+
+def disconnect_all(signal):
+    """
+    Disconnect ALL handlers from a Qt signal.
+    Unlike signal.disconnect() without arguments which only disconnects ONE handler,
+    this function disconnects all connected handlers by calling disconnect in a loop
+    until TypeError is raised (indicating no more handlers are connected).
+    """
+    while True:
+        try:
+            signal.disconnect()
+        except TypeError:
+            # No more handlers connected
+            break
+
+
+def all_workers_finished(jobs_manager):
+    """
+    Check if all worker threads have actually exited.
+    This is more thorough than is_worker_running() which only checks current_job,
+    because threads may still be alive briefly after current_job is set to None.
+    """
+    for worker in jobs_manager.workers.values():
+        if worker.is_alive():
+            return False
+    return True
+
+
 models = [
     RepoModel,
     RepoPassword,
@@ -35,10 +65,13 @@ models = [
 
 def load_window(qapp: vorta.application.VortaApp):
     """
-    Reload the main window of the given application
-    Used to repopulate fields after loading mock data
+    Reload the main window of the given application.
+    Used to repopulate fields after loading mock data.
     """
     qapp.main_window.deleteLater()
+    # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
+    # Use a small sleep instead to allow deleteLater to be processed.
+    time.sleep(0.1)
     del qapp.main_window
     qapp.main_window = MainWindow(qapp)
 
@@ -89,14 +122,13 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     test_archive1 = ArchiveModel(snapshot_id='99998', name='test-archive1', time=dt(2000, 1, 1, 0, 0), repo=1)
     test_archive1.save()
 
-    source_dir = SourceFileModel(dir='/tmp/another', repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
+    source_dir = SourceFileModel(dir=TEST_SOURCE_DIR, repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
 
-    # Disconnect signals before destroying main_window to avoid "deleted object" errors
-    try:
-        qapp.scheduler.schedule_changed.disconnect()
-    except TypeError:
-        pass
+    # Disconnect ALL signal handlers before destroying main_window to avoid "deleted object" errors
+    # Using disconnect_all() instead of disconnect() to ensure ALL handlers are removed,
+    # not just one (which can leave stale connections from previous tests)
+    disconnect_all(qapp.scheduler.schedule_changed)
 
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
@@ -106,10 +138,28 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
 
     yield
 
+    # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
-    qapp.backup_finished_event.disconnect()
-    qapp.scheduler.schedule_changed.disconnect()
-    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
+
+    # Wait for all worker threads to actually exit (not just for current_job to be None).
+    # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
+    # qtbot.waitUntil processes Qt events while waiting, which can trigger D-Bus operations.
+    timeout = pytest._wait_defaults.get('timeout', 20000) / 1000  # Convert ms to seconds
+    start = time.time()
+    while not all_workers_finished(qapp.jobs_manager):
+        if time.time() - start > timeout:
+            break
+        time.sleep(0.1)
+
+    # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
+
+    # Disconnect signals
+    disconnect_all(qapp.backup_finished_event)
+    disconnect_all(qapp.scheduler.schedule_changed)
+
+    # Clear the workers dict to prevent accumulation of dead thread references
+    qapp.jobs_manager.workers.clear()
+    qapp.jobs_manager.jobs.clear()
     mock_db.close()
 
 
@@ -123,19 +173,35 @@ def choose_file_dialog(*args):
             func()
 
         def selectedFiles(self):
-            return ['/tmp']
+            return [TEST_TEMP_DIR]
 
     return MockFileDialog
 
 
 @pytest.fixture
 def borg_json_output():
+    """
+    Returns a function to read borg JSON output files.
+    Opens real file handles (required for os.set_blocking and select.select),
+    but tracks them for cleanup when the fixture is torn down.
+    """
+    open_files = []
+
     def _read_json(subcommand):
         stdout = open(f'tests/unit/borg_json_output/{subcommand}_stdout.json')
         stderr = open(f'tests/unit/borg_json_output/{subcommand}_stderr.json')
+        open_files.append(stdout)
+        open_files.append(stderr)
         return stdout, stderr
 
-    return _read_json
+    yield _read_json
+
+    # Clean up all opened files when the fixture is torn down
+    for f in open_files:
+        try:
+            f.close()
+        except Exception:
+            pass
 
 
 @pytest.fixture

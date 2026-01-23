@@ -100,6 +100,7 @@ quote-style = "preserve"
 [tool.pytest.ini_options]
 addopts = "-vs"
 testpaths = ["tests"]
+pythonpath = ["tests/unit"]
 qt_default_raising = true
 filterwarnings = ["ignore::DeprecationWarning"]
 

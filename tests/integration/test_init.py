@@ -6,12 +6,13 @@ import os
 from pathlib import PurePath
 
 import pytest
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QCoreApplication, Qt
 from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg
 import vorta.utils
 import vorta.views.repo_add_dialog
+from tests.integration.conftest import all_workers_finished
 
 LONG_PASSWORD = 'long-password-long'
 TEST_REPO_NAME = 'TEST - REPONAME'
@@ -43,9 +44,17 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
+    initial_count = main.repoTab.repoSelector.count()
     add_repo_window.run()
 
-    qtbot.waitUntil(lambda: main.repoTab.repoSelector.count() == 2, **pytest._wait_defaults)
+    # Wait for all worker threads to fully exit (more thorough than is_worker_running)
+    qtbot.waitUntil(lambda: all_workers_finished(qapp.jobs_manager), **pytest._wait_defaults)
+
+    # Process pending Qt events to ensure signals are delivered and UI is updated
+    QCoreApplication.processEvents()
+
+    # Wait for the new repo to appear in the selector
+    qtbot.waitUntil(lambda: main.repoTab.repoSelector.count() == initial_count + 1, **pytest._wait_defaults)
 
     # Check if repo was created in tmpdir
     repo_url = (
@@ -96,7 +105,16 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
 
     add_repo_window.run()
 
-    # check that repo was added
-    qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
+    # Wait for all worker threads to fully exit (more thorough than is_worker_running)
+    qtbot.waitUntil(lambda: all_workers_finished(qapp.jobs_manager), **pytest._wait_defaults)
+
+    # Process pending Qt events to ensure signals are delivered and UI is updated
+    QCoreApplication.processEvents()
+
+    # Wait for the repo to appear in the selector
+    # After unlink, count is 1 (only placeholder). After adding repo, count should be 2.
+    qtbot.waitUntil(lambda: tab.repoSelector.count() == 2, **pytest._wait_defaults)
+
+    # check that repo was added correctly
     assert vorta.store.models.RepoModel.select().first().url == str(current_repo_path)
     assert vorta.store.models.RepoModel.select().first().name == TEST_REPO_NAME

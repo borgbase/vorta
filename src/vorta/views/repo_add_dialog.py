@@ -247,10 +247,10 @@ class ExistingRepoWindow(RepoWindow):
             params = BorgInfoRepoJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                thread = BorgInfoRepoJob(params['cmd'], params)
-                thread.updated.connect(self._set_status)
-                thread.result.connect(self.run_result)
-                self.thread = thread  # Needs to be connected to self for tests to work.
-                self.thread.run()
+                job = BorgInfoRepoJob(params['cmd'], params)
+                job.updated.connect(self._set_status)
+                job.result.connect(self.run_result)
+                self.thread = job  # Keep reference for tests
+                QApplication.instance().jobs_manager.add_job(job)
             else:
                 self._set_status(params['message'])
