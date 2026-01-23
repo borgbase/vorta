@@ -164,11 +164,9 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
             print("DEBUG: worker wait timed out", flush=True)
             break
         time.sleep(0.1)
-    print("DEBUG: workers finished, processing events", flush=True)
+    print("DEBUG: workers finished, disconnecting signals", flush=True)
 
-    # Process any pending events to ensure all queued signals are handled
-    QCoreApplication.processEvents()
-    print("DEBUG: events processed, disconnecting signals", flush=True)
+    # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
     # Disconnect signals after events are processed
     disconnect_all(qapp.backup_finished_event)
