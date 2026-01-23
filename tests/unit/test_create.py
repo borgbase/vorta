@@ -1,3 +1,5 @@
+from test_constants import TEST_SOURCE_DIR
+
 from vorta.borg.create import BorgCreateJob
 from vorta.store.models import BackupProfileModel, SourceFileModel
 
@@ -23,10 +25,10 @@ def test_create_paths_from_command():
         'lz4',
         '--one-file-system',
         'i0fi93@i593.repo.borgbase.com:repo::a1',
-        '/tmp/another',
+        TEST_SOURCE_DIR,
     ]
 
-    default_profile.repo.create_backup_cmd = '--paths-from-command -- echo /tmp/another'
+    default_profile.repo.create_backup_cmd = f'--paths-from-command -- echo {TEST_SOURCE_DIR}'
     SourceFileModel.delete().execute()
 
     result = BorgCreateJob.prepare(default_profile)
@@ -47,5 +49,5 @@ def test_create_paths_from_command():
         'i0fi93@i593.repo.borgbase.com:repo::a1',
         '--',
         'echo',
-        '/tmp/another',
+        TEST_SOURCE_DIR,
     ]
