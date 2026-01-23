@@ -154,7 +154,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.progressText.setText(text)
         self.progressText.repaint()
 
-    def set_log(self, text=''):
+    def set_log(self, text='', context=None):
+        # Truncate very long messages to keep the status area readable
+        if text and len(text) > 300:
+            text = text[:300] + '...'
         self.logText.setText(text)
         self.logText.repaint()
 
