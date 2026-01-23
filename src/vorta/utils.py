@@ -315,7 +315,11 @@ def get_sorted_wifis(profile):
     from vorta.store.models import WifiSettingModel
 
     # Pull networks known to OS and all other backup profiles
-    system_wifis = get_network_status_monitor().get_known_wifis()
+    # Skip system WiFi enumeration during tests - CoreWLAN can hang on headless CI
+    if getattr(sys, '_called_from_test', False):
+        system_wifis = []
+    else:
+        system_wifis = get_network_status_monitor().get_known_wifis()
     from_other_profiles = WifiSettingModel.select().where(WifiSettingModel.profile != profile.id).execute()
 
     for wifi in list(from_other_profiles) + system_wifis:
