@@ -398,24 +398,13 @@ def uses_dark_mode():
 
 # patched socket.getfqdn() - see https://bugs.python.org/issue5004
 # Reused with permission from https://github.com/borgbackup/borg/blob/master/src/borg/platform/base.py (BSD-3-Clause)
-# Cache for _getfqdn result to avoid repeated slow DNS lookups
-_fqdn_cache = {}
-
-
 def _getfqdn(name=""):
     """Get fully qualified domain name from name.
     An empty argument is interpreted as meaning the local host.
-    Results are cached to avoid slow DNS lookups on repeated calls.
     """
     name = name.strip()
     if not name or name == "0.0.0.0":
         name = socket.gethostname()
-
-    # Return cached result if available
-    if name in _fqdn_cache:
-        return _fqdn_cache[name]
-
-    result = name
     try:
         addrs = socket.getaddrinfo(name, None, 0, socket.SOCK_DGRAM, 0, socket.AI_CANONNAME)
     except OSError:
@@ -423,11 +412,9 @@ def _getfqdn(name=""):
     else:
         for addr in addrs:
             if addr[3]:
-                result = addr[3]
+                name = addr[3]
                 break
-
-    _fqdn_cache[name] = result
-    return result
+    return name
 
 
 def format_archive_name(profile, archive_name_tpl):
