@@ -169,12 +169,16 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
     # Disconnect signals after events are processed
+    print("DEBUG: disconnecting backup_finished_event", flush=True)
     disconnect_all(qapp.backup_finished_event)
+    print("DEBUG: disconnecting schedule_changed", flush=True)
     disconnect_all(qapp.scheduler.schedule_changed)
+    print("DEBUG: signals disconnected, clearing workers", flush=True)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
+    print("DEBUG: teardown complete", flush=True)
 
     mock_db.close()
 
