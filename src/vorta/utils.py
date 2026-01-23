@@ -405,6 +405,11 @@ def _getfqdn(name=""):
     name = name.strip()
     if not name or name == "0.0.0.0":
         name = socket.gethostname()
+
+    # Skip DNS lookup during tests - it can timeout on CI
+    if getattr(sys, '_called_from_test', False):
+        return name
+
     try:
         addrs = socket.getaddrinfo(name, None, 0, socket.SOCK_DGRAM, 0, socket.AI_CANONNAME)
     except OSError:
