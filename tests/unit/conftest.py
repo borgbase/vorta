@@ -178,9 +178,9 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
-    print("DEBUG: teardown complete", flush=True)
-
+    print("DEBUG: teardown complete, closing db", flush=True)
     mock_db.close()
+    print("DEBUG: db closed, fixture done", flush=True)
 
 
 @pytest.fixture
