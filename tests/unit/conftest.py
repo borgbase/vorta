@@ -1,4 +1,5 @@
 import os
+import time
 from datetime import datetime as dt
 
 import pytest
@@ -154,8 +155,15 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     print("DEBUG: jobs cancelled, waiting for workers", flush=True)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
-    # This is more thorough than is_worker_running() and prevents thread state leakage.
-    qtbot.waitUntil(lambda: all_workers_finished(qapp.jobs_manager), **pytest._wait_defaults)
+    # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
+    # qtbot.waitUntil processes Qt events while waiting, which can trigger D-Bus operations.
+    timeout = pytest._wait_defaults.get('timeout', 20000) / 1000  # Convert ms to seconds
+    start = time.time()
+    while not all_workers_finished(qapp.jobs_manager):
+        if time.time() - start > timeout:
+            print("DEBUG: worker wait timed out", flush=True)
+            break
+        time.sleep(0.1)
     print("DEBUG: workers finished, processing events", flush=True)
 
     # Process any pending events to ensure all queued signals are handled
