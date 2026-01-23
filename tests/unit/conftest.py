@@ -68,15 +68,12 @@ def load_window(qapp: vorta.application.VortaApp):
     Reload the main window of the given application.
     Used to repopulate fields after loading mock data.
     """
-    print("DEBUG load_window: starting", flush=True)
     qapp.main_window.deleteLater()
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
     # Use a small sleep instead to allow deleteLater to be processed.
     time.sleep(0.1)
     del qapp.main_window
-    print("DEBUG load_window: creating new MainWindow", flush=True)
     qapp.main_window = MainWindow(qapp)
-    print("DEBUG load_window: complete", flush=True)
 
 
 @pytest.fixture
@@ -93,7 +90,6 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
-    print("DEBUG init_db: fixture starting", flush=True)
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -140,13 +136,10 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
 
-    print("DEBUG init_db: load_window complete, yielding to test", flush=True)
     yield
 
-    print("DEBUG init_db teardown: starting", flush=True)
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
-    print("DEBUG init_db teardown: cancelled jobs", flush=True)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
@@ -157,22 +150,17 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
         if time.time() - start > timeout:
             break
         time.sleep(0.1)
-    print("DEBUG init_db teardown: workers finished", flush=True)
 
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
     # Disconnect signals
     disconnect_all(qapp.backup_finished_event)
-    print("DEBUG init_db teardown: disconnected backup_finished_event", flush=True)
     disconnect_all(qapp.scheduler.schedule_changed)
-    print("DEBUG init_db teardown: disconnected schedule_changed", flush=True)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
-    print("DEBUG init_db teardown: cleared workers/jobs", flush=True)
     mock_db.close()
-    print("DEBUG init_db teardown: complete", flush=True)
 
 
 @pytest.fixture
@@ -226,13 +214,9 @@ def archive_env(qapp, qtbot):
     """
     Common setup for unit tests involving the archive tab.
     """
-    print("DEBUG archive_env: starting", flush=True)
     main: MainWindow = qapp.main_window
     tab: ArchiveTab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
-    print("DEBUG archive_env: calling populate_from_profile", flush=True)
     tab.populate_from_profile()
-    print("DEBUG archive_env: calling waitUntil", flush=True)
     qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
-    print("DEBUG archive_env: complete", flush=True)
     return main, tab

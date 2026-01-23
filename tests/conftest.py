@@ -10,7 +10,6 @@ import vorta.borg.jobs_manager
 
 
 def pytest_configure(config):
-    print("DEBUG pytest_configure: setting _called_from_test", flush=True)
     sys._called_from_test = True
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
@@ -22,7 +21,6 @@ def pytest_configure(config):
             import pytestqt.plugin
 
             pytestqt.plugin._process_events = lambda: None
-            print("DEBUG pytest_configure: disabled pytest-qt processEvents", flush=True)
         except (ImportError, AttributeError):
             pass
 
