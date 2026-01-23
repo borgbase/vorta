@@ -144,10 +144,11 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     print("DEBUG: About to call load_window", flush=True)
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
-    print("DEBUG: init_db setup complete", flush=True)
+    print("DEBUG: init_db setup complete, about to yield", flush=True)
 
     yield
 
+    print("DEBUG: init_db teardown starting", flush=True)
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
 

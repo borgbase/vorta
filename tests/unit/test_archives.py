@@ -21,6 +21,7 @@ class MockFileDialog:
 
 
 def test_prune_intervals(qapp, qtbot):
+    print("DEBUG: test_prune_intervals STARTED", flush=True)
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
     main = qapp.main_window
     tab = main.archiveTab
