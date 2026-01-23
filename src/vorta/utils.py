@@ -406,10 +406,15 @@ def _getfqdn(name=""):
     if not name or name == "0.0.0.0":
         name = socket.gethostname()
 
+    # Debug: trace when this is called and flag state
+    print(f"DEBUG _getfqdn called, _called_from_test={getattr(sys, '_called_from_test', False)}", flush=True)
+
     # Skip DNS lookup during tests - it can timeout on CI
     if getattr(sys, '_called_from_test', False):
+        print("DEBUG _getfqdn: skipping DNS lookup", flush=True)
         return name
 
+    print("DEBUG _getfqdn: doing DNS lookup...", flush=True)
     try:
         addrs = socket.getaddrinfo(name, None, 0, socket.SOCK_DGRAM, 0, socket.AI_CANONNAME)
     except OSError:
@@ -419,6 +424,7 @@ def _getfqdn(name=""):
             if addr[3]:
                 name = addr[3]
                 break
+    print("DEBUG _getfqdn: DNS lookup complete", flush=True)
     return name
 
 
