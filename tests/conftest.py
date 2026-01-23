@@ -15,6 +15,17 @@ def pytest_configure(config):
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
 
+    # Disable pytest-qt's processEvents() calls on macOS to prevent hangs.
+    # See: https://github.com/pytest-dev/pytest-qt/issues/223
+    if sys.platform == 'darwin':
+        try:
+            import pytestqt.plugin
+
+            pytestqt.plugin._process_events = lambda: None
+            print("DEBUG pytest_configure: disabled pytest-qt processEvents", flush=True)
+        except (ImportError, AttributeError):
+            pass
+
 
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory):
