@@ -142,8 +142,10 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     print("DEBUG init_db: load_window complete, yielding to test", flush=True)
     yield
 
+    print("DEBUG init_db teardown: starting", flush=True)
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
+    print("DEBUG init_db teardown: cancelled jobs", flush=True)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
@@ -154,17 +156,22 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
         if time.time() - start > timeout:
             break
         time.sleep(0.1)
+    print("DEBUG init_db teardown: workers finished", flush=True)
 
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
     # Disconnect signals
     disconnect_all(qapp.backup_finished_event)
+    print("DEBUG init_db teardown: disconnected backup_finished_event", flush=True)
     disconnect_all(qapp.scheduler.schedule_changed)
+    print("DEBUG init_db teardown: disconnected schedule_changed", flush=True)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
+    print("DEBUG init_db teardown: cleared workers/jobs", flush=True)
     mock_db.close()
+    print("DEBUG init_db teardown: complete", flush=True)
 
 
 @pytest.fixture
