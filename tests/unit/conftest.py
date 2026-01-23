@@ -71,12 +71,10 @@ def load_window(qapp: vorta.application.VortaApp):
     """
     print("DEBUG: load_window() called", flush=True)
     qapp.main_window.deleteLater()
-    print("DEBUG: deleteLater called, processing events", flush=True)
-    # Process events to ensure the old window is fully destroyed before creating the new one.
-    # Without this, deleteLater() is asynchronous and the old window's signal connections
-    # may still be active when the new window is created, causing state pollution.
-    QCoreApplication.processEvents()
-    print("DEBUG: events processed, deleting main_window", flush=True)
+    # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
+    # Use a small sleep instead to allow deleteLater to be processed.
+    time.sleep(0.1)
+    print("DEBUG: deleteLater done, deleting main_window", flush=True)
     del qapp.main_window
     print("DEBUG: Creating new MainWindow", flush=True)
     qapp.main_window = MainWindow(qapp)
