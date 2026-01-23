@@ -1,5 +1,7 @@
 import os
+import socket
 import sys
+from unittest.mock import Mock
 
 import pytest
 from peewee import SqliteDatabase
@@ -10,7 +12,6 @@ import vorta.borg.jobs_manager
 
 
 def pytest_configure(config):
-    sys._called_from_test = True
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
 
@@ -23,6 +24,37 @@ def pytest_configure(config):
             pytestqt.plugin._process_events = lambda: None
         except (ImportError, AttributeError):
             pass
+
+    # Mock D-Bus system bus to prevent hangs in CI (scheduler.py, network_manager.py)
+    try:
+        from PyQt6 import QtDBus
+
+        _original_system_bus = QtDBus.QDBusConnection.systemBus
+
+        def _mock_system_bus():
+            mock_bus = Mock()
+            mock_bus.isConnected.return_value = False
+            return mock_bus
+
+        QtDBus.QDBusConnection.systemBus = staticmethod(_mock_system_bus)
+    except ImportError:
+        pass
+
+    # Mock DNS lookups to prevent timeouts in CI (utils._getfqdn)
+    _original_getaddrinfo = socket.getaddrinfo
+    socket.getaddrinfo = lambda *args, **kwargs: []
+
+    # Mock WiFi enumeration to prevent hangs on headless CI (utils.get_sorted_wifis)
+    import vorta.utils
+
+    _original_get_network_status_monitor = vorta.utils.get_network_status_monitor
+
+    def _mock_get_network_status_monitor():
+        mock_monitor = Mock()
+        mock_monitor.get_known_wifis.return_value = []
+        return mock_monitor
+
+    vorta.utils.get_network_status_monitor = _mock_get_network_status_monitor
 
 
 @pytest.fixture(scope='session')

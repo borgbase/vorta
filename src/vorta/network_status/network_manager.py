@@ -1,5 +1,4 @@
 import logging
-import sys
 from datetime import datetime
 from enum import Enum
 from typing import Any, List, Mapping, NamedTuple, Optional
@@ -107,10 +106,6 @@ class NetworkManagerDBusAdapter(QObject):
 
     @classmethod
     def get_system_nm_adapter(cls) -> 'NetworkManagerDBusAdapter':
-        # Skip D-Bus during tests to avoid hangs in CI
-        if getattr(sys, '_called_from_test', False):
-            raise UnsupportedException("D-Bus disabled during tests")
-
         bus = QtDBus.QDBusConnection.systemBus()
         if not bus.isConnected():
             raise UnsupportedException("Can't connect to system bus")

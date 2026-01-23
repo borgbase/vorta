@@ -1,6 +1,5 @@
 import enum
 import logging
-import sys
 import threading
 from datetime import datetime as dt
 from datetime import timedelta
@@ -65,18 +64,16 @@ class VortaScheduler(QtCore.QObject):
 
         # connect to `systemd-logind` to receive sleep/resume events
         # The signal `PrepareForSleep` will be emitted before and after hibernation.
-        # Skip during tests to avoid D-Bus hangs in CI
-        if not getattr(sys, '_called_from_test', False):
-            service = "org.freedesktop.login1"
-            path = "/org/freedesktop/login1"
-            interface = "org.freedesktop.login1.Manager"
-            name = "PrepareForSleep"
-            bus = QtDBus.QDBusConnection.systemBus()
-            if bus.isConnected() and bus.interface().isServiceRegistered(service).value():
-                self.bus = bus
-                self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
-            else:
-                logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
+        service = "org.freedesktop.login1"
+        path = "/org/freedesktop/login1"
+        interface = "org.freedesktop.login1.Manager"
+        name = "PrepareForSleep"
+        bus = QtDBus.QDBusConnection.systemBus()
+        if bus.isConnected() and bus.interface().isServiceRegistered(service).value():
+            self.bus = bus
+            self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
+        else:
+            logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool):
