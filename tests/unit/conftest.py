@@ -151,13 +151,16 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     print("DEBUG: init_db teardown starting", flush=True)
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
+    print("DEBUG: jobs cancelled, waiting for workers", flush=True)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # This is more thorough than is_worker_running() and prevents thread state leakage.
     qtbot.waitUntil(lambda: all_workers_finished(qapp.jobs_manager), **pytest._wait_defaults)
+    print("DEBUG: workers finished, processing events", flush=True)
 
     # Process any pending events to ensure all queued signals are handled
     QCoreApplication.processEvents()
+    print("DEBUG: events processed, disconnecting signals", flush=True)
 
     # Disconnect signals after events are processed
     disconnect_all(qapp.backup_finished_event)
