@@ -1,5 +1,4 @@
 import os
-import socket
 import sys
 
 import pytest
@@ -14,15 +13,6 @@ def pytest_configure(config):
     sys._called_from_test = True
     pytest._wait_defaults = {'timeout': 20000}
     os.environ['LANG'] = 'en'  # Ensure we test an English UI
-
-    # Mock socket.getaddrinfo globally to avoid slow DNS lookups on CI.
-    # DNS lookups can timeout (10s each) on macOS CI runners.
-    def fast_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
-        # Return a fast mock result for all DNS lookups during tests.
-        # The actual address doesn't matter for tests - we just need to avoid timeouts.
-        return [(socket.AF_INET, socket.SOCK_DGRAM, 0, host or 'localhost', ('127.0.0.1', port or 0))]
-
-    socket.getaddrinfo = fast_getaddrinfo
 
 
 @pytest.fixture(scope='session')
