@@ -146,9 +146,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         # set labels
         repo: RepoModel = self.profile().repo
         if repo is not None:
-            # remove *unset* item
-            self.repoSelector.removeItem(self.repoSelector.findData(None))
-
             # Start with every element enabled, then disable SSH-related if relevant
             for child in self.frameRepoSettings.children():
                 child.setEnabled(True)
@@ -309,11 +306,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
     def repo_unlink_action(self):
         profile = self.profile()
-        self.init_repo_stats()
-
-        msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
 
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
@@ -322,15 +314,26 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             # QComboBox is empty / repo unset
             return
 
+        # Disconnect signal before manipulating dropdown to prevent cascading updates
+        try:
+            self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
+        except TypeError:
+            pass
+
+        # Update database
         repo = RepoModel.get(id=selected_repo_id)
         ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
         profile.repo = None
         profile.save()
-
         repo.delete_instance(recursive=True)  # This also deletes archives.
-        self.repoSelector.setCurrentIndex(0)
-        self.repoSelector.removeItem(selected_repo_index)
 
+        # Update dropdown
+        self.repoSelector.removeItem(selected_repo_index)
+        self.repoSelector.setCurrentIndex(0)
+
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
         msg.setWindowTitle(self.tr('Repository was Unlinked'))
         msg.setText(self.tr('You can always connect it again later.'))
         msg.show()
