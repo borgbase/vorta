@@ -1,7 +1,6 @@
 import logging
 import os
 import sys
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -26,20 +25,6 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-
-def _debug_time(label, start_time=None):
-    """Debug timing helper for test diagnostics."""
-    if not getattr(sys, '_called_from_test', False):
-        return time.time()  # No output in production
-    now = time.time()
-    if start_time is not None:
-        elapsed = now - start_time
-        print(f"\n[DEBUG VortaApp] {label}: {elapsed:.3f}s", file=sys.stderr, flush=True)
-    else:
-        print(f"\n[DEBUG VortaApp] {label} - starting", file=sys.stderr, flush=True)
-    return now
-
-
 APP_ID = config.TEMP_DIR / "socket"
 
 
@@ -60,7 +45,6 @@ class VortaApp(QtSingleApplication):
     profile_changed_event = QtCore.pyqtSignal()
 
     def __init__(self, args_raw, single_app=False):
-        t_start = _debug_time("VortaApp.__init__")
         super().__init__(str(APP_ID), args_raw)
         args = parse_args()
         if self.isRunning():
@@ -75,27 +59,20 @@ class VortaApp(QtSingleApplication):
         elif args.profile:
             sys.exit('Vorta must already be running for --create to work')
 
-        t1 = _debug_time("init_translations", t_start)
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
-        t2 = _debug_time("JobsManager", t1)
         self.jobs_manager = JobsManager()
-        t3 = _debug_time("VortaScheduler", t2)
         self.scheduler = VortaScheduler()
 
         self.setApplicationName("Vorta")
 
         # Import profile from ~/.vorta-init.json or add empty "Default" profile.
-        t4 = _debug_time("bootstrap_profile", t3)
         self.bootstrap_profile()
 
         # Prepare tray and main window
-        t5 = _debug_time("TrayMenu", t4)
         self.tray = TrayMenu(self)
-        t6 = _debug_time("MainWindow", t5)
         self.main_window = MainWindow(self)
-        _debug_time("MainWindow created", t6)
 
         if getattr(args, 'daemonize', False):
             pass
@@ -109,12 +86,9 @@ class VortaApp(QtSingleApplication):
         self.check_failed_event.connect(self.check_failed_response)
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
-        t7 = _debug_time("set_borg_details_action", t6)
         self.set_borg_details_action()
-        _debug_time("set_borg_details_action done", t7)
         if sys.platform == 'darwin':
             self.check_darwin_permissions()
-        _debug_time("VortaApp.__init__ complete", t_start)
 
     def create_backups_cmdline(self, profile_name):
         profile = BackupProfileModel.get_or_none(name=profile_name)
