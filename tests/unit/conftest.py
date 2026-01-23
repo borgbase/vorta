@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from datetime import datetime as dt
 
@@ -21,6 +22,18 @@ from vorta.store.models import (
     WifiSettingModel,
 )
 from vorta.views.main_window import ArchiveTab, MainWindow
+
+
+# Debug timing helper
+def debug_time(label, start_time=None):
+    """Print timing debug info. If start_time provided, prints elapsed time."""
+    now = time.time()
+    if start_time is not None:
+        elapsed = now - start_time
+        print(f"\n[DEBUG TIMING] {label}: {elapsed:.3f}s", file=sys.stderr, flush=True)
+    else:
+        print(f"\n[DEBUG TIMING] {label} - starting", file=sys.stderr, flush=True)
+    return now
 
 
 def disconnect_all(signal):
@@ -68,12 +81,16 @@ def load_window(qapp: vorta.application.VortaApp):
     Reload the main window of the given application.
     Used to repopulate fields after loading mock data.
     """
+    t0 = debug_time("load_window: deleteLater")
     qapp.main_window.deleteLater()
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
     # Use a small sleep instead to allow deleteLater to be processed.
     time.sleep(0.1)
+    t1 = debug_time("load_window: after sleep", t0)
     del qapp.main_window
+    t2 = debug_time("load_window: creating MainWindow", t1)
     qapp.main_window = MainWindow(qapp)
+    debug_time("load_window: MainWindow created", t2)
 
 
 @pytest.fixture
@@ -90,6 +107,8 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
+    t_setup_start = debug_time(f"init_db SETUP: {request.node.name}")
+
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -97,7 +116,9 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
             'journal_mode': 'wal',
         },
     )
+    t1 = debug_time("init_db: calling vorta.store.connection.init_db", t_setup_start)
     vorta.store.connection.init_db(mock_db)
+    t2 = debug_time("init_db: store.connection.init_db done", t1)
 
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
@@ -124,6 +145,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
 
     source_dir = SourceFileModel(dir=TEST_SOURCE_DIR, repo=new_repo, dir_size=100, dir_files_count=18, path_isdir=True)
     source_dir.save()
+    debug_time("init_db: models created", t2)
 
     # Disconnect ALL signal handlers before destroying main_window to avoid "deleted object" errors
     # Using disconnect_all() instead of disconnect() to ensure ALL handlers are removed,
@@ -135,21 +157,42 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # it is responsible for calling this instead
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
+    debug_time("init_db SETUP complete", t_setup_start)
 
     yield
 
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
+    t_teardown_start = debug_time(f"init_db TEARDOWN: {request.node.name}")
+
+    # Log worker state before cancel
+    workers_info = {
+        k: {'alive': w.is_alive(), 'current_job': w.current_job} for k, w in qapp.jobs_manager.workers.items()
+    }
+    print(f"\n[DEBUG] Workers before cancel: {workers_info}", file=sys.stderr, flush=True)
+
     qapp.jobs_manager.cancel_all_jobs()
+    t1 = debug_time("init_db: cancel_all_jobs done", t_teardown_start)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
     # qtbot.waitUntil processes Qt events while waiting, which can trigger D-Bus operations.
     timeout = pytest._wait_defaults.get('timeout', 20000) / 1000  # Convert ms to seconds
     start = time.time()
+    wait_iterations = 0
     while not all_workers_finished(qapp.jobs_manager):
+        wait_iterations += 1
+        if wait_iterations % 50 == 0:  # Log every 5 seconds
+            workers_alive = {k: w.is_alive() for k, w in qapp.jobs_manager.workers.items()}
+            print(
+                f"\n[DEBUG] Still waiting for workers after {time.time() - start:.1f}s: {workers_alive}",
+                file=sys.stderr,
+                flush=True,
+            )
         if time.time() - start > timeout:
+            print(f"\n[DEBUG] Worker wait TIMED OUT after {timeout}s", file=sys.stderr, flush=True)
             break
         time.sleep(0.1)
+    t2 = debug_time(f"init_db: worker wait done (iterations={wait_iterations})", t1)
 
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
@@ -161,6 +204,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
     mock_db.close()
+    debug_time("init_db TEARDOWN complete", t_teardown_start)
 
 
 @pytest.fixture
