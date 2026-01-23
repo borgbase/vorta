@@ -102,6 +102,7 @@ addopts = "-vs"
 testpaths = ["tests"]
 pythonpath = ["tests/unit"]
 qt_default_raising = true
+qt_no_exception_capture = true
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
