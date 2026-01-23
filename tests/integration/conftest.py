@@ -4,6 +4,7 @@ import subprocess
 import pytest
 from packaging.version import Version
 from peewee import SqliteDatabase
+from PyQt6.QtCore import QCoreApplication
 
 import vorta
 import vorta.application
@@ -21,6 +22,34 @@ from vorta.store.models import (
 )
 from vorta.utils import borg_compat
 from vorta.views.main_window import ArchiveTab, MainWindow
+
+
+def disconnect_all(signal):
+    """
+    Disconnect ALL handlers from a Qt signal.
+    Unlike signal.disconnect() without arguments which only disconnects ONE handler,
+    this function disconnects all connected handlers by calling disconnect in a loop
+    until TypeError is raised (indicating no more handlers are connected).
+    """
+    while True:
+        try:
+            signal.disconnect()
+        except TypeError:
+            # No more handlers connected
+            break
+
+
+def all_workers_finished(jobs_manager):
+    """
+    Check if all worker threads have actually exited.
+    This is more thorough than is_worker_running() which only checks current_job,
+    because threads may still be alive briefly after current_job is set to None.
+    """
+    for worker in jobs_manager.workers.values():
+        if worker.is_alive():
+            return False
+    return True
+
 
 models = [
     RepoModel,
@@ -175,9 +204,24 @@ def init_db(qapp, qtbot, tmpdir_factory, create_test_repo):
 
     yield
 
+    # Teardown: cancel jobs and wait for workers to fully exit
     qapp.jobs_manager.cancel_all_jobs()
-    qapp.backup_finished_event.disconnect()
-    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
+
+    # Wait for all worker threads to actually exit (not just for current_job to be None).
+    # This is more thorough than is_worker_running() and prevents thread state leakage.
+    qtbot.waitUntil(lambda: all_workers_finished(qapp.jobs_manager), **pytest._wait_defaults)
+
+    # Process any pending events to ensure all queued signals are handled
+    QCoreApplication.processEvents()
+
+    # Disconnect signals after events are processed
+    disconnect_all(qapp.backup_finished_event)
+    disconnect_all(qapp.scheduler.schedule_changed)
+
+    # Clear the workers dict to prevent accumulation of dead thread references
+    qapp.jobs_manager.workers.clear()
+    qapp.jobs_manager.jobs.clear()
+
     mock_db.close()
 
 
