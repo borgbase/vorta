@@ -499,6 +499,11 @@ def extract_mount_points_v1(proc, repo_url):
 
 
 def get_mount_points(repo_url):
+    # Skip process enumeration during tests - psutil.process_iter() is slow on macOS CI
+    # and tests don't have borg mount processes anyway
+    if getattr(sys, '_called_from_test', False):
+        return {}, []
+
     mount_points = {}
     repo_mounts = []
 
