@@ -70,8 +70,22 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
     def __init__(self, parent=None, app=None):
         """Init."""
+        # Debug timing for CI investigation
+        import time
+
+        def _t(label, start=None):
+            if not getattr(sys, '_called_from_test', False):
+                return time.time()
+            now = time.time()
+            if start:
+                print(f"[ArchiveTab] {label}: {now - start:.3f}s", flush=True)
+            return now
+
+        t = _t("start")
         super().__init__(parent)
+        t = _t("super().__init__", t)
         self.setupUi(parent)
+        t = _t("setupUi", t)
         self.is_editing = False  # track if the cell edit was completed or canceled
         self.mount_points = {}  # mapping of archive name to mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
@@ -90,6 +104,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.tooltip_dict[self.bDelete] = self.bDelete.toolTip()
         self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
         self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
+        t = _t("basic_setup", t)
 
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
@@ -117,6 +132,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
         edit_delegate = self.archiveTable.itemDelegate()
         edit_delegate.closeEditor.connect(self.on_editing_finished)
+        t = _t("table_setup", t)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.archiveTable)
@@ -152,10 +168,13 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         for i in self.prune_intervals:
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+        t = _t("signal_connections", t)
 
         self.populate_from_profile()
+        t = _t("populate_from_profile", t)
         self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
+        t = _t("set_icons", t)
 
         # Connect to events
         self._palette_conn_1 = self.app.paletteChanged.connect(self.set_icons)
@@ -165,6 +184,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.app.profile_changed_event.connect(self.populate_from_profile)
         self.app.profile_changed_event.connect(self.toggle_compact_button_visibility)
         self.app.backup_cancelled_event.connect(self.cancel_action)
+        t = _t("event_connections", t)
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""
