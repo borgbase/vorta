@@ -8,6 +8,8 @@ Vorta is a desktop backup client for macOS and Linux that provides a GUI for Bor
 
 ## Common Commands
 
+This project uses `uv` for Python environment and dependency management. All Python commands should be run via `uv run`.
+
 ### Testing
 ```bash
 # Run all tests (uses nox to test against multiple Borg versions)
@@ -20,13 +22,13 @@ make test-unit
 make test-integration
 
 # Run tests with a specific Borg version
-BORG_VERSION=1.2.4 nox -- tests/unit/test_archives.py
+BORG_VERSION=1.2.4 uv run nox -- tests/unit/test_archives.py
 
 # Run a single test file
-nox -- tests/unit/test_archives.py
+uv run nox -- tests/unit/test_archives.py
 
 # Run a single test
-nox -- tests/unit/test_archives.py::test_archive_add
+uv run nox -- tests/unit/test_archives.py::test_archive_add
 ```
 
 ### Linting
@@ -42,7 +44,7 @@ make dist/Vorta.dmg  # Create notarized macOS DMG
 
 ### Development Install
 ```bash
-pip install -e .
+uv sync  # Install dependencies and project in editable mode
 ```
 
 ## Architecture
