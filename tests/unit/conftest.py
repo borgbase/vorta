@@ -4,7 +4,6 @@ from datetime import datetime as dt
 
 import pytest
 from peewee import SqliteDatabase
-from PyQt6.QtCore import QCoreApplication
 from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 import vorta
@@ -69,16 +68,12 @@ def load_window(qapp: vorta.application.VortaApp):
     Reload the main window of the given application.
     Used to repopulate fields after loading mock data.
     """
-    print("DEBUG: load_window() called", flush=True)
     qapp.main_window.deleteLater()
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI.
     # Use a small sleep instead to allow deleteLater to be processed.
     time.sleep(0.1)
-    print("DEBUG: deleteLater done, deleting main_window", flush=True)
     del qapp.main_window
-    print("DEBUG: Creating new MainWindow", flush=True)
     qapp.main_window = MainWindow(qapp)
-    print("DEBUG: New MainWindow created", flush=True)
 
 
 @pytest.fixture
@@ -95,7 +90,6 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
-    print("DEBUG: init_db fixture starting", flush=True)
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -104,7 +98,6 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
         },
     )
     vorta.store.connection.init_db(mock_db)
-    print("DEBUG: DB initialized, setting up test data", flush=True)
 
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
@@ -140,17 +133,13 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
     # it is responsible for calling this instead
-    print("DEBUG: About to call load_window", flush=True)
     if 'window_load' not in request.fixturenames:
         load_window(qapp)
-    print("DEBUG: init_db setup complete, about to yield", flush=True)
 
     yield
 
-    print("DEBUG: init_db teardown starting", flush=True)
     # Teardown: cancel jobs and disconnect ALL signal handlers to prevent state leakage
     qapp.jobs_manager.cancel_all_jobs()
-    print("DEBUG: jobs cancelled, waiting for workers", flush=True)
 
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
@@ -159,26 +148,19 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     start = time.time()
     while not all_workers_finished(qapp.jobs_manager):
         if time.time() - start > timeout:
-            print("DEBUG: worker wait timed out", flush=True)
             break
         time.sleep(0.1)
-    print("DEBUG: workers finished, disconnecting signals", flush=True)
 
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
-    # Disconnect signals after events are processed
-    print("DEBUG: disconnecting backup_finished_event", flush=True)
+    # Disconnect signals
     disconnect_all(qapp.backup_finished_event)
-    print("DEBUG: disconnecting schedule_changed", flush=True)
     disconnect_all(qapp.scheduler.schedule_changed)
-    print("DEBUG: signals disconnected, clearing workers", flush=True)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
     qapp.jobs_manager.jobs.clear()
-    print("DEBUG: teardown complete, closing db", flush=True)
     mock_db.close()
-    print("DEBUG: db closed, fixture done", flush=True)
 
 
 @pytest.fixture

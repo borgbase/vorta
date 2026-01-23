@@ -23,12 +23,9 @@ class VortaNotifications:
 
     @classmethod
     def pick(cls):
-        print("DEBUG: VortaNotifications.pick() called", flush=True)
         if sys.platform == 'darwin':
             return DarwinNotifications()
-        print("DEBUG: About to check sessionBus().isConnected()", flush=True)
-        if QtDBus.QDBusConnection.sessionBus().isConnected():
-            print("DEBUG: sessionBus connected", flush=True)
+        elif QtDBus.QDBusConnection.sessionBus().isConnected():
             return DBusNotifications()
         else:
             logger.warning('could not pick valid notification class')
