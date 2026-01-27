@@ -3,7 +3,7 @@ import logging
 import threading
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import Dict, List, NamedTuple, Optional, Tuple, Union
+from typing import Dict, NamedTuple, Optional, Tuple, Union
 
 from packaging import version
 from PyQt6 import QtCore, QtDBus
@@ -94,7 +94,7 @@ class VortaScheduler(QtCore.QObject):
         self._net_up = up
         logger.debug(f"network status up={up}")
         if reload:
-            logger.info("updating shcedule due to network status change")
+            logger.info("updating schedule due to network status change")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
