@@ -325,7 +325,7 @@ class VortaScheduler(QtCore.QObject):
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
-                else:
+                elif profile.schedule_make_up_missed and not self._net_up:
                     logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
 
                 # calculate next time from now
