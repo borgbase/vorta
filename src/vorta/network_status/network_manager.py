@@ -150,7 +150,7 @@ class NetworkManagerDBusAdapter(QObject):
             )
             return False
         return True
-    
+
     def is_network_connected(self) -> bool:
         return _is_network_connected(self.get_network_state())
 
@@ -185,6 +185,7 @@ class NetworkManagerDBusAdapter(QObject):
     def _get_iface(self, path, interface) -> QtDBus.QDBusInterface:
         return QtDBus.QDBusInterface(self.BUS_NAME, path, interface, self._bus)
 
+
 def _is_network_connected(state: 'NMState') -> bool:
     # We treat site and global as connected because having a default route means you
     # can reach something. This might need to include LOCAL eventually depending on use
@@ -193,6 +194,7 @@ def _is_network_connected(state: 'NMState') -> bool:
         NMState.NM_STATE_CONNECTED_SITE,
         NMState.NM_STATE_CONNECTED_GLOBAL,
     )
+
 
 def read_dbus_property(obj, property):
     # QDBusInterface.property() didn't work for some reason
@@ -237,4 +239,4 @@ class NMState(Enum):
     NM_STATE_CONNECTING = 40
     NM_STATE_CONNECTED_LOCAL = 50
     NM_STATE_CONNECTED_SITE = 60
-    NM_STATE_CONNECTED_GLOBAL = 70	
+    NM_STATE_CONNECTED_GLOBAL = 70
