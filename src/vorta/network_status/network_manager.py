@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Any, List, Mapping, NamedTuple, Optional
 
 from PyQt6 import QtDBus
-from PyQt6.QtCore import QObject, QVersionNumber
+from PyQt6.QtCore import QObject, QVersionNumber, pyqtSignal, pyqtSlot
 
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 class NetworkManagerMonitor(NetworkStatusMonitor):
     def __init__(self, nm_adapter: 'NetworkManagerDBusAdapter' = None):
+        super().__init__()
         self._nm = nm_adapter or NetworkManagerDBusAdapter.get_system_nm_adapter()
+        self._nm.network_status_changed.connect(self.network_status_changed)
 
     def is_network_metered(self) -> bool:
         try:
@@ -24,6 +26,13 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         except DBusException:
             logger.exception("Failed to check if network is metered, assuming it isn't")
             return False
+
+    def is_network_active(self):
+        try:
+            return self._nm.is_network_connected()
+        except DBusException:
+            logger.exception("Failed to check connectivity state. Assuming connected")
+            return True
 
     def get_current_wifi(self) -> Optional[str]:
         # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
@@ -98,10 +107,20 @@ class NetworkManagerDBusAdapter(QObject):
 
     BUS_NAME = 'org.freedesktop.NetworkManager'
     NM_PATH = '/org/freedesktop/NetworkManager'
+    INTERFACE_NAME = 'org.freedesktop.NetworkManager'
+    # Use the NMState everywhere in lieu of Connected. There is no change signal for
+    # Connected and it appears that the connected state changes after the state change.
+    # i.e. immediately asking for current connectivity can return the old value
+    SIGNAL_NAME = 'StateChanged'
+
+    network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
 
     def __init__(self, parent, bus):
         super().__init__(parent)
         self._bus = bus
+        self._bus.connect(
+            self.BUS_NAME, self.NM_PATH, self.INTERFACE_NAME, self.SIGNAL_NAME, 'u', self.networkStateChanged
+        )
         self._nm = self._get_iface(self.NM_PATH, 'org.freedesktop.NetworkManager')
 
     @classmethod
@@ -114,6 +133,12 @@ class NetworkManagerDBusAdapter(QObject):
             raise UnsupportedException("Can't connect to NetworkManager")
         return nm_adapter
 
+    @pyqtSlot("unsigned int")
+    def networkStateChanged(self, state):
+        logger.debug(f'network state changed: {state}')
+        # https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
+        self.network_status_changed.emit(_is_network_connected(NMState(state)))
+
     def isValid(self):
         if not self._nm.isValid():
             return False
@@ -125,6 +150,12 @@ class NetworkManagerDBusAdapter(QObject):
             )
             return False
         return True
+
+    def is_network_connected(self) -> bool:
+        return _is_network_connected(self.get_network_state())
+
+    def get_network_state(self) -> 'NMState':
+        return NMState(read_dbus_property(self._nm, 'State'))
 
     def get_primary_connection_path(self) -> Optional[str]:
         return read_dbus_property(self._nm, 'PrimaryConnection')
@@ -153,6 +184,16 @@ class NetworkManagerDBusAdapter(QObject):
 
     def _get_iface(self, path, interface) -> QtDBus.QDBusInterface:
         return QtDBus.QDBusInterface(self.BUS_NAME, path, interface, self._bus)
+
+
+def _is_network_connected(state: 'NMState') -> bool:
+    # We treat site and global as connected because having a default route means you
+    # can reach something. This might need to include LOCAL eventually depending on use
+    # cases
+    return state in (
+        NMState.NM_STATE_CONNECTED_SITE,
+        NMState.NM_STATE_CONNECTED_GLOBAL,
+    )
 
 
 def read_dbus_property(obj, property):
@@ -186,3 +227,16 @@ class NMDeviceType(Enum):
     # Only the types we care about
     UNKNOWN = 0
     WIFI = 2
+
+
+class NMState(Enum):
+    """https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState"""
+
+    NM_STATE_UNKNOWN = 0
+    NM_STATE_DISABLED = 10
+    NM_STATE_DISCONNECTED = 20
+    NM_STATE_DISCONNECTING = 30
+    NM_STATE_CONNECTING = 40
+    NM_STATE_CONNECTED_LOCAL = 50
+    NM_STATE_CONNECTED_SITE = 60
+    NM_STATE_CONNECTED_GLOBAL = 70
