@@ -14,7 +14,13 @@ from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
-from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
+from vorta.utils import (
+    borg_compat,
+    choose_file_dialog,
+    get_asset,
+    get_private_keys,
+    is_valid_url,
+)
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
@@ -102,6 +108,10 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 
     def validate(self):
         """Pre-flight check for valid input and borg binary."""
+        if not is_valid_url(self.values['repo_url']):
+            self._set_status(self.tr('Please use a supported URL format.'))
+            return False
+
         if self.is_remote_repo and not re.match(r'.+:.+', self.values['repo_url']):
             self._set_status(self.tr('Please enter a valid repo URL or select a local path.'))
             return False
