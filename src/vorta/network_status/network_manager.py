@@ -109,7 +109,7 @@ class NetworkManagerDBusAdapter(QObject):
     NM_PATH = '/org/freedesktop/NetworkManager'
     INTERFACE_NAME = 'org.freedesktop.NetworkManager'
     # Use the NMState everywhere in lieu of Connected. There is no change signal for
-    # Connected and it appears that the the connected state changes after the state change.
+    # Connected and it appears that the connected state changes after the state change.
     # i.e. immediately asking for current connectivity can return the old value
     SIGNAL_NAME = 'StateChanged'
 

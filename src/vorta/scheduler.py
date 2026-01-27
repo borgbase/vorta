@@ -62,7 +62,7 @@ class VortaScheduler(QtCore.QObject):
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
-        # Connect to network manager to to monitor net status
+        # Connect to network manager to monitor net status
         self.net_status = get_network_status_monitor()
         self.net_status.network_status_changed.connect(self.networkStatusChanged)
         self._net_up = self.net_status.is_network_active()
@@ -310,9 +310,10 @@ class VortaScheduler(QtCore.QObject):
 
             logger.debug('Last run time: %s', last_time)
 
+            needs_network = profile.repo is not None and profile.repo.is_remote_repo()
             # handle missing of a scheduled time
             if next_time <= dt.now():
-                if profile.schedule_make_up_missed and self._net_up:
+                if profile.schedule_make_up_missed and (self._net_up or not needs_network):
                     self.lock.release()
                     try:
                         logger.debug(
@@ -325,7 +326,7 @@ class VortaScheduler(QtCore.QObject):
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
-                elif profile.schedule_make_up_missed and not self._net_up:
+                elif profile.schedule_make_up_missed and not self._net_up and needs_network:
                     logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
 
                 # calculate next time from now
