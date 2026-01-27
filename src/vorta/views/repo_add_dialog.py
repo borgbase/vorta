@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QFormLayout,
     QLabel,
+    QMessageBox,
     QSizePolicy,
 )
 
@@ -124,11 +125,28 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             repo_name=self.repoName.text(),
             password=self.passwordInput.get_password(),
             extra_borg_arguments=self.extraBorgArgumentsLineEdit.text(),
+            is_remote_repo=self.is_remote_repo,
         )
         return out
 
+    @classmethod
+    def from_values(cls, values: dict):
+        """Instantiate window from a values dict as returned by values property."""
+        window = cls()
+        window.sshComboBox.setCurrentIndex(window.sshComboBox.findData(values['ssh_key']))
+        window.repoURL.setText(values['repo_url'])
+        window.repoName.setText(values['repo_name'])
+        window.passwordInput.passwordLineEdit.setText(values['password'])
+        # do not set confirmLineEdit, let user confirm password
+        window._set_status("Autofilled password from previous window.")
+        window.extraBorgArgumentsLineEdit.setText(values['extra_borg_arguments'])
+        window.is_remote_repo = values['is_remote_repo']
+        return window
+
 
 class AddRepoWindow(RepoWindow):
+    """Dialog for initializing a new repository and adding it."""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Add New Repository")
@@ -162,6 +180,14 @@ class AddRepoWindow(RepoWindow):
         out = super().values
         out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    @classmethod
+    def from_values(cls, values: dict):
+        """Instantiate window from a values dict as returned by values property."""
+        window = super().from_values(values)
+        if 'encryption' in values:
+            window.encryptionComboBox.setCurrentIndex(window.encryptionComboBox.findData(values['encryption']))
+        return window
 
     def init_encryption(self):
         if borg_compat.check('V2'):
@@ -226,6 +252,8 @@ class AddRepoWindow(RepoWindow):
 
 
 class ExistingRepoWindow(RepoWindow):
+    """Dialog for adding an existing repository."""
+
     def __init__(self):
         super().__init__()
         self.title.setText(self.tr('Connect to existing Repository'))
@@ -236,11 +264,44 @@ class ExistingRepoWindow(RepoWindow):
         self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
 
     def set_password(self, URL):
-        '''Autofill password from keyring only if current entry is empty'''
+        """Autofill password from keyring only if current entry is empty"""
         password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
         if password and self.passwordInput.get_password() == "":
             self._set_status(self.tr("Autofilled password from password manager."))
             self.passwordInput.setText(password)
+
+    def run_result(self, result):
+        """Handle result of BorgInfoRepoJob."""
+        self.saveButton.setEnabled(True)
+        if result['returncode'] == 0:
+            self.added_repo.emit(result)
+            self.accept()
+        else:
+            self._set_status(self.tr('Unable to add your repository.'))
+            for error in result['errors']:
+                if 'msgid' in error and error['msgid'] in [
+                    'Repository.DoesNotExist',
+                    'Repository.InvalidRepository',
+                    'InvalidRepository',
+                ]:
+                    self.init_new_repo()
+                    break
+
+    def init_new_repo(self):
+        """Ask user if they want to initialize a new repository instead."""
+        answer = QMessageBox.question(
+            self,
+            'Add new Repository instead',
+            self.tr("This repository doesn't seem to exist. Do you want to initialize a new repository?"),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+        if answer == QMessageBox.StandardButton.Yes:
+            init_dialog = AddRepoWindow.from_values(self.values)
+            repo_tab = self.parent()
+            init_dialog.setParent(repo_tab, QtCore.Qt.WindowType.Sheet)
+            init_dialog.added_repo.connect(repo_tab.process_new_repo)
+            init_dialog.open()
+            self.close()
 
     def run(self):
         if self.validate():
