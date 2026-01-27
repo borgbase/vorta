@@ -4,6 +4,7 @@ import psutil
 import pytest
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMenu
+from test_constants import TEST_TEMP_DIR
 
 import vorta.borg
 import vorta.utils
@@ -16,7 +17,7 @@ class MockFileDialog:
         func()
 
     def selectedFiles(self):
-        return ['/tmp']
+        return [TEST_TEMP_DIR]
 
 
 def test_prune_intervals(qapp, qtbot):
@@ -92,7 +93,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot, archive_env):
 def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_dialog, archive_env):
     def psutil_disk_partitions(**kwargs):
         DiskPartitions = namedtuple('DiskPartitions', ['device', 'mountpoint'])
-        return [DiskPartitions('borgfs', '/tmp')]
+        return [DiskPartitions('borgfs', TEST_TEMP_DIR)]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
     main, tab = archive_env
@@ -198,7 +199,7 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     tab.archiveTable.editItem(item)
 
     # Wait for edit mode to activate
-    qtbot.waitUntil(lambda: tab.archiveTable.viewport().focusWidget() is not None, timeout=5000)
+    qtbot.waitUntil(lambda: tab.archiveTable.viewport().focusWidget() is not None, **pytest._wait_defaults)
 
     editor = tab.archiveTable.viewport().focusWidget()
     editor.setText(new_archive_name)
@@ -214,7 +215,7 @@ def test_archiveitem_contextmenu(qapp, qtbot, archive_env):
 
     pos = tab.archiveTable.visualRect(tab.archiveTable.model().index(0, 0)).center()
     tab.archiveTable.customContextMenuRequested.emit(pos)
-    qtbot.waitUntil(lambda: tab.archiveTable.findChild(QMenu) is not None, timeout=2000)
+    qtbot.waitUntil(lambda: tab.archiveTable.findChild(QMenu) is not None, **pytest._wait_defaults)
 
     context_menu = tab.archiveTable.findChild(QMenu)
 

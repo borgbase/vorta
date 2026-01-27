@@ -95,6 +95,8 @@ class VortaApp(QtSingleApplication):
         if profile is not None:
             if profile.repo is None:
                 logger.warning(f"Add a repository to {profile_name}")
+                return
+            logger.info(f"Queueing backup for profile '{profile_name}'")
             self.create_backup_action(profile_id=profile.id)
         else:
             logger.warning(f"Invalid profile name {profile_name}")
@@ -157,11 +159,8 @@ class VortaApp(QtSingleApplication):
         if message == "open main window":
             self.open_main_window_action()
         elif message.startswith("create"):
-            message = message[7:]  # Remove create
-            if self.jobs_manager.is_worker_running():
-                logger.warning("Cannot run while backups are already running")
-            else:
-                self.create_backups_cmdline(message)
+            profile_name = message[7:]  # Remove "create " prefix
+            self.create_backups_cmdline(profile_name)
 
     # No need to add this function to JobsManager because it doesn't require to lock a repo.
     def set_borg_details_action(self):
@@ -238,14 +237,14 @@ class VortaApp(QtSingleApplication):
             msg = QMessageBox()
             msg.setWindowTitle(self.tr("Repository In Use"))
             msg.setIcon(QMessageBox.Icon.Critical)
-            abortButton = msg.addButton(self.tr("Abort"), QMessageBox.ButtonRole.RejectRole)
-            msg.addButton(self.tr("Continue"), QMessageBox.ButtonRole.AcceptRole)
-            msg.setDefaultButton(abortButton)
+            cancelButton = msg.addButton(self.tr("Cancel"), QMessageBox.ButtonRole.RejectRole)
+            msg.addButton(self.tr("Break the lock"), QMessageBox.ButtonRole.AcceptRole)
+            msg.setDefaultButton(cancelButton)
             msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
             msg.setInformativeText(
                 self.tr(
                     "Only break the lock if you are certain no other Borg process "
-                    "on any machine is accessing the repository. Abort or break the lock?"
+                    "on any machine is accessing the repository. Cancel or break the lock?"
                 )
             )
             msg.accepted.connect(lambda: self.break_lock(profile))
