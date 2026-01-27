@@ -62,7 +62,7 @@ class VortaScheduler(QtCore.QObject):
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
-        # Connect to network manager to to monitor that network status
+        # Connect to network manager to to monitor net status
         self.net_status = get_network_status_monitor()
         self.net_status.network_status_changed.connect(self.networkStatusChanged)
         self._net_up = self.net_status.is_network_active()
