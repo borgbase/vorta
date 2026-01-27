@@ -29,7 +29,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
 
     def is_network_active(self):
         try:
-            return self._nm.get_connectivity_state() is not NMConnectivityState.NONE
+            return self._nm.is_network_connected()
         except DBusException:
             logger.exception("Failed to check connectivity state. Assuming connected")
             return True
@@ -108,6 +108,9 @@ class NetworkManagerDBusAdapter(QObject):
     BUS_NAME = 'org.freedesktop.NetworkManager'
     NM_PATH = '/org/freedesktop/NetworkManager'
     INTERFACE_NAME = 'org.freedesktop.NetworkManager'
+    # Use the NMState everywhere in lieu of Connected. There is no change signal for
+    # Connected and it appears that the the connected state changes after the state change.
+    # i.e. immediately asking for current connectivity can return the old value
     SIGNAL_NAME = 'StateChanged'
 
     network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
@@ -134,7 +137,7 @@ class NetworkManagerDBusAdapter(QObject):
     def networkStateChanged(self, state):
         logger.debug(f'network state changed: {state}')
         # https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
-        self.network_status_changed.emit(state >= 60)
+        self.network_status_changed.emit(_is_network_connected(NMState(state)))
 
     def isValid(self):
         if not self._nm.isValid():
@@ -147,9 +150,12 @@ class NetworkManagerDBusAdapter(QObject):
             )
             return False
         return True
+    
+    def is_network_connected(self) -> bool:
+        return _is_network_connected(self.get_network_state())
 
-    def get_connectivity_state(self) -> 'NMConnectivityState':
-        return NMConnectivityState(read_dbus_property(self._nm, 'Connectivity'))
+    def get_network_state(self) -> 'NMState':
+        return NMState(read_dbus_property(self._nm, 'State'))
 
     def get_primary_connection_path(self) -> Optional[str]:
         return read_dbus_property(self._nm, 'PrimaryConnection')
@@ -179,6 +185,14 @@ class NetworkManagerDBusAdapter(QObject):
     def _get_iface(self, path, interface) -> QtDBus.QDBusInterface:
         return QtDBus.QDBusInterface(self.BUS_NAME, path, interface, self._bus)
 
+def _is_network_connected(state: 'NMState') -> bool:
+    # We treat site and global as connected because having a default route means you
+    # can reach something. This might need to include LOCAL eventually depending on use
+    # cases
+    return state in (
+        NMState.NM_STATE_CONNECTED_SITE,
+        NMState.NM_STATE_CONNECTED_GLOBAL,
+    )
 
 def read_dbus_property(obj, property):
     # QDBusInterface.property() didn't work for some reason
@@ -213,11 +227,14 @@ class NMDeviceType(Enum):
     WIFI = 2
 
 
-class NMConnectivityState(Enum):
-    """https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMConnectivityState"""
+class NMState(Enum):
+    """https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState"""
 
-    UNKNOWN = 0
-    NONE = 1
-    PORTAL = 2
-    LIMITED = 3
-    FULL = 4
+    NM_STATE_UNKNOWN = 0
+    NM_STATE_DISABLED = 10
+    NM_STATE_DISCONNECTED = 20
+    NM_STATE_DISCONNECTING = 30
+    NM_STATE_CONNECTING = 40
+    NM_STATE_CONNECTED_LOCAL = 50
+    NM_STATE_CONNECTED_SITE = 60
+    NM_STATE_CONNECTED_GLOBAL = 70	
