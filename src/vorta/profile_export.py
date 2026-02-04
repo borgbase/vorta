@@ -100,7 +100,7 @@ class ProfileExport:
             while BackupProfileModel.get_or_none(BackupProfileModel.id == self.id) is not None:
                 self._profile_dict['id'] += 1
 
-            # Add suffix incase names are the same
+            # Add suffix in case names are the same
             if BackupProfileModel.get_or_none(BackupProfileModel.name == self.name) is not None:
                 suffix = 1
                 while BackupProfileModel.get_or_none(BackupProfileModel.name == f"{self.name}-{suffix}") is not None:
