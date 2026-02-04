@@ -3,11 +3,11 @@ import uuid
 
 import pytest
 
-from vorta.keyring.darwin import VortaDarwinKeyring
-
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="macOS only")
 def test_keyring_non_ascii_repo():
+    from vorta.keyring.darwin import VortaDarwinKeyring
+
     UNICODE_PW = 'password'
     REPO = 'vorta-test-repo-한글'
 
