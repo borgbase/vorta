@@ -412,7 +412,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         This is called by `addItem` in a reduce statement. It should
         add a new child with the given attributes to the given item.
         This implementation provides a reasonable default, most subclasses
-        wont need to override this method. The implementation should make use
+        won't need to override this method. The implementation should make use
         of `_make_filesystemitem`, `_merge_data`, `_add_children`.
 
         Parameters
@@ -562,7 +562,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         In TREE mode (default) the tree will be displayed as is.
         In SIMPLIFIED_TREE items will simplify the tree by combining
-        items with their single child if they posess only one.
+        items with their single child if they possess only one.
         In FLAT mode items will be displayed as a simple list. The items
         shown can be filtered by `_flat_filter`.
 

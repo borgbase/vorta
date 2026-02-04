@@ -1045,7 +1045,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def toggle_compact_button_visibility(self):
         """
         Enable or disable the compact button depending on the Borg version.
-        This function runs once on startup, and everytime the profile is changed.
+        This function runs once on startup, and every time the profile is changed.
         """
         if borg_compat.check("COMPACT_SUBCOMMAND"):
             self.compactButton.setEnabled(True)
