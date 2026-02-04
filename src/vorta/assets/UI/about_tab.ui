@@ -118,7 +118,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QFrame" name="seperator">
+        <widget class="QFrame" name="separator">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -223,7 +223,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QFrame" name="seperator">
+        <widget class="QFrame" name="separator">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
