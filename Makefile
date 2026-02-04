@@ -2,7 +2,7 @@ export VORTA_SRC := src/vorta
 export APPSTREAM_METADATA := src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
 VERSION := $(shell uv run python -c "from src.vorta._version import __version__; print(__version__)")
 
-.PHONY: help clean lint test test-unit test-integration \
+.PHONY: help clean lint lint-staged test test-unit test-integration \
         bump-version pypi-release release-preflight changelog update-appcast \
         translations-from-source translations-push translations-pull translations-to-qm translations-update \
         flatpak-install
@@ -91,6 +91,9 @@ flatpak-install: translations-to-qm
 
 lint:
 	uv run pre-commit run --all-files --show-diff-on-failure
+
+lint-staged:  ## Run linting on staged files only
+	uv run pre-commit run --show-diff-on-failure
 
 test:
 	uv run nox -- --cov=vorta
