@@ -50,12 +50,11 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
     assert tab.bCheck.isEnabled()
 
 
-def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
+def test_repo_prune(qapp, qtbot, mock_borg_popen, archive_env):
     main, tab = archive_env
 
-    stdout, stderr = borg_json_output('prune')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+    # Prune triggers a list refresh, so we need fresh handles for both jobs
+    mock_borg_popen(['prune', 'list'])
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.MouseButton.LeftButton)
 
