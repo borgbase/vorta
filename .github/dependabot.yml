@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # GitHub Actions - weekly updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Python dependencies (uv) - weekly updates
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
