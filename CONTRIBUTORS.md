@@ -23,7 +23,7 @@ For other contributors, see [here](https://github.com/borgbase/vorta/graphs/cont
 
 
 ## Translations
-The following authors contributed translations:
+The following authors contributed translations via Transifex (used until 2026):
 
 - German: [Thomas Waldmann](https://github.com/ThomasWaldmann)
 - Italian: [Luigi Operoso](https://github.com/brokenpip3)
