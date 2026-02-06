@@ -4,22 +4,22 @@
     <message>
         <location filename="../../borg/borg_job.py" line="166"/>
         <source>messages</source>
-        <comment>Please unlock your system password manager or disable it under Misc</comment>
-        <translation>Bitte entsperren Sie Ihren Schlüsselbund oder deaktivieren Sie diesen unter Verschiedenes</translation>
+        <comment>Please unlock your system password manager or disable it under Settings</comment>
+        <translation>Bitte entsperre deinen Schlüsselbund oder deaktiviere diesen unter Einstellungen</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="187"/>
         <source>messages</source>
         <comment>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</comment>
-        <translation>Ihr Repository-Passwort wurde in einem Schlüsselbund gespeichert, der nicht mehr verfügbar ist.
-Versuchen Sie, das Repository zu trennen und erneut hinzuzufügen.</translation>
+        <translation>Dein Repository-Passwort wurde in einem Schlüsselbund gespeichert, der nicht mehr verfügbar ist.
+Versuche, das Repository zu trennen und erneut hinzuzufügen.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="148"/>
         <source>messages</source>
         <comment>Your current Borg version does not support ZStd compression.</comment>
-        <translation>Ihre aktuelle Borg-Version unterstützt keine ZStd-Komprimierung.</translation>
+        <translation>Deine aktuelle Borg-Version unterstützt keine ZStd-Komprimierung.</translation>
     </message>
     <message>
         <location filename="../../__main__.py" line="34"/>
@@ -27,7 +27,7 @@ Versuchen Sie, das Repository zu trennen und erneut hinzuzufügen.</translation>
         <comment>Uncaught exception, please file a report with this text at
 https://github.com/borgbase/vorta/issues/new
 </comment>
-        <translation>Unbehandelte Ausnahme, bitte melden Sie diesen Fehler mit diesem Text unter
+        <translation>Unbehandelte Ausnahme, bitte melde diesen Fehler mit diesem Text unter
 https://github.com/borgbase/vorta/issues/new
 </translation>
     </message>
@@ -101,7 +101,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_add_dialog.py" line="156"/>
         <source>Autofilled password from password manager.</source>
-        <translation>Passwort automatisch aus dem Schlüsselbund eingefügt</translation>
+        <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="170"/>
@@ -164,7 +164,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
-        <translation>Initialisiere Neues Backup-Repository</translation>
+        <translation>Initialisiere neues Backup-Repository</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="67"/>
@@ -209,7 +209,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
-        <translation>SSH-Key:</translation>
+        <translation>SSH-Schlüssel:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="176"/>
@@ -224,7 +224,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation>HINWEIS: Bewahren Sie eine Kopie Ihres Passworts an einem separaten Ort auf.</translation>
+        <translation>HINWEIS: Bewahre eine Kopie deines Passworts an einem separaten Ort auf.</translation>
     </message>
 </context>
 <context>
@@ -242,7 +242,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="260"/>
         <source>Archives for {}</source>
-        <translation>Archive auf {}</translation>
+        <translation>Archive für {}</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="300"/>
@@ -297,7 +297,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="545"/>
         <source>Refreshed archives.</source>
-        <translation>Archive aufgefrischt.</translation>
+        <translation>Archive aktualisiert.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="612"/>
@@ -362,7 +362,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/archive_tab.py" line="797"/>
         <source>Choose Extraction Point</source>
-        <translation>Extrahierungs-Punkt auswählen</translation>
+        <translation>Extraktionsort auswählen</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="863"/>
@@ -440,7 +440,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/compact.py" line="29"/>
         <source>Errors during compaction. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Defragmentierung fehlgeschlagen. Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;Logs&lt;/a&gt;.</translation>
+        <translation>Fehler bei der Defragmentierung. Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;Protokollen&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -575,10 +575,10 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../assets/UI/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
 &lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
-&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
+&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Settings&lt;/span&gt; are shared across profiles.&lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mit Profilen können verschiedene Zeitpläne, Repositorys und Backup-Optionen konfiguriert werden.&lt;/p&gt;
-&lt;p&gt;Alle Profile können dieselben Repositorys und dieselben &lt;span style=&quot; font-style:italic;&quot;&gt;SSH&lt;/span&gt;-Schlüssel verwenden. Der Reiter &lt;span style=&quot; font-style:italic;&quot;&gt;Allgemein&lt;/span&gt; legt Profil übergreifend die globalen Programmeinstellungen fest.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p&gt;Alle Profile können dieselben Repositorys und dieselben &lt;span style=&quot; font-style:italic;&quot;&gt;SSH&lt;/span&gt;-Schlüssel verwenden. Der Reiter &lt;span style=&quot; font-style:italic;&quot;&gt;Einstellungen&lt;/span&gt; legt profilübergreifend die globalen Programmeinstellungen fest.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profile_add.ui" line="87"/>
@@ -708,7 +708,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
-        <translation>Borg-Passwort dem Export beifügen. Vorsicht wegen Datendiebstahls!</translation>
+        <translation>Borg-Passwort dem Export beifügen. Mit Vorsicht verwenden!</translation>
     </message>
     <message>
         <location filename="../../assets/UI/export_window.ui" line="26"/>
@@ -763,7 +763,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
-        <translation>Behalten Sie dies bei, wenn SSH den Schlüssel automatisch finden soll.</translation>
+        <translation>Behalte dies bei, wenn SSH den Schlüssel automatisch finden soll.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/exception_dialog.ui" line="23"/>
@@ -778,7 +778,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can report this issue on &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;. Please search for similar issues before reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sie können dieses Problem auf &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt; melden. Bitte suchen Sie vor dem Melden nach ähnlichen Problemen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Du kannst dieses Problem auf &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt; melden. Bitte suche vor dem Melden nach ähnlichen Problemen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/exception_dialog.ui" line="124"/>
@@ -806,7 +806,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/diff_result.py" line="151"/>
         <source>Expand recursively</source>
-        <translation>Rekursiv Aufklappen</translation>
+        <translation>Rekursiv aufklappen</translation>
     </message>
 </context>
 <context>
@@ -923,7 +923,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_add_dialog.py" line="242"/>
         <source>Autofilled password from password manager.</source>
-        <translation>Passwort automatisch aus dem Schlüsselbund eingefügt</translation>
+        <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="235"/>
@@ -984,7 +984,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/extract_dialog.py" line="214"/>
         <source>Expand recursively</source>
-        <translation>Rekursiv Aufklappen</translation>
+        <translation>Rekursiv aufklappen</translation>
     </message>
 </context>
 <context>
@@ -1052,12 +1052,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/extract_dialog.py" line="539"/>
         <source>healthy</source>
-        <translation>gesund</translation>
+        <translation>intakt</translation>
     </message>
     <message>
         <location filename="../../views/extract_dialog.py" line="541"/>
         <source>broken</source>
-        <translation>kaputt</translation>
+        <translation>beschädigt</translation>
     </message>
     <message>
         <location filename="../../views/extract_dialog.py" line="554"/>
@@ -1075,12 +1075,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="46"/>
         <source>Schedule</source>
-        <translation>Planung</translation>
+        <translation>Zeitplan</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="61"/>
         <source>Networks</source>
-        <translation>Netze</translation>
+        <translation>Netzwerke</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="76"/>
@@ -1090,7 +1090,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="164"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Logs anschauen&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Protokolle anschauen&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="91"/>
@@ -1105,7 +1105,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="66"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Probieren Sie &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt; für einfaches und sicheres Backup-Hosting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Probiere &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt; für einfaches und sicheres Backup-Hosting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="235"/>
@@ -1120,7 +1120,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="194"/>
         <source>SSH Key:</source>
-        <translation>SSH-Key:</translation>
+        <translation>SSH-Schlüssel:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="256"/>
@@ -1285,7 +1285,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="383"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ausdünnen entfernt ältere Archive. Sie können die Anzahl der stündlichen, täglichen, etc. Archive wählen, die Sie behalten möchten. Üblicherweise werden Sie mehr neue und weniger alte Archive behalten. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mehr&lt;/span&gt;&lt;/a&gt; lesen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ausdünnen entfernt ältere Archive. Du kannst die Anzahl der stündlichen, täglichen, etc. Archive wählen, die du behalten möchtest. Üblicherweise wirst du mehr neue und weniger alte Archive behalten. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mehr&lt;/span&gt;&lt;/a&gt; lesen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="417"/>
@@ -1440,7 +1440,7 @@ https://github.com/borgbase/vorta/issues/new
                       Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
             </source>
         <translation>
-             Vorta ist ein plattformübergreifender, open-source Klient - entworfen zur vereinfachten Verwaltung von Borg-Backups.
+             Vorta ist ein plattformübergreifender, quelloffener Client zur vereinfachten Verwaltung von Borg-Backups.
 
                       Copyright (C) 2018-2020 Manuel Riel und Vorta-Mitwirkende (siehe CONTRIBUTORS.md)
             </translation>
@@ -1466,7 +1466,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/import_window.py" line="48"/>
         <source>(Name is not used yet)</source>
-        <translation>(Namen noch nicht belegt)</translation>
+        <translation>(Name ist noch nicht vergeben)</translation>
     </message>
     <message>
         <location filename="../../views/import_window.py" line="55"/>
@@ -1490,10 +1490,10 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../views/import_window.py" line="70"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link um &quot;Misc&quot;-Tab, mit folgendem Fehler:
+        <translation>Schema-Upgrade Fehler, erstelle einen Bugreport auf dem Link im &quot;Einstellungen&quot;-Tab, mit folgendem Fehler:
  {0}
  {1}</translation>
     </message>
@@ -1690,17 +1690,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="14"/>
         <source>Networks</source>
-        <translation>Netze</translation>
+        <translation>Netzwerke</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="31"/>
         <source>Allowed Networks:</source>
-        <translation>Erlaubte Netze:</translation>
+        <translation>Erlaubte Netzwerke:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="50"/>
         <source>Run backups over metered networks</source>
-        <translation>Backups über getaktete Verbindungen ausführen</translation>
+        <translation>Backups über limitierte Verbindungen ausführen</translation>
     </message>
 </context>
 <context>
@@ -1759,7 +1759,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/check.py" line="27"/>
         <source>Repo check failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Überprüfung des Repositorys fehlgeschlagen, Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt;.</translation>
+        <translation>Überprüfung des Repositorys fehlgeschlagen. Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;Protokollen&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="28"/>
@@ -1843,12 +1843,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_tab.py" line="239"/>
         <source>Public Key Copied to Clipboard</source>
-        <translation>Öffentlicher Schlüssel auf Zwischenablage kopiert</translation>
+        <translation>Öffentlicher Schlüssel in die Zwischenablage kopiert</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="240"/>
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>Der ausgewählte öffentliche SSH-Schlüssel wurde auf die Zwischenablage kopiert. Benutze dies, um die Zugriffsrechte des fernen Repositories einzurichten.</translation>
+        <translation>Der ausgewählte öffentliche SSH-Schlüssel wurde in die Zwischenablage kopiert. Benutze ihn, um die Zugriffsrechte des entfernten Repositorys einzurichten.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="247"/>
@@ -1868,7 +1868,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_tab.py" line="318"/>
         <source>You can always connect it again later.</source>
-        <translation>Sie können es jederzeit später wieder verbinden.</translation>
+        <translation>Du kannst es jederzeit später wieder verbinden.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42"/>
@@ -1908,7 +1908,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_tab.py" line="375"/>
         <source>Unable to change the repository passphrase. Please try again.</source>
-        <translation>Das Repository-Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut.</translation>
+        <translation>Das Repository-Passwort konnte nicht geändert werden. Bitte versuche es erneut.</translation>
     </message>
 </context>
 <context>
@@ -1936,17 +1936,17 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../views/repo_add_dialog.py" line="96"/>
         <source>Unable to add your repository.</source>
-        <translation>Ihr Repository konnte nicht hinzugefügt werden.</translation>
+        <translation>Dein Repository konnte nicht hinzugefügt werden.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Bitte geben Sie eine gültige Repo-Adresse oder lokalen Pfad an.</translation>
+        <translation>Bitte gib eine gültige Repo-Adresse oder einen lokalen Pfad an.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
-        <translation>Repository-Name muss weniger als 65 Zeichen lang sein</translation>
+        <translation>Repository-Name muss weniger als 65 Zeichen lang sein.</translation>
     </message>
     <message>
         <location filename="../../views/repo_add_dialog.py" line="114"/>
@@ -2145,7 +2145,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zusätzliche Argumente für &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Mögliche Optionen finden Sie in der &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Borg-Dokumentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zusätzliche Argumente für &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Mögliche Optionen findest du in der &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Borg-Dokumentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="166"/>
@@ -2229,7 +2229,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="217"/>
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Auf einige Dateien kann ohne diese Berechtigung nicht zugegriffen werden. Dies kann zu unvollständigen Backups führen. Gewähren Sie Vorta bitte den &lt;b&gt;Vollzugriff auf die Festplatte&lt;/b&gt; unter &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systemeinstellungen &gt; Sicherheit &amp; Privatsphäre&lt;/a&gt;. </translation>
+        <translation>Auf einige Dateien kann ohne diese Berechtigung nicht zugegriffen werden. Dies kann zu unvollständigen Backups führen. Gewähre Vorta bitte den &lt;b&gt;Vollzugriff auf die Festplatte&lt;/b&gt; unter &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systemeinstellungen &gt; Sicherheit &amp; Privatsphäre&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="239"/>
@@ -2254,7 +2254,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="245"/>
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
-        <translation>Hebe die Sperre nur auf, wenn du sichergestellt hast, dass keine weiteren Borg-Prozesse auf dem System auf das Repository zugreifen. Abbrechen oder Sperre aufheben?</translation>
+        <translation>Hebe die Sperre nur auf, wenn du sichergestellt hast, dass keine weiteren Borg-Prozesse auf irgendeinem Rechner auf das Repository zugreifen. Abbrechen oder Sperre aufheben?</translation>
     </message>
     <message>
         <location filename="../../application.py" line="257"/>
@@ -2274,7 +2274,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="290"/>
         <source>Failed to import a profile from {}:</source>
-        <translation>Importieren eines Profils fehlgeschlagen von {}:</translation>
+        <translation>Importieren eines Profils von {} fehlgeschlagen:</translation>
     </message>
     <message>
         <location filename="../../application.py" line="290"/>
@@ -2299,7 +2299,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="344"/>
         <source>Borg exited with warning status (rc 1). See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Borg wurde mit einer Warnung beendet (rc 1). Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt;.</translation>
+        <translation>Borg wurde mit einer Warnung beendet (rc 1). Details befinden sich in den &lt;a href=&quot;{0}&quot;&gt;Protokollen&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="351"/>
@@ -2309,7 +2309,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../application.py" line="352"/>
         <source>The process running the check job got a kill signal. Try again.</source>
-        <translation>Der Prozess, der die Überprüfung ausführt empfing ein &quot;kill&quot;-Signal. Versuchen Sie es erneut.</translation>
+        <translation>Der Prozess, der die Überprüfung ausführt, empfing ein &quot;kill&quot;-Signal. Versuche es erneut.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="355"/>
@@ -2383,7 +2383,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/umount.py" line="32"/>
         <source>Mount point not active.</source>
-        <translation>Einhängepunkt bereits ausgehängt.</translation>
+        <translation>Einhängepunkt nicht aktiv.</translation>
     </message>
     <message>
         <location filename="../../borg/version.py" line="21"/>
@@ -2393,12 +2393,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/borg_job.py" line="148"/>
         <source>Select a backup repository first.</source>
-        <translation>Wähle zuerst ein Backup-Repository aus</translation>
+        <translation>Wähle zuerst ein Backup-Repository aus.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="152"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
-        <translation>Ihre Borg Version ist zu alt. &gt;=1.1.0 ist notwendig.</translation>
+        <translation>Deine Borg-Version ist zu alt. &gt;=1.1.0 ist notwendig.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="112"/>
@@ -2413,7 +2413,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/create.py" line="132"/>
         <source>Not running backup over metered connection.</source>
-        <translation>Backup über kostenpflichtige Verbindung wird nicht durchgeführt.</translation>
+        <translation>Backup über limitierte Verbindung wird nicht durchgeführt.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="140"/>
@@ -2491,7 +2491,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="64"/>
         <source>When adding a new source, calculate its size and the number of files.</source>
-        <translation>Beim Hinzufügen einer neuen Quelle die Grösse und Anzahl der Dateien berechnen.</translation>
+        <translation>Beim Hinzufügen einer neuen Quelle die Größe und Anzahl der Dateien berechnen.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="71"/>
@@ -2521,7 +2521,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="169"/>
         <source>Alerts user when full disk access permission has not been provided</source>
-        <translation>Den Benutzer benachrichtigen, falls kein vollständiger Datenspeicherzugriff gewährt wurde.</translation>
+        <translation>Den Benutzer benachrichtigen, falls kein vollständiger Festplattenzugriff gewährt wurde.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="83"/>
@@ -2541,7 +2541,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../store/settings.py" line="158"/>
         <source>Needs Vorta restart to apply.</source>
-        <translation>Vorta muss für die Anwendung dieser Änderung neugestartet werden</translation>
+        <translation>Vorta muss für die Anwendung dieser Änderung neu gestartet werden.</translation>
     </message>
 </context>
 <context>
@@ -2549,12 +2549,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../keyring/abc.py" line="42"/>
         <source>Storing password in your password manager.</source>
-        <translation>Speichere Passwort im Schlüsselbund</translation>
+        <translation>Speichere Passwort im Schlüsselbund.</translation>
     </message>
     <message>
         <location filename="../../keyring/abc.py" line="44"/>
         <source>Saving password with Vorta settings.</source>
-        <translation>Speichere Passwort in der Vorta-Konfiguration</translation>
+        <translation>Speichere Passwort in der Vorta-Konfiguration.</translation>
     </message>
 </context>
 </TS>

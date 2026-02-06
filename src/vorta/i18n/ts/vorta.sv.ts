@@ -1210,10 +1210,10 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i diversefliken och ange följande fel:
+        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i inställningsfliken och ange följande fel:
  {0}
  {1}</translation>
     </message>
@@ -1283,7 +1283,7 @@
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="168"/>
         <source>Misc</source>
-        <translation>Diverse</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="190"/>
@@ -1815,8 +1815,8 @@ Försök avlänka och återansluta ditt förråd.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
-        <source>Please unlock your system password manager or disable it under Misc</source>
-        <translation>Lås upp din lösenordshanterare eller avaktivera den under Diverse</translation>
+        <source>Please unlock your system password manager or disable it under Settings</source>
+        <translation>Lås upp din lösenordshanterare eller avaktivera den under Inställningar</translation>
     </message>
 </context>
 <context>

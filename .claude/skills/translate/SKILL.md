@@ -181,6 +181,7 @@ done
 - Change technical identifiers or paths
 - Add or remove punctuation unnecessarily
 - Translate placeholder text that's clearly an example (e.g., email@example.com)
+- Translate based on code-internal names instead of actual UI labels (e.g., code says "Misc" but UI shows "Settings / About" — translate as "Settings")
 
 ### RTL Languages (Arabic):
 - Text direction is handled by Qt automatically
@@ -195,7 +196,7 @@ After updating translations:
 
 1. Compile: `make translations-to-qm`
 2. Run the app: `uv run vorta`
-3. Go to **Misc** tab → **Language** dropdown
+3. Go to **Settings** tab → **Language** dropdown
 4. Select the language and restart the app
 5. Verify translations appear correctly in the UI
 
