@@ -23,10 +23,7 @@ class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
         super().__init__(parent)
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
-        self.logLink.setText(
-            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> to view the logs.'
-        )
+        self.logLink.setText(self.logLink.text().replace('file:///', f'file://{config.LOG_DIR}'))
         self.gpl_logo.setPixmap(get_colored_icon('gpl_logo', scaled_height=40, return_qpixmap=True))
         self.python_logo.setPixmap(get_colored_icon('python_logo', scaled_height=40, return_qpixmap=True))
         copyright_text = self.copyrightLabel.text()

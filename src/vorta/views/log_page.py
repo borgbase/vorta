@@ -40,10 +40,7 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
         self.logPage.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.logPage.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
-        self.logLink.setText(
-            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> for complete logs.'
-        )
+        self.logLink.setText(self.logLink.text().replace('file:///', f'file://{config.LOG_DIR}'))
 
         self.populate_logs()
 
