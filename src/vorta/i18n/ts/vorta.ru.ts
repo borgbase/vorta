@@ -1210,10 +1210,10 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Разное со следующим текстом ошибки:
+        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Настройки со следующим текстом ошибки:
  {0}
  {1}</translation>
     </message>
@@ -1282,8 +1282,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="168"/>
-        <source>Misc</source>
-        <translation>Разное</translation>
+        <source>Settings</source>
+        <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="190"/>
@@ -1814,8 +1814,8 @@ Try unlinking and re-adding your repo.</source>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
-        <source>Please unlock your system password manager or disable it under Misc</source>
-        <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Разное</translation>
+        <source>Please unlock your system password manager or disable it under Settings</source>
+        <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Настройки</translation>
     </message>
 </context>
 <context>
