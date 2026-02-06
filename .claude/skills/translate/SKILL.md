@@ -70,7 +70,15 @@ Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
 - Untranslated strings: `<translation type="unfinished"/>`
 - Existing translations for context
 
-### Step 2: Understand the .ts file format
+### Step 2: Load glossary and scan for consistency
+
+**2a. Load glossary:** Read `.claude/skills/translate/glossaries/<lang>.md` if it exists. All terms in the glossary are mandatory — use them consistently.
+
+**2b. Scan existing translations:** Before translating new strings, grep for key domain terms in already-translated strings to identify established conventions. Flag any conflicts with the glossary (e.g., a glossary says "Passwort" but existing translations use "Kennwort").
+
+**2c. Resolve unknown terms:** If a source string contains a term not covered by the glossary, and the term is ambiguous or has multiple valid translations, ask the user which translation to use (via `AskUserQuestion`). Add the decision to the glossary file and its Decision Log.
+
+### Step 3: Understand the .ts file format
 
 ```xml
 <context>
@@ -93,7 +101,7 @@ Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
 ```
 When `<source>` is `messages`, `settings`, or `app`, the actual translatable text is in `<comment>`.
 
-### Step 3: Generate translations with context
+### Step 4: Generate translations with context
 
 For each untranslated string, consider:
 
@@ -119,7 +127,11 @@ For each untranslated string, consider:
    - **Technical terms:** Keep English for: Borg, BorgBackup, SSH, repository (or use locale-appropriate term)
    - **Placeholders:** Preserve `{variable}` and `%s` patterns exactly
 
-### Step 4: Update the .ts file
+### Step 5: Terminology check
+
+Before writing translations, cross-check all generated translations against the glossary. Verify that no inconsistent terms slipped through (e.g., using "Kennwort" when the glossary specifies "Passwort"). Fix any violations before proceeding.
+
+### Step 6: Update the .ts file
 
 Replace `<translation type="unfinished"/>` with `<translation>Translated text</translation>`
 
@@ -129,7 +141,7 @@ Replace `<translation type="unfinished"/>` with `<translation>Translated text</t
 - Preserve newlines in multi-line strings
 - Keep `type="unfinished"` attribute only for strings you cannot confidently translate
 
-### Step 5: Show summary
+### Step 7: Show summary
 
 After making changes, display:
 - Number of strings translated
@@ -224,6 +236,16 @@ Maintain consistency with these translations:
 | Schedule | Backup timing | When to run backups |
 | Source | Files to back up | Folders/files to include |
 | Exclude | Files to skip | Patterns to ignore |
+
+## Per-Language Glossaries
+
+Per-language glossaries live in `.claude/skills/translate/glossaries/<lang>.md`. These document agreed-upon translations for domain-specific and ambiguous terms. The terms in a glossary are **mandatory** — they must be used consistently in all translations for that language.
+
+Each glossary contains:
+- A **Terminology** table mapping English terms to the agreed translation
+- A **Decision Log** recording when and why each term was chosen
+
+Create a new glossary when a language is first reviewed. Update it whenever a new term decision is made.
 
 ---
 
