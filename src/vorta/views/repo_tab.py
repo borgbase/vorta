@@ -5,6 +5,8 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QMimeData, QUrl
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
+from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
@@ -24,6 +26,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(parent)
+
+        self.borgbase_sentence = trans_late('Form', 'For simple and secure backup hosting, try %1.')
+        self.compression_help_text = trans_late('Form', 'Help on compression types')
+        self._set_link_texts()
 
         # Populate dropdowns
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
@@ -84,6 +90,21 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         )
         self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
         self.destroyed.connect(self._on_destroyed)
+
+    def _set_link_texts(self):
+        borgbase_template = self.borgbaseLinkLabel.text()
+        borgbase_sentence = format_richtext(
+            escape(translate('Form', self.borgbase_sentence)),
+            link('https://www.borgbase.com/?utm_source=vorta&utm_medium=app', 'BorgBase'),
+        )
+        self.borgbaseLinkLabel.setText(format_richtext(borgbase_template, borgbase_sentence))
+
+        compression_template = self.compressionHelpLink.text()
+        compression_link = link(
+            'https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression',
+            translate('Form', self.compression_help_text),
+        )
+        self.compressionHelpLink.setText(format_richtext(compression_template, compression_link))
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))

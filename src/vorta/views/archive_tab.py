@@ -31,7 +31,8 @@ from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
-from vorta.i18n import translate
+from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
 from vorta.utils import (
     borg_compat,
@@ -102,6 +103,16 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         delegate = IconDelegate(self.archiveTable)
         self.archiveTable.setItemDelegateForColumn(5, delegate)
+
+        self.mount_help_text = trans_late('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
+        self.mount_help_link_text = trans_late('Form', 'here')
+        self.pruning_help_text = trans_late(
+            'Form',
+            'Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. '
+            'Usually you will keep more newer and fewer old archives. Read %1.',
+        )
+        self.pruning_help_link_text = trans_late('Form', 'more')
+        self._init_help_texts()
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
@@ -229,6 +240,25 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
+
+    def _init_help_texts(self):
+        mount_template = self.mountErrors.text()
+        mount_sentence = format_richtext(
+            escape(translate('Form', self.mount_help_text)),
+            link('https://osxfuse.github.io/', translate('Form', self.mount_help_link_text)),
+        )
+        self.mountErrors.setText(format_richtext(mount_template, mount_sentence))
+
+        prune_template = self.pruningHelpLabel.text()
+        prune_sentence = format_richtext(
+            escape(translate('Form', self.pruning_help_text)),
+            link(
+                'https://borgbackup.readthedocs.io/en/stable/usage/prune.html',
+                translate('Form', self.pruning_help_link_text),
+                color="#FF4500",
+            ),
+        )
+        self.pruningHelpLabel.setText(format_richtext(prune_template, prune_sentence))
 
     def _toggle_all_buttons(self, enabled=True):
         """

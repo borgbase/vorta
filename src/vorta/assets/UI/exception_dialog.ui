@@ -90,9 +90,9 @@
          </item>
          <item>
           <widget class="QLabel" name="report_to_github_label">
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can report this issue on &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;. Please search for similar issues before reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
+         <property name="text">
+          <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;%1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
            <property name="wordWrap">
             <bool>true</bool>
            </property>

@@ -13,6 +13,7 @@ from vorta.borg.create import BorgCreateJob
 from vorta.borg.jobs_manager import JobsManager
 from vorta.borg.version import BorgVersionJob
 from vorta.i18n import init_translations, translate
+from vorta.i18n.richtext import bold, escape, format_richtext, link
 from vorta.notifications import VortaNotifications
 from vorta.profile_export import ProfileExport
 from vorta.qt_single_application import QtSingleApplication
@@ -213,14 +214,19 @@ class VortaApp(QtSingleApplication):
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse)
             msg.setText(self.tr("Vorta needs Full Disk Access for complete Backups"))
-            msg.setInformativeText(
-                self.tr(
-                    "Without this, some files will not be accessible and you may end up with an incomplete "
-                    "backup. Please set <b>Full Disk Access</b> permission for Vorta in "
-                    "<a href='x-apple.systempreferences:com.apple.preference.security?Privacy'>"
-                    "System Preferences > Security & Privacy</a>."
-                )
+            info_template = self.tr(
+                "Without this, some files will not be accessible and you may end up with an incomplete "
+                "backup. Please set %1 permission for Vorta in %2."
             )
+            info_text = format_richtext(
+                escape(info_template),
+                bold(self.tr("Full Disk Access")),
+                link(
+                    "x-apple.systempreferences:com.apple.preference.security?Privacy",
+                    self.tr("System Preferences > Security & Privacy"),
+                ),
+            )
+            msg.setInformativeText(info_text)
             msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.exec()
 
@@ -340,9 +346,10 @@ class VortaApp(QtSingleApplication):
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
-                text = translate(
-                    'VortaApp', 'Borg exited with warning status (rc 1). See the <a href="{0}">logs</a> for details.'
-                ).format(config.LOG_DIR.as_uri())
+                text = format_richtext(
+                    escape(translate('VortaApp', 'Borg exited with warning status (rc 1). See the %1 for details.')),
+                    link(config.LOG_DIR.as_uri(), translate('messages', 'logs')),
+                )
                 infotext = error_message
             elif returncode > 128:
                 # 128+N - killed by signal N (e.g. 137 == kill -9)

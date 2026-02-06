@@ -2,6 +2,7 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtWidgets import QDialogButtonBox
 
 from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, italic
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
@@ -27,8 +28,26 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
 
         self.name_blank = trans_late('AddProfileWindow', 'Please enter a profile name.')
         self.name_exists = trans_late('AddProfileWindow', 'A profile with this name already exists.')
+        self.profile_explainer_p1 = trans_late(
+            'Dialog',
+            'Profiles allow configuring of different backup and repository settings including different schedules.',
+        )
+        self.profile_explainer_p2 = trans_late(
+            'Dialog',
+            'All profiles will be able to access the same repositories as well as the same %1 keys. '
+            'The global application settings in %2 are shared across profiles.',
+        )
+        self._set_profile_explainer()
         # Call validate to set initial messages
         self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setEnabled(self.validate())
+
+    def _set_profile_explainer(self):
+        template = self.profileExplainer.text()
+        p1 = translate('Dialog', self.profile_explainer_p1)
+        p2_template = translate('Dialog', self.profile_explainer_p2)
+        settings = translate('MainWindow', 'Settings')
+        p2 = format_richtext(escape(p2_template), italic('ssh'), italic(settings))
+        self.profileExplainer.setText(format_richtext(template, escape(p1), p2))
 
     def _set_status(self, text):
         self.errorText.setText(text)

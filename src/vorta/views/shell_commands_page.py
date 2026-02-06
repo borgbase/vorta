@@ -1,6 +1,7 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QLineEdit, QWidget
+from PyQt6.QtWidgets import QApplication, QLabel, QLineEdit, QWidget
 
+from vorta.i18n.richtext import code, escape, format_richtext, italic, link
 from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 
@@ -14,6 +15,9 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.preBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'preBackupCmdLineEdit')
         self.postBackupCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'postBackupCmdLineEdit')
         self.createCmdLineEdit: QLineEdit = self.findChild(QLineEdit, 'createCmdLineEdit')
+        self.shellCommandsHelpLabel: QLabel = self.findChild(QLabel, 'shellCommandsHelpLabel')
+        self.borgCreateHelpLabel: QLabel = self.findChild(QLabel, 'borgCreateHelpLabel')
+        self._set_help_texts()
         self.populate_from_profile()
 
         self.preBackupCmdLineEdit.textEdited.connect(
@@ -29,6 +33,31 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
             self.populate_from_profile
         )
         self.destroyed.connect(self._on_destroyed)
+
+    def _set_help_texts(self):
+        commands_template = self.shellCommandsHelpLabel.text()
+        commands_sentence = format_richtext(
+            escape(
+                self.tr(
+                    'Run custom shell commands before and after each backup. The actual backup and post-backup '
+                    'command will only run, if the pre-backup command exits without error (return code 0). '
+                    'Available variables: %1'
+                )
+            ),
+            code('$repo_url, $profile_name, $profile_slug, $returncode'),
+        )
+        self.shellCommandsHelpLabel.setText(format_richtext(commands_template, commands_sentence))
+
+        borg_template = self.borgCreateHelpLabel.text()
+        borg_sentence = format_richtext(
+            escape(self.tr('Extra arguments for %1. Possible options are listed in %2.')),
+            italic('borg create'),
+            link(
+                'https://borgbackup.readthedocs.io/en/stable/usage/create.html',
+                self.tr('the borg documentation'),
+            ),
+        )
+        self.borgCreateHelpLabel.setText(format_richtext(borg_template, borg_sentence))
 
     def populate_from_profile(self):
         profile = self.profile()

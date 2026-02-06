@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -411,7 +413,7 @@
     <name>BorgCompactJob</name>
     <message>
         <location filename="../../borg/compact.py" line="27"/>
-        <source>Errors during compaction. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <source>Errors during compaction. See the %1 for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -533,14 +535,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/profile_add.ui" line="56"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
-&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Settings&lt;/span&gt; are shared across profiles.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profiilit mahdollistavat eri varmuuskopio- ja tietovarastoasetusten sekä ajastusasetusten tallentamisen.&lt;/p&gt;
-&lt;p&gt;Kaikki profiilit voivat käyttää samoja tietovarastoja sekä &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt;-avaimia. Yleisiä asetuksia &lt;span style=&quot; font-style:italic;&quot;&gt;Sekalaiset-välilehdeltä&lt;/span&gt; sovelletaan kaikkiin profiileihin.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
+        <translation>Profiilit mahdollistavat eri varmuuskopio- ja tietovarastoasetusten sekä ajastusasetusten tallentamisen.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
+        <translation>Kaikki profiilit voivat käyttää samoja tietovarastoja sekä %1-avaimia. Yleisiä asetuksia %2 sovelletaan kaikkiin profiileihin.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/profile_add.ui" line="87"/>
@@ -679,8 +680,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="93"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 tai 4096 RSA:lle, 384 tai 521 ECDSA:lle. Kiinteä Ed25519:lle. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Lisää&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 tai 4096 RSA:lle, 384 tai 521 ECDSA:lle. Kiinteä Ed25519:lle. %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <source>More</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="106"/>
@@ -1083,8 +1089,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="659"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Suorita komentoja ennen ja jälkeen varmuuskopioinnin. Sekä varmuuskopio- että varmuuskopion jälkeiset komennot suoritetaan vain, jos varmuuskopiota edeltävä komento päättyy virheettömänä (paluukoodi 0). Käytössä olevat muuttujat: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Suorita komentoja ennen ja jälkeen varmuuskopioinnin. Sekä varmuuskopio- että varmuuskopion jälkeiset komennot suoritetaan vain, jos varmuuskopiota edeltävä komento päättyy virheettömänä (paluukoodi 0). Käytössä olevat muuttujat: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="683"/>
@@ -1093,8 +1099,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="711"/>
-        <source>echo &quot;Before backup of $repo_url&quot;</source>
-        <translation>echo &quot;Ennen tietovaraston $repo_url varmuuskopiota&quot;</translation>
+        <source>echo "Before backup of $repo_url"</source>
+        <translation>echo "Ennen tietovaraston $repo_url varmuuskopiota"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="731"/>
@@ -1103,13 +1109,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="750"/>
-        <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
-        <translation>echo &quot;Tietovaraston $repo_url varmuuskopio päättyi paluukoodiin $returncode.&quot;</translation>
+        <source>echo "Backup of $repo_url ended with $returncode."</source>
+        <translation>echo "Tietovaraston $repo_url varmuuskopio päättyi paluukoodiin $returncode."</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="771"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lisäargumentit &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;-komennolle. Vaihtoehdot löytyvät &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;borg-dokumentaatiosta&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=" font-style:italic;"&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lisäargumentit &lt;span style=" font-style:italic;"&gt;borg create&lt;/span&gt;-komennolle. Vaihtoehdot löytyvät &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;borg-dokumentaatiosta&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="793"/>
@@ -1123,8 +1129,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="95"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kokeile &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBasea&lt;/span&gt;&lt;/a&gt;, yksinkertaista ja turvallista varmuuskopiointipalvelua.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>Kokeile %1, yksinkertaista ja turvallista varmuuskopiointipalvelua.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="247"/>
@@ -1153,8 +1159,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="311"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Tietoa pakkaustyypeistä&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Help on compression types</source>
+        <translation>Tietoa pakkaustyypeistä</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="368"/>
@@ -1293,8 +1299,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="347"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Jotta voit liittää arkistot, asenna ensin &amp;quot;FUSE for macOS&amp;quot; &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;täältä&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation>Jotta voit liittää arkistot, asenna ensin "FUSE for macOS" %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="347"/>
+        <source>here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="366"/>
@@ -1303,8 +1314,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="381"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Karsiminen poistaa vanhoja arkistoja. Voit valita, kuinka monta tunnittaista, päivittäistä jne. arkistoa säilytetään. Yleensä säilytetään useampia uudemmista arkistoista ja harvempia vanhemmista. Lue &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;lisää&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>Karsiminen poistaa vanhoja arkistoja. Voit valita, kuinka monta tunnittaista, päivittäistä jne. arkistoa säilytetään. Yleensä säilytetään useampia uudemmista arkistoista ja harvempia vanhemmista. Lue %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="381"/>
+        <source>more</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="415"/>
@@ -1403,8 +1419,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="158"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kaavat tiedon poisjättämiselle (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;lisää&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kaavat tiedon poisjättämiselle (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;lisää&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="168"/>
@@ -1433,13 +1449,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="87"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Ilmoita&lt;/span&gt;&lt;/a&gt; ongelmasta |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Ilmoita&lt;/span&gt;&lt;/a&gt; ongelmasta |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="97"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Loki&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Loki&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="133"/>
@@ -1528,8 +1544,8 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="169"/>
-        <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
-        <translation>Haluatko varmasti poistaa profiilin &apos;{}&apos;?</translation>
+        <source>Are you sure you want to delete profile '{}'?</source>
+        <translation>Haluatko varmasti poistaa profiilin '{}'?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="170"/>
@@ -1583,7 +1599,7 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="296"/>
-        <source>Don&apos;t show this again</source>
+        <source>Don't show this again</source>
         <translation>Älä näytä uudelleen</translation>
     </message>
     <message>
@@ -1661,7 +1677,7 @@
     <name>RepoCheckJob</name>
     <message>
         <location filename="../../borg/check.py" line="25"/>
-        <source>Repo check failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <source>Repo check failed. See the %1 for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -1879,7 +1895,7 @@
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="288"/>
-        <source>You don&apos;t have read access to {dir}.</source>
+        <source>You don't have read access to {dir}.</source>
         <translation>Ei lukuoikeutta kohteeseen {dir}.</translation>
     </message>
     <message>
@@ -1955,8 +1971,18 @@
     </message>
     <message>
         <location filename="../../application.py" line="207"/>
-        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Ilman tätä käyttöoikeutta kaikkia tiedostoja ei voida varmuuskopioida joten varmuuskopiot saattavat jäädä vajaiksi. Salli Vortalle &lt;b&gt;koko levyn käyttö&lt;/b&gt; avaamalla &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Järjestelmäasetukset &gt; Suojaus ja yksityisyys&lt;/a&gt;.</translation>
+        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
+        <translation>Ilman tätä käyttöoikeutta kaikkia tiedostoja ei voida varmuuskopioida joten varmuuskopiot saattavat jäädä vajaiksi. Salli Vortalle %1 avaamalla %2.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="207"/>
+        <source>System Preferences &gt; Security &amp; Privacy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="207"/>
+        <source>Full Disk Access</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../application.py" line="227"/>
@@ -2045,7 +2071,7 @@
     </message>
     <message>
         <location filename="../../application.py" line="333"/>
-        <source>Borg exited with warning status (rc 1). See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -2091,6 +2117,11 @@
         <location filename="../../borg/umount.py" line="27"/>
         <source>No active Borg mounts found.</source>
         <translation>Aktiivisia Borg-liitoksia ei löytynyt.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/umount.py" line="27"/>
+        <source>logs</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../borg/version.py" line="20"/>
@@ -2227,7 +2258,7 @@
     </message>
     <message>
         <location filename="../../store/settings.py" line="70"/>
-        <source>Otherwise Vorta&apos;s configuration database stores the password in plaintext.</source>
+        <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
         <translation>Muussa tapauksessa Vortan asetustietokanta tallettaa salasanan selväkielisenä.</translation>
     </message>
     <message>
