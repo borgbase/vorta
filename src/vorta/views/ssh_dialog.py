@@ -18,6 +18,13 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
 
     def __init__(self):
         super().__init__()
+
+        self.key_size_help_text = trans_late(
+            'Dialog',
+            '2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.',
+        )
+        self.key_size_help_link = trans_late('Dialog', 'More')
+
         self.setupUi(self)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
@@ -30,11 +37,6 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.accepted.connect(self.generate_key)
 
-        self.key_size_help_text = trans_late(
-            'Dialog',
-            '2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.',
-        )
-        self.key_size_help_link = trans_late('Dialog', 'More')
         self._set_key_size_help()
 
         self.init_format()
