@@ -60,9 +60,9 @@ es          45              450      90.0%
 
 ---
 
-## Command: `/translate review <lang>`
+## Command: `/translate translate <lang>`
 
-Generate or review translations for a specific language.
+Generate translations for a specific language.
 
 ### Step 1: Parse the .ts file
 
@@ -171,7 +171,7 @@ done
 
 ### DO:
 - Maintain consistency with existing translations in the same file
-- Use formal/polite form appropriate for the language (e.g., "Sie" in German)
+- Use formal/informal tone based on the target language's conventions
 - Preserve keyboard shortcuts (e.g., "&File" where & indicates Alt+F)
 - Keep URLs unchanged
 - Preserve formatting placeholders (`{0}`, `%s`, `%d`, etc.)
