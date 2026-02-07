@@ -232,7 +232,7 @@ Maintain consistency with these translations:
 | Prune | Delete old archives | Technical term |
 | Mount | Make archive browsable | Filesystem operation |
 | Extract | Restore files | Copy files from archive |
-| Passphrase | Encryption password | Security credential |
+| Passphrase | Password to unlock the borg key | Security credential |
 | Profile | Backup configuration | Group of settings |
 | Schedule | Backup timing | When to run backups |
 | Source | Files to back up | Folders/files to include |

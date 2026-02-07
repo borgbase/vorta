@@ -245,7 +245,7 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         mount_template = self.mountErrors.text()
         mount_sentence = format_richtext(
             escape(translate('Form', self.mount_help_text)),
-            link('https://osxfuse.github.io/', translate('Form', self.mount_help_link_text)),
+            link('https://macfuse.github.io/', translate('Form', self.mount_help_link_text)),
         )
         self.mountErrors.setText(format_richtext(mount_template, mount_sentence))
 
