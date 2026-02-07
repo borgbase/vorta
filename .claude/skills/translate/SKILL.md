@@ -1,6 +1,6 @@
 ---
 name: translate
-description: Manage Vorta translations using AI. Commands - /translate missing (report untranslated counts), /translate review <lang> (generate translations), /translate compile (build .qm files).
+description: Manage Vorta translations using AI. Commands - /translate missing (report status), /translate translate <lang> (generate translations), /translate review <lang> (quality check), /translate compile (build .qm files).
 ---
 
 # Vorta Translation Skill
@@ -12,8 +12,11 @@ Manage translations for the Vorta backup application. This skill replaces the pr
 ### `/translate missing`
 Report the count of untranslated strings for each language.
 
+### `/translate translate <lang>`
+Generate translations for untranslated strings in a specific language (e.g., `de`, `es`, `fr`).
+
 ### `/translate review <lang>`
-Review and generate translations for a specific language (e.g., `de`, `es`, `fr`).
+Review existing translations for quality, consistency, and glossary compliance. Does not generate new translations.
 
 ### `/translate compile`
 Compile all .ts files to binary .qm format.
@@ -150,6 +153,78 @@ After making changes, display:
 
 ---
 
+## Command: `/translate review <lang>`
+
+Review existing translations for quality and consistency without generating new translations. This command performs a quality assurance pass over already-translated strings.
+
+### Step 1: Parse the .ts file
+
+Read `src/vorta/i18n/ts/vorta.<lang>.ts` and collect all existing translations (excluding `type="unfinished"` entries).
+
+### Step 2: Load glossary
+
+Read `.claude/skills/translate/glossaries/<lang>.md` if it exists. The glossary contains mandatory terminology that must be used consistently.
+
+### Step 3: Quality checks
+
+Perform the following checks on existing translations:
+
+**3a. Glossary compliance:**
+- For each term in the glossary, search all translated strings
+- Flag any translation that uses a different term than specified in the glossary
+- Example: If glossary says "Passwort" but translation uses "Kennwort", flag it
+
+**3b. Consistency check:**
+- Identify the same English source string appearing in multiple contexts
+- Verify all instances have identical translations
+- Flag inconsistencies
+
+**3c. Style compliance:**
+- Check button text follows Title Case conventions (if applicable to the language)
+- Verify labels with colons in English preserve colons in translation
+- Ensure placeholders (`{0}`, `%s`, `%d`) are preserved unchanged
+- Check that proper nouns (Borg, BorgBackup, Vorta, SSH) remain untranslated
+
+**3d. Technical validation:**
+- Verify XML entities are properly escaped (`&` → `&amp;`, `<` → `&lt;`, `>` → `&gt;`)
+- Check for mismatched quotes or brackets
+- Ensure keyboard shortcuts (e.g., `&File`) are preserved
+
+### Step 4: Report findings
+
+Display a summary report:
+```
+Translation Review: German (de)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Total translations reviewed: 416
+
+Issues found:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ Glossary violations (3):
+  - Line 145: Uses "Kennwort" instead of "Passwort"
+  - Line 289: Uses "Sichern" instead of "Speichern"
+  - Line 412: Uses "Repo" instead of "Repository"
+
+⚠ Inconsistencies (2):
+  - "Cancel" translated as both "Abbrechen" and "Beenden"
+  - "Settings" translated as both "Einstellungen" and "Konfiguration"
+
+⚠ Style issues (1):
+  - Line 234: Missing colon in "Repository" (should be "Repository:")
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recommendation: Fix the 6 issues above before release.
+```
+
+### Step 5: Optional fixes
+
+If issues are found, offer to fix them automatically:
+- Ask user: "Would you like me to fix these issues automatically?"
+- If yes, update the .ts file to correct the flagged problems
+- If no, just provide the report
+
+---
+
 ## Command: `/translate compile`
 
 Compile .ts source files to binary .qm format:
@@ -208,13 +283,16 @@ After updating translations:
 # 1. Check translation status
 /translate missing
 
-# 2. Review and translate German
+# 2. Generate missing German translations
+/translate translate de
+
+# 3. Review translation quality
 /translate review de
 
-# 3. Compile translations
+# 4. Compile translations
 /translate compile
 
-# 4. Test in app
+# 5. Test in app
 uv run vorta
 ```
 
@@ -264,8 +342,10 @@ Create a new glossary when a language is first reviewed. Update it whenever a ne
 
 3. Clear all translations (set to `type="unfinished"`)
 
-4. Run `/translate review XX` to generate translations
+4. Run `/translate translate XX` to generate translations
 
-5. Compile with `/translate compile`
+5. Run `/translate review XX` to check quality
 
-6. Test in the application
+6. Compile with `/translate compile`
+
+7. Test in the application
