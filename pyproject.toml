@@ -61,6 +61,9 @@ dev = [
     "pytest-faulthandler",
     "pytest-mock",
     "pytest-qt",
+    "mypy",
+    "PyQt6-stubs",
+    "types-peewee",
     "ruff",
     "tox",
     "twine",
@@ -125,6 +128,18 @@ pass_env = ["DISPLAY"]
 [tool.tox.env.ruff]
 deps = ["ruff"]
 commands = [["ruff", "check", "src", "tests"]]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = false
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["vorta.store.models", "vorta.store.connection", "vorta.store.settings", "vorta.network_status.*"]
+disallow_untyped_defs = true
 
 [tool.pylint.master]
 extension-pkg-whitelist = "PyQt6"
