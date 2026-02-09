@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from datetime import datetime
 from enum import Enum
@@ -12,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class NetworkManagerMonitor(NetworkStatusMonitor):
-    def __init__(self, nm_adapter: 'NetworkManagerDBusAdapter' = None):
+    def __init__(self, nm_adapter: NetworkManagerDBusAdapter | None = None) -> None:
         super().__init__()
         self._nm = nm_adapter or NetworkManagerDBusAdapter.get_system_nm_adapter()
         self._nm.network_status_changed.connect(self.network_status_changed)
@@ -27,7 +29,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to check if network is metered, assuming it isn't")
             return False
 
-    def is_network_active(self):
+    def is_network_active(self) -> bool:
         try:
             return self._nm.is_network_connected()
         except DBusException:
@@ -40,7 +42,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         try:
             active_connection_path = self._nm.get_primary_connection_path()
             if not active_connection_path:
-                return
+                return None
             active_connection = self._nm.get_active_connection_info(active_connection_path)
             if active_connection.type == '802-11-wireless':
                 settings = self._nm.get_settings(active_connection.connection)
@@ -49,10 +51,10 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
                     return ssid
         except DBusException:
             logger.exception("Failed to get currently connected WiFi network, assuming none")
-            return None
+        return None
 
     def get_known_wifis(self) -> List[SystemWifiInfo]:
-        wifis = []
+        wifis: list[SystemWifiInfo] = []
         try:
             connections_paths = self._nm.get_connections_paths()
         except DBusException:
@@ -76,7 +78,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
                     )
         return wifis
 
-    def _get_ssid_from_settings(self, settings):
+    def _get_ssid_from_settings(self, settings: Mapping[str, Mapping[str, Any]]) -> str | None:
         wireless_settings = settings.get('802-11-wireless') or {}
         raw_ssid = wireless_settings.get('ssid')
         ssid = raw_ssid and decode_ssid(raw_ssid)
@@ -115,7 +117,7 @@ class NetworkManagerDBusAdapter(QObject):
 
     network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
 
-    def __init__(self, parent, bus):
+    def __init__(self, parent: QObject | None, bus: QtDBus.QDBusConnection) -> None:
         super().__init__(parent)
         self._bus = bus
         self._bus.connect(
@@ -134,12 +136,12 @@ class NetworkManagerDBusAdapter(QObject):
         return nm_adapter
 
     @pyqtSlot("unsigned int")
-    def networkStateChanged(self, state):
+    def networkStateChanged(self, state: int) -> None:
         logger.debug(f'network state changed: {state}')
         # https://www.networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
         self.network_status_changed.emit(_is_network_connected(NMState(state)))
 
-    def isValid(self):
+    def isValid(self) -> bool:
         if not self._nm.isValid():
             return False
         nm_version = self._get_nm_version()
@@ -160,7 +162,7 @@ class NetworkManagerDBusAdapter(QObject):
     def get_primary_connection_path(self) -> Optional[str]:
         return read_dbus_property(self._nm, 'PrimaryConnection')
 
-    def get_active_connection_info(self, active_connection_path) -> 'ActiveConnectionInfo':
+    def get_active_connection_info(self, active_connection_path: str) -> ActiveConnectionInfo:
         active_connection = self._get_iface(active_connection_path, 'org.freedesktop.NetworkManager.Connection.Active')
         return ActiveConnectionInfo(
             connection=read_dbus_property(active_connection, 'Connection'),
@@ -171,22 +173,22 @@ class NetworkManagerDBusAdapter(QObject):
         settings_manager = self._get_iface(self.NM_PATH + '/Settings', 'org.freedesktop.NetworkManager.Settings')
         return get_result(settings_manager.call('ListConnections'))
 
-    def get_settings(self, connection_path) -> Mapping[str, Mapping[str, Any]]:
+    def get_settings(self, connection_path: str) -> Mapping[str, Mapping[str, Any]]:
         settings = self._get_iface(connection_path, 'org.freedesktop.NetworkManager.Settings.Connection')
         return get_result(settings.call('GetSettings'))
 
     def get_global_metered_status(self) -> 'NMMetered':
         return NMMetered(read_dbus_property(self._nm, 'Metered'))
 
-    def _get_nm_version(self):
+    def _get_nm_version(self) -> QVersionNumber:
         version, _suffindex = QVersionNumber.fromString(read_dbus_property(self._nm, 'Version'))
         return version
 
-    def _get_iface(self, path, interface) -> QtDBus.QDBusInterface:
+    def _get_iface(self, path: str, interface: str) -> QtDBus.QDBusInterface:
         return QtDBus.QDBusInterface(self.BUS_NAME, path, interface, self._bus)
 
 
-def _is_network_connected(state: 'NMState') -> bool:
+def _is_network_connected(state: NMState) -> bool:
     # We treat site and global as connected because having a default route means you
     # can reach something. This might need to include LOCAL eventually depending on use
     # cases
@@ -196,7 +198,7 @@ def _is_network_connected(state: 'NMState') -> bool:
     )
 
 
-def read_dbus_property(obj, property):
+def read_dbus_property(obj: QtDBus.QDBusInterface, property: str) -> Any:
     # QDBusInterface.property() didn't work for some reason
     props = QtDBus.QDBusInterface(obj.service(), obj.path(), 'org.freedesktop.DBus.Properties', obj.connection())
     msg = props.call('Get', obj.interface(), property)

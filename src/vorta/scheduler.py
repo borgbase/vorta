@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import enum
 import logging
 import threading
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import Dict, NamedTuple, Optional, Tuple, Union
+from typing import Any, Dict, NamedTuple, Optional, Tuple, Union
 
 from packaging import version
 from PyQt6 import QtCore, QtDBus
@@ -40,7 +42,7 @@ class VortaScheduler(QtCore.QObject):
     #: The schedule for a profile changed.
     schedule_changed = QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         #: mapping of profiles to timers
@@ -81,7 +83,7 @@ class VortaScheduler(QtCore.QObject):
             logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
 
     @QtCore.pyqtSlot(bool)
-    def loginSuspendNotify(self, suspend: bool):
+    def loginSuspendNotify(self, suspend: bool) -> None:
         if not suspend:
             logger.debug("Got login suspend/resume notification")
             # Defensively refetch in case the network status didn't arrive
@@ -97,11 +99,11 @@ class VortaScheduler(QtCore.QObject):
             logger.info("updating schedule due to network status change")
             self.reload_all_timers()
 
-    def tr(self, *args, **kwargs):
+    def tr(self, *args: Any, **kwargs: Any) -> str:
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
-    def pause(self, profile_id: int, until: Optional[dt] = None):
+    def pause(self, profile_id: int, until: Optional[dt] = None) -> None:
         """
         Call a timeout for scheduling of a given profile.
 
@@ -160,7 +162,7 @@ class VortaScheduler(QtCore.QObject):
         self.pauses[profile_id] = (until, timer)
         logger.debug(f"Paused {profile_id} until {until.strftime('%Y-%m-%d %H:%M:%S')}")
 
-    def unpause(self, profile_id: int):
+    def unpause(self, profile_id: int) -> None:
         """
         Return to scheduling for a profile.
 
@@ -199,7 +201,7 @@ class VortaScheduler(QtCore.QObject):
         """
         return self.pauses.get(profile_id) is not None
 
-    def set_timer_for_profile(self, profile_id: int):
+    def set_timer_for_profile(self, profile_id: int) -> None:
         """
         Set a timer for next scheduled backup run of this profile.
 
@@ -380,7 +382,7 @@ class VortaScheduler(QtCore.QObject):
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit()
 
-    def reload_all_timers(self):
+    def reload_all_timers(self) -> None:
         logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
             # Only set a timer for the profile if the network is actually up
@@ -393,7 +395,7 @@ class VortaScheduler(QtCore.QObject):
                 logger.debug("Network is down, not scheduling %s", profile.id)
                 self.remove_job(profile.id)
 
-    def next_job(self):
+    def next_job(self) -> str:
         now = dt.now()
 
         def is_scheduled(timer):
@@ -417,9 +419,9 @@ class VortaScheduler(QtCore.QObject):
         job = self.timers.get(profile_id)
         if job is None:
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
-        return ScheduleStatus(job['type'], time=job.get('dt'))
+        return ScheduleStatus(job['type'], time=job.get('dt'))  # type: ignore[arg-type]
 
-    def create_backup(self, profile_id):
+    def create_backup(self, profile_id: int) -> None:
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
@@ -457,7 +459,7 @@ class VortaScheduler(QtCore.QObject):
                 )
                 self.pause(profile_id)
 
-    def notify(self, result):
+    def notify(self, result: dict[str, Any]) -> None:
         notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
         profile_id = result['params']['profile'].id
@@ -487,7 +489,7 @@ class VortaScheduler(QtCore.QObject):
 
         self.set_timer_for_profile(profile_id)
 
-    def post_backup_tasks(self, profile_id):
+    def post_backup_tasks(self, profile_id: int) -> None:
         """
         Pruning and checking after successful backup.
         """
@@ -550,7 +552,7 @@ class VortaScheduler(QtCore.QObject):
             level='info',
         )
 
-    def remove_job(self, profile_id):
+    def remove_job(self, profile_id: int) -> None:
         if profile_id in self.timers:
             qtimer = self.timers[profile_id].get('qtt')
             if qtimer is not None:
