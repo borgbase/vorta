@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import subprocess
 from datetime import datetime as dt
 from typing import Iterator, List, Optional
@@ -9,7 +11,7 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     def is_network_metered(self) -> bool:
@@ -28,7 +30,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
 
-    def is_network_active(self):
+    def is_network_active(self) -> bool:
         # Not yet implemented
         return True
 
@@ -88,11 +90,11 @@ def get_network_devices() -> Iterator[str]:
             yield line.split()[1].strip().decode('ascii')
 
 
-def is_network_metered_with_android(bsd_device) -> bool:
+def is_network_metered_with_android(bsd_device: str) -> bool:
     return b'ANDROID_METERED' in call_ipconfig_getpacket(bsd_device)
 
 
-def call_ipconfig_getpacket(bsd_device):
+def call_ipconfig_getpacket(bsd_device: str) -> bytes:
     cmd = ['ipconfig', 'getpacket', bsd_device]
     try:
         return subprocess.check_output(cmd)
@@ -101,7 +103,7 @@ def call_ipconfig_getpacket(bsd_device):
         return b''
 
 
-def call_networksetup_listallhardwareports():
+def call_networksetup_listallhardwareports() -> bytes:
     cmd = ['/usr/sbin/networksetup', '-listallhardwareports']
     try:
         return subprocess.check_output(cmd)
@@ -110,7 +112,7 @@ def call_networksetup_listallhardwareports():
         return b''
 
 
-def call_networksetup_listpreferredwirelessnetworks(interface) -> str:
+def call_networksetup_listpreferredwirelessnetworks(interface: str) -> str:
     command = ['/usr/sbin/networksetup', '-listpreferredwirelessnetworks', interface]
     try:
         return subprocess.check_output(command).decode(encoding='utf-8')

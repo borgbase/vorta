@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import sys
 from datetime import datetime
 from typing import List, NamedTuple, Optional
@@ -26,10 +28,10 @@ class NetworkStatusMonitor(QObject):
 
     network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
 
-    def is_network_status_available(self):
+    def is_network_status_available(self) -> bool:
         """Is the network status really available, and not just a dummy implementation?"""
         return type(self) is not NetworkStatusMonitor
 
@@ -61,13 +63,13 @@ class SystemWifiInfo(NamedTuple):
 class NullNetworkStatusMonitor(NetworkStatusMonitor):
     """Dummy implementation, in case we don't have one for current platform."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def is_network_active(self):
+    def is_network_active(self) -> bool:
         return True
 
-    def is_network_status_available(self):
+    def is_network_status_available(self) -> bool:
         return False
 
     def is_network_metered(self) -> bool:
