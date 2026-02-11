@@ -9,6 +9,9 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 
 class DarwinNetworkStatus(NetworkStatusMonitor):
+    def __init__(self):
+        super().__init__()
+
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
 
@@ -24,6 +27,10 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
             is_ios_hotspot = False
 
         return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
+
+    def is_network_active(self):
+        # Not yet implemented
+        return True
 
     def get_current_wifi(self) -> Optional[str]:
         """
