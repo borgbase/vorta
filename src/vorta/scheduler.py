@@ -19,7 +19,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel
-from vorta.utils import borg_compat
+from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +62,11 @@ class VortaScheduler(QtCore.QObject):
         # connect signals
         self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
 
+        # Connect to network manager to monitor net status
+        self.net_status = get_network_status_monitor()
+        self.net_status.network_status_changed.connect(self.networkStatusChanged)
+        self._net_up = self.net_status.is_network_active()
+
         # connect to `systemd-logind` to receive sleep/resume events
         # The signal `PrepareForSleep` will be emitted before and after hibernation.
         service = "org.freedesktop.login1"
@@ -79,6 +84,17 @@ class VortaScheduler(QtCore.QObject):
     def loginSuspendNotify(self, suspend: bool):
         if not suspend:
             logger.debug("Got login suspend/resume notification")
+            # Defensively refetch in case the network status didn't arrive
+            self._net_up = self.net_status.is_network_active()
+            self.reload_all_timers()
+
+    @QtCore.pyqtSlot(bool)
+    def networkStatusChanged(self, up: bool):
+        reload = self._net_up != up
+        self._net_up = up
+        logger.debug(f"network status up={up}")
+        if reload:
+            logger.info("updating schedule due to network status change")
             self.reload_all_timers()
 
     def tr(self, *args, **kwargs):
@@ -294,9 +310,10 @@ class VortaScheduler(QtCore.QObject):
 
             logger.debug('Last run time: %s', last_time)
 
+            needs_network = profile.repo is not None and profile.repo.is_remote_repo()
             # handle missing of a scheduled time
             if next_time <= dt.now():
-                if profile.schedule_make_up_missed:
+                if profile.schedule_make_up_missed and (self._net_up or not needs_network):
                     self.lock.release()
                     try:
                         logger.debug(
@@ -309,6 +326,8 @@ class VortaScheduler(QtCore.QObject):
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
+                elif profile.schedule_make_up_missed and not self._net_up and needs_network:
+                    logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
 
                 # calculate next time from now
                 if profile.schedule_mode == 'interval':
@@ -364,7 +383,15 @@ class VortaScheduler(QtCore.QObject):
     def reload_all_timers(self):
         logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
-            self.set_timer_for_profile(profile.id)
+            # Only set a timer for the profile if the network is actually up
+            if profile.repo is None:
+                logger.debug("nothing scheduled for %s because of unset repo", profile.id)
+            elif not profile.repo.is_remote_repo() or self._net_up:
+                logger.debug("scheduling %s", profile.id)
+                self.set_timer_for_profile(profile.id)
+            else:
+                logger.debug("Network is down, not scheduling %s", profile.id)
+                self.remove_job(profile.id)
 
     def next_job(self):
         now = dt.now()
