@@ -61,7 +61,8 @@ class BorgListRepoJob(BorgJob):
                     repo=repo.id,
                     defaults={
                         'name': archive['name'],
-                        'time': dt.fromisoformat(archive['time']).replace(tzinfo=None),
+                        # Convert to local time (for Borg 2.x UTC timestamps) before storing as naive datetime
+                        'time': dt.fromisoformat(archive['time']).astimezone().replace(tzinfo=None),
                     },
                 )
                 new_archive.save()
