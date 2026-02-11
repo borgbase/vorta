@@ -4,6 +4,15 @@ on:
   push:
     branches: [master]
   pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/**'
+      - 'noxfile.py'
+      - 'Makefile'
+      - 'package/**'
   workflow_dispatch:
     inputs:
       debug_enabled:
