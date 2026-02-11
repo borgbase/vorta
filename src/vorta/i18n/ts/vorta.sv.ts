@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="sv">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TS>
+<TS version="2.0" language="sv">
 <context>
     <name>AddProfileWindow</name>
     <message>
@@ -326,7 +328,7 @@
     <name>BorgCreateJob</name>
     <message>
         <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
+        <source>Backup finished with warnings. See the %1 for details.</source>
         <translation>Säkerhetskopiering slutfördes med varningar. Se loggar för detaljerad info.</translation>
     </message>
     <message>
@@ -555,8 +557,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="94"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <source>More</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="107"/>
@@ -565,7 +572,7 @@
     </message>
     <message>
         <location filename="../../assets/UI/ssh_add.ui" line="119"/>
-        <source>Don&apos;t change this if you want SSH to automatically find the key.</source>
+        <source>Don't change this if you want SSH to automatically find the key.</source>
         <translation>Ändra inte om du vill att SSH skall hitta nyckeln automatiskt.</translation>
     </message>
     <message>
@@ -867,7 +874,7 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="136"/>
-        <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
+        <source>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</source>
         <translation>Avlänka förrådet (Detta tar inte bort någon data. Du kan alltid lägga till ett förråd igen, senare.)</translation>
     </message>
     <message>
@@ -1012,8 +1019,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="519"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tillgängliga miljövariabler: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tillgängliga miljövariabler: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="20"/>
@@ -1042,13 +1049,23 @@
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;För att montera arkiv, installerarar du först &amp;quot;FUSE för macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;här&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation>För att montera arkiv, installerarar du först "FUSE för macOS" from %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="183"/>
+        <source>here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="208"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Beskärning tar bort äldre arkiv. Du kan välja antal arkiv att bevara per timma, dag etc. Normalt vill man bevara fler nyare och färre äldre arkiv. Läs &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>Beskärning tar bort äldre arkiv. Du kan välja antal arkiv att bevara per timma, dag etc. Normalt vill man bevara fler nyare och färre äldre arkiv. Läs %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="208"/>
+        <source>more</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="64"/>
@@ -1057,13 +1074,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="81"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Rapportera&lt;/span&gt;&lt;/a&gt; ett fel |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Rapportera&lt;/span&gt;&lt;/a&gt; ett fel |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="91"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Logg&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Logg&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="127"/>
@@ -1082,18 +1099,18 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="96"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fjärr- eller lokalt säkerhetskopieringsförråd. För enkel och säker lagring kan du prova &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>Fjärr- eller lokalt säkerhetskopieringsförråd. För enkel och säker lagring kan du prova %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="288"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprimering använd för ny data. Kan ändras och påverkar inte deduplicering. Läs &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn't affect deduplication. Read &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprimering använd för ny data. Kan ändras och påverkar inte deduplicering. Läs &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="154"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undantagsmall. Läs (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;mer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undantagsmall. Läs (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="180"/>
@@ -1112,7 +1129,7 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="364"/>
-        <source>Don&apos;t run backup over metered networks</source>
+        <source>Don't run backup over metered networks</source>
         <translation>Kör inte säkerhetskopiering över nätverk med datamätare</translation>
     </message>
     <message>
@@ -1162,8 +1179,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="542"/>
-        <source>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
-        <translation>Lägg till dessa argument när en säkerhetskopia skapas. Se &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;dokumentationen&lt;/span&gt;&lt;/a&gt; för mer information.</translation>
+        <source>Add these arguments when creating a backup. See &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
+        <translation>Lägg till dessa argument när en säkerhetskopia skapas. Se &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;dokumentationen&lt;/span&gt;&lt;/a&gt; för mer information.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="558"/>
@@ -1210,10 +1227,10 @@
     </message>
     <message>
         <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i diversefliken och ange följande fel:
+        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i inställningsfliken och ange följande fel:
  {0}
  {1}</translation>
     </message>
@@ -1283,7 +1300,7 @@
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="168"/>
         <source>Misc</source>
-        <translation>Diverse</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="190"/>
@@ -1312,8 +1329,8 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="163"/>
-        <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
-        <translation>Vill du verkligen ta bort profilen &quot;{}&quot;?</translation>
+        <source>Are you sure you want to delete profile '{}'?</source>
+        <translation>Vill du verkligen ta bort profilen "{}"?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="164"/>
@@ -1332,7 +1349,7 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="278"/>
-        <source>Don&apos;t show this again</source>
+        <source>Don't show this again</source>
         <translation>Visa inte detta igen</translation>
     </message>
     <message>
@@ -1342,7 +1359,7 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="174"/>
-        <source>Can&apos;t delete the last profile.</source>
+        <source>Can't delete the last profile.</source>
         <translation>Kan inte ta bort senaste profilen.</translation>
     </message>
     <message>
@@ -1415,7 +1432,7 @@
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="155"/>
-        <source>Couldn&apos;t find public key.</source>
+        <source>Couldn't find public key.</source>
         <translation>Kunde inte hitta offentlig nyckel.</translation>
     </message>
     <message>
@@ -1559,7 +1576,7 @@
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="164"/>
-        <source>You don&apos;t have read access to {dir}.</source>
+        <source>You don't have read access to {dir}.</source>
         <translation>Du har inte läsåtkomst till {dir}.</translation>
     </message>
 </context>
@@ -1655,8 +1672,8 @@
     </message>
     <message>
         <location filename="../../application.py" line="211"/>
-        <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Utan detta kommer vissa filer inte att vara tillgängliga och det kan sluta med en ofullständig säkerhetskopia.  Ange &lt;b&gt;fullständig diskåtkomstbehörighet&lt;/b&gt; för Vorta i &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Systeminställningar &gt; Säkerhet &amp; sekretess&lt;/a&gt;.</translation>
+        <source>Without this, some files won't be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
+        <translation>Utan detta kommer vissa filer inte att vara tillgängliga och det kan sluta med en ofullständig säkerhetskopia.  Ange &lt;b&gt;fullständig diskåtkomstbehörighet&lt;/b&gt; för Vorta i &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;Systeminställningar &gt; Säkerhet &amp; sekretess&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="283"/>
@@ -1752,6 +1769,11 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Borg-binär hittades inte.</translation>
     </message>
     <message>
+        <location filename="../../borg/version.py" line="20"/>
+        <source>logs</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Lägg först till ett säkerhetskopieringsförråd.</translation>
@@ -1815,8 +1837,8 @@ Försök avlänka och återansluta ditt förråd.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
-        <source>Please unlock your system password manager or disable it under Misc</source>
-        <translation>Lås upp din lösenordshanterare eller avaktivera den under Diverse</translation>
+        <source>Please unlock your system password manager or disable it under Settings</source>
+        <translation>Lås upp din lösenordshanterare eller avaktivera den under Inställningar</translation>
     </message>
 </context>
 <context>

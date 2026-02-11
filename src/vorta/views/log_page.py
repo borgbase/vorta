@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta import config
+from vorta.i18n.richtext import format_richtext, link
 from vorta.store.models import BackupProfileMixin, EventLogModel
 from vorta.utils import get_asset
 
@@ -40,10 +41,9 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
         self.logPage.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.logPage.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
-        self.logLink.setText(
-            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> for complete logs.'
-        )
+        template = self.logLink.text()
+        log_link = link(f"file://{config.LOG_DIR}", self.tr('View the logs'))
+        self.logLink.setText(format_richtext(template, log_link))
 
         self.populate_logs()
 

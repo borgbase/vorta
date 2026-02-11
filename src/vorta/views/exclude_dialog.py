@@ -7,7 +7,8 @@ from PyQt6.QtGui import QCursor, QStandardItem, QStandardItemModel
 from PyQt6.QtWidgets import QAbstractItemView, QApplication, QMenu, QMessageBox, QStyledItemDelegate
 
 from vorta.filedialog import VortaFileSelector
-from vorta.i18n import translate
+from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon, get_exclusion_presets
@@ -93,12 +94,14 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
 
         # help text
         self.customPresetsHelpText.setOpenExternalLinks(True)
-        self.customPresetsHelpText.setText(
-            translate(
-                "CustomPresetsHelp",
-                "Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the <a href=\"https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns\">documentation</a>. To add multiple patterns at once, use the \"Raw\" tab.",  # noqa: E501
-            )
+        self.custom_presets_help_text = trans_late(
+            "CustomPresetsHelp",
+            "Patterns that you add here will be used to exclude files and folders from the backup. "
+            "For more info on how to use patterns, see the %1. "
+            "To add multiple patterns at once, use the \"Raw\" tab.",
         )
+        self.custom_presets_help_link_text = trans_late("CustomPresetsHelp", "documentation")
+        self._set_custom_presets_help()
         self.exclusionPresetsHelpText.setText(
             translate(
                 "ExclusionPresetsHelp",
@@ -144,6 +147,22 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.populate_raw_exclusions_text()
         self.populate_preview_tab()
         self.populate_exclude_if_present_patterns()
+
+    def _set_custom_presets_help(self):
+        template = self.customPresetsHelpText.text()
+        sentence_template = translate(
+            "CustomPresetsHelp",
+            self.custom_presets_help_text,
+        )
+        link_text = translate("CustomPresetsHelp", self.custom_presets_help_link_text)
+        sentence = format_richtext(
+            escape(sentence_template),
+            link(
+                "https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-patterns",
+                link_text,
+            ),
+        )
+        self.customPresetsHelpText.setText(format_richtext(template, sentence))
 
     def populate_custom_exclusions_list(self):
         user_excluded_patterns = {

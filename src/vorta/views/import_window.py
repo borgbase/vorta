@@ -70,7 +70,7 @@ class ImportWindow(ImportWindowUI, ImportWindowBase):
             self.on_error(
                 e,
                 self.tr(
-                    "Schema upgrade failure, file a bug report with the link in the Misc tab "
+                    "Schema upgrade failure, file a bug report with the link in the Settings tab "
                     "with the following error: \n {0} \n {1}"
                 ).format(str(e), schema_message),
             )

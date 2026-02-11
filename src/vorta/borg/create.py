@@ -8,6 +8,7 @@ from PyQt6.QtCore import QCoreApplication
 
 from vorta import config
 from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 
@@ -40,13 +41,12 @@ class BorgCreateJob(BorgJob):
                 repo.save()
 
             if result['returncode'] == 1:
-                self.app.backup_progress_event.emit(
-                    f"[{self.params['profile_name']}] "
-                    + translate(
-                        'BorgCreateJob',
-                        'Backup finished with warnings. See the <a href="{0}">logs</a> for details.',
-                    ).format(config.LOG_DIR.as_uri())
+                logs_link = link(config.LOG_DIR.as_uri(), translate('messages', 'logs'))
+                message = format_richtext(
+                    escape(translate('BorgCreateJob', 'Backup finished with warnings. See the %1 for details.')),
+                    logs_link,
                 )
+                self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] " + message)
             else:
                 self.app.backup_log_event.emit('', {})
                 self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")

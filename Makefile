@@ -4,7 +4,7 @@ VERSION := $(shell uv run python -c "from src.vorta._version import __version__;
 
 .PHONY: help clean lint test test-unit test-integration \
         bump-version pypi-release release-preflight changelog update-appcast \
-        translations-from-source translations-push translations-pull translations-to-qm translations-update \
+        translations-from-source translations-to-qm \
         flatpak-install
 .DEFAULT_GOAL := help
 
@@ -50,16 +50,8 @@ translations-from-source:  ## Extract strings from source code / UI files, merge
 			   $$(find ${VORTA_SRC} -iname "*.py" -o -iname "*.ui") \
 			   -ts ${VORTA_SRC}/i18n/ts/vorta.en.ts
 
-translations-push: translations-from-source  ## Upload .ts to Transifex.
-	tx push -s
-
-translations-pull:  ## Download .ts from Transifex.
-	tx pull -a
-
 translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls ${VORTA_SRC}/i18n/ts/vorta.*.ts); do lrelease $$f -qm ${VORTA_SRC}/i18n/qm/$$(basename $$f .ts).qm; done
-
-translations-update: translations-pull translations-to-qm  ## Pull translations and compile to .qm
 
 changelog:  ## Show commits since last tag
 	@PREV_TAG=$$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo ""); \

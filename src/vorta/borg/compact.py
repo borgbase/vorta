@@ -2,6 +2,7 @@ from typing import Any, Dict
 
 from vorta import config
 from vorta.i18n import translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
@@ -26,12 +27,12 @@ class BorgCompactJob(BorgJob):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         if result['returncode'] != 0:
-            self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] "
-                + translate(
-                    'BorgCompactJob', 'Errors during compaction. See the <a href="{0}">logs</a> for details.'
-                ).format(config.LOG_DIR.as_uri())
+            logs_link = link(config.LOG_DIR.as_uri(), translate('messages', 'logs'))
+            message = format_richtext(
+                escape(translate('BorgCompactJob', 'Errors during compaction. See the %1 for details.')),
+                logs_link,
             )
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] " + message)
         else:
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Compaction completed.')}")
 
