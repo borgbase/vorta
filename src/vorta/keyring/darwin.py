@@ -94,9 +94,9 @@ class VortaDarwinKeyring(VortaKeyring):
         try:
             result, password_length, password_buffer, keychain_item = SecKeychainFindGenericPassword(
                 self.login_keychain,
-                len(service),
+                len(service.encode()),
                 service.encode(),
-                len(repo_url),
+                len(repo_url.encode()),
                 repo_url.encode(),
                 None,
                 None,
@@ -124,9 +124,9 @@ class VortaDarwinKeyring(VortaKeyring):
             keychain_item,
         ) = SecKeychainFindGenericPassword(
             self.login_keychain,
-            len(service),
+            len(service.encode()),
             service.encode(),
-            len(repo_url),
+            len(repo_url.encode()),
             repo_url.encode(),
             None,
             None,
