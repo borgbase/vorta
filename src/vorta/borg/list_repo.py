@@ -1,9 +1,12 @@
+import logging
 from datetime import datetime as dt
 
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
+
+logger = logging.getLogger(__name__)
 
 
 class BorgListRepoJob(BorgJob):
@@ -38,8 +41,12 @@ class BorgListRepoJob(BorgJob):
     def process_result(self, result):
         if result['returncode'] == 0:
             repo, created = RepoModel.get_or_create(url=result['cmd'][-1])
-            if not result['data']:
-                result['data'] = {}  # TODO: Workaround for tests. Can't read mock results 2x.
+
+            # Handle unexpected response format from Borg
+            if not isinstance(result['data'], dict):
+                logger.warning('Borg list returned unexpected data type: %s', type(result['data']))
+                return
+
             remote_archives = result['data'].get('archives', [])
 
             # Delete archives that don't exist on the remote side

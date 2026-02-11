@@ -8,6 +8,7 @@ from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 import vorta
 import vorta.application
+import vorta.borg.borg_job
 import vorta.borg.jobs_manager
 from vorta.store.models import (
     ArchiveModel,
@@ -202,6 +203,50 @@ def borg_json_output():
             f.close()
         except Exception:
             pass
+
+
+@pytest.fixture
+def mock_borg_popen(mocker, borg_json_output):
+    """
+    Mock Popen for tests that trigger multiple Borg jobs (job chaining).
+
+    When a test triggers job chaining (e.g., prune triggers list refresh),
+    each Popen call needs fresh file handles. This fixture uses side_effect
+    to create new handles for each call, preventing file handle exhaustion.
+
+    Usage:
+        mock_borg_popen(['prune', 'list'])  # Prune job, then list job
+
+    For single-command tests, use borg_json_output directly with return_value.
+    """
+
+    def _mock_popen(subcommands, returncodes=None):
+        if returncodes is None:
+            returncodes = [0] * len(subcommands)
+
+        call_count = [0]  # Use list to allow mutation in closure
+
+        def create_mock(*args, **kwargs):
+            idx = call_count[0]
+            call_count[0] += 1
+
+            if idx < len(subcommands):
+                stdout, stderr = borg_json_output(subcommands[idx])
+                returncode = returncodes[idx]
+            else:
+                # Fallback for unexpected extra calls - use last subcommand
+                stdout, stderr = borg_json_output(subcommands[-1])
+                returncode = returncodes[-1]
+
+            mock = mocker.MagicMock()
+            mock.stdout = stdout
+            mock.stderr = stderr
+            mock.returncode = returncode
+            return mock
+
+        mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=create_mock)
+
+    return _mock_popen
 
 
 @pytest.fixture
