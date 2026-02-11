@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   lint:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +33,7 @@ jobs:
         run: uv run pre-commit run --all-files --show-diff-on-failure
 
   prepare-matrix:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     outputs:
       matrix-unit: ${{ steps.set-matrix-unit.outputs.matrix }}
@@ -82,6 +84,7 @@ jobs:
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
+        timeout-minutes: 60
 
       - name: Run Unit Tests with pytest (Linux)
         if: runner.os == 'Linux'
@@ -130,6 +133,7 @@ jobs:
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true'}}
+        timeout-minutes: 60
 
       - name: Run Integration Tests with pytest (Linux)
         if: runner.os == 'Linux'
