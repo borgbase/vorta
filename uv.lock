@@ -511,7 +511,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
@@ -571,7 +571,7 @@ name = "importlib-metadata"
 version = "8.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "zipp" },
+    { name = "zipp", marker = "python_full_version < '3.12'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/66/650a33bd90f786193e4de4b3ad86ea60b53c89b669a5c7be931fac31cdb0/importlib_metadata-8.7.0.tar.gz", hash = "sha256:d13b81ad223b890aa16c5471f2ac3056cf76c5f10f82d6f9292f0b415f389000", size = 56641, upload-time = "2025-04-27T15:29:01.736Z" }
 wheels = [
@@ -1190,6 +1190,44 @@ wheels = [
 ]
 
 [[package]]
+name = "pyobjc-framework-libdispatch"
+version = "12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyobjc-core", marker = "sys_platform == 'darwin'" },
+    { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/26/e8/75b6b9b3c88b37723c237e5a7600384ea2d84874548671139db02e76652b/pyobjc_framework_libdispatch-12.1.tar.gz", hash = "sha256:4035535b4fae1b5e976f3e0e38b6e3442ffea1b8aa178d0ca89faa9b8ecdea41", size = 38277, upload-time = "2025-11-14T10:16:46.235Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a5/76/9936d97586dbae4d7d10f3958d899ee7a763930af69b5ad03d4516178c7c/pyobjc_framework_libdispatch-12.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:50a81a29506f0e35b4dc313f97a9d469f7b668dae3ba597bb67bbab94de446bd", size = 20471, upload-time = "2025-11-14T09:52:53.134Z" },
+    { url = "https://files.pythonhosted.org/packages/1f/75/c4aeab6ce7268373d4ceabbc5c406c4bbf557038649784384910932985f8/pyobjc_framework_libdispatch-12.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:954cc2d817b71383bd267cc5cd27d83536c5f879539122353ca59f1c945ac706", size = 20463, upload-time = "2025-11-14T09:52:55.703Z" },
+    { url = "https://files.pythonhosted.org/packages/83/6f/96e15c7b2f7b51fc53252216cd0bed0c3541bc0f0aeb32756fefd31bed7d/pyobjc_framework_libdispatch-12.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:0e9570d7a9a3136f54b0b834683bf3f206acd5df0e421c30f8fd4f8b9b556789", size = 15650, upload-time = "2025-11-14T09:52:59.284Z" },
+    { url = "https://files.pythonhosted.org/packages/38/3a/d85a74606c89b6b293782adfb18711026ff79159db20fc543740f2ac0bc7/pyobjc_framework_libdispatch-12.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:58ffce5e6bcd7456b4311009480b195b9f22107b7682fb0835d4908af5a68ad0", size = 15668, upload-time = "2025-11-14T09:53:01.354Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/40/49b1c1702114ee972678597393320d7b33f477e9d24f2a62f93d77f23dfb/pyobjc_framework_libdispatch-12.1-cp313-cp313t-macosx_10_13_universal2.whl", hash = "sha256:e9f49517e253716e40a0009412151f527005eec0b9a2311ac63ecac1bdf02332", size = 15938, upload-time = "2025-11-14T09:53:03.461Z" },
+    { url = "https://files.pythonhosted.org/packages/59/d8/7d60a70fc1a546c6cb482fe0595cb4bd1368d75c48d49e76d0bc6c0a2d0f/pyobjc_framework_libdispatch-12.1-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:0ebfd9e4446ab6528126bff25cfb09e4213ddf992b3208978911cfd3152e45f5", size = 15693, upload-time = "2025-11-14T09:53:05.531Z" },
+    { url = "https://files.pythonhosted.org/packages/99/32/15e08a0c4bb536303e1568e2ba5cae1ce39a2e026a03aea46173af4c7a2d/pyobjc_framework_libdispatch-12.1-cp314-cp314t-macosx_10_15_universal2.whl", hash = "sha256:23fc9915cba328216b6a736c7a48438a16213f16dfb467f69506300b95938cc7", size = 15976, upload-time = "2025-11-14T09:53:07.936Z" },
+]
+
+[[package]]
+name = "pyobjc-framework-network"
+version = "12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyobjc-core", marker = "sys_platform == 'darwin'" },
+    { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/13/a71270a1b0a9ec979e68b8ec84b0f960e908b17b51cb3cac246a74d52b6b/pyobjc_framework_network-12.1.tar.gz", hash = "sha256:dbf736ff84d1caa41224e86ff84d34b4e9eb6918ae4e373a44d3cb597648a16a", size = 56990, upload-time = "2025-11-14T10:18:16.714Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d0/b7/8c29d66920d026532b4acb4ed4e608fd1ee41db602217d6abf2c5f9ea14f/pyobjc_framework_network-12.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:07264f1dc5d7c437dfbbbf9302a60ead87bbce14692c4cc20b2a259a9fe20b3d", size = 19591, upload-time = "2025-11-14T09:57:14.127Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/7c/4f9fc6b94be3e949b7579128cbb9171943e27d1d7841db12d66b76aeadc3/pyobjc_framework_network-12.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:d1ad948b9b977f432bf05363381d7d85a7021246ebf9d50771b35bf8d4548d2b", size = 19593, upload-time = "2025-11-14T09:57:17.027Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/ef/a53f04f43e93932817f2ea71689dcc8afe3b908d631c21d11ec30c7b2e87/pyobjc_framework_network-12.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:5e53aad64eae2933fe12d49185d66aca62fb817abf8a46f86b01e436ce1b79e4", size = 19613, upload-time = "2025-11-14T09:57:19.571Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/f5/612539c2c0c7ce1160bd348325747f3a94ea367901965b217af877a556a1/pyobjc_framework_network-12.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:e341beb32c7f95ed3e38f00cfed0a9fe7f89b8d80679bf2bd97c1a8d2280180a", size = 19632, upload-time = "2025-11-14T09:57:21.762Z" },
+    { url = "https://files.pythonhosted.org/packages/c6/ff/6a1909206f6d840ebcf40c9ea5de9a9ee07e7bb1ffa4fe573da7f90fac12/pyobjc_framework_network-12.1-cp313-cp313t-macosx_10_13_universal2.whl", hash = "sha256:8344e3b57afccc762983e4629ec5eff72a3d7292afa8169a3e2aada3348848a8", size = 19696, upload-time = "2025-11-14T09:57:23.948Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/6d/a7fb29708f2797fa96bfa6ae740b8154ac719e150939393453073121b7c9/pyobjc_framework_network-12.1-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:25e20ec81e23699e1182808384b8e426cb3ae9adaf639684232fc205edb48183", size = 19361, upload-time = "2025-11-14T09:57:26.565Z" },
+    { url = "https://files.pythonhosted.org/packages/40/54/9cb89d6fac3e2e8d34107fa6de36ab7890844428b3d4fb4a9692f3cc4926/pyobjc_framework_network-12.1-cp314-cp314t-macosx_10_15_universal2.whl", hash = "sha256:39be2f25b13d2d530e893f06ddd3f277b83233020a0ab58413554fe8e0496624", size = 19406, upload-time = "2025-11-14T09:57:28.765Z" },
+]
+
+[[package]]
 name = "pyproject-api"
 version = "1.10.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1672,6 +1710,8 @@ dependencies = [
     { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'" },
     { name = "pyobjc-framework-corewlan", marker = "sys_platform == 'darwin'" },
     { name = "pyobjc-framework-launchservices", marker = "sys_platform == 'darwin'" },
+    { name = "pyobjc-framework-libdispatch", marker = "sys_platform == 'darwin'" },
+    { name = "pyobjc-framework-network", marker = "sys_platform == 'darwin'" },
     { name = "pyqt6" },
     { name = "secretstorage", marker = "sys_platform != 'darwin'" },
 ]
@@ -1719,6 +1759,8 @@ requires-dist = [
     { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'", specifier = "<13" },
     { name = "pyobjc-framework-corewlan", marker = "sys_platform == 'darwin'", specifier = "<13" },
     { name = "pyobjc-framework-launchservices", marker = "sys_platform == 'darwin'", specifier = "<13" },
+    { name = "pyobjc-framework-libdispatch", marker = "sys_platform == 'darwin'", specifier = ">=12.1" },
+    { name = "pyobjc-framework-network", marker = "sys_platform == 'darwin'", specifier = ">=12.1" },
     { name = "pyqt6" },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-cov", marker = "extra == 'test'" },

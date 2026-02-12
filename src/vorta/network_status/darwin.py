@@ -2,6 +2,8 @@ import subprocess
 from datetime import datetime as dt
 from typing import Iterator, List, Optional
 
+import dispatch
+import Network
 from CoreWLAN import CWInterface, CWNetwork, CWWiFiClient
 
 from vorta.log import logger
@@ -11,6 +13,17 @@ from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 class DarwinNetworkStatus(NetworkStatusMonitor):
     def __init__(self):
         super().__init__()
+        # Default state of none indicates we haven't received a path update yet
+        self.nw_path = None
+        self.nw_path_monitor = Network.nw_path_monitor_create()
+        Network.nw_path_monitor_set_update_handler(self.nw_path_monitor, self._path_updated)
+        # Needs a dispatch to get the first event
+        Network.nw_path_monitor_set_queue(self.nw_path_monitor, dispatch.dispatch_get_main_queue())
+        Network.nw_path_monitor_start(self.nw_path_monitor)
+
+    def _path_updated(self, path):
+        self.nw_path = path
+        self.network_status_changed.emit(self.is_network_active())
 
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
@@ -29,8 +42,15 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
 
     def is_network_active(self):
-        # Not yet implemented
-        return True
+        # We haven't received an update yet, surely it is coming soon
+        if self.nw_path is None:
+            return False
+        # https://developer.apple.com/documentation/network/nw_path_status_satisfiable
+        # Maybe making a network connection will work so treat it as active
+        return Network.nw_path_get_status(self.nw_path) in (
+            Network.nw_path_status_satisfied,
+            Network.nw_path_status_satisfied,
+        )
 
     def get_current_wifi(self) -> Optional[str]:
         """
