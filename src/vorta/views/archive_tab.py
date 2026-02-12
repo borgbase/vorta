@@ -220,6 +220,10 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
             action = menu.addAction(button.icon(), button.text(), connection)
             action.setEnabled(button.isEnabled())
 
+        # Export to Tar
+        if len(selected_rows) == 1:
+            menu.addAction(get_colored_icon('file'), self.tr("Export to Tarball"), self.export_tar_action)
+
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
     def cancel_action(self):
@@ -818,6 +822,23 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
     def extract_archive_result(self, result):
         """Finished extraction."""
         self._toggle_all_buttons(True)
+
+    def export_tar_action(self):
+        """
+        Open a dialog to export the selected archive to a tarball.
+        """
+        row_selected = self.archiveTable.selectionModel().selectedRows()
+        if len(row_selected) != 1:
+            return
+
+        archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
+        if archive_cell:
+            archive_name = archive_cell.text()
+
+            from vorta.views.export_tar_dialog import ExportTarDialog
+
+            dialog = ExportTarDialog(self, self.profile(), archive_name)
+            dialog.exec()
 
     def cell_double_clicked(self, row=None, column=None):
         if not self.bRename.isEnabled():
