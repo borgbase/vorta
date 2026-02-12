@@ -125,6 +125,13 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
+    # Mock the key backup prompt to avoid blocking QMessageBox.exec() in headless CI
+    mocker.patch.object(
+        add_repo_window,
+        'prompt_key_backup',
+        lambda result: (add_repo_window.added_repo.emit(result), add_repo_window.accept()),
+    )
+
     add_repo_window.run()
     qtbot.waitUntil(
         lambda: EventLogModel.select().where(EventLogModel.returncode == 0).count() == 2, **pytest._wait_defaults
