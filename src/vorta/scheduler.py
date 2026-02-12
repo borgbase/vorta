@@ -370,7 +370,7 @@ class VortaScheduler(QtCore.QObject):
             else:
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
-                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
+                logger.debug(f"Couldn't schedule for {next_time} because timer value {timer_ms} too large.")
 
                 self.timers[profile_id] = {
                     'dt': next_time,
@@ -444,7 +444,7 @@ class VortaScheduler(QtCore.QObject):
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'
-                job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
+                job = BorgCreateJob(msg['cmd'], msg, profile.repo.id, True)
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
             else:
