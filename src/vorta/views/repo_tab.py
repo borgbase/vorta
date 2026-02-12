@@ -3,8 +3,9 @@ from pathlib import PurePath
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QMimeData, QUrl
-from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
+from PyQt6.QtWidgets import QApplication, QFileDialog, QLayout, QMenu, QMessageBox
 
+from vorta.borg.key_export import BorgKeyExportJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
@@ -44,6 +45,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         )
         self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase_action).setIcon(
             get_colored_icon("key")
+        )
+        self.menuRepoUtil.addAction(self.tr("Export Key…"), self.repo_export_key_action).setIcon(
+            get_colored_icon("cloud-download")
         )
 
         self.bRepoUtil.setMenu(self.menuRepoUtil)
@@ -393,5 +397,73 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle(self.tr("Passphrase Change Failed"))
             msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
+
+        msg.show()
+
+    def repo_export_key_action(self):
+        """Export the repository key to a file."""
+        profile = self.profile()
+        if not profile.repo:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Repository Selected"))
+            msg.setText(self.tr("Please select a repository first."))
+            msg.show()
+            return
+
+        if profile.repo.encryption == 'none':
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Encryption"))
+            msg.setText(self.tr("The repository is not encrypted. There is no key to export."))
+            msg.show()
+            return
+
+        # Open file dialog to select where to save the key
+        default_filename = f"{profile.repo.name or 'repo'}_key.txt"
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Repository Key"),
+            default_filename,
+            self.tr("Text Files (*.txt);;All Files (*)")
+        )
+
+        if not file_path:
+            # User cancelled the dialog
+            return
+
+        # Prepare and run the key export job
+        params = BorgKeyExportJob.prepare(profile, file_path)
+        if params['ok']:
+            job = BorgKeyExportJob(params['cmd'], params, profile.repo.id)
+            job.result.connect(self._handle_key_export_result)
+            job.run()
+        else:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("Key Export Failed"))
+            msg.setText(params.get('message', self.tr("Unable to export repository key.")))
+            msg.show()
+
+    def _handle_key_export_result(self, result):
+        """Handle the result of the key export action."""
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        if result['returncode'] == 0:
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle(self.tr("Key Exported"))
+            msg.setText(self.tr("The repository key was successfully exported. Keep it in a safe place!"))
+        else:
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle(self.tr("Key Export Failed"))
+            msg.setText(self.tr("Unable to export the repository key. Please check the logs for details."))
 
         msg.show()
