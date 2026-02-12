@@ -17,7 +17,7 @@ class BorgKeyImportJob(BorgJob):
     def finished_event(self, result: Dict[str, Any]):
         """
         Process that the job terminated with the given results.
-        
+
         Parameters
         ----------
         result : Dict[str, Any]
@@ -25,28 +25,26 @@ class BorgKeyImportJob(BorgJob):
         """
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        
+
         if result['returncode'] == 0:
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] {self.tr('Repository key imported successfully.')}"
             )
         else:
-            self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] {self.tr('Key import failed.')}"
-            )
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Key import failed.')}")
 
     @classmethod
     def prepare(cls, profile, input_path):
         """
         Prepare key import command.
-        
+
         Parameters
         ----------
         profile : BackupProfileModel
             The profile with repository to import key into
         input_path : str
             Path to the backup key file to import
-        
+
         Note: --paper flag is intentionally not supported as it requires
         interactive input which is not suitable for GUI operation.
         """

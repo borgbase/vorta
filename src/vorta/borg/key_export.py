@@ -17,7 +17,7 @@ class BorgKeyExportJob(BorgJob):
     def finished_event(self, result: Dict[str, Any]):
         """
         Process that the job terminated with the given results.
-        
+
         Parameters
         ----------
         result : Dict[str, Any]
@@ -25,21 +25,19 @@ class BorgKeyExportJob(BorgJob):
         """
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
-        
+
         if result['returncode'] == 0:
             self.app.backup_progress_event.emit(
                 f"[{self.params['profile_name']}] {self.tr('Repository key exported successfully.')}"
             )
         else:
-            self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] {self.tr('Key export failed.')}"
-            )
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Key export failed.')}")
 
     @classmethod
     def prepare(cls, profile, output_path, paper=False, qr_html=False):
         """
         Prepare key export command.
-        
+
         Parameters
         ----------
         profile : BackupProfileModel
@@ -66,11 +64,11 @@ class BorgKeyExportJob(BorgJob):
 
         cmd = ['borg', 'key', 'export', '--info', '--log-json']
 
-        # Add optional flags
-        if paper:
-            cmd.append('--paper')
+        # Add optional flags (mutually exclusive)
         if qr_html:
             cmd.append('--qr-html')
+        elif paper:
+            cmd.append('--paper')
 
         # Handle v1 vs v2 syntax for repository argument
         if borg_compat.check('V2'):

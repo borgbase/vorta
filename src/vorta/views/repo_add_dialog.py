@@ -95,7 +95,7 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             self.accept()
         else:
             self._set_status(self.tr('Unable to add your repository.'))
-    
+
     def prompt_key_backup(self, repo):
         """
         Prompt user to backup their repository key after creation.
@@ -235,7 +235,7 @@ class AddRepoWindow(RepoWindow):
                 self.accept()
         else:
             self._set_status(self.tr('Unable to add your repository.'))
-    
+
     def prompt_key_backup(self, result):
         """Show prompt to backup repository key after successful creation."""
         # Extract any warning messages from Borg output
@@ -247,30 +247,32 @@ class AddRepoWindow(RepoWindow):
                     message = line.get('message', '')
                     if any(keyword in message.lower() for keyword in ['key', 'safe', 'inaccessible']):
                         warning_text += message + "\n"
-        
+
         msg = QMessageBox(self)
         msg.setWindowTitle(self.tr("Repository Created Successfully"))
         msg.setIcon(QMessageBox.Icon.Information)
-        
+
         # Build message text
-        message = self.tr("Your encrypted repository has been created.\n\n"
-                         "It is strongly recommended to backup your encryption key now. "
-                         "Without this key, you will not be able to access your backups "
-                         "if your local key is lost or corrupted.")
-        
+        message = self.tr(
+            "Your encrypted repository has been created.\n\n"
+            "It is strongly recommended to backup your encryption key now. "
+            "Without this key, you will not be able to access your backups "
+            "if your local key is lost or corrupted."
+        )
+
         # Add Borg's warnings if any
         if warning_text:
             message += "\n\n" + self.tr("Borg message:") + "\n" + warning_text.strip()
-        
+
         msg.setText(message)
         msg.setInformativeText(self.tr("Would you like to export your key now?"))
-        
+
         export_button = msg.addButton(self.tr("Export Key Now"), QMessageBox.ButtonRole.AcceptRole)
-        later_button = msg.addButton(self.tr("Skip"), QMessageBox.ButtonRole.RejectRole)
+        msg.addButton(self.tr("Skip"), QMessageBox.ButtonRole.RejectRole)
         msg.setDefaultButton(export_button)
-        
+
         msg.exec()
-        
+
         if msg.clickedButton() == export_button:
             # User wants to export the key
             # We need to emit the result first so the repo is added to the UI
@@ -280,12 +282,13 @@ class AddRepoWindow(RepoWindow):
             # Trigger key export from the main window
             # We'll use QTimer to delay this slightly to ensure UI is ready
             from PyQt6.QtCore import QTimer
+
             QTimer.singleShot(100, self._trigger_key_export)
         else:
             # User skipped, just add repo and close
             self.added_repo.emit(result)
             self.accept()
-    
+
     def _trigger_key_export(self):
         """Trigger the key export action on the main window."""
         # Get the main window's repo tab and trigger export

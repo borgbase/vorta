@@ -1,4 +1,5 @@
 import os
+import webbrowser
 from pathlib import PurePath
 
 from PyQt6 import QtCore, uic
@@ -10,6 +11,7 @@ from vorta.borg.key_import import BorgKeyImportJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
+from .key_export_dialog import KeyExportDialog
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .repo_change_passphrase import ChangeBorgPassphraseWindow
 from .ssh_dialog import SSHAddWindow
@@ -427,21 +429,39 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.show()
             return
 
+        # Show format selection dialog
+        format_dialog = KeyExportDialog(self)
+        if format_dialog.exec() != KeyExportDialog.DialogCode.Accepted:
+            # User cancelled the format dialog
+            return
+
+        # Get the selected format flags and extension
+        format_flags = format_dialog.get_format_flags()
+        extension = format_dialog.get_default_extension()
+
         # Open file dialog to select where to save the key
-        default_filename = f"{profile.repo.name or 'repo'}_key.txt"
+        default_filename = f"{profile.repo.name or 'repo'}_key{extension}"
+        if extension == '.html':
+            file_filter = self.tr("HTML Files (*.html);;All Files (*)")
+        else:
+            file_filter = self.tr("Text Files (*.txt);;All Files (*)")
+
         file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            self.tr("Export Repository Key"),
-            default_filename,
-            self.tr("Text Files (*.txt);;All Files (*)")
+            self, self.tr("Export Repository Key"), default_filename, file_filter
         )
 
         if not file_path:
-            # User cancelled the dialog
+            # User cancelled the file dialog
             return
 
+        # Store the file path and format for later use in result handler
+        self._export_file_path = file_path
+        self._export_format_flags = format_flags
+
         # Prepare and run the key export job
-        params = BorgKeyExportJob.prepare(profile, file_path)
+        paper = '--paper' in format_flags
+        qr_html = '--qr-html' in format_flags
+        params = BorgKeyExportJob.prepare(profile, file_path, paper=paper, qr_html=qr_html)
         if params['ok']:
             job = BorgKeyExportJob(params['cmd'], params, profile.repo.id)
             job.result.connect(self._handle_key_export_result)
@@ -465,6 +485,10 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.setIcon(QMessageBox.Icon.Information)
             msg.setWindowTitle(self.tr("Key Exported"))
             msg.setText(self.tr("The repository key was successfully exported. Keep it in a safe place!"))
+
+            # If HTML format was used, open it in browser
+            if hasattr(self, '_export_file_path') and self._export_file_path.endswith('.html'):
+                webbrowser.open(f'file://{self._export_file_path}')
         else:
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle(self.tr("Key Export Failed"))
@@ -472,87 +496,11 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
 
         msg.show()
 
-    def repo_import_key_action(self):
-        """Import a repository key from a file."""
-        profile = self.profile()
-        if not profile.repo:
-            msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-            msg.setWindowTitle(self.tr("No Repository Selected"))
-            msg.setText(self.tr("Please select a repository first."))
-            msg.show()
-            return
-
-        if profile.repo.encryption == 'none':
-            msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-            msg.setWindowTitle(self.tr("No Encryption"))
-            msg.setText(self.tr("The repository is not encrypted. There is no key to import."))
-            msg.show()
-            return
-
-        # Show warning about overwriting existing key
-        warning = QMessageBox()
-        warning.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        warning.setIcon(QMessageBox.Icon.Warning)
-        warning.setParent(self, QtCore.Qt.WindowType.Sheet)
-        warning.setWindowTitle(self.tr("Import Key - Warning"))
-        warning.setText(
-            self.tr("Importing a key will replace the current repository key. "
-                   "This operation cannot be undone. Continue?")
-        )
-        warning.setDefaultButton(QMessageBox.StandardButton.No)
-        
-        if warning.exec() != QMessageBox.StandardButton.Yes:
-            return
-
-        # Open file dialog to select the key file
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            self.tr("Import Repository Key"),
-            "",
-            self.tr("Text Files (*.txt);;All Files (*)")
-        )
-
-        if not file_path:
-            # User cancelled the dialog
-            return
-
-        # Prepare and run the key import job
-        params = BorgKeyImportJob.prepare(profile, file_path)
-        if params['ok']:
-            job = BorgKeyImportJob(params['cmd'], params, profile.repo.id)
-            job.result.connect(self._handle_key_import_result)
-            job.run()
-        else:
-            msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-            msg.setWindowTitle(self.tr("Key Import Failed"))
-            msg.setText(params.get('message', self.tr("Unable to import repository key.")))
-            msg.show()
-
-    def _handle_key_import_result(self, result):
-        """Handle the result of the key import action."""
-        msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-
-        if result['returncode'] == 0:
-            msg.setIcon(QMessageBox.Icon.Information)
-            msg.setWindowTitle(self.tr("Key Imported"))
-            msg.setText(self.tr("The repository key was successfully imported."))
-        else:
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle(self.tr("Key Import Failed"))
-            msg.setText(self.tr("Unable to import the repository key. Please check the logs for details."))
-
-        msg.show()
+        # Clean up temporary attributes
+        if hasattr(self, '_export_file_path'):
+            delattr(self, '_export_file_path')
+        if hasattr(self, '_export_format_flags'):
+            delattr(self, '_export_format_flags')
 
     def repo_import_key_action(self):
         """Import a repository key from a file."""
@@ -584,20 +532,18 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         warning.setParent(self, QtCore.Qt.WindowType.Sheet)
         warning.setWindowTitle(self.tr("Import Key - Warning"))
         warning.setText(
-            self.tr("Importing a key will replace the current repository key. "
-                   "This operation cannot be undone. Continue?")
+            self.tr(
+                "Importing a key will replace the current repository key. This operation cannot be undone. Continue?"
+            )
         )
         warning.setDefaultButton(QMessageBox.StandardButton.No)
-        
+
         if warning.exec() != QMessageBox.StandardButton.Yes:
             return
 
         # Open file dialog to select the key file
         file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            self.tr("Import Repository Key"),
-            "",
-            self.tr("Text Files (*.txt);;All Files (*)")
+            self, self.tr("Import Repository Key"), "", self.tr("Text Files (*.txt);;All Files (*)")
         )
 
         if not file_path:
