@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>250</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,6 +119,61 @@
        <property name="minimum">
         <number>0</number>
        </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_excludes">
+       <property name="text">
+        <string>Exclude Patterns:</string>
+       </property>
+       <property name="toolTip">
+        <string>Space-separated list of exclude patterns.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="inputExcludes">
+       <property name="placeholderText">
+        <string>e.g. *.tmp home/user/.cache</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_paths">
+       <property name="text">
+        <string>Specific Paths:</string>
+       </property>
+       <property name="toolTip">
+        <string>Space-separated list of paths to extract.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="inputPaths">
+       <property name="placeholderText">
+        <string>Leave empty to export all</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_format">
+       <property name="text">
+        <string>Tar Format:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="comboFormat">
+       <item>
+        <property name="text">
+         <string>GNU</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PAX</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

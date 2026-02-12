@@ -95,3 +95,37 @@ def test_export_tar_dialog_job_creation(qapp, qtbot, mocker):
     # The return value of the class constructor is the instance
     mock_job_instance = mock_job_class.return_value
     main_window.app.jobs_manager.add_job.assert_called_once_with(mock_job_instance)
+
+
+def test_export_tar_dialog_advanced_options(qapp, qtbot, mocker):
+    """Test sending advanced options from UI."""
+    profile = mocker.MagicMock()
+    profile.repo = mocker.MagicMock()
+
+    # Mock V2 to enable format
+    mocker.patch('vorta.utils.borg_compat.check', return_value=True)
+
+    dialog = ExportTarDialog(None, profile, "test_archive")
+    qtbot.addWidget(dialog)
+
+    # Fill UI
+    dialog.destinationInput.setText('/tmp/output.tar')
+    dialog.inputExcludes.setText("*.tmp cache")
+    dialog.inputPaths.setText("home/user/docs")
+    dialog.comboFormat.setCurrentText("PAX")
+
+    # Mock prepare
+    mock_prepare = mocker.patch(
+        'vorta.views.export_tar_dialog.BorgExportTar.prepare', return_value={'ok': False}
+    )  # return false so we don't proceed to job creation
+
+    # Accept
+    dialog.buttonBox.button(QDialogButtonBox.StandardButton.Ok).click()
+
+    # Check prepare was called with correct args
+    mock_prepare.assert_called_once()
+    call_kwargs = mock_prepare.call_args[1]
+
+    assert call_kwargs['excludes'] == ['*.tmp', 'cache']
+    assert call_kwargs['paths'] == ['home/user/docs']
+    assert call_kwargs['tar_format'] == 'PAX'

@@ -1,10 +1,11 @@
 import logging
+import shlex
 
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QDialog, QFileDialog
 
 from vorta.borg.export_tar import BorgExportTar
-from vorta.utils import get_asset
+from vorta.utils import borg_compat, get_asset
 
 uifile = get_asset("UI/export_tar_dialog.ui")
 ExportTarDialogUI, ExportTarDialogBase = uic.loadUiType(uifile)
@@ -28,6 +29,11 @@ class ExportTarDialog(ExportTarDialogBase, ExportTarDialogUI):
 
         # Defaults
         self.comboCompression.setCurrentIndex(0)  # none
+
+        # Enable/Disable Format based on version
+        if not borg_compat.check('V2'):
+            self.comboFormat.setDisabled(True)
+            self.comboFormat.setToolTip("Requires Borg V2")
 
     def choose_destination(self):
         filename, _ = QFileDialog.getSaveFileName(
@@ -64,8 +70,20 @@ class ExportTarDialog(ExportTarDialogBase, ExportTarDialogUI):
 
         compression = self.comboCompression.currentText()
         strip_components = self.spinStripComponents.value()
+        excludes = shlex.split(self.inputExcludes.text())
+        paths = shlex.split(self.inputPaths.text())
+        tar_format = self.comboFormat.currentText()
 
-        job_data = BorgExportTar.prepare(self.profile, self.archive_name, destination, compression, strip_components)
+        job_data = BorgExportTar.prepare(
+            self.profile,
+            self.archive_name,
+            destination,
+            compression,
+            strip_components,
+            paths=paths,
+            excludes=excludes,
+            tar_format=tar_format,
+        )
 
         if job_data['ok']:
             job = BorgExportTar(job_data['cmd'], job_data, site=self.profile.repo.id)

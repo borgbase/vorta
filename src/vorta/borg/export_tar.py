@@ -20,7 +20,17 @@ class BorgExportTar(BorgJob):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Export to tarball finished.')}")
 
     @classmethod
-    def prepare(cls, profile, archive_name, destination_file, compression=None, strip_components=0, subpath=None):
+    def prepare(
+        cls,
+        profile,
+        archive_name,
+        destination_file,
+        compression=None,
+        strip_components=0,
+        paths=None,
+        excludes=None,
+        tar_format=None,
+    ):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -36,6 +46,13 @@ class BorgExportTar(BorgJob):
         if strip_components > 0:
             cmd.append(f'--strip-components={strip_components}')
 
+        if excludes:
+            for pattern in excludes:
+                cmd.extend(['-e', pattern])
+
+        if tar_format and borg_compat.check('V2') and tar_format != 'GNU':
+            cmd.append(f'--tar-format={tar_format}')
+
         if borg_compat.check('V2'):
             cmd += ['-r', profile.repo.url, archive_name]
         else:
@@ -43,11 +60,12 @@ class BorgExportTar(BorgJob):
 
         cmd.append(destination_file)
 
-        # If we want to export only a specific path (optional, maybe not in this iteration but good to have)
-        if subpath:
-            cmd.append(subpath)
+        if paths:
+            cmd.extend(paths)
 
         ret['ok'] = True
+        ret['cmd'] = cmd
+        return ret
         ret['cmd'] = cmd
 
         return ret
