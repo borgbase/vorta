@@ -10,6 +10,7 @@ MIN_BORG_FOR_FEATURE = {
     "V2": Version("2.0.0b10"),
     'CHANGE_PASSPHRASE': Version('1.1.0'),
     'KEY_EXPORT': Version('1.0.0'),
+    'KEY_IMPORT': Version('1.0.0'),
     # add new version-checks here.
 }
 

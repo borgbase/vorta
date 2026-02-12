@@ -6,6 +6,7 @@ from PyQt6.QtCore import QMimeData, QUrl
 from PyQt6.QtWidgets import QApplication, QFileDialog, QLayout, QMenu, QMessageBox
 
 from vorta.borg.key_export import BorgKeyExportJob
+from vorta.borg.key_import import BorgKeyImportJob
 from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
@@ -48,6 +49,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         )
         self.menuRepoUtil.addAction(self.tr("Export Key…"), self.repo_export_key_action).setIcon(
             get_colored_icon("cloud-download")
+        )
+        self.menuRepoUtil.addAction(self.tr("Import Key…"), self.repo_import_key_action).setIcon(
+            get_colored_icon("file-import-solid")
         )
 
         self.bRepoUtil.setMenu(self.menuRepoUtil)
@@ -465,5 +469,169 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle(self.tr("Key Export Failed"))
             msg.setText(self.tr("Unable to export the repository key. Please check the logs for details."))
+
+        msg.show()
+
+    def repo_import_key_action(self):
+        """Import a repository key from a file."""
+        profile = self.profile()
+        if not profile.repo:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Repository Selected"))
+            msg.setText(self.tr("Please select a repository first."))
+            msg.show()
+            return
+
+        if profile.repo.encryption == 'none':
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Encryption"))
+            msg.setText(self.tr("The repository is not encrypted. There is no key to import."))
+            msg.show()
+            return
+
+        # Show warning about overwriting existing key
+        warning = QMessageBox()
+        warning.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        warning.setIcon(QMessageBox.Icon.Warning)
+        warning.setParent(self, QtCore.Qt.WindowType.Sheet)
+        warning.setWindowTitle(self.tr("Import Key - Warning"))
+        warning.setText(
+            self.tr("Importing a key will replace the current repository key. "
+                   "This operation cannot be undone. Continue?")
+        )
+        warning.setDefaultButton(QMessageBox.StandardButton.No)
+        
+        if warning.exec() != QMessageBox.StandardButton.Yes:
+            return
+
+        # Open file dialog to select the key file
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Import Repository Key"),
+            "",
+            self.tr("Text Files (*.txt);;All Files (*)")
+        )
+
+        if not file_path:
+            # User cancelled the dialog
+            return
+
+        # Prepare and run the key import job
+        params = BorgKeyImportJob.prepare(profile, file_path)
+        if params['ok']:
+            job = BorgKeyImportJob(params['cmd'], params, profile.repo.id)
+            job.result.connect(self._handle_key_import_result)
+            job.run()
+        else:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("Key Import Failed"))
+            msg.setText(params.get('message', self.tr("Unable to import repository key.")))
+            msg.show()
+
+    def _handle_key_import_result(self, result):
+        """Handle the result of the key import action."""
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        if result['returncode'] == 0:
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle(self.tr("Key Imported"))
+            msg.setText(self.tr("The repository key was successfully imported."))
+        else:
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle(self.tr("Key Import Failed"))
+            msg.setText(self.tr("Unable to import the repository key. Please check the logs for details."))
+
+        msg.show()
+
+    def repo_import_key_action(self):
+        """Import a repository key from a file."""
+        profile = self.profile()
+        if not profile.repo:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Repository Selected"))
+            msg.setText(self.tr("Please select a repository first."))
+            msg.show()
+            return
+
+        if profile.repo.encryption == 'none':
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("No Encryption"))
+            msg.setText(self.tr("The repository is not encrypted. There is no key to import."))
+            msg.show()
+            return
+
+        # Show warning about overwriting existing key
+        warning = QMessageBox()
+        warning.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        warning.setIcon(QMessageBox.Icon.Warning)
+        warning.setParent(self, QtCore.Qt.WindowType.Sheet)
+        warning.setWindowTitle(self.tr("Import Key - Warning"))
+        warning.setText(
+            self.tr("Importing a key will replace the current repository key. "
+                   "This operation cannot be undone. Continue?")
+        )
+        warning.setDefaultButton(QMessageBox.StandardButton.No)
+        
+        if warning.exec() != QMessageBox.StandardButton.Yes:
+            return
+
+        # Open file dialog to select the key file
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Import Repository Key"),
+            "",
+            self.tr("Text Files (*.txt);;All Files (*)")
+        )
+
+        if not file_path:
+            # User cancelled the dialog
+            return
+
+        # Prepare and run the key import job
+        params = BorgKeyImportJob.prepare(profile, file_path)
+        if params['ok']:
+            job = BorgKeyImportJob(params['cmd'], params, profile.repo.id)
+            job.result.connect(self._handle_key_import_result)
+            job.run()
+        else:
+            msg = QMessageBox()
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+            msg.setWindowTitle(self.tr("Key Import Failed"))
+            msg.setText(params.get('message', self.tr("Unable to import repository key.")))
+            msg.show()
+
+    def _handle_key_import_result(self, result):
+        """Handle the result of the key import action."""
+        msg = QMessageBox()
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+
+        if result['returncode'] == 0:
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle(self.tr("Key Imported"))
+            msg.setText(self.tr("The repository key was successfully imported."))
+        else:
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle(self.tr("Key Import Failed"))
+            msg.setText(self.tr("Unable to import the repository key. Please check the logs for details."))
 
         msg.show()
