@@ -45,6 +45,14 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     initial_count = main.repoTab.repoSelector.count()
+
+    # Mock the key backup prompt to avoid blocking QMessageBox.exec() in headless CI
+    monkeypatch.setattr(
+        add_repo_window,
+        'prompt_key_backup',
+        lambda result: (add_repo_window.added_repo.emit(result), add_repo_window.accept()),
+    )
+
     add_repo_window.run()
 
     # Wait for all worker threads to fully exit (more thorough than is_worker_running)
