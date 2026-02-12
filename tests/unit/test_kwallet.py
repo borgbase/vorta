@@ -1,9 +1,12 @@
+import sys
 from unittest.mock import patch
 
 import pytest
 from PyQt6.QtCore import QVariant
 
 from vorta.keyring.kwallet import KWalletNotAvailableException, VortaKWallet5Keyring
+
+pytestmark = pytest.mark.skipif(sys.platform == 'darwin', reason="no kwallet on macos")
 
 
 @pytest.fixture
