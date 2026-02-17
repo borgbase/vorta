@@ -50,7 +50,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd, params, site="default", should_inhibit=False):
+    def __init__(self, cmd, params, site="default"):
         """
         Thread to run Borg operations in.
 
@@ -59,14 +59,14 @@ class BorgJob(JobInterface, BackupProfileMixin):
                        process the result.
         :param site: For scheduler. Only one job can run per site at one time. Site is
                      usually the repository ID, or 'default' for misc Borg commands.
-        :param should_inhibit: Whether to activate a power management inhibitor during the job.
         """
 
         super().__init__()
         self.site_id = site
         self.app: application.VortaApp = QApplication.instance()
-        logger.info("created job %s should inhibit %s", self.__class__.__name__, should_inhibit)
-        self.should_inhibit = should_inhibit
+        # Default state is should_inhibit false. Subclasses can set should_inhibit in their own
+        # constructors
+        self.should_inhibit = False
 
         # Declare labels here for translation
         self.category_label = {
