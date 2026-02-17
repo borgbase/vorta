@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import QApplication
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
+from vorta.inhibitor.abc import Inhibitor
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 from vorta.store.models import BackupProfileMixin, EventLogModel
@@ -63,6 +64,9 @@ class BorgJob(JobInterface, BackupProfileMixin):
         super().__init__()
         self.site_id = site
         self.app: application.VortaApp = QApplication.instance()
+        # Default state is should_inhibit false. Subclasses can set should_inhibit in their own
+        # constructors
+        self.should_inhibit = False
 
         # Declare labels here for translation
         self.category_label = {
@@ -269,72 +273,76 @@ class BorgJob(JobInterface, BackupProfileMixin):
             except (IOError, TypeError):
                 return ''
 
-        stdout = []
-        while True:
-            # Wait for new output
-            select.select([p.stdout, p.stderr], [], [], 0.1)
+        with self.get_inhibitor():
+            stdout = []
+            while True:
+                # Wait for new output
+                select.select([p.stdout, p.stderr], [], [], 0.1)
 
-            stdout.append(read_async(p.stdout))
-            stderr = read_async(p.stderr)
-            if stderr:
-                for line in stderr.split('\n'):
-                    try:
-                        parsed = json.loads(line)
-
-                        if parsed['type'] == 'log_message':
-                            context = {
-                                'msgid': parsed.get('msgid'),
-                                'repo_url': self.params['repo_url'],
-                                'profile_name': self.params.get('profile_name'),
-                                'cmd': self.params['cmd'][1],
-                            }
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}', context
-                            )
-                            level_int = getattr(logging, parsed["levelname"])
-                            logger.log(level_int, parsed["message"])
-
-                            if level_int >= logging.WARNING:
-                                # Append log to list of error messages
-                                error_messages.append((level_int, parsed["message"]))
-
-                        elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
-                            )
-                        elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
-                        elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
-                            msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
-                            )
-                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
-                    except json.decoder.JSONDecodeError:
-                        msg = line.strip()
-                        if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
-                            logger.warning(msg)
-
-            if p.poll() is not None:
-                time.sleep(0.1)
                 stdout.append(read_async(p.stdout))
-                break
+                stderr = read_async(p.stderr)
+                if stderr:
+                    for line in stderr.split('\n'):
+                        try:
+                            parsed = json.loads(line)
 
-        result = {
-            'params': self.params,
-            'returncode': self.process.returncode,
-            'cmd': self.cmd,
-            'errors': error_messages,
-        }
-        stdout = ''.join(stdout)
+                            if parsed['type'] == 'log_message':
+                                context = {
+                                    'msgid': parsed.get('msgid'),
+                                    'repo_url': self.params['repo_url'],
+                                    'profile_name': self.params.get('profile_name'),
+                                    'cmd': self.params['cmd'][1],
+                                }
+                                self.app.backup_log_event.emit(
+                                    f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}',
+                                    context,
+                                )
+                                level_int = getattr(logging, parsed["levelname"])
+                                logger.log(level_int, parsed["message"])
 
-        try:
-            result['data'] = json.loads(stdout)
-        except ValueError:
-            result['data'] = stdout
+                                if level_int >= logging.WARNING:
+                                    # Append log to list of error messages
+                                    error_messages.append((level_int, parsed["message"]))
+
+                            elif parsed['type'] == 'file_status':
+                                self.app.backup_log_event.emit(
+                                    f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
+                                )
+                            elif parsed['type'] == 'progress_percent' and parsed.get("message"):
+                                self.app.backup_log_event.emit(
+                                    f'[{self.params["profile_name"]}] {parsed["message"]}', {}
+                                )
+                            elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
+                                msg = (
+                                    f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                    f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                    # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
+                                    f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                                )
+                                self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
+                        except json.decoder.JSONDecodeError:
+                            msg = line.strip()
+                            if msg:  # Log only if there is something to log.
+                                self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                                logger.warning(msg)
+
+                if p.poll() is not None:
+                    time.sleep(0.1)
+                    stdout.append(read_async(p.stdout))
+                    break
+
+            result = {
+                'params': self.params,
+                'returncode': self.process.returncode,
+                'cmd': self.cmd,
+                'errors': error_messages,
+            }
+            stdout = ''.join(stdout)
+
+            try:
+                result['data'] = json.loads(stdout)
+            except ValueError:
+                result['data'] = stdout
 
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
@@ -355,3 +363,11 @@ class BorgJob(JobInterface, BackupProfileMixin):
 
     def finished_event(self, result):
         self.result.emit(result)
+
+    def get_inhibitor(self) -> Inhibitor:
+        if self.should_inhibit:
+            logger.debug("job will inhibit")
+            return Inhibitor.get_inhibitor(f"borg {self.cmd[1]}")
+        else:
+            logger.debug("job will not inhibit")
+            return Inhibitor.get_noop_inhibitor()

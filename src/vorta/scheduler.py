@@ -370,7 +370,7 @@ class VortaScheduler(QtCore.QObject):
             else:
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
-                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
+                logger.debug(f"Couldn't schedule for {next_time} because timer value {timer_ms} too large.")
 
                 self.timers[profile_id] = {
                     'dt': next_time,
