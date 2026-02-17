@@ -217,7 +217,7 @@ class AddRepoWindow(RepoWindow):
             params = BorgInitJob.prepare(self.values)
             if params['ok']:
                 self.saveButton.setEnabled(False)
-                job = BorgInitJob(params['cmd'], params, True)
+                job = BorgInitJob(params['cmd'], params)
                 job.updated.connect(self._set_status)
                 job.result.connect(self.run_result)
                 QApplication.instance().jobs_manager.add_job(job)

@@ -8,6 +8,7 @@ from typing import Any
 
 from PyQt6 import QtDBus
 
+
 def read_dbus_property(obj: QtDBus.QDBusInterface, property: str) -> Any:
     # QDBusInterface.property() didn't work for some reason
     props = QtDBus.QDBusInterface(obj.service(), obj.path(), 'org.freedesktop.DBus.Properties', obj.connection())
