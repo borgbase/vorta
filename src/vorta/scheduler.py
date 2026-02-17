@@ -444,7 +444,7 @@ class VortaScheduler(QtCore.QObject):
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'
-                job = BorgCreateJob(msg['cmd'], msg, profile.repo.id, True)
+                job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
             else:

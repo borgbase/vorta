@@ -15,6 +15,10 @@ from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.should_inhibit = True
+
     def process_result(self, result):
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_archive, created = ArchiveModel.get_or_create(

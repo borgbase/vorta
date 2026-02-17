@@ -121,7 +121,7 @@ class VortaApp(QtSingleApplication):
 
         msg = BorgCreateJob.prepare(profile)
         if msg['ok']:
-            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id, True)
+            job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
             self.jobs_manager.add_job(job)
         else:
             notifier = VortaNotifications.pick()
