@@ -12,7 +12,9 @@ class Inhibitor(object):
     @classmethod
     def get_inhibitor(cls, what: str) -> 'Inhibitor':
         if sys.platform == 'darwin':
-            return NullInhibitor(what)
+            from .iokit import IOKitInhibitor
+
+            return IOKitInhibitor(what)
         else:
             from .fdo import FdoInhibitor, UnsupportedException
 
