@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import RepoModel
+from vorta.store.models import FailedRepoModel, RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
@@ -36,6 +36,8 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Add"))
+
+        self.populate_from_failed_repo()
 
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
@@ -92,8 +94,48 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         if result['returncode'] == 0:
             self.added_repo.emit(result)
             self.accept()
+            # clear FailedRepoModel if adding repo succeeds
+            FailedRepoModel.delete().execute()
+
         else:
+            self.save_failed_repo(
+                self.repoURL.text(),
+                self.repoName.text(),
+                self.extraBorgArgumentsLineEdit.text(),
+                self.sshComboBox.currentText(),
+            )
             self._set_status(self.tr('Unable to add your repository.'))
+
+    def save_failed_repo(self, url, name, extraBorgArguments, sshKey):
+        # Check if there's already a failed repository entry in the database
+        failed_repo = FailedRepoModel.get_or_none()
+        if failed_repo is not None:
+            # Update details of the existing failed repository with the new information
+            failed_repo.url = url
+            failed_repo.name = name
+            failed_repo.extra_borg_arguments = extraBorgArguments
+            failed_repo.ssh_key = sshKey
+            failed_repo.save()
+        else:
+            # Create a new entry for the failed repository
+            failed_repo = FailedRepoModel.create(
+                url=url,
+                name=name,
+                extra_borg_arguments=extraBorgArguments,
+                ssh_key=sshKey,
+            )
+        return failed_repo
+
+    def populate_from_failed_repo(self):
+        failed_repo = FailedRepoModel.get_or_none()
+
+        if failed_repo is not None:
+            self.repoName.setText(failed_repo.name)
+            self.repoURL.setText(failed_repo.url)
+            self.extraBorgArgumentsLineEdit.setText(failed_repo.extra_borg_arguments)
+            ssh_index = self.sshComboBox.findData(failed_repo.ssh_key)
+            if ssh_index != -1:
+                self.sshComboBox.setCurrentIndex(ssh_index)
 
     def init_ssh_key(self):
         keys = get_private_keys()
