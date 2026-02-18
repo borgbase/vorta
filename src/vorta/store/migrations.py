@@ -1,6 +1,8 @@
 from datetime import datetime
+from typing import Any
 
 import peewee as pw
+from peewee import SqliteDatabase
 from playhouse.migrate import SqliteMigrator, migrate
 
 from .models import (
@@ -9,13 +11,14 @@ from .models import (
     BackupProfileModel,
     EventLogModel,
     RepoModel,
+    SchemaVersion,
     SettingsModel,
     SourceFileModel,
     WifiSettingModel,
 )
 
 
-def run_migrations(current_schema, db_connection):
+def run_migrations(current_schema: SchemaVersion, db_connection: SqliteDatabase):
     """
     Apply new schema versions to database.
 
@@ -267,7 +270,7 @@ def run_migrations(current_schema, db_connection):
         )
 
 
-def _apply_schema_update(current_schema, version_after, *operations):
+def _apply_schema_update(current_schema: Any, version_after: int, *operations) -> None:
     with DB.atomic():
         migrate(*operations)
         current_schema.version = version_after

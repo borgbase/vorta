@@ -8,6 +8,7 @@ import json
 import logging
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, Optional
 
 import peewee as pw
 from playhouse import signals
@@ -26,11 +27,11 @@ class JSONField(pw.TextField):
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
 
-    def db_value(self, value):
+    def db_value(self, value) -> Optional[str]:
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
 
-    def python_value(self, value):
+    def python_value(self, value) -> Optional[str]:
         """Convert the database value to a pythonic value."""
         return value if value is None else json.loads(value)
 
@@ -53,7 +54,7 @@ class RepoModel(BaseModel):
     create_backup_cmd = pw.CharField(default='')
     extra_borg_arguments = pw.CharField(default='')
 
-    def is_remote_repo(self):
+    def is_remote_repo(self) -> bool:
         return not self.url.startswith('/')
 
     class Meta:
@@ -105,14 +106,14 @@ class BackupProfileModel(BaseModel):
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
 
-    def refresh(self):
+    def refresh(self) -> None:
         return type(self).get(self._pk_expr())
 
-    def slug(self):
+    def slug(self) -> str:
         return slugify(self.name)
 
-    def get_combined_exclusion_string(self):
-        allPresets = get_exclusion_presets()
+    def get_combined_exclusion_string(self) -> str:
+        allPresets: Dict[str, Dict[str, Any]] = get_exclusion_presets()
         excludes = ""
 
         if (
@@ -204,7 +205,7 @@ class ArchiveModel(BaseModel):
     size = pw.IntegerField(null=True)
     trigger = pw.CharField(null=True)
 
-    def formatted_time(self):
+    def formatted_time(self) -> None:
         return
 
     class Meta:
@@ -268,5 +269,5 @@ class SettingsModel(BaseModel):
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
 
-    def profile(self):
+    def profile(self) -> BackupProfileModel:
         return BackupProfileModel.get(id=self.window().current_profile.id)
