@@ -36,6 +36,15 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
+  # spell checking
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        exclude: "^src/vorta/i18n/|uv\\.lock"
+        additional_dependencies:
+          - tomli
+
   # format python files
   # - repo: https://github.com/psf/black
   #   rev: 22.12.0

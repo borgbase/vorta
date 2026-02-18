@@ -101,6 +101,10 @@ ignore = [
 [tool.ruff.format]
 quote-style = "preserve"
 
+[tool.codespell]
+skip = "src/vorta/i18n,*.qm"
+ignore-words-list = "doubleclick,caf,datas"
+
 [tool.pytest.ini_options]
 addopts = "-vs"
 testpaths = ["tests"]
