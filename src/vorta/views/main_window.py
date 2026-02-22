@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QListWidgetItem,
     QMessageBox,
+    QPushButton,
     QToolTip,
 )
 
@@ -36,7 +37,7 @@ from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
 
-uifile = get_asset('UI/main_window.ui')
+uifile = get_asset("UI/main_window.ui")
 MainWindowUI, MainWindowBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
@@ -48,31 +49,45 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle('Vorta for Borg Backup')
+        self.setWindowTitle("Vorta for Borg Backup")
         self.app = parent
         self.setWindowIcon(get_colored_icon("icon"))
-        if sys.platform.startswith('linux'):
-            self.app.setDesktopFileName('com.borgbase.Vorta')
-        self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
+        if sys.platform.startswith("linux"):
+            self.app.setDesktopFileName("com.borgbase.Vorta")
+        self.setWindowFlags(
+            QtCore.Qt.WindowType.WindowCloseButtonHint
+            | QtCore.Qt.WindowType.WindowMinimizeButtonHint
+        )
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
+        self.cancelButton.clicked.connect(self.app.backup_cancelled_event.emit)
 
-        # set log label height to two lines
-        fontmetrics: QFontMetrics = self.logText.fontMetrics()
-        self.logText.setMinimumHeight(fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
+        # Create Clear button dynamically and add to the same layout as cancelButton
+        self.clearLogButton = QPushButton(self.tr("Clear"))
+        cancel_button_layout = self.cancelButton.parent().layout()
+        if cancel_button_layout:
+            cancel_button_layout.addWidget(self.clearLogButton)
+        self.clearLogButton.clicked.connect(self.clear_log)
+        self.clearLogButton.setEnabled(False)
 
         # Use previous window state
-        previous_window_width = SettingsModel.get(key='previous_window_width')
-        previous_window_height = SettingsModel.get(key='previous_window_height')
-        self.resize(int(previous_window_width.str_value), int(previous_window_height.str_value))
+        previous_window_width = SettingsModel.get(key="previous_window_width")
+        previous_window_height = SettingsModel.get(key="previous_window_height")
+        self.resize(
+            int(previous_window_width.str_value), int(previous_window_height.str_value)
+        )
 
         # Select previously used profile, if available
-        prev_profile_id = SettingsModel.get(key='previous_profile_id')
-        self.current_profile = BackupProfileModel.get_or_none(id=prev_profile_id.str_value)
+        prev_profile_id = SettingsModel.get(key="previous_profile_id")
+        self.current_profile = BackupProfileModel.get_or_none(
+            id=prev_profile_id.str_value
+        )
         if self.current_profile is None:
             profiles = BackupProfileModel.select()
-            self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
+            self.current_profile = min(
+                profiles, key=lambda p: (p.name.casefold(), p.name)
+            )
 
         # Load tab models
         self.repoTab = RepoTab(self.repoTabSlot)
@@ -86,7 +101,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.tabWidget.setCurrentIndex(0)
 
         self.repoTab.repo_changed.connect(self.archiveTab.populate_from_profile)
-        self.repoTab.repo_changed.connect(self.scheduleTab.schedulePage.populate_from_profile)
+        self.repoTab.repo_changed.connect(
+            self.scheduleTab.schedulePage.populate_from_profile
+        )
         self.repoTab.repo_added.connect(self.archiveTab.refresh_archive_list)
         self.miscTab.refresh_archive.connect(self.archiveTab.populate_from_profile)
 
@@ -106,12 +123,18 @@ class MainWindow(MainWindowBase, MainWindowUI):
         # Init profile list
         self.populate_profile_selector()
         self.profileSelector.itemClicked.connect(self.profile_clicked_action)
-        self.profileSelector.currentItemChanged.connect(self.profile_selection_changed_action)
+        self.profileSelector.currentItemChanged.connect(
+            self.profile_selection_changed_action
+        )
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
-        self.profileAddButton.addAction(self.tr("Create new profile"), self.profile_add_action)
-        self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
+        self.profileAddButton.addAction(
+            self.tr("Create new profile"), self.profile_add_action
+        )
+        self.profileAddButton.addAction(
+            self.tr("Import from file…"), self.profile_import_action
+        )
 
         # OS-specific startup options:
         if not get_network_status_monitor().is_network_status_available():
@@ -128,21 +151,24 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.cancelButton.setEnabled(True)
 
         # Connect to palette change
-        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
+        self._palette_connection = QApplication.instance().paletteChanged.connect(
+            lambda p: self.set_icons()
+        )
         self.destroyed.connect(self._on_destroyed)
 
         self.set_icons()
         self.loaded.emit()
+        
 
     def on_close_window(self):
         self.close()
 
     def set_icons(self):
-        self.profileAddButton.setIcon(get_colored_icon('plus'))
-        self.profileRenameButton.setIcon(get_colored_icon('edit'))
-        self.profileExportButton.setIcon(get_colored_icon('file-import-solid'))
-        self.profileDeleteButton.setIcon(get_colored_icon('minus'))
-        self.miscButton.setIcon(get_colored_icon('settings_wheel'))
+        self.profileAddButton.setIcon(get_colored_icon("plus"))
+        self.profileRenameButton.setIcon(get_colored_icon("edit"))
+        self.profileExportButton.setIcon(get_colored_icon("file-import-solid"))
+        self.profileDeleteButton.setIcon(get_colored_icon("minus"))
+        self.miscButton.setIcon(get_colored_icon("settings_wheel"))
 
     def _on_destroyed(self):
         try:
@@ -150,16 +176,23 @@ class MainWindow(MainWindowBase, MainWindowUI):
         except (TypeError, RuntimeError):
             pass
 
-    def set_progress(self, text=''):
+    def set_progress(self, text=""):
         self.progressText.setText(text)
         self.progressText.repaint()
 
-    def set_log(self, text='', context=None):
+    def set_log(self, text="", context=None):
         # Truncate very long messages to keep the status area readable
         if text and len(text) > 300:
-            text = text[:300] + '...'
+            text = text[:300] + "..."
         self.logText.setText(text)
+        self.clearLogButton.setEnabled(bool(self.logText.text()))
+
         self.logText.repaint()
+
+    def clear_log(self):
+        """Clear the log text and disable the clear button."""
+        self.logText.setText("")
+        self.clearLogButton.setEnabled(False)
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
@@ -201,7 +234,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
         self.current_profile = BackupProfileModel.get(id=backup_profile_id)
         SettingsModel.update({SettingsModel.str_value: self.current_profile.id}).where(
-            SettingsModel.key == 'previous_profile_id'
+            SettingsModel.key == "previous_profile_id"
         ).execute()
 
         self.app.profile_changed_event.emit()
@@ -211,20 +244,30 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.toggle_misc_visibility()
 
     def profile_rename_action(self):
-        backup_profile_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
+        backup_profile_id = self.profileSelector.currentItem().data(
+            Qt.ItemDataRole.UserRole
+        )
         window = EditProfileWindow(rename_existing_id=backup_profile_id)
         self.window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
         window.profile_changed.connect(self.profile_add_edit_result)
-        window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
+        window.rejected.connect(
+            lambda: self.profileSelector.setCurrentIndex(
+                self.profileSelector.currentIndex()
+            )
+        )
 
     def profile_delete_action(self):
         if self.profileSelector.count() > 1:
-            to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
+            to_delete_id = self.profileSelector.currentItem().data(
+                Qt.ItemDataRole.UserRole
+            )
             to_delete = BackupProfileModel.get(id=to_delete_id)
 
-            msg = self.tr("Are you sure you want to delete profile '{}'?").format(to_delete.name)
+            msg = self.tr("Are you sure you want to delete profile '{}'?").format(
+                to_delete.name
+            )
             reply = QMessageBox.question(
                 self,
                 self.tr("Confirm deletion"),
@@ -250,7 +293,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.open()
         window.profile_changed.connect(self.profile_add_edit_result)
-        window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
+        window.rejected.connect(
+            lambda: self.profileSelector.setCurrentIndex(
+                self.profileSelector.currentIndex()
+            )
+        )
 
     def profile_export_action(self):
         """
@@ -271,8 +318,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         def profile_imported_event(profile):
             QMessageBox.information(
                 None,
-                self.tr('Profile import successful!'),
-                self.tr('Profile {} imported.').format(profile.name),
+                self.tr("Profile import successful!"),
+                self.tr("Profile {} imported.").format(profile.name),
             )
             self.populate_profile_selector()
             self.app.profile_changed_event.emit()
@@ -287,7 +334,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
             try:
                 profile_export = ProfileExport.from_json(filename)
             except ImportFailedException as exception:
-                QMessageBox.critical(None, self.tr('Failed to import profile'), str(exception))
+                QMessageBox.critical(
+                    None, self.tr("Failed to import profile"), str(exception)
+                )
                 return
             window = ImportWindow(profile_export=profile_export)
             self.window = window
@@ -297,7 +346,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def profile_add_edit_result(self, profile_name, profile_id):
         # Profile is renamed
-        if self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole) == profile_id:
+        if (
+            self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
+            == profile_id
+        ):
             profile = self.profileSelector.takeItem(self.profileSelector.currentRow())
             profile.setText(profile_name)
         # Profile is added
@@ -330,32 +382,36 @@ class MainWindow(MainWindowBase, MainWindowUI):
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
         self.archiveTab._toggle_all_buttons(enabled=False)
-        self.set_log('')
+        self.clearLogButton.setEnabled(False)
+        self.set_log("")
 
     def backup_finished_event(self):
         if not self.app.jobs_manager.is_worker_running() and (
-            self.archiveTab.remaining_refresh_archives == 0 or self.archiveTab.remaining_refresh_archives == 1
+            self.archiveTab.remaining_refresh_archives == 0
+            or self.archiveTab.remaining_refresh_archives == 1
         ):  # Either the refresh is done or this is the last archive to refresh.
             self._toggle_buttons(create_enabled=True)
             self.archiveTab._toggle_all_buttons(enabled=True)
 
     def backup_cancelled_event(self):
         self._toggle_buttons(create_enabled=True)
-        self.set_log(self.tr('Task cancelled'))
+        self.set_log(self.tr("Task cancelled"))
 
     def closeEvent(self, event):
         # Save window state in SettingsModel
         SettingsModel.update({SettingsModel.str_value: str(self.width())}).where(
-            SettingsModel.key == 'previous_window_width'
+            SettingsModel.key == "previous_window_width"
         ).execute()
         SettingsModel.update({SettingsModel.str_value: str(self.height())}).where(
-            SettingsModel.key == 'previous_window_height'
+            SettingsModel.key == "previous_window_height"
         ).execute()
 
         if not is_system_tray_available():
             if SettingsModel.get(key="enable_background_question").value:
                 msg = QMessageBox()
-                msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                msg.setStandardButtons(
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                )
                 msg.setParent(self, QtCore.Qt.WindowType.Sheet)
                 msg.setText(self.tr("Should Vorta continue to run in the background?"))
                 msg.button(QMessageBox.StandardButton.Yes).clicked.connect(
@@ -369,7 +425,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
                 )
                 msg.setWindowTitle(self.tr("Quit"))
                 dont_show_box = QCheckBox(self.tr("Don't show this again"))
-                dont_show_box.clicked.connect(lambda x: self.miscTab.save_setting("enable_background_question", not x))
+                dont_show_box.clicked.connect(
+                    lambda x: self.miscTab.save_setting(
+                        "enable_background_question", not x
+                    )
+                )
                 dont_show_box.setTristate(False)
                 msg.setCheckBox(dont_show_box)
                 msg.exec()
