@@ -1,4 +1,5 @@
 import os
+import time
 import uuid
 from typing import Any, Dict
 from unittest.mock import MagicMock
@@ -13,6 +14,11 @@ from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
+
+
+def wait_successful():
+    time.sleep(0.1)
+    return 0
 
 
 @pytest.mark.parametrize(
@@ -122,7 +128,7 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
 
     stdout, stderr = borg_json_output('info')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     add_repo_window.run()
@@ -245,7 +251,7 @@ def test_ssh_copy_to_clipboard_action(qapp, qtbot, mocker, tmpdir):
 def test_create(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
     stdout, stderr = borg_json_output('create')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)

@@ -5,10 +5,10 @@ import pytest
 
 pytestmark = pytest.mark.skipif(sys.platform != 'darwin', reason="macOS only")
 
-from vorta.network_status import darwin  # noqa: E402
-
 
 def test_get_current_wifi_when_wifi_is_on(mocker):
+    from vorta.network_status import darwin  # noqa: E402
+
     mock_interface = MagicMock()
     mock_network = MagicMock()
     mock_interface.lastNetworkJoined.return_value = mock_network
@@ -23,6 +23,8 @@ def test_get_current_wifi_when_wifi_is_on(mocker):
 
 
 def test_get_current_wifi_when_wifi_is_off(mocker):
+    from vorta.network_status import darwin  # noqa: E402
+
     mock_interface = MagicMock()
     mock_interface.lastNetworkJoined.return_value = None
 
@@ -35,6 +37,8 @@ def test_get_current_wifi_when_wifi_is_off(mocker):
 
 
 def test_get_current_wifi_when_no_wifi_interface(mocker):
+    from vorta.network_status import darwin  # noqa: E402
+
     instance = darwin.DarwinNetworkStatus()
     mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
 
@@ -45,6 +49,8 @@ def test_get_current_wifi_when_no_wifi_interface(mocker):
 
 @pytest.mark.parametrize("is_hotspot_enabled", [True, False])
 def test_network_is_metered_with_ios(mocker, is_hotspot_enabled):
+    from vorta.network_status import darwin  # noqa: E402
+
     mock_interface = MagicMock()
     mock_network = MagicMock()
     mock_interface.lastNetworkJoined.return_value = mock_network
@@ -59,6 +65,8 @@ def test_network_is_metered_with_ios(mocker, is_hotspot_enabled):
 
 
 def test_network_is_metered_when_wifi_is_off(mocker):
+    from vorta.network_status import darwin  # noqa: E402
+
     mock_interface = MagicMock()
     mock_interface.lastNetworkJoined.return_value = None
 
@@ -78,6 +86,8 @@ def test_network_is_metered_when_wifi_is_off(mocker):
     ],
 )
 def test_is_network_metered_with_android(getpacket_output_name, expected, monkeypatch):
+    from vorta.network_status import darwin  # noqa: E402
+
     def mock_getpacket(device):
         assert device == 'en0'
         return GETPACKET_OUTPUTS[getpacket_output_name]
@@ -89,6 +99,8 @@ def test_is_network_metered_with_android(getpacket_output_name, expected, monkey
 
 
 def test_get_known_wifi_networks_when_wifi_interface_exists(monkeypatch):
+    from vorta.network_status import darwin  # noqa: E402
+
     networksetup_output = """
 Preferred networks on en0:
     Home Network
@@ -109,6 +121,8 @@ Preferred networks on en0:
 
 
 def test_get_known_wifi_networks_when_no_wifi_interface(mocker):
+    from vorta.network_status import darwin  # noqa: E402
+
     instance = darwin.DarwinNetworkStatus()
     mocker.patch.object(instance, "_get_wifi_interface", return_value=None)
 
@@ -118,6 +132,8 @@ def test_get_known_wifi_networks_when_no_wifi_interface(mocker):
 
 
 def test_get_network_devices(monkeypatch):
+    from vorta.network_status import darwin  # noqa: E402
+
     monkeypatch.setattr(darwin, 'call_networksetup_listallhardwareports', lambda: NETWORKSETUP_OUTPUT)
 
     result = list(darwin.get_network_devices())

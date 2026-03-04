@@ -294,7 +294,7 @@ class VortaApp(QtSingleApplication):
                         double_newline,
                         str(exception),
                         double_newline,
-                        self.tr('Consider removing or repairing this file to ' 'get rid of this message.'),
+                        self.tr('Consider removing or repairing this file to get rid of this message.'),
                     ),
                 )
                 return
