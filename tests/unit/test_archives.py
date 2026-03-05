@@ -21,7 +21,7 @@ class MockFileDialog:
         return [TEST_TEMP_DIR]
 
 
-def wait_successful():
+def wait_successful(*args, **kwargs):
     time.sleep(0.1)
     return 0
 
