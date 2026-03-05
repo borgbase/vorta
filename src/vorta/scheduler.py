@@ -5,7 +5,7 @@ import logging
 import threading
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import Any, Dict, NamedTuple, Optional, Tuple, Union
+from typing import Any, NamedTuple
 
 from packaging import version
 from PyQt6 import QtCore, QtDBus
@@ -35,7 +35,7 @@ class ScheduleStatusType(enum.Enum):
 
 class ScheduleStatus(NamedTuple):
     type: ScheduleStatusType
-    time: Optional[dt] = None
+    time: dt | None = None
 
 
 class VortaScheduler(QtCore.QObject):
@@ -46,13 +46,13 @@ class VortaScheduler(QtCore.QObject):
         super().__init__()
 
         #: mapping of profiles to timers
-        self.timers: Dict[int, Dict[str, Union[Optional[QTimer], Optional[dt], ScheduleStatusType]]] = dict()
+        self.timers: dict[int, dict[str, QTimer | dt | ScheduleStatusType | None]] = dict()
 
         self.app: application.VortaApp = QApplication.instance()
         self.lock = threading.Lock()
 
         # pausing will prevent scheduling for a specified time
-        self.pauses: Dict[int, Tuple[dt, QtCore.QTimer]] = dict()
+        self.pauses: dict[int, tuple[dt, QtCore.QTimer]] = dict()
 
         # Set additional timer to make sure background tasks stay scheduled.
         # E.g. after hibernation
@@ -103,7 +103,7 @@ class VortaScheduler(QtCore.QObject):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
-    def pause(self, profile_id: int, until: Optional[dt] = None) -> None:
+    def pause(self, profile_id: int, until: dt | None = None) -> None:
         """
         Call a timeout for scheduling of a given profile.
 
@@ -117,7 +117,7 @@ class VortaScheduler(QtCore.QObject):
         ----------
         profile_id : int
             The profile to pause the scheduling for.
-        until : Optional[dt], optional
+        until : dt | None, optional
             The time to end the pause, by default None
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)

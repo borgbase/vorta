@@ -214,9 +214,6 @@ class ArchiveModel(BaseModel):
     size = pw.IntegerField(null=True)
     trigger = pw.CharField(null=True)
 
-    def formatted_time(self) -> None:
-        return
-
     class Meta:
         database = DB
 

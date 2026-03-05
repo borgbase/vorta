@@ -89,8 +89,7 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
     current_schema.save()
     if created or current_schema.version == SCHEMA_VERSION:
         pass
-    else:
-        assert con is not None, "Database connection required for migrations"
+    elif con is not None:
         backup_current_db(current_schema.version)
         run_migrations(current_schema, con)
 
