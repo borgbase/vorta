@@ -29,7 +29,6 @@ classifiers = [
 dependencies = [
     "packaging",
     "peewee",
-    "perun>=0.9.1",
     "platformdirs>=2.6.0,<5.0.0; sys_platform != 'darwin'",
     "platformdirs>=3.0.0,<5.0.0; sys_platform == 'darwin'",
     "psutil",
