@@ -5,8 +5,8 @@ import pytest
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
 
-from vorta.profile_export import VersionException
-from vorta.store.models import BackupProfileModel, SourceFileModel
+from vorta.profile_export import ProfileExport, VersionException
+from vorta.store.models import BackupProfileModel, ExclusionModel, RepoModel, SourceFileModel
 from vorta.views.import_window import ImportWindow
 
 VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'
@@ -155,3 +155,23 @@ def test_export_fail_unwritable(qapp, qtbot, monkeypatch):
 
     assert 'could not be created' in alert_message
     assert not os.path.isfile(FILE_PATH)
+
+
+def test_export_import_includes_exclusion_list(qapp):
+    repo = RepoModel.create(url='/tmp/vorta-test-repo')
+    profile = BackupProfileModel.create(name='Profile With Excludes', repo=repo)
+
+    ExclusionModel.create(profile=profile, name='*.tmp', enabled=True, source=ExclusionModel.SourceFieldOptions.CUSTOM.value)
+    ExclusionModel.create(profile=profile, name='Caches', enabled=True, source=ExclusionModel.SourceFieldOptions.PRESET.value)
+
+    export = ProfileExport.from_db(profile, store_password=False, include_settings=False)
+    exported_dict = export._profile_dict
+
+    assert 'ExclusionModel' in exported_dict
+    assert len(exported_dict['ExclusionModel']) == 2
+
+    imported_profile = export.to_db(overwrite_profile=False, overwrite_settings=False)
+
+    imported_exclusions = list(ExclusionModel.select().where(ExclusionModel.profile == imported_profile))
+    assert len(imported_exclusions) == 2
+    assert {e.name for e in imported_exclusions} == {'*.tmp', 'Caches'}
