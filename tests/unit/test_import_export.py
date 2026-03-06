@@ -174,4 +174,7 @@ def test_export_import_includes_exclusion_list(qapp):
 
     imported_exclusions = list(ExclusionModel.select().where(ExclusionModel.profile == imported_profile))
     assert len(imported_exclusions) == 2
-    assert {e.name for e in imported_exclusions} == {'*.tmp', 'Caches'}
+    assert {(e.name, e.enabled, e.source) for e in imported_exclusions} == {
+        ('*.tmp', True, ExclusionModel.SourceFieldOptions.CUSTOM.value),
+        ('Caches', True, ExclusionModel.SourceFieldOptions.PRESET.value),
+    }

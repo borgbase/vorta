@@ -134,7 +134,7 @@ class ProfileExport:
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
 
-        # Restore source dirs
+        # Restore source dirs (clear first to avoid duplicates)
         for source in self._profile_dict['SourceFileModel']:
             source['profile'] = self.id
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
@@ -159,10 +159,10 @@ class ProfileExport:
         new_profile.save(force_insert=force_insert)
 
         # Restore exclusions (custom/preset exclude list)
+        ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
         if exclusions:
             for exclusion in exclusions:
                 exclusion['profile'] = self.id
-            ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
             ExclusionModel.insert_many(exclusions).execute()
 
         init_db()  # rerun db init code to perform the same operations on the new as as on application boot
