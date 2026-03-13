@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import ArchiveModel, EventLogModel, RepoModel
+from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
@@ -76,6 +76,35 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
         qapp.create_backup_action()
 
     assert 'Select a backup repository first.' in main.progressText.text()
+
+
+def test_repo_unlink_shared_repository_keeps_dropdown_entry(qapp, qtbot, mocker, monkeypatch):
+    main = qapp.main_window
+    tab = main.repoTab
+    current_profile = main.current_profile
+    shared_repo = current_profile.repo
+    other_profile = BackupProfileModel.create(name='Shared Repo Profile', repo=shared_repo.id)
+    monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
+
+    mock_title = mocker.patch.object(QMessageBox, "setWindowTitle")
+    mock_text = mocker.patch.object(QMessageBox, "setText")
+
+    assert tab.repoSelector.count() == 2
+    assert tab.repoSelector.currentData() == shared_repo.id
+
+    tab.repo_unlink_action()
+
+    refreshed_profile = BackupProfileModel.get(id=current_profile.id)
+    refreshed_other_profile = BackupProfileModel.get(id=other_profile.id)
+
+    assert refreshed_profile.repo is None
+    assert refreshed_other_profile.repo.id == shared_repo.id
+    assert RepoModel.get_or_none(id=shared_repo.id) is not None
+    assert tab.repoSelector.count() == 2
+    assert tab.repoSelector.currentData() is None
+    assert tab.repoSelector.currentIndex() == 0
+    mock_title.assert_called_with('Repository was Detached')
+    mock_text.assert_called_with('The repository remains available for other profiles.')
 
 
 def test_password_autofill(qapp, qtbot):

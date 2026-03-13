@@ -1,13 +1,13 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QLineEdit, QWidget
+from PyQt6.QtWidgets import QLineEdit, QWidget
 
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
+from vorta.views.base_tab import BaseTab
 
 
-class ShellCommandsPage(QWidget, BackupProfileMixin):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+class ShellCommandsPage(BaseTab, QWidget):
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         uifile = get_asset('UI/shell_commands_page.ui')
         uic.loadUi(uifile, self)
 
@@ -25,10 +25,7 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
         self.createCmdLineEdit.textEdited.connect(
             lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
         )
-        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
-            self.populate_from_profile
-        )
-        self.destroyed.connect(self._on_destroyed)
+        self.track_profile_change()
 
     def populate_from_profile(self):
         profile = self.profile()
@@ -45,19 +42,3 @@ class ShellCommandsPage(QWidget, BackupProfileMixin):
             self.createCmdLineEdit.setEnabled(False)
             self.preBackupCmdLineEdit.setEnabled(False)
             self.postBackupCmdLineEdit.setEnabled(False)
-
-    def save_profile_attr(self, attr, new_value):
-        profile = self.profile()
-        setattr(profile, attr, new_value)
-        profile.save()
-
-    def save_repo_attr(self, attr, new_value):
-        repo = self.profile().repo
-        setattr(repo, attr, new_value)
-        repo.save()
-
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
