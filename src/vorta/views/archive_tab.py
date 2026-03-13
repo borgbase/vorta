@@ -32,7 +32,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
-from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
+from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
@@ -43,6 +43,7 @@ from vorta.utils import (
     pretty_bytes,
 )
 from vorta.views import diff_result, extract_dialog
+from vorta.views.base_tab import BaseTab
 from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.extract_dialog import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
@@ -65,18 +66,18 @@ class IconDelegate(QStyledItemDelegate):
         option.decorationSize = option.rect.size() - QtCore.QSize(0, 10)
 
 
-class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
+class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
     prune_intervals = ['hour', 'day', 'week', 'month', 'year']
 
-    def __init__(self, parent=None, app=None):
+    def __init__(self, parent=None, app=None, profile_provider=None):
         """Init."""
-        super().__init__(parent)
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
         self.is_editing = False  # track if the cell edit was completed or canceled
         self.mount_points = {}  # mapping of archive name to mount point
         self.repo_mount_point: Optional[str] = None  # mount point of whole repo
         self.menu = None
-        self.app = app
+        self.app = app or self.app
         self.toolBox.setCurrentIndex(0)
         self.repoactions_enabled = True
         self.renamed_archive_original_name = None
@@ -158,13 +159,12 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
         self.set_icons()
 
         # Connect to events
-        self._palette_conn_1 = self.app.paletteChanged.connect(self.set_icons)
-        self._palette_conn_2 = self.app.paletteChanged.connect(self.populate_from_profile)
-        self.destroyed.connect(self._on_destroyed)
-        self.app.backup_finished_event.connect(self.populate_from_profile)
-        self.app.profile_changed_event.connect(self.populate_from_profile)
-        self.app.profile_changed_event.connect(self.toggle_compact_button_visibility)
-        self.app.backup_cancelled_event.connect(self.cancel_action)
+        self.track_palette_change()
+        self.track_palette_change(self.populate_from_profile)
+        self.track_backup_finished()
+        self.track_profile_change()
+        self.track_profile_change(self.toggle_compact_button_visibility)
+        self.track_signal(self.app.backup_cancelled_event, self.cancel_action)
 
     def set_icons(self):
         """Used when changing between light- and dark mode"""
@@ -182,13 +182,6 @@ class ArchiveTab(ArchiveTabBase, ArchiveTabUI, BackupProfileMixin):
 
         self.bmountarchive_refresh(icon_only=True)
         self.bmountrepo_refresh()
-
-    def _on_destroyed(self):
-        try:
-            self.app.paletteChanged.disconnect(self._palette_conn_1)
-            self.app.paletteChanged.disconnect(self._palette_conn_2)
-        except (TypeError, RuntimeError):
-            pass
 
     @pyqtSlot(QPoint)
     def archiveitem_contextmenu(self, pos: QPoint):

@@ -5,9 +5,10 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QMimeData, QUrl
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
-from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
+from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
+from .base_tab import BaseTab
 from .repo_add_dialog import AddRepoWindow, ExistingRepoWindow
 from .repo_change_passphrase import ChangeBorgPassphraseWindow
 from .ssh_dialog import SSHAddWindow
@@ -17,12 +18,12 @@ uifile = get_asset('UI/repo_tab.ui')
 RepoUI, RepoBase = uic.loadUiType(uifile)
 
 
-class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
+class RepoTab(BaseTab, RepoBase, RepoUI):
     repo_changed = QtCore.pyqtSignal()
     repo_added = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
 
         # Populate dropdowns
@@ -78,12 +79,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.populate_from_profile()  # needs init of ssh and compression items
 
         # Connect to events
-        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
-            self.populate_from_profile
-        )
-        self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.init_repo_stats)
-        self.destroyed.connect(self._on_destroyed)
+        self.track_palette_change()
+        self.track_profile_change()
+        self.track_backup_finished(self.init_repo_stats)
 
     def set_icons(self):
         self.bAddSSHKey.setIcon(get_colored_icon("plus"))
@@ -92,24 +90,9 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         self.sshKeyToClipboardButton.setIcon(get_colored_icon('copy'))
         self.copyURLbutton.setIcon(get_colored_icon('copy'))
 
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            QApplication.instance().backup_finished_event.disconnect(self._backup_finished_connection)
-        except (TypeError, RuntimeError):
-            pass
-
     def set_repos(self):
         self.repoSelector.clear()
         self.repoSelector.addItem(self.tr('No repository selected'), None)
-        # set tooltip = url for each item in the repoSelector
         for repo in RepoModel.select():
             self.repoSelector.addItem(f"{repo.name + ' - ' if repo.name else ''}{repo.url}", repo.id)
             self.repoSelector.setItemData(self.repoSelector.count() - 1, repo.url, QtCore.Qt.ItemDataRole.ToolTipRole)
@@ -144,7 +127,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         refresh = self.tr("Try refreshing the metadata of any archive.")
 
         # set labels
-        repo: RepoModel = self.profile().repo
+        repo: RepoModel = self.repo()
         if repo is not None:
             # Start with every element enabled, then disable SSH-related if relevant
             for child in self.frameRepoSettings.children():
@@ -216,9 +199,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.repoCompression.model().item(ix).setEnabled(use_zstd)
 
     def ssh_select_action(self, index):
-        profile = self.profile()
-        profile.ssh_key = self.sshComboBox.itemData(index)
-        profile.save()
+        self.save_profile_attr('ssh_key', self.sshComboBox.itemData(index))
 
     def create_ssh_key(self):
         """Open a dialog to create an ssh key."""
@@ -264,9 +245,7 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         msg.show()
 
     def compression_select_action(self, index):
-        profile = self.profile()
-        profile.compression = self.repoCompression.currentData()
-        profile.save()
+        self.save_profile_attr('compression', self.repoCompression.currentData())
 
     def new_repo(self):
         """Open a dialog to create a new repo and add it to vorta."""
@@ -287,17 +266,13 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
         window.open()
 
     def repo_select_action(self):
-        profile = self.profile()
-        profile.repo = self.repoSelector.currentData()
-        profile.save()
+        self.save_profile_attr('repo', self.repoSelector.currentData())
         self.init_repo_stats()
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
             new_repo = RepoModel.get(url=result['params']['repo_url'])
-            profile = self.profile()
-            profile.repo = new_repo.id
-            profile.save()
+            self.save_profile_attr('repo', new_repo.id)
 
             self.set_repos()
             self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
@@ -305,8 +280,6 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             self.init_repo_stats()
 
     def repo_unlink_action(self):
-        profile = self.profile()
-
         selected_repo_id = self.repoSelector.currentData()
         selected_repo_index = self.repoSelector.currentIndex()
 
@@ -321,21 +294,28 @@ class RepoTab(RepoBase, RepoUI, BackupProfileMixin):
             pass
 
         # Update database
+        profile = self.profile()
         repo = RepoModel.get(id=selected_repo_id)
-        ArchiveModel.delete().where(ArchiveModel.repo_id == repo.id).execute()
+        repo_deleted = not repo.is_shared_with_other_profiles(excluding_profile_id=profile.id)
         profile.repo = None
         profile.save()
-        repo.delete_instance(recursive=True)  # This also deletes archives.
+        if repo_deleted:
+            repo.delete_instance(recursive=True)
 
-        # Update dropdown
-        self.repoSelector.removeItem(selected_repo_index)
+        # Update dropdown only if the repository no longer exists in the DB.
+        if repo_deleted:
+            self.repoSelector.removeItem(selected_repo_index)
         self.repoSelector.setCurrentIndex(0)
 
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        msg.setWindowTitle(self.tr('Repository was Unlinked'))
-        msg.setText(self.tr('You can always connect it again later.'))
+        if repo_deleted:
+            msg.setWindowTitle(self.tr('Repository was Unlinked'))
+            msg.setText(self.tr('You can always connect it again later.'))
+        else:
+            msg.setWindowTitle(self.tr('Repository was Detached'))
+            msg.setText(self.tr('The repository remains available for other profiles.'))
         msg.show()
 
         self.repo_changed.emit()
