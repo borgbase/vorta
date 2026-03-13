@@ -286,8 +286,43 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         window.open()
 
     def repo_select_action(self):
+<<<<<<< HEAD
         self.save_profile_attr('repo', self.repoSelector.currentData())
+=======
+        profile = self.profile()
+        new_repo_id = self.repoSelector.currentData()
+
+        # Warn if profile already has a repo with existing backups
+        if profile.repo and new_repo_id and profile.repo.id != new_repo_id:
+            existing_archives = ArchiveModel.select().where(
+                ArchiveModel.repo_id == profile.repo.id
+            ).count()
+
+            if existing_archives > 0:
+                msg = QMessageBox()
+                msg.setStandardButtons(
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                )
+                msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+                msg.setWindowTitle(self.tr('Change Repository?'))
+                msg.setText(self.tr(
+                    'This profile already has backups in the current repository. '
+                    'Are you sure you want to change it?'
+                ))
+                if msg.exec() == QMessageBox.StandardButton.No:
+                    # Revert selection
+                    self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
+                    self.repoSelector.setCurrentIndex(
+                        self.repoSelector.findData(profile.repo.id)
+                    )
+                    self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
+                    return
+
+        profile.repo = new_repo_id
+        profile.save()
+>>>>>>> 95b526c (Show warning when changing repository with existing backups)
         self.init_repo_stats()
+        self.repo_changed.emit()
 
     def process_new_repo(self, result):
         if result['returncode'] == 0:
