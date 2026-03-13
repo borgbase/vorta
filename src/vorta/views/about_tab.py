@@ -5,8 +5,8 @@ from PyQt6 import QtCore, uic
 
 from vorta import config
 from vorta._version import __version__
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
+from vorta.views.base_tab import BaseTab
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/about_tab.ui')
@@ -15,12 +15,12 @@ AboutTabUI, AboutTabBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class AboutTab(AboutTabBase, AboutTabUI, BackupProfileMixin):
+class AboutTab(BaseTab, AboutTabBase, AboutTabUI):
     refresh_archive = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, profile_provider=None):
         """Init."""
-        super().__init__(parent)
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
         self.logLink.setText(

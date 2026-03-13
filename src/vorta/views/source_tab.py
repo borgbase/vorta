@@ -12,13 +12,14 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.filedialog import VortaFileSelector
-from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
+from vorta.store.models import SettingsModel, SourceFileModel
 from vorta.utils import (
     FilePathInfoAsync,
     get_asset,
     pretty_bytes,
     sort_sizes,
 )
+from vorta.views.base_tab import BaseTab
 from vorta.views.exclude_dialog import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
@@ -65,11 +66,11 @@ class FilesCount(QTableWidgetItem):
                 return 0
 
 
-class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
+class SourceTab(BaseTab, SourceBase, SourceUI):
     updateThreads = []
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
 
         # Prepare source files view
@@ -102,11 +103,8 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         self.set_icons()
 
         # Listen for events
-        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
-            self.populate_from_profile
-        )
-        self.destroyed.connect(self._on_destroyed)
+        self.track_palette_change()
+        self.track_profile_change()
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
@@ -122,16 +120,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 path_item.setIcon(get_colored_icon('folder'))
             else:
                 path_item.setIcon(get_colored_icon('file'))
-
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
 
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):

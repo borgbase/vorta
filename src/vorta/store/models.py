@@ -56,6 +56,13 @@ class RepoModel(BaseModel):
     def is_remote_repo(self):
         return not self.url.startswith('/')
 
+    def is_shared_with_other_profiles(self, excluding_profile_id: int | None = None) -> bool:
+        """Return whether another profile still references this repository."""
+        query = BackupProfileModel.select().where(BackupProfileModel.repo == self)
+        if excluding_profile_id is not None:
+            query = query.where(BackupProfileModel.id != excluding_profile_id)
+        return query.exists()
+
     class Meta:
         database = DB
 
