@@ -99,12 +99,11 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Populate
-        self.populate_from_profile()
+        self.track_profile_change(call_now=True)
         self.set_icons()
 
         # Listen for events
         self.track_palette_change()
-        self.track_profile_change()
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
