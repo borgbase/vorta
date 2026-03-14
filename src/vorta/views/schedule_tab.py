@@ -25,27 +25,24 @@ class ScheduleTab(BaseTab, ScheduleBase, ScheduleUI):
         self.track_backup_finished(self.logPage.populate_logs)
 
     def init_log_page(self):
-        self.logPage = LogPage(self, profile_provider=self.child_profile_provider)
+        self.logPage = LogPage(self, profile_provider=self.profile)
         self.logLayout.addWidget(self.logPage)
         self.logPage.show()
 
     def init_shell_commands_page(self):
-        self.shellCommandsPage = ShellCommandsPage(self, profile_provider=self.child_profile_provider)
+        self.shellCommandsPage = ShellCommandsPage(self, profile_provider=self.profile)
         self.shellCommandsLayout.addWidget(self.shellCommandsPage)
         self.shellCommandsPage.show()
 
     def init_networks_page(self):
-        self.networksPage = NetworksPage(self, profile_provider=self.child_profile_provider)
+        self.networksPage = NetworksPage(self, profile_provider=self.profile)
         self.networksLayout.addWidget(self.networksPage)
         self.networksPage.show()
 
     def init_schedule_page(self):
-        self.schedulePage = SchedulePage(self, profile_provider=self.child_profile_provider)
+        self.schedulePage = SchedulePage(self, profile_provider=self.profile)
         self.scheduleLayout.addWidget(self.schedulePage)
         self.schedulePage.show()
-
-    def child_profile_provider(self):
-        return self.profile()
 
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
