@@ -321,7 +321,7 @@ class VortaScheduler(QtCore.QObject):
                             profile.name,
                             profile_id,
                         )
-                QtCore.QTimer.singleShot(30000, lambda: self.create_backup(profile_id))
+                                            QtCore.QTimer.singleShot(30000, lambda: self.create_backup(profile_id))
                     finally:
                         self.lock.acquire()  # with-statement will try to release
 
