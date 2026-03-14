@@ -17,33 +17,35 @@ class ScheduleTab(BaseTab, ScheduleBase, ScheduleUI):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
         self.toolBox.setCurrentIndex(0)
-        self.set_icons()
         self.init_log_page()
         self.init_shell_commands_page()
         self.init_networks_page()
         self.init_schedule_page()
-        self.track_palette_change()
+        self.track_palette_change(call_now=True)
         self.track_backup_finished(self.logPage.populate_logs)
 
     def init_log_page(self):
-        self.logPage = LogPage(self, profile_provider=lambda: self.profile())
+        self.logPage = LogPage(self, profile_provider=self.child_profile_provider)
         self.logLayout.addWidget(self.logPage)
         self.logPage.show()
 
     def init_shell_commands_page(self):
-        self.shellCommandsPage = ShellCommandsPage(self, profile_provider=lambda: self.profile())
+        self.shellCommandsPage = ShellCommandsPage(self, profile_provider=self.child_profile_provider)
         self.shellCommandsLayout.addWidget(self.shellCommandsPage)
         self.shellCommandsPage.show()
 
     def init_networks_page(self):
-        self.networksPage = NetworksPage(self, profile_provider=lambda: self.profile())
+        self.networksPage = NetworksPage(self, profile_provider=self.child_profile_provider)
         self.networksLayout.addWidget(self.networksPage)
         self.networksPage.show()
 
     def init_schedule_page(self):
-        self.schedulePage = SchedulePage(self, profile_provider=lambda: self.profile())
+        self.schedulePage = SchedulePage(self, profile_provider=self.child_profile_provider)
         self.scheduleLayout.addWidget(self.schedulePage)
         self.schedulePage.show()
+
+    def child_profile_provider(self):
+        return self.profile()
 
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))

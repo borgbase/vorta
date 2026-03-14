@@ -28,8 +28,8 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
         self.init_ui()
+        self.track_profile_change(self.populate_logs, call_now=True)
         self.track_backup_finished(self.populate_logs)
-        self.track_profile_change(self.populate_logs)
 
     def init_ui(self):
         self.logPage.setAlternatingRowColors(True)
@@ -43,8 +43,6 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
         template = self.logLink.text()
         log_link = link(f"file://{config.LOG_DIR}", self.tr('View the logs'))
         self.logLink.setText(format_richtext(template, log_link))
-
-        self.populate_logs()
 
     def populate_logs(self):
         profile = self.profile()

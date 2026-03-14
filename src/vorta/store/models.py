@@ -270,10 +270,3 @@ class SettingsModel(BaseModel):
 
     class Meta:
         database = DB
-
-
-class BackupProfileMixin:
-    """Extend to support multiple profiles later."""
-
-    def profile(self):
-        return BackupProfileModel.get(id=self.window().current_profile.id)
