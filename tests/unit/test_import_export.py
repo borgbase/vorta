@@ -161,8 +161,18 @@ def test_export_import_includes_exclusion_list(qapp):
     repo = RepoModel.create(url='/tmp/vorta-test-repo')
     profile = BackupProfileModel.create(name='Profile With Excludes', repo=repo)
 
-    ExclusionModel.create(profile=profile, name='*.tmp', enabled=True, source=ExclusionModel.SourceFieldOptions.CUSTOM.value)
-    ExclusionModel.create(profile=profile, name='Caches', enabled=True, source=ExclusionModel.SourceFieldOptions.PRESET.value)
+    ExclusionModel.create(
+        profile=profile,
+        name='*.tmp',
+        enabled=True,
+        source=ExclusionModel.SourceFieldOptions.CUSTOM.value,
+    )
+    ExclusionModel.create(
+        profile=profile,
+        name='Caches',
+        enabled=True,
+        source=ExclusionModel.SourceFieldOptions.PRESET.value,
+    )
 
     export = ProfileExport.from_db(profile, store_password=False, include_settings=False)
     exported_dict = export._profile_dict
@@ -174,9 +184,7 @@ def test_export_import_includes_exclusion_list(qapp):
 
     imported_exclusions = list(ExclusionModel.select().where(ExclusionModel.profile == imported_profile))
     assert len(imported_exclusions) == 2
-    imported_values = {
-        (e.name, e.enabled, e.source) for e in imported_exclusions
-    }
+    imported_values = {(e.name, e.enabled, e.source) for e in imported_exclusions}
     assert imported_values == {
         ('*.tmp', True, ExclusionModel.SourceFieldOptions.CUSTOM.value),
         ('Caches', True, ExclusionModel.SourceFieldOptions.PRESET.value),
