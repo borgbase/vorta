@@ -155,7 +155,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
         self.populate_from_profile()
-        self.selected_archives = None  # TODO: remove unused variable
         self.set_icons()
 
         # Connect to events
