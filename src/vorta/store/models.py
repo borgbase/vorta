@@ -26,11 +26,11 @@ class JSONField(pw.TextField):
     From: https://gist.github.com/rosscdh/f4f26758b0228f475b132c688f15af2b
     """
 
-    def db_value(self, value):
+    def db_value(self, value) -> str | None:
         """Convert the python value for storage in the database."""
         return value if value is None else json.dumps(value)
 
-    def python_value(self, value):
+    def python_value(self, value) -> dict | list | None:
         """Convert the database value to a pythonic value."""
         return value if value is None else json.loads(value)
 
@@ -53,7 +53,7 @@ class RepoModel(BaseModel):
     create_backup_cmd = pw.CharField(default='')
     extra_borg_arguments = pw.CharField(default='')
 
-    def is_remote_repo(self):
+    def is_remote_repo(self) -> bool:
         return not self.url.startswith('/')
 
     def is_shared_with_other_profiles(self, excluding_profile_id: int | None = None) -> bool:
@@ -112,13 +112,13 @@ class BackupProfileModel(BaseModel):
     post_backup_cmd = pw.CharField(default='')
     dont_run_on_metered_networks = pw.BooleanField(default=True)
 
-    def refresh(self):
+    def refresh(self) -> 'BackupProfileModel':
         return type(self).get(self._pk_expr())
 
-    def slug(self):
+    def slug(self) -> str:
         return slugify(self.name)
 
-    def get_combined_exclusion_string(self):
+    def get_combined_exclusion_string(self) -> str:
         allPresets = get_exclusion_presets()
         excludes = ""
 
@@ -211,7 +211,7 @@ class ArchiveModel(BaseModel):
     size = pw.IntegerField(null=True)
     trigger = pw.CharField(null=True)
 
-    def formatted_time(self):
+    def formatted_time(self) -> str:
         return
 
     class Meta:
@@ -275,5 +275,5 @@ class SettingsModel(BaseModel):
 class BackupProfileMixin:
     """Extend to support multiple profiles later."""
 
-    def profile(self):
+    def profile(self) -> 'BackupProfileModel':
         return BackupProfileModel.get(id=self.window().current_profile.id)
