@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg
 import vorta.utils
-import vorta.views.repo_add_dialog
+import vorta.views.dialogs.repo_add
 from tests.integration.conftest import all_workers_finished
 
 LONG_PASSWORD = 'long-password-long'
@@ -30,7 +30,7 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     new_repo_path.mkdir()
 
     monkeypatch.setattr(
-        vorta.views.repo_add_dialog,
+        vorta.views.dialogs.repo_add,
         "choose_file_dialog",
         lambda *args, **kwargs: choose_file_dialog(*args, **kwargs, subdirectory=new_repo_path.basename),
     )
@@ -92,7 +92,7 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
     add_repo_window = main.repoTab._window
 
     monkeypatch.setattr(
-        vorta.views.repo_add_dialog,
+        vorta.views.dialogs.repo_add,
         "choose_file_dialog",
         lambda *args, **kwargs: choose_file_dialog(*args, **kwargs, directory=current_repo_path),
     )

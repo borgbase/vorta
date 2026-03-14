@@ -8,12 +8,10 @@ from vorta._version import __version__
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import borg_compat
-from vorta.views.utils import get_colored_icon
-
-from ..utils import get_asset
+from vorta.views.utils import get_asset, get_colored_icon
 
 # Load UI file
-uifile = get_asset('UI/exception_dialog.ui')
+uifile = get_asset('UI/dialogs/exception.ui')
 ExceptionDialogUI, ExceptionDialogBase = uic.loadUiType(uifile)
 
 

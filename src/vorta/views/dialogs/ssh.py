@@ -6,8 +6,7 @@ from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-
-from ..utils import get_asset
+from vorta.utils import get_asset
 
 uifile = get_asset('UI/ssh_add.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)

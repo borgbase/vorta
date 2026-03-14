@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="24"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="24"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
         <source>Cancel</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Anna profiilille nimi.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Nimi on jo käytössä.</translation>
     </message>
@@ -27,97 +27,97 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="59"/>
+        <location filename="../../views/dialogs/repo_add.py" line="59"/>
         <source>Add</source>
         <translation>Lisää</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="115"/>
+        <location filename="../../views/dialogs/repo_add.py" line="115"/>
         <source>Show my passwords</source>
         <translation>Näytä salasanat</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="90"/>
+        <location filename="../../views/dialogs/repo_add.py" line="90"/>
         <source>Repository Path:</source>
         <translation>Tietovaraston polku:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="93"/>
+        <location filename="../../views/dialogs/repo_add.py" line="93"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Valitse Borg-tietovaraston sijainti</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="100"/>
+        <location filename="../../views/dialogs/repo_add.py" line="100"/>
         <source>Autofilled password from password manager.</source>
         <translation>Salasana täytetty automaattisesti salasanahallinnan sovelluksesta.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="112"/>
+        <location filename="../../views/dialogs/repo_add.py" line="112"/>
         <source>Hide my passwords</source>
         <translation>Piilota salasanat</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="122"/>
+        <location filename="../../views/dialogs/repo_add.py" line="122"/>
         <source>Repository URL:</source>
         <translation>Tietovaraston osoite:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="148"/>
+        <location filename="../../views/dialogs/repo_add.py" line="148"/>
         <source>Unable to add your repository.</source>
         <translation>Tietovaraston lisääminen ei onnistunut.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="167"/>
+        <location filename="../../views/dialogs/repo_add.py" line="167"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (Suositeltu, avain säilötään tietovarastoon)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="168"/>
+        <location filename="../../views/dialogs/repo_add.py" line="168"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="169"/>
+        <location filename="../../views/dialogs/repo_add.py" line="169"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (Avain säilötään kotihakemistoon)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="170"/>
+        <location filename="../../views/dialogs/repo_add.py" line="170"/>
         <source>Keyfile</source>
         <translation>Avaintiedosto</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="171"/>
+        <location filename="../../views/dialogs/repo_add.py" line="171"/>
         <source>None (not recommended)</source>
         <translation>Ei mitään (ei suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="190"/>
+        <location filename="../../views/dialogs/repo_add.py" line="190"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Anna kelvollinen tietovaraston osoite tai valitse paikallinen polku.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="194"/>
+        <location filename="../../views/dialogs/repo_add.py" line="194"/>
         <source>This repo has already been added.</source>
         <translation>Tämä tietovarasto on jo lisätty.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="154"/>
+        <location filename="../../views/dialogs/repo_add.py" line="154"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (Suositeltu, avain säilötään tietovarastoon)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="158"/>
+        <location filename="../../views/dialogs/repo_add.py" line="158"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (Avain säilötään kotihakemistoon)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="161"/>
+        <location filename="../../views/dialogs/repo_add.py" line="161"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="162"/>
+        <location filename="../../views/dialogs/repo_add.py" line="162"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
@@ -549,62 +549,62 @@
         <translation>Profiilin nimi:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Valitse arkistot, joiden erot haetaan</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Valitse kaksi arkistoa</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Päiväys</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Koko</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Kesto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Liitospiste</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Eroavaisuudet</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Valitse purettavat tiedostot</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Arkisto:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
@@ -707,12 +707,12 @@
 <context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/diff_result.py" line="132"/>
+        <location filename="../../views/dialogs/diff.py" line="132"/>
         <source>Copy</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="140"/>
+        <location filename="../../views/dialogs/diff.py" line="140"/>
         <source>Expand recursively</source>
         <translation>Laajenna rekursiivisesti</translation>
     </message>
@@ -720,72 +720,72 @@
 <context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/diff_result.py" line="765"/>
+        <location filename="../../views/dialogs/diff.py" line="765"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="767"/>
+        <location filename="../../views/dialogs/diff.py" line="767"/>
         <source>Change</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="769"/>
+        <location filename="../../views/dialogs/diff.py" line="769"/>
         <source>Size</source>
         <translation>Koko</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="771"/>
+        <location filename="../../views/dialogs/diff.py" line="771"/>
         <source>Balance</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="842"/>
+        <location filename="../../views/dialogs/diff.py" line="842"/>
         <source>Added {}, deleted {}</source>
         <translation>Lisätty {}, poistettu {}</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="849"/>
+        <location filename="../../views/dialogs/diff.py" line="849"/>
         <source>File</source>
         <translation>Tiedosto</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="851"/>
+        <location filename="../../views/dialogs/diff.py" line="851"/>
         <source>Directory</source>
         <translation>Kansio</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="853"/>
+        <location filename="../../views/dialogs/diff.py" line="853"/>
         <source>Link</source>
         <translation>Linkki</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="855"/>
+        <location filename="../../views/dialogs/diff.py" line="855"/>
         <source>Block device file</source>
         <translation>Lohkolaitetiedosto</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="857"/>
+        <location filename="../../views/dialogs/diff.py" line="857"/>
         <source>Character device file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="862"/>
+        <location filename="../../views/dialogs/diff.py" line="862"/>
         <source>unchanged</source>
         <translation>muuttumaton</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="864"/>
+        <location filename="../../views/dialogs/diff.py" line="864"/>
         <source>modified</source>
         <translation>muokattu</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="866"/>
+        <location filename="../../views/dialogs/diff.py" line="866"/>
         <source>removed</source>
         <translation>poistettu</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="868"/>
+        <location filename="../../views/dialogs/diff.py" line="868"/>
         <source>added</source>
         <translation>lisätty</translation>
     </message>
@@ -793,7 +793,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="68"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Nimeä profiili uudelleen</translation>
     </message>
@@ -801,17 +801,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="217"/>
+        <location filename="../../views/dialogs/repo_add.py" line="217"/>
         <source>Connect to existing Repository</source>
         <translation>Yhdistä olemassa olevaan tietovarastoon</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <location filename="../../views/dialogs/repo_add.py" line="235"/>
         <source>Show my password</source>
         <translation>Näytä salasana</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="232"/>
+        <location filename="../../views/dialogs/repo_add.py" line="232"/>
         <source>Hide my password</source>
         <translation>Piilota salasana</translation>
     </message>
@@ -819,37 +819,37 @@
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="27"/>
+        <location filename="../../views/dialogs/export.py" line="27"/>
         <source>Export Profile</source>
         <translation>Vie profiili</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="36"/>
+        <location filename="../../views/dialogs/export.py" line="36"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="41"/>
+        <location filename="../../views/dialogs/export.py" line="41"/>
         <source>Save profile_export</source>
         <translation>Tallenna profile_export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="49"/>
+        <location filename="../../views/dialogs/export.py" line="49"/>
         <source>Error while exporting</source>
         <translation>Vientivirhe</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="63"/>
+        <location filename="../../views/dialogs/export.py" line="63"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Tiedosta {} ei voitu luoda. Valitse toinen sijainti.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="70"/>
+        <location filename="../../views/dialogs/export.py" line="70"/>
         <source>Profile export successful!</source>
         <translation>Profiilin vienti onnistui!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="70"/>
+        <location filename="../../views/dialogs/export.py" line="70"/>
         <source>Profile export written to {}.</source>
         <translation>Profiili viety kohteeseen {}.</translation>
     </message>
@@ -857,17 +857,17 @@
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="114"/>
+        <location filename="../../views/dialogs/extract.py" line="114"/>
         <source>Extract</source>
         <translation>Pura</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="184"/>
+        <location filename="../../views/dialogs/extract.py" line="184"/>
         <source>Copy</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="188"/>
+        <location filename="../../views/dialogs/extract.py" line="188"/>
         <source>Expand recursively</source>
         <translation>Laajenna rekursiivisesti</translation>
     </message>
@@ -875,77 +875,77 @@
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="407"/>
+        <location filename="../../views/dialogs/extract.py" line="407"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="409"/>
+        <location filename="../../views/dialogs/extract.py" line="409"/>
         <source>Last Modified</source>
         <translation>Viimeksi muokattu</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="411"/>
+        <location filename="../../views/dialogs/extract.py" line="411"/>
         <source>Size</source>
         <translation>Koko</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="413"/>
+        <location filename="../../views/dialogs/extract.py" line="413"/>
         <source>Health</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="492"/>
+        <location filename="../../views/dialogs/extract.py" line="492"/>
         <source>File</source>
         <translation>Tiedosto</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="494"/>
+        <location filename="../../views/dialogs/extract.py" line="494"/>
         <source>Directory</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="496"/>
+        <location filename="../../views/dialogs/extract.py" line="496"/>
         <source>Symbolic link</source>
         <translation>Symbolinen linkki</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="498"/>
+        <location filename="../../views/dialogs/extract.py" line="498"/>
         <source>FIFO pipe</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="500"/>
+        <location filename="../../views/dialogs/extract.py" line="500"/>
         <source>Hard link</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="502"/>
+        <location filename="../../views/dialogs/extract.py" line="502"/>
         <source>Socket</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="504"/>
+        <location filename="../../views/dialogs/extract.py" line="504"/>
         <source>Block special file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="506"/>
+        <location filename="../../views/dialogs/extract.py" line="506"/>
         <source>Character special file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="513"/>
+        <location filename="../../views/dialogs/extract.py" line="513"/>
         <source>healthy</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="515"/>
+        <location filename="../../views/dialogs/extract.py" line="515"/>
         <source>broken</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="528"/>
+        <location filename="../../views/dialogs/extract.py" line="528"/>
         <source>Linked to: {}</source>
         <translation type="unfinished"/>
     </message>
@@ -1481,32 +1481,32 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="24"/>
+        <location filename="../../views/dialogs/import.py" line="24"/>
         <source>Import Profile</source>
         <translation>Tuo profiili</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="32"/>
+        <location filename="../../views/dialogs/import.py" line="32"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation>Syötä tunnuslause (ladattu jo viedystä tiedostosta)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="39"/>
+        <location filename="../../views/dialogs/import.py" line="39"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation>Syötä tunnuslause (ladattu jo avainnipustasi)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="47"/>
+        <location filename="../../views/dialogs/import.py" line="47"/>
         <source>(Name is not used yet)</source>
         <translation>(Nimi ei ole vielä käytössä)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="54"/>
+        <location filename="../../views/dialogs/import.py" line="54"/>
         <source>Error while importing</source>
         <translation>Tuontivirhe</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="69"/>
+        <location filename="../../views/dialogs/import.py" line="69"/>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
@@ -1515,17 +1515,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="77"/>
+        <location filename="../../views/dialogs/import.py" line="77"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Uudempia profile_export vientitiedostoja ei voida käyttää vanhemmilla versioilla.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="82"/>
+        <location filename="../../views/dialogs/import.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>profile_export-vientitiedostoa ei voitu lukea käyttöoikeusvirheen vuoksi.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="87"/>
+        <location filename="../../views/dialogs/import.py" line="87"/>
         <source>Profile export file not found.</source>
         <translation>Profiilin vientitiedostoa ei löytynyt.</translation>
     </message>
@@ -1783,47 +1783,47 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="35"/>
+        <location filename="../../views/dialogs/ssh.py" line="35"/>
         <source>Generate and copy to clipboard</source>
         <translation>Luo ja kopioi leikepöydälle</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="38"/>
+        <location filename="../../views/dialogs/ssh.py" line="38"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="39"/>
+        <location filename="../../views/dialogs/ssh.py" line="39"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (vanha)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="40"/>
+        <location filename="../../views/dialogs/ssh.py" line="40"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="49"/>
+        <location filename="../../views/dialogs/ssh.py" line="49"/>
         <source>High (Recommended)</source>
         <translation>Korkea (suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="50"/>
+        <location filename="../../views/dialogs/ssh.py" line="50"/>
         <source>Medium</source>
         <translation>Keskitaso</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="63"/>
+        <location filename="../../views/dialogs/ssh.py" line="63"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Avaintiedosto on jo olemassa. Ei korvata.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="75"/>
+        <location filename="../../views/dialogs/ssh.py" line="75"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Uusi avain kopioitiin leikepöydälle ja kirjoitettiin sijaintiin %s.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="77"/>
+        <location filename="../../views/dialogs/ssh.py" line="77"/>
         <source>Error during key generation.</source>
         <translation>Virhe avainta luotaessa.</translation>
     </message>

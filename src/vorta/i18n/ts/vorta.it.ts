@@ -70,22 +70,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>Salva</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>Annulla</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Inserisci il nome del profilo.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>C'è già un profilo con questo nome.</translation>
     </message>
@@ -93,57 +93,57 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="139"/>
+        <location filename="../../views/dialogs/repo_add.py" line="139"/>
         <source>Encryption:</source>
         <translation>Cifratura:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <location filename="../../views/dialogs/repo_add.py" line="156"/>
         <source>Autofilled password from password manager.</source>
         <translation>Password automatica suggerita dal gestore di password.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="170"/>
+        <location filename="../../views/dialogs/repo_add.py" line="170"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (consigliata, chiave memorizzata nel repository)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/repo_add.py" line="174"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (chiave memorizzata nella cartella home)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="177"/>
+        <location filename="../../views/dialogs/repo_add.py" line="177"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="178"/>
+        <location filename="../../views/dialogs/repo_add.py" line="178"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/repo_add.py" line="187"/>
         <source>None (not recommended)</source>
         <translation>Nessuna (sconsigliata)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="183"/>
+        <location filename="../../views/dialogs/repo_add.py" line="183"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (consigliata, chiave salvata nel repository)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="184"/>
+        <location filename="../../views/dialogs/repo_add.py" line="184"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="185"/>
+        <location filename="../../views/dialogs/repo_add.py" line="185"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (chiave salvata nella cartella home)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="186"/>
+        <location filename="../../views/dialogs/repo_add.py" line="186"/>
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
@@ -505,22 +505,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="19"/>
+        <location filename="../../views/dialogs/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="29"/>
+        <location filename="../../views/dialogs/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="33"/>
+        <location filename="../../views/dialogs/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="62"/>
+        <location filename="../../views/dialogs/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
         <translation type="unfinished"/>
     </message>
@@ -586,122 +586,122 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Nome profilo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>Aggiungi i modelli da escludere</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>Personalizzato</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>Preimpostazioni</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>Semplice</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>Anteprima</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>Copia negli appunti</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Scegli gli archivi per mostrare le differenze</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Seleziona due archivi</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Data</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Dimensione</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Durata</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Punto di mount</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Annulla</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Differenza</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Scegli i file da estrarre</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archivio:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>Mantieni le cartelle in cima quando ordini</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>Prima le cartelle</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>Imposta il modo di visualizzazione delle differenze</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>Albero</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>Albero, semplificato</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>Contrai tutto</translation>
     </message>
@@ -771,37 +771,37 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Non cambiare questa impostazione se vuoi che SSH trovi automaticamente la chiave.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="23"/>
         <source>Fatal Error</source>
         <translation>Errore grave</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="87"/>
         <source>Vorta quit unexpectedly. </source>
         <translation>Vorta si è arresta in modo inatteso.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
         <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
         <translation>Puoi segnalare questo problema su %1. Cerca problemi simili prima di segnalarlo.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
         <source>Github</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="124"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="124"/>
         <source>Crash Report:</source>
         <translation>Segnalazione di arresto anomalo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>Escludi se presente</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation type="unfinished"/>
     </message>
@@ -809,12 +809,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/diff_result.py" line="143"/>
+        <location filename="../../views/dialogs/diff.py" line="143"/>
         <source>Copy</source>
         <translation>Copia</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="151"/>
+        <location filename="../../views/dialogs/diff.py" line="151"/>
         <source>Expand recursively</source>
         <translation>Espandi ricorsivamente</translation>
     </message>
@@ -822,72 +822,72 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/diff_result.py" line="778"/>
+        <location filename="../../views/dialogs/diff.py" line="778"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="780"/>
+        <location filename="../../views/dialogs/diff.py" line="780"/>
         <source>Change</source>
         <translation>Modifica</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="782"/>
+        <location filename="../../views/dialogs/diff.py" line="782"/>
         <source>Size</source>
         <translation>Dimensione</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="784"/>
+        <location filename="../../views/dialogs/diff.py" line="784"/>
         <source>Balance</source>
         <translation>Saldo</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="855"/>
+        <location filename="../../views/dialogs/diff.py" line="855"/>
         <source>Added {}, deleted {}</source>
         <translation>Aggiunti {}, eliminati {}</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="862"/>
+        <location filename="../../views/dialogs/diff.py" line="862"/>
         <source>File</source>
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="864"/>
+        <location filename="../../views/dialogs/diff.py" line="864"/>
         <source>Directory</source>
         <translation>Cartella</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="866"/>
+        <location filename="../../views/dialogs/diff.py" line="866"/>
         <source>Link</source>
         <translation>Collegamento</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="868"/>
+        <location filename="../../views/dialogs/diff.py" line="868"/>
         <source>Block device file</source>
         <translation>File di dispositivo a blocchi</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="870"/>
+        <location filename="../../views/dialogs/diff.py" line="870"/>
         <source>Character device file</source>
         <translation>File di dispositivo a caratteri</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="875"/>
+        <location filename="../../views/dialogs/diff.py" line="875"/>
         <source>unchanged</source>
         <translation>non modificato</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="877"/>
+        <location filename="../../views/dialogs/diff.py" line="877"/>
         <source>modified</source>
         <translation>modificato</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="879"/>
+        <location filename="../../views/dialogs/diff.py" line="879"/>
         <source>removed</source>
         <translation>rimosso</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="881"/>
+        <location filename="../../views/dialogs/diff.py" line="881"/>
         <source>added</source>
         <translation>aggiunto</translation>
     </message>
@@ -895,7 +895,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Rinomina profilo</translation>
     </message>
@@ -903,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>Copia</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="180"/>
+        <location filename="../../views/dialogs/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>Rimuovi</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>Attiva/disattiva</translation>
     </message>
@@ -921,22 +921,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="231"/>
+        <location filename="../../views/dialogs/repo_add.py" line="231"/>
         <source>Connect to existing Repository</source>
         <translation>Connetti a un repository esistente</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="234"/>
+        <location filename="../../views/dialogs/repo_add.py" line="234"/>
         <source>Password:</source>
         <translation>Password:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="242"/>
+        <location filename="../../views/dialogs/repo_add.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>Password compilata automaticamente dal gestore delle password.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <location filename="../../views/dialogs/repo_add.py" line="235"/>
         <source>Enter the encryption passphrase</source>
         <translation type="unfinished"/>
     </message>
@@ -944,37 +944,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="31"/>
+        <location filename="../../views/dialogs/export.py" line="31"/>
         <source>Export Profile</source>
         <translation>Esporta profilo</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="40"/>
+        <location filename="../../views/dialogs/export.py" line="40"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation>Rivela la frase segreta di borg (nessuna frase segreta impostata)</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="45"/>
+        <location filename="../../views/dialogs/export.py" line="45"/>
         <source>Save profile_export</source>
         <translation>Salva profile_export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="53"/>
+        <location filename="../../views/dialogs/export.py" line="53"/>
         <source>Error while exporting</source>
         <translation>Errore durante l'esportazione</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="67"/>
+        <location filename="../../views/dialogs/export.py" line="67"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Impossibile creare il file {}. Scegli un'altra posizione.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export successful!</source>
         <translation>Profilo esportato correttamente!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export written to {}.</source>
         <translation>Esportazione del profilo scritta su {}.</translation>
     </message>
@@ -982,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/extract.py" line="138"/>
         <source>Extract</source>
         <translation>Estrai</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/extract.py" line="210"/>
         <source>Copy</source>
         <translation>Copia</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="214"/>
+        <location filename="../../views/dialogs/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>Espandi ricorsivamente</translation>
     </message>
@@ -1000,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="433"/>
+        <location filename="../../views/dialogs/extract.py" line="433"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="435"/>
+        <location filename="../../views/dialogs/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>Ultima modifica</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="437"/>
+        <location filename="../../views/dialogs/extract.py" line="437"/>
         <source>Size</source>
         <translation>Dimensione</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="439"/>
+        <location filename="../../views/dialogs/extract.py" line="439"/>
         <source>Health</source>
         <translation>Stato di salute</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="518"/>
+        <location filename="../../views/dialogs/extract.py" line="518"/>
         <source>File</source>
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="520"/>
+        <location filename="../../views/dialogs/extract.py" line="520"/>
         <source>Directory</source>
         <translation>Cartella</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="522"/>
+        <location filename="../../views/dialogs/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>Collegamento simbolico</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="524"/>
+        <location filename="../../views/dialogs/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>Pipe FIFO</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="526"/>
+        <location filename="../../views/dialogs/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>Collegamento diretto</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="528"/>
+        <location filename="../../views/dialogs/extract.py" line="528"/>
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="530"/>
+        <location filename="../../views/dialogs/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>File speciale a blocchi</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="532"/>
+        <location filename="../../views/dialogs/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>File speciale a caratteri</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="539"/>
+        <location filename="../../views/dialogs/extract.py" line="539"/>
         <source>healthy</source>
         <translation>sano</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="541"/>
+        <location filename="../../views/dialogs/extract.py" line="541"/>
         <source>broken</source>
         <translation>danneggiato</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="554"/>
+        <location filename="../../views/dialogs/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>Collegato a: {}</translation>
     </message>
@@ -1474,47 +1474,47 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importa profilo</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation>Digita la frase segreta (già caricata dal file di esportazione)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation>Digita la frase segreta (già caricata dal tuo portachiavi)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="48"/>
+        <location filename="../../views/dialogs/import.py" line="48"/>
         <source>(Name is not used yet)</source>
         <translation>(Il nome non è ancora usato)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="55"/>
+        <location filename="../../views/dialogs/import.py" line="55"/>
         <source>Error while importing</source>
         <translation>Errore durante l'importazione</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="78"/>
+        <location filename="../../views/dialogs/import.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>I file di esportazione profile_export più recenti non possono essere utilizzati su versioni precedenti.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/dialogs/import.py" line="83"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Impossibile leggere il file di esportazione profile_export a causa di un errore di permessi.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="88"/>
+        <location filename="../../views/dialogs/import.py" line="88"/>
         <source>Profile export file not found.</source>
         <translation>File di esportazione del profilo non trovato.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="70"/>
+        <location filename="../../views/dialogs/import.py" line="70"/>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
@@ -1938,42 +1938,42 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="57"/>
+        <location filename="../../views/dialogs/repo_add.py" line="57"/>
         <source>Add</source>
         <translation>Aggiungi</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="71"/>
+        <location filename="../../views/dialogs/repo_add.py" line="71"/>
         <source>Repository Path:</source>
         <translation>Percorso repository:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo_add.py" line="74"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Scegli la posizione del repository di Borg</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo_add.py" line="83"/>
         <source>Repository URL:</source>
         <translation>URL del repository:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="96"/>
+        <location filename="../../views/dialogs/repo_add.py" line="96"/>
         <source>Unable to add your repository.</source>
         <translation>Impossibile aggiungere il tuo repository.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="106"/>
+        <location filename="../../views/dialogs/repo_add.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Digita l'URL di un repository valido o seleziona un percorso locale.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="110"/>
+        <location filename="../../views/dialogs/repo_add.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
         <translation>Il nome del repository deve contenere meno di 65 caratteri.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="114"/>
+        <location filename="../../views/dialogs/repo_add.py" line="114"/>
         <source>This repo has already been added.</source>
         <translation>Questo repository è già stato aggiunto.</translation>
     </message>
@@ -1981,37 +1981,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="39"/>
+        <location filename="../../views/dialogs/ssh.py" line="39"/>
         <source>Generate and copy to clipboard</source>
         <translation>Genera e copia negli appunti</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="42"/>
+        <location filename="../../views/dialogs/ssh.py" line="42"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (consigliato)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="43"/>
+        <location filename="../../views/dialogs/ssh.py" line="43"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (obsoleto)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="44"/>
+        <location filename="../../views/dialogs/ssh.py" line="44"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="53"/>
+        <location filename="../../views/dialogs/ssh.py" line="53"/>
         <source>High (Recommended)</source>
         <translation>Alto (consigliato)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="54"/>
+        <location filename="../../views/dialogs/ssh.py" line="54"/>
         <source>Medium</source>
         <translation>Medio</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="67"/>
+        <location filename="../../views/dialogs/ssh.py" line="67"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Il file della chiave esiste già. Non sovrascrivo.</translation>
     </message>

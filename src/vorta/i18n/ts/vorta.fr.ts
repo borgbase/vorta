@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Veuillez entrer un nom de profil.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>Un profil avec ce nom existe déjà.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -27,77 +27,77 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="94"/>
+        <location filename="../../views/dialogs/repo_add.py" line="94"/>
         <source>Repository Path:</source>
         <translation>Chemin d'accès du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="97"/>
+        <location filename="../../views/dialogs/repo_add.py" line="97"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Choisissez l'emplacement du dépôt Borg</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="126"/>
+        <location filename="../../views/dialogs/repo_add.py" line="126"/>
         <source>Repository URL:</source>
         <translation>URL du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="152"/>
+        <location filename="../../views/dialogs/repo_add.py" line="152"/>
         <source>Unable to add your repository.</source>
         <translation>Impossible d'ajouter le dépôt.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="179"/>
+        <location filename="../../views/dialogs/repo_add.py" line="179"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Saisissez un chemin d'accès URL valide ou sélectionnez un répertoire local</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="183"/>
+        <location filename="../../views/dialogs/repo_add.py" line="183"/>
         <source>This repo has already been added.</source>
         <translation>Ce dépôt a déjà été ajouté.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="119"/>
+        <location filename="../../views/dialogs/repo_add.py" line="119"/>
         <source>Show my passwords</source>
         <translation>Montrer mes mots de passe</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="104"/>
+        <location filename="../../views/dialogs/repo_add.py" line="104"/>
         <source>Autofilled password from password manager.</source>
         <translation>Mot de passe auto-rempli depuis le gestionnaire de mots de passe.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="116"/>
+        <location filename="../../views/dialogs/repo_add.py" line="116"/>
         <source>Hide my passwords</source>
         <translation>Cacher mes mots de passe</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="63"/>
+        <location filename="../../views/dialogs/repo_add.py" line="63"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <location filename="../../views/dialogs/repo_add.py" line="156"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Clé de dépôt BLAKE2 (Recommandé, clé stockée dans le dépôt)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="157"/>
+        <location filename="../../views/dialogs/repo_add.py" line="157"/>
         <source>Repokey</source>
         <translation>Clé de dépôt</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="158"/>
+        <location filename="../../views/dialogs/repo_add.py" line="158"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Fichier clé BLAKE2 (Clé stocké dans le répertoire personnel)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="159"/>
+        <location filename="../../views/dialogs/repo_add.py" line="159"/>
         <source>Keyfile</source>
         <translation>Fichier clé</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="160"/>
+        <location filename="../../views/dialogs/repo_add.py" line="160"/>
         <source>None (not recommended)</source>
         <translation>Aucun (déconseillé)</translation>
     </message>
@@ -579,22 +579,22 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archive :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
         <translation>Note : Si vous sélectionner un dossier sans sélectionner les sous-dossiers, ceux-ci seront quand même restaurés. </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -634,37 +634,37 @@
         <translation>Fichier se sortie :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Sélectionnez deux archives</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Durée</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Point de montage</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Différence</translation>
     </message>
@@ -749,7 +749,7 @@
         <translation>Ne changez pas ceci si vous voulez que SSH trouve automatiquement la clef.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Choisissez les archives pour diff</translation>
     </message>
@@ -759,7 +759,7 @@
         <translation>Résultat de diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Choisissez les fichiers à extraire</translation>
     </message>
@@ -767,7 +767,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
+        <location filename="../../views/dialogs/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Renommer le Profil</translation>
     </message>
@@ -775,17 +775,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="206"/>
+        <location filename="../../views/dialogs/repo_add.py" line="206"/>
         <source>Connect to existing Repository</source>
         <translation>Connexion à un dépôt existant</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="224"/>
+        <location filename="../../views/dialogs/repo_add.py" line="224"/>
         <source>Show my password</source>
         <translation>Afficher mon mot de passe</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="221"/>
+        <location filename="../../views/dialogs/repo_add.py" line="221"/>
         <source>Hide my password</source>
         <translation>Cacher mon mot de passe</translation>
     </message>
@@ -793,37 +793,37 @@
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="30"/>
+        <location filename="../../views/dialogs/export.py" line="30"/>
         <source>Export Profile</source>
         <translation>Exporter le Profil</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="44"/>
+        <location filename="../../views/dialogs/export.py" line="44"/>
         <source>Save profile_export</source>
         <translation>Sauver l'export de profil</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="56"/>
+        <location filename="../../views/dialogs/export.py" line="56"/>
         <source>Error while exporting</source>
         <translation>Erreur de l'export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="72"/>
+        <location filename="../../views/dialogs/export.py" line="72"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Le fichier {} n'a pu être créé. Veuillez choisir un autre emplacement.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="79"/>
+        <location filename="../../views/dialogs/export.py" line="79"/>
         <source>Profile export successful!</source>
         <translation>Profil exporté avec succès !</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="79"/>
+        <location filename="../../views/dialogs/export.py" line="79"/>
         <source>Profile export written to {}.</source>
         <translation>Profil exporté vers {}.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="39"/>
+        <location filename="../../views/dialogs/export.py" line="39"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation>Révélez votre phrase de passe Borg (pas de phrase de passe établie)</translation>
     </message>
@@ -831,7 +831,7 @@
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="76"/>
+        <location filename="../../views/dialogs/extract.py" line="76"/>
         <source>Extract</source>
         <translation>Extraire</translation>
     </message>
@@ -1362,17 +1362,17 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importer le Profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="59"/>
+        <location filename="../../views/dialogs/import.py" line="59"/>
         <source>Error while importing</source>
         <translation>Erreur pendant l'importation</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="75"/>
+        <location filename="../../views/dialogs/import.py" line="75"/>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
@@ -1381,32 +1381,32 @@
 {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="78"/>
+        <location filename="../../views/dialogs/import.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Les nouveaux fichiers d'export de profil ne peuvent être importés dans les anciennes versions.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="80"/>
+        <location filename="../../views/dialogs/import.py" line="80"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Erreur de permission: impossible de lire le fichier d'export de profil </translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="82"/>
+        <location filename="../../views/dialogs/import.py" line="82"/>
         <source>Profile export file not found.</source>
         <translation>Fichier de profil exporté non trouvé.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="50"/>
+        <location filename="../../views/dialogs/import.py" line="50"/>
         <source>(Name is not used yet)</source>
         <translation type="unfinished"/>
     </message>
@@ -1656,47 +1656,47 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="52"/>
+        <location filename="../../views/dialogs/ssh.py" line="52"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (Recommandé)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="53"/>
+        <location filename="../../views/dialogs/ssh.py" line="53"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (Classique)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="54"/>
+        <location filename="../../views/dialogs/ssh.py" line="54"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="63"/>
+        <location filename="../../views/dialogs/ssh.py" line="63"/>
         <source>High (Recommended)</source>
         <translation>Haut (Recommandé)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="64"/>
+        <location filename="../../views/dialogs/ssh.py" line="64"/>
         <source>Medium</source>
         <translation>Moyen</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="77"/>
+        <location filename="../../views/dialogs/ssh.py" line="77"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Le fichier clé existe déjà. Il ne sera pas écrasé. </translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="89"/>
+        <location filename="../../views/dialogs/ssh.py" line="89"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>La nouvelle clé a été copiée dans le presse-papier et écrite sous %s.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="91"/>
+        <location filename="../../views/dialogs/ssh.py" line="91"/>
         <source>Error during key generation.</source>
         <translation>Erreur durant la génération de la clé.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="48"/>
+        <location filename="../../views/dialogs/ssh.py" line="48"/>
         <source>Generate and copy to clipboard</source>
         <translation>Générer et copier dans le presse-papier</translation>
     </message>
