@@ -8,6 +8,7 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.store.connection import DB, SCHEMA_VERSION, init_db
 from vorta.store.models import (
     BackupProfileModel,
+    ExclusionModel,
     RepoModel,
     SchemaVersion,
     SettingsModel,
@@ -66,6 +67,12 @@ class ProfileExport:
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
+
+        # Add ExclusionModel (custom/preset exclude list)
+        profile_dict['ExclusionModel'] = [
+            model_to_dict(exclusion, recurse=False, exclude=[ExclusionModel.id])
+            for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
+        ]
 
         if include_settings:
             # Add WifiSettingModel
@@ -127,18 +134,21 @@ class ProfileExport:
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
 
-        # Set the profile ids to be match new profile
+        # Restore source dirs (clear first to avoid duplicates)
         for source in self._profile_dict['SourceFileModel']:
             source['profile'] = self.id
-        # Delete existing Sources to avoid duplicates
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
 
+        # Stash exclusions before we mutate the dict into a BackupProfileModel.
+        exclusions = self._profile_dict.get('ExclusionModel')
+
         # Delete added dictionaries to make it match BackupProfileModel
-        del self._profile_dict['SettingsModel']
-        del self._profile_dict['SourceFileModel']
-        del self._profile_dict['WifiSettingModel']
-        del self._profile_dict['SchemaVersion']
+        self._profile_dict.pop('SettingsModel', None)
+        self._profile_dict.pop('SourceFileModel', None)
+        self._profile_dict.pop('WifiSettingModel', None)
+        self._profile_dict.pop('SchemaVersion', None)
+        self._profile_dict.pop('ExclusionModel', None)
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
@@ -147,6 +157,14 @@ class ProfileExport:
         else:
             force_insert = True
         new_profile.save(force_insert=force_insert)
+
+        # Restore exclusions (custom/preset exclude list)
+        ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
+        if exclusions:
+            for exclusion in exclusions:
+                exclusion['profile'] = self.id
+            ExclusionModel.insert_many(exclusions).execute()
+
         init_db()  # rerun db init code to perform the same operations on the new as as on application boot
         return new_profile
 
