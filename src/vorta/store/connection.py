@@ -73,10 +73,10 @@ def init_db(con=None):
         .group_by(EventLogModel.profile)
     )
 
-    three_months_ago = datetime.now() - timedelta(days=6 * 30)
+    six_months_ago = datetime.now() - timedelta(days=6 * 30)
     entry = Tuple(EventLogModel.profile, EventLogModel.start_time)
     EventLogModel.delete().where(
-        EventLogModel.start_time < three_months_ago,
+        EventLogModel.start_time < six_months_ago,
         entry.not_in(last_backups_per_profile),
         entry.not_in(last_scheduled_backups_per_profile),
     ).execute()
