@@ -531,12 +531,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation>Borg-Passwort ändern</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation>Hinweis: Bewahre eine Kopie des Passworts separat auf.</translation>
     </message>
@@ -544,22 +544,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-Passwort:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Passwort eingeben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Bestehendes Profil überschreiben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Bestehende Einstellungen überschreiben</translation>
     </message>
@@ -709,32 +709,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Alle einklappen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Borg-Passwort dem Export beifügen. Mit Vorsicht verwenden!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Borg-Passwort mitexportieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Flach</translation>
     </message>
@@ -1790,7 +1790,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Überprüfung des Repositorys fehlgeschlagen. Details befinden sich in den %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="28"/>
+        <location filename="../../borg/dialogs/change_passphrase.ui.py" line="28"/>
         <source>Passphrase change failed. See the %1 for details.</source>
         <translation>Änderung des Passworts fehlgeschlagen. Details befinden sich in den %1.</translation>
     </message>

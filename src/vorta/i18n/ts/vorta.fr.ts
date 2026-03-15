@@ -669,57 +669,57 @@
         <translation>Différence</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="25"/>
         <source>Difference between</source>
         <translation>Différence entre</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="45"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="45"/>
         <source>and</source>
         <translation>et</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="101"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="101"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Inclure le mot de passe borg dans le fichier d'export</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Mot de passe Borg :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Écraser le profil existant</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Écraser les paramètres existant</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Inclure la phrase de passe Borg dans le fichier d'export. Utilisez avec précaution!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Entrez la phrase de passe</translation>
     </message>
@@ -754,7 +754,7 @@
         <translation>Choisissez les archives pour diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Résultat de diff</translation>
     </message>

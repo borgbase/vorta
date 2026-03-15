@@ -10,10 +10,10 @@ from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 from vorta.views.dialogs.repo_add import AddRepoWindow, ExistingRepoWindow
+from vorta.views.dialogs.repo_change_passphrase import ChangeBorgPassphraseWindow
 from vorta.views.dialogs.ssh import SSHAddWindow
 
 from .base_tab import BaseTab
-from .repo_change_passphrase import ChangeBorgPassphraseWindow
 from .utils import get_colored_icon
 
 uifile = get_asset('UI/repo_tab.ui')

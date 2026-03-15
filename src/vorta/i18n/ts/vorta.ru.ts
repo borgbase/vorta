@@ -621,52 +621,52 @@
         <translation>Сравнить</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="25"/>
         <source>Difference between</source>
         <translation>Разница между</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="45"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="45"/>
         <source>and</source>
         <translation>и</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="101"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="101"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
         <translation>Если включено, то при передаче этого файла другим лицам ваш пароль Borg будет раскрыт. Используйте с осторожностью!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Включить пароль Borg в экспорт</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Пароль Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="53"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="53"/>
         <source>Overwrite existing profile</source>
         <translation>Перезаписать существующий профиль</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="60"/>
         <source>Overwrite existing settings</source>
         <translation>Перезаписать существующие настройки</translation>
     </message>

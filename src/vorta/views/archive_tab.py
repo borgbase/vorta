@@ -43,11 +43,11 @@ from vorta.utils import (
     get_mount_points,
     pretty_bytes,
 )
-from vorta.views import diff_result
 from vorta.views.base_tab import BaseTab
+from vorta.views.dialogs import diff_result
 from vorta.views.dialogs import extract as extract_dialog
+from vorta.views.dialogs.diff_result import DiffResultDialog, DiffTree
 from vorta.views.dialogs.extract import ExtractDialog, ExtractTree
-from vorta.views.diff_result import DiffResultDialog, DiffTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 

@@ -528,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -541,22 +541,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>عبارة مرور بورغ:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>أدخل عبارة المرور</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>الكتابة فوق ملف التعريف الموجود</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>الكتابة فوق الإعدادات الموجودة</translation>
     </message>
@@ -706,32 +706,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>طي الكل</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير. استخدم بحذر!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>نتيجة الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>مسطح</translation>
     </message>

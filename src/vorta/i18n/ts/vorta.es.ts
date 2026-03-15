@@ -504,22 +504,22 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Contraseña de Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Introducir contraseña</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Sobrescribir el perfil existente</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Sobrescribir la configuración existente</translation>
     </message>
@@ -609,57 +609,57 @@
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="65"/>
         <source>Keep folders on top when sorting</source>
         <translation>Mantener carpetas en la parte superior al ordenar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="81"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="81"/>
         <source>Set display mode of diff view</source>
         <translation>Establecer modo de visualización de la comparación</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="88"/>
         <source>Tree</source>
         <translation>Árbol</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="93"/>
         <source>Tree, simplified</source>
         <translation>Árbol, simplificado.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="109"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="109"/>
         <source>Collapse All</source>
         <translation>Plegar todo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Incluir contraseña de Borg en el archivo exportado. ¡Usar con cuidado!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Incluir la contraseña de Borg dentro del archivo exportado</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Resultado de la comparación</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Lista</translation>
     </message>
@@ -699,7 +699,7 @@
         <translation>No cambie esto si desea que SSH encuentre la llave automáticamente.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="68"/>
+        <location filename="../../assets/UI/dialogs/diff_result.ui" line="68"/>
         <source>Folders First</source>
         <translation>Carpetas primero</translation>
     </message>

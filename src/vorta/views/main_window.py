@@ -23,14 +23,14 @@ from vorta.utils import (
     get_network_status_monitor,
     is_system_tray_available,
 )
+from vorta.views.dialogs.export_window import ExportWindow
+from vorta.views.dialogs.import_window import ImportWindow
 from vorta.views.dialogs.profile_add_edit import AddProfileWindow, EditProfileWindow
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
 
 from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
-from .export_window import ExportWindow
-from .import_window import ImportWindow
 from .misc_tab import MiscTab
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
