@@ -7,7 +7,6 @@ from vorta import config
 from vorta._version import __version__
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
 from vorta.views.utils import get_colored_icon

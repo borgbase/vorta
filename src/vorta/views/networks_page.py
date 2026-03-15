@@ -22,9 +22,7 @@ class NetworksPage(BaseTab, NetworksBase, NetworksUI):
         # Connect signals
         self.meteredNetworksCheckBox.stateChanged.connect(self.on_metered_networks_state_changed)
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
-        self.track_profile_change(self.populate_wifi)
-
-        self.populate_wifi()
+        self.track_profile_change(self.populate_wifi, call_now=True)
 
     def on_metered_networks_state_changed(self, state):
         profile = self.profile()

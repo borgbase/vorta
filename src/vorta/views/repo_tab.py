@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
+from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
 from .base_tab import BaseTab
@@ -82,11 +82,10 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.set_icons()
-        self.populate_from_profile()  # needs init of ssh and compression items
 
         # Connect to events
         self.track_palette_change()
-        self.track_profile_change()
+        self.track_profile_change(call_now=True)  # needs init of ssh and compression items
         self.track_backup_finished(self.init_repo_stats)
 
     def _set_link_texts(self):

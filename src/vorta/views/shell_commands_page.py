@@ -1,8 +1,7 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QLabel, QLineEdit, QWidget
+from PyQt6.QtWidgets import QLabel, QLineEdit, QWidget
 
 from vorta.i18n.richtext import code, escape, format_richtext, italic, link
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
 
@@ -19,18 +18,11 @@ class ShellCommandsPage(BaseTab, QWidget):
         self.shellCommandsHelpLabel: QLabel = self.findChild(QLabel, 'shellCommandsHelpLabel')
         self.borgCreateHelpLabel: QLabel = self.findChild(QLabel, 'borgCreateHelpLabel')
         self._set_help_texts()
-        self.populate_from_profile()
 
-        self.preBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='pre_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.postBackupCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='post_backup_cmd': self.save_profile_attr(attr, new_val)
-        )
-        self.createCmdLineEdit.textEdited.connect(
-            lambda new_val, attr='create_backup_cmd': self.save_repo_attr(attr, new_val)
-        )
-        self.track_profile_change()
+        self.bind_profile_attr(self.preBackupCmdLineEdit.textEdited, 'pre_backup_cmd')
+        self.bind_profile_attr(self.postBackupCmdLineEdit.textEdited, 'post_backup_cmd')
+        self.bind_repo_attr(self.createCmdLineEdit.textEdited, 'create_backup_cmd')
+        self.track_profile_change(call_now=True)
 
     def _set_help_texts(self):
         commands_template = self.shellCommandsHelpLabel.text()
