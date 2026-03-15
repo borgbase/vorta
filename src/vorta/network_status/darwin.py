@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import subprocess
+from collections.abc import Iterator
 from datetime import datetime as dt
-from typing import Iterator, List, Optional
 
 from CoreWLAN import CWInterface, CWNetwork, CWWiFiClient
 
@@ -21,7 +21,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         if interface is None:
             return False
 
-        network: Optional[CWNetwork] = interface.lastNetworkJoined()
+        network: CWNetwork | None = interface.lastNetworkJoined()
 
         if network:
             is_ios_hotspot = network.isPersonalHotspot()
@@ -34,16 +34,16 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         # Not yet implemented
         return True
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         """
         Get current SSID or None if Wi-Fi is off.
         """
-        interface: Optional[CWInterface] = self._get_wifi_interface()
+        interface: CWInterface | None = self._get_wifi_interface()
         if not interface:
             return None
 
         # If the user has Wi-Fi turned off lastNetworkJoined will return None.
-        network: Optional[CWNetwork] = interface.lastNetworkJoined()
+        network: CWNetwork | None = interface.lastNetworkJoined()
 
         if network:
             network_name = network.ssid()
@@ -51,13 +51,13 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         else:
             return None
 
-    def get_known_wifis(self) -> List[SystemWifiInfo]:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         """
         Use the program, "networksetup", to get the list of know Wi-Fi networks.
         """
 
         wifis = []
-        interface: Optional[CWInterface] = self._get_wifi_interface()
+        interface: CWInterface | None = self._get_wifi_interface()
         if not interface:
             return []
 
@@ -78,9 +78,9 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         return wifis
 
-    def _get_wifi_interface(self) -> Optional[CWInterface]:
+    def _get_wifi_interface(self) -> CWInterface | None:
         wifi_client: CWWiFiClient = CWWiFiClient.sharedWiFiClient()
-        interface: Optional[CWInterface] = wifi_client.interface()
+        interface: CWInterface | None = wifi_client.interface()
         return interface
 
 

@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class NetworkStatusMonitor(QObject):
     @classmethod
-    def get_network_status_monitor(cls) -> 'NetworkStatusMonitor':
+    def get_network_status_monitor(cls) -> NetworkStatusMonitor:
         if sys.platform == 'darwin':
             from .darwin import DarwinNetworkStatus
 
@@ -46,18 +46,18 @@ class NetworkStatusMonitor(QObject):
         """Is the currently connected network a metered connection?"""
         raise NotImplementedError()
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         """Get current SSID or None if Wifi is off."""
         raise NotImplementedError()
 
-    def get_known_wifis(self) -> List['SystemWifiInfo']:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         """Get WiFi networks known to system."""
         raise NotImplementedError()
 
 
 class SystemWifiInfo(NamedTuple):
     ssid: str
-    last_connected: Optional[datetime]
+    last_connected: datetime | None
 
 
 class NullNetworkStatusMonitor(NetworkStatusMonitor):
@@ -75,8 +75,8 @@ class NullNetworkStatusMonitor(NetworkStatusMonitor):
     def is_network_metered(self) -> bool:
         return False
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         pass
 
-    def get_known_wifis(self) -> List['SystemWifiInfo']:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         return []

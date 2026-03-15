@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Mapping
 from datetime import datetime
 from enum import Enum
-from typing import Any, List, Mapping, NamedTuple, Optional
+from typing import Any, NamedTuple
 
 from PyQt6 import QtDBus
 from PyQt6.QtCore import QObject, QVersionNumber, pyqtSignal, pyqtSlot
@@ -36,7 +37,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to check connectivity state. Assuming connected")
             return True
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
         # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
         try:
@@ -53,7 +54,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to get currently connected WiFi network, assuming none")
         return None
 
-    def get_known_wifis(self) -> List[SystemWifiInfo]:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         wifis: list[SystemWifiInfo] = []
         try:
             connections_paths = self._nm.get_connections_paths()
@@ -85,7 +86,7 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         return ssid
 
 
-def decode_ssid(raw_ssid: List[int]) -> Optional[str]:
+def decode_ssid(raw_ssid: list[int]) -> str | None:
     """SSIDs are binary strings, but we need something to show to the user."""
     # Best effort UTF-8 decoding, as most SSIDs are UTF-8 (or even ASCII)
     str_ssid = bytes(raw_ssid).decode('utf-8', 'surrogateescape')
@@ -126,7 +127,7 @@ class NetworkManagerDBusAdapter(QObject):
         self._nm = self._get_iface(self.NM_PATH, 'org.freedesktop.NetworkManager')
 
     @classmethod
-    def get_system_nm_adapter(cls) -> 'NetworkManagerDBusAdapter':
+    def get_system_nm_adapter(cls) -> NetworkManagerDBusAdapter:
         bus = QtDBus.QDBusConnection.systemBus()
         if not bus.isConnected():
             raise UnsupportedException("Can't connect to system bus")
@@ -156,10 +157,10 @@ class NetworkManagerDBusAdapter(QObject):
     def is_network_connected(self) -> bool:
         return _is_network_connected(self.get_network_state())
 
-    def get_network_state(self) -> 'NMState':
+    def get_network_state(self) -> NMState:
         return NMState(read_dbus_property(self._nm, 'State'))
 
-    def get_primary_connection_path(self) -> Optional[str]:
+    def get_primary_connection_path(self) -> str | None:
         return read_dbus_property(self._nm, 'PrimaryConnection')
 
     def get_active_connection_info(self, active_connection_path: str) -> ActiveConnectionInfo:
@@ -169,7 +170,7 @@ class NetworkManagerDBusAdapter(QObject):
             type=read_dbus_property(active_connection, 'Type'),
         )
 
-    def get_connections_paths(self) -> List[str]:
+    def get_connections_paths(self) -> list[str]:
         settings_manager = self._get_iface(self.NM_PATH + '/Settings', 'org.freedesktop.NetworkManager.Settings')
         return get_result(settings_manager.call('ListConnections'))
 
@@ -177,7 +178,7 @@ class NetworkManagerDBusAdapter(QObject):
         settings = self._get_iface(connection_path, 'org.freedesktop.NetworkManager.Settings.Connection')
         return get_result(settings.call('GetSettings'))
 
-    def get_global_metered_status(self) -> 'NMMetered':
+    def get_global_metered_status(self) -> NMMetered:
         return NMMetered(read_dbus_property(self._nm, 'Metered'))
 
     def _get_nm_version(self) -> QVersionNumber:
