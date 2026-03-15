@@ -30,7 +30,7 @@ from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 
-from ..partials.treemodel import (
+from ...partials.treemodel import (
     FileSystemItem,
     FileTreeModel,
     FileTreeSortProxyModel,
