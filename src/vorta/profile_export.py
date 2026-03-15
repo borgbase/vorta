@@ -13,6 +13,7 @@ from vorta.store.models import (
     SettingsModel,
     SourceFileModel,
     WifiSettingModel,
+    ExclusionModel,
 )
 
 
@@ -64,6 +65,11 @@ class ProfileExport:
             model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
         ]
+            # Add ExclusionModel
+    profile_dict['ExclusionModel'] = [
+        model_to_dict(exclusion, recurse=False, exclude=[ExclusionModel.id])
+        for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
+    ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
 
@@ -133,12 +139,19 @@ class ProfileExport:
         # Delete existing Sources to avoid duplicates
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
+            # Set the profile ids for ExclusionModel to match new profile
+    for exclusion in self._profile_dict['ExclusionModel']:
+        exclusion['profile'] = self.id
+    # Delete existing Exclusions to avoid duplicates
+    ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
+    ExclusionModel.insert_many(self._profile_dict['ExclusionModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
         del self._profile_dict['SettingsModel']
         del self._profile_dict['SourceFileModel']
         del self._profile_dict['WifiSettingModel']
         del self._profile_dict['SchemaVersion']
+    del self._profile_dict['ExclusionModel']
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
