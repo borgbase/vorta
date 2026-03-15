@@ -12,6 +12,7 @@ from vorta.store.models import (
     SchemaVersion,
     SettingsModel,
     SourceFileModel,
+ ExclusionModel,
     WifiSettingModel,
 )
 
@@ -51,7 +52,8 @@ class ProfileExport:
         self._profile_dict['password'] = password
 
     @classmethod
-    def from_db(cls, profile, store_password=True, include_settings=True):
+    55
+    (cls, profile, store_password=True, include_settings=True):
         profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
 
         keyring = VortaKeyring.get_keyring()
@@ -75,6 +77,11 @@ class ProfileExport:
             ]
             # Add SettingsModel
             profile_dict['SettingsModel'] = [model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
+                # Add ExclusionModel
+    profile_dict['ExclusionModel'] = [
+                model_to_dict(exclusion, recurse=False, exclude=[ExclusionModel.id])
+                for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
+            ]
         return ProfileExport(profile_dict)
 
     def to_db(self, overwrite_profile=False, overwrite_settings=True):
@@ -133,12 +140,15 @@ class ProfileExport:
         # Delete existing Sources to avoid duplicates
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
+            # Insert ExclusionModel
+            ExclusionModel.insert_many(self._profile_dict['ExclusionModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
         del self._profile_dict['SettingsModel']
         del self._profile_dict['SourceFileModel']
         del self._profile_dict['WifiSettingModel']
         del self._profile_dict['SchemaVersion']
+            del self._profile_dict['ExclusionModel']
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
