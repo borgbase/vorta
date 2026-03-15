@@ -1,4 +1,8 @@
+import logging
+import re
 from html import escape as html_escape
+
+logger = logging.getLogger(__name__)
 
 
 def escape(text: str) -> str:
@@ -7,8 +11,13 @@ def escape(text: str) -> str:
 
 def format_richtext(template: str, *args: str) -> str:
     result = template
-    for index, value in enumerate(args, start=1):
-        result = result.replace(f"%{index}", value)
+    for index in range(len(args), 0, -1):
+        result = result.replace(f"%{index}", args[index - 1])
+    remaining = re.findall(r'%\d+', result)
+    if remaining:
+        logger.debug(
+            'Unreplaced placeholders in richtext template: %s (template=%r, args=%r)', remaining, template, args
+        )
     return result
 
 
