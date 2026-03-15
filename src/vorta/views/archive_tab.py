@@ -33,7 +33,7 @@ from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
+from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
@@ -165,14 +165,13 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
-        self.populate_from_profile()
+        self.track_profile_change(call_now=True)
         self.set_icons()
 
         # Connect to events
         self.track_palette_change()
         self.track_palette_change(self.populate_from_profile)
         self.track_backup_finished()
-        self.track_profile_change()
         self.track_profile_change(self.toggle_compact_button_visibility)
         self.track_signal(self.app.backup_cancelled_event, self.cancel_action)
 

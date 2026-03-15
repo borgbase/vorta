@@ -32,6 +32,7 @@ class DummyTab(BaseTab, QWidget):
         self.profile_change_count = 0
         self.palette_change_count = 0
         self.backup_finished_count = 0
+        self.populate_count = 0
 
     def on_profile_change(self):
         self.profile_change_count += 1
@@ -41,6 +42,9 @@ class DummyTab(BaseTab, QWidget):
 
     def on_backup_finished(self):
         self.backup_finished_count += 1
+
+    def populate_from_profile(self):
+        self.populate_count += 1
 
 
 def test_base_tab_uses_injected_profile_provider(qapp):
@@ -85,6 +89,42 @@ def test_base_tab_cleans_up_tracked_connections(qapp):
     assert tab.profile_change_count == 1
     assert tab.palette_change_count == 1
     assert tab.backup_finished_count == 1
+
+
+def test_base_tab_track_methods_support_call_now(qapp):
+    profile = BackupProfileModel.get(id=1)
+    tab = DummyTab(profile_provider=lambda: BackupProfileModel.get(id=profile.id))
+    fake_app = SimpleNamespace(
+        profile_changed_event=FakeSignal(),
+        paletteChanged=FakeSignal(),
+        backup_finished_event=FakeSignal(),
+    )
+    tab.app = fake_app
+
+    tab.track_profile_change(call_now=True)
+    tab.track_palette_change(tab.on_palette_change, call_now=True)
+    tab.track_backup_finished(tab.on_backup_finished, call_now=True)
+
+    assert tab.populate_count == 1
+    assert tab.palette_change_count == 1
+    assert tab.backup_finished_count == 1
+
+
+def test_base_tab_bind_attr_helpers_update_models(qapp):
+    repo = RepoModel.get(id=1)
+    profile = BackupProfileModel.get(id=1)
+    tab = DummyTab(profile_provider=lambda: BackupProfileModel.get(id=profile.id))
+
+    profile_signal = FakeSignal()
+    repo_signal = FakeSignal()
+    tab.bind_profile_attr(profile_signal, 'compression')
+    tab.bind_repo_attr(repo_signal, 'name')
+
+    profile_signal.emit('none')
+    repo_signal.emit('Renamed Repo')
+
+    assert BackupProfileModel.get(id=profile.id).compression == 'none'
+    assert RepoModel.get(id=repo.id).name == 'Renamed Repo'
 
 
 def test_base_tab_falls_back_to_window_current_profile(qapp, qtbot):

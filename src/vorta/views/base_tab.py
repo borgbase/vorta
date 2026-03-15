@@ -21,7 +21,7 @@ class BaseTab:
         super().__init__(parent)
         self.app = QApplication.instance()
         self._profile_provider = profile_provider or self._default_profile_provider
-        self._tracked_connections: list[tuple[Any, Any, Any]] = []
+        self._tracked_connections: list[tuple[Any, Any]] = []
         self.destroyed.connect(self._cleanup_tracked_connections)
 
     def _default_profile_provider(self) -> BackupProfileModel | None:
@@ -56,19 +56,37 @@ class BaseTab:
         repo.save()
         return repo
 
+    def bind_profile_attr(self, signal: Any, attr: str) -> Any:
+        return self.track_signal(signal, lambda new_value: self.save_profile_attr(attr, new_value))
+
+    def bind_repo_attr(self, signal: Any, attr: str) -> Any:
+        return self.track_signal(signal, lambda new_value: self.save_repo_attr(attr, new_value))
+
     def track_signal(self, signal: Any, slot: Callable[..., None]) -> Any:
         connection = signal.connect(slot)
-        self._tracked_connections.append((signal, connection, slot))
+        self._tracked_connections.append((signal, connection))
         return connection
 
-    def track_palette_change(self, callback: Callable[[], None] | None = None) -> Any:
-        return self.track_signal(self.app.paletteChanged, self._without_signal_args(callback or self.set_icons))
+    def track_palette_change(self, callback: Callable[[], None] | None = None, call_now: bool = False) -> Any:
+        callback = callback or self.set_icons
+        connection = self.track_signal(self.app.paletteChanged, self._without_signal_args(callback))
+        if call_now:
+            callback()
+        return connection
 
-    def track_profile_change(self, callback: Callable[[], None] | None = None) -> Any:
-        return self.track_signal(self.app.profile_changed_event, callback or self.populate_from_profile)
+    def track_profile_change(self, callback: Callable[[], None] | None = None, call_now: bool = False) -> Any:
+        callback = callback or self.populate_from_profile
+        connection = self.track_signal(self.app.profile_changed_event, callback)
+        if call_now:
+            callback()
+        return connection
 
-    def track_backup_finished(self, callback: Callable[[], None] | None = None) -> Any:
-        return self.track_signal(self.app.backup_finished_event, callback or self.populate_from_profile)
+    def track_backup_finished(self, callback: Callable[[], None] | None = None, call_now: bool = False) -> Any:
+        callback = callback or self.populate_from_profile
+        connection = self.track_signal(self.app.backup_finished_event, callback)
+        if call_now:
+            callback()
+        return connection
 
     @staticmethod
     def _without_signal_args(callback: Callable[[], None]) -> Callable[..., None]:
@@ -79,7 +97,7 @@ class BaseTab:
 
     def _cleanup_tracked_connections(self) -> None:
         while self._tracked_connections:
-            signal, connection, _slot = self._tracked_connections.pop()
+            signal, connection = self._tracked_connections.pop()
             try:
                 signal.disconnect(connection)
             except (TypeError, RuntimeError):
