@@ -13,7 +13,7 @@ from vorta.store.models import ExclusionModel
 from vorta.utils import get_asset
 from vorta.views.utils import get_colored_icon, get_exclusion_presets
 
-uifile = get_asset('UI/exclude_dialog.ui')
+uifile = get_asset('UI/dialogs/archive/exclude_dialog.ui')
 ExcludeDialogUi, ExcludeDialogBase = uic.loadUiType(uifile)
 
 

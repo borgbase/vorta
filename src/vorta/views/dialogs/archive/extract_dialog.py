@@ -38,7 +38,7 @@ from ..partials.treemodel import (
     relative_path,
 )
 
-uifile = get_asset("UI/extract_dialog.ui")
+uifile = get_asset("UI/dialogs/archive/extract_dialog.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

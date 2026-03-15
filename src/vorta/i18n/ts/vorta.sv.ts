@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit_dialog.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Ange ett profilnamn.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit_dialog.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Det finns redan en profil med det här namne.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit_dialog.py" line="24"/>
         <source>Save</source>
         <translation>Spara</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit_dialog.py" line="25"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
@@ -27,47 +27,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="80"/>
         <source>Repository Path:</source>
         <translation>Förrådssökväg:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="83"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Välj en plats för Borg-förrådet</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="112"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="112"/>
         <source>Repository URL:</source>
         <translation>Förrådets URL:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Kunde inte lägga till ditt förråd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="165"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="169"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Detta förråd har redan lagts till.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="105"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="105"/>
         <source>Show my passwords</source>
         <translation>Visa mina lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="90"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="90"/>
         <source>Autofilled password from password manager.</source>
         <translation>Automatiskt ifyllt lösenord från lösenordshanterare.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="102"/>
         <source>Hide my passwords</source>
         <translation>Dölj mina lösenord</translation>
     </message>
@@ -75,82 +75,82 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Starta nytt säkerhetskopieringsförråd</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>Förråds-URL:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local path as repository.</source>
         <translation>Välj en lokal mapp som förråd.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="201"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="201"/>
         <source>Encryption:</source>
         <translation>Kryptering:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="179"/>
         <source>SSH Key:</source>
         <translation>SSH-nyckel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="193"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="193"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Välj SSH-nyckel automatiskt (standard)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="247"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="247"/>
         <source>Add</source>
         <translation>Lägg till</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="254"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="254"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Allmänt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="158"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="158"/>
         <source>Advanced</source>
         <translation>Avancerat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="218"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>Extra Borg Arguments:</source>
         <translation>Extra Borg-argument:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="116"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
         <source>Borg passphrase:</source>
         <translation>Borg-lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="143"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="143"/>
         <source>Confirm passphrase:</source>
         <translation>Bekräfta lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="150"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="150"/>
         <source>TextLabel</source>
         <translation>TextEtikett</translation>
     </message>
@@ -496,177 +496,177 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="14"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="25"/>
         <source>Archive:</source>
         <translation>Arkiv:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 från November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
         <translation>Notera: Om du väljer en toppnivåmapp och väljer bort dess undermappar, kommer de ändå att återställas.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="88"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="95"/>
+        <location filename="../../assets/UI/dialogs/archive/extract_dialog.ui" line="95"/>
         <source>Extract</source>
         <translation>Extrahera</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Lägg till säkerhetskopieringsprofil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Säkerhetskopieringsprofiler möjliggör detaljerade säkerhetskopior från olika källor till olika mål. Du kan t.ex. säkerhetskopiera viktiga dokument till ett fjärrförråd via Wifi, samtidigt som du gör en fullständig säkerhetskopia på en lokal lagringsenhet.&lt;/p&gt;&lt;p&gt;Förråd och SSH-nycklar delas mellan profiler. Källmappar, aktiva målförråd, tillåtna nätverk, beskärning, validering och schemaläggning är per profil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="84"/>
         <source>Profile Name</source>
         <translation>Profilnamn</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="43"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="43"/>
         <source>Generate SSH Key</source>
         <translation>Generera SSH-nyckel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="55"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="55"/>
         <source>Key Format:</source>
         <translation>Nyckelformat:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="72"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="72"/>
         <source>Key Length:</source>
         <translation>Nyckellängd:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="107"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
         <source>Output File:</source>
         <translation>Utdatafil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
         <source>Don't change this if you want SSH to automatically find the key.</source>
         <translation>Ändra inte om du vill att SSH skall hitta nyckeln automatiskt.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="128"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
         <source>Close</source>
         <translation>Stäng</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
         <translation>Generera och kopiera till urklipp</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Välj två arkiv</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="60"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="65"/>
         <source>Size</source>
         <translation>Storlek</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="70"/>
         <source>Duration</source>
         <translation>Varaktighet</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Moneringspunkt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="80"/>
         <source>Name</source>
         <translation>Namn</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_dialog.ui" line="113"/>
         <source>Diff</source>
         <translation>Diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="25"/>
         <source>Difference between</source>
         <translation>Skillnad mellan</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="45"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="45"/>
         <source>and</source>
         <translation>och</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="101"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="101"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
         <translation>Vid aktivering, avslöjas din borg-lösenfras om du delar den här filen med andra. Använd detta med försiktighet!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Ta med borg-lösenfrasen i exporten</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="53"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="53"/>
         <source>Overwrite existing profile</source>
         <translation>Skriv över befintlig profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="60"/>
         <source>Overwrite existing settings</source>
         <translation>Skriv över befintliga inställningar</translation>
     </message>
@@ -674,7 +674,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="68"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit_dialog.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Byt profilnamn</translation>
     </message>
@@ -682,17 +682,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="192"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Anslut till befintligt förråd</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="210"/>
         <source>Show my password</source>
         <translation>Visa mitt lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/dialogs/repo/repo_add_dialog.py" line="207"/>
         <source>Hide my password</source>
         <translation>Dölj mitt lösenord</translation>
     </message>
@@ -700,37 +700,37 @@
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="29"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="29"/>
         <source>Export Profile</source>
         <translation>Exportera profil</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="38"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="38"/>
         <source>The current profile_export has no password</source>
         <translation>Den aktuella profile_export har inget lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="43"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="43"/>
         <source>Save profile_export</source>
         <translation>Spara profile_export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="55"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="55"/>
         <source>Error while exporting</source>
         <translation>Fel vid export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="71"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="71"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Filen {} kunde inte skapas. Välj en annan plats.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="78"/>
         <source>Profile export successful!</source>
         <translation>Profilexport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/dialogs/profile/export_window.py" line="78"/>
         <source>Profile export written to {}.</source>
         <translation>Profilexport skriven på {}.</translation>
     </message>
@@ -1201,32 +1201,32 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importera profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Lösenfrasen har lästs in från exportfilen</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Lösenfrasen har lästs in från din nyckelring</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="50"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Det finns ingen profil med namnet {}. Det finns inget att skriva över.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="61"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="61"/>
         <source>Error while importing</source>
         <translation>Fel vid import</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="77"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="77"/>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
@@ -1235,17 +1235,17 @@
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="80"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Nyare profile_export exportfiler kan inte användas i äldre versioner.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="82"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Kan inte läsa profile_export exportfil på grund av behörighetsfel.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="84"/>
+        <location filename="../../views/dialogs/profile/import_window.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Profilexportfil hittades inte</translation>
     </message>
@@ -1484,42 +1484,42 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="35"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="35"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (Rekommenderas)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="36"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="36"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (Äldre)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="37"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="37"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="46"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="46"/>
         <source>High (Recommended)</source>
         <translation>Hög (Rekommenderas)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="47"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="47"/>
         <source>Medium</source>
         <translation>Medel</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="60"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="60"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Nyckelfilen finns redan. Skriver inte över.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="72"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="72"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Ny nyckel kopierades till urklipp och skrevs till %s.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo/ssh_dialog.py" line="74"/>
         <source>Error during key generation.</source>
         <translation>Fel vid nyckelgenerering.</translation>
     </message>
