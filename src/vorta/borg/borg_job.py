@@ -162,7 +162,7 @@ class BorgJob(JobInterface, BackupProfileMixin):
             if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
                 ret['message'] = trans_late(
                     'messages',
-                    'Please unlock your system password manager or disable it under Misc',
+                    'Please unlock your system password manager or disable it under Settings',
                 )
                 return ret
 
