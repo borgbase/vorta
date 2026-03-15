@@ -1,16 +1,18 @@
+from __future__ import annotations
+
 import sys
-from typing import Dict, List
+from typing import Any
 
 from vorta.i18n import trans_late
 
 
-def get_misc_settings() -> List[Dict[str, str]]:
+def get_misc_settings() -> list[dict[str, Any]]:
     """
     Get the settings structure with default values.
 
     Returns
     -------
-    List[Dict[str, str]]
+    list[dict[str, Any]]
         The settings in a json-like way.
     """
     # groups
