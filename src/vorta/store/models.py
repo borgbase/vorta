@@ -63,7 +63,7 @@ class RepoModel(BaseModel):
         """Return whether another profile still references this repository."""
         query = BackupProfileModel.select().where(BackupProfileModel.repo == self)
         if excluding_profile_id is not None:
-            query = query.where(BackupProfileModel.id != excluding_profile_id)
+            query = query.where(BackupProfileModel.id != excluding_profile_id)  # type: ignore[attr-defined]
         return query.exists()
 
     class Meta:
