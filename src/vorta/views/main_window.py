@@ -28,9 +28,9 @@ from vorta.views.utils import get_colored_icon
 
 from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
-from .dialogs.export_window import ExportWindow
-from .dialogs.import_window import ImportWindow
-from .dialogs.profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
+from .dialogs.profile.export_window import ExportWindow
+from .dialogs.profile.import_window import ImportWindow
+from .dialogs.profile.profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .misc_tab import MiscTab
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
