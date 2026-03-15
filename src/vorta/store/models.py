@@ -247,6 +247,46 @@ class EventLogModel(BaseModel):
         database = DB
 
 
+class JobModel(BaseModel):
+    """Durable scheduler job record for pending and executed work."""
+
+    class StatusFieldOptions(Enum):
+        PENDING = 'pending'
+        QUEUED = 'queued'
+        RUNNING = 'running'
+        SUCCESS = 'success'
+        WARNING = 'warning'
+        FAILED = 'failed'
+        SKIPPED = 'skipped'
+        CANCELLED = 'cancelled'
+        INTERRUPTED = 'interrupted'
+
+    class SourceFieldOptions(Enum):
+        USER = 'user'
+        SCHEDULED = 'scheduled'
+        POST_BACKUP = 'post_backup'
+        RECOVERY = 'recovery'
+
+    created_at = pw.DateTimeField(default=datetime.now)
+    profile = pw.ForeignKeyField(BackupProfileModel, null=True, backref='jobs')
+    repo = pw.ForeignKeyField(RepoModel, null=True, backref='jobs')
+    job_type = pw.CharField()
+    source = pw.CharField(default=SourceFieldOptions.USER.value)
+    status = pw.CharField(default=StatusFieldOptions.PENDING.value)
+    scheduled_for = pw.DateTimeField(null=True)
+    queued_at = pw.DateTimeField(null=True)
+    started_at = pw.DateTimeField(null=True)
+    finished_at = pw.DateTimeField(null=True)
+    skip_reason_code = pw.CharField(null=True)
+    skip_reason_text = pw.CharField(null=True)
+    event_log = pw.ForeignKeyField(EventLogModel, null=True, backref='job_records')
+    parent_job = pw.ForeignKeyField('self', null=True, backref='child_jobs')
+    metadata = JSONField(null=True)
+
+    class Meta:
+        database = DB
+
+
 class SchemaVersion(BaseModel):
     """Keep DB version to apply the correct migrations."""
 

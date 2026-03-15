@@ -13,6 +13,7 @@ from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    JobModel,
     RepoModel,
     RepoPassword,
     SchemaVersion,
@@ -60,6 +61,7 @@ models = [
     ArchiveModel,
     WifiSettingModel,
     EventLogModel,
+    JobModel,
     SchemaVersion,
 ]
 

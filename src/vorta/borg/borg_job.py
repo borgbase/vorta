@@ -20,7 +20,7 @@ from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.store.models import EventLogModel
+from vorta.store.models import EventLogModel, JobModel
 from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
@@ -234,6 +234,7 @@ class BorgJob(JobInterface):
                 profile=self.params.get('profile_id', None),
             )
             log_entry.save()
+            self._mark_job_running(log_entry)
 
             # logs: put cmd arguments with special strings in quotation marks
             quote_strings = [' ', '*', '?', 're:']
@@ -341,6 +342,7 @@ class BorgJob(JobInterface):
         log_entry.end_time = dt.now()
         with db_lock:
             log_entry.save()
+            self._mark_job_finished(log_entry, result)
             self.process_result(result)
 
         self.finished_event(result)
@@ -349,6 +351,48 @@ class BorgJob(JobInterface):
 
     def process_result(self, result):
         pass
+
+    def _get_job_record(self):
+        job_model_id = self.params.get('job_model_id')
+        if job_model_id is None:
+            return None
+        return JobModel.get_or_none(id=job_model_id)
+
+    def _mark_job_running(self, log_entry):
+        job_record = self._get_job_record()
+        if job_record is None:
+            return
+
+        now = dt.now()
+        job_record.event_log = log_entry
+        job_record.status = JobModel.StatusFieldOptions.RUNNING.value
+        if job_record.queued_at is None:
+            job_record.queued_at = now
+        if job_record.started_at is None:
+            job_record.started_at = now
+        job_record.finished_at = None
+        job_record.skip_reason_code = None
+        job_record.skip_reason_text = None
+        job_record.save()
+
+    def _mark_job_finished(self, log_entry, result):
+        job_record = self._get_job_record()
+        if job_record is None:
+            return
+
+        if result['returncode'] == 0:
+            status = JobModel.StatusFieldOptions.SUCCESS.value
+        elif result['returncode'] == 1:
+            status = JobModel.StatusFieldOptions.WARNING.value
+        else:
+            status = JobModel.StatusFieldOptions.FAILED.value
+
+        job_record.event_log = log_entry
+        job_record.status = status
+        if job_record.started_at is None:
+            job_record.started_at = log_entry.start_time
+        job_record.finished_at = log_entry.end_time
+        job_record.save()
 
     def started_event(self):
         self.updated.emit(self.tr('Task started'))

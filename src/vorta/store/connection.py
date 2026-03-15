@@ -18,6 +18,7 @@ from .models import (
     BackupProfileModel,
     EventLogModel,
     ExclusionModel,
+    JobModel,
     RepoModel,
     RepoPassword,
     SchemaVersion,
@@ -27,7 +28,7 @@ from .models import (
 )
 from .settings import get_misc_settings
 
-SCHEMA_VERSION = 23
+SCHEMA_VERSION = 24
 
 
 @signals.post_save(sender=SettingsModel)
@@ -57,6 +58,7 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
             ArchiveModel,
             WifiSettingModel,
             EventLogModel,
+            JobModel,
             SchemaVersion,
             ExclusionModel,
         ]

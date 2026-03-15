@@ -1,6 +1,5 @@
 from datetime import datetime as dt
 from datetime import timedelta as td
-from functools import wraps
 from unittest.mock import MagicMock
 
 import pytest
@@ -25,22 +24,17 @@ def clockmock(monkeypatch):
     return datetime_mock
 
 
-def prepare(func):
-    """Decorator adding common preparation steps."""
-
-    @wraps(func)
-    def do(qapp, qtbot, mocker, borg_json_output):
-        stdout, stderr = borg_json_output('create')
-        popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-        mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-
-        return func(qapp, qtbot, mocker, borg_json_output)
-
-    return do
+@pytest.fixture
+def mock_borg_create(mocker, borg_json_output):
+    stdout, stderr = borg_json_output('create')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+    mocker.patch.object(vorta.borg.borg_job.BorgJob, 'prepare_bin', return_value='borg')
+    mocker.patch.object(vorta.borg.borg_job.os, 'set_blocking', return_value=None, create=True)
+    mocker.patch.object(vorta.borg.borg_job.select, 'select', side_effect=lambda r, w, x, t: (r, w, x))
 
 
-@prepare
-def test_scheduler_create_backup(qapp, qtbot, mocker, borg_json_output):
+def test_scheduler_create_backup(qapp, qtbot, mock_borg_create):
     """Test running a backup with `create_backup`."""
     events_before = EventLogModel.select().count()
 
@@ -203,7 +197,9 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
         (td(hours=20), 18, 00, td(hours=24), True),
     ],
 )
-def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup):
+def test_missed_startup(
+    qapp, qtbot, mock_borg_create, window_load, clockmock, now, hour, minute, time_since_last_run, expect_catchup
+):
     time = dt(2020, 5, 4, 0, 0) + now
     clockmock.now.return_value = time
 

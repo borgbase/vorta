@@ -20,7 +20,7 @@ from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
@@ -103,6 +103,99 @@ class VortaScheduler(QtCore.QObject):
         scope = self.__class__.__name__
         return translate(scope, *args, **kwargs)
 
+    def _pending_scheduled_job_query(self, profile_id: int):
+        return (
+            JobModel.select()
+            .where(
+                JobModel.profile == profile_id,
+                JobModel.job_type == 'create',
+                JobModel.source == JobModel.SourceFieldOptions.SCHEDULED.value,
+                JobModel.status == JobModel.StatusFieldOptions.PENDING.value,
+            )
+            .order_by(JobModel.created_at.desc())
+        )
+
+    def _cancel_pending_jobs(self, profile_id: int, reason_code: str, reason_text: str):
+        now = dt.now()
+        (
+            JobModel.update(
+                status=JobModel.StatusFieldOptions.CANCELLED.value,
+                finished_at=now,
+                skip_reason_code=reason_code,
+                skip_reason_text=reason_text,
+            )
+            .where(
+                JobModel.profile == profile_id,
+                JobModel.job_type == 'create',
+                JobModel.source == JobModel.SourceFieldOptions.SCHEDULED.value,
+                JobModel.status == JobModel.StatusFieldOptions.PENDING.value,
+            )
+            .execute()
+        )
+
+    def _ensure_scheduled_job(self, profile: BackupProfileModel, scheduled_for: dt) -> JobModel:
+        pending_jobs = list(self._pending_scheduled_job_query(profile.id))
+        now = dt.now()
+
+        if pending_jobs:
+            job = pending_jobs[0]
+            job.repo = profile.repo
+            job.scheduled_for = scheduled_for
+            job.finished_at = None
+            job.skip_reason_code = None
+            job.skip_reason_text = None
+            job.metadata = {'schedule_mode': profile.schedule_mode}
+            job.save()
+        else:
+            job = JobModel.create(
+                profile=profile,
+                repo=profile.repo,
+                job_type='create',
+                source=JobModel.SourceFieldOptions.SCHEDULED.value,
+                status=JobModel.StatusFieldOptions.PENDING.value,
+                scheduled_for=scheduled_for,
+                metadata={'schedule_mode': profile.schedule_mode},
+            )
+
+        for duplicate in pending_jobs[1:]:
+            duplicate.status = JobModel.StatusFieldOptions.CANCELLED.value
+            duplicate.finished_at = now
+            duplicate.skip_reason_code = 'superseded'
+            duplicate.skip_reason_text = self.tr('Superseded by a newer scheduled backup.')
+            duplicate.save()
+
+        return job
+
+    def _mark_job_queued(self, job_id: int):
+        now = dt.now()
+        (
+            JobModel.update(
+                status=JobModel.StatusFieldOptions.QUEUED.value,
+                queued_at=now,
+                finished_at=None,
+                skip_reason_code=None,
+                skip_reason_text=None,
+            )
+            .where(JobModel.id == job_id)
+            .execute()
+        )
+
+    def _mark_job_skipped(self, job_id: int | None, reason_code: str, reason_text: str):
+        if job_id is None:
+            return
+
+        now = dt.now()
+        (
+            JobModel.update(
+                status=JobModel.StatusFieldOptions.SKIPPED.value,
+                finished_at=now,
+                skip_reason_code=reason_code,
+                skip_reason_text=reason_text,
+            )
+            .where(JobModel.id == job_id)
+            .execute()
+        )
+
     def pause(self, profile_id: int, until: dt | None = None) -> None:
         """
         Call a timeout for scheduling of a given profile.
@@ -145,6 +238,7 @@ class VortaScheduler(QtCore.QObject):
 
         # remove existing schedule
         self.remove_job(profile_id)
+        self._cancel_pending_jobs(profile_id, 'paused', self.tr('Scheduling paused.'))
 
         # setting timer for reschedule is not possible if called
         # from a non-QThread -  it won't fail but won't work
@@ -214,9 +308,9 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
         if profile is None:  # profile doesn't exist any more.
             return
+        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
 
         with self.lock:  # Acquire lock
             self.remove_job(profile_id)  # reset schedule
@@ -240,12 +334,14 @@ class VortaScheduler(QtCore.QObject):
                     'Nothing scheduled for profile %s because of unset repo.',
                     profile_id,
                 )
+                self._cancel_pending_jobs(profile_id, 'missing_repo', self.tr('No repository configured.'))
                 # Emit signal so that e.g. the GUI can react to the new schedule
                 self.schedule_changed.emit()
                 return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
+                self._cancel_pending_jobs(profile_id, 'schedule_disabled', self.tr('Schedule disabled.'))
                 # Emit signal so that e.g. the GUI can react to the new schedule
                 self.schedule_changed.emit()
                 return
@@ -284,6 +380,11 @@ class VortaScheduler(QtCore.QObject):
                     + "because it would be the first backup "
                     + "for this profile."
                 )
+                self._cancel_pending_jobs(
+                    profile_id,
+                    'awaiting_first_backup',
+                    self.tr('Run a manual backup before scheduling starts.'),
+                )
                 self.timers[profile_id] = {'type': ScheduleStatusType.NO_PREVIOUS_BACKUP}
                 # Emit signal so that e.g. the GUI can react to the new schedule
                 self.schedule_changed.emit()
@@ -316,6 +417,7 @@ class VortaScheduler(QtCore.QObject):
             # handle missing of a scheduled time
             if next_time <= dt.now():
                 if profile.schedule_make_up_missed and (self._net_up or not needs_network):
+                    scheduled_job = self._ensure_scheduled_job(profile, next_time)
                     self.lock.release()
                     try:
                         logger.debug(
@@ -323,13 +425,19 @@ class VortaScheduler(QtCore.QObject):
                             profile.name,
                             profile_id,
                         )
-                        self.create_backup(profile_id)
+                        self.create_backup(profile_id, scheduled_job.id)
                     finally:
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
                 elif profile.schedule_make_up_missed and not self._net_up and needs_network:
                     logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
+                    skipped_job = self._ensure_scheduled_job(profile, next_time)
+                    self._mark_job_skipped(
+                        skipped_job.id,
+                        'network_unavailable',
+                        self.tr('Skipped scheduled backup because the network is unavailable.'),
+                    )
 
                 # calculate next time from now
                 if profile.schedule_mode == 'interval':
@@ -354,6 +462,7 @@ class VortaScheduler(QtCore.QObject):
 
             # start QTimer
             timer_ms = (next_time - dt.now()).total_seconds() * 1000
+            scheduled_job = self._ensure_scheduled_job(profile, next_time)
 
             if timer_ms < 2**31 - 1:
                 logger.debug('Scheduling next run for %s', next_time)
@@ -361,7 +470,7 @@ class VortaScheduler(QtCore.QObject):
                 timer = QTimer()
                 timer.setSingleShot(True)
                 timer.setInterval(int(timer_ms))
-                timer.timeout.connect(lambda: self.create_backup(profile_id))
+                timer.timeout.connect(lambda: self.create_backup(profile_id, scheduled_job.id))
                 timer.start()
 
                 self.timers[profile_id] = {
@@ -421,7 +530,7 @@ class VortaScheduler(QtCore.QObject):
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))  # type: ignore[arg-type]
 
-    def create_backup(self, profile_id: int) -> None:
+    def create_backup(self, profile_id: int, job_id: int | None = None) -> None:
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
@@ -429,9 +538,22 @@ class VortaScheduler(QtCore.QObject):
             logger.info('Profile not found. Maybe deleted?')
             return
 
+        if profile.repo is None:
+            logger.info('Profile %s has no repository configured.', profile_id)
+            self._mark_job_skipped(job_id, 'missing_repo', self.tr('No repository configured.'))
+            return
+
+        if job_id is None:
+            job_id = self._ensure_scheduled_job(profile, dt.now()).id
+
         # Skip if a job for this profile (repo) is already in progress
         if self.app.jobs_manager.is_worker_running(site=profile.repo.id):
             logger.debug('A job for repo %s is already active.', profile.repo.id)
+            self._mark_job_skipped(
+                job_id,
+                'repo_busy',
+                self.tr('Skipped scheduled backup because another repository job is already running.'),
+            )
             self.pause(profile_id)
             return
 
@@ -445,13 +567,16 @@ class VortaScheduler(QtCore.QObject):
             msg = BorgCreateJob.prepare(profile)
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
+                self._mark_job_queued(job_id)
                 msg['category'] = 'scheduled'
+                msg['job_model_id'] = job_id
                 job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
             else:
                 logger.error('Conditions for backup not met. Aborting.')
                 logger.error(msg['message'])
+                self._mark_job_skipped(job_id, 'preparation_failed', translate('messages', msg['message']))
                 notifier.deliver(
                     self.tr('Vorta Backup'),
                     translate('messages', msg['message']),

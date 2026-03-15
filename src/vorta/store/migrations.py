@@ -269,6 +269,9 @@ def run_migrations(current_schema: SchemaVersion, db_connection: pw.SqliteDataba
             ),
         )
 
+    if current_schema.version < 24:
+        _apply_schema_update(current_schema, 24)
+
 
 def _apply_schema_update(current_schema: SchemaVersion, version_after: int, *operations: Operation) -> None:
     with DB.atomic():
