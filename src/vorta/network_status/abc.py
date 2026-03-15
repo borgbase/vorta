@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 import sys
 from datetime import datetime
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class NetworkStatusMonitor(QObject):
     @classmethod
-    def get_network_status_monitor(cls) -> 'NetworkStatusMonitor':
+    def get_network_status_monitor(cls) -> NetworkStatusMonitor:
         if sys.platform == 'darwin':
             from .darwin import DarwinNetworkStatus
 
@@ -26,10 +28,10 @@ class NetworkStatusMonitor(QObject):
 
     network_status_changed = pyqtSignal(bool, name="networkStatusChanged")
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
 
-    def is_network_status_available(self):
+    def is_network_status_available(self) -> bool:
         """Is the network status really available, and not just a dummy implementation?"""
         return type(self) is not NetworkStatusMonitor
 
@@ -44,37 +46,37 @@ class NetworkStatusMonitor(QObject):
         """Is the currently connected network a metered connection?"""
         raise NotImplementedError()
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         """Get current SSID or None if Wifi is off."""
         raise NotImplementedError()
 
-    def get_known_wifis(self) -> List['SystemWifiInfo']:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         """Get WiFi networks known to system."""
         raise NotImplementedError()
 
 
 class SystemWifiInfo(NamedTuple):
     ssid: str
-    last_connected: Optional[datetime]
+    last_connected: datetime | None
 
 
 class NullNetworkStatusMonitor(NetworkStatusMonitor):
     """Dummy implementation, in case we don't have one for current platform."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def is_network_active(self):
+    def is_network_active(self) -> bool:
         return True
 
-    def is_network_status_available(self):
+    def is_network_status_available(self) -> bool:
         return False
 
     def is_network_metered(self) -> bool:
         return False
 
-    def get_current_wifi(self) -> Optional[str]:
+    def get_current_wifi(self) -> str | None:
         pass
 
-    def get_known_wifis(self) -> List['SystemWifiInfo']:
+    def get_known_wifis(self) -> list[SystemWifiInfo]:
         return []
