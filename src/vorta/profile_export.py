@@ -12,6 +12,7 @@ from vorta.store.models import (
     SchemaVersion,
     SettingsModel,
     SourceFileModel,
+    ExcludeModel,
     WifiSettingModel,
 )
 
@@ -60,9 +61,14 @@ class ProfileExport:
 
         # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
-        profile_dict['SourceFileModel'] = [
+        profile_dict['SourceFileModel'] = [ 
             model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
+        ]
+        # Add ExcludeModel
+        profile_dict['ExcludeModel']=[
+            model_to_dict(exclude, recurse=False, exclude=[ExcludeModel.id])
+            for exclude in ExcludeModel.select().where(ExcludeModel.profile == profile)
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
