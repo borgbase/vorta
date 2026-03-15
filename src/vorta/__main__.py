@@ -12,7 +12,7 @@ from vorta.log import init_logger, logger
 from vorta.store.connection import init_db
 from vorta.updater import get_updater
 from vorta.utils import DEFAULT_DIR_FLAG, parse_args
-from vorta.views.exception_dialog import ExceptionDialog
+from vorta.views.dialogs.exception_dialog import ExceptionDialog
 
 
 def main():

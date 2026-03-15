@@ -28,10 +28,10 @@ from vorta.views.utils import get_colored_icon
 
 from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
-from .export_window import ExportWindow
-from .import_window import ImportWindow
+from .dialogs.export_window import ExportWindow
+from .dialogs.import_window import ImportWindow
+from .dialogs.profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .misc_tab import MiscTab
-from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab

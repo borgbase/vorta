@@ -20,7 +20,7 @@ from vorta.utils import (
     sort_sizes,
 )
 from vorta.views.base_tab import BaseTab
-from vorta.views.exclude_dialog import ExcludeDialog
+from vorta.views.dialogs.exclude_dialog import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
