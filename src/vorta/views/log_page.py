@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 
 from vorta import config
 from vorta.i18n.richtext import format_richtext, link
-from vorta.store.models import BackupProfileMixin, EventLogModel
+from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
 

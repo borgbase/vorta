@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import ArchiveModel, BackupProfileMixin, RepoModel
+from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
 
 from .base_tab import BaseTab

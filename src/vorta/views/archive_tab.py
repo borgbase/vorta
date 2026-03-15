@@ -33,7 +33,7 @@ from vorta.borg.rename import BorgRenameJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import ArchiveModel, BackupProfileMixin, SettingsModel
+from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
     choose_file_dialog,
