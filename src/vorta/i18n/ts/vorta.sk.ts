@@ -70,22 +70,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>Uložiť</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="26"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>Zrušiť</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Zadajte, prosím, názov profilu.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="29"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>Takto pomenovaný profil už existuje.</translation>
     </message>
@@ -541,47 +541,47 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg heslo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Zadajte heslo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Prepísať existujúci profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Prepísať existujúce nastavenia</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Pridať profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Pridať profil zálohovania</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
         <translation>Profily umožnujú nastaviť rozdielne nastavenia pre zálohy a repozitáre vrátane rozdielnych časových rozvrhov.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
         <translation>Všetky profily majú prístup k tým istým repozitárom a rovnako tak aj ku%1 kľúčom. Globálne nastavenia aplikácie v %2 sú zdieľané všetkými profilmi.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Názov profilu:</translation>
     </message>
@@ -706,12 +706,12 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Zbaliť všetko</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Zahrnúť borg heslo v expore. Používajte opatrne!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Zahrnúť borg heslo do exportu</translation>
     </message>
@@ -895,7 +895,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="69"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Premenovať profil</translation>
     </message>

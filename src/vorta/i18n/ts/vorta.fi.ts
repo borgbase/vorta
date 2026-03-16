@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Cancel</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Anna profiilille nimi.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Nimi on jo käytössä.</translation>
     </message>
@@ -504,47 +504,47 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borgin tunnuslause:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Syötä salauslause</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Korvaa aikaisempi profiili</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Korvaa aikaisemmat asetukset</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Lisää profiili</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Lisää varmuuskopioprofiili</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
         <translation>Profiilit mahdollistavat eri varmuuskopio- ja tietovarastoasetusten sekä ajastusasetusten tallentamisen.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
         <translation>Kaikki profiilit voivat käyttää samoja tietovarastoja sekä %1-avaimia. Yleisiä asetuksia %2 sovelletaan kaikkiin profiileihin.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Profiilin nimi:</translation>
     </message>
@@ -634,12 +634,12 @@
         <translation>Laajenna kaikki</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Sisällytä Borgin salauslause vientiin. Käytä varauksella!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Sisällytä Borgin tunnuslause vientiin</translation>
     </message>
@@ -793,7 +793,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="68"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Nimeä profiili uudelleen</translation>
     </message>

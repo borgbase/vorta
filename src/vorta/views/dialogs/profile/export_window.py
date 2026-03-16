@@ -12,9 +12,9 @@ from vorta.profile_export import ProfileExport
 from vorta.store.models import BackupProfileModel  # noqa: F401
 from vorta.utils import get_asset
 
-uifile_import = get_asset('UI/dialogs/export_window.ui')
+uifile_import = get_asset('UI/dialogs/profile/export_window.ui')
 ExportWindowUI, ExportWindowBase = uic.loadUiType(uifile_import)
-uifile_export = get_asset('UI/dialogs/import_window.ui')
+uifile_export = get_asset('UI/dialogs/profile/import_window.ui')
 ImportWindowUI, ImportWindowBase = uic.loadUiType(uifile_export)
 logger = logging.getLogger(__name__)
 

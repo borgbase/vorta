@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Введите название профиля.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Профиль с таким названием уже существует.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -526,17 +526,17 @@
         <translation>Извлечь</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Добавление профиля</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Профили архивации позволяют архивировать файлы из различных источников в различные хранилища. Например, можно архивировать важные документы на удалённый репозиторий через Wifi, а полный архив хранить на локальном устройстве.&lt;/p&gt;&lt;p&gt;Репозитории и ключи SSH доступны всем профилям. Исходные папки, выбранный репозиторий, разрешённые сети, очистка, проверка и расписание задаются отдельно для каждого профиля.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="84"/>
         <source>Profile Name</source>
         <translation>Название профиля</translation>
     </message>
@@ -646,27 +646,27 @@
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
         <translation>Если включено, то при передаче этого файла другим лицам ваш пароль Borg будет раскрыт. Используйте с осторожностью!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Включить пароль Borg в экспорт</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Пароль Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="53"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="53"/>
         <source>Overwrite existing profile</source>
         <translation>Перезаписать существующий профиль</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="60"/>
         <source>Overwrite existing settings</source>
         <translation>Перезаписать существующие настройки</translation>
     </message>
@@ -674,7 +674,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="68"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Переименование профиля</translation>
     </message>

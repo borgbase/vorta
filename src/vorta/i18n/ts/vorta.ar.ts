@@ -70,22 +70,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>حفظ</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="26"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>إلغاء </translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>رجاء، أدخل اسم ملف تعريف. </translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="29"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>ملف تعريف بهذا الاسم موجود مسبقا. </translation>
     </message>
@@ -541,47 +541,47 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>عبارة مرور بورغ:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>أدخل عبارة المرور</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>الكتابة فوق ملف التعريف الموجود</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>الكتابة فوق الإعدادات الموجودة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>إضافة ملف شخصي</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>إضافة ملف تعريف النسخ الاحتياطي</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
         <translation>تسمح ملفات التعريفات بتكوين إعدادات النسخ الاحتياطي والمستودع المختلفة بما في ذلك جداول زمنية مختلفة.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
         <translation>ستكون جميع ملفات التعريفات قادرة على الوصول إلى نفس المستودعات بالإضافة إلى مفاتيح %1. إعدادات التطبيق العامة في %2 تتم مشاركتها عبر ملفات التعريفات.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>اسم ملف التعريف:</translation>
     </message>
@@ -706,12 +706,12 @@ https://github.com/borgbase/vorta/issues/new
         <translation>طي الكل</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير. استخدم بحذر!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير</translation>
     </message>
@@ -895,7 +895,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="69"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>إعادة تسمية الملف الشخصي</translation>
     </message>

@@ -4,22 +4,22 @@
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Ange ett profilnamn.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Det finns redan en profil med det här namne.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
         <source>Save</source>
         <translation>Spara</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
@@ -526,17 +526,17 @@
         <translation>Extrahera</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Lägg till säkerhetskopieringsprofil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Säkerhetskopieringsprofiler möjliggör detaljerade säkerhetskopior från olika källor till olika mål. Du kan t.ex. säkerhetskopiera viktiga dokument till ett fjärrförråd via Wifi, samtidigt som du gör en fullständig säkerhetskopia på en lokal lagringsenhet.&lt;/p&gt;&lt;p&gt;Förråd och SSH-nycklar delas mellan profiler. Källmappar, aktiva målförråd, tillåtna nätverk, beskärning, validering och schemaläggning är per profil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="84"/>
         <source>Profile Name</source>
         <translation>Profilnamn</translation>
     </message>
@@ -646,27 +646,27 @@
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
         <translation>Vid aktivering, avslöjas din borg-lösenfras om du delar den här filen med andra. Använd detta med försiktighet!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Ta med borg-lösenfrasen i exporten</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="53"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="53"/>
         <source>Overwrite existing profile</source>
         <translation>Skriv över befintlig profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/import_window.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="60"/>
         <source>Overwrite existing settings</source>
         <translation>Skriv över befintliga inställningar</translation>
     </message>
@@ -674,7 +674,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile_add_edit.py" line="68"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Byt profilnamn</translation>
     </message>
