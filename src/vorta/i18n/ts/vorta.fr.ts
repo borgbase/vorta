@@ -579,17 +579,17 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archive :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
         <translation>Note : Si vous sélectionner un dossier sans sélectionner les sous-dossiers, ceux-ci seront quand même restaurés. </translation>
     </message>
@@ -759,7 +759,7 @@
         <translation>Résultat de diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Choisissez les fichiers à extraire</translation>
     </message>
@@ -831,7 +831,7 @@
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="76"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="76"/>
         <source>Extract</source>
         <translation>Extraire</translation>
     </message>

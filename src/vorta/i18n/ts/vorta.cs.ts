@@ -586,32 +586,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Název profilu:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>Přidat vzory pro vynechání</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>Uživatelsky určené</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>Přednastavené</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>Holé</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>Náhled</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>Zkopírovat do schránky</translation>
     </message>
@@ -661,47 +661,47 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Rozdíl</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Zvolte soubory, které rozbalit</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archiv:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>Při řazení ponechat složky na začátku</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>Složky jako první</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>Nastavit režim zobrazování výstupu z porovnání rozdílů</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>Strom</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>Zjednodušený strom</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>Sbalit vše</translation>
     </message>
@@ -796,12 +796,12 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Hlášení o pádu:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>Vynechat pokud přednastavené</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation>Vynechat soubory/složky</translation>
     </message>
@@ -903,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>Zkopírovat</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>Odebrat</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>Vyp/zap.</translation>
     </message>
@@ -982,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>Rozbalit</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>Zkopírovat</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>Rozbalit celou větev</translation>
     </message>
@@ -1000,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>Naposledy změněno</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>Velikost</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>Stav</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>Složka</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>Symbolický odkaz</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>FIFO roura</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>Pevný odkaz</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>Soket</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>Speciální soubor blokového zařízení</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>Speciální soubor znakového zařízení</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>v pořádku</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>poškozené</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>Napojeno na: {}</translation>
     </message>

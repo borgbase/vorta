@@ -586,32 +586,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Nome do Perfil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>Engadir patróns de exclusión</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>Persoal</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>Prestablecido</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>En crú</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>Vista previa</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>Copiar ao Portapapeis</translation>
     </message>
@@ -661,47 +661,47 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Diferenza</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Elexir ficheiros a extraer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Arquivo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>Manter na parte superior os cartafoles ao ordenar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>Primeiro Cartafoles</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>Modo de visualización para diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>Árbore</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>Árbore, simplificada</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>Pregar Todo</translation>
     </message>
@@ -796,12 +796,12 @@ https://github.com/borgbase/vorta/issues/new
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation type="unfinished"/>
     </message>
@@ -903,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>Eliminar</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>Cambiar</translation>
     </message>
@@ -982,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>Extraer</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>Copiarq</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>Despregrar recursivamente</translation>
     </message>
@@ -1000,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>Última modificación</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>Tamaño</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>Saúde</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>Ficheiro</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>Directorio</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>Ligazón simbólica</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>saudable</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>estragada</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>Enlaza con: {}</translation>
     </message>

@@ -594,17 +594,17 @@
         <translation>Comparar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Seleccionar archivos que extraer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Instantánea:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
@@ -857,17 +857,17 @@
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="114"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="114"/>
         <source>Extract</source>
         <translation>Extraer</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="184"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="184"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="188"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="188"/>
         <source>Expand recursively</source>
         <translation>Expandir recursivamente</translation>
     </message>
@@ -875,77 +875,77 @@
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="407"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="407"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="409"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="409"/>
         <source>Last Modified</source>
         <translation>Última modificación</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="411"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="411"/>
         <source>Size</source>
         <translation>Tamaño</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="413"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="413"/>
         <source>Health</source>
         <translation>Estado</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="492"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="492"/>
         <source>File</source>
         <translation>Archivo</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="494"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="494"/>
         <source>Directory</source>
         <translation>Directorio</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="496"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="496"/>
         <source>Symbolic link</source>
         <translation>Enlace simbólico</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="498"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="498"/>
         <source>FIFO pipe</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="500"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="500"/>
         <source>Hard link</source>
         <translation>Enlace físico</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="502"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="502"/>
         <source>Socket</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="504"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="504"/>
         <source>Block special file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="506"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="506"/>
         <source>Character special file</source>
         <translation>Archivo de carácter especial</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="513"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="513"/>
         <source>healthy</source>
         <translation>perfecto</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="515"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="515"/>
         <source>broken</source>
         <translation>roto</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Linked to: {}</source>
         <translation>Enlazado a:</translation>
     </message>

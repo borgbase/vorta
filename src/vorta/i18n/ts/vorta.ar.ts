@@ -586,32 +586,32 @@ https://github.com/borgbase/vorta/issues/new
         <translation>اسم ملف التعريف:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>أضف أنماطا لاستبعادها</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>مخصّص</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>الإعدادات المسبقة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>خام</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>انسخ إلى الحافظة</translation>
     </message>
@@ -661,47 +661,47 @@ https://github.com/borgbase/vorta/issues/new
         <translation>الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>اختر ملفات لفك الضغط عنها</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>الأرشيف:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>احتفظ بالمجلدات في الأعلى عند الفرز</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>المجلدات أولا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>ضبط وضع العرض لعرض الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>شجرة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>شجرة، مبسطة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>طي الكل</translation>
     </message>
@@ -796,12 +796,12 @@ https://github.com/borgbase/vorta/issues/new
         <translation>تقرير الأعطال:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>استبعد إذا كان موجودا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/exclude.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation type="unfinished"/>
     </message>
@@ -903,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>إزالة</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/exclude.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>تبديل</translation>
     </message>
@@ -982,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>استخراج</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>توسيع بشكل متكرر</translation>
     </message>
@@ -1000,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>الاسم</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>آخر تعديل</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>الحجم</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>السلامة</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>ملف</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>الدليل</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>ارتباط رمزي</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>أنبوب FIFO</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>رابط صلب</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>مقبس</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>حظر ملف خاص</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>ملف جهاز الرمز</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>سليم</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>تالف</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/extract.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>مرتبط بـ: {}</translation>
     </message>

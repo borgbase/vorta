@@ -37,7 +37,7 @@ from vorta.views.partials.treemodel import (
 )
 from vorta.views.utils import get_colored_icon
 
-uifile = get_asset("UI/dialogs/extract.ui")
+uifile = get_asset("UI/dialogs/archive/extract.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)

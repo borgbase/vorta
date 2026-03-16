@@ -496,32 +496,32 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Arkiv:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 från November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
         <translation>Notera: Om du väljer en toppnivåmapp och väljer bort dess undermappar, kommer de ändå att återställas.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="88"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/extract.ui" line="95"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="95"/>
         <source>Extract</source>
         <translation>Extrahera</translation>
     </message>
