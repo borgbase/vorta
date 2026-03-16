@@ -1,6 +1,7 @@
 import logging
 from pathlib import PurePath
 
+from peewee import fn
 from PyQt6 import QtCore, QtGui, uic
 from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
@@ -334,8 +335,6 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         """
         Update the total size and files count for all sources.
         """
-        from peewee import fn
-
         total_size, total_files = (
             SourceFileModel.select(fn.SUM(SourceFileModel.dir_size), fn.SUM(SourceFileModel.dir_files_count))
             .where(SourceFileModel.profile == self.profile(), SourceFileModel.dir_size >= 0)
