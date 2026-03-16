@@ -27,47 +27,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="80"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
         <source>Repository Path:</source>
         <translation>Förrådssökväg:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Välj en plats för Borg-förrådet</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="112"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
         <source>Repository URL:</source>
         <translation>Förrådets URL:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="138"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Kunde inte lägga till ditt förråd.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="165"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="169"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Detta förråd har redan lagts till.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="105"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="105"/>
         <source>Show my passwords</source>
         <translation>Visa mina lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="90"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
         <source>Autofilled password from password manager.</source>
         <translation>Automatiskt ifyllt lösenord från lösenordshanterare.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="102"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="102"/>
         <source>Hide my passwords</source>
         <translation>Dölj mina lösenord</translation>
     </message>
@@ -75,82 +75,82 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Starta nytt säkerhetskopieringsförråd</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>Förråds-URL:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local path as repository.</source>
         <translation>Välj en lokal mapp som förråd.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="201"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="201"/>
         <source>Encryption:</source>
         <translation>Kryptering:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="179"/>
         <source>SSH Key:</source>
         <translation>SSH-nyckel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="193"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="193"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Välj SSH-nyckel automatiskt (standard)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="247"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="247"/>
         <source>Add</source>
         <translation>Lägg till</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="254"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="254"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Allmänt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="158"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="158"/>
         <source>Advanced</source>
         <translation>Avancerat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="218"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>Extra Borg Arguments:</source>
         <translation>Extra Borg-argument:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="116"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
         <source>Borg passphrase:</source>
         <translation>Borg-lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="143"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="143"/>
         <source>Confirm passphrase:</source>
         <translation>Bekräfta lösenfras:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="150"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="150"/>
         <source>TextLabel</source>
         <translation>TextEtikett</translation>
     </message>
@@ -541,47 +541,47 @@
         <translation>Profilnamn</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="43"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="43"/>
         <source>Generate SSH Key</source>
         <translation>Generera SSH-nyckel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="55"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="55"/>
         <source>Key Format:</source>
         <translation>Nyckelformat:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="72"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="72"/>
         <source>Key Length:</source>
         <translation>Nyckellängd:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="107"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
         <source>Output File:</source>
         <translation>Utdatafil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
         <source>Don't change this if you want SSH to automatically find the key.</source>
         <translation>Ändra inte om du vill att SSH skall hitta nyckeln automatiskt.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="128"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
         <source>Close</source>
         <translation>Stäng</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
         <translation>Generera och kopiera till urklipp</translation>
     </message>
@@ -682,17 +682,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="192"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Anslut till befintligt förråd</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="210"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="210"/>
         <source>Show my password</source>
         <translation>Visa mitt lösenord</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="207"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="207"/>
         <source>Hide my password</source>
         <translation>Dölj mitt lösenord</translation>
     </message>
@@ -1484,42 +1484,42 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="35"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (Rekommenderas)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="36"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="36"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (Äldre)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="37"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="37"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="46"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="46"/>
         <source>High (Recommended)</source>
         <translation>Hög (Rekommenderas)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="47"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="47"/>
         <source>Medium</source>
         <translation>Medel</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="60"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="60"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Nyckelfilen finns redan. Skriver inte över.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="72"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="72"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Ny nyckel kopierades till urklipp och skrevs till %s.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="74"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="74"/>
         <source>Error during key generation.</source>
         <translation>Fel vid nyckelgenerering.</translation>
     </message>

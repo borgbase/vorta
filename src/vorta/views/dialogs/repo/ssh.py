@@ -8,7 +8,7 @@ from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/ssh_add.ui')
+uifile = get_asset('UI/dialogs/repo/ssh_add.ui')
 SSHAddUI, SSHAddBase = uic.loadUiType(uifile)
 
 

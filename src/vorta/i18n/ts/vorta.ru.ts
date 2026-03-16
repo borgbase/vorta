@@ -27,47 +27,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="80"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
         <source>Repository Path:</source>
         <translation>Путь к репозиторию:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Выберите расположение репозитория Borg</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="112"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
         <source>Repository URL:</source>
         <translation>URL репозитория:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="138"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Не удалось добавить репозиторий.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="165"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Введите правильный URL репозитория или локальный путь.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="169"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Этот репозиторий уже добавлен.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="105"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="105"/>
         <source>Show my passwords</source>
         <translation>Показать мои пароли</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="90"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
         <source>Autofilled password from password manager.</source>
         <translation>Автоматически заполнять пароль из менеджера паролей</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="102"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="102"/>
         <source>Hide my passwords</source>
         <translation>Скрыть мои пароли</translation>
     </message>
@@ -75,82 +75,82 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Создание нового репозитория</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>URL репозитория:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local path as repository.</source>
         <translation>Выбрать для репозитория локальный путь.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="201"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="201"/>
         <source>Encryption:</source>
         <translation>Шифрование:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="179"/>
         <source>SSH Key:</source>
         <translation>Ключ SSH:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="193"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="193"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Автоматически выбирать ключ SSH (по умолчанию)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="247"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="247"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="254"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="254"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="158"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="158"/>
         <source>Advanced</source>
         <translation>Расширенные</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="218"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>Extra Borg Arguments:</source>
         <translation>Дополнительные аргументы Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="116"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
         <source>Borg passphrase:</source>
         <translation>Пароль Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="143"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="143"/>
         <source>Confirm passphrase:</source>
         <translation>Подтверждение пароля:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="150"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="150"/>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
     </message>
@@ -541,47 +541,47 @@
         <translation>Название профиля</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="43"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="43"/>
         <source>Generate SSH Key</source>
         <translation>Создать ключ SSH</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="55"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="55"/>
         <source>Key Format:</source>
         <translation>Формат ключа:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="72"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="72"/>
         <source>Key Length:</source>
         <translation>Длина ключа:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 или 4096 для RSA, 384 или 521 для ECDSA. Фиксировано для Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="107"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
         <source>Output File:</source>
         <translation>Выходной файл:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
         <source>Don't change this if you want SSH to automatically find the key.</source>
         <translation>Не изменяйте, если вы хотите, чтобы SSH автоматически нашел ключ.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="128"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
         <translation>Создать и скопировать в буфер обмена</translation>
     </message>
@@ -682,17 +682,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="192"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Подключение к существующему репозиторию</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="210"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="210"/>
         <source>Show my password</source>
         <translation>Показать мой пароль</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="207"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="207"/>
         <source>Hide my password</source>
         <translation>Скрыть мой пароль</translation>
     </message>
@@ -1484,42 +1484,42 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="35"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (рекомендуется)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="36"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="36"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (устарело)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="37"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="37"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="46"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="46"/>
         <source>High (Recommended)</source>
         <translation>Высокая (рекомендуется)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="47"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="47"/>
         <source>Medium</source>
         <translation>Средняя</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="60"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="60"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Файл ключа уже существует и не будет перезаписан.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="72"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="72"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Новый ключ был скопирован в буфер обмена и записан в %s.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="74"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="74"/>
         <source>Error during key generation.</source>
         <translation>Ошибка при создании ключа.</translation>
     </message>

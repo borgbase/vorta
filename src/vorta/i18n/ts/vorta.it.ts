@@ -93,57 +93,57 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="139"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="139"/>
         <source>Encryption:</source>
         <translation>Cifratura:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="156"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156"/>
         <source>Autofilled password from password manager.</source>
         <translation>Password automatica suggerita dal gestore di password.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="170"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (consigliata, chiave memorizzata nel repository)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="174"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="174"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (chiave memorizzata nella cartella home)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="177"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="177"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="178"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="178"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="187"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187"/>
         <source>None (not recommended)</source>
         <translation>Nessuna (sconsigliata)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="183"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (consigliata, chiave salvata nel repository)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="184"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="184"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="185"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="185"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (chiave salvata nella cartella home)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="186"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186"/>
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
@@ -151,77 +151,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="14"/>
         <source>Add Repository</source>
         <translation>Aggiungi repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Generale</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Inizializza un nuovo repository dei backup</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>URL del repository:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local folder</source>
         <translation>Scegli una cartella locale</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>Choose a remote repository</source>
         <translation>Scegli un repository remoto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="119"/>
         <source>Repository Name:</source>
         <translation>Nome repository:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="126"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="126"/>
         <source>Macbook Pro Office (optional)</source>
         <translation>Macbook Pro ufficio (facoltativo)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="141"/>
         <source>Advanced</source>
         <translation>Avanzate</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="162"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
         <translation>Chiave SSH:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="176"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="176"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Scegli automaticamente la chiave SSH (predefinita)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="184"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="184"/>
         <source>Extra Borg Arguments:</source>
         <translation>Argomenti aggiuntivi per Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="236"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -505,22 +505,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_change_passphrase.py" line="19"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_change_passphrase.py" line="29"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_change_passphrase.py" line="33"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_change_passphrase.py" line="62"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
         <translation type="unfinished"/>
     </message>
@@ -528,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -736,37 +736,37 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Piatto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>Genera Key SSH</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Formato della chiave:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Lunghezza della chiave:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 o 4096 per RSA, 384 o 521 per ECDSA. Fissa per Ed25519. %1</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>File di uscita:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Non cambiare questa impostazione se vuoi che SSH trovi automaticamente la chiave.</translation>
     </message>
@@ -921,22 +921,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="231"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="231"/>
         <source>Connect to existing Repository</source>
         <translation>Connetti a un repository esistente</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="234"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="234"/>
         <source>Password:</source>
         <translation>Password:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="242"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>Password compilata automaticamente dal gestore delle password.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="235"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235"/>
         <source>Enter the encryption passphrase</source>
         <translation type="unfinished"/>
     </message>
@@ -1938,42 +1938,42 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="57"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="57"/>
         <source>Add</source>
         <translation>Aggiungi</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="71"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="71"/>
         <source>Repository Path:</source>
         <translation>Percorso repository:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="74"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="74"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Scegli la posizione del repository di Borg</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Repository URL:</source>
         <translation>URL del repository:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="96"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="96"/>
         <source>Unable to add your repository.</source>
         <translation>Impossibile aggiungere il tuo repository.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="106"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Digita l'URL di un repository valido o seleziona un percorso locale.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="110"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
         <translation>Il nome del repository deve contenere meno di 65 caratteri.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="114"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="114"/>
         <source>This repo has already been added.</source>
         <translation>Questo repository è già stato aggiunto.</translation>
     </message>
@@ -1981,37 +1981,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="39"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="39"/>
         <source>Generate and copy to clipboard</source>
         <translation>Genera e copia negli appunti</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="42"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="42"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (consigliato)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="43"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="43"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (obsoleto)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="44"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="44"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="53"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="53"/>
         <source>High (Recommended)</source>
         <translation>Alto (consigliato)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="54"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="54"/>
         <source>Medium</source>
         <translation>Medio</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="67"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="67"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Il file della chiave esiste già. Non sovrascrivo.</translation>
     </message>

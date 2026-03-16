@@ -27,97 +27,97 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="59"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="59"/>
         <source>Add</source>
         <translation>Lisää</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="115"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="115"/>
         <source>Show my passwords</source>
         <translation>Näytä salasanat</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="90"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
         <source>Repository Path:</source>
         <translation>Tietovaraston polku:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="93"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="93"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Valitse Borg-tietovaraston sijainti</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="100"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="100"/>
         <source>Autofilled password from password manager.</source>
         <translation>Salasana täytetty automaattisesti salasanahallinnan sovelluksesta.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="112"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
         <source>Hide my passwords</source>
         <translation>Piilota salasanat</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="122"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="122"/>
         <source>Repository URL:</source>
         <translation>Tietovaraston osoite:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="148"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="148"/>
         <source>Unable to add your repository.</source>
         <translation>Tietovaraston lisääminen ei onnistunut.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="167"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="167"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (Suositeltu, avain säilötään tietovarastoon)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="168"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="168"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="169"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (Avain säilötään kotihakemistoon)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="170"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170"/>
         <source>Keyfile</source>
         <translation>Avaintiedosto</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="171"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="171"/>
         <source>None (not recommended)</source>
         <translation>Ei mitään (ei suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="190"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="190"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Anna kelvollinen tietovaraston osoite tai valitse paikallinen polku.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="194"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="194"/>
         <source>This repo has already been added.</source>
         <translation>Tämä tietovarasto on jo lisätty.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="154"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="154"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (Suositeltu, avain säilötään tietovarastoon)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="158"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="158"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (Avain säilötään kotihakemistoon)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="161"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="161"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="162"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="162"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
@@ -125,77 +125,77 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="69"/>
         <source>General</source>
         <translation>Yleiset</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="95"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="95"/>
         <source>Initialize New Backup Repository</source>
         <translation>Alusta uusi tietovarasto varmuuskopiolle</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="102"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="102"/>
         <source>Repository URL:</source>
         <translation>Tietovaraston osoite:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="124"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="124"/>
         <source>Choose a local folder</source>
         <translation>Valitse paikallinen hakemisto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="141"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="138"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="138"/>
         <source>Choose a remote repository</source>
         <translation>Valitse etätietovarasto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="154"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="154"/>
         <source>Borg passphrase:</source>
         <translation>Borgin tunnuslause:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="181"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="181"/>
         <source>Confirm passphrase:</source>
         <translation>Vahvista tunnuslause:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="188"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="188"/>
         <source>TextLabel</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="196"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="196"/>
         <source>Advanced</source>
         <translation>Lisäasetukset</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="217"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="217"/>
         <source>SSH Key:</source>
         <translation>SSH-avain:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="231"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="231"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Valitse SSH-avain automaattisesti (oletus)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="239"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="239"/>
         <source>Encryption:</source>
         <translation>Salaus:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="256"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="256"/>
         <source>Extra Borg Arguments:</source>
         <translation>Borgin lisäargumentit:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="117"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="117"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
@@ -664,37 +664,37 @@
         <translation>Tasainen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>Luo SSH-avain</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Avaimen muoto:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Avaimen pituus:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 tai 4096 RSA:lle, 384 tai 521 ECDSA:lle. Kiinteä Ed25519:lle. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Tulostetiedosto:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Jotta SSH löytää avaimen automaattisesti, älä muuta tätä.</translation>
     </message>
@@ -801,17 +801,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="217"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="217"/>
         <source>Connect to existing Repository</source>
         <translation>Yhdistä olemassa olevaan tietovarastoon</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="235"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235"/>
         <source>Show my password</source>
         <translation>Näytä salasana</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="232"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="232"/>
         <source>Hide my password</source>
         <translation>Piilota salasana</translation>
     </message>
@@ -1783,47 +1783,47 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="35"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
         <source>Generate and copy to clipboard</source>
         <translation>Luo ja kopioi leikepöydälle</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="38"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="38"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="39"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="39"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (vanha)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="40"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="40"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="49"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="49"/>
         <source>High (Recommended)</source>
         <translation>Korkea (suositeltu)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="50"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="50"/>
         <source>Medium</source>
         <translation>Keskitaso</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="63"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="63"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Avaintiedosto on jo olemassa. Ei korvata.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="75"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="75"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Uusi avain kopioitiin leikepöydälle ja kirjoitettiin sijaintiin %s.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="77"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="77"/>
         <source>Error during key generation.</source>
         <translation>Virhe avainta luotaessa.</translation>
     </message>

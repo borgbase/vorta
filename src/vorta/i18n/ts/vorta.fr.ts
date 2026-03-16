@@ -27,77 +27,77 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="94"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="94"/>
         <source>Repository Path:</source>
         <translation>Chemin d'accès du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="97"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="97"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Choisissez l'emplacement du dépôt Borg</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="126"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="126"/>
         <source>Repository URL:</source>
         <translation>URL du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="152"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="152"/>
         <source>Unable to add your repository.</source>
         <translation>Impossible d'ajouter le dépôt.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="179"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="179"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Saisissez un chemin d'accès URL valide ou sélectionnez un répertoire local</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="183"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183"/>
         <source>This repo has already been added.</source>
         <translation>Ce dépôt a déjà été ajouté.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="119"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="119"/>
         <source>Show my passwords</source>
         <translation>Montrer mes mots de passe</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="104"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="104"/>
         <source>Autofilled password from password manager.</source>
         <translation>Mot de passe auto-rempli depuis le gestionnaire de mots de passe.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="116"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="116"/>
         <source>Hide my passwords</source>
         <translation>Cacher mes mots de passe</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="63"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="63"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="156"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Clé de dépôt BLAKE2 (Recommandé, clé stockée dans le dépôt)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="157"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="157"/>
         <source>Repokey</source>
         <translation>Clé de dépôt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="158"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="158"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Fichier clé BLAKE2 (Clé stocké dans le répertoire personnel)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="159"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="159"/>
         <source>Keyfile</source>
         <translation>Fichier clé</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="160"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="160"/>
         <source>None (not recommended)</source>
         <translation>Aucun (déconseillé)</translation>
     </message>
@@ -105,77 +105,77 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="96"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="96"/>
         <source>Initialize New Backup Repository</source>
         <translation>Initialiser un nouveau dépôt de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>Repository URL:</source>
         <translation>URL du dépôt :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="118"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="118"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="142"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="142"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="240"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="240"/>
         <source>Encryption:</source>
         <translation>Chiffrement :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="218"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>SSH Key:</source>
         <translation>Clé SSH :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="232"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="232"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Choisir automatiquement une clef SSH (par défaut)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="69"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="197"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="197"/>
         <source>Advanced</source>
         <translation>Avancé</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="257"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="257"/>
         <source>Extra Borg Arguments:</source>
         <translation>Arguments Supplémentaires Pour Borg :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="155"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="155"/>
         <source>Borg passphrase:</source>
         <translation>Phrase de passe pour Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="182"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="182"/>
         <source>Confirm passphrase:</source>
         <translation>Confirmer la phrase de passe:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="189"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="189"/>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="125"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="125"/>
         <source>Choose a local folder</source>
         <translation>Choisissez un dossier local</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="139"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="139"/>
         <source>Choose a remote repository</source>
         <translation>Choisissez un dépôt distant</translation>
     </message>
@@ -604,32 +604,32 @@
         <translation>Ajouter un profil de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>Générer une clé SSH</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Format de clé :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Longueur de la clé :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 ou 4096 pour RSA, 384 ou 521 pour ECDSA. Pré-déterminé pour ED25519.%1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>More</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Fichier se sortie :</translation>
     </message>
@@ -744,7 +744,7 @@
         <translation>Nom du profil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Ne changez pas ceci si vous voulez que SSH trouve automatiquement la clef.</translation>
     </message>
@@ -775,17 +775,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="206"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="206"/>
         <source>Connect to existing Repository</source>
         <translation>Connexion à un dépôt existant</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="224"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="224"/>
         <source>Show my password</source>
         <translation>Afficher mon mot de passe</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo_add.py" line="221"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="221"/>
         <source>Hide my password</source>
         <translation>Cacher mon mot de passe</translation>
     </message>
@@ -1656,47 +1656,47 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="52"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="52"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (Recommandé)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="53"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="53"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (Classique)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="54"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="54"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="63"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="63"/>
         <source>High (Recommended)</source>
         <translation>Haut (Recommandé)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="64"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="64"/>
         <source>Medium</source>
         <translation>Moyen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="77"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="77"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Le fichier clé existe déjà. Il ne sera pas écrasé. </translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="89"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="89"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>La nouvelle clé a été copiée dans le presse-papier et écrite sous %s.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="91"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="91"/>
         <source>Error during key generation.</source>
         <translation>Erreur durant la génération de la clé.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/ssh.py" line="48"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="48"/>
         <source>Generate and copy to clipboard</source>
         <translation>Générer et copier dans le presse-papier</translation>
     </message>
