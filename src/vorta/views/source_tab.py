@@ -173,6 +173,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
+        self.update_total_size()
 
     def update_path_info(self, index_row: int):
         """
@@ -245,7 +246,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
-
+        self.update_total_size()
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
@@ -288,6 +289,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
+            self.update_total_size()
 
     def source_copy(self, index=None):
         """
@@ -326,6 +328,27 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
             self.sourceFilesWidget.removeRow(index.row())
 
             logger.debug(f"Removed source in row {index.row()}")
+        self.update_total_size()
+
+    def update_total_size(self):
+        """
+        Update the total size and files count for all sources.
+        """
+        total_size, total_files = 0, 0
+
+        sources = SourceFileModel.select().where(SourceFileModel.profile == self.profile())
+        for source in sources:
+            if source.dir_size > 0:
+                total_size += source.dir_size
+            if source.dir_files_count > 0:
+                total_files += source.dir_files_count
+
+        if total_size > 0:
+            self.totalSizeLabel.setText(
+                self.tr("Total Size: {}, {} files").format(pretty_bytes(total_size), total_files)
+            )
+        else:
+            self.totalSizeLabel.setText("")
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)
