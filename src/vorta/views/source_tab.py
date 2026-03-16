@@ -334,18 +334,18 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         """
         Update the total size and files count for all sources.
         """
-        total_size, total_files = 0, 0
+        from peewee import fn
 
-        sources = SourceFileModel.select().where(SourceFileModel.profile == self.profile())
-        for source in sources:
-            if source.dir_size > 0:
-                total_size += source.dir_size
-            if source.dir_files_count > 0:
-                total_files += source.dir_files_count
+        total_size, total_files = (
+            SourceFileModel.select(fn.SUM(SourceFileModel.dir_size), fn.SUM(SourceFileModel.dir_files_count))
+            .where(SourceFileModel.profile == self.profile(), SourceFileModel.dir_size >= 0)
+            .scalar(as_tuple=True)
+        )
 
-        if total_size > 0:
+        if total_size is not None:
+            total_files = total_files or 0
             self.totalSizeLabel.setText(
-                self.tr("Total Size: {}, {} files").format(pretty_bytes(total_size), total_files)
+                self.tr("Total Size: {size}, {count} files").format(size=pretty_bytes(total_size), count=total_files)
             )
         else:
             self.totalSizeLabel.setText("")
