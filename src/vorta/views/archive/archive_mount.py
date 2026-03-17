@@ -125,6 +125,7 @@ class ArchiveMount:
     def umount_result(self, result):
         self.tab._toggle_all_buttons(True)
         archive_name = result['params'].get('current_archive')
+        mount_point = result['params'].get('mount_point')
 
         if result['returncode'] == 0:
             self.tab._set_status(self.tab.tr('Un-mounted successfully.'))
@@ -139,4 +140,6 @@ class ArchiveMount:
                 self.tab.repo_mount_point = None
                 self.bmountrepo_refresh()
         else:
-            self.tab._set_status(self.tab.tr('Error: Unmount failed. See log for details.'))
+            self.tab._set_status(
+                self.tab.tr('Unmounting failed. Make sure no programs are using {}').format(mount_point)
+            )
