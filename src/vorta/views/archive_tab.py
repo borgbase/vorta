@@ -39,8 +39,8 @@ from vorta.utils import (
     get_mount_points,
     pretty_bytes,
 )
-from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.archive.archive_extract import ArchiveExtract
+from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive import diff_result
 from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
@@ -591,13 +591,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
-
-    def cell_double_clicked(self, row=None, column=None):, result):
-        self._set_status('')
-        if result['returncode'] == 0:
-            archive = ArchiveModel.get(name=result['params']['archive_name'])
-            self._set_status(self.tr("Processing archive contents"))
-            self._t.start()
 
     def cell_double_clicked(self, row=None, column=None):
         if not self.bRename.isEnabled():

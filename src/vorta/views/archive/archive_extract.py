@@ -3,11 +3,11 @@ from PyQt6.QtWidgets import QDialog
 
 from vorta.borg.extract import BorgExtractJob
 from vorta.borg.list_archive import BorgListArchiveJob
-from vorta.filedialog import choose_file_dialog
 from vorta.store.models import ArchiveModel
-from vorta.views import extract_dialog
-from vorta.views.extract_dialog import ExtractDialog
-from vorta.views.extract_tree import ExtractTree
+from vorta.utils import choose_file_dialog
+from vorta.views.dialogs.archive import extract as extract_dialog
+from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree
+
 
 class ArchiveExtract:
     def __init__(self, tab):
