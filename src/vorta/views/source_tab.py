@@ -333,9 +333,13 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
             db_item.delete_instance()
             self.sourceFilesWidget.removeRow(index.row())
 
-            for thrd in self.updateThreads:
+            for thrd in self.updateThreads[:]:
                 if thrd.objectName() == path:
-                    thrd.signal.disconnect(self.set_path_info)
+                    try:
+                        thrd.signal.disconnect(self.set_path_info)
+                    except (RuntimeError, TypeError):
+                        pass
+                    self.updateThreads.remove(thrd)
 
             logger.debug(f"Removed source in row {index.row()}")
         self.update_total_size()
