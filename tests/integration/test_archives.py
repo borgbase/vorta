@@ -71,7 +71,7 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
         return [DiskPartitions('borgfs', str(tmpdir))]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr("vorta.views.archive.archive_mount.choose_file_dialog", choose_file_dialog)
 
     main, tab = archive_env
     tab.archiveTable.selectRow(0)
@@ -81,13 +81,13 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
     qtbot.mouseClick(tab.bMountArchive, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
