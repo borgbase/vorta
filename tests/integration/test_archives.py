@@ -71,7 +71,7 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
         return [DiskPartitions('borgfs', str(tmpdir))]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr("vorta.views.archive.archive_mount.choose_file_dialog", choose_file_dialog)
 
     main, tab = archive_env
     tab.archiveTable.selectRow(0)
