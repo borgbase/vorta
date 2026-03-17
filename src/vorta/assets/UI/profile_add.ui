@@ -53,9 +53,9 @@
       </font>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
-&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
+      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p&gt;%1&lt;/p&gt;
+&lt;p&gt;%2&lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">

@@ -1,6 +1,7 @@
 import logging
 from pathlib import PurePath
 
+from peewee import fn
 from PyQt6 import QtCore, QtGui, uic
 from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
@@ -99,12 +100,11 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Populate
-        self.populate_from_profile()
+        self.track_profile_change(call_now=True)
         self.set_icons()
 
         # Listen for events
         self.track_palette_change()
-        self.track_profile_change()
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
@@ -178,6 +178,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
+        self.update_total_size()
 
     def update_path_info(self, index_row: int):
         """
@@ -250,7 +251,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
-
+        self.update_total_size()
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
@@ -293,6 +294,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
+            self.update_total_size()
 
     def source_copy(self, index=None):
         """
@@ -336,6 +338,25 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
                     thrd.signal.disconnect(self.set_path_info)
 
             logger.debug(f"Removed source in row {index.row()}")
+        self.update_total_size()
+
+    def update_total_size(self):
+        """
+        Update the total size and files count for all sources.
+        """
+        total_size, total_files = (
+            SourceFileModel.select(fn.SUM(SourceFileModel.dir_size), fn.SUM(SourceFileModel.dir_files_count))
+            .where(SourceFileModel.profile == self.profile(), SourceFileModel.dir_size >= 0)
+            .scalar(as_tuple=True)
+        )
+
+        if total_size is not None:
+            total_files = total_files or 0
+            self.totalSizeLabel.setText(
+                self.tr("Total Size: {size}, {count} files").format(size=pretty_bytes(total_size), count=total_files)
+            )
+        else:
+            self.totalSizeLabel.setText("")
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)

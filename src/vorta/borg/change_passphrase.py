@@ -3,6 +3,7 @@ from typing import Any, Dict
 from vorta import config
 from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
 from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
@@ -25,12 +26,12 @@ class BorgChangePassJob(BorgJob):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         if result['returncode'] != 0:
-            self.app.backup_progress_event.emit(
-                f"[{self.params['profile_name']}] "
-                + translate(
-                    'RepoCheckJob', 'Passphrase change failed. See the <a href="{0}">logs</a> for details.'
-                ).format(config.LOG_DIR.as_uri())
+            logs_link = link(config.LOG_DIR.as_uri(), translate('messages', 'logs'))
+            message = format_richtext(
+                escape(translate('RepoCheckJob', 'Passphrase change failed. See the %1 for details.')),
+                logs_link,
             )
+            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] " + message)
             self.app.check_failed_event.emit(result)
         else:
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Passphrase changed.')}")

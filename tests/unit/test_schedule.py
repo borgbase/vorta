@@ -4,10 +4,12 @@ from unittest.mock import MagicMock
 
 import pytest
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QWidget
 
 import vorta.scheduler
 from vorta.application import VortaApp
 from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.views.schedule_tab import ScheduleTab
 
 PROFILE_NAME = 'Default'
 
@@ -78,3 +80,15 @@ def test_schedule_tab(qapp: VortaApp, qtbot, clockmock):
     assert qapp.scheduler.next_job_for_profile(profile.id).time == next_backup
 
     qapp.scheduler.remove_job(profile.id)
+
+
+def test_schedule_tab_forwards_profile_provider_to_child_pages(qapp: VortaApp, qtbot):
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    host = QWidget()
+    qtbot.addWidget(host)
+    tab = ScheduleTab(host, profile_provider=lambda: BackupProfileModel.get(id=profile.id))
+
+    assert tab.schedulePage.profile().id == profile.id
+    assert tab.shellCommandsPage.profile().id == profile.id
+    assert tab.networksPage.profile().id == profile.id
+    assert tab.logPage.profile().id == profile.id

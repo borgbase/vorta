@@ -4,6 +4,9 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QProcess, Qt, pyqtSlot
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
+from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
+
 from ..utils import get_asset
 
 uifile = get_asset('UI/ssh_add.ui')
@@ -15,6 +18,13 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
 
     def __init__(self):
         super().__init__()
+
+        self.key_size_help_text = trans_late(
+            'Dialog',
+            '2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.',
+        )
+        self.key_size_help_link = trans_late('Dialog', 'More')
+
         self.setupUi(self)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
@@ -27,6 +37,8 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.accepted.connect(self.generate_key)
 
+        self._set_key_size_help()
+
         self.init_format()
         self.init_length()
 
@@ -37,6 +49,18 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
         # setupUi calls retranslateUi
         if hasattr(self, 'generateButton'):
             self.generateButton.setText(self.tr("Generate and copy to clipboard"))
+        if hasattr(self, 'keySizeHelpLabel'):
+            self._set_key_size_help()
+
+    def _set_key_size_help(self):
+        template = self.keySizeHelpLabel.text()
+        sentence_template = translate('Dialog', self.key_size_help_text)
+        link_text = translate('Dialog', self.key_size_help_link)
+        sentence = format_richtext(
+            escape(sentence_template),
+            link('https://stribika.github.io/2015/01/04/secure-secure-shell.html', link_text, color="#0000ff"),
+        )
+        self.keySizeHelpLabel.setText(format_richtext(template, sentence))
 
     def init_format(self):
         self.formatSelect.addItem(self.tr('ED25519 (Recommended)'), 'ed25519')
