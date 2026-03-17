@@ -594,7 +594,7 @@
         <translation>Note : Si vous sélectionner un dossier sans sélectionner les sous-dossiers, ceux-ci seront quand même restaurés. </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -634,62 +634,62 @@
         <translation>Fichier se sortie :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Sélectionnez deux archives</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Durée</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Point de montage</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Différence</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="25"/>
         <source>Difference between</source>
         <translation>Différence entre</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="45"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="45"/>
         <source>and</source>
         <translation>et</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="101"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="101"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -749,12 +749,12 @@
         <translation>Ne changez pas ceci si vous voulez que SSH trouve automatiquement la clef.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Choisissez les archives pour diff</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Résultat de diff</translation>
     </message>

@@ -549,47 +549,47 @@
         <translation>Profiilin nimi:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Valitse arkistot, joiden erot haetaan</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Valitse kaksi arkistoa</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Päiväys</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Koko</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Kesto</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Liitospiste</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Eroavaisuudet</translation>
     </message>
@@ -609,27 +609,27 @@
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="65"/>
         <source>Keep folders on top when sorting</source>
         <translation>Pidä kansiot päällimäisenä järjestäessä</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="81"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="81"/>
         <source>Set display mode of diff view</source>
         <translation>Aseta diff-näkymän näkymätila</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="88"/>
         <source>Tree</source>
         <translation>Puu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="93"/>
         <source>Tree, simplified</source>
         <translation>Puu, yksinkertaistettu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="109"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="109"/>
         <source>Collapse All</source>
         <translation>Laajenna kaikki</translation>
     </message>
@@ -644,22 +644,22 @@
         <translation>Sisällytä Borgin tunnuslause vientiin</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Diff-tulos</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Tasainen</translation>
     </message>
@@ -699,7 +699,7 @@
         <translation>Jotta SSH löytää avaimen automaattisesti, älä muuta tätä.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="68"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="68"/>
         <source>Folders First</source>
         <translation>Kansiot ensin</translation>
     </message>

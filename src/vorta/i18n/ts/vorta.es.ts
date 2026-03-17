@@ -549,47 +549,47 @@
         <translation>Nombre del perfil:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Seleccionar instantáneas para comparar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Seleccionar dos instantáneas</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Tamaño</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Duración</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Punto de montaje</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Comparar</translation>
     </message>
@@ -609,27 +609,27 @@
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="65"/>
         <source>Keep folders on top when sorting</source>
         <translation>Mantener carpetas en la parte superior al ordenar</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="81"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="81"/>
         <source>Set display mode of diff view</source>
         <translation>Establecer modo de visualización de la comparación</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="88"/>
         <source>Tree</source>
         <translation>Árbol</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="93"/>
         <source>Tree, simplified</source>
         <translation>Árbol, simplificado.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="109"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="109"/>
         <source>Collapse All</source>
         <translation>Plegar todo</translation>
     </message>
@@ -644,22 +644,22 @@
         <translation>Incluir la contraseña de Borg dentro del archivo exportado</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Resultado de la comparación</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Lista</translation>
     </message>
@@ -699,7 +699,7 @@
         <translation>No cambie esto si desea que SSH encuentre la llave automáticamente.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/diff_result.ui" line="68"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="68"/>
         <source>Folders First</source>
         <translation>Carpetas primero</translation>
     </message>

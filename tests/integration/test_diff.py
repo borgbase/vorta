@@ -9,7 +9,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from vorta.borg.diff import BorgDiffJob
-from vorta.views.dialogs.diff_result import (
+from vorta.views.dialogs.archive.diff_result import (
     ChangeType,
     DiffTree,
     FileType,

@@ -44,10 +44,10 @@ from vorta.utils import (
     pretty_bytes,
 )
 from vorta.views.base_tab import BaseTab
-from vorta.views.dialogs import diff_result
+from vorta.views.dialogs.archive import diff_result
 from vorta.views.dialogs.archive import extract as extract_dialog
+from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
 from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree
-from vorta.views.dialogs.diff_result import DiffResultDialog, DiffTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 

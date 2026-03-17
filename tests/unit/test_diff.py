@@ -8,7 +8,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel
-from vorta.views.dialogs.diff_result import (
+from vorta.views.dialogs.archive.diff_result import (
     ChangeType,
     DiffData,
     DiffResultDialog,
