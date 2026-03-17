@@ -73,22 +73,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Bitte einen Profilnamen eingeben.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>Ein gleichnamiges Profil existiert bereits.</translation>
     </message>
@@ -96,57 +96,57 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="139"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="139"/>
         <source>Encryption:</source>
         <translation>Verschlüsselung:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156"/>
         <source>Autofilled password from password manager.</source>
         <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="170"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (empfohlen, Schlüssel wird im Repository gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="174"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (Schlüssel wird im Home-Verzeichnis gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="177"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="177"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="178"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="178"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187"/>
         <source>None (not recommended)</source>
         <translation>Unverschlüsselt (nicht empfohlen)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="183"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (empfohlen, Schlüssel wird im Repository gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="184"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="184"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="185"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="185"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (Schlüssel wird im Home-Verzeichnis gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="186"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186"/>
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
@@ -154,77 +154,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="14"/>
         <source>Add Repository</source>
         <translation>Repository hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Initialisiere neues Backup-Repository</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>Repository-URL:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local folder</source>
         <translation>Ein lokales Verzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>Choose a remote repository</source>
         <translation>Ein entferntes Repository auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="119"/>
         <source>Repository Name:</source>
         <translation>Repository-Name:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="126"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="126"/>
         <source>Macbook Pro Office (optional)</source>
         <translation>Macbook Pro Office (optional)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="141"/>
         <source>Advanced</source>
         <translation>Erweitert</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="162"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
         <translation>SSH-Schlüssel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="176"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="176"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>SSH-Schlüssel automatisch auswählen (Standardeinstellung)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="184"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="184"/>
         <source>Extra Borg Arguments:</source>
         <translation>Extra Optionen für Borg Kommando:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="236"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation>HINWEIS: Bewahre eine Kopie deines Passworts an einem separaten Ort auf.</translation>
     </message>
@@ -508,22 +508,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="19"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
         <translation>Passwort ändern</translation>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="29"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
         <translation>Repository:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="33"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
         <translation>Aktualisieren</translation>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="62"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
         <translation>Änderung des Borg-Passworts fehlgeschlagen.</translation>
     </message>
@@ -531,12 +531,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation>Borg-Passwort ändern</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation>Hinweis: Bewahre eine Kopie des Passworts separat auf.</translation>
     </message>
@@ -544,267 +544,267 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg-Passwort:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Passwort eingeben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Bestehendes Profil überschreiben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Bestehende Einstellungen überschreiben</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Backup-Profil hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
         <translation>Mit Profilen können verschiedene Zeitpläne, Repositorys und Backup-Optionen konfiguriert werden.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
         <translation>Alle Profile können dieselben Repositorys und dieselben %1-Schlüssel verwenden. Der Reiter %2 legt profilübergreifend die globalen Programmeinstellungen fest.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Profilname:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>Ausschlussschema hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>Benutzerdefiniert</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>Voreinstellungen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>Roheingabe</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>Vorschau</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>In die Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Zu vergleichende Archive auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Wähle zwei Archive aus</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Einhängepunkt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Zu extrahierende Dateien auswählen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archiv:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>Sortiere Ordner immer über Dateien ein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>Ordner zuerst</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>Stelle den Darstellungsmodus der Diff-Ansicht ein</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>Baum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>Baum, vereinfacht</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>Alle einklappen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Borg-Passwort dem Export beifügen. Mit Vorsicht verwenden!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Borg-Passwort mitexportieren</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Unterschiede</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Flach</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>SSH-Schlüssel erzeugen</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Schlüssel-Format:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Schlüssel-Länge:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
         <translation>2048 oder 4096 für RSA, 384 oder 521 für ECDSA. Fest für Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
         <source>More</source>
         <translation>Mehr</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Ausgabe-Datei:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Behalte dies bei, wenn SSH den Schlüssel automatisch finden soll.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="23"/>
         <source>Fatal Error</source>
         <translation>Schwerwiegender Fehler</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="87"/>
         <source>Vorta quit unexpectedly. </source>
         <translation>Vorta wurde unerwartet beendet.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
         <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
         <translation>Du kannst dieses Problem auf %1 melden. Bitte suche vor dem Melden nach ähnlichen Problemen.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
         <source>Github</source>
         <translation>GitHub</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="124"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="124"/>
         <source>Crash Report:</source>
         <translation>Absturzbericht:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>Ausschließen, wenn vorhanden</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation>Dateien/Ordner ausschließen</translation>
     </message>
@@ -812,12 +812,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/diff_result.py" line="143"/>
+        <location filename="../../views/dialogs/diff.py" line="143"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="151"/>
+        <location filename="../../views/dialogs/diff.py" line="151"/>
         <source>Expand recursively</source>
         <translation>Rekursiv aufklappen</translation>
     </message>
@@ -825,72 +825,72 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/diff_result.py" line="778"/>
+        <location filename="../../views/dialogs/diff.py" line="778"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="780"/>
+        <location filename="../../views/dialogs/diff.py" line="780"/>
         <source>Change</source>
         <translation>Änderung</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="782"/>
+        <location filename="../../views/dialogs/diff.py" line="782"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="784"/>
+        <location filename="../../views/dialogs/diff.py" line="784"/>
         <source>Balance</source>
         <translation>Bilanz</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="855"/>
+        <location filename="../../views/dialogs/diff.py" line="855"/>
         <source>Added {}, deleted {}</source>
         <translation>Neu {}, entfernt {}</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="862"/>
+        <location filename="../../views/dialogs/diff.py" line="862"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="864"/>
+        <location filename="../../views/dialogs/diff.py" line="864"/>
         <source>Directory</source>
         <translation>Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="866"/>
+        <location filename="../../views/dialogs/diff.py" line="866"/>
         <source>Link</source>
         <translation>Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="868"/>
+        <location filename="../../views/dialogs/diff.py" line="868"/>
         <source>Block device file</source>
         <translation>Blockorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="870"/>
+        <location filename="../../views/dialogs/diff.py" line="870"/>
         <source>Character device file</source>
         <translation>Zeichenorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="875"/>
+        <location filename="../../views/dialogs/diff.py" line="875"/>
         <source>unchanged</source>
         <translation>unverändert</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="877"/>
+        <location filename="../../views/dialogs/diff.py" line="877"/>
         <source>modified</source>
         <translation>verändert</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="879"/>
+        <location filename="../../views/dialogs/diff.py" line="879"/>
         <source>removed</source>
         <translation>entfernt</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="881"/>
+        <location filename="../../views/dialogs/diff.py" line="881"/>
         <source>added</source>
         <translation>hinzugefügt</translation>
     </message>
@@ -898,7 +898,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Profilname ändern</translation>
     </message>
@@ -906,17 +906,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>Entfernen</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>Umschalten</translation>
     </message>
@@ -924,22 +924,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="231"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="231"/>
         <source>Connect to existing Repository</source>
         <translation>Mit existierendem Repository verbinden</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="234"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="234"/>
         <source>Password:</source>
         <translation>Passwort:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="242"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235"/>
         <source>Enter the encryption passphrase</source>
         <translation>Verschlüsselungspasswort eingeben</translation>
     </message>
@@ -947,37 +947,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="31"/>
+        <location filename="../../views/dialogs/export.py" line="31"/>
         <source>Export Profile</source>
         <translation>Profil exportieren</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="40"/>
+        <location filename="../../views/dialogs/export.py" line="40"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation>Borg-Passwort anhängen (Kein Passwort festgelegt)</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="45"/>
+        <location filename="../../views/dialogs/export.py" line="45"/>
         <source>Save profile_export</source>
         <translation>profile_export speichern</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="53"/>
+        <location filename="../../views/dialogs/export.py" line="53"/>
         <source>Error while exporting</source>
         <translation>Fehler beim Exportieren</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="67"/>
+        <location filename="../../views/dialogs/export.py" line="67"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Die Datei {} konnte nicht erstellt werden. Bitte ein anderes Verzeichnis auswählen.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export successful!</source>
         <translation>Profil erfolgreich exportiert!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export written to {}.</source>
         <translation>Profil nach {} exportiert.</translation>
     </message>
@@ -985,17 +985,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>Entpacken</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>Rekursiv aufklappen</translation>
     </message>
@@ -1003,77 +1003,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>Letzte Änderung</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>Zustand</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>Symbolische Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>FIFO Pipe</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>Harte Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>Blockorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>Zeichenorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>intakt</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>beschädigt</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>Zeigt auf: {}</translation>
     </message>
@@ -1477,47 +1477,47 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>Profil importieren</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation>Passwort eingeben (bereits aus der Exportdatei importiert)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation>Passwort eingeben (bereits aus dem Schlüsselbund geladen)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="48"/>
+        <location filename="../../views/dialogs/import.py" line="48"/>
         <source>(Name is not used yet)</source>
         <translation>(Name ist noch nicht vergeben)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="55"/>
+        <location filename="../../views/dialogs/import.py" line="55"/>
         <source>Error while importing</source>
         <translation>Fehler beim Importieren</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="78"/>
+        <location filename="../../views/dialogs/import.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Neuere profile_export Export-Dateien können nicht von älteren Versionen verwendet werden.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/dialogs/import.py" line="83"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Die profile_export exportierte Datei kann aufgrund der Dateiberechtigungen nicht gelesen werden.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="88"/>
+        <location filename="../../views/dialogs/import.py" line="88"/>
         <source>Profile export file not found.</source>
         <translation>Profil-Export Datei nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="70"/>
+        <location filename="../../views/dialogs/import.py" line="70"/>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
@@ -1790,7 +1790,7 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Überprüfung des Repositorys fehlgeschlagen. Details befinden sich in den %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="28"/>
+        <location filename="../../borg/dialogs/repo/change_passphrase.ui.py" line="28"/>
         <source>Passphrase change failed. See the %1 for details.</source>
         <translation>Änderung des Passworts fehlgeschlagen. Details befinden sich in den %1.</translation>
     </message>
@@ -1942,42 +1942,42 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="57"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="57"/>
         <source>Add</source>
         <translation>Hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="71"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="71"/>
         <source>Repository Path:</source>
         <translation>Repository-Pfad:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="74"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Ordner für Borg-Repository auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Repository URL:</source>
         <translation>Repository-Adresse:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="96"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="96"/>
         <source>Unable to add your repository.</source>
         <translation>Dein Repository konnte nicht hinzugefügt werden.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="106"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Bitte gib eine gültige Repo-Adresse oder einen lokalen Pfad an.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="110"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
         <translation>Repository-Name muss weniger als 65 Zeichen lang sein.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="114"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="114"/>
         <source>This repo has already been added.</source>
         <translation>Dieses Repo wurde bereits hinzugefügt.</translation>
     </message>
@@ -1985,37 +1985,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="39"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="39"/>
         <source>Generate and copy to clipboard</source>
         <translation>Erzeugen und in die Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="42"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="42"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (Empfohlen)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="43"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="43"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (veraltet)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="44"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="44"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="53"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="53"/>
         <source>High (Recommended)</source>
         <translation>Hoch (Empfohlen)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="54"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="54"/>
         <source>Medium</source>
         <translation>Mittel</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="67"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="67"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Schlüssel-Datei existiert bereits, überschreibe nicht.</translation>
     </message>
