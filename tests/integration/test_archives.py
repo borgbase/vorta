@@ -81,13 +81,13 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
     qtbot.mouseClick(tab.bMountArchive, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 

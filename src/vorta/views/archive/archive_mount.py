@@ -18,7 +18,12 @@ class ArchiveMount:
         self.tab = tab
 
     def bmountarchive_clicked(self):
+        """
+        Handle MountArchive being clicked.
+        Mount or umount the current archive depending on its current state.
+        """
         archive_name = self.tab.selected_archive_name()
+
         if not archive_name:
             logger.warning("Archive name of selection is empty.")
             return
@@ -29,12 +34,21 @@ class ArchiveMount:
             self.mount_action(archive_name=archive_name)
 
     def bmountrepo_clicked(self):
+        """
+        Handle MountRepo being clicked.
+        Mount or umount the repository depending on its current state.
+        """
         if self.tab.repo_mount_point:
             self.unmount_action()
         else:
             self.mount_action()
 
     def bmountarchive_refresh(self, icon_only=False):
+        """
+        Update label, tooltip and state of MountArchive.
+        The new state depends on the mount status of the current archive.
+        This also updates the icon of the button.
+        """
         archive_name = self.tab.selected_archive_name()
 
         if archive_name in self.tab.mount_points:
@@ -51,6 +65,11 @@ class ArchiveMount:
                 )
 
     def bmountrepo_refresh(self):
+        """
+        Update label, tooltip and state of MountRepo.
+        The new state depends on the mount status of the current archive.
+        This also updates the icon of the button.
+        """
         if self.tab.repo_mount_point:
             self.tab.bMountRepo.setText(self.tab.tr("Unmount"))
             self.tab.bMountRepo.setToolTip(self.tab.tr('Unmount the repository from the file system'))
@@ -61,6 +80,15 @@ class ArchiveMount:
             self.tab.bMountRepo.setToolTip(self.tab.tr("Mount the repository as a folder in the file system"))
 
     def mount_action(self, archive_name=None):
+        """
+        Mount an archive or the whole repository.
+        Opens a file chooser to let the user choose a mount point and starts
+        the borg job for mounting afterwards.
+        Parameters
+        ----------
+        archive_name : str, optional
+            The archive to mount or None, by default None
+        """
         profile = self.tab.profile()
         params = BorgMountJob.prepare(profile, archive=archive_name)
         if not params['ok']:
@@ -90,24 +118,38 @@ class ArchiveMount:
             mount_point = result['params']['mount_point']
 
             if result['params'].get('mounted_archive'):
+                # archive was mounted
                 archive_name = result['params']['mounted_archive']
                 self.tab.mount_points[archive_name] = mount_point
 
+                # update column in table
                 row = self.tab.row_of_archive(archive_name)
                 item = QTableWidgetItem(result['cmd'][-1])
                 self.tab.archiveTable.setItem(row, 3, item)
 
+                # update button
                 self.bmountarchive_refresh()
             else:
+                # whole repo was mounted
                 self.tab.repo_mount_point = mount_point
                 self.bmountrepo_refresh()
 
         self.tab._toggle_all_buttons(True)
 
     def unmount_action(self, archive_name=None):
+        """
+        Unmount a (mounted) repository or archive.
+        If the target isn't mounted nothing happens.
+        Parameters
+        ----------
+        archive_name : str, optional
+            The archive to unmount, by default None
+        """
         if archive_name:
+            # unmount a single archive
             mount_point = self.tab.mount_points.get(archive_name)
         else:
+            # unmount the whole repository
             mount_point = self.tab.repo_mount_point
 
         if mount_point is not None:
@@ -125,18 +167,22 @@ class ArchiveMount:
     def umount_result(self, result):
         self.tab._toggle_all_buttons(True)
         archive_name = result['params'].get('current_archive')
-        mount_point = result['params'].get('mount_point')
+        mount_point = result['params']['mount_point']
 
         if result['returncode'] == 0:
             self.tab._set_status(self.tab.tr('Un-mounted successfully.'))
 
             if archive_name:
+                # unmount single archive
                 del self.tab.mount_points[archive_name]
                 row = self.tab.row_of_archive(archive_name)
                 item = QTableWidgetItem('')
                 self.tab.archiveTable.setItem(row, 3, item)
+
+                # update button
                 self.bmountarchive_refresh()
             else:
+                # unmount repo
                 self.tab.repo_mount_point = None
                 self.bmountrepo_refresh()
         else:
