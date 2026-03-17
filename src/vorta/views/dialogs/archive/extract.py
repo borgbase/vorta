@@ -28,17 +28,16 @@ from PyQt6.QtWidgets import (
 
 from vorta.store.models import SettingsModel
 from vorta.utils import borg_compat, get_asset, pretty_bytes, uses_dark_mode
-from vorta.views.utils import get_colored_icon
-
-from .partials.treemodel import (
+from vorta.views.partials.treemodel import (
     FileSystemItem,
     FileTreeModel,
     FileTreeSortProxyModel,
     path_to_str,
     relative_path,
 )
+from vorta.views.utils import get_colored_icon
 
-uifile = get_asset("UI/extract_dialog.ui")
+uifile = get_asset("UI/dialogs/archive/extract.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
