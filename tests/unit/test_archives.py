@@ -103,18 +103,18 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr("vorta.views.archive.archive_mount.choose_file_dialog", choose_file_dialog)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
