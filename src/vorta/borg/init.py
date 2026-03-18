@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
@@ -5,11 +9,11 @@ from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInitJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.updated.emit(self.tr('Setting up new repo…'))
 
     @classmethod
-    def prepare(cls, params):
+    def prepare(cls, params: dict[str, Any]) -> dict[str, Any]:
         # Build fake profile because we don't have it in the DB yet.
         profile = FakeProfile(
             999,
@@ -54,7 +58,7 @@ class BorgInitJob(BorgJob):
 
         return ret
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         if result['returncode'] == 0:
             new_repo, created = RepoModel.get_or_create(
                 url=result['params']['repo_url'],

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import queue
 import threading
@@ -19,11 +21,11 @@ class JobInterface(QObject):
 
     # Must return the site id. In borg case, it is the id of the repository.
     @abstractmethod
-    def repo_id(self):
+    def repo_id(self) -> str | int:
         pass
 
     @abstractmethod
-    def cancel(self):
+    def cancel(self) -> None:
         """
         Cancel can be called when the job is not started. It is the responsibility of FuncJob to not cancel job if
         no job is running.
@@ -33,7 +35,7 @@ class JobInterface(QObject):
 
     # Put the code which must be run for a repo here. The code must be reentrant.
     @abstractmethod
-    def run(self):
+    def run(self) -> None:
         pass
 
 
@@ -44,12 +46,12 @@ class SiteWorker(threading.Thread):
     launched in a thread, it is up to the calling function to do so.
     """
 
-    def __init__(self, jobs):
+    def __init__(self, jobs: queue.Queue[JobInterface]) -> None:
         super().__init__()
         self.jobs = jobs
         self.current_job = None
 
-    def run(self):
+    def run(self) -> None:
         job = None
         while True:
             try:
@@ -73,12 +75,12 @@ class JobsManager:
     Inspired by https://stackoverflow.com/a/50265824/3983708
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.jobs = dict()  # jobs by site > queue
         self.workers = dict()  # threads by site
         self.jobs_lock = threading.Lock()  # for atomic queue operations, like cancelling
 
-    def is_worker_running(self, site=None):
+    def is_worker_running(self, site: str | int | None = None) -> bool:
         """
         See if there are any active jobs.
         The user can't start a backup if a job is running. The scheduler can.
@@ -102,7 +104,7 @@ class JobsManager:
                     return True
         return False
 
-    def add_job(self, job):
+    def add_job(self, job: JobInterface) -> int | None:
         logger.debug("Add job for site %s", job.repo_id())
 
         if not isinstance(job.repo_id(), (int, str)):
@@ -125,7 +127,7 @@ class JobsManager:
                 self.workers[job.repo_id()] = SiteWorker(jobs=self.jobs[job.repo_id()])
                 self.workers[job.repo_id()].start()
 
-    def cancel_all_jobs(self):
+    def cancel_all_jobs(self) -> None:
         """
         Remove pending jobs and ask all workers to cancel their current jobs.
         """

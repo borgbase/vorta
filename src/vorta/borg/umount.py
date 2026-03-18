@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import os.path
+from typing import Any
 
 import psutil
 
@@ -7,11 +10,11 @@ from .borg_job import BorgJob
 
 
 class BorgUmountJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.updated.emit(self.tr('Unmounting archive…'))
 
     @classmethod
-    def prepare(cls, profile, mount_point, archive_name=None):
+    def prepare(cls, profile: Any, mount_point: str, archive_name: str | None = None) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

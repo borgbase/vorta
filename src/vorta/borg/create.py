@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import os
 import shlex
 import subprocess
 import tempfile
 from datetime import datetime as dt
+from typing import Any
 
 from PyQt6.QtCore import QCoreApplication
 
@@ -16,7 +19,7 @@ from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_archive, created = ArchiveModel.get_or_create(
                 snapshot_id=result['data']['archive']['id'],
@@ -51,20 +54,20 @@ class BorgCreateJob(BorgJob):
                 self.app.backup_log_event.emit('', {})
                 self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup finished.')}")
 
-    def progress_event(self, fmt):
+    def progress_event(self, fmt: str) -> None:
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
-    def started_event(self):
+    def started_event(self) -> None:
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup started.')}")
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
 
     @classmethod
-    def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):
+    def pre_post_backup_cmd(cls, params: dict[str, Any], cmd: str = 'pre_backup_cmd', returncode: int = 0) -> int:
         cmd = getattr(params['profile'], cmd)
         if cmd:
             env = {
@@ -85,7 +88,7 @@ class BorgCreateJob(BorgJob):
             return 0  # 0 if no command was run.
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile: Any) -> dict[str, Any]:
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.

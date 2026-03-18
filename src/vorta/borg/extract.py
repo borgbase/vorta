@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import tempfile
+from typing import Any
 
 from PyQt6.QtCore import QModelIndex, Qt
 
@@ -10,13 +13,13 @@ from .borg_job import BorgJob
 
 
 class BorgExtractJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Downloading files from archive…')}"
         )
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         self.app.backup_progress_event.emit(
@@ -24,7 +27,7 @@ class BorgExtractJob(BorgJob):
         )
 
     @classmethod
-    def prepare(cls, profile, archive_name, model: ExtractTree, destination_folder):
+    def prepare(cls, profile: Any, archive_name: str, model: ExtractTree, destination_folder: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

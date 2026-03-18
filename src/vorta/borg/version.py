@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from vorta.i18n import trans_late
 
 from .borg_job import BorgJob
@@ -10,11 +14,11 @@ class BorgVersionJob(BorgJob):
     Used to display under 'Settings' and later for version-specific compatibility.
     """
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls):
+    def prepare(cls) -> dict[str, Any]:
         ret = {'ok': False}
 
         if cls.prepare_bin() is None:
@@ -26,7 +30,7 @@ class BorgVersionJob(BorgJob):
         ret['ok'] = True
         return ret
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         if result['returncode'] == 0:
             version = result['data'].strip().split(' ')[1]
             path = self.prepare_bin()

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import logging
 import os
@@ -8,6 +10,7 @@ import signal
 import sys
 import time
 from collections import namedtuple
+from typing import Any
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
@@ -49,7 +52,7 @@ class BorgJob(JobInterface):
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd, params, site="default"):
+    def __init__(self, cmd: list[str], params: dict[str, Any], site: str = "default") -> None:
         """
         Thread to run Borg operations in.
 
@@ -109,10 +112,10 @@ class BorgJob(JobInterface):
         self.process = None
         self.cleanup_files = params.get('cleanup_files', [])
 
-    def repo_id(self):
+    def repo_id(self) -> str:
         return self.site_id
 
-    def cancel(self):
+    def cancel(self) -> None:
         logger.debug("Cancel job on site %s", self.site_id)
         if self.process is not None:
             self.process.send_signal(signal.SIGINT)
@@ -125,7 +128,7 @@ class BorgJob(JobInterface):
                     pass
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile: Any) -> dict[str, Any]:
         """
         Prepare for running Borg. This function in the base class should be called from all
         subclasses and calls that define their own `cmd`.
@@ -201,7 +204,7 @@ class BorgJob(JobInterface):
         return ret
 
     @classmethod
-    def prepare_bin(cls):
+    def prepare_bin(cls) -> str | None:
         """Find packaged borg binary. Prefer globally installed."""
         # On MacOS, the PATH environment variable does not seem to be set when run as a pyinstaller binary.
         # More info at https://github.com/borgbase/vorta/issues/2100
@@ -225,7 +228,7 @@ class BorgJob(JobInterface):
                 return bundled_borg
         return None
 
-    def run(self):
+    def run(self) -> None:
         self.started_event()
         with db_lock:
             log_entry = EventLogModel(
@@ -347,11 +350,11 @@ class BorgJob(JobInterface):
         for tmpfile in self.cleanup_files:
             tmpfile.close()
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         pass
 
-    def started_event(self):
+    def started_event(self) -> None:
         self.updated.emit(self.tr('Task started'))
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.result.emit(result)

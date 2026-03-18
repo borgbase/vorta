@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from packaging.version import Version
 
 MIN_BORG_FOR_FEATURE = {
@@ -23,13 +25,13 @@ class BorgCompatibility:
     version = "1.1.4"
     path = ""
 
-    def set_version(self, version, path):
+    def set_version(self, version: str, path: str) -> None:
         self.version = version
         self.path = path
 
-    def check(self, feature_name):
+    def check(self, feature_name: str) -> bool:
         return Version(self.version) >= MIN_BORG_FOR_FEATURE[feature_name]
 
-    def get_version(self):
+    def get_version(self) -> tuple[str, str]:
         """Returns the version and path of the Borg binary."""
         return self.version, self.path

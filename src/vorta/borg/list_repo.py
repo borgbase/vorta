@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from datetime import datetime as dt
 
 from vorta.store.models import ArchiveModel, RepoModel
@@ -7,17 +11,17 @@ from .borg_job import BorgJob
 
 
 class BorgListRepoJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives…')}")
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives done.')}")
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile: Any) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -35,7 +39,7 @@ class BorgListRepoJob(BorgJob):
 
         return ret
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         if result['returncode'] == 0:
             repo, created = RepoModel.get_or_create(url=result['cmd'][-1])
             if not result['data']:

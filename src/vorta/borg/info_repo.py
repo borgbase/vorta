@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any
+
 from vorta.i18n import trans_late
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
@@ -6,11 +10,11 @@ from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInfoRepoJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.updated.emit(self.tr('Validating existing repo…'))
 
     @classmethod
-    def prepare(cls, params):
+    def prepare(cls, params: dict[str, Any]) -> dict[str, Any]:
         """
         Used to validate existing repository when added.
         """
@@ -53,7 +57,7 @@ class BorgInfoRepoJob(BorgJob):
 
         return ret
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]) -> None:
         if result['returncode'] == 0:
             new_repo, _ = RepoModel.get_or_create(
                 url=result['cmd'][-1], defaults={'name': result['params']['repo_name']}

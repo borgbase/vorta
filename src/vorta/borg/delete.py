@@ -1,4 +1,6 @@
-from typing import List
+from __future__ import annotations
+
+from typing import Any, List
 
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
@@ -7,11 +9,11 @@ from .borg_job import BorgJob
 
 
 class BorgDeleteJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Deleting archive…')}")
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         # set repo stats to N/A
         repo = RepoModel.get(id=result['params']['repo_id'])
         repo.total_size = None
@@ -25,7 +27,7 @@ class BorgDeleteJob(BorgJob):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
 
     @classmethod
-    def prepare(cls, profile, archives: List[str]):
+    def prepare(cls, profile: Any, archives: list[str]) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

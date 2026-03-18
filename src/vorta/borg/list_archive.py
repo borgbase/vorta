@@ -1,14 +1,18 @@
+from __future__ import annotations
+
+from typing import Any
+
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
 
 
 class BorgListArchiveJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Getting archive content…')}")
 
-    def finished_event(self, result):
+    def finished_event(self, result: dict[str, Any]) -> None:
         self.app.backup_finished_event.emit(result)
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Done getting archive content.')}"
@@ -16,7 +20,7 @@ class BorgListArchiveJob(BorgJob):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile, archive_name):
+    def prepare(cls, profile: Any, archive_name: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

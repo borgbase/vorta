@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import logging
 import os
+from typing import Any
 
 from vorta.store.models import SettingsModel
 from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
@@ -10,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 
 class BorgMountJob(BorgJob):
-    def started_event(self):
+    def started_event(self) -> None:
         self.updated.emit(self.tr('Mounting archive into folder…'))
 
     @classmethod
-    def prepare(cls, profile, archive: str = None):
+    def prepare(cls, profile: Any, archive: str | None = None) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
