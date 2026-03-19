@@ -31,6 +31,10 @@ jobs:
         shell: bash
         run: uv run pre-commit run --all-files --show-diff-on-failure
 
+      - name: Type check with mypy
+        shell: bash
+        run: uv run mypy src/vorta/store/ src/vorta/network_status/
+
   prepare-matrix:
     runs-on: ubuntu-latest
     outputs:

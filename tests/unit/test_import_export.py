@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
 
 from vorta.profile_export import VersionException
 from vorta.store.models import BackupProfileModel, SourceFileModel
-from vorta.views.import_window import ImportWindow
+from vorta.views.dialogs.profile.import_window import ImportWindow
 
 VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'
 

@@ -1,6 +1,7 @@
 import logging
 from pathlib import PurePath
 
+from peewee import fn
 from PyQt6 import QtCore, QtGui, uic
 from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
@@ -20,7 +21,7 @@ from vorta.utils import (
     sort_sizes,
 )
 from vorta.views.base_tab import BaseTab
-from vorta.views.exclude_dialog import ExcludeDialog
+from vorta.views.dialogs.archive.exclude import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
@@ -173,6 +174,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
+        self.update_total_size()
 
     def update_path_info(self, index_row: int):
         """
@@ -245,7 +247,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
-
+        self.update_total_size()
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
@@ -288,6 +290,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
+            self.update_total_size()
 
     def source_copy(self, index=None):
         """
@@ -326,6 +329,25 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
             self.sourceFilesWidget.removeRow(index.row())
 
             logger.debug(f"Removed source in row {index.row()}")
+        self.update_total_size()
+
+    def update_total_size(self):
+        """
+        Update the total size and files count for all sources.
+        """
+        total_size, total_files = (
+            SourceFileModel.select(fn.SUM(SourceFileModel.dir_size), fn.SUM(SourceFileModel.dir_files_count))
+            .where(SourceFileModel.profile == self.profile(), SourceFileModel.dir_size >= 0)
+            .scalar(as_tuple=True)
+        )
+
+        if total_size is not None:
+            total_files = total_files or 0
+            self.totalSizeLabel.setText(
+                self.tr("Total Size: {size}, {count} files").format(size=pretty_bytes(total_size), count=total_files)
+            )
+        else:
+            self.totalSizeLabel.setText("")
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)
