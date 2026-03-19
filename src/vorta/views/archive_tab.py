@@ -165,7 +165,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # Connect prune setting signals (only once in init, not in populate_from_profile)
         for i in self.prune_intervals:
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+        self.prune_keep_within.textChanged.connect(self.save_prune_setting)
 
         self.track_profile_change(call_now=True)
         self.set_icons()
