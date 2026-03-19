@@ -26,6 +26,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
     def _path_updated(self, path) -> None:
         self.nw_path = path
         self.network_status_changed.emit(self.is_network_active())
+        return None
 
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
