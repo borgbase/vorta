@@ -448,14 +448,17 @@ class VortaScheduler(QtCore.QObject):
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
             else:
-                logger.error('Conditions for backup not met. Aborting.')
-                logger.error(msg['message'])
-                if msg['message'] != 'Current Wifi is not allowed.':
+                level = msg.get('level', 'error')
+                if level == 'error':
+                    logger.error('Conditions for backup not met. Aborting.')
+                    logger.error(msg['message'])
                     notifier.deliver(
                         self.tr('Vorta Backup'),
                         translate('messages', msg['message']),
                         level='error',
                     )
+                else:
+                    logger.info('Backup skipped: %s', msg['message'])
                 self.pause(profile_id)
 
     def notify(self, result):
