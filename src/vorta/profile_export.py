@@ -8,10 +8,10 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.store.connection import DB, SCHEMA_VERSION, init_db
 from vorta.store.models import (
     BackupProfileModel,
+    ExcludeModel,
     RepoModel,
     SchemaVersion,
     SettingsModel,
-    ExcludeModel,
     SourceFileModel,
     WifiSettingModel,
 )
