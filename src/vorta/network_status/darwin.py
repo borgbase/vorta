@@ -23,7 +23,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         Network.nw_path_monitor_set_queue(self.nw_path_monitor, dispatch.dispatch_get_main_queue())
         Network.nw_path_monitor_start(self.nw_path_monitor)
 
-    def _path_updated(self, path):
+    def _path_updated(self, path) -> None:
         self.nw_path = path
         self.network_status_changed.emit(self.is_network_active())
 
@@ -43,7 +43,7 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
 
         return is_ios_hotspot or any(is_network_metered_with_android(d) for d in get_network_devices())
 
-    def is_network_active(self):
+    def is_network_active(self) -> bool:
         # We haven't received an update yet, surely it is coming soon
         if self.nw_path is None:
             return False
