@@ -11,6 +11,7 @@ from vorta.store.models import (
     RepoModel,
     SchemaVersion,
     SettingsModel,
+    ExcludeModel,
     SourceFileModel,
     WifiSettingModel,
 )
@@ -63,6 +64,11 @@ class ProfileExport:
         profile_dict['SourceFileModel'] = [
             model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
+        ]
+        # Add ExcludeModel
+        profile_dict['ExcludeModel'] = [
+            model_to_dict(exclude, recurse=False, exclude=[ExcludeModel.id])
+            for exclude in ExcludeModel.select().where(ExcludeModel.profile == profile)
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
@@ -133,6 +139,13 @@ class ProfileExport:
         # Delete existing Sources to avoid duplicates
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
+
+        # Restore ExcludeModel entries
+        for exclude in self._profile_dict.get('ExcludeModel', []):
+            exclude['profile'] = self.id
+        ExcludeModel.delete().where(ExcludeModel.profile == self.id).execute()
+        if self._profile_dict.get('ExcludeModel'):
+            ExcludeModel.insert_many(self._profile_dict['ExcludeModel']).execute()
 
         # Delete added dictionaries to make it match BackupProfileModel
         del self._profile_dict['SettingsModel']
