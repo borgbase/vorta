@@ -12,7 +12,7 @@ from vorta.store.models import (
     SchemaVersion,
     SettingsModel,
     SourceFileModel,
-    ExcludeModel,
+    ExclusionModel,
     WifiSettingModel,
 )
 
@@ -53,22 +53,22 @@ class ProfileExport:
 
     @classmethod
     def from_db(cls, profile, store_password=True, include_settings=True):
-        profile_dict = model_to_dict(profile, exclude=[RepoModel.id])  # Have to retain profile ID
+        profile_dict = model_to_dict(profile, exclusion=[RepoModel.id])  # Have to retain profile ID
 
         keyring = VortaKeyring.get_keyring()
         if store_password:
             profile_dict['password'] = keyring.get_password('vorta-repo', profile.repo.url)
 
-        # For all below, exclude ids to prevent collisions. DB will automatically reassign ids
+        # For all below, exclusion ids to prevent collisions. DB will automatically reassign ids
         # Add SourceFileModel
         profile_dict['SourceFileModel'] = [ 
-            model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
+            model_to_dict(source, recurse=False, exclusion=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
         ]
-        # Add ExcludeModel
-        profile_dict['ExcludeModel']=[
-            model_to_dict(exclude, recurse=False, exclude=[ExcludeModel.id])
-            for exclude in ExcludeModel.select().where(ExcludeModel.profile == profile)
+        # Add ExclusionModel
+        profile_dict['ExclusionModel'] = [
+            model_to_dict(exclusion, recurse=False, exclusion=[ExclusionModel.id])
+            for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
@@ -80,7 +80,7 @@ class ProfileExport:
                 for wifi in WifiSettingModel.select().where(WifiSettingModel.profile == profile.id)
             ]
             # Add SettingsModel
-            profile_dict['SettingsModel'] = [model_to_dict(s, exclude=[SettingsModel.id]) for s in SettingsModel]
+            profile_dict['SettingsModel'] = [model_to_dict(s, exclusion=[SettingsModel.id]) for s in SettingsModel]
         return ProfileExport(profile_dict)
 
     def to_db(self, overwrite_profile=False, overwrite_settings=True):
@@ -95,7 +95,17 @@ class ProfileExport:
                     sourcedir['dir_files_count'] = -1
                     sourcedir['dir_size'] = -1
                     sourcedir['path_isdir'] = False
+                    # Handle ExclusionModel imports
+        if 'ExclusionModel' in self._profile_dict:
+            exclusions = self._profile_dict.pop('ExclusionModel')
 
+            ExclusionModel.delete().where(ExclusionModel.profile == self).execute()
+            # Clear existing
+            if exclusions:
+                for excl in exclusions:
+                    excl['profile'] = self  
+            # Foreign Key set 
+                ExclusionModel.insert_many(exclusions).execute()
         existing_profile = None
         if overwrite_profile:
             existing_profile = BackupProfileModel.get_or_none(BackupProfileModel.name == self.name)
