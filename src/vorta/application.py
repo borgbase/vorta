@@ -280,12 +280,20 @@ class VortaApp(QtSingleApplication):
         # Necessary to dynamically load the variable from config during runtime
         # Check out pull request for #1682 for context
         bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
-
         """
         Make sure there is at least one profile when first starting Vorta.
         Will either import a profile placed in ~/.vorta-init.json
         or add an empty "Default" profile.
         """
+        possible_paths = [bootstrap_file]
+        real_home_path = Path(os.path.expanduser("~")) / ".vorta-init.json"
+        if real_home_path not in possible_paths:
+            possible_paths.append(real_home_path)
+        for path in possible_paths:
+            logger.debug(f"Checking bootstrap file at {path}")
+            if path.is_file():
+                bootstrap_file = path
+                break
         if bootstrap_file.is_file():
             try:
                 profile_export = ProfileExport.from_json(bootstrap_file)
@@ -300,21 +308,22 @@ class VortaApp(QtSingleApplication):
                         double_newline,
                         str(exception),
                         double_newline,
-                        self.tr('Consider removing or repairing this file to ' 'get rid of this message.'),
+                        self.tr('Consider removing or repairing this file to get rid of this message.'),
                     ),
                 )
                 return
-            bootstrap_file.unlink()
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
-                self.tr('Profile import successful!'),
-                self.tr('Profile {} imported.').format(profile.name),
-                level='info',
-            )
-            logger.info('Profile {} imported.'.format(profile.name))
-        if BackupProfileModel.select().count() == 0:
-            default_profile = BackupProfileModel(name='Default')
-            default_profile.save()
+        bootstrap_file.unlink()
+        notifier = VortaNotifications.pick()
+        notifier.deliver(
+            self.tr('Profile import successful!'),
+            self.tr('Profile {} imported.').format(profile.name),
+            level='info',
+        )
+        logger.info('Profile {} imported.'.format(profile.name))
+
+    if BackupProfileModel.select().count() == 0:
+        default_profile = BackupProfileModel(name='Default')
+        default_profile.save()
 
     def check_failed_response(self, result: Dict[str, Any]):
         """
