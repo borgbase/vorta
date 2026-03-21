@@ -1,6 +1,6 @@
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QCheckBox, QLabel, QListWidget, QListWidgetItem
+from PyQt6.QtWidgets import QCheckBox, QLabel, QListWidget, QListWidgetItem, QPushButton
 
 from vorta.store.models import WifiSettingModel
 from vorta.utils import get_asset, get_sorted_wifis
@@ -18,10 +18,14 @@ class NetworksPage(BaseTab, NetworksBase, NetworksUI):
         self.wifiListLabel: QLabel = self.findChild(QLabel, 'wifiListLabel')
         self.meteredNetworksCheckBox: QCheckBox = self.findChild(QCheckBox, 'meteredNetworksCheckBox')
         self.wifiListWidget: QListWidget = self.findChild(QListWidget, 'wifiListWidget')
+        self.selectAllButton: QPushButton = self.findChild(QPushButton, 'selectAllButton')
+        self.selectNoneButton: QPushButton = self.findChild(QPushButton, 'selectNoneButton')
 
         # Connect signals
         self.meteredNetworksCheckBox.stateChanged.connect(self.on_metered_networks_state_changed)
         self.wifiListWidget.itemChanged.connect(self.save_wifi_item)
+        self.selectAllButton.clicked.connect(self.select_all_wifi)
+        self.selectNoneButton.clicked.connect(self.select_none_wifi)
         self.track_profile_change(self.populate_wifi, call_now=True)
 
     def on_metered_networks_state_changed(self, state):
@@ -44,6 +48,16 @@ class NetworksPage(BaseTab, NetworksBase, NetworksUI):
                 else:
                     item.setCheckState(Qt.CheckState.Unchecked)
                 self.wifiListWidget.addItem(item)
+
+    def select_all_wifi(self):
+        self._set_all_wifi_check_state(Qt.CheckState.Checked)
+
+    def select_none_wifi(self):
+        self._set_all_wifi_check_state(Qt.CheckState.Unchecked)
+
+    def _set_all_wifi_check_state(self, state):
+        for i in range(self.wifiListWidget.count()):
+            self.wifiListWidget.item(i).setCheckState(state)
 
     def save_wifi_item(self, item):
         profile = self.profile()

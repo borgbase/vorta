@@ -3,7 +3,7 @@ from PyQt6.QtCore import QModelIndex, Qt
 
 import vorta.borg
 from vorta.store.models import ArchiveModel
-from vorta.views.extract_dialog import (
+from vorta.views.dialogs.archive.extract import (
     ExtractDialog,
     ExtractTree,
     FileData,
