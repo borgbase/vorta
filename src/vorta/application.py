@@ -312,18 +312,17 @@ class VortaApp(QtSingleApplication):
                     ),
                 )
                 return
-        bootstrap_file.unlink()
-        notifier = VortaNotifications.pick()
-        notifier.deliver(
-            self.tr('Profile import successful!'),
-            self.tr('Profile {} imported.').format(profile.name),
-            level='info',
-        )
-        logger.info('Profile {} imported.'.format(profile.name))
-
-    if BackupProfileModel.select().count() == 0:
-        default_profile = BackupProfileModel(name='Default')
-        default_profile.save()
+            bootstrap_file.unlink()
+            notifier = VortaNotifications.pick()
+            notifier.deliver(
+                self.tr('Profile import successful!'),
+                self.tr('Profile {} imported.').format(profile.name),
+                level='info',
+                )
+            logger.info('Profile {} imported.'.format(profile.name))
+        if BackupProfileModel.select().count() == 0:
+            default_profile = BackupProfileModel(name='Default')
+            default_profile.save()
 
     def check_failed_response(self, result: Dict[str, Any]):
         """
