@@ -2,6 +2,7 @@ import os
 
 import pytest
 from PyQt6 import QtCore
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox
 from test_constants import TEST_TEMP_DIR
 
@@ -39,9 +40,17 @@ def test_source_add_remove(qapp, qtbot, mocker, source_env):
     tab.source_add()
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() > initial_count, **pytest._wait_defaults)
 
-    # test remove
+    # test remove via button
     tab.sourceFilesWidget.selectRow(initial_count)  # Select the new row
     qtbot.mouseClick(tab.removeButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == initial_count, **pytest._wait_defaults)
+
+    # test remove via Delete key
+    tab.source_add()
+    qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() > initial_count, **pytest._wait_defaults)
+    tab.sourceFilesWidget.selectRow(initial_count)
+    tab.sourceFilesWidget.setFocus()
+    qtbot.keyPress(tab.sourceFilesWidget, Qt.Key.Key_Delete)
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.rowCount() == initial_count, **pytest._wait_defaults)
 
 

@@ -91,6 +91,8 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         # Shortcuts
         shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
+        shortcut_delete = QShortcut(QtGui.QKeySequence(Qt.Key.Key_Delete), self.sourceFilesWidget)
+        shortcut_delete.activated.connect(self.source_remove)
 
         # Connect signals
         self.addButton.clicked.connect(self.source_add)

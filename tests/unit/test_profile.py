@@ -1,6 +1,7 @@
 import tempfile
 
 from PyQt6 import QtCore
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox, QToolTip
 
 from vorta.store.models import BackupProfileModel, SourceFileModel
@@ -84,3 +85,20 @@ def test_profile_import_no_duplicate_sources(qapp, qtbot, mocker):
     imported_sources = [source.dir for source in SourceFileModel.select().where(SourceFileModel.profile == profile)]
     assert set(imported_sources) == set(sources)
     assert len(imported_sources) == len(sources)
+
+
+def test_profile_delete_key(qapp, qtbot, mocker):
+    """Delete key on profileSelector triggers profile deletion."""
+    main = qapp.main_window
+
+    main.profile_add_action()
+    add_profile_window = main.window
+    qtbot.keyClicks(add_profile_window.profileNameField, 'Delete Key Test')
+    save_button = add_profile_window.buttonBox.button(QDialogButtonBox.StandardButton.Save)
+    qtbot.mouseClick(save_button, QtCore.Qt.MouseButton.LeftButton)
+    assert BackupProfileModel.get_or_none(name='Delete Key Test') is not None
+
+    mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
+    main.profileSelector.setFocus()
+    qtbot.keyPress(main.profileSelector, Qt.Key.Key_Delete)
+    assert BackupProfileModel.get_or_none(name='Delete Key Test') is None
