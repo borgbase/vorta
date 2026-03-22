@@ -8,6 +8,7 @@ from typing import Any, NamedTuple
 
 from PyQt6 import QtDBus
 from PyQt6.QtCore import QObject, QVersionNumber, pyqtSignal, pyqtSlot
+from PyQt6.QtDBus import QDBusArgument
 
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
@@ -36,24 +37,60 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
         except DBusException:
             logger.exception("Failed to check connectivity state. Assuming connected")
             return True
+    def get_all_wifi_ssids(self) -> list[str]:
+        print("DEBUG: get_all_wifi_ssids called")
+
+        wifi_ssids = []
+
+        try:
+            active_paths = self._nm.get_active_connections_paths()
+            print("DEBUG: active paths:", active_paths)
+
+            for path in active_paths:
+                try:
+                    active_connection = self._nm.get_active_connection_info(path)
+                    print("DEBUG: checking connection type:", active_connection.type)
+
+                    # Ignore non-WiFi (Ethernet etc.)
+                    if active_connection.type != "802-11-wireless":
+                        continue
+
+                    settings = self._nm.get_settings(active_connection.connection)
+                    print("DEBUG: raw settings:", settings)
+
+                    ssid = self._get_ssid_from_settings(settings)
+
+                    if ssid:
+                        print("DEBUG: found wifi SSID:", ssid)
+                        wifi_ssids.append(ssid)
+
+                except Exception as e:
+                    print("DEBUG: error processing connection:", e)
+                    continue
+
+            print("DEBUG: final wifi list:", wifi_ssids)
+            return wifi_ssids
+
+        except Exception as e:
+            print("DEBUG: get_all_wifi_ssids error:", e)
+            return [] 
 
     def get_current_wifi(self) -> str | None:
-        # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
-        # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
         try:
-            active_connection_path = self._nm.get_primary_connection_path()
-            if not active_connection_path:
+            connection_path = self._nm.get_primary_connection_path()
+            if not connection_path:
                 return None
-            active_connection = self._nm.get_active_connection_info(active_connection_path)
-            if active_connection.type == '802-11-wireless':
-                settings = self._nm.get_settings(active_connection.connection)
-                ssid = self._get_ssid_from_settings(settings)
-                if ssid:
-                    return ssid
-        except DBusException:
-            logger.exception("Failed to get currently connected WiFi network, assuming none")
-        return None
 
+            active_connection = self._nm.get_active_connection_info(connection_path)
+
+            if active_connection.type != "802-11-wireless":
+                return None
+
+            settings = self._nm.get_settings(active_connection.connection)
+            return self._get_ssid_from_settings(settings)
+
+        except Exception:
+            return None
     def get_known_wifis(self) -> list[SystemWifiInfo]:
         wifis: list[SystemWifiInfo] = []
         try:
@@ -135,6 +172,31 @@ class NetworkManagerDBusAdapter(QObject):
         if not nm_adapter.isValid():
             raise UnsupportedException("Can't connect to NetworkManager")
         return nm_adapter
+    
+    def get_active_connections_paths(self) -> list[str]:
+        try:
+            iface = QtDBus.QDBusInterface(
+                self.BUS_NAME,
+                self.NM_PATH,
+                "org.freedesktop.DBus.Properties",
+                self._bus,
+            )
+
+            reply = iface.call("Get", self.INTERFACE_NAME, "ActiveConnections")
+
+            if not reply.arguments():
+                return []
+
+            paths = reply.arguments()[0]
+
+            print("DEBUG raw:", paths)
+            print("DEBUG type:", type(paths))
+
+            return [str(p) for p in paths]
+
+        except Exception:
+            logger.exception("Failed to get active connections")
+            return []
 
     @pyqtSlot("unsigned int")
     def networkStateChanged(self, state: int) -> None:
