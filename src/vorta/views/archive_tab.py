@@ -32,7 +32,6 @@ from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
-    choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
     get_asset,

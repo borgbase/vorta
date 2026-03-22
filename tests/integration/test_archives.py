@@ -11,6 +11,7 @@ from PyQt6 import QtCore
 
 import vorta.borg
 import vorta.utils
+import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel
 
@@ -103,7 +104,6 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, a
     # Select all files
     tree_view = tab._window.treeView.model()
     tree_view.setData(tree_view.index(0, 0), QtCore.Qt.CheckState.Checked, QtCore.Qt.ItemDataRole.CheckStateRole)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
     monkeypatch.setattr(vorta.views.archive.archive_extract, "choose_file_dialog", choose_file_dialog)
     qtbot.mouseClick(tab._window.extractButton, QtCore.Qt.MouseButton.LeftButton)
 

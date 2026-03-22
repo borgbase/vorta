@@ -1,5 +1,4 @@
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QDialog
 
 from vorta.borg.extract import BorgExtractJob
 from vorta.borg.list_archive import BorgListArchiveJob
