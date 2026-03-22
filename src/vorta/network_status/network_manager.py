@@ -51,7 +51,6 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
                     active_connection = self._nm.get_active_connection_info(path)
                     print("DEBUG: checking connection type:", active_connection.type)
 
-                    # Ignore non-WiFi (Ethernet etc.)
                     if active_connection.type != "802-11-wireless":
                         continue
 

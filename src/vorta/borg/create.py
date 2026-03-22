@@ -111,13 +111,10 @@ class BorgCreateJob(BorgJob):
         if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
-
         network_status_monitor = get_network_status_monitor()
         network_status_monitor = get_network_status_monitor()
 
         wifi_list = network_status_monitor.get_all_wifi_ssids()
-
-        # sanitize list
         clean_wifi_list = []
         for w in wifi_list:
             if w:
@@ -125,22 +122,16 @@ class BorgCreateJob(BorgJob):
                     clean_wifi_list.append(str(w))
                 except Exception:
                     pass
-
         wifi_list = clean_wifi_list
-
         print(f"DEBUG: all connected wifi: {wifi_list}")
-
-        # 🚨 IMPORTANT: avoid empty IN ()
         if wifi_list:
             disallowed_wifi = WifiSettingModel.select().where(
                 (WifiSettingModel.ssid.in_(wifi_list))
                 & (WifiSettingModel.allowed == False)
                 & (WifiSettingModel.profile == profile.id)
             )
-
             count = disallowed_wifi.count()
             print(f"DEBUG: disallowed wifi count: {count}")
-
             if count > 0:
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
@@ -164,7 +155,6 @@ class BorgCreateJob(BorgJob):
                 'Your current Borg version does not support ZStd compression.',
             )
             return ret
-
         cmd = [
             'borg',
             'create',
