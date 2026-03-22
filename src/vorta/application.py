@@ -24,6 +24,11 @@ from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
 from vorta.views.main_window import MainWindow
 
+# pwd is only available on Linux/macOS. Flatpak sandboxing (which motivates
+# the pwd-based home resolution) does not exist on Windows.
+if sys.platform != 'win32':
+    import pwd
+
 logger = logging.getLogger(__name__)
 
 APP_ID = config.TEMP_DIR / "socket"
@@ -277,49 +282,66 @@ class VortaApp(QtSingleApplication):
         self.jobs_manager.add_job(job)
 
     def bootstrap_profile(self, bootstrap_file=None):
-        # Necessary to dynamically load the variable from config during runtime
-        # Check out pull request for #1682 for context
-        bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
         """
         Make sure there is at least one profile when first starting Vorta.
         Will either import a profile placed in ~/.vorta-init.json
         or add an empty "Default" profile.
         """
+        # Necessary to dynamically load the variable from config during runtime.
+        # Check out pull request for #1682 for context.
+        bootstrap_file = bootstrap_file or config.PROFILE_BOOTSTRAP_FILE
+
+        # On Linux/macOS, use the password database to resolve the real home
+        # directory, bypassing any Flatpak/sandbox overrides of HOME.
+        # On Windows, Flatpak does not exist so expanduser is sufficient.
+        if sys.platform != 'win32':
+            real_home = Path(pwd.getpwuid(os.getuid()).pw_dir) / ".vorta-init.json"
+        else:
+            real_home = Path(os.path.expanduser("~")) / ".vorta-init.json"
+
         possible_paths = [bootstrap_file]
-        real_home_path = Path(os.path.expanduser("~")) / ".vorta-init.json"
-        if real_home_path not in possible_paths:
-            possible_paths.append(real_home_path)
+        if real_home not in possible_paths:
+            possible_paths.append(real_home)
+
         for path in possible_paths:
             logger.debug(f"Checking bootstrap file at {path}")
             if path.is_file():
                 bootstrap_file = path
                 break
-        if bootstrap_file.is_file():
-            try:
-                profile_export = ProfileExport.from_json(bootstrap_file)
-                profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
-            except Exception as exception:
-                double_newline = os.linesep + os.linesep
-                QMessageBox.critical(
-                    None,
-                    self.tr('Failed to import profile'),
-                    "{}{}\"{}\"{}{}".format(
-                        self.tr('Failed to import a profile from {}:').format(bootstrap_file),
-                        double_newline,
-                        str(exception),
-                        double_newline,
-                        self.tr('Consider removing or repairing this file to get rid of this message.'),
-                    ),
-                )
-                return
-            bootstrap_file.unlink()
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
-                self.tr('Profile import successful!'),
-                self.tr('Profile {} imported.').format(profile.name),
-                level='info',
-                )
-            logger.info('Profile {} imported.'.format(profile.name))
+        else:
+            # No bootstrap file found in any location; ensure a default profile exists.
+            if BackupProfileModel.select().count() == 0:
+                default_profile = BackupProfileModel(name='Default')
+                default_profile.save()
+            return
+
+        try:
+            profile_export = ProfileExport.from_json(bootstrap_file)
+            profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
+        except Exception as exception:
+            double_newline = os.linesep + os.linesep
+            QMessageBox.critical(
+                None,
+                self.tr('Failed to import profile'),
+                "{}{}\"{}\"{}{}".format(
+                    self.tr('Failed to import a profile from {}:').format(bootstrap_file),
+                    double_newline,
+                    str(exception),
+                    double_newline,
+                    self.tr('Consider removing or repairing this file to get rid of this message.'),
+                ),
+            )
+            return
+
+        bootstrap_file.unlink()
+        notifier = VortaNotifications.pick()
+        notifier.deliver(
+            self.tr('Profile import successful!'),
+            self.tr('Profile {} imported.').format(profile.name),
+            level='info',
+        )
+        logger.info('Profile {} imported.'.format(profile.name))
+
         if BackupProfileModel.select().count() == 0:
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()
