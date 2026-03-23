@@ -111,27 +111,32 @@ class BorgCreateJob(BorgJob):
         if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
             ret['message'] = trans_late('messages', 'Add some folders to back up first.')
             return ret
-
         network_status_monitor = get_network_status_monitor()
-        current_wifi = network_status_monitor.get_current_wifi()
-        if current_wifi is not None:
-            wifi_is_disallowed = WifiSettingModel.select().where(
-                (WifiSettingModel.ssid == current_wifi)
-                & (WifiSettingModel.allowed == False)  # noqa
-                & (WifiSettingModel.profile == profile)
+        network_status_monitor = get_network_status_monitor()
+
+        wifi_list = network_status_monitor.get_all_wifi_ssids()
+        clean_wifi_list = []
+        for w in wifi_list:
+            if w:
+                try:
+                    clean_wifi_list.append(str(w))
+                except Exception:
+                    pass
+        wifi_list = clean_wifi_list
+        print(f"DEBUG: all connected wifi: {wifi_list}")
+        if wifi_list:
+            disallowed_wifi = WifiSettingModel.select().where(
+                (WifiSettingModel.ssid.in_(wifi_list))
+                & (WifiSettingModel.allowed == False)
+                & (WifiSettingModel.profile == profile.id)
             )
-            if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
+            count = disallowed_wifi.count()
+            print(f"DEBUG: disallowed wifi count: {count}")
+            if count > 0:
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
                 return ret
-
-        if (
-            profile.repo.is_remote_repo()
-            and profile.dont_run_on_metered_networks
-            and network_status_monitor.is_network_metered()
-        ):
-            ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
-            return ret
-
+        else:
+            print("DEBUG: no wifi → skipping restriction")
         ret['profile'] = profile
         ret['repo'] = profile.repo
 
@@ -150,7 +155,6 @@ class BorgCreateJob(BorgJob):
                 'Your current Borg version does not support ZStd compression.',
             )
             return ret
-
         cmd = [
             'borg',
             'create',
