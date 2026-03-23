@@ -5,7 +5,7 @@ from json import JSONDecodeError
 from playhouse.shortcuts import dict_to_model, model_to_dict
 
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.connection import DB, SCHEMA_VERSION, init_db
+
 from vorta.store.models import (
     BackupProfileModel,
     RepoModel,
@@ -13,6 +13,7 @@ from vorta.store.models import (
     SettingsModel,
     SourceFileModel,
     WifiSettingModel,
+    ExclusionModel,
 )
 
 
@@ -63,6 +64,11 @@ class ProfileExport:
         profile_dict['SourceFileModel'] = [
             model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
+        ]
+        # Add ExclusionModel
+        profile_dict['ExclusionModel'] = [
+        model_to_dict(exclusion, recurse=False, exclude=[ExclusionModel.id])
+        for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
