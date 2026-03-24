@@ -38,40 +38,30 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             logger.exception("Failed to check connectivity state. Assuming connected")
             return True
     def get_all_wifi_ssids(self) -> list[str]:
-        print("DEBUG: get_all_wifi_ssids called")
-
         wifi_ssids = []
 
         try:
             active_paths = self._nm.get_active_connections_paths()
-            print("DEBUG: active paths:", active_paths)
 
             for path in active_paths:
                 try:
                     active_connection = self._nm.get_active_connection_info(path)
-                    print("DEBUG: checking connection type:", active_connection.type)
 
                     if active_connection.type != "802-11-wireless":
                         continue
 
                     settings = self._nm.get_settings(active_connection.connection)
-                    print("DEBUG: raw settings:", settings)
-
                     ssid = self._get_ssid_from_settings(settings)
 
                     if ssid:
-                        print("DEBUG: found wifi SSID:", ssid)
                         wifi_ssids.append(ssid)
 
                 except Exception as e:
-                    print("DEBUG: error processing connection:", e)
                     continue
 
-            print("DEBUG: final wifi list:", wifi_ssids)
             return wifi_ssids
 
         except Exception as e:
-            print("DEBUG: get_all_wifi_ssids error:", e)
             return [] 
 
     def get_current_wifi(self) -> str | None:
