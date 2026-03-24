@@ -1,0 +1,8 @@
+{"original_size": 321757264, "compressed_size": 302994872, "deduplicated_size": 0, "nfiles": 1010, "path": "Users/example.pdf", "time": 1654700723.321005, "type": "archive_progress", "finished": false}
+{"original_size": 473579978, "compressed_size": 444583871, "deduplicated_size": 0, "nfiles": 1567, "path": "Users/other.pdf", "time": 1654700723.521086, "type": "archive_progress", "finished": false}
+{"original_size": 796025201, "compressed_size": 754720403, "deduplicated_size": 0, "nfiles": 2080, "path": "Users/doc.docx", "time": 1654700723.721322, "type": "archive_progress", "finished": false}
+{"time": 1654700723.764089, "type": "archive_progress", "finished": true}
+{"message": "Saving files cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1654700723.790658}
+{"message": "Saving chunks cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1654700723.8089201}
+{"message": "Saving cache config", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1654700723.810185}
+{"operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": true, "time": 1654700723.811722}
