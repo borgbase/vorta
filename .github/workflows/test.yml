@@ -100,6 +100,7 @@ jobs:
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
+          QT_QPA_PLATFORM: offscreen
         run: echo $PKG_CONFIG_PATH && make test-unit
 
       - name: Upload coverage to Codecov
@@ -148,6 +149,7 @@ jobs:
         env:
           BORG_VERSION: ${{ matrix.borg-version }}
           PKG_CONFIG_PATH: /usr/local/opt/openssl@3/lib/pkgconfig
+          QT_QPA_PLATFORM: offscreen
         run: echo $PKG_CONFIG_PATH && make test-integration
 
       - name: Upload coverage to Codecov
