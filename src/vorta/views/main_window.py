@@ -110,7 +110,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
-        QShortcut(QKeySequence(Qt.Key.Key_Delete), self.profileSelector).activated.connect(self.profile_delete_action)
+        QShortcut(QKeySequence.StandardKey.Delete, self.profileSelector).activated.connect(self.profile_delete_action)
         self.profileAddButton.addAction(self.tr("Create new profile"), self.profile_add_action)
         self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
 
