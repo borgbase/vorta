@@ -82,6 +82,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.set_icons()
+        # The Wire: Connect the checkbox to our switch
+        self.checkAdvanced.toggled.connect(self.on_advanced_toggled)
+
+        # Start with the scary buttons hidden!
+        self.on_advanced_toggled(False)
 
         # Connect to events
         self.track_palette_change()
@@ -394,4 +399,19 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             msg.setWindowTitle(self.tr("Passphrase Change Failed"))
             msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
 
-        msg.show()
+    def on_advanced_toggled(self, checked):
+        """
+        The magic switch: Hide/Show technical settings when 'Advanced' is clicked.
+        """
+        # 1. Hide/Show the SSH Key settings
+        self.labelSSHKey.setVisible(checked)
+        self.sshComboBox.setVisible(checked)
+        self.bAddSSHKey.setVisible(checked)
+        self.sshKeyToClipboardButton.setVisible(checked)
+
+        # 2. Hide/Show the Compression settings
+        self.labelCompression.setVisible(checked)
+        self.repoCompression.setVisible(checked)
+        self.compressionHelpLink.setVisible(checked)
+
+        #msg.show()
