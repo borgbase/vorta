@@ -208,9 +208,6 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self._window.rejected.connect(self.init_ssh)
         self._window.failure.connect(self.create_ssh_key_failure)
         self._window.open()
-        self._window = None
-        self._window = None
-        self._window = None
 
     def create_ssh_key_failure(self, exit_code):
         msg = QMessageBox()
@@ -253,18 +250,12 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window.added_repo.connect(self.process_new_repo)
         self._window.open()
-        self._window = None
-        self._window = None
-        self._window = None
 
     def add_existing_repo(self):
         self._window = ExistingRepoWindow()
         self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window.added_repo.connect(self.process_new_repo)
         self._window.open()
-        self._window = None
-        self._window = None
-        self._window = None
 
     def repo_select_action(self):
         self.save_profile_attr('repo', self.repoSelector.currentData())
@@ -334,9 +325,6 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
         self._window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
         self._window.open()
-        self._window = None
-        self._window = None
-        self._window = None
 
     def _handle_passphrase_change_result(self, result):
         msg = QMessageBox()
