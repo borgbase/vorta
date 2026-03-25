@@ -53,7 +53,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.setWindowIcon(get_colored_icon("icon"))
         if sys.platform.startswith('linux'):
             self.app.setDesktopFileName('com.borgbase.Vorta')
-        self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint | QtCore.Qt.WindowType.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.WindowType.WindowCloseButtonHint
+            | QtCore.Qt.WindowType.WindowMinimizeButtonHint
+            | QtCore.Qt.WindowType.WindowMaximizeButtonHint)
         self.createStartBtn = LoadingButton(self.tr("Start Backup"))
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
