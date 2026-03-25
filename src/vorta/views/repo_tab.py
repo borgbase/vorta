@@ -2,7 +2,7 @@ import os
 from pathlib import PurePath
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QMimeData, QUrl
+from PyQt6.QtCore import QMimeData, QUrl, Qt
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
 from vorta.i18n import trans_late, translate
@@ -37,44 +37,30 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
 
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
-
         self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
         self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
-
         self.bAddRepo.setMenu(self.menuAddRepo)
 
         # init repo util button
         self.menuRepoUtil = QMenu(self.bRepoUtil)
-
         self.menuRepoUtil.addAction(self.tr("Unlink Repository…"), self.repo_unlink_action).setIcon(
             get_colored_icon("unlink")
         )
         self.menuRepoUtil.addAction(self.tr("Change Passphrase…"), self.repo_change_passphrase_action).setIcon(
             get_colored_icon("key")
         )
-
         self.bRepoUtil.setMenu(self.menuRepoUtil)
 
-        # note: it is hard to describe these algorithms with attributes like low/medium/high
-        # compression or speed on a unified scale. this is not 1-dimensional and also depends
-        # on the input data. so we just tell what we know for sure.
-        # "auto" is used for some slower / older algorithms to avoid wasting a lot of time
-        # on incompressible data.
+        # Compression algorithms setup
         self.repoCompression.addItem(self.tr('LZ4 (modern, default)'), 'lz4')
         self.repoCompression.addItem(self.tr('Zstandard Level 3 (modern)'), 'zstd,3')
         self.repoCompression.addItem(self.tr('Zstandard Level 8 (modern)'), 'zstd,8')
-
-        # zlib and lzma come from python stdlib and are there (and in borg) since long.
-        # but maybe not much reason to start with these nowadays, considering zstd supports
-        # a very wide range of compression levels and has great speed. if speed is more
-        # important than compression, lz4 is even a little better.
         self.repoCompression.addItem(self.tr('ZLIB Level 6 (auto, legacy)'), 'auto,zlib,6')
         self.repoCompression.addItem(self.tr('LZMA Level 6 (auto, legacy)'), 'auto,lzma,6')
         self.repoCompression.addItem(self.tr('No Compression'), 'none')
         self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.toggle_available_compression()
-        self.repoCompression.currentIndexChanged.connect(self.compression_select_action)
 
         self.init_ssh()
         self.sshComboBox.currentIndexChanged.connect(self.ssh_select_action)
@@ -82,15 +68,20 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.bAddSSHKey.clicked.connect(self.create_ssh_key)
 
         self.set_icons()
-        # The Wire: Connect the checkbox to our switch
-        self.checkAdvanced.toggled.connect(self.on_advanced_toggled)
 
-        # Start with the scary buttons hidden!
+        # Connect the checkbox to our switch
+        self.checkAdvanced.toggled.connect(self.on_advanced_toggled)
+        
+        # Ensure the checkbox is physically at the front for clicking
+        self.checkAdvanced.raise_()
+
+        # Start with the advanced buttons hidden (Standard View)
+        self.checkAdvanced.setChecked(False)
         self.on_advanced_toggled(False)
 
         # Connect to events
         self.track_palette_change()
-        self.track_profile_change(call_now=True)  # needs init of ssh and compression items
+        self.track_profile_change(call_now=True)
         self.track_backup_finished(self.init_repo_stats)
 
     def _set_link_texts(self):
@@ -125,13 +116,10 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
     def populate_from_profile(self):
         try:
             self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
-        except TypeError:  # raised when signal is not connected
+        except TypeError:
             pass
 
-        # populate repositories
         self.set_repos()
-
-        # load profile configuration
         profile = self.profile()
         if profile.repo:
             self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
@@ -145,68 +133,50 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.repoSelector.currentIndexChanged.connect(self.repo_select_action)
 
     def init_repo_stats(self):
-        """Set the strings of the repo stats labels."""
-        # prepare translations
         na = self.tr('N/A', "Not available.")
         no_repo_selected = self.tr("Select a repository first.")
         refresh = self.tr("Try refreshing the metadata of any archive.")
 
-        # set labels
         repo: RepoModel = self.repo()
         if repo is not None:
-            # Start with every element enabled, then disable SSH-related if relevant
             for child in self.frameRepoSettings.children():
-                child.setEnabled(True)
-            # local repo doesn't use ssh
+                if hasattr(child, 'setEnabled'):
+                    child.setEnabled(True)
+            
             ssh_enabled = repo.is_remote_repo()
-            # self.bAddSSHKey.setEnabled(ssh_enabled)
-            # otherwise one cannot add a ssh key for adding a repo
             self.sshComboBox.setEnabled(ssh_enabled)
             self.sshKeyToClipboardButton.setEnabled(ssh_enabled)
 
-            # update stats
             if repo.unique_csize is not None:
                 self.sizeCompressed.setText(pretty_bytes(repo.unique_csize))
-                self.sizeCompressed.setToolTip('')
             else:
                 self.sizeCompressed.setText(na)
-                self.sizeCompressed.setToolTip(refresh)
 
             if repo.unique_size is not None:
                 self.sizeDeduplicated.setText(pretty_bytes(repo.unique_size))
-                self.sizeDeduplicated.setToolTip('')
             else:
                 self.sizeDeduplicated.setText(na)
-                self.sizeDeduplicated.setToolTip(refresh)
 
             if repo.total_size is not None:
                 self.sizeOriginal.setText(pretty_bytes(repo.total_size))
-                self.sizeOriginal.setToolTip('')
             else:
                 self.sizeOriginal.setText(na)
-                self.sizeOriginal.setToolTip(refresh)
 
             self.repoEncryption.setText(str(repo.encryption))
         else:
-            # Compression and SSH key are only valid entries for a repo
-            # Yet Add SSH key button must be enabled for bootstrapping
+            # Disable generic settings if no repo is selected
             for child in self.frameRepoSettings.children():
-                if not isinstance(child, QLayout):
+                if not isinstance(child, QLayout) and hasattr(child, 'setEnabled'):
                     child.setEnabled(False)
+            
             self.bAddSSHKey.setEnabled(True)
+            # Ensure toggle remains active even without a repository selected
+            self.checkAdvanced.setEnabled(True) 
 
-            # unset stats
             self.sizeCompressed.setText(na)
-            self.sizeCompressed.setToolTip(no_repo_selected)
-
             self.sizeDeduplicated.setText(na)
-            self.sizeDeduplicated.setToolTip(no_repo_selected)
-
             self.sizeOriginal.setText(na)
-            self.sizeOriginal.setToolTip(no_repo_selected)
-
             self.repoEncryption.setText(na)
-            self.repoEncryption.setToolTip(no_repo_selected)
 
         self.repo_changed.emit()
 
@@ -221,15 +191,14 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         use_zstd = borg_compat.check('ZSTD')
         for algo in ['zstd,3', 'zstd,8']:
             ix = self.repoCompression.findData(algo)
-            self.repoCompression.model().item(ix).setEnabled(use_zstd)
+            if ix != -1:
+                self.repoCompression.model().item(ix).setEnabled(use_zstd)
 
     def ssh_select_action(self, index):
         self.save_profile_attr('ssh_key', self.sshComboBox.itemData(index))
 
     def create_ssh_key(self):
-        """Open a dialog to create an ssh key."""
         ssh_add_window = SSHAddWindow()
-        self._window = ssh_add_window  # For tests
         ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
         ssh_add_window.rejected.connect(self.init_ssh)
         ssh_add_window.failure.connect(self.create_ssh_key_failure)
@@ -255,14 +224,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
                 pub_key = open(ssh_key_path).read().strip()
                 clipboard = QApplication.clipboard()
                 clipboard.setText(pub_key)
-
                 msg.setWindowTitle(self.tr("Public Key Copied to Clipboard"))
-                msg.setText(
-                    self.tr(
-                        "The selected public SSH key was copied to the clipboard. "
-                        "Use it to set up remote repo permissions."
-                    )
-                )
+                msg.setText(self.tr("The selected public SSH key was copied to the clipboard."))
             else:
                 msg.setText(self.tr("Could not find public key."))
         else:
@@ -273,21 +236,15 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.save_profile_attr('compression', self.repoCompression.currentData())
 
     def new_repo(self):
-        """Open a dialog to create a new repo and add it to vorta."""
         window = AddRepoWindow()
-        self._window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
 
     def add_existing_repo(self):
-        """Open a dialog to add a existing repo to vorta."""
         window = ExistingRepoWindow()
-        self._window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
 
     def repo_select_action(self):
@@ -298,27 +255,21 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         if result['returncode'] == 0:
             new_repo = RepoModel.get(url=result['params']['repo_url'])
             self.save_profile_attr('repo', new_repo.id)
-
             self.set_repos()
-            self.repoSelector.setCurrentIndex(self.repoSelector.count() - 1)
+            self.repoSelector.setCurrentIndex(self.repoSelector.findData(new_repo.id))
             self.repo_added.emit()
             self.init_repo_stats()
 
     def repo_unlink_action(self):
         selected_repo_id = self.repoSelector.currentData()
-        selected_repo_index = self.repoSelector.currentIndex()
-
         if not selected_repo_id:
-            # QComboBox is empty / repo unset
             return
 
-        # Disconnect signal before manipulating dropdown to prevent cascading updates
         try:
             self.repoSelector.currentIndexChanged.disconnect(self.repo_select_action)
         except TypeError:
             pass
 
-        # Update database
         profile = self.profile()
         repo = RepoModel.get(id=selected_repo_id)
         repo_deleted = not repo.is_shared_with_other_profiles(excluding_profile_id=profile.id)
@@ -326,92 +277,56 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         profile.save()
         if repo_deleted:
             repo.delete_instance(recursive=True)
-
-        # Update dropdown only if the repository no longer exists in the DB.
-        if repo_deleted:
-            self.repoSelector.removeItem(selected_repo_index)
+            self.repoSelector.removeItem(self.repoSelector.currentIndex())
+        
         self.repoSelector.setCurrentIndex(0)
-
-        msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        if repo_deleted:
-            msg.setWindowTitle(self.tr('Repository was Unlinked'))
-            msg.setText(self.tr('You can always connect it again later.'))
-        else:
-            msg.setWindowTitle(self.tr('Repository was Detached'))
-            msg.setText(self.tr('The repository remains available for other profiles.'))
-        msg.show()
-
         self.repo_changed.emit()
         self.populate_from_profile()
 
     def copy_URL_action(self):
         selected_repo_id = self.repoSelector.currentData()
         if not selected_repo_id:
-            # QComboBox is empty / repo unset
             return
-
         repo = RepoModel.get(id=selected_repo_id)
-
         url = repo.url
         data = QMimeData()
-
         if not repo.is_remote_repo():
             path = PurePath(url)
             data.setUrls([QUrl(path.as_uri())])
             data.setText(str(path))
         else:
             data.setText(url)
-
         QApplication.clipboard().setMimeData(data)
 
     def repo_change_passphrase_action(self):
         if not self.profile().repo.encryption.startswith('repokey'):
             msg = QMessageBox()
-            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-            msg.setIcon(QMessageBox.Icon.Warning)
             msg.setParent(self, QtCore.Qt.WindowType.Sheet)
             msg.setWindowTitle(self.tr("Invalid Encryption Type"))
-            msg.setText(self.tr("Unable to change the repository passphrase. Encryption type must be repokey."))
+            msg.setText(self.tr("Encryption type must be repokey."))
             msg.show()
             return
-
         window = ChangeBorgPassphraseWindow(self.profile())
-        self._window = window
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
-
         window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
         window.open()
 
     def _handle_passphrase_change_result(self, result):
-        """Handle the result of the passphrase change action."""
         msg = QMessageBox()
-        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-
         if result['returncode'] == 0:
-            msg.setIcon(QMessageBox.Icon.Information)
-            msg.setWindowTitle(self.tr("Passphrase Changed"))
             msg.setText(self.tr("The borg passphrase was successfully changed."))
         else:
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle(self.tr("Passphrase Change Failed"))
-            msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
+            msg.setText(self.tr("Unable to change the repository passphrase."))
+        msg.show()
 
     def on_advanced_toggled(self, checked):
-        """
-        The magic switch: Hide/Show technical settings when 'Advanced' is clicked.
-        """
-        # 1. Hide/Show the SSH Key settings
+        """Magic switch: Hide/Show settings."""
         self.labelSSHKey.setVisible(checked)
         self.sshComboBox.setVisible(checked)
         self.bAddSSHKey.setVisible(checked)
         self.sshKeyToClipboardButton.setVisible(checked)
 
-        # 2. Hide/Show the Compression settings
         self.labelCompression.setVisible(checked)
         self.repoCompression.setVisible(checked)
         self.compressionHelpLink.setVisible(checked)
-
-        #msg.show()
