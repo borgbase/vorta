@@ -125,6 +125,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             self.repoSelector.setCurrentIndex(self.repoSelector.findData(profile.repo.id))
         else:
             self.repoSelector.setCurrentIndex(0)
+        msg = QMessageBox()
+        msg.setWindowTitle(self.tr("Repository was Detached"))
+        msg.setText(self.tr("The repository remains available for other profiles."))
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+        msg.show()
 
         self.repoCompression.setCurrentIndex(self.repoCompression.findData(profile.compression))
         self.sshComboBox.setCurrentIndex(self.sshComboBox.findData(profile.ssh_key))
@@ -225,7 +230,12 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
                 clipboard = QApplication.clipboard()
                 clipboard.setText(pub_key)
                 msg.setWindowTitle(self.tr("Public Key Copied to Clipboard"))
-                msg.setText(self.tr("The selected public SSH key was copied to the clipboard."))
+                msg.setText(
+                    self.tr(
+                        "The selected public SSH key was copied to the clipboard. "
+                        "Use it to set up remote repo permissions."
+                    )
+                )
             else:
                 msg.setText(self.tr("Could not find public key."))
         else:
@@ -280,6 +290,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             self.repoSelector.removeItem(self.repoSelector.currentIndex())
 
         self.repoSelector.setCurrentIndex(0)
+        msg = QMessageBox()
+        msg.setWindowTitle(self.tr("Repository was Detached"))
+        msg.setText(self.tr("The repository remains available for other profiles."))
+        msg.setParent(self, QtCore.Qt.WindowType.Sheet)
+        msg.show()
         self.repo_changed.emit()
         self.populate_from_profile()
 
@@ -314,9 +329,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
     def _handle_passphrase_change_result(self, result):
         msg = QMessageBox()
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        if result['returncode'] == 0:
+        if result["returncode"] == 0:
+            msg.setWindowTitle(self.tr("Passphrase Changed"))
             msg.setText(self.tr("The borg passphrase was successfully changed."))
         else:
+            msg.setWindowTitle(self.tr("Passphrase Change Failed"))
             msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
         msg.show()
 
