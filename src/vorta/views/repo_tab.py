@@ -198,11 +198,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.save_profile_attr('ssh_key', self.sshComboBox.itemData(index))
 
     def create_ssh_key(self):
-        ssh_add_window = SSHAddWindow()
-        ssh_add_window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        ssh_add_window.rejected.connect(self.init_ssh)
-        ssh_add_window.failure.connect(self.create_ssh_key_failure)
-        ssh_add_window.open()
+        self._window = SSHAddWindow()
+        self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window.rejected.connect(self.init_ssh)
+        self._window.failure.connect(self.create_ssh_key_failure)
+        self._window.open()
 
     def create_ssh_key_failure(self, exit_code):
         msg = QMessageBox()
@@ -306,9 +306,9 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             msg.setText(self.tr("Encryption type must be repokey."))
             msg.show()
             return
-        window = ChangeBorgPassphraseWindow(self.profile())
+        self._window = ChangeBorgPassphraseWindow(self.profile())
         self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
+        self._window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
         self._window.open()
 
     def _handle_passphrase_change_result(self, result):
@@ -317,7 +317,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         if result['returncode'] == 0:
             msg.setText(self.tr("The borg passphrase was successfully changed."))
         else:
-            msg.setText(self.tr("Unable to change the repository passphrase."))
+            msg.setText(self.tr("Unable to change the repository passphrase. Please try again."))
         msg.show()
 
     def on_advanced_toggled(self, checked):
