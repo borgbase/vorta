@@ -2,7 +2,7 @@ import os
 from pathlib import PurePath
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QMimeData, QUrl, Qt
+from PyQt6.QtCore import QMimeData, Qt, QUrl
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
 from vorta.i18n import trans_late, translate
@@ -71,7 +71,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
 
         # Connect the checkbox to our switch
         self.checkAdvanced.toggled.connect(self.on_advanced_toggled)
-        
+
         # Ensure the checkbox is physically at the front for clicking
         self.checkAdvanced.raise_()
 
@@ -134,15 +134,15 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
 
     def init_repo_stats(self):
         na = self.tr('N/A', "Not available.")
-        no_repo_selected = self.tr("Select a repository first.")
-        refresh = self.tr("Try refreshing the metadata of any archive.")
+        self.tr("Select a repository first.")
+        self.tr("Try refreshing the metadata of any archive.")
 
         repo: RepoModel = self.repo()
         if repo is not None:
             for child in self.frameRepoSettings.children():
                 if hasattr(child, 'setEnabled'):
                     child.setEnabled(True)
-            
+
             ssh_enabled = repo.is_remote_repo()
             self.sshComboBox.setEnabled(ssh_enabled)
             self.sshKeyToClipboardButton.setEnabled(ssh_enabled)
@@ -168,10 +168,10 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             for child in self.frameRepoSettings.children():
                 if not isinstance(child, QLayout) and hasattr(child, 'setEnabled'):
                     child.setEnabled(False)
-            
+
             self.bAddSSHKey.setEnabled(True)
             # Ensure toggle remains active even without a repository selected
-            self.checkAdvanced.setEnabled(True) 
+            self.checkAdvanced.setEnabled(True)
 
             self.sizeCompressed.setText(na)
             self.sizeDeduplicated.setText(na)
@@ -278,7 +278,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         if repo_deleted:
             repo.delete_instance(recursive=True)
             self.repoSelector.removeItem(self.repoSelector.currentIndex())
-        
+
         self.repoSelector.setCurrentIndex(0)
         self.repo_changed.emit()
         self.populate_from_profile()
