@@ -236,16 +236,16 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         self.save_profile_attr('compression', self.repoCompression.currentData())
 
     def new_repo(self):
-        window = AddRepoWindow()
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        window.added_repo.connect(self.process_new_repo)
-        window.open()
+        self._window = AddRepoWindow()
+        self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window.added_repo.connect(self.process_new_repo)
+        self._window.open()
 
     def add_existing_repo(self):
-        window = ExistingRepoWindow()
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        window.added_repo.connect(self.process_new_repo)
-        window.open()
+        self._window = ExistingRepoWindow()
+        self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window.added_repo.connect(self.process_new_repo)
+        self._window.open()
 
     def repo_select_action(self):
         self.save_profile_attr('repo', self.repoSelector.currentData())
@@ -307,9 +307,9 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             msg.show()
             return
         window = ChangeBorgPassphraseWindow(self.profile())
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.change_borg_passphrase.connect(self._handle_passphrase_change_result)
-        window.open()
+        self._window.open()
 
     def _handle_passphrase_change_result(self, result):
         msg = QMessageBox()
