@@ -23,10 +23,9 @@ class DarwinNetworkStatus(NetworkStatusMonitor):
         Network.nw_path_monitor_set_queue(self.nw_path_monitor, dispatch.dispatch_get_main_queue())
         Network.nw_path_monitor_start(self.nw_path_monitor)
 
-    def _path_updated(self, path) -> None:
+    def _path_updated(self, path: Network.NWPath) -> None:
         self.nw_path = path
         self.network_status_changed.emit(self.is_network_active())
-        return None
 
     def is_network_metered(self) -> bool:
         interface: CWInterface = self._get_wifi_interface()
