@@ -6,8 +6,8 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox
 
 from vorta.profile_export import VersionException
-from vorta.store.models import BackupProfileModel, SourceFileModel
-from vorta.views.import_window import ImportWindow
+from vorta.store.models import BackupProfileModel, ExclusionModel, SourceFileModel
+from vorta.views.dialogs.profile.import_window import ImportWindow
 
 VALID_IMPORT_FILE = Path(__file__).parent / 'profile_exports' / 'valid.json'
 
@@ -32,6 +32,7 @@ def test_import_success(qapp, qtbot, rootdir, monkeypatch):
     restored_repo = restored_profile.repo
     assert restored_repo is not None
     assert len(SourceFileModel.select().where(SourceFileModel.profile == restored_profile)) == 3
+    assert len(ExclusionModel.select().where(ExclusionModel.profile == restored_profile)) == 2
 
 
 @pytest.mark.parametrize(
@@ -127,6 +128,12 @@ def test_export_success(qapp, qtbot, tmpdir, monkeypatch):
     qtbot.waitUntil(lambda: os.path.isfile(FILE_PATH))
 
     assert os.path.isfile(FILE_PATH)
+
+    import json
+
+    with open(FILE_PATH) as f:
+        exported = json.load(f)
+    assert 'ExclusionModel' in exported
 
 
 def test_export_fail_unwritable(qapp, qtbot, monkeypatch):

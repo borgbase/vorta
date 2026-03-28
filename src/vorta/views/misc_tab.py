@@ -14,9 +14,10 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.i18n import translate
-from vorta.store.models import BackupProfileMixin, SettingsModel
+from vorta.store.models import SettingsModel
 from vorta.store.settings import get_misc_settings
 from vorta.utils import get_asset, search
+from vorta.views.base_tab import BaseTab
 from vorta.views.partials.tooltip_button import ToolTipButton
 from vorta.views.utils import get_colored_icon
 
@@ -26,12 +27,12 @@ MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
+class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
     refresh_archive = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, profile_provider=None):
         """Init."""
-        super().__init__(parent)
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
 
         self.checkboxLayout = QFormLayout(self.frameSettings)
@@ -45,8 +46,7 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         self.populate()
 
         # Connect to events
-        self._palette_connection = QApplication.instance().paletteChanged.connect(self.set_icons)
-        self.destroyed.connect(self._on_destroyed)
+        self.track_palette_change()
 
     def populate(self):
         """
@@ -127,12 +127,6 @@ class MiscTab(MiscTabBase, MiscTabUI, BackupProfileMixin):
         """Set or update the icons in this view."""
         for button in self.tooltip_buttons:
             button.setIcon(get_colored_icon('help-about'))
-
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
-        except (TypeError, RuntimeError):
-            pass
 
     def save_setting(self, key, new_value):
         setting = SettingsModel.get(key=key)

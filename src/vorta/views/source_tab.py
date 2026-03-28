@@ -1,6 +1,7 @@
 import logging
 from pathlib import PurePath
 
+from peewee import fn
 from PyQt6 import QtCore, QtGui, uic
 from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
@@ -12,14 +13,15 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.filedialog import VortaFileSelector
-from vorta.store.models import BackupProfileMixin, SettingsModel, SourceFileModel
+from vorta.store.models import SettingsModel, SourceFileModel
 from vorta.utils import (
     FilePathInfoAsync,
     get_asset,
     pretty_bytes,
     sort_sizes,
 )
-from vorta.views.exclude_dialog import ExcludeDialog
+from vorta.views.base_tab import BaseTab
+from vorta.views.dialogs.archive.exclude import ExcludeDialog
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
@@ -65,11 +67,11 @@ class FilesCount(QTableWidgetItem):
                 return 0
 
 
-class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
+class SourceTab(BaseTab, SourceBase, SourceUI):
     updateThreads = []
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
 
         # Prepare source files view
@@ -98,15 +100,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         header.sortIndicatorChanged.connect(self.update_sort_order)
 
         # Populate
-        self.populate_from_profile()
+        self.track_profile_change(call_now=True)
         self.set_icons()
 
         # Listen for events
-        self._palette_connection = QApplication.instance().paletteChanged.connect(lambda p: self.set_icons())
-        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(
-            self.populate_from_profile
-        )
-        self.destroyed.connect(self._on_destroyed)
+        self.track_palette_change()
 
     def set_icons(self):
         "Used when changing between light- and dark mode"
@@ -122,16 +120,6 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 path_item.setIcon(get_colored_icon('folder'))
             else:
                 path_item.setIcon(get_colored_icon('file'))
-
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().paletteChanged.disconnect(self._palette_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
 
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):
@@ -163,7 +151,11 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         files_count = int(files_count)
 
         for item in items:
-            db_item = SourceFileModel.get(dir=path, profile=self.profile())
+            try:
+                db_item = SourceFileModel.get(dir=path, profile=self.profile())
+            except SourceFileModel.DoesNotExist:
+                continue
+
             if QFileInfo(path).isDir():
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
@@ -186,6 +178,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         # enable sorting again
         self.sourceFilesWidget.setSortingEnabled(sorting)
+        self.update_total_size()
 
     def update_path_info(self, index_row: int):
         """
@@ -258,7 +251,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
 
         for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
             self.add_source_to_table(source, False)
-
+        self.update_total_size()
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
@@ -301,6 +294,7 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
                 if created:
                     self.add_source_to_table(new_source)
                     new_source.save()
+            self.update_total_size()
 
     def source_copy(self, index=None):
         """
@@ -331,14 +325,42 @@ class SourceTab(SourceBase, SourceUI, BackupProfileMixin):
         indexes.sort()
         # remove each selected row, starting with the highest index (otherwise, higher indexes become invalid)
         for index in reversed(indexes):
+            path = self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text()
             db_item = SourceFileModel.get(
-                dir=self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text(),
+                dir=path,
                 profile=profile,
             )
             db_item.delete_instance()
             self.sourceFilesWidget.removeRow(index.row())
 
+            for thrd in self.updateThreads[:]:
+                if thrd.objectName() == path:
+                    try:
+                        thrd.signal.disconnect(self.set_path_info)
+                    except (RuntimeError, TypeError):
+                        pass
+                    self.updateThreads.remove(thrd)
+
             logger.debug(f"Removed source in row {index.row()}")
+        self.update_total_size()
+
+    def update_total_size(self):
+        """
+        Update the total size and files count for all sources.
+        """
+        total_size, total_files = (
+            SourceFileModel.select(fn.SUM(SourceFileModel.dir_size), fn.SUM(SourceFileModel.dir_files_count))
+            .where(SourceFileModel.profile == self.profile(), SourceFileModel.dir_size >= 0)
+            .scalar(as_tuple=True)
+        )
+
+        if total_size is not None:
+            total_files = total_files or 0
+            self.totalSizeLabel.setText(
+                self.tr("Total Size: {size}, {count} files").format(size=pretty_bytes(total_size), count=total_files)
+            )
+        else:
+            self.totalSizeLabel.setText("")
 
     def show_exclude_dialog(self):
         window = ExcludeDialog(self.profile(), self)

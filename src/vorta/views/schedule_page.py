@@ -6,18 +6,17 @@ from PyQt6.QtWidgets import QApplication
 
 from vorta.i18n import get_locale
 from vorta.scheduler import ScheduleStatusType
-from vorta.store.models import BackupProfileMixin
 from vorta.utils import get_asset
+from vorta.views.base_tab import BaseTab
 
 logger = logging.getLogger(__name__)
 uifile = get_asset('UI/schedule_page.ui')
 SchedulePageUI, SchedulePageBase = uic.loadUiType(uifile)
 
 
-class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.app = QApplication.instance()
+class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
         self.hasPopulatedScheduleFields = False
 
@@ -48,30 +47,16 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
         self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
-        self.missedBackupsCheckBox.stateChanged.connect(
-            lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
-        )
-        self.pruneCheckBox.stateChanged.connect(lambda new_val, attr='prune_on': self.save_profile_attr(attr, new_val))
-        self.validationCheckBox.stateChanged.connect(
-            lambda new_val, attr='validation_on': self.save_profile_attr(attr, new_val)
-        )
-        self.validationWeeksCount.valueChanged.connect(
-            lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val)
-        )
-        self.compactionCheckBox.stateChanged.connect(
-            lambda new_val, attr='compaction_on': self.save_profile_attr(attr, new_val)
-        )
-        self.compactionWeeksCount.valueChanged.connect(
-            lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
-        )
+        self.bind_profile_attr(self.missedBackupsCheckBox.stateChanged, 'schedule_make_up_missed')
+        self.bind_profile_attr(self.pruneCheckBox.stateChanged, 'prune_on')
+        self.bind_profile_attr(self.validationCheckBox.stateChanged, 'validation_on')
+        self.bind_profile_attr(self.validationWeeksCount.valueChanged, 'validation_weeks')
+        self.bind_profile_attr(self.compactionCheckBox.stateChanged, 'compaction_on')
+        self.bind_profile_attr(self.compactionWeeksCount.valueChanged, 'compaction_weeks')
 
-        self._schedule_changed_connection = self.app.scheduler.schedule_changed.connect(self.draw_next_scheduled_backup)
-        self.destroyed.connect(self._on_destroyed)
-        self.populate_from_profile()
+        self.track_signal(self.app.scheduler.schedule_changed, self.draw_next_scheduled_backup)
+        self.track_profile_change(call_now=True)
         self.hasPopulatedScheduleFields = True
-
-        # Listen for events
-        self._profile_changed_connection = self.app.profile_changed_event.connect(self.populate_from_profile)
 
     def on_scheduler_change(self, _):
         # Wait until we've populated fields _from_ the schedule before populating them back
@@ -122,16 +107,6 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
         self.draw_next_scheduled_backup()
 
-    def _on_destroyed(self):
-        try:
-            self.app.scheduler.schedule_changed.disconnect(self._schedule_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            self.app.profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
-
     def draw_next_scheduled_backup(self):
         status = self.app.scheduler.next_job_for_profile(self.profile().id)
         if status.type in (
@@ -147,13 +122,3 @@ class SchedulePage(SchedulePageBase, SchedulePageUI, BackupProfileMixin):
 
         self.nextBackupDateTimeLabel.setText(text)
         self.nextBackupDateTimeLabel.repaint()
-
-    def save_profile_attr(self, attr, new_value):
-        profile = self.profile()
-        setattr(profile, attr, new_value)
-        profile.save()
-
-    def save_repo_attr(self, attr, new_value):
-        repo = self.profile().repo
-        setattr(repo, attr, new_value)
-        repo.save()

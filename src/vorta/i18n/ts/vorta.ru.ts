@@ -1,23 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.0" language="ru">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TS>
+<TS version="2.0" language="ru">
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27"/>
         <source>Please enter a profile name.</source>
         <translation>Введите название профиля.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
         <translation>Профиль с таким названием уже существует.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -25,47 +27,47 @@
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="80"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
         <source>Repository Path:</source>
         <translation>Путь к репозиторию:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Выберите расположение репозитория Borg</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="112"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
         <source>Repository URL:</source>
         <translation>URL репозитория:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="138"/>
         <source>Unable to add your repository.</source>
         <translation>Не удалось добавить репозиторий.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="165"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Введите правильный URL репозитория или локальный путь.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="169"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
         <source>This repo has already been added.</source>
         <translation>Этот репозиторий уже добавлен.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="105"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="105"/>
         <source>Show my passwords</source>
         <translation>Показать мои пароли</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="90"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
         <source>Autofilled password from password manager.</source>
         <translation>Автоматически заполнять пароль из менеджера паролей</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="102"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="102"/>
         <source>Hide my passwords</source>
         <translation>Скрыть мои пароли</translation>
     </message>
@@ -73,82 +75,82 @@
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Создание нового репозитория</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>URL репозитория:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
         <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local path as repository.</source>
         <translation>Выбрать для репозитория локальный путь.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="201"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="201"/>
         <source>Encryption:</source>
         <translation>Шифрование:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="179"/>
         <source>SSH Key:</source>
         <translation>Ключ SSH:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="193"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="193"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>Автоматически выбирать ключ SSH (по умолчанию)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="247"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="247"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="254"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="254"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="158"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="158"/>
         <source>Advanced</source>
         <translation>Расширенные</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="218"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>Extra Borg Arguments:</source>
         <translation>Дополнительные аргументы Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="116"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
         <source>Borg passphrase:</source>
         <translation>Пароль Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="143"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="143"/>
         <source>Confirm passphrase:</source>
         <translation>Подтверждение пароля:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="150"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="150"/>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
     </message>
@@ -326,7 +328,7 @@
     <name>BorgCreateJob</name>
     <message>
         <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See logs for details.</source>
+        <source>Backup finished with warnings. See the %1 for details.</source>
         <translation>Архивация завершена с предупреждениями. Подробности см. в журналах.</translation>
     </message>
     <message>
@@ -494,172 +496,177 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Dialog</source>
         <translation>Диалог</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Архив:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
         <translation>Внимание: Если вы отметите папку, но не ее подпапки, они все равно будут восстановлены.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="88"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="88"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="95"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="95"/>
         <source>Extract</source>
         <translation>Извлечь</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Добавление профиля</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Профили архивации позволяют архивировать файлы из различных источников в различные хранилища. Например, можно архивировать важные документы на удалённый репозиторий через Wifi, а полный архив хранить на локальном устройстве.&lt;/p&gt;&lt;p&gt;Репозитории и ключи SSH доступны всем профилям. Исходные папки, выбранный репозиторий, разрешённые сети, очистка, проверка и расписание задаются отдельно для каждого профиля.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="84"/>
         <source>Profile Name</source>
         <translation>Название профиля</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="43"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="43"/>
         <source>Generate SSH Key</source>
         <translation>Создать ключ SSH</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="55"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="55"/>
         <source>Key Format:</source>
         <translation>Формат ключа:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="72"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="72"/>
         <source>Key Length:</source>
         <translation>Длина ключа:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="94"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 или 4096 для RSA, 384 или 521 для ECDSA. Фиксировано для Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Еще&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 или 4096 для RSA, 384 или 521 для ECDSA. Фиксировано для Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="107"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
+        <source>More</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
         <source>Output File:</source>
         <translation>Выходной файл:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="119"/>
-        <source>Don&apos;t change this if you want SSH to automatically find the key.</source>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
+        <source>Don't change this if you want SSH to automatically find the key.</source>
         <translation>Не изменяйте, если вы хотите, чтобы SSH автоматически нашел ключ.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="128"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="141"/>
         <source>Generate and copy to Clipboard</source>
         <translation>Создать и скопировать в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Выберите два архива</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Размер</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Длительность</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Точка монтирования</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Сравнить</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="25"/>
         <source>Difference between</source>
         <translation>Разница между</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="45"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="45"/>
         <source>and</source>
         <translation>и</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="58"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="101"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="101"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
         <translation>Если включено, то при передаче этого файла другим лицам ваш пароль Borg будет раскрыт. Используйте с осторожностью!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Включить пароль Borg в экспорт</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Пароль Borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="53"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="53"/>
         <source>Overwrite existing profile</source>
         <translation>Перезаписать существующий профиль</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="60"/>
         <source>Overwrite existing settings</source>
         <translation>Перезаписать существующие настройки</translation>
     </message>
@@ -667,7 +674,7 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="68"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="68"/>
         <source>Rename Profile</source>
         <translation>Переименование профиля</translation>
     </message>
@@ -675,17 +682,17 @@
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="192"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="192"/>
         <source>Connect to existing Repository</source>
         <translation>Подключение к существующему репозиторию</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="210"/>
         <source>Show my password</source>
         <translation>Показать мой пароль</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="207"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="207"/>
         <source>Hide my password</source>
         <translation>Скрыть мой пароль</translation>
     </message>
@@ -693,37 +700,37 @@
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="29"/>
+        <location filename="../../views/dialogs/export.py" line="29"/>
         <source>Export Profile</source>
         <translation>Экспорт профиля</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="38"/>
+        <location filename="../../views/dialogs/export.py" line="38"/>
         <source>The current profile_export has no password</source>
         <translation>Текущий profile_export не имеет пароля</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="43"/>
+        <location filename="../../views/dialogs/export.py" line="43"/>
         <source>Save profile_export</source>
         <translation>Сохранить profile_export</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="55"/>
+        <location filename="../../views/dialogs/export.py" line="55"/>
         <source>Error while exporting</source>
         <translation>Ошибка при экспорте</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="71"/>
+        <location filename="../../views/dialogs/export.py" line="71"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Файл {} не может быть создан. Пожалуйста, выберите другое место.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/dialogs/export.py" line="78"/>
         <source>Profile export successful!</source>
         <translation>Профиль успешно экспортирован!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="78"/>
+        <location filename="../../views/dialogs/export.py" line="78"/>
         <source>Profile export written to {}.</source>
         <translation>Профиль экспортирован в {}.</translation>
     </message>
@@ -867,7 +874,7 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="136"/>
-        <source>Unlink Repository (This doesn&apos;t delete any data. You can always add a repo again later.)</source>
+        <source>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</source>
         <translation>Отвязать репозиторий (При этом данные не удаляются. Вы всегда можете переподключиться к нему позднее.)</translation>
     </message>
     <message>
@@ -1012,8 +1019,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="519"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Доступные переменные окружения: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Доступные переменные окружения: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="20"/>
@@ -1042,13 +1049,23 @@
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Для монтирования архивов установите &amp;quot;FUSE для macOS&amp;quot; &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;отсюда&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation>Для монтирования архивов установите "FUSE для macOS" %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="183"/>
+        <source>here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="208"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Очистка удаляет старые архивы. Можно выбрать число хранимых архивов за день, неделю и т.д. Обычно сохраняются самые последние и несколько старых архивов. &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;Узнать больше&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>Очистка удаляет старые архивы. Можно выбрать число хранимых архивов за день, неделю и т.д. Обычно сохраняются самые последние и несколько старых архивов. %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="208"/>
+        <source>more</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="64"/>
@@ -1057,13 +1074,13 @@
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="81"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Сообщить&lt;/span&gt;&lt;/a&gt; об ошибке |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Сообщить&lt;/span&gt;&lt;/a&gt; об ошибке |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="91"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Журнал&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Журнал&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="127"/>
@@ -1082,18 +1099,18 @@
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="96"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote or local backup repository. For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Удалённый или локальный репозиторий. Для простой и безопасной архивации попробуйте использовать хостинг &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>Удалённый или локальный репозиторий. Для простой и безопасной архивации попробуйте использовать хостинг %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="288"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn&apos;t affect deduplication. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Метод сжатия данных. Не влияет на дедупликацию. Узнать &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;больше&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn't affect deduplication. Read &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Метод сжатия данных. Не влияет на дедупликацию. Узнать &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;больше&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="154"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Шаблоны исключения (&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;узнать больше&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Шаблоны исключения (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;узнать больше&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="180"/>
@@ -1112,7 +1129,7 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="364"/>
-        <source>Don&apos;t run backup over metered networks</source>
+        <source>Don't run backup over metered networks</source>
         <translation>Не архивировать через платное соединение</translation>
     </message>
     <message>
@@ -1162,8 +1179,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="542"/>
-        <source>Add these arguments when creating a backup. See &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
-        <translation>Аргументы, добавляемые при запуске архивации. Смотрите &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;документацию&lt;/span&gt;&lt;/a&gt; для дополнительной информации.</translation>
+        <source>Add these arguments when creating a backup. See &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
+        <translation>Аргументы, добавляемые при запуске архивации. Смотрите &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;документацию&lt;/span&gt;&lt;/a&gt; для дополнительной информации.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="558"/>
@@ -1184,51 +1201,51 @@
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>Импортировать профиль</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>The passphrase has been loaded from the export file</source>
         <translation>Пароль был загружен из файла экспорта</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>The passphrase has been loaded from your keyring</source>
         <translation>Пароль был загружен из вашей связки ключей</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="50"/>
+        <location filename="../../views/dialogs/import.py" line="50"/>
         <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
         <translation>Профиль с именем {} не существует. Перезаписывать нечего.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="61"/>
+        <location filename="../../views/dialogs/import.py" line="61"/>
         <source>Error while importing</source>
         <translation>Ошибка при импорте</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <location filename="../../views/dialogs/import.py" line="77"/>
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Разное со следующим текстом ошибки:
+        <translation>Сбой обновления схемы. Отправьте сообщение об ошибке по ссылке на вкладке Настройки со следующим текстом ошибки:
  {0}
  {1}</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="80"/>
+        <location filename="../../views/dialogs/import.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Новые файлы экспорта profile_export не могут быть использованы в более старых версиях.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="82"/>
+        <location filename="../../views/dialogs/import.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Невозможно прочитать файл экспорта profile_export из-за ошибки прав доступа.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="84"/>
+        <location filename="../../views/dialogs/import.py" line="84"/>
         <source>Profile export file not found.</source>
         <translation>Не найден файл экспорта профиля.</translation>
     </message>
@@ -1282,8 +1299,8 @@
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="168"/>
-        <source>Misc</source>
-        <translation>Разное</translation>
+        <source>Settings</source>
+        <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="190"/>
@@ -1312,8 +1329,8 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="163"/>
-        <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
-        <translation>Вы действительно хотите удалить профиль &apos;{}&apos;?</translation>
+        <source>Are you sure you want to delete profile '{}'?</source>
+        <translation>Вы действительно хотите удалить профиль '{}'?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="164"/>
@@ -1332,7 +1349,7 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="278"/>
-        <source>Don&apos;t show this again</source>
+        <source>Don't show this again</source>
         <translation>Не показывать снова</translation>
     </message>
     <message>
@@ -1342,7 +1359,7 @@
     </message>
     <message>
         <location filename="../../views/main_window.py" line="174"/>
-        <source>Can&apos;t delete the last profile.</source>
+        <source>Can't delete the last profile.</source>
         <translation>Невозможно удалить последний профиль.</translation>
     </message>
     <message>
@@ -1415,7 +1432,7 @@
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="155"/>
-        <source>Couldn&apos;t find public key.</source>
+        <source>Couldn't find public key.</source>
         <translation>Не удалось найти открытый ключ.</translation>
     </message>
     <message>
@@ -1467,42 +1484,42 @@
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="35"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (рекомендуется)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="36"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="36"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (устарело)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="37"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="37"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="46"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="46"/>
         <source>High (Recommended)</source>
         <translation>Высокая (рекомендуется)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="47"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="47"/>
         <source>Medium</source>
         <translation>Средняя</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="60"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="60"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Файл ключа уже существует и не будет перезаписан.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="72"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="72"/>
         <source>New key was copied to clipboard and written to %s.</source>
         <translation>Новый ключ был скопирован в буфер обмена и записан в %s.</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="74"/>
         <source>Error during key generation.</source>
         <translation>Ошибка при создании ключа.</translation>
     </message>
@@ -1559,7 +1576,7 @@
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="164"/>
-        <source>You don&apos;t have read access to {dir}.</source>
+        <source>You don't have read access to {dir}.</source>
         <translation>У вас нет прав на чтение {dir}.</translation>
     </message>
 </context>
@@ -1655,8 +1672,8 @@
     </message>
     <message>
         <location filename="../../application.py" line="211"/>
-        <source>Without this, some files won&apos;t be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Без этого некоторые файлы будут недоступны, и архивирование может быть завершено не полностью. Пожалуйста, выдайте&lt;b&gt;Full Disk Access&lt;/b&gt; права для Vorta в &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</translation>
+        <source>Without this, some files won't be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
+        <translation>Без этого некоторые файлы будут недоступны, и архивирование может быть завершено не полностью. Пожалуйста, выдайте&lt;b&gt;Full Disk Access&lt;/b&gt; права для Vorta в &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="283"/>
@@ -1752,6 +1769,11 @@ https://github.com/borgbase/vorta/issues/new
         <translation>Исполняемый файл Borg не найден.</translation>
     </message>
     <message>
+        <location filename="../../borg/version.py" line="20"/>
+        <source>logs</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../borg/borg_job.py" line="140"/>
         <source>Add a backup repository first.</source>
         <translation>Сначала добавьте репозиторий.</translation>
@@ -1814,8 +1836,8 @@ Try unlinking and re-adding your repo.</source>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
-        <source>Please unlock your system password manager or disable it under Misc</source>
-        <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Разное</translation>
+        <source>Please unlock your system password manager or disable it under Settings</source>
+        <translation>Пожалуйста, разблокируйте системный менеджер паролей или отключите его использование на вкладке Настройки</translation>
     </message>
 </context>
 <context>

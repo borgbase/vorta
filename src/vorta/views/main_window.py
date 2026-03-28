@@ -23,15 +23,15 @@ from vorta.utils import (
     get_network_status_monitor,
     is_system_tray_available,
 )
+from vorta.views.dialogs.profile.export_window import ExportWindow
+from vorta.views.dialogs.profile.import_window import ImportWindow
+from vorta.views.dialogs.profile.profile_add_edit import AddProfileWindow, EditProfileWindow
 from vorta.views.partials.loading_button import LoadingButton
 from vorta.views.utils import get_colored_icon
 
 from .about_tab import AboutTab
 from .archive_tab import ArchiveTab
-from .export_window import ExportWindow
-from .import_window import ImportWindow
 from .misc_tab import MiscTab
-from .profile_add_edit_dialog import AddProfileWindow, EditProfileWindow
 from .repo_tab import RepoTab
 from .schedule_tab import ScheduleTab
 from .source_tab import SourceTab
@@ -75,12 +75,12 @@ class MainWindow(MainWindowBase, MainWindowUI):
             self.current_profile = min(profiles, key=lambda p: (p.name.casefold(), p.name))
 
         # Load tab models
-        self.repoTab = RepoTab(self.repoTabSlot)
-        self.sourceTab = SourceTab(self.sourceTabSlot)
-        self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app)
-        self.scheduleTab = ScheduleTab(self.scheduleTabSlot)
-        self.miscTab = MiscTab(self.SettingsTabSlot)
-        self.aboutTab = AboutTab(self.AboutTabSlot)
+        self.repoTab = RepoTab(self.repoTabSlot, profile_provider=self.get_current_profile)
+        self.sourceTab = SourceTab(self.sourceTabSlot, profile_provider=self.get_current_profile)
+        self.archiveTab = ArchiveTab(self.archiveTabSlot, app=self.app, profile_provider=self.get_current_profile)
+        self.scheduleTab = ScheduleTab(self.scheduleTabSlot, profile_provider=self.get_current_profile)
+        self.miscTab = MiscTab(self.SettingsTabSlot, profile_provider=self.get_current_profile)
+        self.aboutTab = AboutTab(self.AboutTabSlot, profile_provider=self.get_current_profile)
         self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.miscWidget.hide()
         self.tabWidget.setCurrentIndex(0)
@@ -136,6 +136,9 @@ class MainWindow(MainWindowBase, MainWindowUI):
 
     def on_close_window(self):
         self.close()
+
+    def get_current_profile(self):
+        return BackupProfileModel.get(id=self.current_profile.id)
 
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))

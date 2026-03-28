@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import os
 import shutil
 from datetime import datetime, timedelta
 
+import peewee as pw
 from peewee import Tuple, fn
 from playhouse import signals
 
@@ -28,18 +31,18 @@ SCHEMA_VERSION = 23
 
 
 @signals.post_save(sender=SettingsModel)
-def setup_autostart(model_class, instance, created):
+def setup_autostart(model_class: type, instance: SettingsModel, created: bool) -> None:
     if instance.key == 'autostart':
         open_app_at_startup(instance.value)
 
 
-def cleanup_db():
+def cleanup_db() -> None:
     # Clean up database
     DB.execute_sql("VACUUM")
     DB.close()
 
 
-def init_db(con=None):
+def init_db(con: pw.SqliteDatabase | None = None) -> None:
     if con is not None:
         os.umask(0o0077)
         DB.initialize(con)
@@ -73,10 +76,10 @@ def init_db(con=None):
         .group_by(EventLogModel.profile)
     )
 
-    three_months_ago = datetime.now() - timedelta(days=6 * 30)
+    six_months_ago = datetime.now() - timedelta(days=6 * 30)
     entry = Tuple(EventLogModel.profile, EventLogModel.start_time)
     EventLogModel.delete().where(
-        EventLogModel.start_time < three_months_ago,
+        EventLogModel.start_time < six_months_ago,
         entry.not_in(last_backups_per_profile),
         entry.not_in(last_scheduled_backups_per_profile),
     ).execute()
@@ -86,7 +89,7 @@ def init_db(con=None):
     current_schema.save()
     if created or current_schema.version == SCHEMA_VERSION:
         pass
-    else:
+    elif con is not None:
         backup_current_db(current_schema.version)
         run_migrations(current_schema, con)
 
@@ -105,11 +108,12 @@ def init_db(con=None):
         s.save()
 
 
-def backup_current_db(schema_version):
+def backup_current_db(schema_version: int) -> None:
     """
     Creates a backup copy of settings.db
     """
 
+    assert config.SETTINGS_DIR is not None
     timestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
     backup_file_name = f'settings_v{schema_version}_{timestamp}.db'
     shutil.copy(config.SETTINGS_DIR / 'settings.db', config.SETTINGS_DIR / backup_file_name)

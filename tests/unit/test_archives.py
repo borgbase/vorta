@@ -60,7 +60,7 @@ def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
     main, tab = archive_env
 
     stdout, stderr = borg_json_output('prune')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.MouseButton.LeftButton)
@@ -73,7 +73,7 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
     main, tab = archive_env
 
     stdout, stderr = borg_json_output('compact')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.compactButton, QtCore.Qt.MouseButton.LeftButton)
@@ -88,7 +88,7 @@ def test_check(qapp, mocker, borg_json_output, qtbot, archive_env):
     main, tab = archive_env
 
     stdout, stderr = borg_json_output('check')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     qtbot.mouseClick(tab.bCheck, QtCore.Qt.MouseButton.LeftButton)
@@ -106,21 +106,21 @@ def test_mount(qapp, qtbot, mocker, borg_json_output, monkeypatch, choose_file_d
     tab.archiveTable.selectRow(0)
 
     stdout, stderr = borg_json_output('prune')  # TODO: fully mock mount command?
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr("vorta.views.archive.archive_mount.choose_file_dialog", choose_file_dialog)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
@@ -128,9 +128,9 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
     main, tab = archive_env
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('list_archive')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    tab.extract_action()
+    tab.archive_extract.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
@@ -144,7 +144,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
 
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('delete')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
     tab.delete_action()
@@ -179,7 +179,7 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
     main, tab = archive_env
     tab.archiveTable.selectRow(0)
     stdout, stderr = borg_json_output('info')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     with qtbot.waitSignal(tab.bRefreshArchive.clicked, timeout=5000):
@@ -197,7 +197,7 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     tab.archiveTable.selectRow(0)
     new_archive_name = 'idf89d8f9d8fd98'
     stdout, stderr = borg_json_output('rename')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, wait=wait_successful)
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0, wait=wait_successful)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
     # Trigger inline editing programmatically (more reliable than double-click simulation)

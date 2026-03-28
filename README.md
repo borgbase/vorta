@@ -13,7 +13,7 @@
 
 Vorta is a backup client for macOS and Linux desktops. It integrates the mighty [BorgBackup](https://borgbackup.readthedocs.io) with your desktop environment to protect your data from disk failure, ransomware and theft.
 
-https://github.com/m3nu/vorta/assets/3916435/a622a148-5373-4ae0-87bc-4ca1d6f6202e
+https://github.com/user-attachments/assets/541c15a1-60bd-4ec7-afb0-0db28b734228
 
 ## Why is this great? 🤩
 - **Encrypted, deduplicated and compressed backups** using [Borg](https://borgbackup.readthedocs.io) as backend.

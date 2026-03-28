@@ -1,14 +1,15 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import (
     QAbstractItemView,
-    QApplication,
     QHeaderView,
     QTableWidgetItem,
 )
 
 from vorta import config
-from vorta.store.models import BackupProfileMixin, EventLogModel
+from vorta.i18n.richtext import format_richtext, link
+from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
+from vorta.views.base_tab import BaseTab
 
 uifile = get_asset('UI/log_page.ui')
 LogTableUI, LogTableBase = uic.loadUiType(uifile)
@@ -22,14 +23,13 @@ class LogTableColumn:
     ReturnCode = 4
 
 
-class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+class LogPage(BaseTab, LogTableBase, LogTableUI):
+    def __init__(self, parent=None, profile_provider=None):
+        super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
         self.init_ui()
-        self._backup_finished_connection = QApplication.instance().backup_finished_event.connect(self.populate_logs)
-        self._profile_changed_connection = QApplication.instance().profile_changed_event.connect(self.populate_logs)
-        self.destroyed.connect(self._on_destroyed)
+        self.track_profile_change(self.populate_logs, call_now=True)
+        self.track_backup_finished(self.populate_logs)
 
     def init_ui(self):
         self.logPage.setAlternatingRowColors(True)
@@ -40,12 +40,9 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
         self.logPage.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.logPage.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
-        self.logLink.setText(
-            f'<a href="file://{config.LOG_DIR}"><span style="text-decoration:'
-            'underline; color:#0984e3;">Click here</span></a> for complete logs.'
-        )
-
-        self.populate_logs()
+        template = self.logLink.text()
+        log_link = link(f"file://{config.LOG_DIR}", self.tr('View the logs'))
+        self.logLink.setText(format_richtext(template, log_link))
 
     def populate_logs(self):
         profile = self.profile()
@@ -67,13 +64,3 @@ class LogPage(LogTableBase, LogTableUI, BackupProfileMixin):
             self.logPage.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
             self.logPage.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
         self.logPage.setSortingEnabled(sorting)
-
-    def _on_destroyed(self):
-        try:
-            QApplication.instance().backup_finished_event.disconnect(self._backup_finished_connection)
-        except (TypeError, RuntimeError):
-            pass
-        try:
-            QApplication.instance().profile_changed_event.disconnect(self._profile_changed_connection)
-        except (TypeError, RuntimeError):
-            pass
