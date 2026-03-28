@@ -5,7 +5,8 @@ import pytest
 
 pytestmark = pytest.mark.skipif(sys.platform != 'darwin', reason="macOS only")
 
-from vorta.network_status import darwin  # noqa: E402
+if sys.platform == 'darwin':
+    from vorta.network_status import darwin
 
 
 def test_get_current_wifi_when_wifi_is_on(mocker):
