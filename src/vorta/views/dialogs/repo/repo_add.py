@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QFormLayout,
     QLabel,
+    QMessageBox,
     QSizePolicy,
 )
 
@@ -88,12 +89,26 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         self.errorText.repaint()
 
     def run_result(self, result):
-        self.saveButton.setEnabled(True)
-        if result['returncode'] == 0:
-            self.added_repo.emit(result)
-            self.accept()
-        else:
-            self._set_status(self.tr('Unable to add your repository.'))
+            self.saveButton.setEnabled(True)
+            if result['returncode'] == 0:
+                self.added_repo.emit(result)
+                self.accept()
+            else:
+                # New Logic for Issue #1799
+                msg = QMessageBox(self)
+                msg.setIcon(QMessageBox.Icon.Question)
+                msg.setWindowTitle(self.tr("Repository Not Found"))
+                msg.setText(self.tr("Vorta couldn't find an existing repository at this location."))
+                msg.setInformativeText(self.tr("Would you like to initialize a new repository here instead?"))
+                msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                msg.setDefaultButton(QMessageBox.StandardButton.Yes)
+
+                if msg.exec() == QMessageBox.StandardButton.Yes:
+                    self.reject()
+                    if hasattr(self.parent(), 'new_repo'):
+                        self.parent().new_repo()
+                else:
+                    self._set_status(self.tr('Unable to add your repository.'))
 
     def init_ssh_key(self):
         keys = get_private_keys()
