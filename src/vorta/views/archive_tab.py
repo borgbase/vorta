@@ -23,29 +23,26 @@ from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.diff import BorgDiffJob
-from vorta.borg.extract import BorgExtractJob
 from vorta.borg.info_archive import BorgInfoArchiveJob
-from vorta.borg.list_archive import BorgListArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
-from vorta.borg.mount import BorgMountJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
-from vorta.borg.umount import BorgUmountJob
-from vorta.i18n import translate
+from vorta.i18n import trans_late, translate
+from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
-    choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
     get_asset,
     get_mount_points,
     pretty_bytes,
 )
-from vorta.views import diff_result, extract_dialog
+from vorta.views.archive.archive_extract import ArchiveExtract
+from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.base_tab import BaseTab
-from vorta.views.diff_result import DiffResultDialog, DiffTree
-from vorta.views.extract_dialog import ExtractDialog, ExtractTree
+from vorta.views.dialogs.archive import diff_result
+from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
@@ -85,6 +82,9 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             0  # number of archives that are left to refresh before action buttons are enabled again
         )
 
+        self.archive_mount = ArchiveMount(self)
+        self.archive_extract = ArchiveExtract(self)
+
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
         self.tooltip_dict[self.bDiff] = self.bDiff.toolTip()
@@ -103,6 +103,16 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         delegate = IconDelegate(self.archiveTable)
         self.archiveTable.setItemDelegateForColumn(5, delegate)
+
+        self.mount_help_text = trans_late('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
+        self.mount_help_link_text = trans_late('Form', 'here')
+        self.pruning_help_text = trans_late(
+            'Form',
+            'Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. '
+            'Usually you will keep more newer and fewer old archives. Read %1.',
+        )
+        self.pruning_help_link_text = trans_late('Form', 'more')
+        self._init_help_texts()
 
         if sys.platform != 'darwin':
             self._set_status('')  # Set platform-specific hints.
@@ -128,11 +138,11 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.archiveTable.selectionModel().selectionChanged.connect(self.on_selection_change)
 
         # connect archive actions
-        self.bMountArchive.clicked.connect(self.bmountarchive_clicked)
+        self.bMountArchive.clicked.connect(self.archive_mount.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.cell_double_clicked)
         self.bDelete.clicked.connect(self.delete_action)
-        self.bExtract.clicked.connect(self.extract_action)
+        self.bExtract.clicked.connect(self.archive_extract.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
 
         # other signals
@@ -140,7 +150,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.bPrune.clicked.connect(self.prune_action)
         self.bCheck.clicked.connect(self.check_action)
         self.bDiff.clicked.connect(self.diff_action)
-        self.bMountRepo.clicked.connect(self.bmountrepo_clicked)
+        self.bMountRepo.clicked.connect(self.archive_mount.bmountrepo_clicked)
 
         self.archiveNameTemplate.textChanged.connect(
             lambda tpl, key='new_archive_name': self.save_archive_template(tpl, key)
@@ -154,15 +164,13 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
         self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
 
-        self.populate_from_profile()
-        self.selected_archives = None  # TODO: remove unused variable
+        self.track_profile_change(call_now=True)
         self.set_icons()
 
         # Connect to events
         self.track_palette_change()
         self.track_palette_change(self.populate_from_profile)
         self.track_backup_finished()
-        self.track_profile_change()
         self.track_profile_change(self.toggle_compact_button_visibility)
         self.track_signal(self.app.backup_cancelled_event, self.cancel_action)
 
@@ -180,8 +188,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.bDelete.setIcon(get_colored_icon('trash'))
         self.bExtract.setIcon(get_colored_icon('cloud-download'))
 
-        self.bmountarchive_refresh(icon_only=True)
-        self.bmountrepo_refresh()
+        self.archive_mount.bmountarchive_refresh(icon_only=True)
+        self.archive_mount.bmountrepo_refresh()
 
     @pyqtSlot(QPoint)
     def archiveitem_contextmenu(self, pos: QPoint):
@@ -203,8 +211,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         button_connection_pairs = [
             (self.bRefreshArchive, self.refresh_archive_info),
             (self.bDiff, self.diff_action),
-            (self.bMountArchive, self.bmountarchive_clicked),
-            (self.bExtract, self.extract_action),
+            (self.bMountArchive, self.archive_mount.bmountarchive_clicked),
+            (self.bExtract, self.archive_extract.extract_action),
             (self.bRename, self.cell_double_clicked),
             (self.bDelete, self.delete_action),
         ]
@@ -222,6 +230,25 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
     def _set_status(self, text):
         self.mountErrors.setText(text)
         self.mountErrors.repaint()
+
+    def _init_help_texts(self):
+        mount_template = self.mountErrors.text()
+        mount_sentence = format_richtext(
+            escape(translate('Form', self.mount_help_text)),
+            link('https://macfuse.github.io/', translate('Form', self.mount_help_link_text)),
+        )
+        self.mountErrors.setText(format_richtext(mount_template, mount_sentence))
+
+        prune_template = self.pruningHelpLabel.text()
+        prune_sentence = format_richtext(
+            escape(translate('Form', self.pruning_help_text)),
+            link(
+                'https://borgbackup.readthedocs.io/en/stable/usage/prune.html',
+                translate('Form', self.pruning_help_link_text),
+                color="#FF4500",
+            ),
+        )
+        self.pruningHelpLabel.setText(format_richtext(prune_template, prune_sentence))
 
     def _toggle_all_buttons(self, enabled=True):
         """
@@ -397,7 +424,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                     widget.setToolTip(self.tooltip_dict.get(widget, ""))
 
             # refresh bMountArchive for the selected archive
-            self.bmountarchive_refresh()
+            self.archive_mount.bmountarchive_refresh()
         else:
             reason = reason or self.tr("(Select exactly one archive)")
 
@@ -409,7 +436,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 widget.setEnabled(False)
 
             # special treatment for dynamic mount/unmount button.
-            self.bmountarchive_refresh()
+            self.archive_mount.bmountarchive_refresh()
             tooltip = self.bMountArchive.toolTip()
             self.bMountArchive.setToolTip(tooltip + " " + reason)
 
@@ -557,260 +584,12 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 return archive_cell.text()
         return None
 
-    def bmountarchive_clicked(self):
-        """
-        Handle `bMountArchive` being clicked.
-
-        Mount or umount the current archive depending on its current state.
-        """
-        archive_name = self.selected_archive_name()
-
-        if not archive_name:
-            logger.warning("Archive name of selection is empty.")
-            return
-
-        if archive_name in self.mount_points:
-            self.unmount_action(archive_name=archive_name)
-        else:
-            self.mount_action(archive_name=archive_name)
-
-    def bmountrepo_clicked(self):
-        """
-        Handle `bMountRepo` being clicked.
-
-        Mount or umount the repository depending on its current state.
-        """
-        if self.repo_mount_point:
-            self.unmount_action()
-        else:
-            self.mount_action()
-
-    def bmountarchive_refresh(self, icon_only=False):
-        """
-        Update label, tooltip and state of `bMountArchive`.
-
-        The new state depends on the mount status of the current archive.
-        This also updates the icon of the button.
-        """
-        archive_name = self.selected_archive_name()
-
-        if archive_name in self.mount_points:
-            self.bMountArchive.setIcon(get_colored_icon('eject'))
-            if not icon_only:
-                self.bMountArchive.setText(self.tr("Unmount"))
-                self.bMountArchive.setToolTip(self.tr('Unmount the selected archive from the file system'))
-        else:
-            self.bMountArchive.setIcon(get_colored_icon('folder-open'))
-            if not icon_only:
-                self.bMountArchive.setText(self.tr("Mount…"))
-                self.bMountArchive.setToolTip(self.tr("Mount the selected archive " + "as a folder in the file system"))
-
-    def bmountrepo_refresh(self):
-        """
-        Update label, tooltip and state of `bMountRepo`.
-
-        The new state depends on the mount status of the current archive.
-        This also updates the icon of the button.
-        """
-        if self.repo_mount_point:
-            self.bMountRepo.setText(self.tr("Unmount"))
-            self.bMountRepo.setToolTip(self.tr('Unmount the repository from the file system'))
-            self.bMountRepo.setIcon(get_colored_icon('eject'))
-        else:
-            self.bMountRepo.setText(self.tr("Mount…"))
-            self.bMountRepo.setIcon(get_colored_icon('folder-open'))
-            self.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system"))
-
-    def mount_action(self, archive_name=None):
-        """
-        Mount an archive or the whole repository.
-
-        Opens a file chooser to let the user choose a mount point and starts
-        the borg job for mounting afterwards.
-
-        Parameters
-        ----------
-        archive_name : str, optional
-            The archive to mount or None, by default None
-        """
-        profile = self.profile()
-        params = BorgMountJob.prepare(profile, archive=archive_name)
-        if not params['ok']:
-            self._set_status(params['message'])
-            return
-
-        def receive():
-            mount_point = dialog.selectedFiles()
-            if mount_point:
-                params['cmd'].append(mount_point[0])
-                params['mount_point'] = mount_point[0]
-
-                if params['ok']:
-                    self._toggle_all_buttons(False)
-                    job = BorgMountJob(params['cmd'], params, self.profile().repo.id)
-                    job.updated.connect(self.mountErrors.setText)
-                    job.result.connect(self.mount_result)
-                    self.app.jobs_manager.add_job(job)
-
-        dialog = choose_file_dialog(self, self.tr("Choose Mount Point"), want_folder=True)
-        dialog.open(receive)
-
-    def mount_result(self, result):
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Mounted successfully.'))
-
-            mount_point = result['params']['mount_point']
-
-            if result['params'].get('mounted_archive'):
-                # archive was mounted
-                archive_name = result['params']['mounted_archive']
-                self.mount_points[archive_name] = mount_point
-
-                # update column in table
-                row = self.row_of_archive(archive_name)
-                item = QTableWidgetItem(result['cmd'][-1])
-                self.archiveTable.setItem(row, 3, item)
-
-                # update button
-                self.bmountarchive_refresh()
-            else:
-                # whole repo was mounted
-                self.repo_mount_point = mount_point
-                self.bmountrepo_refresh()
-
-        self._toggle_all_buttons(True)
-
-    def unmount_action(self, archive_name=None):
-        """
-        Unmount a (mounted) repository or archive.
-
-        If the target isn't mounted nothing happens.
-
-        Parameters
-        ----------
-        archive_name : str, optional
-            The archive to unmount, by default None
-        """
-        if archive_name:
-            # unmount a single archive
-            mount_point = self.mount_points.get(archive_name)
-        else:
-            # unmount the whole repository
-            mount_point = self.repo_mount_point
-
-        if mount_point is not None:
-            profile = self.profile()
-            params = BorgUmountJob.prepare(profile, mount_point, archive_name=archive_name)
-            if not params['ok']:
-                self._set_status(translate('message', params['message']))
-                return
-
-            job = BorgUmountJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self.mountErrors.setText)
-            job.result.connect(self.umount_result)
-            self.app.jobs_manager.add_job(job)
-
-    def umount_result(self, result):
-        self._toggle_all_buttons(True)
-        archive_name = result['params'].get('current_archive')
-        mount_point = result['params']['mount_point']
-
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Un-mounted successfully.'))
-
-            if archive_name:
-                # unmount single archive
-                del self.mount_points[archive_name]
-                row = self.row_of_archive(archive_name)
-                item = QTableWidgetItem('')
-                self.archiveTable.setItem(row, 3, item)
-
-                # update button
-                self.bmountarchive_refresh()
-            else:
-                # unmount repo
-                self.repo_mount_point = None
-
-                self.bmountrepo_refresh()
-        else:
-            self._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(mount_point))
-
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
         for i in self.prune_intervals:
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
-
-    def extract_action(self):
-        """
-        Open a dialog for choosing what to extract from the selected archive.
-        """
-        profile = self.profile()
-
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if archive_cell:
-                archive_name = archive_cell.text()
-                params = BorgListArchiveJob.prepare(profile, archive_name)
-
-                if not params['ok']:
-                    self._set_status(params['message'])
-                    return
-                self._set_status('')
-                self._toggle_all_buttons(False)
-
-                job = BorgListArchiveJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self.mountErrors.setText)
-                job.result.connect(self.extract_list_result)
-                self.app.jobs_manager.add_job(job)
-                return job
-        else:
-            self._set_status(self.tr('Select an archive to restore first.'))
-
-    def extract_list_result(self, result):
-        """Process the contents of the archive to extract."""
-        self._set_status('')
-        if result['returncode'] == 0:
-            archive = ArchiveModel.get(name=result['params']['archive_name'])
-            model = ExtractTree()
-            self._set_status(self.tr("Processing archive contents"))
-            self._t = extract_dialog.ParseThread(result['data'], model)
-            self._t.finished.connect(lambda: self.extract_show_dialog(archive, model))
-            self._t.start()
-
-    def extract_show_dialog(self, archive, model):
-        """Show the dialog for choosing the archive contents to extract."""
-        self._set_status('')
-
-        def process_result():
-            def receive():
-                extraction_folder = dialog.selectedFiles()
-                if extraction_folder:
-                    params = BorgExtractJob.prepare(self.profile(), archive.name, model, extraction_folder[0])
-                    if params['ok']:
-                        self._toggle_all_buttons(False)
-                        job = BorgExtractJob(params['cmd'], params, self.profile().repo.id)
-                        job.updated.connect(self.mountErrors.setText)
-                        job.result.connect(self.extract_archive_result)
-                        self.app.jobs_manager.add_job(job)
-                    else:
-                        self._set_status(params['message'])
-
-            dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
-            dialog.open(receive)
-
-        window = ExtractDialog(archive, model)
-        self._toggle_all_buttons(True)
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        self._window = window  # for testing
-        window.show()
-        window.accepted.connect(process_result)
-
-    def extract_archive_result(self, result):
-        """Finished extraction."""
-        self._toggle_all_buttons(True)
 
     def cell_double_clicked(self, row=None, column=None):
         if not self.bRename.isEnabled():

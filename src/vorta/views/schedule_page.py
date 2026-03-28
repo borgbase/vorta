@@ -47,29 +47,16 @@ class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
         self.scheduleIntervalUnit.currentIndexChanged.connect(self.on_scheduler_change)
         self.scheduleFixedTime.timeChanged.connect(self.on_scheduler_change)
 
-        self.missedBackupsCheckBox.stateChanged.connect(
-            lambda new_val, attr='schedule_make_up_missed': self.save_profile_attr(attr, new_val)
-        )
-        self.pruneCheckBox.stateChanged.connect(lambda new_val, attr='prune_on': self.save_profile_attr(attr, new_val))
-        self.validationCheckBox.stateChanged.connect(
-            lambda new_val, attr='validation_on': self.save_profile_attr(attr, new_val)
-        )
-        self.validationWeeksCount.valueChanged.connect(
-            lambda new_val, attr='validation_weeks': self.save_profile_attr(attr, new_val)
-        )
-        self.compactionCheckBox.stateChanged.connect(
-            lambda new_val, attr='compaction_on': self.save_profile_attr(attr, new_val)
-        )
-        self.compactionWeeksCount.valueChanged.connect(
-            lambda new_val, attr='compaction_weeks': self.save_profile_attr(attr, new_val)
-        )
+        self.bind_profile_attr(self.missedBackupsCheckBox.stateChanged, 'schedule_make_up_missed')
+        self.bind_profile_attr(self.pruneCheckBox.stateChanged, 'prune_on')
+        self.bind_profile_attr(self.validationCheckBox.stateChanged, 'validation_on')
+        self.bind_profile_attr(self.validationWeeksCount.valueChanged, 'validation_weeks')
+        self.bind_profile_attr(self.compactionCheckBox.stateChanged, 'compaction_on')
+        self.bind_profile_attr(self.compactionWeeksCount.valueChanged, 'compaction_weeks')
 
         self.track_signal(self.app.scheduler.schedule_changed, self.draw_next_scheduled_backup)
-        self.populate_from_profile()
+        self.track_profile_change(call_now=True)
         self.hasPopulatedScheduleFields = True
-
-        # Listen for events
-        self.track_profile_change()
 
     def on_scheduler_change(self, _):
         # Wait until we've populated fields _from_ the schedule before populating them back

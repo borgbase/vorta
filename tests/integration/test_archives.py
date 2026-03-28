@@ -11,6 +11,7 @@ from PyQt6 import QtCore
 
 import vorta.borg
 import vorta.utils
+import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel
 
@@ -71,7 +72,7 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
         return [DiskPartitions('borgfs', str(tmpdir))]
 
     monkeypatch.setattr(psutil, "disk_partitions", psutil_disk_partitions)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr("vorta.views.archive.archive_mount.choose_file_dialog", choose_file_dialog)
 
     main, tab = archive_env
     tab.archiveTable.selectRow(0)
@@ -81,13 +82,13 @@ def test_mount(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, archive_env
     qtbot.mouseClick(tab.bMountArchive, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountarchive_clicked()
+    tab.archive_mount.bmountarchive_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Mounted'), **pytest._wait_defaults)
 
-    tab.bmountrepo_clicked()
+    tab.archive_mount.bmountrepo_clicked()
     qtbot.waitUntil(lambda: tab.mountErrors.text().startswith('Un-mounted successfully.'), **pytest._wait_defaults)
 
 
@@ -96,14 +97,14 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, a
     main, tab = archive_env
 
     tab.archiveTable.selectRow(2)
-    tab.extract_action()
+    tab.archive_extract.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
     # Select all files
     tree_view = tab._window.treeView.model()
     tree_view.setData(tree_view.index(0, 0), QtCore.Qt.CheckState.Checked, QtCore.Qt.ItemDataRole.CheckStateRole)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr(vorta.views.archive.archive_extract, "choose_file_dialog", choose_file_dialog)
     qtbot.mouseClick(tab._window.extractButton, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: 'Restored files from archive.' in main.progressText.text(), **pytest._wait_defaults)

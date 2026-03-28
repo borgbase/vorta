@@ -7,7 +7,7 @@ class BorgVersionJob(BorgJob):
     """
     Gets the path of the borg binary to be used and the borg version.
 
-    Used to display under 'Misc' and later for version-specific compatibility.
+    Used to display under 'Settings' and later for version-specific compatibility.
     """
 
     def finished_event(self, result):

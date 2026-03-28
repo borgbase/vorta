@@ -1,10 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sk">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sk">
 <context>
     <name/>
     <message>
         <location filename="../../borg/borg_job.py" line="166"/>
         <source>messages</source>
-        <comment>Please unlock your system password manager or disable it under Misc</comment>
+        <comment>Please unlock your system password manager or disable it under Settings</comment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -68,22 +70,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>Uložiť</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>Zrušiť</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>Zadajte, prosím, názov profilu.</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>Takto pomenovaný profil už existuje.</translation>
     </message>
@@ -91,57 +93,57 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="139"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="139"/>
         <source>Encryption:</source>
         <translation>Šifrovanie:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156"/>
         <source>Autofilled password from password manager.</source>
         <translation>Heslo predvyplnené Správcom hesiel</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="170"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (Odporúčané, kľúč uložený v repozitári)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="174"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (Kľúč uložený v domovskom adresári)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="177"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="177"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="178"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="178"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187"/>
         <source>None (not recommended)</source>
         <translation>Žiadna (neodporúčané)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="183"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (Odporúčané, kľúč uložený v repozitári)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="184"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="184"/>
         <source>Repokey</source>
         <translation>Kľúč repozitára</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="185"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="185"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (Kľúč uložený v domovskom adresári)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="186"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186"/>
         <source>Keyfile</source>
         <translation>Súbor s kľúčom</translation>
     </message>
@@ -149,77 +151,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="14"/>
         <source>Add Repository</source>
         <translation>Pridať repozitár</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>Všeobecné</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>Inicializovat nový repozitár pre zálohy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>URL adresa repozitára:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local folder</source>
         <translation>Vyberte miestny priečinok</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>Choose a remote repository</source>
         <translation>Vyberte vzdialený priečinok</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="119"/>
         <source>Repository Name:</source>
         <translation>Meno repozitára:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="126"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="126"/>
         <source>Macbook Pro Office (optional)</source>
         <translation>Macbook Pro Office (voliteľné)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="141"/>
         <source>Advanced</source>
         <translation>Pokročilé</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="162"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
         <translation>SSH kľúč:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="176"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="176"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>SSH kľúč vybrať automaticky (predvolené)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="184"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="184"/>
         <source>Extra Borg Arguments:</source>
         <translation>Ďalšie argumenty pre borg:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="236"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -436,8 +438,8 @@ https://github.com/borgbase/vorta/issues/new
     <name>BorgCompactJob</name>
     <message>
         <location filename="../../borg/compact.py" line="29"/>
-        <source>Errors during compaction. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Chyby počas zhutňovania. Podrobnosti nájdete v &lt;a href=&quot;{0}&quot;&gt;záznamoch&lt;/a&gt;.</translation>
+        <source>Errors during compaction. See the %1 for details.</source>
+        <translation>Chyby počas zhutňovania. Podrobnosti nájdete v %1.</translation>
     </message>
 </context>
 <context>
@@ -503,22 +505,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="19"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="29"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="33"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="62"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
         <translation type="unfinished"/>
     </message>
@@ -526,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -539,258 +541,267 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>Borg heslo:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>Zadajte heslo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>Prepísať existujúci profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>Prepísať existujúce nastavenia</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>Pridať profil</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>Pridať profil zálohovania</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
-&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profily umožnujú nastaviť rozdielne nastavenia pre zálohy a repozitáre vrátane rozdielnych časových rozvrhov.&lt;/p&gt;
-&lt;p&gt;Všetky profily majú prístup k tým istým repozitárom a rovnako tak aj ku&lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; kľúčom. Globálne nastavenia aplikácie v &lt;span style=&quot; font-style:italic;&quot;&gt;Rôzne&lt;/span&gt; sú zdieľané všetkými profilmi.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
+        <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
+        <translation>Profily umožnujú nastaviť rozdielne nastavenia pre zálohy a repozitáre vrátane rozdielnych časových rozvrhov.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
+        <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
+        <translation>Všetky profily majú prístup k tým istým repozitárom a rovnako tak aj ku%1 kľúčom. Globálne nastavenia aplikácie v %2 sú zdieľané všetkými profilmi.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>Názov profilu:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>Pridať vzory, ktoré sa majú vylúčiť</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>Vlastné</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>Profily</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>Surové</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>Náhľad</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>Kopírovať do schránky</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>Vytvoriť archívy, medzi ktorými budú zobrazené rozdiely</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>Vyberte dva archívy</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>Dátum</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>Veľkosť</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>Čas trvania</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>Bod pripojenia</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>Názov</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>Zrušiť</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>Rozdiel</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>Vyberte súbory na extrakciu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>Archív:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>Pri triedení presúvať priečinky na začiatok</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>Najprv priečinky</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>Nastaviť režim zobrazenia rozdielov</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>Strom</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>Strom, zjednodušený</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>Zbaliť všetko</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>Zahrnúť borg heslo v expore. Používajte opatrne!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>Zahrnúť borg heslo do exportu</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>Výsledok zisťovania rozdielov</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>Ploché</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>Generovať SSH kľúč</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>Formát kľúča:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>Dĺžka kľúča:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 alebo 4096 pre RSA, 384 alebo 521 pre ECDSA. Pevné pre Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Viac na&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 alebo 4096 pre RSA, 384 alebo 521 pre ECDSA. Pevné pre Ed25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
+        <source>More</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>Výstupný súbor:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>Ak chcete, aby bol SSH kľúč nájdený automaticky, nemeňte toto nastavenie.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="23"/>
         <source>Fatal Error</source>
         <translation>Fatálna chyba</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="87"/>
         <source>Vorta quit unexpectedly. </source>
         <translation>Vorta neočakávane skončila.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can report this issue on &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;. Please search for similar issues before reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tento problém môžete nahlásiť na &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Githube&lt;/span&gt;&lt;/a&gt;. Pred tým však skúste nájsť podobné už nahlásené problémy.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
+        <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
+        <translation>Tento problém môžete nahlásiť na %1. Pred tým však skúste nájsť podobné už nahlásené problémy.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="124"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
+        <source>Github</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="124"/>
         <source>Crash Report:</source>
         <translation>Hlásenie o páde:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>Vylúčiť, ak je prítomné</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation type="unfinished"/>
     </message>
@@ -798,12 +809,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/diff_result.py" line="143"/>
+        <location filename="../../views/dialogs/diff.py" line="143"/>
         <source>Copy</source>
         <translation>Kopírovať</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="151"/>
+        <location filename="../../views/dialogs/diff.py" line="151"/>
         <source>Expand recursively</source>
         <translation>Rozbaliť rekurzívne</translation>
     </message>
@@ -811,72 +822,72 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/diff_result.py" line="778"/>
+        <location filename="../../views/dialogs/diff.py" line="778"/>
         <source>Name</source>
         <translation>Názov</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="780"/>
+        <location filename="../../views/dialogs/diff.py" line="780"/>
         <source>Change</source>
         <translation>Zmena</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="782"/>
+        <location filename="../../views/dialogs/diff.py" line="782"/>
         <source>Size</source>
         <translation>Veľkosť</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="784"/>
+        <location filename="../../views/dialogs/diff.py" line="784"/>
         <source>Balance</source>
         <translation>Bilancia</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="855"/>
+        <location filename="../../views/dialogs/diff.py" line="855"/>
         <source>Added {}, deleted {}</source>
         <translation>{} pridaných, {} odstránených</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="862"/>
+        <location filename="../../views/dialogs/diff.py" line="862"/>
         <source>File</source>
         <translation>Súbor</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="864"/>
+        <location filename="../../views/dialogs/diff.py" line="864"/>
         <source>Directory</source>
         <translation>Adresár</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="866"/>
+        <location filename="../../views/dialogs/diff.py" line="866"/>
         <source>Link</source>
         <translation>Odkaz</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="868"/>
+        <location filename="../../views/dialogs/diff.py" line="868"/>
         <source>Block device file</source>
         <translation>Súbor blokového zariadenia</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="870"/>
+        <location filename="../../views/dialogs/diff.py" line="870"/>
         <source>Character device file</source>
         <translation>Súbor znakového zariadenia</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="875"/>
+        <location filename="../../views/dialogs/diff.py" line="875"/>
         <source>unchanged</source>
         <translation>nezmenené</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="877"/>
+        <location filename="../../views/dialogs/diff.py" line="877"/>
         <source>modified</source>
         <translation>zmenené</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="879"/>
+        <location filename="../../views/dialogs/diff.py" line="879"/>
         <source>removed</source>
         <translation>odstránené</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="881"/>
+        <location filename="../../views/dialogs/diff.py" line="881"/>
         <source>added</source>
         <translation>pridané</translation>
     </message>
@@ -884,7 +895,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>Premenovať profil</translation>
     </message>
@@ -892,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>Kopírovať</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>Odstrániť</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>Prepnúť</translation>
     </message>
@@ -910,22 +921,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="231"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="231"/>
         <source>Connect to existing Repository</source>
         <translation>Pripojiť k existujúcemu repozitáru</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="234"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="234"/>
         <source>Password:</source>
         <translation>Heslo:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="242"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>Heslo predvyplnené správcom hesiel.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235"/>
         <source>Enter the encryption passphrase</source>
         <translation type="unfinished"/>
     </message>
@@ -933,37 +944,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="31"/>
+        <location filename="../../views/dialogs/export.py" line="31"/>
         <source>Export Profile</source>
         <translation>Exportovať profil</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="40"/>
+        <location filename="../../views/dialogs/export.py" line="40"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation>Prezradiť vaše borg heslo (Žiadne heslo nenastavené)</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="45"/>
+        <location filename="../../views/dialogs/export.py" line="45"/>
         <source>Save profile_export</source>
         <translation>Uložiť export profilu</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="53"/>
+        <location filename="../../views/dialogs/export.py" line="53"/>
         <source>Error while exporting</source>
         <translation>Chyba počas exportu</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="67"/>
+        <location filename="../../views/dialogs/export.py" line="67"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>Súbor {} sa nepodarilo vytvoriť. Prosím, vyberte iné umiestnenie.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export successful!</source>
         <translation>Export profilu bol úspešný!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export written to {}.</source>
         <translation>Export profilu bol zapísaný do {}.</translation>
     </message>
@@ -971,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>Rozbaliť</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>Kopírovať</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>Rozbaliť rekurzívne</translation>
     </message>
@@ -989,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>Názov</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>Posledná zmena</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>Veľkosť</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>Zdravie</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>Súbor</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>Adresár</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>Symbolický odkaz</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>FIFO rúra</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>Pevný odkaz (hard link)</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>Špeciálny blokový súbor</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>Špeciálny znakový súbor</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>zdravý</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>poškodený</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>Zviazaný s {}</translation>
     </message>
@@ -1088,8 +1099,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="164"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Prezrieť záznamy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>View the logs</source>
+        <translation>Prezrieť záznamy</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="91"/>
@@ -1103,8 +1114,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="66"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ak hľadáte jednoduchý a bezpečný hosting pre zálohy, skúste &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>Ak hľadáte jednoduchý a bezpečný hosting pre zálohy, skúste %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="235"/>
@@ -1128,8 +1139,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="299"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Pomocník pre typy kompresií&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Help on compression types</source>
+        <translation>Pomocník pre typy kompresií</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="356"/>
@@ -1223,7 +1234,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="212"/>
-        <source>Recalculate selected archive&apos;s size(s)</source>
+        <source>Recalculate selected archive's size(s)</source>
         <translation>Prepočítať veľkost(i) vybraných archívu(ov)</translation>
     </message>
     <message>
@@ -1273,8 +1284,13 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="349"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pre pripájanie archívov najprv nainštalujte „FUSE pre macOS“ &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;odtiaľto&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation>Pre pripájanie archívov najprv nainštalujte „FUSE pre macOS“ %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="349"/>
+        <source>here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="368"/>
@@ -1283,8 +1299,13 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="383"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Čistenie odstráni staré archívy. Môžete vybrať počet archívov za jednotlivé hodiny, dni, atď, ktoré budú stále k dispozícii. Je zvykom ponechávať viac novších a menej starších archívov. Zistite &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;viac&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>Čistenie odstráni staré archívy. Môžete vybrať počet archívov za jednotlivé hodiny, dni, atď, ktoré budú stále k dispozícii. Je zvykom ponechávať viac novších a menej starších archívov. Zistite %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="383"/>
+        <source>more</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="417"/>
@@ -1418,18 +1439,23 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="144"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to report a bug.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Kliknutím sem&lt;/span&gt;&lt;/a&gt; nahlásite chybu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to report a bug.</source>
+        <translation>%1 nahlásite chybu.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="144"/>
+        <source>Click here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="190"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/master/index.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt; Click here&lt;/span&gt;&lt;/a&gt; to view the docs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/master/index.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt; Kliknutím sem&lt;/span&gt;&lt;/a&gt; si prezriete záznamy.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to view the docs.</source>
+        <translation>%1 si prezriete záznamy.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="216"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to view Git repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Kliknutím sem&lt;/span&gt;&lt;/a&gt; zobrazíte Git repozitár.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to view Git repo.</source>
+        <translation>%1 zobrazíte Git repozitár.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="246"/>
@@ -1448,48 +1474,48 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>Importovať profil</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation>Zadajte heslo (už načítané zo súboru s exportom)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation>Zadajte heslo (už bolo načítané z kľúčenky)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="48"/>
+        <location filename="../../views/dialogs/import.py" line="48"/>
         <source>(Name is not used yet)</source>
         <translation>(Názov sa ešte nepoužíva)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="55"/>
+        <location filename="../../views/dialogs/import.py" line="55"/>
         <source>Error while importing</source>
         <translation>Chyba počas importu</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="78"/>
+        <location filename="../../views/dialogs/import.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>Novšie súbory s exportom profilu sa nedajú použiť v staršej verzii.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/dialogs/import.py" line="83"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>Nepodarilo sa prečítať súboru s exportom profilu kvôli nedostatočným oprávneniam.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="88"/>
+        <location filename="../../views/dialogs/import.py" line="88"/>
         <source>Profile export file not found.</source>
         <translation>Súbor s exportom profilu nebol nájdený.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="70"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <location filename="../../views/dialogs/import.py" line="70"/>
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
         <translation>Upgrade schémy skončil s chybou, otvorte hlásenie o chybe kliknutím na odkaz na karte Rôzne a skopírujte tento text:
@@ -1526,8 +1552,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/log_page.ui" line="61"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Prezrieť záznamy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>View the logs</source>
+        <translation>Prezrieť záznamy</translation>
     </message>
 </context>
 <context>
@@ -1549,7 +1575,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../views/main_window.py" line="213"/>
-        <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
+        <source>Are you sure you want to delete profile '{}'?</source>
         <translation>Naozaj chcete odstrániť profil „{}“?</translation>
     </message>
     <message>
@@ -1604,7 +1630,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../views/main_window.py" line="357"/>
-        <source>Don&apos;t show this again</source>
+        <source>Don't show this again</source>
         <translation>Túto správu už nezobrazovať</translation>
     </message>
     <message>
@@ -1756,12 +1782,12 @@ https://github.com/borgbase/vorta/issues/new
     <name>RepoCheckJob</name>
     <message>
         <location filename="../../borg/check.py" line="27"/>
-        <source>Repo check failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Chyba pri kontrole repozitára. Podrobnosti nájdete v &lt;a href=&quot;{0}&quot;&gt;záznamoch&lt;/a&gt;.</translation>
+        <source>Repo check failed. See the %1 for details.</source>
+        <translation>Chyba pri kontrole repozitára. Podrobnosti nájdete v %1.</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="28"/>
-        <source>Passphrase change failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <source>Passphrase change failed. See the %1 for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -1912,42 +1938,42 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="57"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="57"/>
         <source>Add</source>
         <translation>Pridať</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="71"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="71"/>
         <source>Repository Path:</source>
         <translation>Cesta k repozitáru:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="74"/>
         <source>Choose Location of Borg Repository</source>
         <translation>Vyberte umiestnenie Borg repozitára</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Repository URL:</source>
         <translation>URL adresa repozitára:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="96"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="96"/>
         <source>Unable to add your repository.</source>
         <translation>Nepodarilo sa pridať do vášho repozitára.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="106"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Zadajte, prosím, platnú URL adresu repozitára alebo vyberte lokálnu cestu.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="110"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
         <translation>Meno repozitára nesmie presiahnuť 65 znakov.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="114"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="114"/>
         <source>This repo has already been added.</source>
         <translation>Tento repozitár už bol pridaný.</translation>
     </message>
@@ -1955,37 +1981,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="39"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="39"/>
         <source>Generate and copy to clipboard</source>
         <translation>Generovať a kopírovať do schránky</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="42"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="42"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (odporúčané)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="43"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="43"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (zastarané)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="44"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="44"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="53"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="53"/>
         <source>High (Recommended)</source>
         <translation>Vysoké (odporúčané)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="54"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="54"/>
         <source>Medium</source>
         <translation>Stredný</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="67"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="67"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>Súbor s kľúčom už existuje. Nebude prepísaný.</translation>
     </message>
@@ -2117,8 +2143,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="32"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spustiť vlastný shellový príkaz pred a po každej zálohe. Samotná záloha a príkaz po zálohovaní sa spustí iba vtedy, ak príkaz pred zálohovaním skonči bez chyby (nulový návratový kód). Dostupné premenné: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
+        <translation>Spustiť vlastný shellový príkaz pred a po každej zálohe. Samotná záloha a príkaz po zálohovaní sa spustí iba vtedy, ak príkaz pred zálohovaním skonči bez chyby (nulový návratový kód). Dostupné premenné: %1</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="56"/>
@@ -2127,8 +2153,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="84"/>
-        <source>echo &quot;Before backup of $repo_url&quot;</source>
-        <translation>echo &quot;Pred zálohovaním $repo_url&quot;</translation>
+        <source>echo "Before backup of $repo_url"</source>
+        <translation>echo "Pred zálohovaním $repo_url"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="104"/>
@@ -2137,13 +2163,18 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="123"/>
-        <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
-        <translation>echo &quot;Záloha $repo_url skončila s návratovým kódom $returncode.&quot;</translation>
+        <source>echo "Backup of $repo_url ended with $returncode."</source>
+        <translation>echo "Záloha $repo_url skončila s návratovým kódom $returncode."</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ďalšie argumenty pre &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Dostupné voľby sú uvedené v &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;dokumentácií borgu&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Extra arguments for %1. Possible options are listed in %2.</source>
+        <translation>Ďalšie argumenty pre %1. Dostupné voľby sú uvedené v %2.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
+        <source>the borg documentation</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="166"/>
@@ -2226,8 +2257,18 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../application.py" line="217"/>
-        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Bez neho nebudú niektoré súbory dostupné a záloha tak nemusí byť kompletná. Nastavte, prosím, &lt;b&gt;Plný prístup k disku&lt;/b&gt; pre Vorta v &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;Nastavenia systému &gt; Bezpečnosť a súkromie&lt;/a&gt;.</translation>
+        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
+        <translation>Bez neho nebudú niektoré súbory dostupné a záloha tak nemusí byť kompletná. Nastavte, prosím, %1 pre Vorta v %2.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="217"/>
+        <source>System Preferences &gt; Security &amp; Privacy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="217"/>
+        <source>Full Disk Access</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../application.py" line="239"/>
@@ -2296,8 +2337,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../application.py" line="344"/>
-        <source>Borg exited with warning status (rc 1). See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>Borg skončil s chybovým stavom (rc 1). Podrobnosti nájdete v &lt;a href=&quot;{0}&quot;&gt;záznamoch&lt;/a&gt;.</translation>
+        <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
+        <translation>Borg skončil s chybovým stavom (rc 1). Podrobnosti nájdete v %1.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="351"/>
@@ -2334,7 +2375,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../filedialog.py" line="103"/>
-        <source>You don&apos;t have read access to {path}.</source>
+        <source>You don't have read access to {path}.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -2377,6 +2418,11 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../borg/umount.py" line="29"/>
         <source>No active Borg mounts found.</source>
         <translation>Neboli nájdené žiadne aktívne body pripojenia Borg (mount).</translation>
+    </message>
+    <message>
+        <location filename="../../borg/umount.py" line="29"/>
+        <source>logs</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="32"/>
@@ -2498,7 +2544,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../store/settings.py" line="84"/>
-        <source>Otherwise Vorta&apos;s configuration database stores the password in plaintext.</source>
+        <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
         <translation>V opačnom prípade ukladá Vorta heslá do databázy s nastaveniami v čitateľnom formáte.</translation>
     </message>
     <message>

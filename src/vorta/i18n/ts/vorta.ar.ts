@@ -1,10 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name/>
     <message>
         <location filename="../../borg/borg_job.py" line="166"/>
         <source>messages</source>
-        <comment>Please unlock your system password manager or disable it under Misc</comment>
+        <comment>Please unlock your system password manager or disable it under Settings</comment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -68,22 +70,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
         <source>Save</source>
         <translation>حفظ</translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="26"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="26"/>
         <source>Cancel</source>
         <translation>إلغاء </translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>Please enter a profile name.</source>
         <translation>رجاء، أدخل اسم ملف تعريف. </translation>
     </message>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="29"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="29"/>
         <source>A profile with this name already exists.</source>
         <translation>ملف تعريف بهذا الاسم موجود مسبقا. </translation>
     </message>
@@ -91,57 +93,57 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="139"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="139"/>
         <source>Encryption:</source>
         <translation>التشفير:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="156"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156"/>
         <source>Autofilled password from password manager.</source>
         <translation>كلمة المرور المكمّلة تلقائيا من طرف مدير كلمات المرور. </translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="170"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170"/>
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (موصى به، المفتاح مخزن في المستودع)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="174"/>
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (المفتاح المخزن في الدليل الرئيسي)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="177"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="177"/>
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="178"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="178"/>
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187"/>
         <source>None (not recommended)</source>
         <translation>لا شيء (غير مستحسن)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="183"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183"/>
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>  Repokey-Blake2 (موصى به، مفتاح مخزن في المستودع)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="184"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="184"/>
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="185"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="185"/>
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (مفتاح مخزن في الدليل الرئيسي)</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="186"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186"/>
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
@@ -149,77 +151,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>AddRepository</name>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="14"/>
         <source>Add Repository</source>
         <translation>أضف مستودعا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="33"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
         <source>General</source>
         <translation>عامّ</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
         <translation>تهيئة مستودع النسخ الاحتياطي الجديد</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="67"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
         <translation>عنوان URL للمستودع:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="82"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
         <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local folder</source>
         <translation>اختر مجلدًا محليًا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="103"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
         <source>Choose a remote repository</source>
         <translation>اختر مستودعًا بعيدًا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="119"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="119"/>
         <source>Repository Name:</source>
         <translation>اسم المستودع:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="126"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="126"/>
         <source>Macbook Pro Office (optional)</source>
         <translation>ماك بوك برو المكتبي (اختياري)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="141"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="141"/>
         <source>Advanced</source>
         <translation>متقدّم</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="162"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="162"/>
         <source>SSH Key:</source>
         <translation>مفتاح SSH :</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="176"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="176"/>
         <source>Automatically choose SSH Key (default)</source>
         <translation>اختيار مفتاح SSH تلقائيًا (افتراضي)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="184"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="184"/>
         <source>Extra Borg Arguments:</source>
         <translation>وسيطات بورغ الإضافية:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_add.ui" line="236"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="236"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -436,8 +438,8 @@ https://github.com/borgbase/vorta/issues/new
     <name>BorgCompactJob</name>
     <message>
         <location filename="../../borg/compact.py" line="29"/>
-        <source>Errors during compaction. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>أخطاء أثناء الضغط. راجع &lt;a href=&quot;{0}&quot;&gt;السجلات&lt;/a&gt; للحصول على التفاصيل.</translation>
+        <source>Errors during compaction. See the %1 for details.</source>
+        <translation>أخطاء أثناء الضغط. راجع %1 للحصول على التفاصيل.</translation>
     </message>
 </context>
 <context>
@@ -503,22 +505,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="19"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19"/>
         <source>Change Passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="29"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29"/>
         <source>Repository:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="33"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33"/>
         <source>Update</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../views/repo_change_passphrase.py" line="62"/>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="62"/>
         <source>Unable to change the borg passphrase.</source>
         <translation type="unfinished"/>
     </message>
@@ -526,12 +528,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ChangeRepositoryPass</name>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="32"/>
         <source>Change the borg passphrase</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../assets/UI/change_passphrase.ui" line="69"/>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="69"/>
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
         <translation type="unfinished"/>
     </message>
@@ -539,258 +541,267 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
         <source>Borg passphrase:</source>
         <translation>عبارة مرور بورغ:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="32"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="32"/>
         <source>Enter passphrase</source>
         <translation>أدخل عبارة المرور</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="56"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="56"/>
         <source>Overwrite existing profile</source>
         <translation>الكتابة فوق ملف التعريف الموجود</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/import_window.ui" line="63"/>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="63"/>
         <source>Overwrite existing settings</source>
         <translation>الكتابة فوق الإعدادات الموجودة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="12"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="12"/>
         <source>Add Profile</source>
         <translation>إضافة ملف شخصي</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="35"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
         <source>Add Backup Profile</source>
         <translation>إضافة ملف تعريف النسخ الاحتياطي</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="56"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;Profiles allow configuring of different backup and repository settings including different schedules.&lt;/p&gt;
-&lt;p&gt;All profiles will be able to access the same repositories as well as the same &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt; keys. The global application settings in &lt;span style=&quot; font-style:italic;&quot;&gt;Misc&lt;/span&gt; are shared across profiles.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
-&lt;p&gt;تسمح ملفات التعريفات بتكوين إعدادات النسخ الاحتياطي والمستودع المختلفة بما في ذلك جداول زمنية مختلفة.&lt;/p&gt;
-&lt;p&gt;ستكون جميع ملفات التعريفات قادرة على الوصول إلى نفس المستودعات بالإضافة إلى مفاتيح &lt;span style=&quot; font-style:italic;&quot;&gt;ssh&lt;/span&gt;. إعدادات التطبيق العامة في &lt;span style=&quot; font-style:italic;&quot;&gt;متنوعات&lt;/span&gt; تتم مشاركتها عبر ملفات التعريفات.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
+        <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
+        <translation>تسمح ملفات التعريفات بتكوين إعدادات النسخ الاحتياطي والمستودع المختلفة بما في ذلك جداول زمنية مختلفة.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/profile_add.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
+        <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
+        <translation>ستكون جميع ملفات التعريفات قادرة على الوصول إلى نفس المستودعات بالإضافة إلى مفاتيح %1. إعدادات التطبيق العامة في %2 تتم مشاركتها عبر ملفات التعريفات.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="87"/>
         <source>Profile Name:</source>
         <translation>اسم ملف التعريف:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="14"/>
         <source>Add patterns to exclude</source>
         <translation>أضف أنماطا لاستبعادها</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="27"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="27"/>
         <source>Custom</source>
         <translation>مخصّص</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="74"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="74"/>
         <source>Presets</source>
         <translation>الإعدادات المسبقة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="91"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="91"/>
         <source>Raw</source>
         <translation>خام</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="148"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="148"/>
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="179"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="179"/>
         <source>Copy to Clipboard</source>
         <translation>انسخ إلى الحافظة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="14"/>
         <source>Choose archives for diff</source>
         <translation>اختر أرشيفات للفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
         <source>Select two archives</source>
         <translation>حدّد أرشيفَيْن</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="60"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
         <source>Date</source>
         <translation>تاريخ</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="65"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
         <source>Size</source>
         <translation>حجم</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="70"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
         <source>Duration</source>
         <translation>مدة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="75"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
         <translation>نقطة الضمّ</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="80"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
         <source>Name</source>
         <translation>الاسم</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="106"/>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_dialog.ui" line="113"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
         <source>Diff</source>
         <translation>الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
         <source>Choose files to extract</source>
         <translation>اختر ملفات لفك الضغط عنها</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="25"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
         <source>Archive:</source>
         <translation>الأرشيف:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="38"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
         <translation>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="61"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="61"/>
         <source>Keep folders on top when sorting</source>
         <translation>احتفظ بالمجلدات في الأعلى عند الفرز</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="64"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="64"/>
         <source>Folders First</source>
         <translation>المجلدات أولا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="77"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="77"/>
         <source>Set display mode of diff view</source>
         <translation>ضبط وضع العرض لعرض الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="84"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="84"/>
         <source>Tree</source>
         <translation>شجرة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="89"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="89"/>
         <source>Tree, simplified</source>
         <translation>شجرة، مبسطة</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/extract_dialog.ui" line="100"/>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="100"/>
         <source>Collapse All</source>
         <translation>طي الكل</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>Include Borg passphrase in export. Use with caution!</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير. استخدم بحذر!</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/export_window.ui" line="26"/>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
         <translation>ضمّن عبارة مرور بورغ في التصدير</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="14"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="14"/>
         <source>Diff Result</source>
         <translation>نتيجة الفروق</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="28"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="28"/>
         <source>nyx2.local-2018-11-16T09:49:58 </source>
         <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="42"/>
         <source>nyx2.local-2018-10-16T09:49:58 </source>
         <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../assets/UI/diff_result.ui" line="98"/>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="98"/>
         <source>Flat</source>
         <translation>مسطح</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="42"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="42"/>
         <source>Generate SSH Key</source>
         <translation>إنشاء مفتاح SSH</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="54"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="54"/>
         <source>Key Format:</source>
         <translation>تنسيق المفتاح:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="71"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="71"/>
         <source>Key Length:</source>
         <translation>طول المفتاح:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="93"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;2048 أو 4096 لـ RSA، 384 أو 521 لـ ECDSA. ثابت لـEd25519. &lt;a href=&quot;https://stribika.github.io/2015/01/04/secure-secure-shell.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;أكثر&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 أو 4096 لـ RSA، 384 أو 521 لـ ECDSA. ثابت لـEd25519. %1.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="106"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="93"/>
+        <source>More</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="106"/>
         <source>Output File:</source>
         <translation>ملف إلاخراج:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/ssh_add.ui" line="121"/>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="121"/>
         <source>Do not change this if you want SSH to automatically find the key.</source>
         <translation>لا تغير هذا إذا كنت تريد أن يقوم SSH بالعثور على المفتاح تلقائيًا.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="23"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="23"/>
         <source>Fatal Error</source>
         <translation>خطأ فادح</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="87"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="87"/>
         <source>Vorta quit unexpectedly. </source>
         <translation>أغلق فورتا بشكل غير متوقع.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="94"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can report this issue on &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;. Please search for similar issues before reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;يمكنك الإبلاغ عن هذه المشكلة على &lt;a href=&quot;https://github.com/borgbase/vorta/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;. الرجاء البحث عن مشاكل مماثلة قبل الإبلاغ.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
+        <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
+        <translation>يمكنك الإبلاغ عن هذه المشكلة على %1. الرجاء البحث عن مشاكل مماثلة قبل الإبلاغ.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exception_dialog.ui" line="124"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="94"/>
+        <source>Github</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="124"/>
         <source>Crash Report:</source>
         <translation>تقرير الأعطال:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="108"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="108"/>
         <source>Exclude If Present</source>
         <translation>استبعد إذا كان موجودا</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/exclude_dialog.ui" line="58"/>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="58"/>
         <source>Exclude Files/Folders</source>
         <translation type="unfinished"/>
     </message>
@@ -798,12 +809,12 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/diff_result.py" line="143"/>
+        <location filename="../../views/dialogs/diff.py" line="143"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="151"/>
+        <location filename="../../views/dialogs/diff.py" line="151"/>
         <source>Expand recursively</source>
         <translation>توسيع بشكل متكرر</translation>
     </message>
@@ -811,72 +822,72 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/diff_result.py" line="778"/>
+        <location filename="../../views/dialogs/diff.py" line="778"/>
         <source>Name</source>
         <translation>الاسم</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="780"/>
+        <location filename="../../views/dialogs/diff.py" line="780"/>
         <source>Change</source>
         <translation>تغيير</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="782"/>
+        <location filename="../../views/dialogs/diff.py" line="782"/>
         <source>Size</source>
         <translation>الحجم</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="784"/>
+        <location filename="../../views/dialogs/diff.py" line="784"/>
         <source>Balance</source>
         <translation>توازن</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="855"/>
+        <location filename="../../views/dialogs/diff.py" line="855"/>
         <source>Added {}, deleted {}</source>
         <translation>تمت إضافة {}، حذف {}</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="862"/>
+        <location filename="../../views/dialogs/diff.py" line="862"/>
         <source>File</source>
         <translation>ملف</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="864"/>
+        <location filename="../../views/dialogs/diff.py" line="864"/>
         <source>Directory</source>
         <translation>مسار</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="866"/>
+        <location filename="../../views/dialogs/diff.py" line="866"/>
         <source>Link</source>
         <translation>رابط</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="868"/>
+        <location filename="../../views/dialogs/diff.py" line="868"/>
         <source>Block device file</source>
         <translation>حظر ملف الجهاز</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="870"/>
+        <location filename="../../views/dialogs/diff.py" line="870"/>
         <source>Character device file</source>
         <translation>ملف جهاز الرمز</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="875"/>
+        <location filename="../../views/dialogs/diff.py" line="875"/>
         <source>unchanged</source>
         <translation>دون تغيير</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="877"/>
+        <location filename="../../views/dialogs/diff.py" line="877"/>
         <source>modified</source>
         <translation>معدّل</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="879"/>
+        <location filename="../../views/dialogs/diff.py" line="879"/>
         <source>removed</source>
         <translation>مُزال</translation>
     </message>
     <message>
-        <location filename="../../views/diff_result.py" line="881"/>
+        <location filename="../../views/dialogs/diff.py" line="881"/>
         <source>added</source>
         <translation>أضيف</translation>
     </message>
@@ -884,7 +895,7 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="../../views/profile_add_edit_dialog.py" line="69"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="69"/>
         <source>Rename Profile</source>
         <translation>إعادة تسمية الملف الشخصي</translation>
     </message>
@@ -892,17 +903,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExcludeDialog</name>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="174"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="174"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="180"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="180"/>
         <source>Remove</source>
         <translation>إزالة</translation>
     </message>
     <message>
-        <location filename="../../views/exclude_dialog.py" line="187"/>
+        <location filename="../../views/dialogs/archive/exclude.py" line="187"/>
         <source>Toggle</source>
         <translation>تبديل</translation>
     </message>
@@ -910,22 +921,22 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="231"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="231"/>
         <source>Connect to existing Repository</source>
         <translation>الاتصال بمستودع موجود</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="234"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="234"/>
         <source>Password:</source>
         <translation>كلمة المرور:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="242"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="242"/>
         <source>Autofilled password from password manager.</source>
         <translation>كلمة مرور مملوءة تلقائيا من مدير كلمات المرور.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="235"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235"/>
         <source>Enter the encryption passphrase</source>
         <translation type="unfinished"/>
     </message>
@@ -933,37 +944,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExportWindow</name>
     <message>
-        <location filename="../../views/export_window.py" line="31"/>
+        <location filename="../../views/dialogs/export.py" line="31"/>
         <source>Export Profile</source>
         <translation>تصدير الملف الشخصي</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="40"/>
+        <location filename="../../views/dialogs/export.py" line="40"/>
         <source>Disclose your borg passphrase (No passphrase set)</source>
         <translation>الكشف عن عبارة مرور بورغ الخاصة بك (لم تعيّن عبارة مرور)</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="45"/>
+        <location filename="../../views/dialogs/export.py" line="45"/>
         <source>Save profile_export</source>
         <translation>احفظ ملف التعريف_المصدّر</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="53"/>
+        <location filename="../../views/dialogs/export.py" line="53"/>
         <source>Error while exporting</source>
         <translation>حدث خطأ أثناء التصدير</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="67"/>
+        <location filename="../../views/dialogs/export.py" line="67"/>
         <source>The file {} could not be created. Please choose another location.</source>
         <translation>تعذر إنشاء الملف {}. الرجاء اختيار موقع آخر.</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export successful!</source>
         <translation>تم تصدير الملف الشخصي بنجاح!</translation>
     </message>
     <message>
-        <location filename="../../views/export_window.py" line="74"/>
+        <location filename="../../views/dialogs/export.py" line="74"/>
         <source>Profile export written to {}.</source>
         <translation>تصدير ملف التعريف مكتوبًا إلى {}.</translation>
     </message>
@@ -971,17 +982,17 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="138"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="138"/>
         <source>Extract</source>
         <translation>استخراج</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="210"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="210"/>
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="214"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="214"/>
         <source>Expand recursively</source>
         <translation>توسيع بشكل متكرر</translation>
     </message>
@@ -989,77 +1000,77 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/extract_dialog.py" line="433"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="433"/>
         <source>Name</source>
         <translation>الاسم</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="435"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="435"/>
         <source>Last Modified</source>
         <translation>آخر تعديل</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="437"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="437"/>
         <source>Size</source>
         <translation>الحجم</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="439"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="439"/>
         <source>Health</source>
         <translation>السلامة</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="518"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="518"/>
         <source>File</source>
         <translation>ملف</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="520"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="520"/>
         <source>Directory</source>
         <translation>الدليل</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="522"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="522"/>
         <source>Symbolic link</source>
         <translation>ارتباط رمزي</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="524"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="524"/>
         <source>FIFO pipe</source>
         <translation>أنبوب FIFO</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="526"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="526"/>
         <source>Hard link</source>
         <translation>رابط صلب</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="528"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="528"/>
         <source>Socket</source>
         <translation>مقبس</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="530"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="530"/>
         <source>Block special file</source>
         <translation>حظر ملف خاص</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="532"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="532"/>
         <source>Character special file</source>
         <translation>ملف جهاز الرمز</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="539"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="539"/>
         <source>healthy</source>
         <translation>سليم</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="541"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="541"/>
         <source>broken</source>
         <translation>تالف</translation>
     </message>
     <message>
-        <location filename="../../views/extract_dialog.py" line="554"/>
+        <location filename="../../views/dialogs/archive/extract.py" line="554"/>
         <source>Linked to: {}</source>
         <translation>مرتبط بـ: {}</translation>
     </message>
@@ -1088,8 +1099,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="164"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;عرض السجلات&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>View the logs</source>
+        <translation>عرض السجلات</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="91"/>
@@ -1103,8 +1114,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="66"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For simple and secure backup hosting, try &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;BorgBase&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;لاستضافة للنسخ الاحتياطي بسيطة وآمنة، جرّب &lt;a href=&quot;https://www.borgbase.com/?utm_source=vorta&amp;utm_medium=app&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;بورغ بيز&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>لاستضافة للنسخ الاحتياطي بسيطة وآمنة، جرّب %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="235"/>
@@ -1128,8 +1139,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="299"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Help on compression types&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;مساعدة في أنواع الضغط&lt;/span&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Help on compression types</source>
+        <translation>مساعدة في أنواع الضغط</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="356"/>
@@ -1223,7 +1234,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="212"/>
-        <source>Recalculate selected archive&apos;s size(s)</source>
+        <source>Recalculate selected archive's size(s)</source>
         <translation>إعادة حساب حجم (أحجام) الأرشيف المحدد</translation>
     </message>
     <message>
@@ -1273,8 +1284,13 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="349"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To mount archives, first install &amp;quot;FUSE for macOS&amp;quot; from &lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; لتحميل الأرشيفات، ثبّت أولاً &amp;quot;FUSE لنظام التشغيل macOSquot; من هنا&lt;a href=&quot;https://osxfuse.github.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation>لتحميل الأرشيفات، ثبّت أولاً "FUSE لنظام التشغيل macOSquot; من هنا%1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="349"/>
+        <source>here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="368"/>
@@ -1283,8 +1299,13 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="383"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;يؤدي التقليم إلى إزالة الأرشيفات القديمة. يمكنك اختيار عدد الأرشيفات بالساعة واليوم وما إلى ذلك للاحتفاظ بها. عادةً ما ستحتفظ بالمزيد من الأرشيفات الأحدث وعدد أقل من الأرشيفات القديمة. اقرأ &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/prune.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#FF4500;&quot;&gt;أكثر&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>يؤدي التقليم إلى إزالة الأرشيفات القديمة. يمكنك اختيار عدد الأرشيفات بالساعة واليوم وما إلى ذلك للاحتفاظ بها. عادةً ما ستحتفظ بالمزيد من الأرشيفات الأحدث وعدد أقل من الأرشيفات القديمة. اقرأ %1.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="383"/>
+        <source>more</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="417"/>
@@ -1324,7 +1345,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="587"/>
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
-        <translation>“&lt;int&gt;&lt;char&gt;”, حيث الحرف هو &quot;H&quot;، &quot;d&quot;، &quot;w&quot;، &quot;m&quot;، &quot;y&quot;.</translation>
+        <translation>“&lt;int&gt;&lt;char&gt;”, حيث الحرف هو "H"، "d"، "w"، "m"، "y".</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="593"/>
@@ -1418,18 +1439,23 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="144"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to report a bug.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta/issues/new/choose&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;اضغط هنا&lt;/span&gt;&lt;/a&gt; للإبلاغ عن خطأ.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to report a bug.</source>
+        <translation>%1 للإبلاغ عن خطأ.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="144"/>
+        <source>Click here</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="190"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/master/index.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt; Click here&lt;/span&gt;&lt;/a&gt; to view the docs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://borgbackup.readthedocs.io/en/master/index.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt; اضغط هنا&lt;/span&gt;&lt;/a&gt; لعرض المستندات.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to view the docs.</source>
+        <translation>%1 لعرض المستندات.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="216"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;Click here&lt;/span&gt;&lt;/a&gt; to view Git repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/borgbase/vorta&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;اضغط هنا&lt;/span&gt;&lt;/a&gt; لعرض مستودع غيت.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>%1 to view Git repo.</source>
+        <translation>%1 لعرض مستودع غيت.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="246"/>
@@ -1448,48 +1474,48 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>ImportWindow</name>
     <message>
-        <location filename="../../views/import_window.py" line="25"/>
+        <location filename="../../views/dialogs/import.py" line="25"/>
         <source>Import Profile</source>
         <translation>استيراد الملف الشخصي</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="33"/>
+        <location filename="../../views/dialogs/import.py" line="33"/>
         <source>Enter passphrase (already loaded from the export file)</source>
         <translation>أدخل عبارة المرور (التي تم تحميلها بالفعل من ملف التصدير)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="40"/>
+        <location filename="../../views/dialogs/import.py" line="40"/>
         <source>Enter passphrase (already loaded from your keyring)</source>
         <translation>أدخل عبارة المرور (التي تم تحميلها بالفعل من حلقة المفاتيح الخاصة بك)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="48"/>
+        <location filename="../../views/dialogs/import.py" line="48"/>
         <source>(Name is not used yet)</source>
         <translation>(الاسم لم يستخدم بعد)</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="55"/>
+        <location filename="../../views/dialogs/import.py" line="55"/>
         <source>Error while importing</source>
         <translation>حدث خطأ أثناء الاستيراد</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="78"/>
+        <location filename="../../views/dialogs/import.py" line="78"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
         <translation>لا يمكن استخدام ملفات التصدير Profile_export الأحدث في الإصدارات الأقدم.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="83"/>
+        <location filename="../../views/dialogs/import.py" line="83"/>
         <source>Cannot read profile_export export file due to permission error.</source>
         <translation>لا يمكن قراءة ملف التصدير Profile_export بسبب خطأ في الإذن.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="88"/>
+        <location filename="../../views/dialogs/import.py" line="88"/>
         <source>Profile export file not found.</source>
         <translation>لم يُعثر على ملف تصدير الملف الشخصي.</translation>
     </message>
     <message>
-        <location filename="../../views/import_window.py" line="70"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Misc tab with the following error:
+        <location filename="../../views/dialogs/import.py" line="70"/>
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
         <translation>فشل ترقية المخطط، قدّم تقريرا بالأخطاء باستخدام الارتباط الموجود في علامة التبويب Misc مع الخطأ التالي:
@@ -1526,8 +1552,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/log_page.ui" line="61"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;View the logs&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;عرض السجلات&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>View the logs</source>
+        <translation>عرض السجلات</translation>
     </message>
 </context>
 <context>
@@ -1549,8 +1575,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../views/main_window.py" line="213"/>
-        <source>Are you sure you want to delete profile &apos;{}&apos;?</source>
-        <translation>هل أنت متأكد أنك تريد حذف الملف الشخصي &apos;{}&apos;؟</translation>
+        <source>Are you sure you want to delete profile '{}'?</source>
+        <translation>هل أنت متأكد أنك تريد حذف الملف الشخصي '{}'؟</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="214"/>
@@ -1604,7 +1630,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../views/main_window.py" line="357"/>
-        <source>Don&apos;t show this again</source>
+        <source>Don't show this again</source>
         <translation>لا تظهر هذا مرة أخرى</translation>
     </message>
     <message>
@@ -1756,12 +1782,12 @@ https://github.com/borgbase/vorta/issues/new
     <name>RepoCheckJob</name>
     <message>
         <location filename="../../borg/check.py" line="27"/>
-        <source>Repo check failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>فشل التحقق من المستودع. انظر &lt;a href=&quot;{0}&quot;&gt;السجلات&lt;/a&gt; للتفاصيل .</translation>
+        <source>Repo check failed. See the %1 for details.</source>
+        <translation>فشل التحقق من المستودع. انظر %1 للتفاصيل .</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="28"/>
-        <source>Passphrase change failed. See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
+        <source>Passphrase change failed. See the %1 for details.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -1912,42 +1938,42 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="57"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="57"/>
         <source>Add</source>
         <translation>أضف</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="71"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="71"/>
         <source>Repository Path:</source>
         <translation>مسار المستودع:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="74"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="74"/>
         <source>Choose Location of Borg Repository</source>
         <translation>اختر موقع مستودع بورغ</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="83"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Repository URL:</source>
         <translation>عنوان URL للمستودع:</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="96"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="96"/>
         <source>Unable to add your repository.</source>
         <translation>غير قادر على إضافة مستودعك.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="106"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="106"/>
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>الرجاء إدخال عنوان URL صالح للمستودع أو تحديد مسار محلي.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="110"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="110"/>
         <source>Repository name must be less than 65 characters.</source>
         <translation>يجب أن يكون اسم المستودع أقل من 65 حرفًا.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_add_dialog.py" line="114"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="114"/>
         <source>This repo has already been added.</source>
         <translation>أُضيف هذا المستودع بالفعل.</translation>
     </message>
@@ -1955,37 +1981,37 @@ https://github.com/borgbase/vorta/issues/new
 <context>
     <name>SSHAddWindow</name>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="39"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="39"/>
         <source>Generate and copy to clipboard</source>
         <translation>إنشاء ونسخ إلى الحافظة</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="42"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="42"/>
         <source>ED25519 (Recommended)</source>
         <translation>ED25519 (مستحسن)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="43"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="43"/>
         <source>RSA (Legacy)</source>
         <translation>RSA (قديم)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="44"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="44"/>
         <source>ECDSA</source>
         <translation>ECDSA</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="53"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="53"/>
         <source>High (Recommended)</source>
         <translation>عالي (مستحسن)</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="54"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="54"/>
         <source>Medium</source>
         <translation>متوسط</translation>
     </message>
     <message>
-        <location filename="../../views/ssh_dialog.py" line="67"/>
+        <location filename="../../views/dialogs/repo/ssh.py" line="67"/>
         <source>Key file already exists. Not overwriting.</source>
         <translation>ملف المفتاح موجود بالفعل. عدم الكتابة فوقها.</translation>
     </message>
@@ -2117,8 +2143,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="32"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;شغّل أوامر shell المخصصة قبل وبعد كل نسخة احتياطية. لن يشغل أمر النسخ الاحتياطي وما بعد النسخ الاحتياطي الفعلي إلا في حالة خروج أمر النسخ الاحتياطي المسبق دون خطأ (رمز الإرجاع 0). المتغيرات المتاحة: &lt;span style=&quot; font-family:&apos;Courier&apos;;&quot;&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
+        <translation>شغّل أوامر shell المخصصة قبل وبعد كل نسخة احتياطية. لن يشغل أمر النسخ الاحتياطي وما بعد النسخ الاحتياطي الفعلي إلا في حالة خروج أمر النسخ الاحتياطي المسبق دون خطأ (رمز الإرجاع 0). المتغيرات المتاحة: %1</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="56"/>
@@ -2127,8 +2153,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="84"/>
-        <source>echo &quot;Before backup of $repo_url&quot;</source>
-        <translation>echo &quot;قبل النسخ الاحتياطي لـ $repo_url&quot;</translation>
+        <source>echo "Before backup of $repo_url"</source>
+        <translation>echo "قبل النسخ الاحتياطي لـ $repo_url"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="104"/>
@@ -2137,13 +2163,18 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="123"/>
-        <source>echo &quot;Backup of $repo_url ended with $returncode.&quot;</source>
-        <translation>echo &quot;نسخة احتياطية من $repo_url انتهت بـ $returncode.&quot;</translation>
+        <source>echo "Backup of $repo_url ended with $returncode."</source>
+        <translation>echo "نسخة احتياطية من $repo_url انتهت بـ $returncode."</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Extra arguments for &lt;span style=&quot; font-style:italic;&quot;&gt;borg create&lt;/span&gt;. Possible options are listed in the &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;the borg documentation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;الحجج الإضافية لـ &lt;span style=&quot; font-style:italic;&quot;&gt;إنشاء بورغ&lt;/span&gt;. تسرد الخيارات الممكنة في &lt;a href=&quot;https://borgbackup.readthedocs.io/en/stable/usage/create.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0984e3;&quot;&gt;وثائق بورغ&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Extra arguments for %1. Possible options are listed in %2.</source>
+        <translation>الحجج الإضافية لـ %1. تسرد الخيارات الممكنة في %2.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="144"/>
+        <source>the borg documentation</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="166"/>
@@ -2226,8 +2257,18 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../application.py" line="217"/>
-        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>دون ذلك، لن تتمكن من الوصول إلى بعض الملفات وقد ينتهي بك الأمر بنسخة احتياطية غير كاملة. يرجى تعيين &lt;b&gt;إذن الوصول الكامل إلى القرص&lt;/b&gt; لـ ڤورتا في &lt;a href=&apos;x-apple.systempreferences:com.apple.preference.security?Privacy&apos;&gt; تفضيلات النظام &gt; الأمان والخصوصية&lt;/a&gt;.</translation>
+        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
+        <translation>دون ذلك، لن تتمكن من الوصول إلى بعض الملفات وقد ينتهي بك الأمر بنسخة احتياطية غير كاملة. يرجى تعيين %1 لـ ڤورتا في %2.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="217"/>
+        <source>System Preferences &gt; Security &amp; Privacy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../application.py" line="217"/>
+        <source>Full Disk Access</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../application.py" line="239"/>
@@ -2296,8 +2337,8 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../application.py" line="344"/>
-        <source>Borg exited with warning status (rc 1). See the &lt;a href=&quot;{0}&quot;&gt;logs&lt;/a&gt; for details.</source>
-        <translation>خرج بورغ بحالة تحذير (rc 1). انظر &lt;a href=&quot;{0}&quot;&gt;السجلات&lt;/a&gt; للتفاصيل .</translation>
+        <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
+        <translation>خرج بورغ بحالة تحذير (rc 1). انظر %1 للتفاصيل .</translation>
     </message>
     <message>
         <location filename="../../application.py" line="351"/>
@@ -2334,7 +2375,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../filedialog.py" line="103"/>
-        <source>You don&apos;t have read access to {path}.</source>
+        <source>You don't have read access to {path}.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -2377,6 +2418,11 @@ https://github.com/borgbase/vorta/issues/new
         <location filename="../../borg/umount.py" line="29"/>
         <source>No active Borg mounts found.</source>
         <translation>لم يُعثر على ضمّات بورغ نشطة.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/umount.py" line="29"/>
+        <source>logs</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="32"/>
@@ -2498,7 +2544,7 @@ https://github.com/borgbase/vorta/issues/new
     </message>
     <message>
         <location filename="../../store/settings.py" line="84"/>
-        <source>Otherwise Vorta&apos;s configuration database stores the password in plaintext.</source>
+        <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
         <translation>بخلاف ذلك، تقوم قاعدة بيانات تكوين ڤورتا بتخزين كلمة المرور في نص عادي.</translation>
     </message>
     <message>
