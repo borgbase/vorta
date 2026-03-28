@@ -8,6 +8,7 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.store.connection import DB, SCHEMA_VERSION, init_db
 from vorta.store.models import (
     BackupProfileModel,
+    ExclusionModel,
     RepoModel,
     SchemaVersion,
     SettingsModel,
@@ -63,6 +64,11 @@ class ProfileExport:
         profile_dict['SourceFileModel'] = [
             model_to_dict(source, recurse=False, exclude=[SourceFileModel.id])
             for source in SourceFileModel.select().where(SourceFileModel.profile == profile)
+        ]
+        # Add ExclusionModel
+        profile_dict['ExclusionModel'] = [
+            model_to_dict(exclusion, recurse=False, exclude=[ExclusionModel.id])
+            for exclusion in ExclusionModel.select().where(ExclusionModel.profile == profile)
         ]
         # Add SchemaVersion
         profile_dict['SchemaVersion'] = model_to_dict(SchemaVersion.get(id=1))
@@ -127,18 +133,27 @@ class ProfileExport:
             SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
             WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
 
-        # Set the profile ids to be match new profile
+        # Set the profile ids to match new profile
         for source in self._profile_dict['SourceFileModel']:
             source['profile'] = self.id
         # Delete existing Sources to avoid duplicates
         SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
         SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
 
+        # Restore ExclusionModel entries
+        if 'ExclusionModel' in self._profile_dict:
+            for exclusion in self._profile_dict['ExclusionModel']:
+                exclusion['profile'] = self.id
+            ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
+            ExclusionModel.insert_many(self._profile_dict['ExclusionModel']).execute()
+
         # Delete added dictionaries to make it match BackupProfileModel
         del self._profile_dict['SettingsModel']
         del self._profile_dict['SourceFileModel']
         del self._profile_dict['WifiSettingModel']
         del self._profile_dict['SchemaVersion']
+        if 'ExclusionModel' in self._profile_dict:
+            del self._profile_dict['ExclusionModel']
 
         # dict to profile
         new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
