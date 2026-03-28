@@ -151,7 +151,11 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         files_count = int(files_count)
 
         for item in items:
-            db_item = SourceFileModel.get(dir=path, profile=self.profile())
+            try:
+                db_item = SourceFileModel.get(dir=path, profile=self.profile())
+            except SourceFileModel.DoesNotExist:
+                continue
+
             if QFileInfo(path).isDir():
                 self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
                 db_item.path_isdir = True
@@ -321,12 +325,21 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         indexes.sort()
         # remove each selected row, starting with the highest index (otherwise, higher indexes become invalid)
         for index in reversed(indexes):
+            path = self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text()
             db_item = SourceFileModel.get(
-                dir=self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text(),
+                dir=path,
                 profile=profile,
             )
             db_item.delete_instance()
             self.sourceFilesWidget.removeRow(index.row())
+
+            for thrd in self.updateThreads[:]:
+                if thrd.objectName() == path:
+                    try:
+                        thrd.signal.disconnect(self.set_path_info)
+                    except (RuntimeError, TypeError):
+                        pass
+                    self.updateThreads.remove(thrd)
 
             logger.debug(f"Removed source in row {index.row()}")
         self.update_total_size()
