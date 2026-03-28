@@ -528,7 +528,7 @@ def is_system_tray_available():
     return is_available
 
 
-def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
+def search(key, iterable: Iterable, func: Optional[Callable] = None) -> Optional[Tuple[int, Any]]:
     """
     Search for a key in an iterable.
 
