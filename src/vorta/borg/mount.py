@@ -7,17 +7,19 @@ from typing import Any
 from vorta.store.models import SettingsModel
 from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 logger = logging.getLogger(__name__)
 
 
 class BorgMountJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.updated.emit(self.tr('Mounting archive into folder…'))
 
     @classmethod
-    def prepare(cls, profile: Any, archive: str | None = None) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel, archive: str | None = None) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

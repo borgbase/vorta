@@ -15,6 +15,8 @@ from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
@@ -57,11 +59,11 @@ class BorgCreateJob(BorgJob):
     def progress_event(self, fmt: str) -> None:
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {fmt}")
 
-    def started_event(self) -> None:
+    def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Backup started.')}")
 
-    def finished_event(self, result: dict[str, Any]) -> None:
+    def finished_event(self, result: dict[str, Any]):
         self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
@@ -88,7 +90,7 @@ class BorgCreateJob(BorgJob):
             return 0  # 0 if no command was run.
 
     @classmethod
-    def prepare(cls, profile: Any) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel) -> dict[str, Any]:
         """
         `borg create` is called from different places and needs some preparation.
         Centralize it here and return the required arguments to the caller.

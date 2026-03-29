@@ -142,6 +142,10 @@ module = ["vorta.store.models", "vorta.store.connection", "vorta.store.settings"
 disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
+module = ["vorta.borg.*"]
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
 module = ["vorta.store.migrations"]
 ignore_errors = true
 

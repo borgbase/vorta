@@ -6,15 +6,17 @@ from typing import Any
 import psutil
 
 from ..i18n import trans_late
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
 class BorgUmountJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.updated.emit(self.tr('Unmounting archive…'))
 
     @classmethod
-    def prepare(cls, profile: Any, mount_point: str, archive_name: str | None = None) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel, mount_point: str, archive_name: str | None = None) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

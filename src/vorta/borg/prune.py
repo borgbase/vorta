@@ -5,15 +5,17 @@ from typing import Any
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, format_archive_name
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
 class BorgPruneJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning old archives…')}")
 
-    def finished_event(self, result: dict[str, Any]) -> None:
+    def finished_event(self, result: dict[str, Any]):
         # set repo stats to N/A
         repo = RepoModel.get(id=result['params']['repo_id'])
         repo.total_size = None
@@ -27,7 +29,7 @@ class BorgPruneJob(BorgJob):
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
 
     @classmethod
-    def prepare(cls, profile: Any) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

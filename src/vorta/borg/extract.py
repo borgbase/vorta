@@ -9,17 +9,19 @@ from vorta.utils import borg_compat
 from vorta.views.extract_dialog import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
 class BorgExtractJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Downloading files from archive…')}"
         )
 
-    def finished_event(self, result: dict[str, Any]) -> None:
+    def finished_event(self, result: dict[str, Any]):
         self.app.backup_finished_event.emit(result)
         self.result.emit(result)
         self.app.backup_progress_event.emit(
@@ -27,7 +29,7 @@ class BorgExtractJob(BorgJob):
         )
 
     @classmethod
-    def prepare(cls, profile: Any, archive_name: str, model: ExtractTree, destination_folder: str) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel, archive_name: str, model: ExtractTree, destination_folder: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

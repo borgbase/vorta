@@ -5,11 +5,13 @@ from typing import Any
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInitJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.updated.emit(self.tr('Setting up new repo…'))
 
     @classmethod

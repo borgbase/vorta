@@ -5,11 +5,13 @@ from typing import Any
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
 class BorgRenameJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Renaming archive…')}")
 
@@ -17,7 +19,7 @@ class BorgRenameJob(BorgJob):
         self.app.backup_log_event.emit(msg)
 
     @classmethod
-    def prepare(cls, profile: Any, old_archive_name: str, new_archive_name: str) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel, old_archive_name: str, new_archive_name: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

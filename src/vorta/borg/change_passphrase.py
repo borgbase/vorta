@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from vorta import config
 from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
-from vorta.store.models import RepoModel
+from vorta.store.models import BackupProfileModel, RepoModel
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
@@ -17,7 +17,7 @@ class BorgChangePassJob(BorgJob):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Changing Borg passphrase…')}")
 
-    def finished_event(self, result: Dict[str, Any]):
+    def finished_event(self, result: dict[str, Any]):
         """
         Process that the job terminated with the given results.
         Parameters
@@ -39,7 +39,7 @@ class BorgChangePassJob(BorgJob):
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Passphrase changed.')}")
 
     @classmethod
-    def prepare(cls, profile, new_passphrase):
+    def prepare(cls, profile: BackupProfileModel, new_passphrase: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -67,7 +67,7 @@ class BorgChangePassJob(BorgJob):
 
         return ret
 
-    def process_result(self, result):
+    def process_result(self, result: dict[str, Any]):
         if result['returncode'] == 0:
             # Change passphrase in keyring
             repo = RepoModel.get(url=result['params']['repo_url'])

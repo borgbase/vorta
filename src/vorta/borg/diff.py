@@ -4,17 +4,19 @@ from typing import Any
 
 from vorta.utils import borg_compat
 
+from vorta.store.models import BackupProfileModel
+
 from .borg_job import BorgJob
 
 
 class BorgDiffJob(BorgJob):
-    def started_event(self) -> None:
+    def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Requesting differences between archives…')}"
         )
 
-    def finished_event(self, result: dict[str, Any]) -> None:
+    def finished_event(self, result: dict[str, Any]):
         self.app.backup_finished_event.emit(result)
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Obtained differences between archives.')}"
@@ -22,7 +24,7 @@ class BorgDiffJob(BorgJob):
         self.result.emit(result)
 
     @classmethod
-    def prepare(cls, profile: Any, archive_name_1: str, archive_name_2: str) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel, archive_name_1: str, archive_name_2: str) -> dict[str, Any]:
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret

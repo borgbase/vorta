@@ -10,8 +10,8 @@ import signal
 import sys
 import time
 from collections import namedtuple
-from typing import Any
 from datetime import datetime as dt
+from typing import Any
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
 
@@ -23,7 +23,7 @@ from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.store.models import EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel
 from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
@@ -52,7 +52,7 @@ class BorgJob(JobInterface):
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
 
-    def __init__(self, cmd: list[str], params: dict[str, Any], site: str = "default") -> None:
+    def __init__(self, cmd: list[str], params: dict[str, Any], site: str = "default"):
         """
         Thread to run Borg operations in.
 
@@ -115,7 +115,7 @@ class BorgJob(JobInterface):
     def repo_id(self) -> str:
         return self.site_id
 
-    def cancel(self) -> None:
+    def cancel(self):
         logger.debug("Cancel job on site %s", self.site_id)
         if self.process is not None:
             self.process.send_signal(signal.SIGINT)
@@ -128,7 +128,7 @@ class BorgJob(JobInterface):
                     pass
 
     @classmethod
-    def prepare(cls, profile: Any) -> dict[str, Any]:
+    def prepare(cls, profile: BackupProfileModel | FakeProfile) -> dict[str, Any]:
         """
         Prepare for running Borg. This function in the base class should be called from all
         subclasses and calls that define their own `cmd`.
@@ -228,7 +228,7 @@ class BorgJob(JobInterface):
                 return bundled_borg
         return None
 
-    def run(self) -> None:
+    def run(self):
         self.started_event()
         with db_lock:
             log_entry = EventLogModel(
@@ -353,8 +353,8 @@ class BorgJob(JobInterface):
     def process_result(self, result: dict[str, Any]) -> None:
         pass
 
-    def started_event(self) -> None:
+    def started_event(self):
         self.updated.emit(self.tr('Task started'))
 
-    def finished_event(self, result: dict[str, Any]) -> None:
+    def finished_event(self, result: dict[str, Any]):
         self.result.emit(result)
