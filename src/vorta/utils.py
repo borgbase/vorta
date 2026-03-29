@@ -30,21 +30,16 @@ METRIC_UNITS = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
 NONMETRIC_UNITS = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
 
 borg_compat = BorgCompatibility()
-_network_status_monitor = None
-
-
+_network_status_monitor: Optional[NetworkStatusMonitor] = None
 class FilePathInfoAsync(QThread):
     signal = pyqtSignal(str, str, str)
 
-    def __init__(self, path, exclude_patterns_str):
+    def __init__(self, path: str, exclude_patterns_str: Optional[str]) -> None:
+        super().__init__()
         self.path = path
-        QThread.__init__(self)
+        self.exclude_patterns_str = exclude_patterns_str
         self.exiting = False
-        self.exclude_patterns = []
-        for _line in (exclude_patterns_str or '').splitlines():
-            line = _line.strip()
-            if line != '' and not line.startswith("#"):
-                self.exclude_patterns.append(line)
+        self.exclude_patterns: List[str] = []
 
     def run(self):
         # logger.info("running thread to get path=%s...", self.path)
@@ -528,7 +523,7 @@ def is_system_tray_available():
     return is_available
 
 
-def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
+def search(key: Any, iterable: Iterable[Any], func: Callable[[Any], Any] | None = None) -> tuple[int, Any] | None:
     """
     Search for a key in an iterable.
 
@@ -545,16 +540,14 @@ def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
 
     Returns
     -------
-    Tuple[int, Any] or None
+    tuple[int, Any] | None
         The index and the item in case of a match else `None`.
     """
-    if not func:
 
-        def func(x):
-            return x
+    check_func = func if func is not None else lambda x: x
 
     for i, item in enumerate(iterable):
-        if func(item) == key:
+        if check_func(item) == key:
             return i, item
 
     return None
