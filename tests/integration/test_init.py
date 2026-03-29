@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import QMessageBox
 import vorta.borg
 import vorta.utils
 import vorta.views.dialogs.repo.repo_add
-from tests.integration.conftest import all_workers_finished
+from tests.conftest import all_workers_finished
 
 LONG_PASSWORD = 'long-password-long'
 TEST_REPO_NAME = 'TEST - REPONAME'
