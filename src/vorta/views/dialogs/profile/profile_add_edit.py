@@ -6,7 +6,7 @@ from vorta.i18n.richtext import escape, format_richtext, italic
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
 
-uifile = get_asset('UI/profile_add.ui')
+uifile = get_asset('UI/dialogs/profile/profile_add.ui')
 AddProfileUI, AddProfileBase = uic.loadUiType(uifile)
 
 

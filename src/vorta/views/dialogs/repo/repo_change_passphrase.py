@@ -6,7 +6,7 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.utils import get_asset
 from vorta.views.partials.password_input import PasswordInput
 
-uifile = get_asset('UI/change_passphrase.ui')
+uifile = get_asset('UI/dialogs/repo/change_passphrase.ui')
 ChangeBorgPassUI, ChangeBorgPassBase = uic.loadUiType(uifile)
 
 

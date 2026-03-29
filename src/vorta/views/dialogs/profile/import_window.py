@@ -5,7 +5,7 @@ from vorta.keyring.abc import VortaKeyring
 from vorta.profile_export import VersionException
 from vorta.store.connection import SCHEMA_VERSION
 from vorta.store.models import BackupProfileModel
-from vorta.views.export_window import ImportWindowBase, ImportWindowUI, logger
+from vorta.views.dialogs.profile.export_window import ImportWindowBase, ImportWindowUI, logger
 
 
 class ImportWindow(ImportWindowUI, ImportWindowBase):
