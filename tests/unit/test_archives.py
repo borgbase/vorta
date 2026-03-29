@@ -3,7 +3,7 @@ from collections import namedtuple
 import psutil
 import pytest
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QMenu
+from PyQt6.QtWidgets import QMenu, QProgressDialog
 from test_constants import TEST_TEMP_DIR
 
 import vorta.borg
@@ -124,13 +124,40 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    tab.archive_extract.extract_action()
+    tab.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
     model = tab._window.model
     assert model.root.children[0].subpath == 'home'
     assert 'test-archive, 2000' in tab._window.archiveNameLabel.text()
+
+
+def test_archive_extract_progress_dialog(qapp, qtbot, mocker, borg_json_output, archive_env):
+    """Progress dialog is shown while parsing archive contents and closed when done."""
+    main, tab = archive_env
+    tab.archiveTable.selectRow(0)
+    stdout, stderr = borg_json_output('list_archive')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    # Spy on QProgressDialog.show to verify dialog is shown
+    show_spy = mocker.spy(QProgressDialog, 'show')
+
+    tab.extract_action()
+
+    # Wait for progress dialog to appear
+    qtbot.waitUntil(lambda: hasattr(tab, '_extract_progress'), **pytest._wait_defaults)
+    progress = tab._extract_progress
+
+    # Wait for extraction to complete (window appears)
+    qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
+
+    # Verify dialog was shown (spy caught the show call)
+    assert show_spy.called, "QProgressDialog.show() was not called"
+
+    # Verify dialog is closed after extraction completes
+    assert not progress.isVisible(), "Progress dialog should be closed after extraction"
 
 
 def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):

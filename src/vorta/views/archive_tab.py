@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
     QLayout,
     QMenu,
     QMessageBox,
+    QProgressDialog,
     QStyledItemDelegate,
     QTableView,
     QTableWidgetItem,
@@ -23,7 +24,9 @@ from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.diff import BorgDiffJob
+from vorta.borg.extract import BorgExtractJob
 from vorta.borg.info_archive import BorgInfoArchiveJob
+from vorta.borg.list_archive import BorgListArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
@@ -32,17 +35,19 @@ from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
+    choose_file_dialog,
     find_best_unit_for_sizes,
     format_archive_name,
     get_asset,
     get_mount_points,
     pretty_bytes,
 )
-from vorta.views.archive.archive_extract import ArchiveExtract
 from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive import diff_result
+from vorta.views.dialogs.archive import extract as extract_dialog
 from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
+from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree
 from vorta.views.source_tab import SizeItem
 from vorta.views.utils import get_colored_icon
 
@@ -83,7 +88,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         )
 
         self.archive_mount = ArchiveMount(self)
-        self.archive_extract = ArchiveExtract(self)
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -142,7 +146,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.cell_double_clicked)
         self.bDelete.clicked.connect(self.delete_action)
-        self.bExtract.clicked.connect(self.archive_extract.extract_action)
+        self.bExtract.clicked.connect(self.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
 
         # other signals
@@ -212,7 +216,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             (self.bRefreshArchive, self.refresh_archive_info),
             (self.bDiff, self.diff_action),
             (self.bMountArchive, self.archive_mount.bmountarchive_clicked),
-            (self.bExtract, self.archive_extract.extract_action),
+            (self.bExtract, self.extract_action),
             (self.bRename, self.cell_double_clicked),
             (self.bDelete, self.delete_action),
         ]
@@ -487,7 +491,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
             if archive_cell:
                 archive_name = archive_cell.text()
-                params['cmd'][-1] += f'::{archive_name}'
+                cmd: list = params['cmd']  # type: ignore[index]
+                cmd[-1] += f'::{archive_name}'
 
         job = BorgCheckJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
@@ -590,6 +595,85 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
+
+    def extract_action(self):
+        """
+        Open a dialog for choosing what to extract from the selected archive.
+        """
+        profile = self.profile()
+
+        row_selected = self.archiveTable.selectionModel().selectedRows()
+        if row_selected:
+            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
+            if archive_cell:
+                archive_name = archive_cell.text()
+                params = BorgListArchiveJob.prepare(profile, archive_name)
+
+                if not params['ok']:
+                    self._set_status(params['message'])
+                    return
+                self._set_status('')
+                self._toggle_all_buttons(False)
+
+                job = BorgListArchiveJob(params['cmd'], params, self.profile().repo.id)
+                job.updated.connect(self.mountErrors.setText)
+                job.result.connect(self.extract_list_result)
+                self.app.jobs_manager.add_job(job)
+                return job
+        else:
+            self._set_status(self.tr('Select an archive to restore first.'))
+
+    def extract_list_result(self, result):
+        """Process the contents of the archive to extract."""
+        self._set_status('')
+        if result['returncode'] == 0:
+            archive = ArchiveModel.get(name=result['params']['archive_name'])
+            model = ExtractTree()
+
+            progress = QProgressDialog(self.tr("Processing archive contents…"), None, 0, 0, self)
+            progress.setWindowTitle(self.tr("Please wait"))
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.setMinimumDuration(0)
+            progress.setValue(0)
+            self._extract_progress = progress
+
+            self._t = extract_dialog.ParseThread(result['data'], model)
+            self._t.finished.connect(self._extract_progress.close)
+            self._t.finished.connect(self._extract_progress.deleteLater)
+            self._t.finished.connect(lambda: self.extract_show_dialog(archive, model))
+            self._t.start()
+
+    def extract_show_dialog(self, archive, model):
+        """Show the dialog for choosing the archive contents to extract."""
+        self._set_status('')
+
+        def process_result():
+            def receive():
+                extraction_folder = dialog.selectedFiles()
+                if extraction_folder:
+                    params = BorgExtractJob.prepare(self.profile(), archive.name, model, extraction_folder[0])
+                    if params['ok']:
+                        self._toggle_all_buttons(False)
+                        job = BorgExtractJob(params['cmd'], params, self.profile().repo.id)
+                        job.updated.connect(self.mountErrors.setText)
+                        job.result.connect(self.extract_archive_result)
+                        self.app.jobs_manager.add_job(job)
+                    else:
+                        self._set_status(params['message'])
+
+            dialog = choose_file_dialog(self, self.tr("Choose Extraction Point"), want_folder=True)
+            dialog.open(receive)
+
+        window = ExtractDialog(archive, model)
+        self._toggle_all_buttons(True)
+        window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        self._window = window  # for testing
+        window.show()
+        window.accepted.connect(process_result)
+
+    def extract_archive_result(self, result):
+        """Finished extraction."""
+        self._toggle_all_buttons(True)
 
     def cell_double_clicked(self, row=None, column=None):
         if not self.bRename.isEnabled():
