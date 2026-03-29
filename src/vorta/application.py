@@ -26,8 +26,8 @@ from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
-APP_ID = config.TEMP_DIR / "socket"
-
+temp_path = config.TEMP_DIR if config.TEMP_DIR else Path("/tmp")
+APP_ID = temp_path / "socket"
 
 class VortaApp(QtSingleApplication):
     """
@@ -346,9 +346,11 @@ class VortaApp(QtSingleApplication):
             if returncode == 1:
                 # warning
                 msg.setIcon(QMessageBox.Icon.Warning)
+                log_uri = config.LOG_DIR.as_uri() if config.LOG_DIR else "#"
+                
                 text = format_richtext(
                     escape(translate('VortaApp', 'Borg exited with warning status (rc 1). See the %1 for details.')),
-                    link(config.LOG_DIR.as_uri(), translate('messages', 'logs')),
+                    link(log_uri, translate('messages', 'logs')),
                 )
                 infotext = error_message
             elif returncode > 128:
