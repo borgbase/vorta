@@ -147,7 +147,7 @@ class BackupProfileModel(BaseModel):
         raw_excludes = self.exclude_patterns
         if raw_excludes:
             excludes += "\n# raw exclusions\n"
-            excludes += raw_excludes
+            excludes += str(raw_excludes)
             excludes += "\n"
 
         # go through all source=='preset' exclusions, find the name in the allPresets dict, and add the patterns
