@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QFormLayout,
     QLabel,
     QSizePolicy,
+    QMessageBox,
 )
 
 from vorta.borg.info_repo import BorgInfoRepoJob
@@ -52,7 +53,6 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         """Retranslate strings in ui."""
         super().retranslateUi(dialog)
 
-        # setupUi calls retranslateUi
         if hasattr(self, 'saveButton'):
             self.saveButton.setText(self.tr("Add"))
 
@@ -196,7 +196,6 @@ class AddRepoWindow(RepoWindow):
             self.encryptionComboBox.setCurrentIndex(1)
 
     def encryption_listener(self):
-        '''Validates passwords only if its going to be used'''
         if self.values['encryption'] == 'none':
             self.passwordInput.set_validation_enabled(False)
             self.passwordInput.set_visibility(False)
@@ -205,7 +204,6 @@ class AddRepoWindow(RepoWindow):
             self.passwordInput.set_visibility(True)
 
     def display_backend_warning(self):
-        '''Display password backend message based off current keyring'''
         if self.encryptionComboBox.currentData() != 'none':
             self.passwordInput.set_error_label(VortaKeyring.get_keyring().get_backend_warning())
 
@@ -254,3 +252,35 @@ class ExistingRepoWindow(RepoWindow):
                 QApplication.instance().jobs_manager.add_job(job)
             else:
                 self._set_status(params['message'])
+
+    def run_result(self, result):
+        """
+        Intercepts 'Repo does not exist' and offers to initialize a new one.
+        """
+        stderr = result.get('stderr', '').lower()
+        
+        if result['returncode'] != 0 and ("does not exist" in stderr or "repository not found" in stderr):
+            self.saveButton.setEnabled(True)
+            
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Question)
+            msg.setWindowTitle(self.tr("Repository Not Found"))
+            msg.setText(self.tr("The repository at this location does not exist."))
+            msg.setInformativeText(self.tr("Would you like to initialize a new repository here instead?"))
+            msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            msg.setDefaultButton(QMessageBox.StandardButton.Yes)
+
+            if msg.exec() == QMessageBox.StandardButton.Yes:
+                current_values = self.values
+                self.close()
+                
+                # Pre-fill the New Repository window
+                new_repo_win = AddRepoWindow(self.parent())
+                new_repo_win.repoURL.setText(current_values['repo_url'])
+                new_repo_win.repoName.setText(current_values['repo_name'])
+                new_repo_win.passwordInput.passwordLineEdit.setText(current_values['password'])
+                new_repo_win.passwordInput.confirmLineEdit.setText(current_values['password'])
+                new_repo_win.show()
+                return
+
+        super().run_result(result)
