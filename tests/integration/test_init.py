@@ -21,7 +21,7 @@ TEST_REPO_NAME = 'TEST - REPONAME'
 def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
     """Test initializing a new repository"""
     main = qapp.main_window
-    main.repoTab.new_repo()
+    main.repoTab.add_repo()
     add_repo_window = main.repoTab._window
     main.show()
 
@@ -43,6 +43,9 @@ def test_create_repo(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir):
 
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
+
+    # borg info fails for new/empty directories, triggering an init confirmation prompt
+    monkeypatch.setattr(QMessageBox, "question", lambda *args, **kwargs: QMessageBox.StandardButton.Yes)
 
     initial_count = main.repoTab.repoSelector.count()
     add_repo_window.run()
@@ -88,7 +91,7 @@ def test_add_existing_repo(qapp, qtbot, monkeypatch, choose_file_dialog):
     )
 
     # add existing repo again
-    main.repoTab.add_existing_repo()
+    main.repoTab.add_repo()
     add_repo_window = main.repoTab._window
 
     monkeypatch.setattr(

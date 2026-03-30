@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QFormLayout,
     QLabel,
+    QMessageBox,
     QSizePolicy,
 )
 
@@ -15,7 +16,7 @@ from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
-from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
+from vorta.views.partials.password_input import PasswordInput
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/dialogs/repo/repo_add.ui')
@@ -131,7 +132,8 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 class AddRepoWindow(RepoWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Add New Repository")
+        self.setWindowTitle("Add Repository")
+        self.title.setText(self.tr('Add Repository'))
 
         self.passwordInput = PasswordInput()
         self.passwordInput.add_form_to_layout(self.repoDataFormLayout)
@@ -148,6 +150,9 @@ class AddRepoWindow(RepoWindow):
 
         self.display_backend_warning()
         self.init_encryption()
+
+        # start in "connect" mode: hide init only widgets
+        self._set_init_widgets_visible(False)
 
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
@@ -209,48 +214,74 @@ class AddRepoWindow(RepoWindow):
         if self.encryptionComboBox.currentData() != 'none':
             self.passwordInput.set_error_label(VortaKeyring.get_keyring().get_backend_warning())
 
+    def _set_init_widgets_visible(self, visible):
+        self.passwordInput.confirmLineEdit.setVisible(visible)
+        self.passwordInput._label_confirm.setVisible(visible)
+        self.encryptionLabel.setVisible(visible)
+        self.encryptionComboBox.setVisible(visible)
+        if not visible:
+            self.passwordInput.set_validation_enabled(False)
+
+    def _validate_repo_fields(self):
+        return super().validate()
+
     def validate(self):
-        return super().validate() and self.passwordInput.validate()
+        return self._validate_repo_fields() and self.passwordInput.validate()
 
     def run(self):
-        if self.validate():
-            params = BorgInitJob.prepare(self.values)
-            if params['ok']:
-                self.saveButton.setEnabled(False)
-                job = BorgInitJob(params['cmd'], params)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.run_result)
-                QApplication.instance().jobs_manager.add_job(job)
+        if not self._validate_repo_fields():
+            return
+
+        self.saveButton.setEnabled(False)
+        self._set_status(self.tr('Checking repository…'))
+        params = BorgInfoRepoJob.prepare(self.values)
+        if params['ok']:
+            job = BorgInfoRepoJob(params['cmd'], params)
+            job.updated.connect(self._set_status)
+            job.result.connect(self._probe_result)
+            QApplication.instance().jobs_manager.add_job(job)
+        else:
+            self.saveButton.setEnabled(True)
+            self._set_status(params['message'])
+
+    def _probe_result(self, result):
+        if result['returncode'] == 0:
+            self.saveButton.setEnabled(True)
+            self.added_repo.emit(result)
+            self.accept()
+        else:
+            error_msgs = ' '.join(msg for _, msg in result.get('errors', []))
+            if 'does not exist' in error_msgs.lower() or 'is not a valid repository' in error_msgs.lower():
+                reply = QMessageBox.question(
+                    self,
+                    self.tr('Repository not found'),
+                    self.tr('No repository found at this location. Initialize a new one?'),
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if reply == QMessageBox.StandardButton.Yes:
+                    self._set_init_widgets_visible(True)
+                    self.passwordInput.set_validation_enabled(True)
+                    self._set_status(self.tr('Please confirm your password and choose encryption to initialize.'))
+                    if not self.passwordInput.validate():
+                        self.saveButton.setEnabled(True)
+                        return
+                    self._init_repo()
+                else:
+                    self.saveButton.setEnabled(True)
+                    self._set_status(self.tr('Unable to add your repository.'))
             else:
-                self._set_status(params['message'])
+                self.saveButton.setEnabled(True)
+                self._set_status(error_msgs if error_msgs else self.tr('Unable to add your repository.'))
 
-
-class ExistingRepoWindow(RepoWindow):
-    def __init__(self):
-        super().__init__()
-        self.title.setText(self.tr('Connect to existing Repository'))
-        self.setWindowTitle("Add Existing Repository")
-
-        self.passwordLabel = QLabel(self.tr('Password:'))
-        self.passwordInput = PasswordLineEdit(placeholder_text=self.tr("Enter the encryption passphrase"))
-        self.repoDataFormLayout.addRow(self.passwordLabel, self.passwordInput)
-
-    def set_password(self, URL):
-        '''Autofill password from keyring only if current entry is empty'''
-        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
-        if password and self.passwordInput.get_password() == "":
-            self._set_status(self.tr("Autofilled password from password manager."))
-            self.passwordInput.setText(password)
-
-    def run(self):
-        if self.validate():
-            params = BorgInfoRepoJob.prepare(self.values)
-            if params['ok']:
-                self.saveButton.setEnabled(False)
-                job = BorgInfoRepoJob(params['cmd'], params)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.run_result)
-                self.thread = job  # Keep reference for tests
-                QApplication.instance().jobs_manager.add_job(job)
-            else:
-                self._set_status(params['message'])
+    def _init_repo(self):
+        self._set_status(self.tr('Initializing new repository…'))
+        params = BorgInitJob.prepare(self.values)
+        if params['ok']:
+            job = BorgInitJob(params['cmd'], params)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.run_result)
+            QApplication.instance().jobs_manager.add_job(job)
+        else:
+            self.saveButton.setEnabled(True)
+            self._set_status(params['message'])

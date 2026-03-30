@@ -9,7 +9,7 @@ from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
-from vorta.views.dialogs.repo.repo_add import AddRepoWindow, ExistingRepoWindow
+from vorta.views.dialogs.repo.repo_add import AddRepoWindow
 from vorta.views.dialogs.repo.repo_change_passphrase import ChangeBorgPassphraseWindow
 from vorta.views.dialogs.repo.ssh import SSHAddWindow
 
@@ -35,13 +35,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         # Populate dropdowns
         self.copyURLbutton.clicked.connect(self.copy_URL_action)
 
-        # init repo add button
-        self.menuAddRepo = QMenu(self.bAddRepo)
-
-        self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
-        self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
-
-        self.bAddRepo.setMenu(self.menuAddRepo)
+        self.bAddRepo.clicked.connect(self.add_repo)
 
         # init repo util button
         self.menuRepoUtil = QMenu(self.bRepoUtil)
@@ -267,22 +261,11 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
     def compression_select_action(self, index):
         self.save_profile_attr('compression', self.repoCompression.currentData())
 
-    def new_repo(self):
-        """Open a dialog to create a new repo and add it to vorta."""
+    def add_repo(self):
         window = AddRepoWindow()
         self._window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
         window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
-        window.open()
-
-    def add_existing_repo(self):
-        """Open a dialog to add a existing repo to vorta."""
-        window = ExistingRepoWindow()
-        self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
         window.open()
 
     def repo_select_action(self):

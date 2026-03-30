@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from typing import Any, Dict
@@ -10,6 +11,7 @@ from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
+from vorta.views.dialogs.repo.repo_add import AddRepoWindow
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
@@ -25,31 +27,35 @@ SHORT_PASSWORD = 'hunter2'
     ],
 )
 def test_new_repo_password_validation(qapp, qtbot, borg_json_output, first_password, second_password, validation_error):
-    # Add new repo window
+    # add new repo window
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
+    tab.add_repo()
     add_repo_window = tab._window
     qtbot.addWidget(add_repo_window)
 
+    # reveal init only widgets so password validation is active
+    add_repo_window._set_init_widgets_visible(True)
+    add_repo_window.passwordInput.set_validation_enabled(True)
+
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, first_password)
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, second_password)
-    qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
+    add_repo_window.passwordInput.validate()
     assert add_repo_window.passwordInput.validation_label.text() == validation_error
 
 
 @pytest.mark.parametrize(
-    "repo_name, error_text",
+    "repo_name, status_text",
     [
-        ('test_repo_name', ''),  # valid repo name
-        ('a' * 64, ''),  # also valid (<=64 characters)
+        ('test_repo_name', 'Checking repository\u2026'),  # valid repo name, probe starts
+        ('a' * 64, 'Checking repository\u2026'),  # also valid (<=64 characters)
         ('a' * 65, 'Repository name must be less than 65 characters.'),  # not valid (>64 characters)
     ],
 )
-def test_repo_add_name_validation(qapp, qtbot, borg_json_output, repo_name, error_text):
+def test_repo_add_name_validation(qapp, qtbot, borg_json_output, repo_name, status_text):
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
+    tab.add_repo()
     add_repo_window = tab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
     qtbot.addWidget(add_repo_window)
@@ -57,7 +63,7 @@ def test_repo_add_name_validation(qapp, qtbot, borg_json_output, repo_name, erro
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.repoName, repo_name)
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
-    assert add_repo_window.errorText.text() == error_text
+    assert add_repo_window.errorText.text() == status_text
 
 
 def test_repo_unlink(qapp, qtbot, monkeypatch):
@@ -110,7 +116,7 @@ def test_repo_unlink_shared_repository_keeps_dropdown_entry(qapp, qtbot, mocker,
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
+    tab.add_repo()
     add_repo_window = tab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
 
@@ -126,11 +132,11 @@ def test_password_autofill(qapp, qtbot):
 def test_repo_add_failure(qapp, qtbot, borg_json_output):
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
+    tab.add_repo()
     add_repo_window = tab._window
     qtbot.addWidget(add_repo_window)
 
-    # Add repo with invalid URL
+    # add repo with invalid URL
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid repo URL')
@@ -139,12 +145,12 @@ def test_repo_add_failure(qapp, qtbot, borg_json_output):
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
+    tab.add_repo()
     add_repo_window = tab._window
-    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # random repo URL to avoid macOS keychain
     test_repo_name = 'Test Repo'
 
-    # Enter valid repo URL, name, and password
+    # enter valid repo URL, name, and password
     qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
     qtbot.keyClicks(add_repo_window.repoName, test_repo_name)
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
@@ -180,16 +186,16 @@ def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
     ssh_dialog.outputFileTextBox.setText(key_tmpfile_full)
     ssh_dialog.generate_key()
 
-    # Ensure new key file was created
+    # Ensures new key file was created
     qtbot.waitUntil(lambda: ssh_dialog_closed.called, **pytest._wait_defaults)
     assert len(ssh_dir.listdir()) == 2
 
-    # Ensure new key is populated in SSH combobox
+    # Ensures new key is populated in SSH combobox
     mocker.patch('os.path.expanduser', return_value=str(tmpdir))
     tab.init_ssh()
     assert tab.sshComboBox.count() == 2
 
-    # Ensure valid keys were created
+    # Ensures valid keys were created
     key_tmpfile_content = key_tmpfile.read()
     assert key_tmpfile_content.startswith('-----BEGIN OPENSSH PRIVATE KEY-----')
     pub_tmpfile_content = pub_tmpfile.read()
@@ -213,10 +219,10 @@ def test_ssh_dialog_failure(qapp, qtbot, mocker, monkeypatch, tmpdir):
     qtbot.waitUntil(lambda: failure_message.called, **pytest._wait_defaults)
     failure_message.assert_called_once()
 
-    # Ensure no new ney file was created
+    # Ensures no new ney file was created
     assert len(ssh_dir.listdir()) == 0
 
-    # Ensure no new key file in combo box
+    # Ensures no new key file in combo box
     mocker.patch('os.path.expanduser', return_value=str(tmpdir))
     tab.init_ssh()
     assert tab.sshComboBox.count() == 1
@@ -315,7 +321,7 @@ def test_create(qapp, borg_json_output, mocker, qtbot):
             "icon": QMessageBox.Icon.Critical,
             "info": "The process running the check job got a kill signal. Try again.",
         },
-        {"return_code": 130, "error": "", "icon": None, "info": None},  # keyboard interrupt
+        {"return_code": 130, "error": "", "icon": None, "info": None},
     ],
 )
 def test_repo_check_failed_response(qapp, qtbot, mocker, response):
@@ -388,3 +394,112 @@ def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_t
     mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
     mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
     mock_instance.show.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "error_message",
+    [
+        'Repository /tmp/nonexistent-repo does not exist.',
+        '/tmp/nonexistent-repo is not a valid repository. Check repo config.',
+    ],
+)
+def test_add_repo_not_found_offers_init(qapp, qtbot, mocker, error_message):
+    main = qapp.main_window
+    tab = main.repoTab
+    tab.add_repo()
+    window = tab._window
+
+    mocker.patch.object(
+        QMessageBox,
+        'question',
+        return_value=QMessageBox.StandardButton.Yes,
+    )
+    mock_init = mocker.patch.object(window, '_init_repo')
+
+    qtbot.keyClicks(window.passwordInput.passwordLineEdit, 'long-password-long')
+    qtbot.keyClicks(window.passwordInput.confirmLineEdit, 'long-password-long')
+    window.repoURL.setText('/tmp/nonexistent-repo')
+    window.repoName.setText('Test Repo')
+    window.is_remote_repo = False
+
+    result = {
+        'returncode': 2,
+        'cmd': ['borg', 'info', '/tmp/nonexistent-repo'],
+        'errors': [(logging.ERROR, error_message)],
+        'params': {'repo_url': '/tmp/nonexistent-repo', 'profile_name': 'Default'},
+        'data': '',
+    }
+    window._probe_result(result)
+
+    QMessageBox.question.assert_called_once()
+    mock_init.assert_called_once()
+
+
+def test_add_repo_not_found_user_declines(qapp, qtbot, mocker):
+    main = qapp.main_window
+    tab = main.repoTab
+    tab.add_repo()
+    window = tab._window
+
+    mocker.patch.object(
+        QMessageBox,
+        'question',
+        return_value=QMessageBox.StandardButton.No,
+    )
+
+    window.repoURL.setText('/tmp/nonexistent-repo')
+    window.is_remote_repo = False
+
+    result = {
+        'returncode': 2,
+        'cmd': ['borg', 'info', '/tmp/nonexistent-repo'],
+        'errors': [(logging.ERROR, 'Repository /tmp/nonexistent-repo does not exist.')],
+        'params': {'repo_url': '/tmp/nonexistent-repo', 'profile_name': 'Default'},
+        'data': '',
+    }
+    window._probe_result(result)
+
+    assert window.errorText.text() == 'Unable to add your repository.'
+
+
+def test_add_repo_other_error_no_init_offer(qapp, qtbot, mocker):
+    main = qapp.main_window
+    tab = main.repoTab
+    tab.add_repo()
+    window = tab._window
+
+    mock_question = mocker.patch.object(QMessageBox, 'question')
+
+    window.repoURL.setText('host.example.com:repo')
+    window.is_remote_repo = True
+
+    result = {
+        'returncode': 2,
+        'cmd': ['borg', 'info', 'host.example.com:repo'],
+        'errors': [(logging.ERROR, 'Connection refused')],
+        'params': {'repo_url': 'host.example.com:repo', 'profile_name': 'Default'},
+        'data': '',
+    }
+    window._probe_result(result)
+
+    mock_question.assert_not_called()
+    assert window.errorText.text() == 'Connection refused'
+
+
+def test_add_repo_probe_succeeds_connects(qapp, qtbot):
+    window = AddRepoWindow()
+
+    signal_received = []
+    window.added_repo.connect(lambda r: signal_received.append(r))
+
+    result = {
+        'returncode': 0,
+        'cmd': ['borg', 'info', '/tmp/existing-repo'],
+        'errors': [],
+        'params': {'repo_url': '/tmp/existing-repo', 'repo_name': 'Test'},
+        'data': {},
+    }
+    window._probe_result(result)
+
+    assert len(signal_received) == 1
+    assert signal_received[0]['returncode'] == 0
