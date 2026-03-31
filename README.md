@@ -73,9 +73,9 @@ See the [contributor guide](https://vorta.borgbase.com/contributing/) for more d
 - See [CONTRIBUTORS.md](CONTRIBUTORS.md) to see who programmed and translated Vorta.
 - Licensed under [GPLv3](LICENSE.txt). © 2018-2023 Manuel Riel and Vorta contributors
 - Based on [PyQt](https://riverbankcomputing.com/software/pyqt/intro) and [Qt](https://www.qt.io).
-- Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) and Material Design icons by Google (licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)). See the `src/vorta/assets/icons` folder for a copy of applicable licenses.
+- Icons by [Fork Awesome](https://forkaweso.me/) (licensed under [SIL Open Font License](https://scripts.sil.org/OFL), Version 1.1) and Material Design icons by Google (licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)). See the `src/vorta/assets/icons` folder for a copy of applicable licenses. 
 
 ## Additional Support
 The team's work is also supported by the below services:
 
-<a href="https://1password.com/"><img src="https://files.pf7.net/vorta/1Password_wordmark_blue_2023.png" align="left" height="40"></a> <a href="https://termius.com/"><img src="https://files.pf7.net/vorta/termius-logo-362-black.png" align="left" height="40"></a>
+<a href="https://1password.com/"><img src="https://files.pf7.net/vorta/1Password_wordmark_blue_2023.png" align="left" height="40"></a> <a href="https://termius.com/"><img src="https://files.pf7.net/vorta/termius-logo-362-black.png" align="left" height="40"></a> 
