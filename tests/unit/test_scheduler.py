@@ -239,3 +239,25 @@ def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, 
         assert len(event_times) == 2
     else:
         assert len(event_times) == 1
+
+
+@prepare
+def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, borg_json_output):
+    """Test that notifier.deliver() is not called with level='error' when
+    prepare() returns level='info' (e.g. WiFi disallowed or metered connection)."""
+    mocker.patch(
+        'vorta.scheduler.BorgCreateJob.prepare',
+        return_value={
+            'ok': False,
+            'message': 'Current Wifi is not allowed.',
+            'level': 'info',
+        },
+    )
+    notifier_mock = mocker.patch('vorta.notifications.VortaNotifications.pick')
+    mock_notifier = mocker.MagicMock()
+    notifier_mock.return_value = mock_notifier
+
+    qapp.scheduler.create_backup(1)
+    # The error notification should be suppressed for an expected skip.
+    assert mock_notifier.deliver.call_count == 1
+    assert mock_notifier.deliver.call_args.kwargs.get('level') != 'error'
