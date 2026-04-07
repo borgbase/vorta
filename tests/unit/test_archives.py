@@ -33,6 +33,20 @@ def test_prune_intervals(qapp, qtbot):
         assert getattr(profile, f'prune_{i}') == 9
 
 
+def test_prune_keep_within_persists(qapp):
+    main = qapp.main_window
+    tab = main.archiveTab
+    profile = BackupProfileModel.get(id=1)
+
+    tab.prune_keep_within.setText('30d')
+    profile = profile.refresh()
+    assert profile.prune_keep_within == '30d'
+
+    tab.prune_keep_within.setText('1w')
+    profile = profile.refresh()
+    assert profile.prune_keep_within == '1w'
+
+
 def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
     main, tab = archive_env
 
