@@ -39,6 +39,11 @@ class VortaFileDialog(QDialog):
         self.btnHome = QPushButton()
         self.btnHome.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.btnHome.setIcon(get_colored_icon('home'))
+        # Root button
+        self.btnRoot = QPushButton()
+        self.btnRoot.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.btnRoot.setIcon(get_colored_icon('folder'))
+        self.btnRoot.setToolTip(self.tr('Go to root directory'))
         # Up button
         self.btnUp = QPushButton()
         self.btnUp.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -50,6 +55,7 @@ class VortaFileDialog(QDialog):
 
         # Path bar layout
         path_layout.addWidget(self.btnHome)
+        path_layout.addWidget(self.btnRoot)
         path_layout.addWidget(self.path_bar)
         path_layout.addWidget(self.btnUp)
         layout.addLayout(path_layout)
@@ -87,6 +93,7 @@ class VortaFileDialog(QDialog):
 
         # Connections
         self.btnHome.clicked.connect(self.go_home)
+        self.btnRoot.clicked.connect(self.go_root)
         self.btnUp.clicked.connect(self.go_up)
 
     def selected_paths(self):
@@ -132,6 +139,9 @@ class VortaFileDialog(QDialog):
 
     def go_home(self):
         self.path_bar.setText(QDir.homePath())
+
+    def go_root(self):
+        self.path_bar.setText(QDir.rootPath())
 
     def go_up(self):
         current_path = self.path_bar.text()
