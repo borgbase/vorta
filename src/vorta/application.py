@@ -230,7 +230,7 @@ class VortaApp(QtSingleApplication):
             msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.exec()
 
-    def react_to_log(self, mgs, context):
+    def react_to_log(self, msg, context):
         """
         Trigger Vorta actions based on Borg logs. E.g. repo lock.
         """
