@@ -175,6 +175,9 @@ def choose_file_dialog(parent, title, want_folder=True):
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
         dialog.setOption(QFileDialog.Option.ShowDirsOnly)
+    # Restrict to file and ssh schemes - borg only supports local paths and SSH
+    dialog.setOption(QFileDialog.Option.ReadOnly)
+    dialog.setSupportedSchemes(['file', 'ssh'])
     return dialog
 
 
