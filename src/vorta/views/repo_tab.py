@@ -247,7 +247,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
             ssh_key_filename = self.sshComboBox.itemData(index)
             ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key_filename}.pub')
             if os.path.isfile(ssh_key_path):
-                pub_key = open(ssh_key_path).read().strip()
+                with open(ssh_key_path) as f:
+                    pub_key = f.read().strip()
                 clipboard = QApplication.clipboard()
                 clipboard.setText(pub_key)
 

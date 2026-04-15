@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Callable
 
 from PyQt6.QtWidgets import QApplication
 
 from vorta.store.models import BackupProfileModel, RepoModel
+
+logger = logging.getLogger(__name__)
 
 ProfileProvider = Callable[[], BackupProfileModel | None]
 
@@ -28,7 +31,10 @@ class BaseTab:
         current_profile = getattr(self.window(), 'current_profile', None)
         if current_profile is None:
             return None
-        return BackupProfileModel.get(id=current_profile.id)
+        profile = BackupProfileModel.get_or_none(id=current_profile.id)
+        if profile is None:
+            logger.warning(f"Profile with id {current_profile.id} no longer exists")
+        return profile
 
     def current_profile(self) -> BackupProfileModel | None:
         return self._profile_provider()

@@ -467,8 +467,9 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             preview = self.tr('Preview: %s') % format_archive_name(profile, tpl)
             setattr(profile, key, tpl)
             profile.save()
-        except Exception:
+        except (KeyError, ValueError, AttributeError) as e:
             preview = self.tr('Error in archive name template.')
+            logger.warning('Invalid archive name template: %s', e)
 
         if key == 'new_archive_name':
             self.archiveNamePreview.setText(preview)
