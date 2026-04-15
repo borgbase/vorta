@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
+from vorta.views.dialogs.repo.repo_change_passphrase import ChangeBorgPassphraseWindow
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
@@ -388,3 +389,18 @@ def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_t
     mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
     mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
     mock_instance.show.assert_called_once()
+
+
+def test_change_passphrase_window_error_text(qapp, qtbot):
+    """Regression test: errorText widget must exist so _set_status() doesn't crash."""
+    mock_profile = MagicMock()
+    mock_profile.repo.url = 'test-repo.example.com:repo'
+
+    window = ChangeBorgPassphraseWindow(mock_profile)
+    qtbot.addWidget(window)
+
+    window._set_status('Unable to change the borg passphrase.')
+    assert window.errorText.text() == 'Unable to change the borg passphrase.'
+
+    window._set_status('')
+    assert window.errorText.text() == ''
