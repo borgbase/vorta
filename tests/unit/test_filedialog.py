@@ -101,3 +101,31 @@ def test_file_selector_cancel(mocker):
     selector = VortaFileSelector()
     paths = selector.get_paths()
     assert paths == []
+
+
+def test_go_root(file_dialog):
+    """Test navigating to root directory."""
+    file_dialog.go_root()
+    assert file_dialog.path_bar.text() == QDir.rootPath()
+
+
+def test_go_home(file_dialog):
+    """Test navigating to home directory."""
+    file_dialog.path_bar.setText("/tmp")
+    file_dialog.go_home()
+    assert file_dialog.path_bar.text() == QDir.homePath()
+
+
+def test_go_up(file_dialog, mocker):
+    """Test navigating to parent directory."""
+    mocker.patch('os.path.exists', return_value=True)
+    file_dialog.path_bar.setText("/home/user/documents")
+    file_dialog.go_up()
+    assert file_dialog.path_bar.text() == "/home/user"
+
+
+def test_go_up_at_root(file_dialog):
+    """Test navigating up at root directory does nothing."""
+    file_dialog.path_bar.setText(QDir.rootPath())
+    file_dialog.go_up()
+    assert file_dialog.path_bar.text() == QDir.rootPath()
