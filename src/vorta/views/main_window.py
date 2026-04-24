@@ -6,6 +6,7 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtCore import pyqtSignal as Signal
 from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
+from vorta.views.dialogs.settings_dialog import SettingsDialog
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -81,6 +82,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.scheduleTab = ScheduleTab(self.scheduleTabSlot, profile_provider=self.get_current_profile)
         self.miscTab = MiscTab(self.SettingsTabSlot, profile_provider=self.get_current_profile)
         self.aboutTab = AboutTab(self.AboutTabSlot, profile_provider=self.get_current_profile)
+        self.settingsDialog = SettingsDialog(parent=self, misc_tab=self.miscTab, about_tab=self.aboutTab)
         self.aboutTab.set_borg_details(borg_compat.version, borg_compat.path)
         self.miscWidget.hide()
         self.tabWidget.setCurrentIndex(0)
@@ -210,8 +212,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.app.profile_changed_event.emit()
 
     def profile_clicked_action(self):
-        if self.miscWidget.isVisible():
-            self.toggle_misc_visibility()
+        pass
 
     def profile_rename_action(self):
         backup_profile_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
@@ -319,16 +320,14 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileSelector.setCurrentItem(profile)
 
     def toggle_misc_visibility(self):
-        if self.miscWidget.isVisible():
-            self.miscWidget.hide()
-            self.tabWidget.setCurrentIndex(0)
-            self.miscButton.setStyleSheet("font-weight: normal;")
-            self.tabWidget.show()
-        else:
-            self.tabWidget.hide()
-            self.miscWidget.setCurrentIndex(0)
-            self.miscButton.setStyleSheet("font-weight: bold;")
-            self.miscWidget.show()
+        # Open Settings/About as a dialog instead of toggling the main tab bar away.
+        if self.settingsDialog.isVisible():
+            self.settingsDialog.raise_()
+            self.settingsDialog.activateWindow()
+            return
+
+        self.settingsDialog.open_settings()
+        self.settingsDialog.open()
 
     def backup_started_event(self):
         self._toggle_buttons(create_enabled=False)
