@@ -6,6 +6,43 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.4</title>
+      <description><![CDATA[<p>This is a maintenance and bugfix release. It includes many contributions from Google Summer of Code applicants — thanks to everyone who participated!</p>
+<h2>Features</h2>
+<ul>
+<li>Add total size and file count display to source tab (#2448)</li>
+<li>Add Select All / Select None buttons to WiFi network list (#2443)</li>
+<li>Wait for network before backing up remote repos (#2176)</li>
+</ul>
+<h2>Fixes</h2>
+<ul>
+<li>Fix non-ASCII (Korean) repo backup failure (#2370)</li>
+<li>Fix timezone handling for Borg 2.x archive timestamps (#2390)</li>
+<li>Fix WiFi detection when wired connection is primary (#2466)</li>
+<li>Suppress "Current WiFi is not allowed" notification for scheduled backups (#2444)</li>
+<li>Prevent crash when removing source during size recalculation (#2435)</li>
+<li>Include ExclusionModel in profile export/import (#2471)</li>
+<li>Restrict folder dialog to file:// scheme (#2476)</li>
+<li>Add missing errorText label in ChangeBorgPassphraseWindow (#2479)</li>
+<li>Correct various typos in comments and UI element names</li>
+</ul>
+<h2>Internal / Developer</h2>
+<ul>
+<li>Migrate translations from Transifex to AI-based workflow (#2395)</li>
+<li>Add mypy type checking infrastructure and core module annotations (#2402)</li>
+<li>Add comprehensive <a href="http://CONTRIBUTING.md" rel="nofollow">CONTRIBUTING.md</a> with AI contribution guidelines</li>
+<li>Refactor views around BaseTab and RepoTabViewModel</li>
+<li>Refactor: reorganize dialogs (#2428)</li>
+<li>Refactor: extract archive mounting logic from ArchiveTab (#2451)</li>
+<li>Refactor: decouple archive extraction logic from ArchiveTab (#2452)</li>
+<li>Update requires-python from &gt;=3.8 to &gt;=3.10 (#2384)</li>
+</ul>]]></description>
+      <pubDate>2026-04-28T16:38:18Z</pubDate>
+      <sparkle:version>0.11.4</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.4</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.4/Vorta-v0.11.4-arm.dmg" length="48323777" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.3</title>
       <description><![CDATA[<h2>Changes</h2>
 <ul>
@@ -786,19 +823,6 @@ see previous pre-releases for detailed changes. Main changes:</p>
       <sparkle:version>0.7.8</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.8</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.8/vorta-0.7.8.dmg" length="45425500" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.7</title>
-      <description><![CDATA[<p>This is a bugfix release, which addresses the following issues:</p>
-<ul>
-<li>Remove PyQt5 pinning. Fixes #1011 </li>
-<li>Fix for diff command. By @bastiencyr. Fixes #1016</li>
-<li>Update translations. Add SK .ts file. Fixes #1013</li>
-</ul>]]></description>
-      <pubDate>2021-06-21T06:38:07Z</pubDate>
-      <sparkle:version>0.7.7</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.7</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.7/vorta-0.7.7.dmg" length="45353976" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
