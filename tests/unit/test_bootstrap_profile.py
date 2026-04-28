@@ -28,8 +28,7 @@ from vorta.store.models import BackupProfileModel
 
 # Marker applied to any test that patches pwd.getpwuid (Linux/macOS only)
 skip_on_windows = pytest.mark.skipif(
-    sys.platform == 'win32',
-    reason="pwd module is not available on Windows; Flatpak does not exist on Windows"
+    sys.platform == 'win32', reason="pwd module is not available on Windows; Flatpak does not exist on Windows"
 )
 
 
@@ -63,6 +62,7 @@ def mock_successful_import(mocker):
 # ---------------------------------------------------------------------------
 # 1. Core fix: pwd.getpwuid is used, not os.path.expanduser / HOME env var
 # ---------------------------------------------------------------------------
+
 
 @skip_on_windows
 def test_pwd_getpwuid_is_called(qapp, tmp_path, mocker):
@@ -120,21 +120,19 @@ def test_expanduser_misses_file_when_home_overridden(tmp_path, monkeypatch):
 
     # Old approach — resolves to sandboxed HOME, file not found
     old_path = Path(os.path.expanduser("~")) / ".vorta-init.json"
-    assert not old_path.exists(), (
-        "expanduser resolves to the sandboxed HOME, missing the real file"
-    )
+    assert not old_path.exists(), "expanduser resolves to the sandboxed HOME, missing the real file"
 
     # New approach — resolves to real home via pwd
     import pwd
+
     new_path = Path(pwd.getpwuid(os.getuid()).pw_dir) / ".vorta-init.json"
-    assert new_path.exists(), (
-        "pwd.getpwuid resolves to the real home where the file exists"
-    )
+    assert new_path.exists(), "pwd.getpwuid resolves to the real home where the file exists"
 
 
 # ---------------------------------------------------------------------------
 # 2. Explicit bootstrap_file argument takes priority over pwd home
 # ---------------------------------------------------------------------------
+
 
 @skip_on_windows
 def test_explicit_file_is_checked_first(qapp, tmp_path, mocker):
@@ -175,6 +173,7 @@ def test_nonexistent_explicit_file_falls_back_to_pwd_home(qapp, tmp_path, mocker
 # ---------------------------------------------------------------------------
 # 3. Default profile creation when no bootstrap file is found
 # ---------------------------------------------------------------------------
+
 
 def test_default_profile_created_when_no_bootstrap_file(qapp, tmp_path, mocker):
     """
@@ -230,6 +229,7 @@ def test_no_duplicate_default_profile(qapp, tmp_path, mocker):
 # 4. Bootstrap file lifecycle
 # ---------------------------------------------------------------------------
 
+
 def test_bootstrap_file_deleted_after_successful_import(qapp, tmp_path, mocker):
     """
     After a successful import the bootstrap file must be removed so it
@@ -249,9 +249,7 @@ def test_bootstrap_file_deleted_after_successful_import(qapp, tmp_path, mocker):
 
     qapp.bootstrap_profile(bootstrap_file=bootstrap)
 
-    assert not bootstrap.exists(), (
-        "Bootstrap file should be deleted after a successful import"
-    )
+    assert not bootstrap.exists(), "Bootstrap file should be deleted after a successful import"
 
 
 def test_corrupt_bootstrap_file_shows_error_dialog(qapp, tmp_path, mocker):
@@ -289,14 +287,13 @@ def test_corrupt_bootstrap_file_is_not_deleted(qapp, tmp_path, mocker):
 
     qapp.bootstrap_profile(bootstrap_file=bootstrap)
 
-    assert bootstrap.exists(), (
-        "A corrupt bootstrap file must be preserved so the user can fix it"
-    )
+    assert bootstrap.exists(), "A corrupt bootstrap file must be preserved so the user can fix it"
 
 
 # ---------------------------------------------------------------------------
 # 5. Docstring sanity check (catches the moved-docstring regression)
 # ---------------------------------------------------------------------------
+
 
 def test_bootstrap_profile_has_docstring():
     """
