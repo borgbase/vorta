@@ -9,6 +9,7 @@ from typing import Any, NamedTuple
 from PyQt6 import QtDBus
 from PyQt6.QtCore import QObject, QVersionNumber, pyqtSignal, pyqtSlot
 
+from vorta.dbus import DBusException, get_result, read_dbus_property
 from vorta.network_status.abc import NetworkStatusMonitor, SystemWifiInfo
 
 logger = logging.getLogger(__name__)
@@ -98,10 +99,6 @@ def decode_ssid(raw_ssid: list[int]) -> str | None:
 
 class UnsupportedException(Exception):
     """NetworkManager is not available"""
-
-
-class DBusException(Exception):
-    """Failed to call a DBus method"""
 
 
 class NetworkManagerDBusAdapter(QObject):
@@ -197,20 +194,6 @@ def _is_network_connected(state: NMState) -> bool:
         NMState.NM_STATE_CONNECTED_SITE,
         NMState.NM_STATE_CONNECTED_GLOBAL,
     )
-
-
-def read_dbus_property(obj: QtDBus.QDBusInterface, property: str) -> Any:
-    # QDBusInterface.property() didn't work for some reason
-    props = QtDBus.QDBusInterface(obj.service(), obj.path(), 'org.freedesktop.DBus.Properties', obj.connection())
-    msg = props.call('Get', obj.interface(), property)
-    return get_result(msg)
-
-
-def get_result(msg: QtDBus.QDBusMessage) -> Any:
-    if msg.type() == msg.MessageType.ReplyMessage:
-        return msg.arguments()[0]
-    else:
-        raise DBusException("DBus call failed: {}".format(msg.arguments()))
 
 
 class ActiveConnectionInfo(NamedTuple):
