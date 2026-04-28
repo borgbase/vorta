@@ -46,8 +46,8 @@ jobs:
         ${{ fromJSON(
           (github.event_name == 'workflow_dispatch' ||
            (github.event_name == 'push' && github.ref == 'refs/heads/master'))
-          && '{"python-version":["3.10","3.12","3.13"],"os":["ubuntu-24.04","macos-15"],"borg-version":["1.4.3"]}'
-          || '{"python-version":["3.12"],"os":["ubuntu-24.04","macos-15"],"borg-version":["1.4.3"]}'
+          && '{"python-version":["3.10","3.12","3.13"],"os":["ubuntu-24.04","macos-15"],"borg-version":["1.4.4"]}'
+          || '{"python-version":["3.12"],"os":["ubuntu-24.04","macos-15"],"borg-version":["1.4.4"]}'
         ) }}
 
     steps:
@@ -100,14 +100,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      # NB: PR set (1.4.2) does not currently overlap with master set (1.2.8, 1.4.3).
-      # Behavior preserved from the old matrix script; consider normalizing in a follow-up.
       matrix: >-
         ${{ fromJSON(
           (github.event_name == 'workflow_dispatch' ||
            (github.event_name == 'push' && github.ref == 'refs/heads/master'))
-          && '{"python-version":["3.12"],"os":["ubuntu-24.04"],"borg-version":["1.2.8","1.4.3"]}'
-          || '{"python-version":["3.12"],"os":["ubuntu-24.04"],"borg-version":["1.4.2"]}'
+          && '{"python-version":["3.12"],"os":["ubuntu-24.04"],"borg-version":["1.2.8","1.4.4"]}'
+          || '{"python-version":["3.12"],"os":["ubuntu-24.04"],"borg-version":["1.4.4"]}'
         ) }}
 
     steps:
