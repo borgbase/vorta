@@ -18,7 +18,7 @@ on:
           - macos-15-intel
 
 env:
-  PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
+  PYTHON_VERSION: ${{ vars.PYTHON_VERSION || '3.12' }}
 
 jobs:
   build:
