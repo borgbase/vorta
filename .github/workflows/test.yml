@@ -24,7 +24,7 @@ jobs:
       - name: Setup python, vorta and dev deps
         uses: ./.github/actions/setup
         with:
-          python-version: ${{ vars.PYTHON_VERSION }}
+          python-version: ${{ vars.PYTHON_VERSION || '3.12' }}
           pre-commit: true
 
       - name: Test formatting with ruff
