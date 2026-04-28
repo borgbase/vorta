@@ -58,11 +58,11 @@ def test_is_network_metered(global_metered_status, expected, nm_monitor):
             {'ssid': bytes([84, 69, 83, 84])},
             'TEST',
         ),
-        ('/org/freedesktop/NetworkManager/ActiveConnection/2', '802-11-ethernet', {}, None),
+        ('/org/freedesktop/NetworkManager/ActiveConnection/2', '802-3-ethernet', {}, None),
     ],
 )
 def test_get_current_wifi(connection_path, connection_type, type_settings, expected, nm_monitor):
-    nm_monitor._nm.get_primary_connection_path.return_value = connection_path
+    nm_monitor._nm.get_active_connections_paths.return_value = [connection_path]
     nm_monitor._nm.get_active_connection_info.return_value = ActiveConnectionInfo(
         connection='/org/freedesktop/NetworkManager/Settings/12', type=connection_type
     )
@@ -74,9 +74,41 @@ def test_get_current_wifi(connection_path, connection_type, type_settings, expec
 
 
 def test_get_current_wifi_with_no_connection(nm_monitor):
-    nm_monitor._nm.get_primary_connection_path.return_value = None
+    nm_monitor._nm.get_active_connections_paths.return_value = []
 
     assert nm_monitor.get_current_wifi() is None
+
+
+def test_get_current_wifi_with_wired_primary_and_wifi_active(nm_monitor):
+    """When wired is primary but WiFi is also active (e.g. docking station), WiFi SSID should be found. See #1775."""
+    wired_path = '/org/freedesktop/NetworkManager/ActiveConnection/1'
+    wifi_path = '/org/freedesktop/NetworkManager/ActiveConnection/2'
+    nm_monitor._nm.get_active_connections_paths.return_value = [wired_path, wifi_path]
+    nm_monitor._nm.get_active_connection_info.side_effect = [
+        ActiveConnectionInfo(connection='/org/freedesktop/NetworkManager/Settings/10', type='802-3-ethernet'),
+        ActiveConnectionInfo(connection='/org/freedesktop/NetworkManager/Settings/11', type='802-11-wireless'),
+    ]
+    nm_monitor._nm.get_settings.return_value = {'802-11-wireless': {'ssid': bytes([72, 79, 77, 69])}}
+
+    result = nm_monitor.get_current_wifi()
+
+    assert result == 'HOME'
+
+
+def test_get_current_wifi_skips_failed_connection(nm_monitor):
+    """If one active connection throws DBusException, other connections should still be checked."""
+    bad_path = '/org/freedesktop/NetworkManager/ActiveConnection/1'
+    good_path = '/org/freedesktop/NetworkManager/ActiveConnection/2'
+    nm_monitor._nm.get_active_connections_paths.return_value = [bad_path, good_path]
+    nm_monitor._nm.get_active_connection_info.side_effect = [
+        DBusException("connection gone"),
+        ActiveConnectionInfo(connection='/org/freedesktop/NetworkManager/Settings/11', type='802-11-wireless'),
+    ]
+    nm_monitor._nm.get_settings.return_value = {'802-11-wireless': {'ssid': bytes([84, 69, 83, 84])}}
+
+    result = nm_monitor.get_current_wifi()
+
+    assert result == 'TEST'
 
 
 def test_get_known_wifis(nm_monitor):

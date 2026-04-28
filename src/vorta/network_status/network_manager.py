@@ -38,18 +38,23 @@ class NetworkManagerMonitor(NetworkStatusMonitor):
             return True
 
     def get_current_wifi(self) -> str | None:
-        # Only check the primary connection. VPN over WiFi will still show the WiFi as Primary Connection.
-        # We don't check all active connections, as NM won't disable WiFi when connecting a cable.
+        # Check all active connections for WiFi, not just the primary one.
+        # When connected via both WiFi and wired (e.g. docking station), the primary
+        # connection may be wired, but the WiFi SSID is still needed for network-based
+        # backup restrictions. See #1775.
         try:
-            active_connection_path = self._nm.get_primary_connection_path()
-            if not active_connection_path:
-                return None
-            active_connection = self._nm.get_active_connection_info(active_connection_path)
-            if active_connection.type == '802-11-wireless':
-                settings = self._nm.get_settings(active_connection.connection)
-                ssid = self._get_ssid_from_settings(settings)
-                if ssid:
-                    return ssid
+            active_paths = self._nm.get_active_connections_paths()
+            for active_connection_path in active_paths:
+                try:
+                    active_connection = self._nm.get_active_connection_info(active_connection_path)
+                    if active_connection.type == '802-11-wireless':
+                        settings = self._nm.get_settings(active_connection.connection)
+                        ssid = self._get_ssid_from_settings(settings)
+                        if ssid:
+                            return ssid
+                except DBusException:
+                    logger.debug("Failed to get info for active connection %s", active_connection_path)
+                    continue
         except DBusException:
             logger.exception("Failed to get currently connected WiFi network, assuming none")
         return None
@@ -162,6 +167,9 @@ class NetworkManagerDBusAdapter(QObject):
 
     def get_primary_connection_path(self) -> str | None:
         return read_dbus_property(self._nm, 'PrimaryConnection')
+
+    def get_active_connections_paths(self) -> list[str]:
+        return read_dbus_property(self._nm, 'ActiveConnections') or []
 
     def get_active_connection_info(self, active_connection_path: str) -> ActiveConnectionInfo:
         active_connection = self._get_iface(active_connection_path, 'org.freedesktop.NetworkManager.Connection.Active')
