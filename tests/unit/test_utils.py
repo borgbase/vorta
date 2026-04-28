@@ -2,9 +2,11 @@ import sys
 import uuid
 
 import pytest
+from PyQt6.QtWidgets import QWidget
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.utils import (
+    choose_file_dialog,
     find_best_unit_for_sizes,
     get_path_datasize,
     is_system_tray_available,
@@ -166,3 +168,11 @@ def test_is_system_tray_available(mocker):
     assert is_system_tray_available() is False
     mocker.patch('PyQt6.QtWidgets.QSystemTrayIcon.isSystemTrayAvailable', return_value=True)
     assert is_system_tray_available() is True
+
+
+def test_choose_file_dialog_sets_file_scheme_only(mocker, qapp):
+    """Local path pickers must not offer unsupported schemes (borgbase/vorta#1631)."""
+    mock_dialog = mocker.MagicMock()
+    mocker.patch('vorta.utils.QFileDialog', return_value=mock_dialog)
+    choose_file_dialog(QWidget(), 'Test')
+    mock_dialog.setSupportedSchemes.assert_called_once_with(['file'])

@@ -175,6 +175,8 @@ def choose_file_dialog(parent, title, want_folder=True):
     dialog.setParent(parent, QtCore.Qt.WindowType.Sheet)
     if want_folder:
         dialog.setOption(QFileDialog.Option.ShowDirsOnly)
+    # Avoid unsupported URL schemes (e.g. smb://) freezing the platform dialog (#1631).
+    dialog.setSupportedSchemes(['file'])
     return dialog
 
 

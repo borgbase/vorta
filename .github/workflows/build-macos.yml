@@ -2,40 +2,51 @@ name: Build macOS release
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to use for building release'
-        required: true
-        default: 'master'
       borg_version:
         description: 'Borg version to package'
         required: true
-        default: '1.4.3'
+        default: '1.4.4'
       macos_version:
-        description: 'macOS version for building'
+        description: 'macOS runner image'
         required: true
-        default: 'macos-14'
-      python_version:
-        description: 'Python version for building'
-        required: true
-        default: '3.12'
+        default: 'macos-26'
+        type: choice
+        options:
+          - macos-26
+          - macos-26-intel
+          - macos-15
+          - macos-15-intel
+
+env:
+  PYTHON_VERSION: ${{ vars.PYTHON_VERSION || '3.12' }}
 
 jobs:
   build:
-    runs-on: ${{ github.event.inputs.macos_version }}
+    runs-on: ${{ inputs.macos_version }}
     timeout-minutes: 120
 
     steps:
+    - name: Validate borg_version
+      env:
+        BORG_VERSION: ${{ inputs.borg_version }}
+      run: |
+        if ! [[ "$BORG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([ab][0-9]+)?$ ]]; then
+          echo "Invalid borg_version: $BORG_VERSION" >&2
+          exit 1
+        fi
+
     - name: Check out selected branch
       uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch }}
+
     - name: Install uv
       uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
-    - name: Set up Python ${{ inputs.python_version }}
-      run: uv python install ${{ inputs.python_version }}
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      run: uv python install "$PYTHON_VERSION"
+
     - name: Install system dependencies
       run: |
         brew install openssl readline xz
@@ -45,12 +56,14 @@ jobs:
         brew install create-dmg
         uv sync --group dev
     - name: Package with PyInstaller
+      env:
+        BORG_VERSION: ${{ inputs.borg_version }}
       run: |
-        if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-14-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-13-x86_64-gh.tgz"; fi
+        if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-15-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-15-x86_64-gh.tgz"; fi
         uv run pyinstaller --clean --noconfirm package/vorta.spec
         cp -R $(brew --prefix)/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
-        curl -LJO https://github.com/borgbackup/borg/releases/download/${{ github.event.inputs.borg_version }}/${BORG_ARCHIVE}
-        tar -xzf ./${BORG_ARCHIVE}
+        curl -LJO "https://github.com/borgbackup/borg/releases/download/${BORG_VERSION}/${BORG_ARCHIVE}"
+        tar -xzf "./${BORG_ARCHIVE}"
         xattr -dr com.apple.quarantine ./borg-dir
         mv ./borg-dir dist/Vorta.app/Contents/Resources/
 
