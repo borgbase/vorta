@@ -138,7 +138,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.close()
 
     def get_current_profile(self):
-        return BackupProfileModel.get(id=self.current_profile.id)
+        profile = BackupProfileModel.get_or_none(id=self.current_profile.id)
+        if profile is None:
+            logging.warning(f"Profile with id {self.current_profile.id} no longer exists")
+        return profile
 
     def set_icons(self):
         self.profileAddButton.setIcon(get_colored_icon('plus'))

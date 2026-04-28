@@ -372,7 +372,7 @@ class VortaScheduler(QtCore.QObject):
             else:
                 # int to big to pass it to qt which expects a c++ int
                 # wait 15 min for regular reschedule
-                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
+                logger.debug(f"Couldn't schedule for {next_time} because timer value {timer_ms} too large.")
 
                 self.timers[profile_id] = {
                     'dt': next_time,
@@ -499,7 +499,11 @@ class VortaScheduler(QtCore.QObject):
         """
         Pruning and checking after successful backup.
         """
-        profile = BackupProfileModel.get(id=profile_id)
+        profile = BackupProfileModel.get_or_none(id=profile_id)
+        if profile is None:
+            logger.warning('Profile %s not found for post-backup tasks', profile_id)
+            return
+
         notifier = VortaNotifications.pick()
         logger.info('Doing post-backup jobs for %s', profile.name)
         if profile.prune_on:
