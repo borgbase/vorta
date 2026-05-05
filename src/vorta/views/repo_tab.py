@@ -38,8 +38,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
 
-        self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
-        self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
+        self.menuAddRepo.addAction(self.tr("Initialize Empty Repository…"), self.new_repo)
+        self.menuAddRepo.addAction(self.tr("Use Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
 
