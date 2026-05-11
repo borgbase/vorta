@@ -6,6 +6,19 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.5</title>
+      <description><![CDATA[<h2>Bug fixes</h2>
+<ul>
+<li>Do not overwrite <code>prune_keep_within</code> during profile load (#2493)</li>
+<li>Resolve symlinks when matching active borg mount points (#1461)</li>
+<li>Normalize CRLF line endings to LF (#2510)</li>
+</ul>]]></description>
+      <pubDate>2026-05-11T16:34:27Z</pubDate>
+      <sparkle:version>0.11.5</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.5</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.5/Vorta-v0.11.5-arm.dmg" length="48806525" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.4</title>
       <description><![CDATA[<p>This is a maintenance and bugfix release. It includes many contributions from Google Summer of Code applicants — thanks to everyone who participated!</p>
 <h2>Features</h2>
@@ -577,18 +590,6 @@ see previous pre-releases for detailed changes. Main changes:</p>
       <sparkle:version>0.8.2</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.2</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.7.8</title>
-      <description><![CDATA[<p>Minor release to update translations and address small bugs. The next release will be 0.8 and will include larger changes:</p>
-<ul>
-<li>Fix double call to on_user_click. By @olivierlemoal (#1031)</li>
-<li>Handle malformed .vorta-init.json on import. Fixes #1053. By @phihos</li>
-</ul>]]></description>
-      <pubDate>2021-08-26T10:30:41Z</pubDate>
-      <sparkle:version>0.7.8</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.7.8</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.7.8/vorta-0.7.8.dmg" length="45425500" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
