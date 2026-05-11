@@ -179,7 +179,7 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 'type': 'checkbox',
                 'label': trans_late(
                     'settings',
-                    "If the system tray isn't available, " "ask whether to continue in the background " "on exit",
+                    "If the system tray isn't available, ask whether to continue in the background on exit",
                 ),
             },
             {
