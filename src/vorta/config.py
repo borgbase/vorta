@@ -17,7 +17,7 @@ def default_dev_dir() -> Path:
     return Path(__file__).parent.parent.parent / '.dev_config'
 
 
-def init_from_platformdirs():
+def init_from_platformdirs() -> None:
     """Initializes config dirs for system-wide use"""
     dirs = platformdirs.PlatformDirs(APP_NAME, APP_AUTHOR)
     init(dirs.user_data_path, dirs.user_log_path, dirs.user_cache_path, dirs.user_cache_path / 'tmp', Path.home())
@@ -35,7 +35,7 @@ def init_dev_mode(dir: Path):
     )
 
 
-def init(settings: Path, logs: Path, cache: Path, tmp: Path, bootstrap: Path):
+def init(settings: Path, logs: Path, cache: Path, tmp: Path, bootstrap: Path) -> None:
     """Initializes config directories with provided paths"""
     global SETTINGS_DIR
     global LOG_DIR
