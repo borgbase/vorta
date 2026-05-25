@@ -7,9 +7,9 @@ from PyQt6.QtWidgets import (
 
 from vorta import config
 from vorta.i18n.richtext import format_richtext, link
-from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
+from vorta.views.viewmodels.log_page_viewmodel import LogPageViewModel
 
 uifile = get_asset('UI/log_page.ui')
 LogTableUI, LogTableBase = uic.loadUiType(uifile)
@@ -28,6 +28,7 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
         self.init_ui()
+        self.viewmodel = LogPageViewModel()
         self.track_profile_change(self.populate_logs, call_now=True)
         self.track_backup_finished(self.populate_logs)
 
@@ -46,12 +47,7 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
 
     def populate_logs(self):
         profile = self.profile()
-        event_logs = [
-            s
-            for s in EventLogModel.select()
-            .where(EventLogModel.profile == profile.id)
-            .order_by(EventLogModel.start_time.desc())
-        ]
+        event_logs = self.viewmodel.get_event_logs(profile.id)
 
         sorting = self.logPage.isSortingEnabled()
         self.logPage.setSortingEnabled(False)
