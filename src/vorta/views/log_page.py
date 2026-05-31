@@ -1,34 +1,29 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import (
-    QAbstractItemView,
-    QHeaderView,
-    QTableWidgetItem,
-)
+from PyQt6.QtCore import QSortFilterProxyModel
+from PyQt6.QtWidgets import QAbstractItemView, QHeaderView
 
 from vorta import config
 from vorta.i18n.richtext import format_richtext, link
+from vorta.store.models import EventLogModel
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
-from vorta.views.viewmodels.log_page_viewmodel import LogPageViewModel
+from vorta.views.partials.event_log_table_model import EventLogTableModel
 
 uifile = get_asset('UI/log_page.ui')
 LogTableUI, LogTableBase = uic.loadUiType(uifile)
-
-
-class LogTableColumn:
-    Time = 0
-    Category = 1
-    Subcommand = 2
-    Repository = 3
-    ReturnCode = 4
 
 
 class LogPage(BaseTab, LogTableBase, LogTableUI):
     def __init__(self, parent=None, profile_provider=None):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
+
+        self._model = EventLogTableModel(self)
+        self._proxy = QSortFilterProxyModel(self)
+        self._proxy.setSourceModel(self._model)
+        self.logPage.setModel(self._proxy)
+
         self.init_ui()
-        self.viewmodel = LogPageViewModel()
         self.track_profile_change(self.populate_logs, call_now=True)
         self.track_backup_finished(self.populate_logs)
 
@@ -36,8 +31,9 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
         self.logPage.setAlternatingRowColors(True)
         header = self.logPage.horizontalHeader()
         header.setVisible(True)
-        [header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents) for i in range(5)]
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        for i in range(self._model.columnCount()):
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(EventLogTableModel.COL_REPOSITORY, QHeaderView.ResizeMode.Stretch)
         self.logPage.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.logPage.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
@@ -47,16 +43,7 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
 
     def populate_logs(self):
         profile = self.profile()
-        event_logs = self.viewmodel.get_event_logs(profile.id)
-
-        sorting = self.logPage.isSortingEnabled()
-        self.logPage.setSortingEnabled(False)
-        self.logPage.setRowCount(len(event_logs))
-        for row, log_line in enumerate(event_logs):
-            formatted_time = log_line.start_time.strftime('%Y-%m-%d %H:%M')
-            self.logPage.setItem(row, LogTableColumn.Time, QTableWidgetItem(formatted_time))
-            self.logPage.setItem(row, LogTableColumn.Category, QTableWidgetItem(log_line.category))
-            self.logPage.setItem(row, LogTableColumn.Subcommand, QTableWidgetItem(log_line.subcommand))
-            self.logPage.setItem(row, LogTableColumn.Repository, QTableWidgetItem(log_line.repo_url))
-            self.logPage.setItem(row, LogTableColumn.ReturnCode, QTableWidgetItem(str(log_line.returncode)))
-        self.logPage.setSortingEnabled(sorting)
+        rows = list(
+            EventLogModel.select().where(EventLogModel.profile == profile.id).order_by(EventLogModel.start_time.desc())
+        )
+        self._model.set_rows(rows)
