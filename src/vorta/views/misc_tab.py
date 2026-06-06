@@ -1,10 +1,6 @@
-import logging
-import sys
-
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication,
     QCheckBox,
     QFormLayout,
     QHBoxLayout,
@@ -15,16 +11,14 @@ from PyQt6.QtWidgets import (
 
 from vorta.i18n import translate
 from vorta.store.models import SettingsModel
-from vorta.store.settings import get_misc_settings
-from vorta.utils import get_asset, search
+from vorta.store.settings import get_grouped_checkbox_settings
+from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
 from vorta.views.partials.tooltip_button import ToolTipButton
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/misc_tab.ui')
 MiscTabUI, MiscTabBase = uic.loadUiType(uifile)
-
-logger = logging.getLogger(__name__)
 
 
 class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
@@ -52,7 +46,8 @@ class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
         """
         Populate the misc tab with the settings widgets.
 
-        Uses `create_group_widget` to construct the layout groups.
+        Groups and per-group settings come from `get_grouped_checkbox_settings()`,
+        which already filters out platform-irrelevant groups and legacy DB rows.
         """
         # clear layout
         while self.checkboxLayout.count():
@@ -62,40 +57,21 @@ class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
                 child.widget().deleteLater()
         self.tooltip_buttons = []
 
-        # dynamically add widgets for settings
-        misc_settings = get_misc_settings()
-
         i = 0
-        for group in (
-            SettingsModel.select(SettingsModel.group)
-            .distinct(True)
-            .where(SettingsModel.group != '')
-            .order_by(SettingsModel.group.asc())
-        ):
-            # add spacer
+        for group_name, settings in get_grouped_checkbox_settings():
+            # add spacer between groups
             if i > 0:
                 spacer = QSpacerItem(20, 4, vPolicy=QSizePolicy.Policy.Fixed)
                 self.checkboxLayout.setItem(i, QFormLayout.ItemRole.LabelRole, spacer)
                 i += 1
 
-            # Skip Update settings on non-darwin
-            if sys.platform != 'darwin' and group.group == 'Updates':
-                continue
-
-            # add label for next group
+            # add label for group
             label = QLabel()
-            label.setText(translate('settings', group.group) + ':')
+            label.setText(translate('settings', group_name) + ':')
             self.checkboxLayout.setWidget(i, QFormLayout.ItemRole.LabelRole, label)
 
             # add settings widget of the group
-            for setting in SettingsModel.select().where(
-                SettingsModel.type == 'checkbox', SettingsModel.group == group.group
-            ):
-                # Skip settings that aren't specified in vorta.store.models.
-                if not search(setting.key, misc_settings, lambda d: d['key']):
-                    logger.warning('Unknown setting {}'.format(setting.key))
-                    continue
-
+            for setting in settings:
                 # create widget
                 cb = QCheckBox(translate('settings', setting.label))
                 cb.setToolTip(setting.tooltip)
