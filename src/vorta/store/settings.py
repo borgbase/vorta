@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
 import sys
 from typing import Any
 
 from vorta.i18n import trans_late
+from vorta.store.models import SettingsModel
+
+logger = logging.getLogger(__name__)
 
 
 def get_misc_settings() -> list[dict[str, Any]]:
@@ -190,3 +194,33 @@ def get_misc_settings() -> list[dict[str, Any]]:
             },
         ]
     return settings
+
+
+def get_grouped_checkbox_settings() -> list[tuple[str, list[SettingsModel]]]:
+    """
+    Return checkbox settings grouped by their group label, ready for the view to render.
+
+    Filters out:
+      - DB rows whose key is not declared in get_misc_settings() — these are legacy /
+        deprecated settings left over from previous installs.
+      - Groups that become empty after filtering (e.g. the 'Updates' group on non-darwin
+        platforms, where none of its keys are declared in get_misc_settings()).
+
+    The returned list preserves the alphabetical group order of the underlying query.
+    """
+    valid_keys = {entry['key'] for entry in get_misc_settings()}
+
+    rows = (
+        SettingsModel.select()
+        .where((SettingsModel.type == 'checkbox') & (SettingsModel.group != ''))
+        .order_by(SettingsModel.group.asc())
+    )
+
+    grouped: dict[str, list[SettingsModel]] = {}
+    for row in rows:
+        if row.key not in valid_keys:
+            logger.warning('Unknown setting %s', row.key)
+            continue
+        grouped.setdefault(row.group, []).append(row)
+
+    return list(grouped.items())
