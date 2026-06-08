@@ -148,3 +148,22 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS, python
           version: v0.7.3  # workaround on Intel macs (GH Actions)
+
+  # Stable-named aggregate gate for branch protection. Matrix jobs above embed
+  # the Borg version in their auto-generated check names (e.g.
+  # "test-unit (3.12, ubuntu-24.04, 1.4.4)"), so requiring them directly breaks
+  # protection on every version bump. Require this job instead.
+  required-checks:
+    name: required-checks
+    if: always()
+    needs:
+      - lint
+      - test-unit
+      - test-integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all required jobs succeeded
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          echo "One or more required jobs failed or were cancelled."
+          exit 1
