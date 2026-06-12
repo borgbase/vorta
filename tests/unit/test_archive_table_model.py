@@ -136,6 +136,16 @@ def test_set_data_rejects_non_name_column_or_wrong_role():
     assert model.setData(model.index(0, ArchiveTableModel.COL_NAME), 'y', Qt.ItemDataRole.DisplayRole) is False
 
 
+def test_archive_role_returns_backing_object():
+    """ArchiveRole exposes the ArchiveModel so callers read it through the (auto-mapping) proxy."""
+    model = ArchiveTableModel()
+    only = _archive('only', dt(2024, 1, 1))
+    model.set_rows([only])
+
+    for column in range(model.columnCount()):
+        assert model.data(model.index(0, column), ArchiveTableModel.ArchiveRole) is only
+
+
 def test_archive_at_returns_object_or_none():
     """archive_at returns the backing ArchiveModel and None when out of range."""
     model = ArchiveTableModel()
@@ -172,7 +182,7 @@ def test_trigger_icon_and_tooltip():
 
 
 def test_header_data_returns_column_labels():
-    """Horizontal headers expose the canonical labels; the icon column is blank."""
+    """Horizontal headers expose the canonical labels, matching the legacy .ui."""
     model = ArchiveTableModel()
     assert (
         model.headerData(ArchiveTableModel.COL_TIME, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole) == 'Date'
@@ -180,7 +190,10 @@ def test_header_data_returns_column_labels():
     assert (
         model.headerData(ArchiveTableModel.COL_NAME, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole) == 'Name'
     )
-    assert model.headerData(ArchiveTableModel.COL_TRIGGER, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole) == ''
+    assert (
+        model.headerData(ArchiveTableModel.COL_TRIGGER, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
+        == 'Trigger'
+    )
     assert model.headerData(0, Qt.Orientation.Vertical, Qt.ItemDataRole.DisplayRole) is None
 
 

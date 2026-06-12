@@ -8,11 +8,11 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
 
 from vorta.i18n import trans_late, translate
 from vorta.store.models import ArchiveModel
-from vorta.utils import find_best_unit_for_sizes, pretty_bytes
+from vorta.utils import find_best_unit_for_sizes, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
 
 #: Decimal digits shown in the size column.
@@ -32,6 +32,8 @@ class ArchiveTableModel(QAbstractTableModel):
 
     #: Role returning native, comparable values for sorting via a proxy model.
     SortRole = Qt.ItemDataRole.UserRole
+    #: Role returning the backing ArchiveModel; auto-mapped through the sort proxy.
+    ArchiveRole = Qt.ItemDataRole.UserRole + 1
 
     _HEADERS = (
         trans_late('Form', 'Date'),
@@ -39,15 +41,19 @@ class ArchiveTableModel(QAbstractTableModel):
         trans_late('Form', 'Duration'),
         trans_late('Form', 'Mount Point'),
         trans_late('Form', 'Name'),
-        '',  # trigger icon column has no header label
+        trans_late('Form', 'Trigger'),
     )
 
-    def __init__(self, parent: Optional[Any] = None):
+    _TRIGGER_ICONS = {'scheduled': 'clock-o', 'user': 'user'}
+
+    def __init__(self, parent: Optional[QObject] = None):
         """Init."""
         super().__init__(parent)
         self._rows: List[ArchiveModel] = []
         self._mount_points: Dict[str, str] = {}
         self._fixed_unit: Optional[int] = None
+        self._icon_cache: Dict[str, Any] = {}  # themed icons; invalidated on dark-mode switch
+        self._icon_cache_dark: Optional[bool] = None
 
     def set_rows(
         self,
@@ -98,6 +104,8 @@ class ArchiveTableModel(QAbstractTableModel):
             return row.name  # pre-fill the rename editor with the current name
         if role == self.SortRole:
             return self._sort_data(row, column)
+        if role == self.ArchiveRole:
+            return row  # proxy-safe accessor: the proxy forwards data() through mapToSource
         if role == Qt.ItemDataRole.DecorationRole and column == self.COL_TRIGGER:
             return self._trigger_icon(row)
         if role == Qt.ItemDataRole.ToolTipRole and column == self.COL_TRIGGER:
@@ -136,11 +144,16 @@ class ArchiveTableModel(QAbstractTableModel):
         return None
 
     def _trigger_icon(self, row: ArchiveModel) -> Any:
-        if row.trigger == 'scheduled':
-            return get_colored_icon('clock-o')
-        if row.trigger == 'user':
-            return get_colored_icon('user')
-        return None
+        icon_name = self._TRIGGER_ICONS.get(row.trigger)
+        if icon_name is None:
+            return None
+        dark = uses_dark_mode()
+        if dark != self._icon_cache_dark:  # theme switched: themed icons are stale
+            self._icon_cache.clear()
+            self._icon_cache_dark = dark
+        if icon_name not in self._icon_cache:
+            self._icon_cache[icon_name] = get_colored_icon(icon_name)
+        return self._icon_cache[icon_name]
 
     def _trigger_tooltip(self, row: ArchiveModel) -> Any:
         if row.trigger == 'scheduled':
