@@ -1,7 +1,5 @@
 import logging
 
-from PyQt6.QtWidgets import QTableWidgetItem
-
 from vorta.borg.mount import BorgMountJob
 from vorta.borg.umount import BorgUmountJob
 from vorta.i18n import translate
@@ -122,10 +120,8 @@ class ArchiveMount:
                 archive_name = result['params']['mounted_archive']
                 self.tab.mount_points[archive_name] = mount_point
 
-                # update column in table
-                row = self.tab.row_of_archive(archive_name)
-                item = QTableWidgetItem(result['cmd'][-1])
-                self.tab.archiveTable.setItem(row, 3, item)
+                # update the Mount Point column in the table
+                self.tab.update_mount_points()
 
                 # update button
                 self.bmountarchive_refresh()
@@ -175,9 +171,7 @@ class ArchiveMount:
             if archive_name:
                 # unmount single archive
                 del self.tab.mount_points[archive_name]
-                row = self.tab.row_of_archive(archive_name)
-                item = QTableWidgetItem('')
-                self.tab.archiveTable.setItem(row, 3, item)
+                self.tab.update_mount_points()
 
                 # update button
                 self.bmountarchive_refresh()

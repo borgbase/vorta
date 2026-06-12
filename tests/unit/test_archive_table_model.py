@@ -123,7 +123,7 @@ def test_set_data_updates_name_and_emits_datachanged():
     model.dataChanged.connect(lambda tl, br, roles=[]: received.append((tl.row(), tl.column())))
 
     assert model.setData(model.index(0, ArchiveTableModel.COL_NAME), 'new') is True
-    assert model.archive_at(0).name == 'new'
+    assert model.data(model.index(0, ArchiveTableModel.COL_NAME), ArchiveTableModel.ArchiveRole).name == 'new'
     assert received == [(0, ArchiveTableModel.COL_NAME)]
 
 
@@ -144,17 +144,6 @@ def test_archive_role_returns_backing_object():
 
     for column in range(model.columnCount()):
         assert model.data(model.index(0, column), ArchiveTableModel.ArchiveRole) is only
-
-
-def test_archive_at_returns_object_or_none():
-    """archive_at returns the backing ArchiveModel and None when out of range."""
-    model = ArchiveTableModel()
-    only = _archive('only', dt(2024, 1, 1))
-    model.set_rows([only])
-
-    assert model.archive_at(0) is only
-    assert model.archive_at(5) is None
-    assert model.archive_at(-1) is None
 
 
 def test_trigger_icon_and_tooltip():

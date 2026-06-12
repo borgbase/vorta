@@ -75,11 +75,13 @@ class ArchiveTableModel(QAbstractTableModel):
             self._fixed_unit = None
         self.endResetModel()
 
-    def archive_at(self, row: int) -> Optional[ArchiveModel]:
-        """Return the `ArchiveModel` backing ``row``, or None if out of range."""
-        if 0 <= row < len(self._rows):
-            return self._rows[row]
-        return None
+    def set_mount_points(self, mount_points: Optional[Dict[str, str]] = None) -> None:
+        """Update mount paths and refresh the Mount Point column in place (no full reset)."""
+        self._mount_points = dict(mount_points or {})
+        if self._rows:
+            top = self.index(0, self.COL_MOUNT)
+            bottom = self.index(len(self._rows) - 1, self.COL_MOUNT)
+            self.dataChanged.emit(top, bottom, [Qt.ItemDataRole.DisplayRole])
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         if parent.isValid():
