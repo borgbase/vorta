@@ -173,7 +173,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
     tab.delete_action()
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
-    assert tab.archiveTable.rowCount() == 1
+    assert tab.archiveTable.model().rowCount() == 1
 
 
 def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
@@ -196,6 +196,41 @@ def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
     assert clipboard_spy.call_count == 2
     actual_data = clipboard_spy.call_args[0][0]  # retrieves the QMimeData() object used in method call
     assert actual_data.text() == "test-archive1"
+
+
+def test_selection_maps_through_sort_proxy(qapp, qtbot, archive_env):
+    """R1: selected_archives() returns the archive shown at the selected row, even after sorting."""
+    main, tab = archive_env
+    view = tab.archiveTable
+    col_name = vorta.views.archive_tab.ArchiveTableModel.COL_NAME
+
+    # Sort by Name descending so the proxy's row order differs from the source order.
+    view.sortByColumn(col_name, QtCore.Qt.SortOrder.DescendingOrder)
+
+    view.selectRow(0)
+    displayed_name = view.model().index(0, col_name).data()
+    selected = tab.selected_archives()
+
+    assert len(selected) == 1
+    # If the helper used the proxy row as a source row, this would resolve to the wrong archive.
+    assert selected[0].name == displayed_name
+
+
+def test_rename_failure_reverts_optimistic_name(qapp, qtbot, archive_env):
+    """A failed rename must not leave the optimistically-applied name in the table (D1)."""
+    main, tab = archive_env
+    model = tab.archive_model
+    col = vorta.views.archive_tab.ArchiveTableModel.COL_NAME
+
+    original = model.data(model.index(0, col))
+    # Simulate the editor having committed a new name optimistically.
+    model.setData(model.index(0, col), 'optimistic-name')
+    assert model.data(model.index(0, col)) == 'optimistic-name'
+
+    # Borg reports the rename failed -> the table must refresh back to the DB's original name.
+    tab.rename_result({'returncode': 2})
+
+    assert model.data(model.index(0, col)) == original
 
 
 def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env):
@@ -223,9 +258,10 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    # Trigger inline editing programmatically (more reliable than double-click simulation)
-    item = tab.archiveTable.item(0, 4)
-    tab.archiveTable.editItem(item)
+    # Trigger inline editing through the real entry point so is_editing / original name are set.
+    index = tab.archiveTable.model().index(0, 4)
+    tab.archiveTable.setCurrentIndex(index)
+    tab.cell_double_clicked(index)
 
     # Wait for edit mode to activate
     qtbot.waitUntil(lambda: tab.archiveTable.viewport().focusWidget() is not None, **pytest._wait_defaults)
