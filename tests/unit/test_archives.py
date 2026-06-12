@@ -10,6 +10,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel, BackupProfileModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
 
 
 class MockFileDialog:
@@ -202,9 +203,9 @@ def test_selection_maps_through_sort_proxy(qapp, qtbot, archive_env):
     """R1: selected_archives() returns the archive shown at the selected row, even after sorting."""
     main, tab = archive_env
     view = tab.archiveTable
-    col_name = vorta.views.archive_tab.ArchiveTableModel.COL_NAME
+    col_name = ArchiveTableModel.COL_NAME
 
-    # Sort by Name descending so the proxy's row order differs from the source order.
+    # sort so the proxy's row order differs from the source order
     view.sortByColumn(col_name, QtCore.Qt.SortOrder.DescendingOrder)
 
     view.selectRow(0)
@@ -212,7 +213,6 @@ def test_selection_maps_through_sort_proxy(qapp, qtbot, archive_env):
     selected = tab.selected_archives()
 
     assert len(selected) == 1
-    # If the helper used the proxy row as a source row, this would resolve to the wrong archive.
     assert selected[0].name == displayed_name
 
 
@@ -220,14 +220,12 @@ def test_rename_failure_reverts_optimistic_name(qapp, qtbot, archive_env):
     """A failed rename must not leave the optimistically-applied name in the table (D1)."""
     main, tab = archive_env
     model = tab.archive_model
-    col = vorta.views.archive_tab.ArchiveTableModel.COL_NAME
+    col = ArchiveTableModel.COL_NAME
 
     original = model.data(model.index(0, col))
-    # Simulate the editor having committed a new name optimistically.
     model.setData(model.index(0, col), 'optimistic-name')
     assert model.data(model.index(0, col)) == 'optimistic-name'
 
-    # Borg reports the rename failed -> the table must refresh back to the DB's original name.
     tab.rename_result({'returncode': 2})
 
     assert model.data(model.index(0, col)) == original

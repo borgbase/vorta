@@ -82,12 +82,11 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
     tab = qapp.main_window.archiveTab
     setting = "Use the same unit of measurement for archive sizes"
 
-    # set mocks. Size formatting now lives in the table model, so patch pretty_bytes there.
+    # set mocks (size formatting now lives in the table model)
     mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
     mock_pretty_bytes = mocker.patch.object(vorta.views.partials.archive_table_model, "pretty_bytes")
 
     def render_size():
-        """Force the model to format the first size cell, which calls pretty_bytes."""
         index = tab.archiveTable.model().index(0, ArchiveTableModel.COL_SIZE)
         index.data(QtCore.Qt.ItemDataRole.DisplayRole)
 
