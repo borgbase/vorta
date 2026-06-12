@@ -120,7 +120,6 @@ class ArchiveMount:
                 archive_name = result['params']['mounted_archive']
                 self.tab.mount_points[archive_name] = mount_point
 
-                # update the Mount Point column in the table
                 self.tab.update_mount_points()
 
                 # update button

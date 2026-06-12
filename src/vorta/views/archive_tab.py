@@ -84,9 +84,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
         self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
-        # Model + sort proxy. The proxy sorts on ArchiveTableModel.SortRole, which
-        # returns native comparable values (raw bytes/seconds/datetime), so non-string
-        # columns order correctly instead of lexically.
+        # Model + sort proxy (proxy sorts on SortRole for correct non-string ordering)
         self.archive_model = ArchiveTableModel(self)
         self.archive_proxy = QSortFilterProxyModel(self)
         self.archive_proxy.setSourceModel(self.archive_model)
@@ -127,7 +125,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
-        # A committed in-place name edit lands in the model via setData; react to it to run the rename job.
         self.archive_model.dataChanged.connect(self.on_name_edited)
 
         # shortcuts
@@ -278,7 +275,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # Restore states
         self.on_selection_change()
 
-    def populate_from_profile(self):
+    def populate_from_profile(self, preserve_view=False):
         """Populate archive list and prune settings from profile."""
         profile = self.profile()
         if profile.repo is not None:
@@ -295,17 +292,21 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
-            # The fixed/dynamic unit choice is a user setting; read it here and inject it so
-            # the model stays DB-free.
+            # inject the user's fixed/dynamic unit setting so the model stays DB-free
             use_fixed_units = bool(SettingsModel.get(key='enable_fixed_units').value)
+
+            scroll_pos = self.archiveTable.verticalScrollBar().value() if preserve_view else 0
+
             self.archive_model.set_rows(archives, mount_points=self.mount_points, use_fixed_units=use_fixed_units)
 
-            # Show the Mount Point column only while at least one archive is mounted
-            # (same predicate as update_mount_points).
+            # show the Mount Point column only while at least one archive is mounted
             self.archiveTable.setColumnHidden(ArchiveTableModel.COL_MOUNT, not self.mount_points)
 
-            self.archiveTable.scrollToTop()
             self.archiveTable.selectionModel().clearSelection()
+            if preserve_view:
+                self.archiveTable.verticalScrollBar().setValue(scroll_pos)
+            else:
+                self.archiveTable.scrollToTop()
             if self.remaining_refresh_archives == 0:
                 self._toggle_all_buttons(enabled=True)
         else:
@@ -417,13 +418,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.bMountArchive.setToolTip(tooltip + " " + reason)
 
     def selected_archives(self):
-        """
-        Return the `ArchiveModel` objects backing the current selection.
-
-        This is the single place selection is resolved to archives. It reads the
-        model's `ArchiveRole`, which `QSortFilterProxyModel.data()` forwards through
-        `mapToSource`, so it returns the correct archive even after the user sorts.
-        """
+        """Return the `ArchiveModel` objects backing the current selection (sort-proxy safe)."""
         return [
             archive
             for index in self.archiveTable.selectionModel().selectedRows()
@@ -572,21 +567,12 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         profile.save()
 
     def cell_double_clicked(self, index=None):
-        """
-        Open a mounted archive's folder, or start an in-place rename.
-
-        Connected to the view's ``doubleClicked`` (passes a `QModelIndex`); also
-        invoked by the Rename button / context menu (passes the clicked bool / nothing),
-        in which case the current row's Name cell is targeted.
-        """
-        if not self.bRename.isEnabled():
-            return
-
+        """Open a mounted archive's folder, or start an in-place rename."""
         if isinstance(index, QtCore.QModelIndex) and index.isValid():
             column = index.column()
         else:
             index = self.archiveTable.currentIndex()
-            column = ArchiveTableModel.COL_NAME  # button/menu rename acts on the Name cell
+            column = ArchiveTableModel.COL_NAME
 
         if not index.isValid():
             return
@@ -599,6 +585,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             return
 
         if column == ArchiveTableModel.COL_NAME:
+            if not self.bRename.isEnabled():
+                return
             archive = index.data(ArchiveTableModel.ArchiveRole)
             if archive is None:
                 return
@@ -607,12 +595,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.archiveTable.edit(index.siblingAtColumn(ArchiveTableModel.COL_NAME))
 
     def on_name_edited(self, top_left, bottom_right, roles=None):
-        """
-        Handle a committed in-place name edit (model `dataChanged` from the Name column).
-
-        `set_rows` resets the model (no `dataChanged`), so repopulation never reaches here;
-        the `is_editing` guard covers the revert path, which re-emits `dataChanged`.
-        """
+        """Handle a committed in-place name edit (model `dataChanged` from the Name column)."""
         if not self.is_editing or top_left.column() != ArchiveTableModel.COL_NAME:
             return
         self.is_editing = False
@@ -622,17 +605,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         new_name = archive.name if archive else ''
         profile = self.profile()
 
-        # unchanged -> nothing to do
         if new_name == original:
             return
 
-        # blank -> revert
         if not new_name:
             self._revert_name(top_left, original)
             self._set_status(self.tr('Archive name cannot be blank.'))
             return
 
-        # duplicate -> revert (single read query; kept inline per the "no thin wrapper" rule)
         if ArchiveModel.get_or_none(name=new_name, repo=profile.repo) is not None:
             self._set_status(self.tr('An archive with this name already exists.'))
             self._revert_name(top_left, original)
@@ -652,7 +632,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.app.jobs_manager.add_job(job)
 
     def _revert_name(self, index, original):
-        """Restore the model's name after a rejected edit; the is_editing guard stops re-entry."""
+        """Restore the model's name after a rejected edit."""
         self.archive_model.setData(index, original, Qt.ItemDataRole.EditRole)
 
     def confirm_dialog(self, title, text):
@@ -702,12 +682,12 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 status = self.tr('Archive deleted.')
             self._set_status(status)
 
-            # remove archives from the database, then refresh the table from the profile
+            repo = self.profile().repo
             for archive in archives:
-                archive_obj = ArchiveModel.get_or_none(name=archive)
+                archive_obj = ArchiveModel.get_or_none(name=archive, repo=repo)
                 if archive_obj:
                     archive_obj.delete_instance()
-            self.populate_from_profile()
+            self.populate_from_profile(preserve_view=True)
 
         self._toggle_all_buttons(True)
 
@@ -788,11 +768,9 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.renamed_archive_original_name = None
             self.populate_from_profile()
         else:
-            # Rename failed: the new name was applied to the model optimistically when the editor
-            # committed. Refresh from the DB (which still holds the original) so the table doesn't
-            # keep showing a name the repo never got. Borg's error stays in the status bar.
+            # rename failed: refresh from the DB to drop the optimistically-applied name
             self.renamed_archive_original_name = None
-            self.populate_from_profile()
+            self.populate_from_profile(preserve_view=True)
 
     def toggle_compact_button_visibility(self):
         """
