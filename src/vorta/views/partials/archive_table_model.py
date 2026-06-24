@@ -9,6 +9,7 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
 from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtGui import QIcon
 
 from vorta.i18n import trans_late, translate
 from vorta.store.models import ArchiveModel
@@ -52,7 +53,7 @@ class ArchiveTableModel(QAbstractTableModel):
         self._rows: List[ArchiveModel] = []
         self._mount_points: Dict[str, str] = {}
         self._fixed_unit: Optional[int] = None
-        self._icon_cache: Dict[str, Any] = {}  # themed icons; invalidated on dark-mode switch
+        self._icon_cache: Dict[str, QIcon] = {}  # themed icons; invalidated on dark-mode switch
         self._icon_cache_dark: Optional[bool] = None
 
     def set_rows(
@@ -171,7 +172,11 @@ class ArchiveTableModel(QAbstractTableModel):
         return flags
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.ItemDataRole.EditRole) -> bool:
-        """Store an in-place edited archive name; the view performs the real rename."""
+        """Store an in-place edited archive name; the view performs the real rename.
+
+        This overwrites ``row.name`` before the rename runs; the view relies on having
+        stashed ``renamed_archive_original_name`` at edit-start to recover the old name.
+        """
         if not index.isValid() or role != Qt.ItemDataRole.EditRole or index.column() != self.COL_NAME:
             return False
         self._rows[index.row()].name = value
