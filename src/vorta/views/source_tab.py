@@ -3,7 +3,7 @@ from pathlib import PurePath
 
 from peewee import fn
 from PyQt6 import QtCore, QtGui, uic
-from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, QSortFilterProxyModel, Qt, QUrl, pyqtSlot
+from PyQt6.QtCore import QFileInfo, QMimeData, QPoint, Qt, QUrl, pyqtSlot
 from PyQt6.QtGui import QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
@@ -22,7 +22,7 @@ from vorta.utils import (
 )
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive.exclude import ExcludeDialog
-from vorta.views.partials.source_files_table_model import SourceFilesModel
+from vorta.views.partials.source_files_table_model import SortProxyModel, SourceFilesModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
@@ -59,9 +59,8 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
         # Prepare source files view
         self.source_model = SourceFilesModel(self)
-        self.source_proxy = QSortFilterProxyModel(self)
+        self.source_proxy = SortProxyModel(self)
         self.source_proxy.setSourceModel(self.source_model)
-        self.source_proxy.setSortRole(SourceFilesModel.SortRole)
         self.sourceFilesWidget.setModel(self.source_proxy)
 
         header = self.sourceFilesWidget.horizontalHeader()

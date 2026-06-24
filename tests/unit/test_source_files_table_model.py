@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QModelIndex, Qt
 
 from vorta.store.models import SourceFileModel
-from vorta.views.partials.source_files_table_model import SourceFilesModel
+from vorta.views.partials.source_files_table_model import SortProxyModel, SourceFilesModel
 
 
 def _source(dir, dir_size=-1, dir_files_count=-1, path_isdir=False):
@@ -120,12 +120,21 @@ def test_sort_role_returns_native_comparable_values():
 
 def test_sort_role_orders_sizes_numerically():
     """Raw size sort keys order correctly where display strings would not."""
+    gib = 1024**3
     model = SourceFilesModel()
-    model.set_rows([_source('/big', dir_size=2048), _source('/small', dir_size=999)])
+    model.set_rows(
+        [
+            _source('/10G', dir_size=10 * gib),
+            _source('/500M', dir_size=500 * 1024**2),
+            _source('/2G', dir_size=2 * gib),
+        ]
+    )
+    proxy = SortProxyModel()
+    proxy.setSourceModel(model)
+    proxy.sort(SourceFilesModel.COL_SIZE, Qt.SortOrder.AscendingOrder)
 
-    keys = [model.data(model.index(r, SourceFilesModel.COL_SIZE), SourceFilesModel.SortRole) for r in range(2)]
-    assert keys == [2048, 999]
-    assert keys[1] < keys[0]  # 999 < 2048, even though '999 B' > '2.0 KB' as text
+    order = [proxy.data(proxy.index(r, SourceFilesModel.COL_PATH)) for r in range(proxy.rowCount())]
+    assert order == ['/500M', '/2G', '/10G']
 
 
 def test_file_count_sort_key_is_negative_for_files():

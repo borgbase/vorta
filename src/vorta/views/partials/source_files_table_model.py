@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Set
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, QSortFilterProxyModel, Qt
 
 from vorta.i18n import trans_late, translate
 from vorta.store.models import SourceFileModel
@@ -170,3 +170,16 @@ class SourceFilesModel(QAbstractTableModel):
         if orientation == Qt.Orientation.Horizontal and 0 <= section < len(self._HEADERS):
             return translate('Form', self._HEADERS[section])
         return None
+
+
+class SortProxyModel(QSortFilterProxyModel):
+    """Sort proxy comparing `SortRole` keys in Python to avoid Qt's 32-bit int truncation."""
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
+        lv = left.data(SourceFilesModel.SortRole)
+        rv = right.data(SourceFilesModel.SortRole)
+        if lv is None:
+            return True
+        if rv is None:
+            return False
+        return lv < rv
