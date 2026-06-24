@@ -170,6 +170,30 @@ def test_trigger_icon_and_tooltip():
     assert tooltip(2) is None
 
 
+def test_trigger_icon_cache_hits_and_rebuilds_on_theme_switch(mocker):
+    """The themed icon is cached per name and the cache is rebuilt when dark mode flips (P2)."""
+    icons = mocker.patch(
+        'vorta.views.partials.archive_table_model.get_colored_icon',
+        side_effect=lambda name: object(),
+    )
+    dark = mocker.patch('vorta.views.partials.archive_table_model.uses_dark_mode', return_value=False)
+
+    model = ArchiveTableModel()
+    model.set_rows([_archive('s', dt(2024, 1, 1), trigger='scheduled')])
+
+    def deco():
+        return model.data(model.index(0, ArchiveTableModel.COL_TRIGGER), Qt.ItemDataRole.DecorationRole)
+
+    first = deco()
+    assert deco() is first
+    assert icons.call_count == 1
+
+    dark.return_value = True
+    second = deco()
+    assert second is not first
+    assert icons.call_count == 2
+
+
 def test_header_data_returns_column_labels():
     """Horizontal headers expose the canonical labels, matching the legacy .ui."""
     model = ArchiveTableModel()
