@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, QSortFilterProxyModel, Qt
 from PyQt6.QtGui import QIcon
 
 from vorta.i18n import trans_late, translate
@@ -194,3 +194,16 @@ class ArchiveTableModel(QAbstractTableModel):
         if orientation == Qt.Orientation.Horizontal and 0 <= section < len(self._HEADERS):
             return translate('Form', self._HEADERS[section])
         return None
+
+
+class ArchiveSortProxyModel(QSortFilterProxyModel):
+    """Sort proxy that compares `SortRole` keys in Python to avoid Qt's 32-bit int truncation."""
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
+        lv = left.data(ArchiveTableModel.SortRole)
+        rv = right.data(ArchiveTableModel.SortRole)
+        if lv is None:
+            return True
+        if rv is None:
+            return False
+        return lv < rv

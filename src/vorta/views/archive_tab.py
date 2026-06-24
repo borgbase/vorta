@@ -3,7 +3,7 @@ import sys
 from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, QSortFilterProxyModel, Qt, pyqtSlot
+from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt6.QtGui import QDesktopServices, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QAbstractItemView,
@@ -39,7 +39,7 @@ from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive import diff_result
 from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
-from vorta.views.partials.archive_table_model import SIZE_DECIMAL_DIGITS, ArchiveTableModel
+from vorta.views.partials.archive_table_model import SIZE_DECIMAL_DIGITS, ArchiveSortProxyModel, ArchiveTableModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archive_tab.ui')
@@ -86,9 +86,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         # Model + sort proxy (proxy sorts on SortRole for correct non-string ordering)
         self.archive_model = ArchiveTableModel(self)
-        self.archive_proxy = QSortFilterProxyModel(self)
+        self.archive_proxy = ArchiveSortProxyModel(self)
         self.archive_proxy.setSourceModel(self.archive_model)
-        self.archive_proxy.setSortRole(ArchiveTableModel.SortRole)
         self.archiveTable.setModel(self.archive_proxy)
 
         header = self.archiveTable.horizontalHeader()
