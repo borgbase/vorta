@@ -214,9 +214,9 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
         if profile is None:  # profile doesn't exist any more.
             return
+        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
 
         with self.lock:  # Acquire lock
             self.remove_job(profile_id)  # reset schedule

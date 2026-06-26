@@ -65,6 +65,18 @@ def test_manual_mode():
     assert len(scheduler.timers) == 0
 
 
+def test_set_timer_for_missing_profile():
+    """A timer firing for a deleted profile must not crash the scheduler."""
+    scheduler = VortaScheduler()
+
+    missing_id = (BackupProfileModel.select().count() or 0) + 1000
+    assert BackupProfileModel.get_or_none(id=missing_id) is None
+
+    # Should return quietly instead of raising AttributeError on None.
+    scheduler.set_timer_for_profile(missing_id)
+    assert len(scheduler.timers) == 0
+
+
 def test_simple_schedule(clockmock):
     """Test a simple scheduling including `next_job` and `remove_job`."""
     scheduler = VortaScheduler()
