@@ -22,6 +22,7 @@ from vorta.utils import (
 )
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive.exclude import ExcludeDialog
+from vorta.views.partials.source_files_table_model import SortProxyModel, SourceFilesModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
@@ -30,13 +31,9 @@ SourceUI, SourceBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class SourceColumn:
-    Path = 0
-    Size = 1
-    FilesCount = 2
-
-
 class SizeItem(QTableWidgetItem):
+    """Right-aligned, size-aware sortable cell, still consumed by archive_tab's QTableWidget."""
+
     def __init__(self, s):
         super().__init__(s)
         self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
@@ -53,20 +50,6 @@ class SizeItem(QTableWidgetItem):
             ]
 
 
-class FilesCount(QTableWidgetItem):
-    def __lt__(self, other):
-        # Verify that conversion is only performed on valid integers
-        # If one of the 2 elements is no number, put these elements at the end
-        # This is important if the text is "Calculating..." or ""
-        if self.text().isdigit() and other.text().isdigit():
-            return int(self.text()) < int(other.text())  # Compare & return result
-        else:
-            if not self.text().isdigit():
-                return 1  # Move one down if current item has no valid count
-            if not other.text().isdigit():
-                return 0
-
-
 class SourceTab(BaseTab, SourceBase, SourceUI):
     updateThreads = []
 
@@ -75,15 +58,19 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         self.setupUi(parent)
 
         # Prepare source files view
+        self.source_model = SourceFilesModel(self)
+        self.source_proxy = SortProxyModel(self)
+        self.source_proxy.setSourceModel(self.source_model)
+        self.sourceFilesWidget.setModel(self.source_proxy)
+
         header = self.sourceFilesWidget.horizontalHeader()
         header.setVisible(True)
         header.setSortIndicatorShown(1)
 
-        header.setSectionResizeMode(SourceColumn.Path, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(SourceColumn.Size, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(SourceColumn.FilesCount, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(SourceFilesModel.COL_PATH, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(SourceFilesModel.COL_SIZE, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(SourceFilesModel.COL_FILES, QHeaderView.ResizeMode.ResizeToContents)
 
-        self.sourceFilesWidget.setSortingEnabled(True)
         self.sourceFilesWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.sourceFilesWidget.customContextMenuRequested.connect(self.sourceitem_contextmenu)
         self.sourceFilesWidget.setAlternatingRowColors(True)
@@ -111,15 +98,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         self.addButton.setIcon(get_colored_icon('plus'))
         self.removeButton.setIcon(get_colored_icon('minus'))
         self.updateButton.setIcon(get_colored_icon('refresh'))
-
-        for row in range(self.sourceFilesWidget.rowCount()):
-            path_item = self.sourceFilesWidget.item(row, SourceColumn.Path)
-            db_item = SourceFileModel.get(dir=path_item.text(), profile=self.profile())
-
-            if db_item.path_isdir:
-                path_item.setIcon(get_colored_icon('folder'))
-            else:
-                path_item.setIcon(get_colored_icon('file'))
+        self.sourceFilesWidget.viewport().update()  # model rebuilds themed row icons lazily
 
     @pyqtSlot(QPoint)
     def sourceitem_contextmenu(self, pos: QPoint):
@@ -141,64 +120,35 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         menu.popup(self.sourceFilesWidget.viewport().mapToGlobal(pos))
 
     def set_path_info(self, path, data_size, files_count):
-        # disable sorting temporarily
-        sorting = self.sourceFilesWidget.isSortingEnabled()
-        self.sourceFilesWidget.setSortingEnabled(False)
-
-        items = self.sourceFilesWidget.findItems(path, QtCore.Qt.MatchFlag.MatchExactly)
         # Conversion int->str->int needed because QT limits int to 32-bit
         data_size = int(data_size)
         files_count = int(files_count)
 
-        for item in items:
-            try:
-                db_item = SourceFileModel.get(dir=path, profile=self.profile())
-            except SourceFileModel.DoesNotExist:
-                continue
+        # Returns None if the source was removed while recalculating (#1080 / #2435).
+        source = self.source_model.set_path_info(path, data_size, files_count, QFileInfo(path).isDir())
+        if source is not None:
+            source.save()
+            self.update_total_size()
+        self._discard_update_thread(path)
 
-            if QFileInfo(path).isDir():
-                self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText(format(files_count))
-                db_item.path_isdir = True
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Path).setIcon(get_colored_icon('folder'))
-            else:
-                # No files count, if entry itself is a file
-                self.sourceFilesWidget.item(item.row(), SourceColumn.FilesCount).setText("")
-                db_item.path_isdir = False
-                self.sourceFilesWidget.item(item.row(), SourceColumn.Path).setIcon(get_colored_icon('file'))
-
-            self.sourceFilesWidget.item(item.row(), SourceColumn.Size).setText(pretty_bytes(data_size))
-
-            db_item.dir_size = data_size
-            db_item.dir_files_count = files_count
-            db_item.save()
-        # Remove thread from list when it's done
-        for thrd in self.updateThreads:
+    def _discard_update_thread(self, path):
+        for thrd in self.updateThreads[:]:
             if thrd.objectName() == path:
+                try:
+                    thrd.signal.disconnect(self.set_path_info)
+                except (RuntimeError, TypeError):
+                    pass
                 self.updateThreads.remove(thrd)
 
-        # enable sorting again
-        self.sourceFilesWidget.setSortingEnabled(sorting)
-        self.update_total_size()
+    def update_path_info(self, path: str):
+        """Mark ``path`` as calculating and spawn the worker that fills in its size/count.
 
-    def update_path_info(self, index_row: int):
+        `set_path_info` applies the result, keyed on ``path`` rather than a row index so a
+        row removed mid-calculation is skipped (#1080 / #2435).
         """
-        Update the information for the source in the given table row.
+        logger.debug(f"Updating source {path}.")  # Debug #1080
 
-        This displays `Calculating...` in the updated rows and creates a
-        `FilePathInfoAsync` instance to get the new information.
-        The method `set_path_info` will update the row with the information
-        provided by this instance.
-
-        Parameters
-        ----------
-        index_row : int
-            The index of the row to update.
-        """
-        logger.debug(f"Updating source in row {index_row}.")  # Debug #1080
-
-        path = self.sourceFilesWidget.item(index_row, SourceColumn.Path).text()
-        self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(self.tr("Calculating…"))
-        self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(self.tr("Calculating…"))
+        self.source_model.mark_calculating(path)
         getDir = FilePathInfoAsync(path, self.profile().get_combined_exclusion_string())
         getDir.signal.connect(self.set_path_info)
         getDir.setObjectName(path)
@@ -206,58 +156,26 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         getDir.start()
 
     def add_source_to_table(self, source, update_data=None):
-        # disable sorting temporarily
-        sorting = self.sourceFilesWidget.isSortingEnabled()
-        self.sourceFilesWidget.setSortingEnabled(False)
-
         if update_data is None:
             update_data = SettingsModel.get(key="get_srcpath_datasize").value
 
-        index_row = self.sourceFilesWidget.rowCount()
-        self.sourceFilesWidget.setRowCount(self.sourceFilesWidget.rowCount() + 1)
-        # Insert all items on current row, add tooltip containing the path name
-        new_item = QTableWidgetItem(source.dir)
-        new_item.setToolTip(source.dir)
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Path, new_item)
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.Size, SizeItem(""))
-        self.sourceFilesWidget.setItem(index_row, SourceColumn.FilesCount, FilesCount(""))
-
-        logger.debug(f"Added item number {index_row}" + f" from {self.sourceFilesWidget.rowCount()}")
+        self.source_model.add_source(source)
 
         if update_data:
-            self.update_path_info(index_row)
-
-            # Debug #1080
-            logger.debug("Updated info for previously added item.")
-
-        else:  # Use cached data from DB
-            if source.dir_size > -1:
-                self.sourceFilesWidget.item(index_row, SourceColumn.Size).setText(pretty_bytes(source.dir_size))
-
-                if source.path_isdir:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.FilesCount).setText(
-                        format(source.dir_files_count)
-                    )
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Path).setIcon(get_colored_icon('folder'))
-                else:
-                    self.sourceFilesWidget.item(index_row, SourceColumn.Path).setIcon(get_colored_icon('file'))
-
-        # enable sorting again
-        self.sourceFilesWidget.setSortingEnabled(sorting)
+            self.update_path_info(source.dir)
+            logger.debug("Updated info for previously added item.")  # Debug #1080
 
     def populate_from_profile(self):
         profile = self.profile()
-        self.sourceFilesWidget.setRowCount(0)  # Clear rows
-
-        for source in SourceFileModel.select().where(SourceFileModel.profile == profile):
-            self.add_source_to_table(source, False)
+        sources = list(SourceFileModel.select().where(SourceFileModel.profile == profile))
+        self.source_model.set_rows(sources)
         self.update_total_size()
         # Fetch the Sort by Column and order
         sourcetab_sort_column = int(SettingsModel.get(key='sourcetab_sort_column').str_value)
         sourcetab_sort_order = int(SettingsModel.get(key='sourcetab_sort_order').str_value)
 
         # Sort items as per settings
-        self.sourceFilesWidget.sortItems(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
+        self.sourceFilesWidget.sortByColumn(sourcetab_sort_column, Qt.SortOrder(sourcetab_sort_order))
 
     def update_sort_order(self, column: int, order: int):
         """Save selected sort by column and order to settings"""
@@ -270,16 +188,16 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
     def sources_update(self):
         """
-        Update each row in the sources table.
+        Update each source in the sources table.
 
-        Calls `update_path_info` for each row. to do the job.
+        Calls `update_path_info` for each source to do the job.
         """
-        row_count = self.sourceFilesWidget.rowCount()
+        row_count = self.source_model.rowCount()
 
         logger.debug(f"Updating sources ({row_count})")  # Debug #1080
 
-        for row in range(0, row_count):
-            self.update_path_info(row)  # Update data for each entry
+        for row in range(row_count):
+            self.update_path_info(self.source_model.source_at(row).dir)
 
     def source_add(self):
         # Selected paths from file dialog
@@ -310,7 +228,10 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
             index = indexes[0]
 
-        path = PurePath(self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text())
+        source = index.data(SourceFilesModel.SourceRole)
+        if source is None:
+            return
+        path = PurePath(source.dir)
 
         data = QMimeData()
         data.setUrls([QUrl(path.as_uri())])
@@ -320,29 +241,17 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
 
     def source_remove(self):
         indexes = self.sourceFilesWidget.selectionModel().selectedRows()
-        profile = self.profile()
-        # sort indexes, starting with lowest
-        indexes.sort()
-        # remove each selected row, starting with the highest index (otherwise, higher indexes become invalid)
-        for index in reversed(indexes):
-            path = self.sourceFilesWidget.item(index.row(), SourceColumn.Path).text()
-            db_item = SourceFileModel.get(
-                dir=path,
-                profile=profile,
-            )
-            db_item.delete_instance()
-            self.sourceFilesWidget.removeRow(index.row())
-
-            for thrd in self.updateThreads[:]:
-                if thrd.objectName() == path:
-                    try:
-                        thrd.signal.disconnect(self.set_path_info)
-                    except (RuntimeError, TypeError):
-                        pass
-                    self.updateThreads.remove(thrd)
-
-            logger.debug(f"Removed source in row {index.row()}")
-        self.update_total_size()
+        if not indexes:
+            return
+        # Resolve the backing sources up front; row indices shift once rows are removed.
+        sources = [index.data(SourceFilesModel.SourceRole) for index in indexes]
+        for source in sources:
+            if source is None:
+                continue
+            source.delete_instance()
+            self._discard_update_thread(source.dir)
+            logger.debug(f"Removed source {source.dir}")
+        self.populate_from_profile()
 
     def update_total_size(self):
         """
