@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from PyQt6.QtCore import QModelIndex, Qt
 
 from vorta.store.models import ArchiveModel
-from vorta.views.partials.archive_table_model import ArchiveTableModel
+from vorta.views.partials.archive_table_model import ArchiveSortProxyModel, ArchiveTableModel
 
 
 def _archive(name, time, size=1000, duration=60, trigger='user'):
@@ -95,12 +95,21 @@ def test_sort_role_returns_native_comparable_values():
 
 def test_sort_role_orders_sizes_numerically():
     """Raw size sort keys order correctly where display strings would not."""
+    gib = 1024**3
     model = ArchiveTableModel()
-    model.set_rows([_archive('big', dt(2024, 1, 1), size=2048), _archive('small', dt(2024, 1, 2), size=999)])
+    model.set_rows(
+        [
+            _archive('10G', dt(2024, 1, 1), size=10 * gib),
+            _archive('500M', dt(2024, 1, 2), size=500 * 1024**2),
+            _archive('2G', dt(2024, 1, 3), size=2 * gib),
+        ]
+    )
+    proxy = ArchiveSortProxyModel()
+    proxy.setSourceModel(model)
+    proxy.sort(ArchiveTableModel.COL_SIZE, Qt.SortOrder.AscendingOrder)
 
-    keys = [model.data(model.index(r, ArchiveTableModel.COL_SIZE), ArchiveTableModel.SortRole) for r in range(2)]
-    assert keys == [2048, 999]
-    assert keys[1] < keys[0]  # 999 < 2048, even though '999 B' > '2.0 kB' as text
+    order = [proxy.data(proxy.index(r, ArchiveTableModel.COL_NAME)) for r in range(proxy.rowCount())]
+    assert order == ['500M', '2G', '10G']
 
 
 def test_only_name_column_is_editable():
@@ -123,7 +132,7 @@ def test_set_data_updates_name_and_emits_datachanged():
     model.dataChanged.connect(lambda tl, br, roles=[]: received.append((tl.row(), tl.column())))
 
     assert model.setData(model.index(0, ArchiveTableModel.COL_NAME), 'new') is True
-    assert model.archive_at(0).name == 'new'
+    assert model.data(model.index(0, ArchiveTableModel.COL_NAME), ArchiveTableModel.ArchiveRole).name == 'new'
     assert received == [(0, ArchiveTableModel.COL_NAME)]
 
 
@@ -144,17 +153,6 @@ def test_archive_role_returns_backing_object():
 
     for column in range(model.columnCount()):
         assert model.data(model.index(0, column), ArchiveTableModel.ArchiveRole) is only
-
-
-def test_archive_at_returns_object_or_none():
-    """archive_at returns the backing ArchiveModel and None when out of range."""
-    model = ArchiveTableModel()
-    only = _archive('only', dt(2024, 1, 1))
-    model.set_rows([only])
-
-    assert model.archive_at(0) is only
-    assert model.archive_at(5) is None
-    assert model.archive_at(-1) is None
 
 
 def test_trigger_icon_and_tooltip():
@@ -179,6 +177,30 @@ def test_trigger_icon_and_tooltip():
     assert tooltip(0) == 'Scheduled'
     assert tooltip(1) == 'User initiated'
     assert tooltip(2) is None
+
+
+def test_trigger_icon_cache_hits_and_rebuilds_on_theme_switch(mocker):
+    """The themed icon is cached per name and the cache is rebuilt when dark mode flips (P2)."""
+    icons = mocker.patch(
+        'vorta.views.partials.archive_table_model.get_colored_icon',
+        side_effect=lambda name: object(),
+    )
+    dark = mocker.patch('vorta.views.partials.archive_table_model.uses_dark_mode', return_value=False)
+
+    model = ArchiveTableModel()
+    model.set_rows([_archive('s', dt(2024, 1, 1), trigger='scheduled')])
+
+    def deco():
+        return model.data(model.index(0, ArchiveTableModel.COL_TRIGGER), Qt.ItemDataRole.DecorationRole)
+
+    first = deco()
+    assert deco() is first
+    assert icons.call_count == 1
+
+    dark.return_value = True
+    second = deco()
+    assert second is not first
+    assert icons.call_count == 2
 
 
 def test_header_data_returns_column_labels():

@@ -218,5 +218,5 @@ def archive_env(qapp, qtbot):
     tab: ArchiveTab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.archiveTable.model().rowCount() == 2, **pytest._wait_defaults)
     return main, tab

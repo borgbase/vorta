@@ -129,7 +129,7 @@
           </layout>
          </item>
          <item row="0" column="0">
-          <widget class="QTableWidget" name="archiveTable">
+          <widget class="QTableView" name="archiveTable">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>1</horstretch>
@@ -145,36 +145,6 @@
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
-           <column>
-            <property name="text">
-             <string>Date</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Size</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Duration</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Mount Point</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Trigger</string>
-            </property>
-           </column>
           </widget>
          </item>
          <item row="0" column="1">

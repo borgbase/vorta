@@ -19,5 +19,5 @@ def test_create(qapp, qtbot, archive_env):
     assert EventLogModel.select().count() == 2
     assert ArchiveModel.select().count() == 7
     assert main.createStartBtn.isEnabled()
-    assert main.archiveTab.archiveTable.rowCount() == 7
+    assert main.archiveTab.archiveTable.model().rowCount() == 7
     assert main.scheduleTab.logPage.logPage.model().rowCount() == 2
