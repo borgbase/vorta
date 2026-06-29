@@ -226,7 +226,7 @@ def test_rename_failure_reverts_optimistic_name(qapp, qtbot, archive_env):
     model.setData(model.index(0, col), 'optimistic-name')
     assert model.data(model.index(0, col)) == 'optimistic-name'
 
-    tab.rename_result({'returncode': 2})
+    tab.archive_rename.rename_result({'returncode': 2})
 
     assert model.data(model.index(0, col)) == original
 
@@ -259,7 +259,7 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     # Trigger inline editing through the real entry point so is_editing / original name are set.
     index = tab.archiveTable.model().index(0, 4)
     tab.archiveTable.setCurrentIndex(index)
-    tab.cell_double_clicked(index)
+    tab.archive_rename.cell_double_clicked(index)
 
     # Wait for edit mode to activate
     qtbot.waitUntil(lambda: tab.archiveTable.viewport().focusWidget() is not None, **pytest._wait_defaults)
