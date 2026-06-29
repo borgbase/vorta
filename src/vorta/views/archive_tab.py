@@ -1,11 +1,10 @@
 import logging
 import sys
-from datetime import timedelta
 from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
 from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
-from PyQt6.QtGui import QDesktopServices, QKeySequence, QShortcut
+from PyQt6.QtGui import QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QApplication,
@@ -15,45 +14,36 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QStyledItemDelegate,
     QTableView,
-    QTableWidgetItem,
     QWidget,
 )
 
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
-from vorta.borg.diff import BorgDiffJob
 from vorta.borg.info_archive import BorgInfoArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
-from vorta.borg.rename import BorgRenameJob
 from vorta.i18n import trans_late, translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
     borg_compat,
-    find_best_unit_for_sizes,
     format_archive_name,
     get_asset,
     get_mount_points,
-    pretty_bytes,
 )
+from vorta.views.archive.archive_diff import ArchiveDiff
 from vorta.views.archive.archive_extract import ArchiveExtract
 from vorta.views.archive.archive_mount import ArchiveMount
+from vorta.views.archive.archive_rename import ArchiveRename
 from vorta.views.base_tab import BaseTab
-from vorta.views.dialogs.archive import diff_result
-from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
-from vorta.views.source_tab import SizeItem
+from vorta.views.partials.archive_table_model import SIZE_DECIMAL_DIGITS, ArchiveSortProxyModel, ArchiveTableModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archive_tab.ui')
 ArchiveTabUI, ArchiveTabBase = uic.loadUiType(uifile)
 
 logger = logging.getLogger(__name__)
-
-
-#: The number of decimal digits to show in the size column
-SIZE_DECIMAL_DIGITS = 1
 
 
 # from https://stackoverflow.com/questions/63177587/pyqt-tableview-align-icons-to-center
@@ -84,6 +74,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         self.archive_mount = ArchiveMount(self)
         self.archive_extract = ArchiveExtract(self)
+        self.archive_diff = ArchiveDiff(self)
+        self.archive_rename = ArchiveRename(self)
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -92,17 +84,23 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.tooltip_dict[self.bRefreshArchive] = self.bRefreshArchive.toolTip()
         self.tooltip_dict[self.compactButton] = self.compactButton.toolTip()
 
+        # Model + sort proxy (proxy sorts on SortRole for correct non-string ordering)
+        self.archive_model = ArchiveTableModel(self)
+        self.archive_proxy = ArchiveSortProxyModel(self)
+        self.archive_proxy.setSourceModel(self.archive_model)
+        self.archiveTable.setModel(self.archive_proxy)
+
         header = self.archiveTable.horizontalHeader()
         header.setVisible(True)
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Interactive)
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(ArchiveTableModel.COL_TIME, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(ArchiveTableModel.COL_SIZE, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(ArchiveTableModel.COL_DURATION, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(ArchiveTableModel.COL_MOUNT, QHeaderView.ResizeMode.Interactive)
+        header.setSectionResizeMode(ArchiveTableModel.COL_NAME, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(ArchiveTableModel.COL_TRIGGER, QHeaderView.ResizeMode.ResizeToContents)
 
         delegate = IconDelegate(self.archiveTable)
-        self.archiveTable.setItemDelegateForColumn(5, delegate)
+        self.archiveTable.setItemDelegateForColumn(ArchiveTableModel.COL_TRIGGER, delegate)
 
         self.mount_help_text = trans_late('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
         self.mount_help_link_text = trans_late('Form', 'here')
@@ -122,12 +120,11 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.archiveTable.setWordWrap(False)
         self.archiveTable.setTextElideMode(QtCore.Qt.TextElideMode.ElideLeft)
         self.archiveTable.setAlternatingRowColors(True)
-        self.archiveTable.cellDoubleClicked.connect(self.cell_double_clicked)
+        self.archiveTable.doubleClicked.connect(self.archive_rename.cell_double_clicked)
         self.archiveTable.setSortingEnabled(True)
         self.archiveTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.archiveTable.customContextMenuRequested.connect(self.archiveitem_contextmenu)
-        edit_delegate = self.archiveTable.itemDelegate()
-        edit_delegate.closeEditor.connect(self.on_editing_finished)
+        self.archive_model.dataChanged.connect(self.archive_rename.on_name_edited)
 
         # shortcuts
         shortcut_copy = QShortcut(QKeySequence.StandardKey.Copy, self.archiveTable)
@@ -140,7 +137,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # connect archive actions
         self.bMountArchive.clicked.connect(self.archive_mount.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
-        self.bRename.clicked.connect(self.cell_double_clicked)
+        self.bRename.clicked.connect(self.archive_rename.cell_double_clicked)
         self.bDelete.clicked.connect(self.delete_action)
         self.bExtract.clicked.connect(self.archive_extract.extract_action)
         self.compactButton.clicked.connect(self.compact_action)
@@ -149,7 +146,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.bList.clicked.connect(self.refresh_archive_list)
         self.bPrune.clicked.connect(self.prune_action)
         self.bCheck.clicked.connect(self.check_action)
-        self.bDiff.clicked.connect(self.diff_action)
+        self.bDiff.clicked.connect(self.archive_diff.diff_action)
         self.bMountRepo.clicked.connect(self.archive_mount.bmountrepo_clicked)
 
         self.archiveNameTemplate.textChanged.connect(
@@ -210,10 +207,10 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # archive actions
         button_connection_pairs = [
             (self.bRefreshArchive, self.refresh_archive_info),
-            (self.bDiff, self.diff_action),
+            (self.bDiff, self.archive_diff.diff_action),
             (self.bMountArchive, self.archive_mount.bmountarchive_clicked),
             (self.bExtract, self.archive_extract.extract_action),
-            (self.bRename, self.cell_double_clicked),
+            (self.bRename, self.archive_rename.cell_double_clicked),
             (self.bDelete, self.delete_action),
         ]
 
@@ -277,7 +274,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # Restore states
         self.on_selection_change()
 
-    def populate_from_profile(self):
+    def populate_from_profile(self, preserve_view=False):
         """Populate archive list and prune settings from profile."""
         profile = self.profile()
         if profile.repo is not None:
@@ -294,61 +291,26 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
             archives = [s for s in profile.repo.archives.select().order_by(ArchiveModel.time.desc())]
 
-            # if no archive's name can be found in self.mount_points, then hide the mount point column
-            if not any(a.name in self.mount_points for a in archives):
-                self.archiveTable.hideColumn(3)
-            else:
-                self.archiveTable.showColumn(3)
+            # inject the user's fixed/dynamic unit setting so the model stays DB-free
+            use_fixed_units = bool(SettingsModel.get(key='enable_fixed_units').value)
 
-            sorting = self.archiveTable.isSortingEnabled()
-            self.archiveTable.setSortingEnabled(False)
-            best_unit = find_best_unit_for_sizes((a.size for a in archives), precision=SIZE_DECIMAL_DIGITS)
-            for row, archive in enumerate(archives):
-                self.archiveTable.insertRow(row)
+            scroll_pos = self.archiveTable.verticalScrollBar().value() if preserve_view else 0
 
-                formatted_time = archive.time.strftime('%Y-%m-%d %H:%M')
-                self.archiveTable.setItem(row, 0, QTableWidgetItem(formatted_time))
+            self.archive_model.set_rows(archives, mount_points=self.mount_points, use_fixed_units=use_fixed_units)
 
-                # format units based on user settings for 'dynamic' or 'fixed' units
-                fixed_unit = best_unit if SettingsModel.get(key='enable_fixed_units').value else None
-                size = pretty_bytes(archive.size, fixed_unit=fixed_unit, precision=SIZE_DECIMAL_DIGITS)
-                self.archiveTable.setItem(row, 1, SizeItem(size))
-
-                if archive.duration is not None:
-                    formatted_duration = str(timedelta(seconds=round(archive.duration)))
-                else:
-                    formatted_duration = ''
-
-                self.archiveTable.setItem(row, 2, QTableWidgetItem(formatted_duration))
-
-                mount_point = self.mount_points.get(archive.name)
-                if mount_point is not None:
-                    item = QTableWidgetItem(mount_point)
-                    self.archiveTable.setItem(row, 3, item)
-
-                self.archiveTable.setItem(row, 4, QTableWidgetItem(archive.name))
-
-                if archive.trigger == 'scheduled':
-                    item = QTableWidgetItem(get_colored_icon('clock-o'), '')
-                    item.setToolTip(self.tr('Scheduled'))
-                    self.archiveTable.setItem(row, 5, item)
-                elif archive.trigger == 'user':
-                    item = QTableWidgetItem(get_colored_icon('user'), '')
-                    item.setToolTip(self.tr('User initiated'))
-                    item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
-                    self.archiveTable.setItem(row, 5, item)
-
-            self.archiveTable.setRowCount(len(archives))
-            self.archiveTable.setSortingEnabled(sorting)
-            item = self.archiveTable.item(0, 0)
-            self.archiveTable.scrollToItem(item)
+            # show the Mount Point column only while at least one archive is mounted
+            self.archiveTable.setColumnHidden(ArchiveTableModel.COL_MOUNT, not self.mount_points)
 
             self.archiveTable.selectionModel().clearSelection()
+            if preserve_view:
+                self.archiveTable.verticalScrollBar().setValue(scroll_pos)
+            else:
+                self.archiveTable.scrollToTop()
             if self.remaining_refresh_archives == 0:
                 self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
-            self.archiveTable.setRowCount(0)
+            self.archive_model.set_rows([])
             self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
@@ -369,6 +331,11 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                     widget.blockSignals(False)
         finally:
             self.prune_keep_within.blockSignals(False)
+
+    def update_mount_points(self):
+        """Push the current mount paths into the model and toggle the Mount Point column."""
+        self.archive_model.set_mount_points(self.mount_points)
+        self.archiveTable.setColumnHidden(ArchiveTableModel.COL_MOUNT, not self.mount_points)
 
     def on_selection_change(self, selected=None, deselected=None):
         """
@@ -449,6 +416,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             tooltip = self.bMountArchive.toolTip()
             self.bMountArchive.setToolTip(tooltip + " " + reason)
 
+    def selected_archives(self):
+        """Return the `ArchiveModel` objects backing the current selection (sort-proxy safe)."""
+        return [
+            archive
+            for index in self.archiveTable.selectionModel().selectedRows()
+            if (archive := index.data(ArchiveTableModel.ArchiveRole)) is not None
+        ]
+
     def archive_copy(self, index=None):
         """
         Copy an archive name to the clipboard.
@@ -463,10 +438,12 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
             index = indexes[0]
 
-        archive_name = self.archiveTable.item(index.row(), 4).text()
+        archive = index.data(ArchiveTableModel.ArchiveRole)
+        if archive is None:
+            return
 
         data = QMimeData()
-        data.setText(archive_name)
+        data.setText(archive.name)
 
         QApplication.clipboard().setMimeData(data)
 
@@ -491,12 +468,9 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             return
 
         # Conditions are met (borg binary available, etc)
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if archive_cell:
-                archive_name = archive_cell.text()
-                params['cmd'][-1] += f'::{archive_name}'
+        archives = self.selected_archives()
+        if archives:
+            params['cmd'][-1] += f'::{archives[0].name}'
 
         job = BorgCheckJob(params['cmd'], params, self.profile().repo.id)
         job.updated.connect(self._set_status)
@@ -558,25 +532,20 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.populate_from_profile()
 
     def refresh_archive_info(self):
-        selected_archives = self.archiveTable.selectionModel().selectedRows()
-
-        archive_names = []
-        for index in selected_archives:
-            archive_names.append(self.archiveTable.item(index.row(), 4).text())
+        archive_names = [archive.name for archive in self.selected_archives()]
 
         self.remaining_refresh_archives = len(archive_names)  # number of archives to refresh
         self._toggle_all_buttons(False)
         for archive_name in archive_names:
-            if archive_name is not None:
-                params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
-                if params['ok']:
-                    job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
-                    job.updated.connect(self._set_status)
-                    job.result.connect(self.info_result)
-                    self.app.jobs_manager.add_job(job)
-                else:
-                    self._set_status(params['message'])
-                    return
+            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
+            if params['ok']:
+                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
+                job.updated.connect(self._set_status)
+                job.result.connect(self.info_result)
+                self.app.jobs_manager.add_job(job)
+            else:
+                self._set_status(params['message'])
+                return
 
     def info_result(self, result):
         self.remaining_refresh_archives -= 1
@@ -586,12 +555,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.populate_from_profile()
 
     def selected_archive_name(self):
-        row_selected = self.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.archiveTable.item(row_selected[0].row(), 4)
-            if archive_cell:
-                return archive_cell.text()
-        return None
+        archives = self.selected_archives()
+        return archives[0].name if archives else None
 
     def save_prune_setting(self, new_value=None):
         profile = self.profile()
@@ -599,89 +564,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
         profile.prune_keep_within = self.prune_keep_within.text()
         profile.save()
-
-    def cell_double_clicked(self, row=None, column=None):
-        if not self.bRename.isEnabled():
-            return
-
-        if not row or not column:
-            row = self.archiveTable.currentRow()
-            column = self.archiveTable.currentColumn()
-
-        if column == 3:
-            archive_name = self.selected_archive_name()
-            if not archive_name:
-                return
-
-            mount_point = self.mount_points.get(archive_name)
-
-            if mount_point is not None:
-                QDesktopServices.openUrl(QtCore.QUrl(f'file:///{mount_point}'))
-
-        if column == 4:
-            item = self.archiveTable.item(row, column)
-            self.renamed_archive_original_name = item.text()
-            self.is_editing = True
-            item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
-            self.archiveTable.editItem(item)
-
-    def on_editing_finished(self, editor, hint):
-        """Called when the user finishes editing a cell (By pressing Enter or clicking away)."""
-        if not self.is_editing:
-            return
-
-        row = self.archiveTable.currentRow()
-        column = self.archiveTable.currentColumn()
-
-        self.cell_changed(row, column)
-
-    def cell_changed(self, row, column):
-        # return if this is not a name change
-        if column != 4 or not self.is_editing:
-            return
-
-        item = self.archiveTable.item(row, column)
-        new_name = item.text()
-        profile = self.profile()
-
-        # if the name hasn't changed or if this slot is called when first repopulating the table, do nothing.
-        if new_name == self.renamed_archive_original_name:
-            self.is_editing = False
-            return
-
-        # if new name is blank, revert to the original name
-        if not new_name:
-            item.setText(self.renamed_archive_original_name)
-            self._set_status(self.tr('Archive name cannot be blank.'))
-            self.is_editing = False
-            return
-
-        # check if the new name already exists
-        new_name_exists = ArchiveModel.get_or_none(name=new_name, repo=profile.repo)
-        if new_name_exists is not None:
-            self._set_status(self.tr('An archive with this name already exists.'))
-            item.setText(self.renamed_archive_original_name)
-            self.is_editing = False
-            return
-
-        params = BorgRenameJob.prepare(profile, self.renamed_archive_original_name, new_name)
-        if not params['ok']:
-            self._set_status(params['message'])
-            self.is_editing = False
-            return
-
-        self._set_status(self.tr('Renaming archive...'))
-        job = BorgRenameJob(params['cmd'], params, self.profile().repo.id)
-        job.updated.connect(self._set_status)
-        job.result.connect(self.rename_result)
-        self._toggle_all_buttons(False)
-        self.app.jobs_manager.add_job(job)
-        self.is_editing = False
-
-    def row_of_archive(self, archive_name):
-        items = self.archiveTable.findItems(archive_name, QtCore.Qt.MatchFlag.MatchExactly)
-        rows = [item.row() for item in items if item.column() == 4]
-        return rows[0] if rows else None
 
     def confirm_dialog(self, title, text):
         msg = QMessageBox()
@@ -697,11 +579,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         # Since this function modify the UI, we can't put the whole function in a JobQueue.
 
         # determine selected archives
-        archives = []
-        for index in self.archiveTable.selectionModel().selectedRows():
-            archive_cell = self.archiveTable.item(index.row(), 4)
-            if archive_cell:
-                archives.append(archive_cell.text())
+        archives = [archive.name for archive in self.selected_archives()]
 
         if not archives:
             self._set_status(self.tr("No archive selected"))
@@ -734,94 +612,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 status = self.tr('Archive deleted.')
             self._set_status(status)
 
-            # remove rows from list and database
+            repo = self.profile().repo
             for archive in archives:
-                for entry in self.archiveTable.findItems(archive, QtCore.Qt.MatchFlag.MatchExactly):
-                    self.archiveTable.removeRow(entry.row())
-                archive_obj = ArchiveModel.get_or_none(name=archive)
+                archive_obj = ArchiveModel.get_or_none(name=archive, repo=repo)
                 if archive_obj:
                     archive_obj.delete_instance()
+            self.populate_from_profile(preserve_view=True)
 
         self._toggle_all_buttons(True)
-
-    def diff_action(self):
-        """
-        Handle the diff button being clicked.
-
-        Exactly two archives must be selected in `archiveTable`. This is
-        usually enforced by `on_selection_change`.
-        """
-        selected_archives = self.archiveTable.selectionModel().selectedRows()
-        profile = self.profile()
-
-        name1 = self.archiveTable.item(selected_archives[0].row(), 4).text()
-        name2 = self.archiveTable.item(selected_archives[1].row(), 4).text()
-
-        archive1, archive2 = (
-            profile.repo.archives.select()
-            .where((ArchiveModel.name == name1) | (ArchiveModel.name == name2))
-            .order_by(ArchiveModel.time.desc())
-        )
-
-        archive_name_newer = archive1.name
-        archive_name_older = archive2.name
-
-        # Start diff job
-        params = BorgDiffJob.prepare(profile, archive_name_older, archive_name_newer)
-
-        if params['ok']:
-            self._toggle_all_buttons(False)
-            job = BorgDiffJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self.mountErrors.setText)
-            job.result.connect(self.list_diff_result)
-            self.app.jobs_manager.add_job(job)
-        else:
-            self._set_status(params['message'])
-
-    def list_diff_result(self, result):
-        """
-        Process the result of the `BorgDiffJob`.
-
-        The `BorgDiffJob` was initiated by `diff_action`.
-
-        Parameters
-        ----------
-        result : dict
-            The BorgJob result.
-        """
-        self._set_status('')
-        if result['returncode'] == 0:
-            archive_newer = ArchiveModel.get(name=result['params']['archive_name_newer'])
-            archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
-            self._set_status(self.tr("Processing diff results."))
-
-            model = DiffTree()
-
-            self._t = diff_result.ParseThread(result['data'], result['params']['json_lines'], model)
-            self._t.finished.connect(lambda: self.show_diff_result(archive_newer, archive_older, model))
-            self._t.start()
-
-    def show_diff_result(self, archive_newer, archive_older, model):
-        self._t = None
-
-        # show dialog
-        self._toggle_all_buttons(True)
-        self._set_status('')
-        window = DiffResultDialog(archive_newer, archive_older, model)
-        window.setParent(self)
-        window.setWindowFlags(Qt.WindowType.Window)
-        window.setWindowModality(Qt.WindowModality.NonModal)
-        self._resultwindow = window  # for testing
-        window.show()
-
-    def rename_result(self, result):
-        if result['returncode'] == 0:
-            self.refresh_archive_info()
-            self._set_status(self.tr('Archive renamed.'))
-            self.renamed_archive_original_name = None
-            self.populate_from_profile()
-        else:
-            self._toggle_all_buttons(True)
 
     def toggle_compact_button_visibility(self):
         """
