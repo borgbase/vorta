@@ -18,24 +18,22 @@ class ArchiveExtract:
         """
         profile = self.tab.profile()
 
-        row_selected = self.tab.archiveTable.selectionModel().selectedRows()
-        if row_selected:
-            archive_cell = self.tab.archiveTable.item(row_selected[0].row(), 4)
-            if archive_cell:
-                archive_name = archive_cell.text()
-                params = BorgListArchiveJob.prepare(profile, archive_name)
+        archives = self.tab.selected_archives()
+        if archives:
+            archive_name = archives[0].name
+            params = BorgListArchiveJob.prepare(profile, archive_name)
 
-                if not params['ok']:
-                    self.tab._set_status(params['message'])
-                    return
-                self.tab._set_status('')
-                self.tab._toggle_all_buttons(False)
+            if not params['ok']:
+                self.tab._set_status(params['message'])
+                return
+            self.tab._set_status('')
+            self.tab._toggle_all_buttons(False)
 
-                job = BorgListArchiveJob(params['cmd'], params, self.tab.profile().repo.id)
-                job.updated.connect(self.tab.mountErrors.setText)
-                job.result.connect(self.extract_list_result)
-                self.tab.app.jobs_manager.add_job(job)
-                return job
+            job = BorgListArchiveJob(params['cmd'], params, self.tab.profile().repo.id)
+            job.updated.connect(self.tab.mountErrors.setText)
+            job.result.connect(self.extract_list_result)
+            self.tab.app.jobs_manager.add_job(job)
+            return job
         else:
             self.tab._set_status(self.tab.tr('Select an archive to restore first.'))
 

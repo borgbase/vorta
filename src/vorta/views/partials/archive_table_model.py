@@ -8,7 +8,8 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, QSortFilterProxyModel, Qt
+from PyQt6.QtGui import QIcon
 
 from vorta.i18n import trans_late, translate
 from vorta.store.models import ArchiveModel
@@ -52,7 +53,7 @@ class ArchiveTableModel(QAbstractTableModel):
         self._rows: List[ArchiveModel] = []
         self._mount_points: Dict[str, str] = {}
         self._fixed_unit: Optional[int] = None
-        self._icon_cache: Dict[str, Any] = {}  # themed icons; invalidated on dark-mode switch
+        self._icon_cache: Dict[str, QIcon] = {}  # themed icons; invalidated on dark-mode switch
         self._icon_cache_dark: Optional[bool] = None
 
     def set_rows(
@@ -75,11 +76,13 @@ class ArchiveTableModel(QAbstractTableModel):
             self._fixed_unit = None
         self.endResetModel()
 
-    def archive_at(self, row: int) -> Optional[ArchiveModel]:
-        """Return the `ArchiveModel` backing ``row``, or None if out of range."""
-        if 0 <= row < len(self._rows):
-            return self._rows[row]
-        return None
+    def set_mount_points(self, mount_points: Optional[Dict[str, str]] = None) -> None:
+        """Update mount paths and refresh the Mount Point column in place (no full reset)."""
+        self._mount_points = dict(mount_points or {})
+        if self._rows:
+            top = self.index(0, self.COL_MOUNT)
+            bottom = self.index(len(self._rows) - 1, self.COL_MOUNT)
+            self.dataChanged.emit(top, bottom, [Qt.ItemDataRole.DisplayRole])
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         if parent.isValid():
@@ -169,7 +172,11 @@ class ArchiveTableModel(QAbstractTableModel):
         return flags
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.ItemDataRole.EditRole) -> bool:
-        """Store an in-place edited archive name; the view performs the real rename."""
+        """Store an in-place edited archive name; the view performs the real rename.
+
+        This overwrites ``row.name`` before the rename runs; the view relies on having
+        stashed ``renamed_archive_original_name`` at edit-start to recover the old name.
+        """
         if not index.isValid() or role != Qt.ItemDataRole.EditRole or index.column() != self.COL_NAME:
             return False
         self._rows[index.row()].name = value
@@ -187,3 +194,16 @@ class ArchiveTableModel(QAbstractTableModel):
         if orientation == Qt.Orientation.Horizontal and 0 <= section < len(self._HEADERS):
             return translate('Form', self._HEADERS[section])
         return None
+
+
+class ArchiveSortProxyModel(QSortFilterProxyModel):
+    """Sort proxy that compares `SortRole` keys in Python to avoid Qt's 32-bit int truncation."""
+
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
+        lv = left.data(ArchiveTableModel.SortRole)
+        rv = right.data(ArchiveTableModel.SortRole)
+        if lv is None:
+            return True
+        if rv is None:
+            return False
+        return lv < rv

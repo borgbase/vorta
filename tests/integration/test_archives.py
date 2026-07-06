@@ -116,7 +116,7 @@ def test_archive_delete(qapp, qtbot, mocker, archive_env):
     """Test for archive deletion"""
     main, tab = archive_env
 
-    archivesCount = tab.archiveTable.rowCount()
+    archivesCount = tab.archiveTable.model().rowCount()
 
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
 
@@ -125,7 +125,7 @@ def test_archive_delete(qapp, qtbot, mocker, archive_env):
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
 
     assert ArchiveModel.select().count() == archivesCount - 1
-    assert tab.archiveTable.rowCount() == archivesCount - 1
+    assert tab.archiveTable.model().rowCount() == archivesCount - 1
 
 
 def test_archive_rename(qapp, qtbot, mocker, archive_env):
