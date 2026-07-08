@@ -9,7 +9,6 @@ from PyQt6.QtWidgets import (
     QApplication,
     QHeaderView,
     QMenu,
-    QTableWidgetItem,
 )
 
 from vorta.filedialog import VortaFileSelector
@@ -18,11 +17,11 @@ from vorta.utils import (
     FilePathInfoAsync,
     get_asset,
     pretty_bytes,
-    sort_sizes,
 )
 from vorta.views.base_tab import BaseTab
 from vorta.views.dialogs.archive.exclude import ExcludeDialog
-from vorta.views.partials.source_files_table_model import SortProxyModel, SourceFilesModel
+from vorta.views.partials.sort_proxy import SortProxyModel
+from vorta.views.partials.source_files_table_model import SourceFilesModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/source_tab.ui')
@@ -31,31 +30,12 @@ SourceUI, SourceBase = uic.loadUiType(uifile)
 logger = logging.getLogger(__name__)
 
 
-class SizeItem(QTableWidgetItem):
-    """Right-aligned, size-aware sortable cell, still consumed by archive_tab's QTableWidget."""
-
-    def __init__(self, s):
-        super().__init__(s)
-        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight)
-
-    def __lt__(self, other):
-        if other.text() == '':
-            return False
-        elif self.text() == '':
-            return True
-        else:
-            return sort_sizes([self.text(), other.text()]) == [
-                self.text(),
-                other.text(),
-            ]
-
-
 class SourceTab(BaseTab, SourceBase, SourceUI):
-    updateThreads = []
-
     def __init__(self, parent=None, profile_provider=None):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
+
+        self.updateThreads = []
 
         # Prepare source files view
         self.source_model = SourceFilesModel(self)

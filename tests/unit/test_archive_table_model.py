@@ -3,7 +3,8 @@ from datetime import datetime as dt
 from PyQt6.QtCore import QModelIndex, Qt
 
 from vorta.store.models import ArchiveModel
-from vorta.views.partials.archive_table_model import ArchiveSortProxyModel, ArchiveTableModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
+from vorta.views.partials.sort_proxy import SortProxyModel
 
 
 def _archive(name, time, size=1000, duration=60, trigger='user'):
@@ -104,7 +105,7 @@ def test_sort_role_orders_sizes_numerically():
             _archive('2G', dt(2024, 1, 3), size=2 * gib),
         ]
     )
-    proxy = ArchiveSortProxyModel()
+    proxy = SortProxyModel()
     proxy.setSourceModel(model)
     proxy.sort(ArchiveTableModel.COL_SIZE, Qt.SortOrder.AscendingOrder)
 

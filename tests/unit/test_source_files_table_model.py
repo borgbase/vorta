@@ -1,7 +1,8 @@
 from PyQt6.QtCore import QModelIndex, Qt
 
 from vorta.store.models import SourceFileModel
-from vorta.views.partials.source_files_table_model import SortProxyModel, SourceFilesModel
+from vorta.views.partials.sort_proxy import SortProxyModel
+from vorta.views.partials.source_files_table_model import SourceFilesModel
 
 
 def _source(dir, dir_size=-1, dir_files_count=-1, path_isdir=False):
@@ -138,7 +139,7 @@ def test_sort_role_orders_sizes_numerically():
 
 
 def test_file_count_sort_key_is_negative_for_files():
-    """Files (no count) sort below any directory by using a -1 count key."""
+    """Files (no count) use a -1 sort key, ordering them before any directory in ascending sort."""
     model = SourceFilesModel()
     model.set_rows([_source('/dir', dir_files_count=0, path_isdir=True), _source('/file', path_isdir=False)])
 
