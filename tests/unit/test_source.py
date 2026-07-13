@@ -5,6 +5,9 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 from test_constants import TEST_TEMP_DIR
 
+from vorta.store.models import SourceFileModel
+from vorta.views.partials.source_files_table_model import SourceFilesModel
+
 
 @pytest.fixture()
 def source_env(qapp, qtbot):
@@ -90,6 +93,27 @@ def test_source_copy(qapp, qtbot, mocker, source_env):
     tab.sourceFilesWidget.selectRow(initial_count)
     tab.source_copy()
     assert mock_clipboard.call_count == 1
+
+
+def test_source_remove_under_sort(qapp, qtbot, source_env):
+    """Removing the first visual row after sorting deletes the correct DB record (proxy mapToSource)."""
+    main, tab = source_env
+    profile = tab.profile()
+
+    SourceFileModel.delete().where(SourceFileModel.profile == profile).execute()
+    small = SourceFileModel.create(dir='/vorta/small', profile=profile, dir_size=1024, path_isdir=True)
+    big = SourceFileModel.create(dir='/vorta/big', profile=profile, dir_size=8 * 1024**3, path_isdir=True)
+    tab.populate_from_profile()
+    assert tab.sourceFilesWidget.model().rowCount() == 2
+
+    # Sort by size descending → the largest source is visual row 0.
+    tab.source_proxy.sort(SourceFilesModel.COL_SIZE, QtCore.Qt.SortOrder.DescendingOrder)
+    tab.sourceFilesWidget.selectRow(0)
+
+    tab.source_remove()
+
+    assert SourceFileModel.get_or_none(id=big.id) is None
+    assert SourceFileModel.get_or_none(id=small.id) is not None
 
 
 # This test is for the paste_text() feature that was removed. Kept here for reference or possible future use.

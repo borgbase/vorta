@@ -1,7 +1,4 @@
-"""
-Shared numeric-safe sort proxy for `QAbstractTableModel`-backed tables.
-
-"""
+"""Shared numeric-safe sort proxy for `QAbstractTableModel`-backed tables."""
 
 from PyQt6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Set
 
 from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtGui import QIcon
 
 from vorta.i18n import trans_late, translate
 from vorta.store.models import SourceFileModel
@@ -37,7 +38,7 @@ class SourceFilesModel(QAbstractTableModel):
         super().__init__(parent)
         self._rows: List[SourceFileModel] = []
         self._calculating: Set[str] = set()
-        self._icon_cache: Dict[str, Any] = {}  # themed icons; invalidated on dark-mode switch
+        self._icon_cache: Dict[str, QIcon] = {}  # themed icons; invalidated on dark-mode switch
         self._icon_cache_dark: Optional[bool] = None
 
     def set_rows(self, rows: List[SourceFileModel]) -> None:
@@ -66,7 +67,11 @@ class SourceFilesModel(QAbstractTableModel):
         self._calculating.add(path)
         row = self._row_for_path(path)
         if row is not None:
-            self.dataChanged.emit(self.index(row, self.COL_SIZE), self.index(row, self.COL_FILES))
+            self.dataChanged.emit(
+                self.index(row, self.COL_SIZE),
+                self.index(row, self.COL_FILES),
+                [Qt.ItemDataRole.DisplayRole],
+            )
 
     def set_path_info(self, path: str, data_size: int, files_count: int, is_dir: bool) -> Optional[SourceFileModel]:
         """Apply recalculated size/count to the row matching ``path`` and return it.
@@ -82,7 +87,11 @@ class SourceFilesModel(QAbstractTableModel):
         source.dir_size = data_size
         source.dir_files_count = files_count
         source.path_isdir = is_dir
-        self.dataChanged.emit(self.index(row, self.COL_PATH), self.index(row, self.COL_FILES))
+        self.dataChanged.emit(
+            self.index(row, self.COL_PATH),
+            self.index(row, self.COL_FILES),
+            [Qt.ItemDataRole.DisplayRole, Qt.ItemDataRole.DecorationRole],
+        )
         return source
 
     def _row_for_path(self, path: str) -> Optional[int]:

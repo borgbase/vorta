@@ -44,7 +44,6 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         self.sourceFilesWidget.setModel(self.source_proxy)
 
         header = self.sourceFilesWidget.horizontalHeader()
-        header.setVisible(True)
         header.setSortIndicatorShown(1)
 
         header.setSectionResizeMode(SourceFilesModel.COL_PATH, QHeaderView.ResizeMode.Stretch)
@@ -127,6 +126,9 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         row removed mid-calculation is skipped (#1080 / #2435).
         """
         logger.debug(f"Updating source {path}.")  # Debug #1080
+
+        if any(thrd.objectName() == path for thrd in self.updateThreads):
+            return
 
         self.source_model.mark_calculating(path)
         getDir = FilePathInfoAsync(path, self.profile().get_combined_exclusion_string())
