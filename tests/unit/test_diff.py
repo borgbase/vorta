@@ -44,7 +44,7 @@ def setup_diff_result_window(qtbot, mocker, tab, borg_json_output, json_mock_fil
     selection_model.select(model.index(0, 0), flags)
     selection_model.select(model.index(1, 0), flags)
 
-    tab.diff_action()
+    tab.archive_diff.diff_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_resultwindow'), **pytest._wait_defaults)
     assert hasattr(tab, '_resultwindow')
