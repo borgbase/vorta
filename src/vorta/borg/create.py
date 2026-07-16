@@ -126,6 +126,7 @@ class BorgCreateJob(BorgJob):
             )
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
                 ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
+                ret['level'] = 'info'
                 return ret
 
         if (
@@ -134,6 +135,7 @@ class BorgCreateJob(BorgJob):
             and network_status_monitor.is_network_metered()
         ):
             ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
+            ret['level'] = 'info'
             return ret
 
         ret['profile'] = profile

@@ -11,6 +11,7 @@ from PyQt6 import QtCore
 
 import vorta.borg
 import vorta.utils
+import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel
 
@@ -96,14 +97,14 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, a
     main, tab = archive_env
 
     tab.archiveTable.selectRow(2)
-    tab.extract_action()
+    tab.archive_extract.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
     # Select all files
     tree_view = tab._window.treeView.model()
     tree_view.setData(tree_view.index(0, 0), QtCore.Qt.CheckState.Checked, QtCore.Qt.ItemDataRole.CheckStateRole)
-    monkeypatch.setattr(vorta.views.archive_tab, "choose_file_dialog", choose_file_dialog)
+    monkeypatch.setattr(vorta.views.archive.archive_extract, "choose_file_dialog", choose_file_dialog)
     qtbot.mouseClick(tab._window.extractButton, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: 'Restored files from archive.' in main.progressText.text(), **pytest._wait_defaults)
@@ -115,7 +116,7 @@ def test_archive_delete(qapp, qtbot, mocker, archive_env):
     """Test for archive deletion"""
     main, tab = archive_env
 
-    archivesCount = tab.archiveTable.rowCount()
+    archivesCount = tab.archiveTable.model().rowCount()
 
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
 
@@ -124,7 +125,7 @@ def test_archive_delete(qapp, qtbot, mocker, archive_env):
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
 
     assert ArchiveModel.select().count() == archivesCount - 1
-    assert tab.archiveTable.rowCount() == archivesCount - 1
+    assert tab.archiveTable.model().rowCount() == archivesCount - 1
 
 
 def test_archive_rename(qapp, qtbot, mocker, archive_env):

@@ -65,6 +65,18 @@ def test_manual_mode():
     assert len(scheduler.timers) == 0
 
 
+def test_set_timer_for_missing_profile():
+    """A timer firing for a deleted profile must not crash the scheduler."""
+    scheduler = VortaScheduler()
+
+    missing_id = (BackupProfileModel.select().count() or 0) + 1000
+    assert BackupProfileModel.get_or_none(id=missing_id) is None
+
+    # Should return quietly instead of raising AttributeError on None.
+    scheduler.set_timer_for_profile(missing_id)
+    assert len(scheduler.timers) == 0
+
+
 def test_simple_schedule(clockmock):
     """Test a simple scheduling including `next_job` and `remove_job`."""
     scheduler = VortaScheduler()
@@ -239,3 +251,25 @@ def test_missed_startup(qapp, qtbot, window_load, clockmock, now, hour, minute, 
         assert len(event_times) == 2
     else:
         assert len(event_times) == 1
+
+
+@prepare
+def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, borg_json_output):
+    """Test that notifier.deliver() is not called with level='error' when
+    prepare() returns level='info' (e.g. WiFi disallowed or metered connection)."""
+    mocker.patch(
+        'vorta.scheduler.BorgCreateJob.prepare',
+        return_value={
+            'ok': False,
+            'message': 'Current Wifi is not allowed.',
+            'level': 'info',
+        },
+    )
+    notifier_mock = mocker.patch('vorta.notifications.VortaNotifications.pick')
+    mock_notifier = mocker.MagicMock()
+    notifier_mock.return_value = mock_notifier
+
+    qapp.scheduler.create_backup(1)
+    # The error notification should be suppressed for an expected skip.
+    assert mock_notifier.deliver.call_count == 1
+    assert mock_notifier.deliver.call_args.kwargs.get('level') != 'error'

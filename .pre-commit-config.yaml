@@ -24,6 +24,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
       - id: mixed-line-ending
+        args: [--fix=lf]
 
       # sort requirements.txt files
       - id: requirements-txt-fixer

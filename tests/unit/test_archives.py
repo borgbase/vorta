@@ -10,6 +10,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
 from vorta.store.models import ArchiveModel, BackupProfileModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
 
 
 class MockFileDialog:
@@ -31,6 +32,35 @@ def test_prune_intervals(qapp, qtbot):
         tab.save_prune_setting(None)
         profile = profile.refresh()
         assert getattr(profile, f'prune_{i}') == 9
+
+
+def test_populate_does_not_overwrite_prune_keep_within(qapp, qtbot):
+    """Loading a profile must not fire save_prune_setting and overwrite
+    prune_keep_within with stale QLineEdit text (#2493)."""
+    main = qapp.main_window
+    tab = main.archiveTab
+    profile = BackupProfileModel.get(id=1)
+    profile.prune_keep_within = '10H'
+    profile.prune_hour = 7
+    profile.save()
+
+    # Simulate stale UI state: a spinbox value differs from the DB (so the
+    # setValue call inside populate_from_profile would otherwise fire
+    # valueChanged -> save_prune_setting) and the prune_keep_within QLineEdit
+    # holds stale text from another profile. Block signals while setting this
+    # up so the pre-state itself doesn't overwrite the DB values just saved.
+    tab.prune_hour.blockSignals(True)
+    try:
+        tab.prune_hour.setValue(1)
+    finally:
+        tab.prune_hour.blockSignals(False)
+    tab.prune_keep_within.setText('')
+
+    tab.populate_from_profile()
+
+    profile = profile.refresh()
+    assert profile.prune_keep_within == '10H'
+    assert tab.prune_keep_within.text() == '10H'
 
 
 def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
@@ -124,7 +154,7 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    tab.extract_action()
+    tab.archive_extract.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
@@ -144,7 +174,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
     tab.delete_action()
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
-    assert tab.archiveTable.rowCount() == 1
+    assert tab.archiveTable.model().rowCount() == 1
 
 
 def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
@@ -167,6 +197,38 @@ def test_archive_copy(qapp, qtbot, monkeypatch, mocker, archive_env):
     assert clipboard_spy.call_count == 2
     actual_data = clipboard_spy.call_args[0][0]  # retrieves the QMimeData() object used in method call
     assert actual_data.text() == "test-archive1"
+
+
+def test_selection_maps_through_sort_proxy(qapp, qtbot, archive_env):
+    """R1: selected_archives() returns the archive shown at the selected row, even after sorting."""
+    main, tab = archive_env
+    view = tab.archiveTable
+    col_name = ArchiveTableModel.COL_NAME
+
+    # sort so the proxy's row order differs from the source order
+    view.sortByColumn(col_name, QtCore.Qt.SortOrder.DescendingOrder)
+
+    view.selectRow(0)
+    displayed_name = view.model().index(0, col_name).data()
+    selected = tab.selected_archives()
+
+    assert len(selected) == 1
+    assert selected[0].name == displayed_name
+
+
+def test_rename_failure_reverts_optimistic_name(qapp, qtbot, archive_env):
+    """A failed rename must not leave the optimistically-applied name in the table (D1)."""
+    main, tab = archive_env
+    model = tab.archive_model
+    col = ArchiveTableModel.COL_NAME
+
+    original = model.data(model.index(0, col))
+    model.setData(model.index(0, col), 'optimistic-name')
+    assert model.data(model.index(0, col)) == 'optimistic-name'
+
+    tab.archive_rename.rename_result({'returncode': 2})
+
+    assert model.data(model.index(0, col)) == original
 
 
 def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env):
@@ -194,9 +256,10 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
-    # Trigger inline editing programmatically (more reliable than double-click simulation)
-    item = tab.archiveTable.item(0, 4)
-    tab.archiveTable.editItem(item)
+    # Trigger inline editing through the real entry point so is_editing / original name are set.
+    index = tab.archiveTable.model().index(0, 4)
+    tab.archiveTable.setCurrentIndex(index)
+    tab.archive_rename.cell_double_clicked(index)
 
     # Wait for edit mode to activate
     qtbot.waitUntil(lambda: tab.archiveTable.viewport().focusWidget() is not None, **pytest._wait_defaults)

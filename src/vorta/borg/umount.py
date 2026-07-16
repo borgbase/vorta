@@ -22,13 +22,13 @@ class BorgUmountJob(BorgJob):
         partitions = psutil.disk_partitions(all=True)
         for p in partitions:
             if p.device == 'borgfs':
-                archive_mount_points.append(os.path.normpath(p.mountpoint))
+                archive_mount_points.append(os.path.realpath(p.mountpoint))
         ret['active_mount_points'] = archive_mount_points
 
         if len(archive_mount_points) == 0:
             ret['message'] = trans_late('messages', 'No active Borg mounts found.')
             return ret
-        if os.path.normpath(mount_point) not in archive_mount_points:
+        if os.path.realpath(mount_point) not in archive_mount_points:
             ret['message'] = trans_late('messages', 'Mount point not active.')
             return ret
 

@@ -214,9 +214,9 @@ class VortaScheduler(QtCore.QObject):
         next suitable backup time.
         """
         profile = BackupProfileModel.get_or_none(id=profile_id)
-        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
         if profile is None:  # profile doesn't exist any more.
             return
+        logger.debug('Profile: %s, %d %d', str(profile), profile.schedule_fixed_hour, profile.schedule_fixed_minute)
 
         with self.lock:  # Acquire lock
             self.remove_job(profile_id)  # reset schedule
@@ -450,13 +450,19 @@ class VortaScheduler(QtCore.QObject):
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
             else:
-                logger.error('Conditions for backup not met. Aborting.')
-                logger.error(msg['message'])
-                notifier.deliver(
-                    self.tr('Vorta Backup'),
-                    translate('messages', msg['message']),
-                    level='error',
-                )
+                # Default to 'error': unexpected failures notify.
+                # Expected skips (WiFi/metered) use 'info' to suppress.
+                level = msg.get('level', 'error')
+                if level == 'error':
+                    logger.error('Conditions for backup not met. Aborting.')
+                    logger.error(msg['message'])
+                    notifier.deliver(
+                        self.tr('Vorta Backup'),
+                        translate('messages', msg['message']),
+                        level='error',
+                    )
+                else:
+                    logger.info('Backup skipped: %s', msg['message'])
                 self.pause(profile_id)
 
     def notify(self, result: dict[str, Any]) -> None:

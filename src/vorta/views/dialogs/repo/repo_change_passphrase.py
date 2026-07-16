@@ -32,6 +32,10 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
         self.saveButton = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
         self.saveButton.setText(self.tr("Update"))
 
+        self.errorText = QLabel("")
+        self.errorText.setStyleSheet("color: red")
+        self.repoDataFormLayout.addRow("", self.errorText)
+
         self.buttonBox.rejected.connect(self.close)
         self.buttonBox.accepted.connect(self.run)
 

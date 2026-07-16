@@ -52,6 +52,20 @@
             "added_at": "2020-07-03 04:37:05.106150"
         }
     ],
+    "ExclusionModel": [
+        {
+            "name": "*.pyc",
+            "enabled": true,
+            "source": "custom",
+            "profile": 1
+        },
+        {
+            "name": "__pycache__",
+            "enabled": true,
+            "source": "preset",
+            "profile": 1
+        }
+    ],
     "WifiSettingModel": [],
     "SchemaVersion": {
         "id": 1,
