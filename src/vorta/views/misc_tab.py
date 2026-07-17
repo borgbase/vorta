@@ -5,10 +5,12 @@ from PyQt6.QtWidgets import (
     QFormLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QSizePolicy,
     QSpacerItem,
 )
 
+from vorta.borg import fuse_venv
 from vorta.i18n import translate
 from vorta.store.models import SettingsModel
 from vorta.store.settings import get_grouped_checkbox_settings
@@ -36,6 +38,8 @@ class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
         self.checkboxLayout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.FieldsStayAtSizeHint)
         self.checkboxLayout.setFormAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.tooltip_buttons = []
+        self._venv_setup_running = False
+        self._venv_setup_job = None
 
         self.populate()
 
@@ -97,6 +101,9 @@ class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
                 # increase i
                 i += 1
 
+                if setting.key == 'use_managed_mount_venv':
+                    i = self.add_mount_venv_row(i, cb)
+
         self.set_icons()
 
     def set_icons(self):
@@ -108,3 +115,57 @@ class MiscTab(BaseTab, MiscTabBase, MiscTabUI):
         setting = SettingsModel.get(key=key)
         setting.value = bool(new_value)
         setting.save()
+
+    def add_mount_venv_row(self, i, checkbox):
+        """
+        Add the Prepare/Rebuild Environment row below the managed-mount-venv
+        checkbox (macOS only — the setting doesn't exist elsewhere).
+        """
+        self.mountVenvCheckbox = checkbox
+        self.bPrepareVenv = QPushButton()
+        self.bPrepareVenv.clicked.connect(self.prepare_mount_venv)
+
+        self.mountVenvStatus = QLabel()
+        self.mountVenvStatus.setWordWrap(True)
+        if fuse_venv.is_venv_ready():
+            self.mountVenvStatus.setText(self.tr('Environment ready.'))
+
+        row = QHBoxLayout()
+        row.addWidget(self.bPrepareVenv)
+        row.addWidget(self.mountVenvStatus, 1)
+        self.checkboxLayout.setLayout(i, QFormLayout.ItemRole.FieldRole, row)
+
+        checkbox.stateChanged.connect(lambda _: self.refresh_mount_venv_button())
+        self.refresh_mount_venv_button()
+        return i + 1
+
+    def refresh_mount_venv_button(self):
+        """Update label and enabled state of the venv setup button."""
+        if fuse_venv.is_venv_ready():
+            self.bPrepareVenv.setText(self.tr('Rebuild Environment'))
+        else:
+            self.bPrepareVenv.setText(self.tr('Prepare Environment'))
+        self.bPrepareVenv.setEnabled(self.mountVenvCheckbox.isChecked() and not self._venv_setup_running)
+
+    def prepare_mount_venv(self):
+        if self._venv_setup_running:
+            return
+        self._venv_setup_running = True
+        self.refresh_mount_venv_button()
+
+        job = fuse_venv.FuseVenvSetupJob(rebuild=fuse_venv.venv_path().exists())
+        job.updated.connect(self.mountVenvStatus.setText)
+        job.result.connect(self.mount_venv_result)
+        self._venv_setup_job = job  # keep a reference while the worker runs
+        self.app.jobs_manager.add_job(job)
+
+    def mount_venv_result(self, result):
+        self._venv_setup_running = False
+        self._venv_setup_job = None
+        if result['ok']:
+            self.mountVenvStatus.setText(
+                self.tr('Environment ready ({0}). Mount will now use it.').format(result['borg_version'])
+            )
+        else:
+            self.mountVenvStatus.setText(result['message'])
+        self.refresh_mount_venv_button()
