@@ -247,6 +247,23 @@ class EventLogModel(BaseModel):
         database = DB
 
 
+class JobModel(BaseModel):
+    """Lifecycle record of a scheduled background job."""
+
+    profile = pw.ForeignKeyField(BackupProfileModel, backref='jobs')
+    repo = pw.ForeignKeyField(RepoModel, null=True, backref='jobs')
+    job_type = pw.CharField(default='backup')
+    status = pw.CharField(default='scheduled')
+    trigger = pw.CharField(null=True)
+    scheduled_at = pw.DateTimeField(null=True)
+    skip_reason = pw.CharField(null=True)
+    event_log = pw.ForeignKeyField(EventLogModel, null=True, backref='job')
+    created_at = pw.DateTimeField(default=datetime.now)
+
+    class Meta:
+        database = DB
+
+
 class SchemaVersion(BaseModel):
     """Keep DB version to apply the correct migrations."""
 
