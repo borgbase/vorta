@@ -13,6 +13,7 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
+from vorta.borg.borg_job import db_lock
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
@@ -20,7 +21,7 @@ from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
@@ -463,6 +464,15 @@ class VortaScheduler(QtCore.QObject):
                     )
                 else:
                     logger.info('Backup skipped: %s', msg['message'])
+                with db_lock:
+                    JobModel.create(
+                        profile=profile_id,
+                        repo_url=profile.repo.url if profile.repo else None,
+                        job_type='backup',
+                        status='skipped',
+                        trigger='scheduled',
+                        skip_reason=msg['message'],
+                    )
                 self.pause(profile_id)
 
     def notify(self, result: dict[str, Any]) -> None:

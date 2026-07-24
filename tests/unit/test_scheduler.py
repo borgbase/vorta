@@ -9,7 +9,7 @@ from pytest import mark
 import vorta.borg
 import vorta.scheduler
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 
 PROFILE_NAME = 'Default'
 FIXED_SCHEDULE = 'fixed'
@@ -273,3 +273,24 @@ def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, 
     # The error notification should be suppressed for an expected skip.
     assert mock_notifier.deliver.call_count == 1
     assert mock_notifier.deliver.call_args.kwargs.get('level') != 'error'
+
+
+def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
+    """A skipped scheduled backup is recorded as a JobModel row with its reason."""
+    mocker.patch(
+        'vorta.scheduler.BorgCreateJob.prepare',
+        return_value={
+            'ok': False,
+            'message': 'Current Wifi is not allowed.',
+            'level': 'info',
+        },
+    )
+    jobs_before = JobModel.select().count()
+
+    qapp.scheduler.create_backup(1)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == 'skipped'
+    assert job.skip_reason == 'Current Wifi is not allowed.'
+    assert str(job.profile) == '1'
