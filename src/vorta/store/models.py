@@ -250,8 +250,8 @@ class EventLogModel(BaseModel):
 class JobModel(BaseModel):
     """Lifecycle record of a scheduled background job."""
 
-    profile = pw.ForeignKeyField(BackupProfileModel, backref='jobs')
-    repo = pw.ForeignKeyField(RepoModel, null=True, backref='jobs')
+    profile = pw.CharField(null=True)
+    repo_url = pw.CharField(null=True)
     job_type = pw.CharField(default='backup')
     status = pw.CharField(default='scheduled')
     trigger = pw.CharField(null=True)
