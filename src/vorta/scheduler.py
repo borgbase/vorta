@@ -331,6 +331,15 @@ class VortaScheduler(QtCore.QObject):
                     return  # create_backup will lead to a call to this method
                 elif profile.schedule_make_up_missed and not self._net_up and needs_network:
                     logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
+                    with db_lock:
+                        JobModel.create(
+                            profile=profile_id,
+                            repo_url=profile.repo.url if profile.repo else None,
+                            job_type='backup',
+                            status='skipped',
+                            trigger='catchup',
+                            skip_reason='Network unavailable for catch-up.',
+                        )
 
                 # calculate next time from now
                 if profile.schedule_mode == 'interval':
@@ -433,6 +442,15 @@ class VortaScheduler(QtCore.QObject):
         # Skip if a job for this profile (repo) is already in progress
         if self.app.jobs_manager.is_worker_running(site=profile.repo.id):
             logger.debug('A job for repo %s is already active.', profile.repo.id)
+            with db_lock:
+                JobModel.create(
+                    profile=profile_id,
+                    repo_url=profile.repo.url if profile.repo else None,
+                    job_type='backup',
+                    status='skipped',
+                    trigger='scheduled',
+                    skip_reason='Repository is busy with another job.',
+                )
             self.pause(profile_id)
             return
 

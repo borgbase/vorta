@@ -294,3 +294,16 @@ def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     assert job.status == 'skipped'
     assert job.skip_reason == 'Current Wifi is not allowed.'
     assert str(job.profile) == '1'
+
+
+def test_create_backup_records_skip_when_repo_busy(qapp, mocker):
+    """A scheduled run blocked by a busy repo is recorded as a skipped JobModel row."""
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    jobs_before = JobModel.select().count()
+
+    qapp.scheduler.create_backup(1)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == 'skipped'
+    assert job.skip_reason == 'Repository is busy with another job.'
