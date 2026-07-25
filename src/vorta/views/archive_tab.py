@@ -35,7 +35,8 @@ from vorta.views.archive.archive_maintenance import ArchiveMaintenance
 from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.archive.archive_rename import ArchiveRename
 from vorta.views.base_tab import BaseTab
-from vorta.views.partials.archive_table_model import SIZE_DECIMAL_DIGITS, ArchiveSortProxyModel, ArchiveTableModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
+from vorta.views.partials.sort_proxy import SortProxyModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archive_tab.ui')
@@ -86,7 +87,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         # Model + sort proxy (proxy sorts on SortRole for correct non-string ordering)
         self.archive_model = ArchiveTableModel(self)
-        self.archive_proxy = ArchiveSortProxyModel(self)
+        self.archive_proxy = SortProxyModel(self)
         self.archive_proxy.setSourceModel(self.archive_model)
         self.archiveTable.setModel(self.archive_proxy)
 
