@@ -20,11 +20,10 @@ from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import trans_late, translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.store.models import EventLogModel
+from vorta.store.models import EventLogModel, db_lock
 from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
-db_lock = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
