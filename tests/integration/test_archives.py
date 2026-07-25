@@ -121,7 +121,7 @@ def test_archive_delete(qapp, qtbot, mocker, archive_env):
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
 
     tab.archiveTable.selectRow(0)
-    tab.delete_action()
+    tab.archive_delete.delete_action()
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
 
     assert ArchiveModel.select().count() == archivesCount - 1

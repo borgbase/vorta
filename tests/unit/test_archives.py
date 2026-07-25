@@ -29,7 +29,7 @@ def test_prune_intervals(qapp, qtbot):
 
     for i in prune_intervals:
         getattr(tab, f'prune_{i}').setValue(9)
-        tab.save_prune_setting(None)
+        tab.archive_maintenance.save_prune_setting(None)
         profile = profile.refresh()
         assert getattr(profile, f'prune_{i}') == 9
 
@@ -171,7 +171,7 @@ def test_archive_delete(qapp, qtbot, mocker, borg_json_output, archive_env):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
     mocker.patch.object(vorta.views.archive_tab.ArchiveTab, 'confirm_dialog', lambda x, y, z: True)
-    tab.delete_action()
+    tab.archive_delete.delete_action()
     qtbot.waitUntil(lambda: 'Archive deleted.' in main.progressText.text(), **pytest._wait_defaults)
     assert ArchiveModel.select().count() == 1
     assert tab.archiveTable.model().rowCount() == 1
