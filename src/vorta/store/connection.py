@@ -18,6 +18,7 @@ from .models import (
     BackupProfileModel,
     EventLogModel,
     ExclusionModel,
+    JobModel,
     RepoModel,
     RepoPassword,
     SchemaVersion,
@@ -57,6 +58,7 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
             ArchiveModel,
             WifiSettingModel,
             EventLogModel,
+            JobModel,
             SchemaVersion,
             ExclusionModel,
         ]
@@ -83,6 +85,9 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
         entry.not_in(last_backups_per_profile),
         entry.not_in(last_scheduled_backups_per_profile),
     ).execute()
+
+    # Delete old job records after 6 months. Nothing derives scheduling state from them.
+    JobModel.delete().where(JobModel.created_at < six_months_ago).execute()
 
     # Migrations
     current_schema, created = SchemaVersion.get_or_create(id=1, defaults={'version': SCHEMA_VERSION})

@@ -9,7 +9,7 @@ from pytest import mark
 import vorta.borg
 import vorta.scheduler
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 
 PROFILE_NAME = 'Default'
 FIXED_SCHEDULE = 'fixed'
@@ -273,3 +273,107 @@ def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, 
     # The error notification should be suppressed for an expected skip.
     assert mock_notifier.deliver.call_count == 1
     assert mock_notifier.deliver.call_args.kwargs.get('level') != 'error'
+
+
+def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
+    """A skipped scheduled backup is recorded as a JobModel row with its reason."""
+    mocker.patch(
+        'vorta.scheduler.BorgCreateJob.prepare',
+        return_value={
+            'ok': False,
+            'message': 'Current Wifi is not allowed.',
+            'level': 'info',
+        },
+    )
+    jobs_before = JobModel.select().count()
+
+    qapp.scheduler.create_backup(1)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == JobModel.Status.SKIPPED.value
+    assert job.reason == 'Current Wifi is not allowed.'
+    assert job.profile == '1'
+    assert job.profile_name == PROFILE_NAME
+
+
+def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
+    """An unexpected prepare() failure is recorded as failed, not skipped."""
+    mocker.patch(
+        'vorta.scheduler.BorgCreateJob.prepare',
+        return_value={
+            'ok': False,
+            'message': 'Add a backup repository first.',
+        },
+    )
+    jobs_before = JobModel.select().count()
+
+    qapp.scheduler.create_backup(1)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == JobModel.Status.FAILED.value
+    assert job.reason == 'Add a backup repository first.'
+
+
+def test_create_backup_records_skip_when_repo_busy(qapp, mocker):
+    """A scheduled run blocked by a busy repo is recorded as a skipped JobModel row."""
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    jobs_before = JobModel.select().count()
+
+    qapp.scheduler.create_backup(1)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == JobModel.Status.SKIPPED.value
+    assert job.reason == 'Repository is busy with another job.'
+
+
+def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
+    """A catch-up run that gets skipped is not recorded as an ordinary scheduled run."""
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+
+    qapp.scheduler.create_backup(1, trigger=JobModel.Trigger.CATCHUP.value)
+
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.trigger == JobModel.Trigger.CATCHUP.value
+
+
+def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
+    """A catch-up run blocked by a down network is recorded as a skipped JobModel row."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = False
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    last_run = time - td(hours=6)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_run,
+        end_time=last_run,
+    )
+    jobs_before = JobModel.select().count()
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == JobModel.Status.SKIPPED.value
+    assert job.trigger == JobModel.Trigger.CATCHUP.value
+    assert job.reason == 'Network unavailable for catch-up.'
+    assert job.scheduled_at == last_run + td(hours=3)
+
+    # Re-evaluating the same missed run must not add a second row.
+    scheduler.set_timer_for_profile(profile.id)
+    assert JobModel.select().count() == jobs_before + 1

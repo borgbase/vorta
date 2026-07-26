@@ -7,6 +7,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 from typing import Any, NamedTuple
 
+import peewee as pw
 from packaging import version
 from PyQt6 import QtCore, QtDBus
 from PyQt6.QtCore import QTimer
@@ -20,7 +21,7 @@ from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
@@ -323,13 +324,19 @@ class VortaScheduler(QtCore.QObject):
                             profile.name,
                             profile_id,
                         )
-                        self.create_backup(profile_id)
+                        self.create_backup(profile_id, trigger=JobModel.Trigger.CATCHUP.value)
                     finally:
                         self.lock.acquire()  # with-statement will try to release
 
                     return  # create_backup will lead to a call to this method
                 elif profile.schedule_make_up_missed and not self._net_up and needs_network:
                     logger.debug('Skipping catchup %s (%s), the network is not available', profile.name, profile.id)
+                    self._record_skip(
+                        profile,
+                        JobModel.Trigger.CATCHUP.value,
+                        'Network unavailable for catch-up.',
+                        scheduled_at=next_time,
+                    )
 
                 # calculate next time from now
                 if profile.schedule_mode == 'interval':
@@ -421,7 +428,37 @@ class VortaScheduler(QtCore.QObject):
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))  # type: ignore[arg-type]
 
-    def create_backup(self, profile_id: int) -> None:
+    def _record_skip(
+        self,
+        profile: BackupProfileModel,
+        trigger: str,
+        reason: str,
+        status: str = JobModel.Status.SKIPPED.value,
+        scheduled_at: dt | None = None,
+    ) -> None:
+        """Record a job outcome, deduplicated on the occurrence when one is known."""
+        lookup = {
+            'profile': str(profile.id),
+            'trigger': trigger,
+            'status': status,
+            'scheduled_at': scheduled_at,
+        }
+        details = {
+            'profile_name': profile.name,
+            'repo_url': profile.repo.url if profile.repo else None,
+            'job_type': JobModel.Type.BACKUP.value,
+            'reason': reason,
+        }
+
+        try:
+            if scheduled_at is None:
+                JobModel.create(**lookup, **details)
+            else:
+                JobModel.get_or_create(**lookup, defaults=details)
+        except pw.PeeweeException:
+            logger.warning('Could not record job for profile %s.', profile.id, exc_info=True)
+
+    def create_backup(self, profile_id: int, trigger: str = JobModel.Trigger.SCHEDULED.value) -> None:
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
 
@@ -432,6 +469,7 @@ class VortaScheduler(QtCore.QObject):
         # Skip if a job for this profile (repo) is already in progress
         if self.app.jobs_manager.is_worker_running(site=profile.repo.id):
             logger.debug('A job for repo %s is already active.', profile.repo.id)
+            self._record_skip(profile, trigger, 'Repository is busy with another job.')
             self.pause(profile_id)
             return
 
@@ -461,8 +499,11 @@ class VortaScheduler(QtCore.QObject):
                         translate('messages', msg['message']),
                         level='error',
                     )
+                    status = JobModel.Status.FAILED.value
                 else:
                     logger.info('Backup skipped: %s', msg['message'])
+                    status = JobModel.Status.SKIPPED.value
+                self._record_skip(profile, trigger, msg['message'], status=status)
                 self.pause(profile_id)
 
     def notify(self, result: dict[str, Any]) -> None:

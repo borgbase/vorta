@@ -10,6 +10,7 @@ import json
 import logging
 from datetime import datetime
 from enum import Enum
+from threading import Lock
 from typing import Any
 
 import peewee as pw
@@ -19,6 +20,7 @@ from vorta.utils import slugify
 from vorta.views.utils import get_exclusion_presets
 
 DB = pw.Proxy()
+db_lock = Lock()
 logger = logging.getLogger(__name__)
 
 
@@ -245,6 +247,40 @@ class EventLogModel(BaseModel):
 
     class Meta:
         database = DB
+
+
+class JobModel(BaseModel):
+    """Lifecycle record of a scheduled background job."""
+
+    class Status(Enum):
+        SCHEDULED = 'scheduled'
+        RUNNING = 'running'
+        COMPLETED = 'completed'
+        FAILED = 'failed'
+        SKIPPED = 'skipped'
+        INTERRUPTED = 'interrupted'
+
+    class Type(Enum):
+        BACKUP = 'backup'
+
+    class Trigger(Enum):
+        SCHEDULED = 'scheduled'
+        CATCHUP = 'catchup'
+
+    profile = pw.CharField(null=True)
+    profile_name = pw.CharField(null=True)
+    repo_url = pw.CharField(null=True)
+    job_type = pw.CharField(default=Type.BACKUP.value)
+    status = pw.CharField(default=Status.SCHEDULED.value)
+    trigger = pw.CharField(null=True)
+    scheduled_at = pw.DateTimeField(null=True)
+    reason = pw.CharField(null=True)
+    event_log = pw.ForeignKeyField(EventLogModel, null=True, backref='jobs')
+    created_at = pw.DateTimeField(default=datetime.now)
+
+    class Meta:
+        database = DB
+        indexes = ((('profile', 'status', 'created_at'), False),)
 
 
 class SchemaVersion(BaseModel):
