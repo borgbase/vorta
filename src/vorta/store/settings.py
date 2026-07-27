@@ -25,6 +25,7 @@ def get_misc_settings() -> list[dict[str, Any]]:
     information = trans_late('settings', 'Information')
     security = trans_late('settings', 'Security')
     updates = trans_late('settings', 'Updates')
+    mounting = trans_late('settings', 'Mounting')
 
     # Default settings for all platforms.
     settings = [
@@ -174,6 +175,22 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 ),
                 'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
             },
+            {
+                'key': 'use_managed_mount_venv',
+                'value': False,
+                'type': 'checkbox',
+                'group': mounting,
+                'label': trans_late(
+                    'settings',
+                    'Use managed Python environment for mounting',
+                ),
+                'tooltip': trans_late(
+                    'settings',
+                    'Recommended if Mount fails with FUSE errors. Builds its own Borg with FUSE '
+                    'support in a private environment, used only for mounting. Prepare the '
+                    'environment after enabling this. All other Borg operations are unaffected.',
+                ),
+            },
         ]
     else:
         settings += [
@@ -183,7 +200,7 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 'type': 'checkbox',
                 'label': trans_late(
                     'settings',
-                    "If the system tray isn't available, " "ask whether to continue in the background " "on exit",
+                    "If the system tray isn't available, ask whether to continue in the background on exit",
                 ),
             },
             {
