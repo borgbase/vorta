@@ -247,6 +247,16 @@ class EventLogModel(BaseModel):
         database = DB
 
 
+class SchedulerPauseModel(BaseModel):
+    """A scheduling pause for a profile, kept so it survives a restart."""
+
+    profile = pw.ForeignKeyField(BackupProfileModel, primary_key=True)
+    paused_until = pw.DateTimeField()
+
+    class Meta:
+        database = DB
+
+
 class SchemaVersion(BaseModel):
     """Keep DB version to apply the correct migrations."""
 

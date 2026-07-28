@@ -115,6 +115,9 @@ class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
         ):
             time = QDateTime.fromMSecsSinceEpoch(int(status.time.timestamp() * 1000))
             text = get_locale().toString(time, QLocale.FormatType.LongFormat)
+        elif status.type == ScheduleStatusType.PAUSED:
+            time = QDateTime.fromMSecsSinceEpoch(int(status.time.timestamp() * 1000))
+            text = self.tr('Paused until %s') % get_locale().toString(time, QLocale.FormatType.LongFormat)
         elif status.type == ScheduleStatusType.NO_PREVIOUS_BACKUP:
             text = self.tr('Run a manual backup first')
         else:
