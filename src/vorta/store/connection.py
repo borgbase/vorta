@@ -21,6 +21,7 @@ from .models import (
     JobModel,
     RepoModel,
     RepoPassword,
+    SchedulerPauseModel,
     SchemaVersion,
     SettingsModel,
     SourceFileModel,
@@ -59,6 +60,7 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
             WifiSettingModel,
             EventLogModel,
             JobModel,
+            SchedulerPauseModel,
             SchemaVersion,
             ExclusionModel,
         ]
