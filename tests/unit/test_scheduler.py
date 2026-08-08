@@ -377,3 +377,49 @@ def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
     # Re-evaluating the same missed run must not add a second row.
     scheduler.set_timer_for_profile(profile.id)
     assert JobModel.select().count() == jobs_before + 1
+
+
+def test_wall_clock_gap_is_treated_as_a_resume(mocker, clockmock):
+    """Without logind, a jump in wall clock time is the only sign that the machine slept."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    # qapp keeps every scheduler alive, and this one's baseline is 2020
+    scheduler.wake_timer.stop()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+    scheduler.net_status = MagicMock()
+    scheduler.net_status.is_network_active.return_value = True
+    scheduler._net_up = False
+
+    clockmock.now.return_value = dt(2020, 5, 6, 6, 0)
+    scheduler.wake_timer.timeout.emit()
+
+    reload_all.assert_called_once()
+    assert scheduler._net_up is True
+
+
+def test_timely_wake_check_does_not_reschedule(mocker, clockmock):
+    """An on-time check must do nothing, or every profile gets rescheduled once a minute."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    scheduler.wake_timer.stop()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 1)
+    scheduler.wake_timer.timeout.emit()
+
+    reload_all.assert_not_called()
+
+
+def test_logind_resume_signal_reloads_timers(mocker, clockmock):
+    """The logind fast path must survive the resume body moving into a helper."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    scheduler.wake_timer.stop()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+    scheduler.net_status = MagicMock()
+
+    scheduler.loginSuspendNotify(True)
+    reload_all.assert_not_called()
+
+    scheduler.loginSuspendNotify(False)
+    reload_all.assert_called_once()
