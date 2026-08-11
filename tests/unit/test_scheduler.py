@@ -25,6 +25,19 @@ def clockmock(monkeypatch):
     return datetime_mock
 
 
+@pytest.fixture(autouse=True)
+def stopped_wake_timers(qapp, monkeypatch):
+    """The app keeps every scheduler alive, so a tick would land in an unrelated later test."""
+    qapp.scheduler.wake_timer.stop()
+    original_init = VortaScheduler.__init__
+
+    def init_with_stopped_wake_timer(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+        self.wake_timer.stop()
+
+    monkeypatch.setattr(VortaScheduler, '__init__', init_with_stopped_wake_timer)
+
+
 def prepare(func):
     """Decorator adding common preparation steps."""
 
@@ -377,3 +390,45 @@ def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
     # Re-evaluating the same missed run must not add a second row.
     scheduler.set_timer_for_profile(profile.id)
     assert JobModel.select().count() == jobs_before + 1
+
+
+def test_wall_clock_gap_is_treated_as_a_resume(mocker, clockmock):
+    """Without logind, a jump in wall clock time is the only sign that the machine slept."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+    scheduler.net_status = MagicMock()
+    scheduler.net_status.is_network_active.return_value = True
+    scheduler._net_up = False
+
+    clockmock.now.return_value = dt(2020, 5, 6, 6, 0)
+    scheduler.wake_timer.timeout.emit()
+
+    reload_all.assert_called_once()
+    assert scheduler._net_up is True
+
+
+def test_timely_wake_check_does_not_reschedule(mocker, clockmock):
+    """An on-time check must do nothing, or every profile gets rescheduled on every tick."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 1)
+    scheduler.wake_timer.timeout.emit()
+
+    reload_all.assert_not_called()
+
+
+def test_logind_resume_signal_reloads_timers(mocker, clockmock):
+    """The logind fast path must survive the resume body moving into a helper."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 0)
+    scheduler = VortaScheduler()
+    reload_all = mocker.patch.object(scheduler, 'reload_all_timers')
+    scheduler.net_status = MagicMock()
+
+    scheduler.loginSuspendNotify(True)
+    reload_all.assert_not_called()
+
+    scheduler.loginSuspendNotify(False)
+    reload_all.assert_called_once()

@@ -26,6 +26,10 @@ from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
 
+RESCHEDULE_INTERVAL_MS = 15 * 60 * 1000
+WAKE_CHECK_INTERVAL_MS = 5 * 60 * 1000
+WAKE_GAP_THRESHOLD = timedelta(minutes=10)
+
 
 class ScheduleStatusType(enum.Enum):
     SCHEDULED = enum.auto()  # date provided
@@ -55,11 +59,10 @@ class VortaScheduler(QtCore.QObject):
         # pausing will prevent scheduling for a specified time
         self.pauses: dict[int, tuple[dt, QtCore.QTimer]] = dict()
 
-        # Set additional timer to make sure background tasks stay scheduled.
-        # E.g. after hibernation
+        # Periodic reschedule, in case a run was missed
         self.qt_timer = QTimer()
         self.qt_timer.timeout.connect(self.reload_all_timers)
-        self.qt_timer.setInterval(15 * 60 * 1000)
+        self.qt_timer.setInterval(RESCHEDULE_INTERVAL_MS)
         self.qt_timer.start()
 
         # connect signals
@@ -81,15 +84,37 @@ class VortaScheduler(QtCore.QObject):
             self.bus = bus
             self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
-            logger.warning('Failed to connect to DBUS interface to detect sleep/resume events')
+            logger.info('No systemd-logind to notify us of sleep/resume, watching for clock gaps as well')
+
+        self._last_wake_check = dt.now()
+        self.wake_timer = QTimer()
+        self.wake_timer.timeout.connect(self.checkForResume)
+        self.wake_timer.setInterval(WAKE_CHECK_INTERVAL_MS)
+        self.wake_timer.start()
 
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool) -> None:
         if not suspend:
             logger.debug("Got login suspend/resume notification")
-            # Defensively refetch in case the network status didn't arrive
-            self._net_up = self.net_status.is_network_active()
-            self.reload_all_timers()
+            self._handle_resume()
+
+    @QtCore.pyqtSlot()
+    def checkForResume(self) -> None:
+        now = dt.now()
+        elapsed = now - self._last_wake_check
+        self._last_wake_check = now
+
+        if elapsed < WAKE_GAP_THRESHOLD:
+            return
+
+        logger.debug('Clock jumped %s since the last wake check, assuming the machine slept', elapsed)
+        self._handle_resume()
+
+    def _handle_resume(self) -> None:
+        self._last_wake_check = dt.now()
+        # Defensively refetch in case the network status didn't arrive
+        self._net_up = self.net_status.is_network_active()
+        self.reload_all_timers()
 
     @QtCore.pyqtSlot(bool)
     def networkStatusChanged(self, up: bool):
