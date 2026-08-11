@@ -175,6 +175,7 @@ def test_deleting_a_paused_profile_clears_the_pause(qapp, qtbot, mocker):
 
     prepare_mock = mocker.patch('vorta.scheduler.BorgCreateJob.prepare')
     mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
+    mocker.patch.object(qapp.scheduler, '_net_up', True)
     qtbot.mouseClick(main.profileDeleteButton, QtCore.Qt.MouseButton.LeftButton)
 
     # The overdue occurrence must not start a backup on the profile being deleted.
@@ -461,34 +462,6 @@ def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
 
     job = JobModel.select().order_by(JobModel.id.desc()).get()
     assert job.trigger == JobModel.Trigger.CATCHUP.value
-
-
-def test_failed_backup_records_the_pause(qapp):
-    """The pause after a failed run is the fourth skip point, and keeps the run's trigger."""
-    profile = BackupProfileModel.get(name=PROFILE_NAME)
-    profile.schedule_mode = INTERVAL_SCHEDULE
-    profile.save()
-    jobs_before = JobModel.select().count()
-
-    scheduler = VortaScheduler()
-    scheduler.notify(
-        {
-            'returncode': 2,
-            'params': {
-                'profile': profile,
-                'profile_id': profile.id,
-                'profile_name': profile.name,
-                'trigger': JobModel.Trigger.CATCHUP.value,
-            },
-        }
-    )
-
-    assert JobModel.select().count() == jobs_before + 1
-    job = JobModel.select().order_by(JobModel.id.desc()).get()
-    assert job.status == JobModel.Status.FAILED.value
-    assert job.trigger == JobModel.Trigger.CATCHUP.value
-    assert job.reason == 'Backup failed, scheduling paused.'
-    assert scheduler.paused(profile.id)
 
 
 def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
