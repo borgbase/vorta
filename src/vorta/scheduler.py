@@ -27,8 +27,8 @@ from vorta.utils import borg_compat, get_network_status_monitor
 logger = logging.getLogger(__name__)
 
 RESCHEDULE_INTERVAL_MS = 15 * 60 * 1000
-WAKE_CHECK_INTERVAL_MS = 60 * 1000
-WAKE_GAP_THRESHOLD = timedelta(minutes=3)
+WAKE_CHECK_INTERVAL_MS = 5 * 60 * 1000
+WAKE_GAP_THRESHOLD = timedelta(minutes=10)
 
 
 class ScheduleStatusType(enum.Enum):
@@ -84,7 +84,7 @@ class VortaScheduler(QtCore.QObject):
             self.bus = bus
             self.bus.connect(service, path, interface, name, "b", self.loginSuspendNotify)
         else:
-            logger.info('No systemd-logind to notify us of sleep/resume, watching for clock gaps instead')
+            logger.info('No systemd-logind to notify us of sleep/resume, watching for clock gaps as well')
 
         self._last_wake_check = dt.now()
         self.wake_timer = QTimer()
