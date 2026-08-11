@@ -1,9 +1,12 @@
 import logging
 import os
 
+import peewee
+
 from vorta.store.models import SettingsModel
 from vorta.utils import SHELL_PATTERN_ELEMENT, borg_compat
 
+from . import fuse_venv
 from .borg_job import BorgJob
 
 logger = logging.getLogger(__name__)
@@ -12,6 +15,26 @@ logger = logging.getLogger(__name__)
 class BorgMountJob(BorgJob):
     def started_event(self):
         self.updated.emit(self.tr('Mounting archive into folder…'))
+
+    @classmethod
+    def prepare_bin(cls):
+        """
+        Use the managed FUSE venv's borg for mounting, when the user opted in
+        and the environment passed validation. Only mount resolves the binary
+        this way; every other Borg command keeps the default resolution.
+        """
+        if fuse_venv.is_supported():
+            try:
+                use_venv = SettingsModel.get(key='use_managed_mount_venv').value
+            except (SettingsModel.DoesNotExist, peewee.PeeweeException):
+                use_venv = False
+
+            if use_venv:
+                if fuse_venv.is_venv_ready():
+                    return str(fuse_venv.venv_borg_bin())
+                logger.warning('Managed mount environment enabled but not ready. Using default Borg binary.')
+
+        return super().prepare_bin()
 
     @classmethod
     def prepare(cls, profile, archive: str = None):
