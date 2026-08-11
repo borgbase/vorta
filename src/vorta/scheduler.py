@@ -560,7 +560,6 @@ class VortaScheduler(QtCore.QObject):
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'
-                msg['trigger'] = trigger
                 job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
@@ -609,12 +608,6 @@ class VortaScheduler(QtCore.QObject):
             # pause scheduler
             # if a scheduled backup fails the scheduler should pause
             # temporarily.
-            self._record_skip(
-                result['params']['profile'],
-                result['params'].get('trigger', JobModel.Trigger.SCHEDULED.value),
-                'Backup failed, scheduling paused.',
-                status=JobModel.Status.FAILED.value,
-            )
             self.pause(result['params']['profile_id'])
 
         self.set_timer_for_profile(profile_id)
