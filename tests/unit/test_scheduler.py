@@ -153,14 +153,32 @@ def test_deleting_a_paused_profile_clears_the_pause(qapp, qtbot, mocker):
     )
 
     profile = BackupProfileModel.get(name='Paused Profile')
+    profile.repo = BackupProfileModel.get(name=PROFILE_NAME).repo
     profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.schedule_make_up_missed = True
     profile.save()
+
+    last_run = dt.now() - td(hours=6)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_run,
+        end_time=last_run,
+    )
+
     qapp.scheduler.pause(profile.id)
     assert SchedulerPauseModel.get_or_none(profile=profile.id) is not None
 
+    prepare_mock = mocker.patch('vorta.scheduler.BorgCreateJob.prepare')
     mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
     qtbot.mouseClick(main.profileDeleteButton, QtCore.Qt.MouseButton.LeftButton)
 
+    # The overdue occurrence must not start a backup on the profile being deleted.
+    prepare_mock.assert_not_called()
     assert not qapp.scheduler.paused(profile.id)
     assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
 
@@ -443,6 +461,34 @@ def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
 
     job = JobModel.select().order_by(JobModel.id.desc()).get()
     assert job.trigger == JobModel.Trigger.CATCHUP.value
+
+
+def test_failed_backup_records_the_pause(qapp):
+    """The pause after a failed run is the fourth skip point, and keeps the run's trigger."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+    jobs_before = JobModel.select().count()
+
+    scheduler = VortaScheduler()
+    scheduler.notify(
+        {
+            'returncode': 2,
+            'params': {
+                'profile': profile,
+                'profile_id': profile.id,
+                'profile_name': profile.name,
+                'trigger': JobModel.Trigger.CATCHUP.value,
+            },
+        }
+    )
+
+    assert JobModel.select().count() == jobs_before + 1
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    assert job.status == JobModel.Status.FAILED.value
+    assert job.trigger == JobModel.Trigger.CATCHUP.value
+    assert job.reason == 'Backup failed, scheduling paused.'
+    assert scheduler.paused(profile.id)
 
 
 def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):

@@ -237,7 +237,7 @@ class MainWindow(MainWindowBase, MainWindowUI):
             )
 
             if reply == QMessageBox.StandardButton.Yes:
-                self.app.scheduler.unpause(to_delete_id)  # Drop a pause the deleted id could outlive
+                self.app.scheduler.clear_pause(to_delete_id)  # Drop a pause the deleted id could outlive
                 to_delete.delete_instance(recursive=True)
                 self.app.scheduler.remove_job(to_delete_id)  # Remove pending jobs
                 self.profileSelector.takeItem(self.profileSelector.currentRow())

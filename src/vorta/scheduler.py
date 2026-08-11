@@ -195,7 +195,12 @@ class VortaScheduler(QtCore.QObject):
         timer.start()
 
         self.pauses[profile_id] = (until, timer)
-        SchedulerPauseModel.replace(profile=profile_id, paused_until=until).execute()
+
+        try:
+            SchedulerPauseModel.replace(profile=profile_id, paused_until=until).execute()
+        except pw.PeeweeException:
+            logger.warning('Could not store pause for profile %s.', profile_id, exc_info=True)
+
         self._mark_paused(profile, until)
 
     def _mark_paused(self, profile: BackupProfileModel, until: dt) -> None:
@@ -206,7 +211,7 @@ class VortaScheduler(QtCore.QObject):
         self.timers[profile.id] = {'type': ScheduleStatusType.PAUSED, 'dt': until}
         self.schedule_changed.emit()
 
-    def _clear_pause(self, profile_id: int) -> None:
+    def clear_pause(self, profile_id: int) -> None:
         """Drop a pause from memory, from the schedule status and from the database."""
         pause = self.pauses.pop(profile_id, None)
         if pause is not None:
@@ -216,7 +221,10 @@ class VortaScheduler(QtCore.QObject):
         if status is not None and status.get('type') is ScheduleStatusType.PAUSED:
             del self.timers[profile_id]
 
-        SchedulerPauseModel.delete().where(SchedulerPauseModel.profile == profile_id).execute()
+        try:
+            SchedulerPauseModel.delete().where(SchedulerPauseModel.profile == profile_id).execute()
+        except pw.PeeweeException:
+            logger.warning('Could not drop stored pause for profile %s.', profile_id, exc_info=True)
 
     def _restore_pauses(self) -> None:
         """Re-arm the pauses stored by a previous run, dropping the ones that already ran out."""
@@ -227,7 +235,7 @@ class VortaScheduler(QtCore.QObject):
             profile = BackupProfileModel.get_or_none(id=profile_id)
 
             if profile is None or stored.paused_until <= now:
-                self._clear_pause(profile_id)
+                self.clear_pause(profile_id)
                 continue
 
             self._set_pause(profile, stored.paused_until)
@@ -250,7 +258,7 @@ class VortaScheduler(QtCore.QObject):
         if pause is None:  # already unpaused
             return
 
-        self._clear_pause(profile_id)
+        self.clear_pause(profile_id)
 
         logger.debug(f"Unpaused {profile_id}")
 
@@ -302,7 +310,7 @@ class VortaScheduler(QtCore.QObject):
                     self._mark_paused(profile, pause_end)
                     return
                 else:
-                    self._clear_pause(profile_id)
+                    self.clear_pause(profile_id)
 
             if profile.repo is None:  # No backups without repo set
                 logger.debug(
@@ -552,6 +560,7 @@ class VortaScheduler(QtCore.QObject):
             if msg['ok']:
                 logger.info('Preparation for backup successful.')
                 msg['category'] = 'scheduled'
+                msg['trigger'] = trigger
                 job = BorgCreateJob(msg['cmd'], msg, profile.repo.id)
                 job.result.connect(self.notify)
                 self.app.jobs_manager.add_job(job)
@@ -600,6 +609,12 @@ class VortaScheduler(QtCore.QObject):
             # pause scheduler
             # if a scheduled backup fails the scheduler should pause
             # temporarily.
+            self._record_skip(
+                result['params']['profile'],
+                result['params'].get('trigger', JobModel.Trigger.SCHEDULED.value),
+                'Backup failed, scheduling paused.',
+                status=JobModel.Status.FAILED.value,
+            )
             self.pause(result['params']['profile_id'])
 
         self.set_timer_for_profile(profile_id)
