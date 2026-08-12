@@ -29,7 +29,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
         <source>Repository Path:</source>
-        <translation>Sökväg till förråd:</translation>
+        <translation>Förrådets sökväg:</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
@@ -435,7 +435,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation>Uppgiften har startats</translation>
+        <translation>Uppgift startad</translation>
     </message>
 </context>
 <context>
@@ -830,7 +830,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="338"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Behåll oavsett övriga inställningar alla arkiv från de senaste:</translation>
+        <translation>Behåll alla arkiv från de senaste, oavsett övriga inställningar:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="348"/>
@@ -1050,12 +1050,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
         <source>To mount archives, first install "FUSE for macOS" from %1.</source>
-        <translation>För att montera arkiv installerar du först ”FUSE för macOS” från %1.</translation>
+        <translation>För att montera arkiv installerar du först ”FUSE för macOS” %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
         <source>here</source>
-        <translation>här</translation>
+        <translation>härifrån</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="208"/>
@@ -1255,7 +1255,7 @@
     <message>
         <location filename="../../views/main_window.py" line="255"/>
         <source>Task cancelled</source>
-        <translation>Uppgiften avbröts</translation>
+        <translation>Uppgift avbruten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="20"/>
@@ -1833,7 +1833,7 @@ https://github.com/borgbase/vorta/issues/new
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
-Försök avlänka och återansluta ditt förråd.</translation>
+Försök att koppla bort och lägga till förrådet igen.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
