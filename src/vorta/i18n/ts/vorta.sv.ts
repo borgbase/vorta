@@ -11,7 +11,7 @@
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
         <source>A profile with this name already exists.</source>
-        <translation>Det finns redan en profil med det här namne.</translation>
+        <translation>Det finns redan en profil med det här namnet.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
@@ -29,12 +29,12 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
         <source>Repository Path:</source>
-        <translation>Förrådssökväg:</translation>
+        <translation>Förrådets sökväg:</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
         <source>Choose Location of Borg Repository</source>
-        <translation>Välj en plats för Borg-förrådet</translation>
+        <translation>Välj plats för Borg-förrådet</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
@@ -44,12 +44,12 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="138"/>
         <source>Unable to add your repository.</source>
-        <translation>Kunde inte lägga till ditt förråd.</translation>
+        <translation>Det gick inte att lägga till förrådet.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="165"/>
         <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
+        <translation>Ange en giltig förråds-URL eller välj en lokal sökväg.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
@@ -64,7 +64,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
         <source>Autofilled password from password manager.</source>
-        <translation>Automatiskt ifyllt lösenord från lösenordshanterare.</translation>
+        <translation>Lösenordet fylldes i automatiskt från lösenordshanteraren.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="102"/>
@@ -77,12 +77,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
         <source>Initialize New Backup Repository</source>
-        <translation>Starta nytt säkerhetskopieringsförråd</translation>
+        <translation>Initiera nytt säkerhetskopieringsförråd</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
         <source>Repository URL:</source>
-        <translation>Förråds-URL:</translation>
+        <translation>Förrådets URL:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
@@ -92,7 +92,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
         <source>Choose a local path as repository.</source>
-        <translation>Välj en lokal mapp som förråd.</translation>
+        <translation>Välj en lokal sökväg som förråd.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
@@ -137,7 +137,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
         <source>Extra Borg Arguments:</source>
-        <translation>Extra Borg-argument:</translation>
+        <translation>Ytterligare Borg-argument:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
@@ -170,12 +170,12 @@
     <message>
         <location filename="../../views/archive_tab.py" line="194"/>
         <source>Preview: %s</source>
-        <translation>Förhandsgranska: %s</translation>
+        <translation>Förhandsvisning: %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="198"/>
         <source>Error in archive name template.</source>
-        <translation>Fel i arkivets namnmall.</translation>
+        <translation>Fel i mallen för arkivnamn.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="242"/>
@@ -185,7 +185,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="261"/>
         <source>Refreshed archives.</source>
-        <translation>Uppdaterade arkiv.</translation>
+        <translation>Arkiven har uppdaterats.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="315"/>
@@ -195,17 +195,17 @@
     <message>
         <location filename="../../views/archive_tab.py" line="321"/>
         <source>Mounted successfully.</source>
-        <translation>Montering slutförd.</translation>
+        <translation>Monteringen lyckades.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="348"/>
         <source>Mount point not active.</source>
-        <translation>Monteringspunkt inte aktiv.</translation>
+        <translation>Monteringspunkten är inte aktiv.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="355"/>
         <source>Un-mounted successfully.</source>
-        <translation>Avmontering slutförd.</translation>
+        <translation>Avmonteringen lyckades.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="393"/>
@@ -215,12 +215,12 @@
     <message>
         <location filename="../../views/archive_tab.py" line="413"/>
         <source>Choose Extraction Point</source>
-        <translation>Välj extraheringspunkt</translation>
+        <translation>Välj plats för extrahering</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="478"/>
         <source>Archive deleted.</source>
-        <translation>Arkiv borttaget.</translation>
+        <translation>Arkivet har tagits bort.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="463"/>
@@ -250,12 +250,12 @@
     <message>
         <location filename="../../views/archive_tab.py" line="98"/>
         <source>Action cancelled.</source>
-        <translation>Åtgärden avbruten.</translation>
+        <translation>Åtgärden avbröts.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="361"/>
         <source>Unmounting failed. Make sure no programs are using {}</source>
-        <translation>Avmontering misslyckades. Tillse att inget program använder {}</translation>
+        <translation>Avmonteringen misslyckades. Kontrollera att inga program använder {}</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="117"/>
@@ -285,12 +285,12 @@
     <message>
         <location filename="../../views/archive_tab.py" line="567"/>
         <source>Archive renamed.</source>
-        <translation>Arkiv namnändrat.</translation>
+        <translation>Arkivet har bytt namn.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="278"/>
         <source>Refreshed archive.</source>
-        <translation>Uppdaterade arkiv.</translation>
+        <translation>Arkivet har uppdaterats.</translation>
     </message>
 </context>
 <context>
@@ -298,12 +298,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="8"/>
         <source>Breaking repository lock...</source>
-        <translation>Bryter förrådslås...</translation>
+        <translation>Bryter låset för förrådet…</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="12"/>
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation>Förrådslås uppbrutet. Upprepa senaste åtgärden.</translation>
+        <translation>Låset för förrådet har brutits. Upprepa den senaste åtgärden.</translation>
     </message>
 </context>
 <context>
@@ -311,7 +311,7 @@
     <message>
         <location filename="../../borg/check.py" line="8"/>
         <source>Starting consistency check...</source>
-        <translation>Startar konsekvenskontroll...</translation>
+        <translation>Startar konsekvenskontroll…</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="17"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../../borg/check.py" line="14"/>
         <source>Repo check failed. See logs for details.</source>
-        <translation>Förrådskontroll misslyckades, Se logg för detaljerad info.</translation>
+        <translation>Kontrollen av förrådet misslyckades. Se loggarna för mer information.</translation>
     </message>
 </context>
 <context>
@@ -329,17 +329,17 @@
     <message>
         <location filename="../../borg/create.py" line="36"/>
         <source>Backup finished with warnings. See the %1 for details.</source>
-        <translation>Säkerhetskopiering slutfördes med varningar. Se loggar för detaljerad info.</translation>
+        <translation>Säkerhetskopieringen slutfördes med varningar. Se %1 för mer information.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="38"/>
         <source>Backup finished.</source>
-        <translation>Säkerhetskopiering slutförd.</translation>
+        <translation>Säkerhetskopieringen är klar.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="45"/>
         <source>Backup started.</source>
-        <translation>Säkerhetskopiering startad.</translation>
+        <translation>Säkerhetskopieringen har startats.</translation>
     </message>
 </context>
 <context>
@@ -347,12 +347,12 @@
     <message>
         <location filename="../../borg/delete.py" line="8"/>
         <source>Deleting archive...</source>
-        <translation>Tar bort arkiv...</translation>
+        <translation>Tar bort arkiv…</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="13"/>
         <source>Archive deleted.</source>
-        <translation>Arkiv borttaget.</translation>
+        <translation>Arkivet har tagits bort.</translation>
     </message>
 </context>
 <context>
@@ -360,12 +360,12 @@
     <message>
         <location filename="../../borg/diff.py" line="9"/>
         <source>Requesting differences between archives...</source>
-        <translation>Begär olikheter mellan arkiv...</translation>
+        <translation>Hämtar skillnader mellan arkiv…</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="13"/>
         <source>Obtained differences between archives.</source>
-        <translation>Mottog olikheter mellan arkiv.</translation>
+        <translation>Skillnaderna mellan arkiven har hämtats.</translation>
     </message>
 </context>
 <context>
@@ -373,12 +373,12 @@
     <message>
         <location filename="../../borg/extract.py" line="8"/>
         <source>Downloading files from archive...</source>
-        <translation>Laddar ner filer från arkiv...</translation>
+        <translation>Hämtar filer från arkivet…</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="13"/>
         <source>Restored files from archive.</source>
-        <translation>Återställde filer från arkiv.</translation>
+        <translation>Filerna har återställts från arkivet.</translation>
     </message>
 </context>
 <context>
@@ -386,12 +386,12 @@
     <message>
         <location filename="../../borg/info_archive.py" line="9"/>
         <source>Refreshing archive...</source>
-        <translation>Uppdaterar arkiv...</translation>
+        <translation>Uppdaterar arkiv…</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="14"/>
         <source>Refreshing archive done.</source>
-        <translation>Arkiv uppdaterade.</translation>
+        <translation>Arkivet har uppdaterats.</translation>
     </message>
 </context>
 <context>
@@ -399,7 +399,7 @@
     <message>
         <location filename="../../borg/info_repo.py" line="9"/>
         <source>Validating existing repo...</source>
-        <translation>Validerar befintligt förråd...</translation>
+        <translation>Validerar befintligt förråd…</translation>
     </message>
 </context>
 <context>
@@ -407,7 +407,7 @@
     <message>
         <location filename="../../borg/init.py" line="8"/>
         <source>Setting up new repo...</source>
-        <translation>Skapar nytt förråd...</translation>
+        <translation>Skapar nytt förråd…</translation>
     </message>
 </context>
 <context>
@@ -435,7 +435,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="299"/>
         <source>Task started</source>
-        <translation>Åtgärd startad</translation>
+        <translation>Uppgift startad</translation>
     </message>
 </context>
 <context>
@@ -443,12 +443,12 @@
     <message>
         <location filename="../../borg/list_archive.py" line="8"/>
         <source>Getting archive content...</source>
-        <translation>Hämtar arkivinnehåll...</translation>
+        <translation>Hämtar arkivinnehåll…</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="12"/>
         <source>Done getting archive content.</source>
-        <translation>Arkivinnehåll hämtat.</translation>
+        <translation>Arkivinnehållet har hämtats.</translation>
     </message>
 </context>
 <context>
@@ -456,12 +456,12 @@
     <message>
         <location filename="../../borg/list_repo.py" line="10"/>
         <source>Refreshing archives...</source>
-        <translation>Uppdaterar arkiv...</translation>
+        <translation>Uppdaterar arkiv…</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="15"/>
         <source>Refreshing archives done.</source>
-        <translation>Arkiv uppdaterade.</translation>
+        <translation>Arkiven har uppdaterats.</translation>
     </message>
 </context>
 <context>
@@ -469,7 +469,7 @@
     <message>
         <location filename="../../borg/mount.py" line="9"/>
         <source>Mounting archive into folder...</source>
-        <translation>Monterar arkiv i mapp...</translation>
+        <translation>Monterar arkiv i mapp…</translation>
     </message>
 </context>
 <context>
@@ -477,7 +477,7 @@
     <message>
         <location filename="../../borg/prune.py" line="9"/>
         <source>Pruning old archives...</source>
-        <translation>Beskär gamla arkiv...</translation>
+        <translation>Beskär äldre arkiv…</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="14"/>
@@ -490,7 +490,7 @@
     <message>
         <location filename="../../borg/umount.py" line="10"/>
         <source>Unmounting archive...</source>
-        <translation>Avmonterar arkiv...</translation>
+        <translation>Avmonterar arkiv…</translation>
     </message>
 </context>
 <context>
@@ -508,12 +508,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
         <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation>nyx2.local-2018-11-16T09:49:58 från November 16, 2018</translation>
+        <translation>nyx2.local-2018-11-16T09:49:58 från 16 november 2018</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="63"/>
         <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
-        <translation>Notera: Om du väljer en toppnivåmapp och väljer bort dess undermappar, kommer de ändå att återställas.</translation>
+        <translation>Obs: Om du väljer en toppnivåmapp och avmarkerar dess undermappar kommer de ändå att återställas.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="88"/>
@@ -558,12 +558,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
-        <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. %1.</translation>
+        <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fast värde för Ed25519. %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
         <source>More</source>
-        <translation type="unfinished"/>
+        <translation>Mer</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
@@ -573,7 +573,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
         <source>Don't change this if you want SSH to automatically find the key.</source>
-        <translation>Ändra inte om du vill att SSH skall hitta nyckeln automatiskt.</translation>
+        <translation>Ändra inte detta om du vill att SSH ska hitta nyckeln automatiskt.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
@@ -608,7 +608,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
         <source>Mount Point</source>
-        <translation>Moneringspunkt</translation>
+        <translation>Monteringspunkt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
@@ -648,12 +648,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
         <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
-        <translation>Vid aktivering, avslöjas din borg-lösenfras om du delar den här filen med andra. Använd detta med försiktighet!</translation>
+        <translation>Om alternativet är aktiverat avslöjas din Borg-lösenfras om du delar filen med andra. Var försiktig!</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
         <source>Include borg passphrase in export</source>
-        <translation>Ta med borg-lösenfrasen i exporten</translation>
+        <translation>Inkludera Borg-lösenfrasen i exporten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
@@ -707,12 +707,12 @@
     <message>
         <location filename="../../views/dialogs/export.py" line="38"/>
         <source>The current profile_export has no password</source>
-        <translation>Den aktuella profile_export har inget lösenord</translation>
+        <translation>Den aktuella profile_export-filen har inget lösenord</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/export.py" line="43"/>
         <source>Save profile_export</source>
-        <translation>Spara profile_export</translation>
+        <translation>Spara profile_export-filen</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/export.py" line="55"/>
@@ -727,12 +727,12 @@
     <message>
         <location filename="../../views/dialogs/export.py" line="78"/>
         <source>Profile export successful!</source>
-        <translation>Profilexport slutförd!</translation>
+        <translation>Profilexporten slutfördes!</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/export.py" line="78"/>
         <source>Profile export written to {}.</source>
-        <translation>Profilexport skriven på {}.</translation>
+        <translation>Profilexporten sparades i {}.</translation>
     </message>
 </context>
 <context>
@@ -740,7 +740,7 @@
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="14"/>
         <source>Form</source>
-        <translation>Format</translation>
+        <translation>Formulär</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="44"/>
@@ -795,7 +795,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="229"/>
         <source>Keep</source>
-        <translation>Bevara</translation>
+        <translation>Behåll</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="256"/>
@@ -805,22 +805,22 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="249"/>
         <source> hourly, </source>
-        <translation> varje timma, </translation>
+        <translation> per timme, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="269"/>
         <source> daily, </source>
-        <translation> varje dag, </translation>
+        <translation> per dag, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="283"/>
         <source> weekly, </source>
-        <translation> varje vecka, </translation>
+        <translation> per vecka, </translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="297"/>
         <source> monthly and</source>
-        <translation> varje månad och</translation>
+        <translation> per månad och</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="311"/>
@@ -830,7 +830,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="338"/>
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Oavsett, bevara alla arkiv för de senaste:</translation>
+        <translation>Behåll alla arkiv från de senaste, oavsett övriga inställningar:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="348"/>
@@ -870,12 +870,12 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="128"/>
         <source>Select Backup Destination</source>
-        <translation>Välj målmapp för säkerhetskopiering</translation>
+        <translation>Välj mål för säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="136"/>
         <source>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</source>
-        <translation>Avlänka förrådet (Detta tar inte bort någon data. Du kan alltid lägga till ett förråd igen, senare.)</translation>
+        <translation>Koppla bort förrådet (detta tar inte bort några data. Du kan alltid lägga till förrådet igen senare.)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="164"/>
@@ -890,7 +890,7 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="222"/>
         <source>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</source>
-        <translation>Behåll standard för att använda alla befintliga nycklar, eller skapa en ny nyckel, för säker åtkomst till fjärrförråd.</translation>
+        <translation>För säker åtkomst till fjärrförråd: behåll standardinställningen för att använda alla befintliga nycklar, eller skapa en ny nyckel.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="246"/>
@@ -935,7 +935,7 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="110"/>
         <source>Backup daily at</source>
-        <translation>Säkerhetskopiera varje dag</translation>
+        <translation>Säkerhetskopiera dagligen kl.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="279"/>
@@ -965,7 +965,7 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="357"/>
         <source>Allowed Networks:</source>
-        <translation>Betrodda nätverk:</translation>
+        <translation>Tillåtna nätverk:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="406"/>
@@ -1005,17 +1005,17 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="477"/>
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).</source>
-        <translation>Kör anpassade skalkommandon före och efter säkerhetskopiering. Det faktiska säkerhetskopierings- och eftersäkerhetskopieringskommandot körs bara om kommandot före säkerhetskopieringen avslutas utan fel (returkod 0).</translation>
+        <translation>Kör anpassade skalkommandon före och efter varje säkerhetskopiering. Själva säkerhetskopieringen och kommandot efter säkerhetskopieringen körs endast om kommandot före säkerhetskopieringen avslutas utan fel (returkod 0).</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="496"/>
         <source>Pre-backup command to run BEFORE backups</source>
-        <translation>Försäkerhetskopieringskommando att köra FÖRE säkerhetskopiering</translation>
+        <translation>Kommando att köra FÖRE säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="506"/>
         <source>Post-backup command to run AFTER backups</source>
-        <translation>Eftersäkerhetskopieringskommando att köra EFTER säkerhetskopiering</translation>
+        <translation>Kommando att köra EFTER säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="519"/>
@@ -1040,7 +1040,7 @@
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="164"/>
         <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Undanta om finnes (undanta mappar med dessa filer):</translation>
+        <translation>Undanta om dessa filer finns (undanta mappar som innehåller dem):</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="135"/>
@@ -1050,22 +1050,22 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
         <source>To mount archives, first install "FUSE for macOS" from %1.</source>
-        <translation>För att montera arkiv, installerarar du först "FUSE för macOS" from %1.</translation>
+        <translation>För att montera arkiv installerar du först ”FUSE för macOS” %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="183"/>
         <source>here</source>
-        <translation type="unfinished"/>
+        <translation>härifrån</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="208"/>
         <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
-        <translation>Beskärning tar bort äldre arkiv. Du kan välja antal arkiv att bevara per timma, dag etc. Normalt vill man bevara fler nyare och färre äldre arkiv. Läs %1.</translation>
+        <translation>Beskärning tar bort äldre arkiv. Du kan välja hur många arkiv per timme, dag, vecka osv. som ska behållas. Vanligtvis behåller man fler nya och färre gamla arkiv. Läs %1.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="208"/>
         <source>more</source>
-        <translation type="unfinished"/>
+        <translation>mer</translation>
     </message>
     <message>
         <location filename="../../assets/UI/misc_tab.ui" line="64"/>
@@ -1100,17 +1100,17 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="96"/>
         <source>For simple and secure backup hosting, try %1.</source>
-        <translation>Fjärr- eller lokalt säkerhetskopieringsförråd. För enkel och säker lagring kan du prova %1.</translation>
+        <translation>Prova %1 för enkel och säker lagring av säkerhetskopior.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="288"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn't affect deduplication. Read &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprimering använd för ny data. Kan ändras och påverkar inte deduplicering. Läs &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprimering som används för nya data. Inställningen kan ändras och påverkar inte dedupliceringen. Läs &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="154"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undantagsmall. Läs (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undantagsmönster (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="180"/>
@@ -1130,12 +1130,12 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="364"/>
         <source>Don't run backup over metered networks</source>
-        <translation>Kör inte säkerhetskopiering över nätverk med datamätare</translation>
+        <translation>Kör inte säkerhetskopiering över databegränsade nätverk</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="101"/>
         <source>Add File(s)</source>
-        <translation>Lägg till fil(er)</translation>
+        <translation>Lägg till filer</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="115"/>
@@ -1195,7 +1195,7 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="252"/>
         <source>Run missed backups right after startup or wakeup</source>
-        <translation>Kör saknade säkerhetskopieringar direkt efter uppstart eller väckning</translation>
+        <translation>Kör missade säkerhetskopieringar direkt efter start eller väckning</translation>
     </message>
 </context>
 <context>
@@ -1230,24 +1230,24 @@
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
  {0}
  {1}</source>
-        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i inställningsfliken och ange följande fel:
+        <translation>Uppgraderingen av schemat misslyckades. Skicka en felrapport via länken på fliken Inställningar och ange följande fel:
  {0}
  {1}</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/import.py" line="80"/>
         <source>Newer profile_export export files cannot be used on older versions.</source>
-        <translation>Nyare profile_export exportfiler kan inte användas i äldre versioner.</translation>
+        <translation>Nyare exportfiler av typen profile_export kan inte användas med äldre versioner.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/import.py" line="82"/>
         <source>Cannot read profile_export export file due to permission error.</source>
-        <translation>Kan inte läsa profile_export exportfil på grund av behörighetsfel.</translation>
+        <translation>Det går inte att läsa exportfilen av typen profile_export på grund av ett behörighetsfel.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/import.py" line="84"/>
         <source>Profile export file not found.</source>
-        <translation>Profilexportfil hittades inte</translation>
+        <translation>Profilexportfilen hittades inte.</translation>
     </message>
 </context>
 <context>
@@ -1255,7 +1255,7 @@
     <message>
         <location filename="../../views/main_window.py" line="255"/>
         <source>Task cancelled</source>
-        <translation>Aktivitet avbruten</translation>
+        <translation>Uppgift avbruten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="20"/>
@@ -1315,7 +1315,7 @@
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="239"/>
         <source>Latest</source>
-        <translation>Senast</translation>
+        <translation>Senaste</translation>
     </message>
     <message>
         <location filename="../../assets/UI/mainwindow.ui" line="244"/>
@@ -1340,7 +1340,7 @@
     <message>
         <location filename="../../views/main_window.py" line="272"/>
         <source>Should Vorta continue to run in the background?</source>
-        <translation>Skall Vorta fortsätta köra i bakgrunden?</translation>
+        <translation>Ska Vorta fortsätta köras i bakgrunden?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="277"/>
@@ -1355,12 +1355,12 @@
     <message>
         <location filename="../../views/main_window.py" line="83"/>
         <source>Import from file...</source>
-        <translation>Importera från fil...</translation>
+        <translation>Importera från fil…</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="174"/>
         <source>Can't delete the last profile.</source>
-        <translation>Kan inte ta bort senaste profilen.</translation>
+        <translation>Det går inte att ta bort den sista profilen.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="202"/>
@@ -1398,7 +1398,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="26"/>
         <source>+ Initialize New Repository</source>
-        <translation>+ Starta nytt förråd</translation>
+        <translation>+ Initiera nytt förråd</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="27"/>
@@ -1413,7 +1413,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="111"/>
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Välj SSH-nyckel auomatiskt (standard)</translation>
+        <translation>Välj SSH-nyckel automatiskt (standard)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="112"/>
@@ -1443,7 +1443,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="213"/>
         <source>Repository was Unlinked</source>
-        <translation>Förrådet blev avlänkat</translation>
+        <translation>Förrådet har kopplats bort</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="214"/>
@@ -1486,12 +1486,12 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
         <source>ED25519 (Recommended)</source>
-        <translation>ED25519 (Rekommenderas)</translation>
+        <translation>ED25519 (rekommenderas)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="36"/>
         <source>RSA (Legacy)</source>
-        <translation>RSA (Äldre)</translation>
+        <translation>RSA (äldre)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="37"/>
@@ -1501,7 +1501,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="46"/>
         <source>High (Recommended)</source>
-        <translation>Hög (Rekommenderas)</translation>
+        <translation>Hög (rekommenderas)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="47"/>
@@ -1516,7 +1516,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="72"/>
         <source>New key was copied to clipboard and written to %s.</source>
-        <translation>Ny nyckel kopierades till urklipp och skrevs till %s.</translation>
+        <translation>Den nya nyckeln kopierades till urklipp och sparades i %s.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="74"/>
@@ -1557,7 +1557,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="173"/>
         <source>Choose file(s) to back up</source>
-        <translation>Välj fil(er) att säkerhetskopiera</translation>
+        <translation>Välj filer att säkerhetskopiera</translation>
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="130"/>
@@ -1572,7 +1572,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="102"/>
         <source>Calculating...</source>
-        <translation>Beräknar...</translation>
+        <translation>Beräknar…</translation>
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="164"/>
@@ -1595,7 +1595,7 @@
     <message>
         <location filename="../../tray_menu.py" line="56"/>
         <source>Next Task: %s</source>
-        <translation>Nästa aktivitet: %s</translation>
+        <translation>Nästa uppgift: %s</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="65"/>
@@ -1610,7 +1610,7 @@
     <message>
         <location filename="../../tray_menu.py" line="52"/>
         <source>Task in progress</source>
-        <translation>Åtgärd pågår</translation>
+        <translation>Uppgift pågår</translation>
     </message>
 </context>
 <context>
@@ -1618,22 +1618,22 @@
     <message>
         <location filename="../../application.py" line="129"/>
         <source>Vorta Backup</source>
-        <translation>Vorta säkerhetskopiering</translation>
+        <translation>Vorta-säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../application.py" line="191"/>
         <source>No Borg Binary Found</source>
-        <translation>Ingen Borg-binär hittades</translation>
+        <translation>Ingen Borg-binärfil hittades</translation>
     </message>
     <message>
         <location filename="../../application.py" line="192"/>
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
-        <translation>Vorta kunde inte hitta någon användbar Borg Backup-binär.</translation>
+        <translation>Vorta kunde inte hitta någon användbar Borg Backup-binärfil.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="229"/>
         <source>Repository In Use</source>
-        <translation>Förråd som används</translation>
+        <translation>Förrådet används</translation>
     </message>
     <message>
         <location filename="../../application.py" line="231"/>
@@ -1648,7 +1648,7 @@
     <message>
         <location filename="../../application.py" line="234"/>
         <source>The repository at {repo_url} might be in use elsewhere.</source>
-        <translation>Förrådet på {repo_url} kanske används någon annan stans.</translation>
+        <translation>Förrådet på {repo_url} kanske används på en annan plats.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="235"/>
@@ -1663,7 +1663,7 @@
     <message>
         <location filename="../../application.py" line="246"/>
         <source>No Repository Permissions</source>
-        <translation>Inga förrådsrättigheter</translation>
+        <translation>Ingen behörighet till förrådet</translation>
     </message>
     <message>
         <location filename="../../application.py" line="210"/>
@@ -1721,22 +1721,22 @@
     <message>
         <location filename="../../scheduler.py" line="143"/>
         <source>None scheduled</source>
-        <translation>Ej schemalagd</translation>
+        <translation>Inget schemalagt</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="190"/>
         <source>Vorta Backup</source>
-        <translation>Vorta säkerhetskopiering</translation>
+        <translation>Vorta-säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="162"/>
         <source>Starting background backup for %s.</source>
-        <translation>Starta säkerhetskopiering i bakgrunden för %s.</translation>
+        <translation>Startar säkerhetskopiering i bakgrunden för %s.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="184"/>
         <source>Backup successful for %s.</source>
-        <translation>Säkerhetskopiering slutförd för %s.</translation>
+        <translation>Säkerhetskopieringen för %s slutfördes.</translation>
     </message>
     <message>
         <location filename="../../scheduler.py" line="190"/>
@@ -1766,12 +1766,12 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/version.py" line="20"/>
         <source>Borg binary was not found.</source>
-        <translation>Borg-binär hittades inte.</translation>
+        <translation>Borg-binärfilen hittades inte.</translation>
     </message>
     <message>
         <location filename="../../borg/version.py" line="20"/>
         <source>logs</source>
-        <translation type="unfinished"/>
+        <translation>loggarna</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="140"/>
@@ -1786,22 +1786,22 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/create.py" line="98"/>
         <source>Current Wifi is not allowed.</source>
-        <translation>Aktuellt Wifi är inte tillåtet.</translation>
+        <translation>Det aktuella Wi-Fi-nätverket är inte tillåtet.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="115"/>
         <source>Repo folder not mounted or moved.</source>
-        <translation>Förrådsmapp inte monterad eller flyttad.</translation>
+        <translation>Förrådsmappen är inte monterad eller har flyttats.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="111"/>
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>Kommandot före säkerhetskopiering returnerade en icke-nollavslutningskod.</translation>
+        <translation>Kommandot före säkerhetskopieringen returnerade en avslutningskod som inte är noll.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="165"/>
         <source>Starting backup...</source>
-        <translation>Startar säkerhetskopiering...</translation>
+        <translation>Startar säkerhetskopiering…</translation>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="27"/>
@@ -1811,7 +1811,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/borg_job.py" line="144"/>
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
-        <translation>Din Borg-version är för gammal. &gt;=1.1.0 är obligatoriskt.</translation>
+        <translation>Din Borg-version är för gammal. Version 1.1.0 eller senare krävs.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="119"/>
@@ -1821,7 +1821,7 @@ https://github.com/borgbase/vorta/issues/new
     <message>
         <location filename="../../borg/create.py" line="103"/>
         <source>Not running backup over metered connection.</source>
-        <translation>Säkerhetskopiering över anslutning med datamätare körs inte.</translation>
+        <translation>Säkerhetskopiering körs inte över en databegränsad anslutning.</translation>
     </message>
     <message>
         <location filename="../../borg/info_repo.py" line="43"/>
@@ -1833,12 +1833,12 @@ https://github.com/borgbase/vorta/issues/new
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
-Försök avlänka och återansluta ditt förråd.</translation>
+Försök att koppla bort och lägga till förrådet igen.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="155"/>
         <source>Please unlock your system password manager or disable it under Settings</source>
-        <translation>Lås upp din lösenordshanterare eller avaktivera den under Inställningar</translation>
+        <translation>Lås upp systemets lösenordshanterare eller inaktivera den under Inställningar</translation>
     </message>
 </context>
 <context>
@@ -1846,12 +1846,12 @@ Försök avlänka och återansluta ditt förråd.</translation>
     <message>
         <location filename="../../store/settings.py" line="10"/>
         <source>Display notifications when background tasks fail</source>
-        <translation>Visa meddelanden när bakgrundsaktiviteter misslyckas</translation>
+        <translation>Visa aviseringar när bakgrundsuppgifter misslyckas</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="15"/>
         <source>Also notify about successful background tasks</source>
-        <translation>Visa meddelanden också  för lyckade bakgrundsaktiviteter</translation>
+        <translation>Visa även aviseringar om lyckade bakgrundsuppgifter</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="20"/>
@@ -1871,7 +1871,7 @@ Försök avlänka och återansluta ditt förråd.</translation>
     <message>
         <location filename="../../store/settings.py" line="35"/>
         <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Lagra förrådslösenord i systemets nyckelkedja, om tillgänglig.</translation>
+        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="40"/>
@@ -1891,7 +1891,7 @@ Försök avlänka och återansluta ditt förråd.</translation>
     <message>
         <location filename="../../store/settings.py" line="73"/>
         <source>Display background exit dialog</source>
-        <translation>Visa dialog när bakgrundsaktiviteter avslutas</translation>
+        <translation>Visa dialogrutan vid avslut till bakgrunden</translation>
     </message>
 </context>
 <context>
