@@ -88,13 +88,3 @@ def translate(*args, **kwargs):
     """
     global application  # see init_translation
     return application.translate(*args, **kwargs)
-
-
-def trans_late(scope, text):
-    """
-    dummy translate function - only purpose is to mark scope/text for message extraction.
-
-    later, at another place, there will be a translate(scope, text) call, with same
-    scope and text, potentially not literal scope, not literal text, but from a variable.
-    """
-    return text

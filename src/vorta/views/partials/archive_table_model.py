@@ -8,10 +8,10 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, QObject, Qt
 from PyQt6.QtGui import QIcon
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 from vorta.utils import find_best_unit_for_sizes, pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
@@ -37,12 +37,12 @@ class ArchiveTableModel(QAbstractTableModel):
     ArchiveRole = Qt.ItemDataRole.UserRole + 1
 
     _HEADERS = (
-        trans_late('Form', 'Date'),
-        trans_late('Form', 'Size'),
-        trans_late('Form', 'Duration'),
-        trans_late('Form', 'Mount Point'),
-        trans_late('Form', 'Name'),
-        trans_late('Form', 'Trigger'),
+        QT_TRANSLATE_NOOP('Form', 'Date'),
+        QT_TRANSLATE_NOOP('Form', 'Size'),
+        QT_TRANSLATE_NOOP('Form', 'Duration'),
+        QT_TRANSLATE_NOOP('Form', 'Mount Point'),
+        QT_TRANSLATE_NOOP('Form', 'Name'),
+        QT_TRANSLATE_NOOP('Form', 'Trigger'),
     )
 
     _TRIGGER_ICONS = {'scheduled': 'clock-o', 'user': 'user'}

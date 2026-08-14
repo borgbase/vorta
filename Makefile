@@ -45,10 +45,8 @@ bump-version: release-preflight  ## Tag new version. First set new version numbe
 	git commit -a -m "Bump version to v${VERSION}"
 	git tag -a v${VERSION} -m "Release v${VERSION}"
 
-translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
-	pylupdate5 -verbose -translate-function trans_late \
-			   $$(find ${VORTA_SRC} -iname "*.py" -o -iname "*.ui") \
-			   -ts ${VORTA_SRC}/i18n/ts/vorta.en.ts
+translations-from-source:  ## Extract strings from source code / UI files, merge into every .ts.
+	pylupdate6 $(foreach f,$(wildcard ${VORTA_SRC}/i18n/ts/vorta.*.ts),--ts $f) ${VORTA_SRC}
 
 translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls ${VORTA_SRC}/i18n/ts/vorta.*.ts); do lrelease $$f -qm ${VORTA_SRC}/i18n/qm/$$(basename $$f .ts).qm; done

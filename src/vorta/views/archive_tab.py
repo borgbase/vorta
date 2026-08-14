@@ -3,7 +3,7 @@ import sys
 from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt6.QtGui import QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QAbstractItemView,
@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (
 
 from vorta.borg.info_archive import BorgInfoArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
@@ -103,14 +103,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         delegate = IconDelegate(self.archiveTable)
         self.archiveTable.setItemDelegateForColumn(ArchiveTableModel.COL_TRIGGER, delegate)
 
-        self.mount_help_text = trans_late('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
-        self.mount_help_link_text = trans_late('Form', 'here')
-        self.pruning_help_text = trans_late(
+        self.mount_help_text = QT_TRANSLATE_NOOP('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
+        self.mount_help_link_text = QT_TRANSLATE_NOOP('Form', 'here')
+        self.pruning_help_text = QT_TRANSLATE_NOOP(
             'Form',
             'Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. '
             'Usually you will keep more newer and fewer old archives. Read %1.',
         )
-        self.pruning_help_link_text = trans_late('Form', 'more')
+        self.pruning_help_link_text = QT_TRANSLATE_NOOP('Form', 'more')
         self._init_help_texts()
 
         if sys.platform != 'darwin':

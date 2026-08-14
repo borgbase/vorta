@@ -13,11 +13,12 @@ from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
 
 from PyQt6 import QtCore
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 from vorta.store.models import EventLogModel, db_lock
@@ -65,10 +66,10 @@ class BorgJob(JobInterface):
 
         # Declare labels here for translation
         self.category_label = {
-            "files": trans_late("BorgJob", "Files"),
-            "original": trans_late("BorgJob", "Original"),
-            "deduplicated": trans_late("BorgJob", "Deduplicated"),
-            "compressed": trans_late("BorgJob", "Compressed"),
+            "files": QT_TRANSLATE_NOOP("BorgJob", "Files"),
+            "original": QT_TRANSLATE_NOOP("BorgJob", "Original"),
+            "deduplicated": QT_TRANSLATE_NOOP("BorgJob", "Deduplicated"),
+            "compressed": QT_TRANSLATE_NOOP("BorgJob", "Compressed"),
         }
 
         cmd[0] = self.prepare_bin()
@@ -140,15 +141,15 @@ class BorgJob(JobInterface):
         ret = {'ok': False}
 
         if cls.prepare_bin() is None:
-            ret['message'] = trans_late('messages', 'Borg binary was not found.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Borg binary was not found.')
             return ret
 
         if profile.repo is None:
-            ret['message'] = trans_late('messages', 'Select a backup repository first.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Select a backup repository first.')
             return ret
 
         if not borg_compat.check('JSON_LOG'):
-            ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
 
         # Try to get password from chosen keyring backend.
@@ -159,7 +160,7 @@ class BorgJob(JobInterface):
 
             # Check if keyring is locked
             if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-                ret['message'] = trans_late(
+                ret['message'] = QT_TRANSLATE_NOOP(
                     'messages',
                     'Please unlock your system password manager or disable it under Settings',
                 )
@@ -179,7 +180,7 @@ class BorgJob(JobInterface):
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
-            ret['message'] = trans_late(
+            ret['message'] = QT_TRANSLATE_NOOP(
                 'messages',
                 "Your repo passphrase was stored in a password manager which is no longer available.\n"
                 "Try unlinking and re-adding your repo.",
@@ -305,10 +306,10 @@ class BorgJob(JobInterface):
                             self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:

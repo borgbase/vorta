@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Set
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QObject, Qt
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, QObject, Qt
 from PyQt6.QtGui import QIcon
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.store.models import SourceFileModel
 from vorta.utils import pretty_bytes, uses_dark_mode
 from vorta.views.utils import get_colored_icon
@@ -26,12 +26,12 @@ class SourceFilesModel(QAbstractTableModel):
     SourceRole = Qt.ItemDataRole.UserRole + 1
 
     _HEADERS = (
-        trans_late('Form', 'Path'),
-        trans_late('Form', 'Size'),
-        trans_late('Form', 'File Count'),
+        QT_TRANSLATE_NOOP('Form', 'Path'),
+        QT_TRANSLATE_NOOP('Form', 'Size'),
+        QT_TRANSLATE_NOOP('Form', 'File Count'),
     )
 
-    _CALCULATING = trans_late('SourceTab', 'Calculating…')
+    _CALCULATING = QT_TRANSLATE_NOOP('SourceTab', 'Calculating…')
 
     def __init__(self, parent: Optional[QObject] = None):
         """Init."""

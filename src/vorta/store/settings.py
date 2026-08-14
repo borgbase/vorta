@@ -4,7 +4,8 @@ import logging
 import sys
 from typing import Any
 
-from vorta.i18n import trans_late
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
+
 from vorta.store.models import SettingsModel
 
 logger = logging.getLogger(__name__)
@@ -20,11 +21,11 @@ def get_misc_settings() -> list[dict[str, Any]]:
         The settings in a json-like way.
     """
     # groups
-    notifications = trans_late('settings', 'Notifications')
-    startup = trans_late('settings', 'Startup')
-    information = trans_late('settings', 'Information')
-    security = trans_late('settings', 'Security')
-    updates = trans_late('settings', 'Updates')
+    notifications = QT_TRANSLATE_NOOP('settings', 'Notifications')
+    startup = QT_TRANSLATE_NOOP('settings', 'Startup')
+    information = QT_TRANSLATE_NOOP('settings', 'Information')
+    security = QT_TRANSLATE_NOOP('settings', 'Security')
+    updates = QT_TRANSLATE_NOOP('settings', 'Updates')
 
     # Default settings for all platforms.
     settings = [
@@ -33,30 +34,30 @@ def get_misc_settings() -> list[dict[str, Any]]:
             'value': True,
             'type': 'checkbox',
             'group': notifications,
-            'label': trans_late('settings', 'Display notifications when background tasks fail'),
+            'label': QT_TRANSLATE_NOOP('settings', 'Display notifications when background tasks fail'),
         },
         {
             'key': 'enable_notifications_success',
             'value': False,
             'type': 'checkbox',
             'group': notifications,
-            'label': trans_late('settings', 'Notify about successful background tasks'),
+            'label': QT_TRANSLATE_NOOP('settings', 'Notify about successful background tasks'),
         },
         {
             'key': 'autostart',
             'value': False,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Automatically start Vorta at login'),
-            'tooltip': trans_late('settings', 'Add Vorta to the systems autostart list'),
+            'label': QT_TRANSLATE_NOOP('settings', 'Automatically start Vorta at login'),
+            'tooltip': QT_TRANSLATE_NOOP('settings', 'Add Vorta to the systems autostart list'),
         },
         {
             'key': 'foreground',
             'value': True,
             'type': 'checkbox',
             'group': startup,
-            'label': trans_late('settings', 'Show main window of Vorta on launch'),
-            'tooltip': trans_late(
+            'label': QT_TRANSLATE_NOOP('settings', 'Show main window of Vorta on launch'),
+            'tooltip': QT_TRANSLATE_NOOP(
                 'settings',
                 'Make Vorta appear on screen instead of minimizing to system tray',
             ),
@@ -66,16 +67,18 @@ def get_misc_settings() -> list[dict[str, Any]]:
             'value': True,
             'type': 'checkbox',
             'group': information,
-            'label': trans_late('settings', 'Get statistics of file/folder when added'),
-            'tooltip': trans_late('settings', 'When adding a new source, calculate its size and the number of files.'),
+            'label': QT_TRANSLATE_NOOP('settings', 'Get statistics of file/folder when added'),
+            'tooltip': QT_TRANSLATE_NOOP(
+                'settings', 'When adding a new source, calculate its size and the number of files.'
+            ),
         },
         {
             'key': 'enable_fixed_units',
             'value': False,
             'type': 'checkbox',
             'group': information,
-            'label': trans_late('settings', 'Use the same unit of measurement for archive sizes'),
-            'tooltip': trans_late(
+            'label': QT_TRANSLATE_NOOP('settings', 'Use the same unit of measurement for archive sizes'),
+            'tooltip': QT_TRANSLATE_NOOP(
                 'settings',
                 'When enabled, all archive sizes will use the same unit of measurement, '
                 'such as  KB or MB. This can make archive sizes easier to compare.',
@@ -86,8 +89,8 @@ def get_misc_settings() -> list[dict[str, Any]]:
             'value': True,
             'type': 'checkbox',
             'group': security,
-            'label': trans_late('settings', 'Store repository passwords in system keychain, if available'),
-            'tooltip': trans_late(
+            'label': QT_TRANSLATE_NOOP('settings', 'Store repository passwords in system keychain, if available'),
+            'tooltip': QT_TRANSLATE_NOOP(
                 'settings', "Otherwise Vorta's configuration database stores the password in plaintext."
             ),
         },
@@ -96,11 +99,11 @@ def get_misc_settings() -> list[dict[str, Any]]:
             'value': False,
             'type': 'checkbox',
             'group': security,
-            'label': trans_late(
+            'label': QT_TRANSLATE_NOOP(
                 'settings',
                 'Try to replace file permissions when mounting an archive',
             ),
-            'tooltip': trans_late('settings', 'Set owner to current user and umask to 0277'),
+            'tooltip': QT_TRANSLATE_NOOP('settings', 'Set owner to current user and umask to 0277'),
         },
         {
             'key': 'previous_profile_id',
@@ -152,27 +155,29 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 'value': True,
                 'type': 'checkbox',
                 'group': updates,
-                'label': trans_late('settings', 'Check for updates on startup'),
-                'tooltip': trans_late('settings', 'Uses Sparkle to find new updates published on Github.'),
+                'label': QT_TRANSLATE_NOOP('settings', 'Check for updates on startup'),
+                'tooltip': QT_TRANSLATE_NOOP('settings', 'Uses Sparkle to find new updates published on Github.'),
             },
             {
                 'key': 'updates_include_beta',
                 'value': False,
                 'type': 'checkbox',
                 'group': updates,
-                'label': trans_late('settings', 'Include pre-release versions when checking for updates'),
-                'tooltip': trans_late('settings', 'Needs Vorta restart to apply.'),
+                'label': QT_TRANSLATE_NOOP('settings', 'Include pre-release versions when checking for updates'),
+                'tooltip': QT_TRANSLATE_NOOP('settings', 'Needs Vorta restart to apply.'),
             },
             {
                 'key': 'check_full_disk_access',
                 'value': True,
                 'type': 'checkbox',
                 'group': startup,
-                'label': trans_late(
+                'label': QT_TRANSLATE_NOOP(
                     'settings',
                     'Check for Full Disk Access on startup',
                 ),
-                'tooltip': trans_late('settings', 'Alerts user when full disk access permission has not been provided'),
+                'tooltip': QT_TRANSLATE_NOOP(
+                    'settings', 'Alerts user when full disk access permission has not been provided'
+                ),
             },
         ]
     else:
@@ -181,9 +186,9 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 'key': 'enable_background_question',
                 'value': True,
                 'type': 'checkbox',
-                'label': trans_late(
+                'label': QT_TRANSLATE_NOOP(
                     'settings',
-                    "If the system tray isn't available, " "ask whether to continue in the background " "on exit",
+                    "If the system tray isn't available, ask whether to continue in the background on exit",
                 ),
             },
             {

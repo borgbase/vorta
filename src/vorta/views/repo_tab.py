@@ -2,10 +2,10 @@ import os
 from pathlib import PurePath
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QMimeData, QUrl
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QMimeData, QUrl
 from PyQt6.QtWidgets import QApplication, QLayout, QMenu, QMessageBox
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat, get_asset, get_private_keys, pretty_bytes
@@ -28,8 +28,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
 
-        self.borgbase_sentence = trans_late('Form', 'For simple and secure backup hosting, try %1.')
-        self.compression_help_text = trans_late('Form', 'Help on compression types')
+        self.borgbase_sentence = QT_TRANSLATE_NOOP('Form', 'For simple and secure backup hosting, try %1.')
+        self.compression_help_text = QT_TRANSLATE_NOOP('Form', 'Help on compression types')
         self._set_link_texts()
 
         # Populate dropdowns
