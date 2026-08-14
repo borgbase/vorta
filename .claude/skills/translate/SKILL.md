@@ -46,10 +46,19 @@ Compile all .ts files to binary .qm format.
 
 ## Command: `/translate missing`
 
-1. Read each .ts file in `src/vorta/i18n/ts/`
-2. Count strings with `<translation type="unfinished"/>` (untranslated)
-3. Count total `<message>` elements
-4. Display a summary table:
+1. Refresh the message set first, so the counts reflect the current code:
+   ```bash
+   make translations-from-source
+   ```
+   This runs `pylupdate6` over `src/vorta` and merges the extracted strings into
+   **every** `vorta.*.ts` at once. Existing translations are preserved, new strings
+   arrive as `type="unfinished"`, and strings that vanished from the code are kept as
+   `type="vanished"`. It is idempotent — a second run is a no-op.
+2. Read each .ts file in `src/vorta/i18n/ts/`
+3. Count strings with `<translation type="unfinished"/>` (untranslated), ignoring
+   `type="vanished"` entries
+4. Count total live `<message>` elements (again ignoring `vanished`)
+5. Display a summary table:
 
 ```
 Language    Untranslated    Total    Completion
@@ -91,15 +100,29 @@ Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
 </context>
 ```
 
-**Special case - comment-based strings:**
+The text to translate is always in `<source>`, and `<name>` is always the real
+context — including for strings marked with `QT_TRANSLATE_NOOP` in the code, which
+land under lowercase contexts like `messages`, `settings`, `utils` and `app`:
+
 ```xml
-<message>
-    <source>messages</source>
-    <comment>Please unlock your system password manager</comment>  <!-- THIS is the text to translate -->
-    <translation type="unfinished"/>
-</message>
+<context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="51"/>
+        <source>Add Vorta to the systems autostart list</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
 ```
-When `<source>` is `messages`, `settings`, or `app`, the actual translatable text is in `<comment>`.
+
+Older files used a `<source>settings</source>` + `<comment>actual text</comment>`
+shape produced by `pylupdate5 -translate-function`. That shape is gone; if you ever
+meet it in an archived file, the `<comment>` holds the text and the `<source>` holds
+the context.
+
+**Obsolete entries:** messages whose source string no longer exists in the code are
+kept with `<translation type="vanished">`. Leave them alone — they are what lets a
+future rewording recover its old translation. Do not count them as untranslated.
 
 ### Step 4: Generate translations with context
 
@@ -195,28 +218,34 @@ done
 After updating translations:
 
 1. Compile: `make translations-to-qm`
-2. Run the app: `uv run vorta`
-3. Go to **Settings** tab → **Language** dropdown
-4. Select the language and restart the app
-5. Verify translations appear correctly in the UI
+2. Run the app in the target language: `LANG=de_DE uv run vorta --foreground`
+   (there is no in-app language picker; the locale comes from `LANG`, else the system)
+3. Verify translations appear correctly in the UI
 
 ---
 
 ## Workflow Example
 
 ```bash
-# 1. Check translation status
+# 1. Pull new strings out of the code into every .ts file
+make translations-from-source
+
+# 2. Check translation status
 /translate missing
 
-# 2. Review and translate German
+# 3. Review and translate German
 /translate review de
 
-# 3. Compile translations
+# 4. Compile translations
 /translate compile
 
-# 4. Test in app
+# 5. Test in app
 uv run vorta
 ```
+
+Step 1 is what keeps the .ts files in sync with the code — run it after any change
+that adds, removes or rewords a `self.tr()`, `QT_TRANSLATE_NOOP()` or `.ui` string.
+There is no `vorta.en.ts` any more; extraction writes straight into the locale files.
 
 ---
 
@@ -252,17 +281,21 @@ Create a new glossary when a language is first reviewed. Update it whenever a ne
 
 ## Adding a New Language
 
-1. Copy an existing .ts file as template:
+1. Create an empty catalog with the right language attribute:
    ```bash
-   cp src/vorta/i18n/ts/vorta.de.ts src/vorta/i18n/ts/vorta.XX.ts
+   printf '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE TS>\n<TS version="2.1" language="XX">\n</TS>\n' \
+       > src/vorta/i18n/ts/vorta.XX.ts
    ```
 
-2. Update the language attribute in the new file:
-   ```xml
-   <TS version="2.1" language="XX">
+2. Fill it with the current message set:
+   ```bash
+   make translations-from-source
    ```
+   Every message arrives as `type="unfinished"`. Do not copy another locale's file as
+   a template — that carries its translations over under the wrong language.
 
-3. Clear all translations (set to `type="unfinished"`)
+3. Add the language to the Supported Languages table above. Nothing else needs
+   registering — `init_translations()` picks the catalog up from `i18n/qm/` by locale.
 
 4. Run `/translate review XX` to generate translations
 

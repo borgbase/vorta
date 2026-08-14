@@ -1,10 +1,10 @@
 import os
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QProcess, Qt, pyqtSlot
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QProcess, Qt, pyqtSlot
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import get_asset
 
@@ -18,11 +18,11 @@ class SSHAddWindow(SSHAddBase, SSHAddUI):
     def __init__(self):
         super().__init__()
 
-        self.key_size_help_text = trans_late(
+        self.key_size_help_text = QT_TRANSLATE_NOOP(
             'Dialog',
             '2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.',
         )
-        self.key_size_help_link = trans_late('Dialog', 'More')
+        self.key_size_help_link = QT_TRANSLATE_NOOP('Dialog', 'More')
 
         self.setupUi(self)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
