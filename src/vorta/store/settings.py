@@ -28,7 +28,7 @@ def get_misc_settings() -> list[dict[str, Any]]:
     updates = QT_TRANSLATE_NOOP('settings', 'Updates')
 
     # Default settings for all platforms.
-    settings = [
+    settings: list[dict[str, Any]] = [
         {
             'key': 'enable_notifications',
             'value': True,
