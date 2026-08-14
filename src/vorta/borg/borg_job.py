@@ -283,6 +283,7 @@ class BorgJob(JobInterface):
                         if parsed['type'] == 'log_message':
                             context = {
                                 'msgid': parsed.get('msgid'),
+                                'message': parsed.get('message', ''),
                                 'repo_url': self.params['repo_url'],
                                 'profile_name': self.params.get('profile_name'),
                                 'cmd': self.params['cmd'][1],
