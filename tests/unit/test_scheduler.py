@@ -4,12 +4,14 @@ from functools import wraps
 from unittest.mock import MagicMock
 
 import pytest
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QDialogButtonBox, QMessageBox
 from pytest import mark
 
 import vorta.borg
 import vorta.scheduler
 from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
-from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel, SchedulerPauseModel
 
 PROFILE_NAME = 'Default'
 FIXED_SCHEDULE = 'fixed'
@@ -90,6 +92,116 @@ def test_set_timer_for_missing_profile():
     assert len(scheduler.timers) == 0
 
 
+def test_pause_survives_restart():
+    """A pause is restored when the scheduler is recreated, and unpause clears it."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    VortaScheduler().pause(profile.id)
+    stored = SchedulerPauseModel.get_or_none(profile=profile.id)
+    assert stored is not None
+
+    restarted = VortaScheduler()
+    assert restarted.paused(profile.id)
+    assert restarted.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.PAUSED, stored.paused_until)
+
+    restarted.unpause(profile.id)
+    assert restarted.next_job_for_profile(profile.id).type is not ScheduleStatusType.PAUSED
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
+
+
+def test_expired_pause_dropped_on_restart(clockmock):
+    """A pause that ran out while Vorta was closed must not keep blocking the schedule."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    SchedulerPauseModel.replace(profile=profile.id, paused_until=dt(2020, 5, 6, 4, 30)).execute()
+    clockmock.now.return_value = dt(2020, 5, 6, 5, 30)
+
+    scheduler = VortaScheduler()
+
+    assert not scheduler.paused(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
+
+
+def test_pause_cleared_when_it_runs_out(clockmock):
+    """A pause running out while Vorta stays open clears the row and reschedules."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    scheduler = VortaScheduler()
+    scheduler.pause(profile.id)
+
+    clockmock.now.return_value = dt(2020, 5, 6, 6, 30)
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert not scheduler.paused(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
+
+
+def test_deleting_a_paused_profile_clears_the_pause(qapp, qtbot, mocker):
+    """SQLite reuses ids, so a new profile must not inherit a deleted one's pause."""
+    main = qapp.main_window
+    main.profile_add_action()
+    qtbot.keyClicks(main.window.profileNameField, 'Paused Profile')
+    qtbot.mouseClick(
+        main.window.buttonBox.button(QDialogButtonBox.StandardButton.Save), QtCore.Qt.MouseButton.LeftButton
+    )
+
+    profile = BackupProfileModel.get(name='Paused Profile')
+    profile.repo = BackupProfileModel.get(name=PROFILE_NAME).repo
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.schedule_make_up_missed = True
+    profile.save()
+
+    last_run = dt.now() - td(hours=6)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_run,
+        end_time=last_run,
+    )
+
+    qapp.scheduler.pause(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is not None
+
+    prepare_mock = mocker.patch('vorta.scheduler.BorgCreateJob.prepare')
+    mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
+    mocker.patch.object(qapp.scheduler, '_net_up', True)
+    qtbot.mouseClick(main.profileDeleteButton, QtCore.Qt.MouseButton.LeftButton)
+
+    # The overdue occurrence must not start a backup on the profile being deleted.
+    prepare_mock.assert_not_called()
+    assert not qapp.scheduler.paused(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
+
+
+def test_paused_manual_profile_reports_unscheduled():
+    """Switching a paused profile to manual reports no schedule, not a pause."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    scheduler = VortaScheduler()
+    scheduler.pause(profile.id)
+
+    profile.schedule_mode = MANUAL_SCHEDULE
+    profile.save()
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.paused(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type is ScheduleStatusType.UNSCHEDULED
+    assert VortaScheduler().next_job_for_profile(profile.id).type is ScheduleStatusType.UNSCHEDULED
+
+
 def test_simple_schedule(clockmock):
     """Test a simple scheduling including `next_job` and `remove_job`."""
     scheduler = VortaScheduler()
@@ -123,6 +235,121 @@ def test_simple_schedule(clockmock):
     assert len(scheduler.timers) == 0
     assert scheduler.next_job() == 'None scheduled'
     assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
+
+
+def test_schedule_past_the_qtimer_range(clockmock):
+    """A four-week interval is longer than a QTimer can wait, but still a scheduled run."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'weeks'
+    profile.schedule_interval_count = 4
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, time + td(weeks=4)
+    )
+    assert scheduler.timers[profile.id]['qtt'].interval() <= vorta.scheduler.MAX_TIMER_MS
+    assert scheduler.next_job().endswith('({})'.format(PROFILE_NAME))
+
+    scheduler.remove_job(profile.id)
+
+
+def test_deadline_timer_waits_in_chunks(clockmock):
+    """A wait past the QTimer range is split up, and only the last chunk fires."""
+    start = dt(2020, 5, 6, 4, 30)
+    deadline = start + td(days=30)
+    clockmock.now.return_value = start
+    fired = []
+
+    timer = vorta.scheduler.arm_deadline_timer(deadline, lambda: fired.append(True))
+    assert timer.interval() == vorta.scheduler.MAX_TIMER_MS
+
+    clockmock.now.return_value = start + td(days=29)
+    timer.timeout.emit()
+    assert fired == []
+    assert timer.interval() == int(td(days=1).total_seconds() * 1000) + vorta.scheduler.TIMER_GRACE_MS
+
+    clockmock.now.return_value = deadline + td(seconds=1)
+    timer.timeout.emit()
+    assert fired == [True]
+
+    timer.stop()
+
+
+def test_overriding_a_pause_stops_the_old_timer(clockmock):
+    """The replaced timer holds a reference cycle, so it has to be stopped, not just dropped."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    scheduler = VortaScheduler()
+    scheduler.pause(profile.id)
+    replaced = scheduler.pauses[profile.id][1]
+
+    scheduler.pause(profile.id, until=dt(2020, 5, 6, 5, 30))
+
+    assert not replaced.isActive()
+    assert scheduler.pauses[profile.id][1] is not replaced
+
+    scheduler.clear_pause(profile.id)
+
+
+def test_deadline_timer_in_the_past_defers_to_the_event_loop(clockmock):
+    """Arming a passed deadline must not call back inline, which would re-enter the lock."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    fired = []
+
+    timer = vorta.scheduler.arm_deadline_timer(dt(2020, 5, 6, 4, 0), lambda: fired.append(True))
+
+    assert fired == []
+    assert timer.interval() == 0
+
+    timer.timeout.emit()
+    assert fired == [True]
+
+    timer.stop()
+
+
+def test_far_future_pause_runs_its_full_length(clockmock):
+    """A restored pause past the QTimer range must re-arm, not end at the 24 day cap."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    until = dt(2020, 7, 6, 4, 30)
+    SchedulerPauseModel.replace(profile=profile.id, paused_until=until).execute()
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    scheduler = VortaScheduler()
+    timer = scheduler.pauses[profile.id][1]
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.PAUSED, until)
+
+    # A day out, the chunk that ran out has to re-arm for what is left of the pause.
+    clockmock.now.return_value = until - td(days=1)
+    timer.timeout.emit()
+
+    assert scheduler.paused(profile.id)
+    assert timer.interval() == int(td(days=1).total_seconds() * 1000) + vorta.scheduler.TIMER_GRACE_MS
+
+    # Once it has actually passed, the same timer ends the pause.
+    clockmock.now.return_value = until + td(seconds=1)
+    timer.timeout.emit()
+
+    assert not scheduler.paused(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
 
 
 @mark.parametrize("scheduled", [True, False])

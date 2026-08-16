@@ -3,6 +3,7 @@ from __future__ import annotations
 import enum
 import logging
 import threading
+from collections.abc import Callable
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Any, NamedTuple
@@ -21,7 +22,7 @@ from vorta.borg.list_repo import BorgListRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
-from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel, SchedulerPauseModel
 from vorta.utils import borg_compat, get_network_status_monitor
 
 logger = logging.getLogger(__name__)
@@ -30,12 +31,45 @@ RESCHEDULE_INTERVAL_MS = 15 * 60 * 1000
 WAKE_CHECK_INTERVAL_MS = 5 * 60 * 1000
 WAKE_GAP_THRESHOLD = timedelta(minutes=10)
 
+# A QTimer interval is a C++ int, so a single wait tops out at about 24.8 days.
+MAX_TIMER_MS = 2**31 - 1
+# Fire just after the deadline, so the handler always sees it as passed.
+TIMER_GRACE_MS = 100
+
+
+def arm_deadline_timer(deadline: dt, on_expiry: Callable[[], None]) -> QTimer:
+    """
+    Start a timer that calls `on_expiry` once `deadline` has passed.
+
+    Waits longer than `MAX_TIMER_MS` are split into chunks, and every chunk is measured
+    against the wall clock again, so the deadline holds however far ahead it is.
+    """
+    timer = QTimer()
+    timer.setSingleShot(True)
+
+    def remaining_ms() -> float:
+        return (deadline - dt.now()).total_seconds() * 1000 + TIMER_GRACE_MS
+
+    def rearm() -> None:
+        timer.setInterval(int(max(0, min(remaining_ms(), MAX_TIMER_MS))))
+        timer.start()
+
+    def on_timeout() -> None:
+        if remaining_ms() <= 0:
+            on_expiry()
+        else:
+            rearm()
+
+    timer.timeout.connect(on_timeout)
+    rearm()
+    return timer
+
 
 class ScheduleStatusType(enum.Enum):
     SCHEDULED = enum.auto()  # date provided
     UNSCHEDULED = enum.auto()  # Unknown
-    TOO_FAR_AHEAD = enum.auto()  # QTimer range exceeded, date provided
     NO_PREVIOUS_BACKUP = enum.auto()  # run a manual backup first
+    PAUSED = enum.auto()  # paused after a failed or skipped run, date provided
 
 
 class ScheduleStatus(NamedTuple):
@@ -91,6 +125,8 @@ class VortaScheduler(QtCore.QObject):
         self.wake_timer.timeout.connect(self.checkForResume)
         self.wake_timer.setInterval(WAKE_CHECK_INTERVAL_MS)
         self.wake_timer.start()
+
+        self._restore_pauses()
 
     @QtCore.pyqtSlot(bool)
     def loginSuspendNotify(self, suspend: bool) -> None:
@@ -172,21 +208,71 @@ class VortaScheduler(QtCore.QObject):
         # remove existing schedule
         self.remove_job(profile_id)
 
-        # setting timer for reschedule is not possible if called
-        # from a non-QThread -  it won't fail but won't work
-        timer_value = max(1, (until - dt.now()).total_seconds())
-        timer = QtCore.QTimer()
-        timer.setInterval(int(timer_value * 1000) + 100)
-        timer.timeout.connect(lambda: self.set_timer_for_profile(profile_id))
-        timer.start()
-
         # set timeout/pause
         other_pause = self.pauses.get(profile_id)
         if other_pause is not None:
             logger.debug(f"Override existing timeout for profile {profile_id}")
 
-        self.pauses[profile_id] = (until, timer)
+        self._set_pause(profile, until)
         logger.debug(f"Paused {profile_id} until {until.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    def _set_pause(self, profile: BackupProfileModel, until: dt) -> None:
+        """Arm the reschedule timer for a pause and store it, so it outlives the process."""
+        profile_id = profile.id
+        replaced = self.pauses.get(profile_id)
+        if replaced is not None:
+            replaced[1].stop()
+
+        # setting timer for reschedule is not possible if called
+        # from a non-QThread -  it won't fail but won't work
+        timer = arm_deadline_timer(until, lambda: self.set_timer_for_profile(profile_id))
+
+        self.pauses[profile_id] = (until, timer)
+
+        try:
+            SchedulerPauseModel.replace(profile=profile_id, paused_until=until).execute()
+        except pw.PeeweeException:
+            logger.warning('Could not store pause for profile %s.', profile_id, exc_info=True)
+
+        self._mark_paused(profile, until)
+
+    def _mark_paused(self, profile: BackupProfileModel, until: dt) -> None:
+        """Report the pause as the schedule status, unless the profile has no schedule to block."""
+        if profile.repo is None or profile.schedule_mode == 'off':
+            return
+
+        self.timers[profile.id] = {'type': ScheduleStatusType.PAUSED, 'dt': until}
+        self.schedule_changed.emit()
+
+    def clear_pause(self, profile_id: int) -> None:
+        """Drop a pause from memory, from the schedule status and from the database."""
+        pause = self.pauses.pop(profile_id, None)
+        if pause is not None:
+            pause[1].stop()
+
+        status = self.timers.get(profile_id)
+        if status is not None and status.get('type') is ScheduleStatusType.PAUSED:
+            del self.timers[profile_id]
+
+        try:
+            SchedulerPauseModel.delete().where(SchedulerPauseModel.profile == profile_id).execute()
+        except pw.PeeweeException:
+            logger.warning('Could not drop stored pause for profile %s.', profile_id, exc_info=True)
+
+    def _restore_pauses(self) -> None:
+        """Re-arm the pauses stored by a previous run, dropping the ones that already ran out."""
+        now = dt.now()
+
+        for stored in list(SchedulerPauseModel.select()):
+            profile_id = stored.profile_id
+            profile = BackupProfileModel.get_or_none(id=profile_id)
+
+            if profile is None or stored.paused_until <= now:
+                self.clear_pause(profile_id)
+                continue
+
+            self._set_pause(profile, stored.paused_until)
+            logger.debug(f"Restored pause for {profile_id} until {stored.paused_until:%Y-%m-%d %H:%M:%S}")
 
     def unpause(self, profile_id: int) -> None:
         """
@@ -205,9 +291,7 @@ class VortaScheduler(QtCore.QObject):
         if pause is None:  # already unpaused
             return
 
-        dummy, timer = pause
-        timer.stop()
-        del self.pauses[profile_id]
+        self.clear_pause(profile_id)
 
         logger.debug(f"Unpaused {profile_id}")
 
@@ -256,10 +340,10 @@ class VortaScheduler(QtCore.QObject):
                         profile_id,
                         pause[0].strftime('%Y-%m-%d %H:%M:%S'),
                     )
+                    self._mark_paused(profile, pause_end)
                     return
                 else:
-                    timer.stop()
-                    del self.pauses[profile_id]
+                    self.clear_pause(profile_id)
 
             if profile.repo is None:  # No backups without repo set
                 logger.debug(
@@ -385,31 +469,13 @@ class VortaScheduler(QtCore.QObject):
                         next_time += timedelta(days=1)
 
             # start QTimer
-            timer_ms = (next_time - dt.now()).total_seconds() * 1000
+            logger.debug('Scheduling next run for %s', next_time)
 
-            if timer_ms < 2**31 - 1:
-                logger.debug('Scheduling next run for %s', next_time)
-
-                timer = QTimer()
-                timer.setSingleShot(True)
-                timer.setInterval(int(timer_ms))
-                timer.timeout.connect(lambda: self.create_backup(profile_id))
-                timer.start()
-
-                self.timers[profile_id] = {
-                    'qtt': timer,
-                    'dt': next_time,
-                    'type': ScheduleStatusType.SCHEDULED,
-                }
-            else:
-                # int to big to pass it to qt which expects a c++ int
-                # wait 15 min for regular reschedule
-                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
-
-                self.timers[profile_id] = {
-                    'dt': next_time,
-                    'type': ScheduleStatusType.TOO_FAR_AHEAD,
-                }
+            self.timers[profile_id] = {
+                'qtt': arm_deadline_timer(next_time, lambda: self.create_backup(profile_id)),
+                'dt': next_time,
+                'type': ScheduleStatusType.SCHEDULED,
+            }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit()
