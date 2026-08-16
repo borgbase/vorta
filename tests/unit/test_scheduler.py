@@ -237,6 +237,121 @@ def test_simple_schedule(clockmock):
     assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
 
 
+def test_schedule_past_the_qtimer_range(clockmock):
+    """A four-week interval is longer than a QTimer can wait, but still a scheduled run."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'weeks'
+    profile.schedule_interval_count = 4
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, time + td(weeks=4)
+    )
+    assert scheduler.timers[profile.id]['qtt'].interval() <= vorta.scheduler.MAX_TIMER_MS
+    assert scheduler.next_job().endswith('({})'.format(PROFILE_NAME))
+
+    scheduler.remove_job(profile.id)
+
+
+def test_deadline_timer_waits_in_chunks(clockmock):
+    """A wait past the QTimer range is split up, and only the last chunk fires."""
+    start = dt(2020, 5, 6, 4, 30)
+    deadline = start + td(days=30)
+    clockmock.now.return_value = start
+    fired = []
+
+    timer = vorta.scheduler.arm_deadline_timer(deadline, lambda: fired.append(True))
+    assert timer.interval() == vorta.scheduler.MAX_TIMER_MS
+
+    clockmock.now.return_value = start + td(days=29)
+    timer.timeout.emit()
+    assert fired == []
+    assert timer.interval() == int(td(days=1).total_seconds() * 1000) + vorta.scheduler.TIMER_GRACE_MS
+
+    clockmock.now.return_value = deadline + td(seconds=1)
+    timer.timeout.emit()
+    assert fired == [True]
+
+    timer.stop()
+
+
+def test_overriding_a_pause_stops_the_old_timer(clockmock):
+    """The replaced timer holds a reference cycle, so it has to be stopped, not just dropped."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    scheduler = VortaScheduler()
+    scheduler.pause(profile.id)
+    replaced = scheduler.pauses[profile.id][1]
+
+    scheduler.pause(profile.id, until=dt(2020, 5, 6, 5, 30))
+
+    assert not replaced.isActive()
+    assert scheduler.pauses[profile.id][1] is not replaced
+
+    scheduler.clear_pause(profile.id)
+
+
+def test_deadline_timer_in_the_past_defers_to_the_event_loop(clockmock):
+    """Arming a passed deadline must not call back inline, which would re-enter the lock."""
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    fired = []
+
+    timer = vorta.scheduler.arm_deadline_timer(dt(2020, 5, 6, 4, 0), lambda: fired.append(True))
+
+    assert fired == []
+    assert timer.interval() == 0
+
+    timer.timeout.emit()
+    assert fired == [True]
+
+    timer.stop()
+
+
+def test_far_future_pause_runs_its_full_length(clockmock):
+    """A restored pause past the QTimer range must re-arm, not end at the 24 day cap."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    until = dt(2020, 7, 6, 4, 30)
+    SchedulerPauseModel.replace(profile=profile.id, paused_until=until).execute()
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    scheduler = VortaScheduler()
+    timer = scheduler.pauses[profile.id][1]
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.PAUSED, until)
+
+    # A day out, the chunk that ran out has to re-arm for what is left of the pause.
+    clockmock.now.return_value = until - td(days=1)
+    timer.timeout.emit()
+
+    assert scheduler.paused(profile.id)
+    assert timer.interval() == int(td(days=1).total_seconds() * 1000) + vorta.scheduler.TIMER_GRACE_MS
+
+    # Once it has actually passed, the same timer ends the pause.
+    clockmock.now.return_value = until + td(seconds=1)
+    timer.timeout.emit()
+
+    assert not scheduler.paused(profile.id)
+    assert SchedulerPauseModel.get_or_none(profile=profile.id) is None
+
+
 @mark.parametrize("scheduled", [True, False])
 @mark.parametrize(
     "passed_time, now, unit, count, added_time",
