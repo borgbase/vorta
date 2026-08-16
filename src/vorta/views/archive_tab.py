@@ -103,7 +103,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         delegate = IconDelegate(self.archiveTable)
         self.archiveTable.setItemDelegateForColumn(ArchiveTableModel.COL_TRIGGER, delegate)
 
-        self.mount_help_text = QT_TRANSLATE_NOOP('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
+        self.mount_help_text = QT_TRANSLATE_NOOP('Form', 'To mount archives, first install macFUSE from %1.')
         self.mount_help_link_text = QT_TRANSLATE_NOOP('Form', 'here')
         self.pruning_help_text = QT_TRANSLATE_NOOP(
             'Form',
