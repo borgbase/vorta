@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -258,13 +259,42 @@ class VortaApp(QtSingleApplication):
             msg.show()
         elif msgid == 'LockFailed':
             repo_url = context.get('repo_url')
+            borg_message = context.get('message', '')
+
+            # Borg reports any failure to create the lock file as LockFailed, so the
+            # errno in its message tells us what actually went wrong. Match the number
+            # and not the text after it, because that text comes from strerror and is
+            # localized. ENOSPC is 28 everywhere, EDQUOT is 122 on Linux and 69 on
+            # macOS/BSD. For a remote repository the errno originates on the server, so
+            # the local platform's errno constants are not a valid comparison here.
+            errno_match = re.search(r'\[Errno (\d+)\]', borg_message)
+            err = int(errno_match.group(1)) if errno_match else None
+
             msg = QMessageBox()
-            msg.setText(
-                self.tr(
-                    f"You do not have permission to access the repository at {repo_url}. Gain access and try again."
+            msg.setIcon(QMessageBox.Icon.Critical)
+            if err in (28, 122, 69):
+                msg.setWindowTitle(self.tr("Repository Storage Full"))
+                msg.setText(self.tr("The storage backing the repository at {} is full.").format(repo_url))
+                msg.setInformativeText(
+                    self.tr(
+                        "Borg could not create its lock file, so no operation can run — including pruning, "
+                        "which would free space. Free up space outside the repository, then try again."
+                    )
                 )
-            )  # noqa: E501
-            msg.setWindowTitle(self.tr("No Repository Permissions"))
+            elif err in (1, 13):
+                msg.setWindowTitle(self.tr("No Repository Permissions"))
+                msg.setText(
+                    self.tr(
+                        "You do not have permission to access the repository at {}. Gain access and try again."
+                    ).format(repo_url)
+                )
+            else:
+                msg.setWindowTitle(self.tr("Repository Lock Failed"))
+                msg.setText(self.tr("Borg could not lock the repository at {}.").format(repo_url))
+
+            if borg_message:
+                msg.setDetailedText(borg_message)
+
             self._msg = msg
             msg.show()
 
