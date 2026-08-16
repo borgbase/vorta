@@ -3,6 +3,7 @@ from __future__ import annotations
 import enum
 import logging
 import threading
+from collections.abc import Callable
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Any, NamedTuple
@@ -30,11 +31,43 @@ RESCHEDULE_INTERVAL_MS = 15 * 60 * 1000
 WAKE_CHECK_INTERVAL_MS = 5 * 60 * 1000
 WAKE_GAP_THRESHOLD = timedelta(minutes=10)
 
+# A QTimer interval is a C++ int, so a single wait tops out at about 24.8 days.
+MAX_TIMER_MS = 2**31 - 1
+# Fire just after the deadline, so the handler always sees it as passed.
+TIMER_GRACE_MS = 100
+
+
+def arm_deadline_timer(deadline: dt, on_expiry: Callable[[], None]) -> QTimer:
+    """
+    Start a timer that calls `on_expiry` once `deadline` has passed.
+
+    Waits longer than `MAX_TIMER_MS` are split into chunks, and every chunk is measured
+    against the wall clock again, so the deadline holds however far ahead it is.
+    """
+    timer = QTimer()
+    timer.setSingleShot(True)
+
+    def remaining_ms() -> float:
+        return (deadline - dt.now()).total_seconds() * 1000 + TIMER_GRACE_MS
+
+    def rearm() -> None:
+        timer.setInterval(int(max(0, min(remaining_ms(), MAX_TIMER_MS))))
+        timer.start()
+
+    def on_timeout() -> None:
+        if remaining_ms() <= 0:
+            on_expiry()
+        else:
+            rearm()
+
+    timer.timeout.connect(on_timeout)
+    rearm()
+    return timer
+
 
 class ScheduleStatusType(enum.Enum):
     SCHEDULED = enum.auto()  # date provided
     UNSCHEDULED = enum.auto()  # Unknown
-    TOO_FAR_AHEAD = enum.auto()  # QTimer range exceeded, date provided
     NO_PREVIOUS_BACKUP = enum.auto()  # run a manual backup first
     PAUSED = enum.auto()  # paused after a failed or skipped run, date provided
 
@@ -186,13 +219,13 @@ class VortaScheduler(QtCore.QObject):
     def _set_pause(self, profile: BackupProfileModel, until: dt) -> None:
         """Arm the reschedule timer for a pause and store it, so it outlives the process."""
         profile_id = profile.id
+        replaced = self.pauses.get(profile_id)
+        if replaced is not None:
+            replaced[1].stop()
+
         # setting timer for reschedule is not possible if called
         # from a non-QThread -  it won't fail but won't work
-        timer_value = max(1, (until - dt.now()).total_seconds())
-        timer = QtCore.QTimer()
-        timer.setInterval(min(int(timer_value * 1000) + 100, 2**31 - 1))
-        timer.timeout.connect(lambda: self.set_timer_for_profile(profile_id))
-        timer.start()
+        timer = arm_deadline_timer(until, lambda: self.set_timer_for_profile(profile_id))
 
         self.pauses[profile_id] = (until, timer)
 
@@ -436,31 +469,13 @@ class VortaScheduler(QtCore.QObject):
                         next_time += timedelta(days=1)
 
             # start QTimer
-            timer_ms = (next_time - dt.now()).total_seconds() * 1000
+            logger.debug('Scheduling next run for %s', next_time)
 
-            if timer_ms < 2**31 - 1:
-                logger.debug('Scheduling next run for %s', next_time)
-
-                timer = QTimer()
-                timer.setSingleShot(True)
-                timer.setInterval(int(timer_ms))
-                timer.timeout.connect(lambda: self.create_backup(profile_id))
-                timer.start()
-
-                self.timers[profile_id] = {
-                    'qtt': timer,
-                    'dt': next_time,
-                    'type': ScheduleStatusType.SCHEDULED,
-                }
-            else:
-                # int to big to pass it to qt which expects a c++ int
-                # wait 15 min for regular reschedule
-                logger.debug(f"Couldn't schedule for {next_time} because " f"timer value {timer_ms} too large.")
-
-                self.timers[profile_id] = {
-                    'dt': next_time,
-                    'type': ScheduleStatusType.TOO_FAR_AHEAD,
-                }
+            self.timers[profile_id] = {
+                'qtt': arm_deadline_timer(next_time, lambda: self.create_backup(profile_id)),
+                'dt': next_time,
+                'type': ScheduleStatusType.SCHEDULED,
+            }
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.schedule_changed.emit()
