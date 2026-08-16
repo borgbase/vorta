@@ -43,6 +43,15 @@ class ScheduleStatus(NamedTuple):
     time: dt | None = None
 
 
+class PendingJob(NamedTuple):
+    """A run the scheduler is holding a time for, but that hasn't been recorded yet."""
+
+    profile_id: int
+    profile_name: str
+    repo_url: str | None
+    scheduled_at: dt
+
+
 class VortaScheduler(QtCore.QObject):
     #: The schedule for a profile changed.
     schedule_changed = QtCore.pyqtSignal()
@@ -452,6 +461,23 @@ class VortaScheduler(QtCore.QObject):
         if job is None:
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))  # type: ignore[arg-type]
+
+    def pending_jobs(self) -> list[PendingJob]:
+        """The runs currently on the clock, soonest first."""
+        pending = []
+
+        for profile_id, timer in self.timers.items():
+            if timer['type'] not in (ScheduleStatusType.SCHEDULED, ScheduleStatusType.TOO_FAR_AHEAD):
+                continue
+
+            profile = BackupProfileModel.get_or_none(id=profile_id)
+            if profile is None:
+                continue
+
+            repo_url = profile.repo.url if profile.repo else None
+            pending.append(PendingJob(profile_id, profile.name, repo_url, timer['dt']))
+
+        return sorted(pending, key=lambda job: job.scheduled_at)
 
     def _record_skip(
         self,

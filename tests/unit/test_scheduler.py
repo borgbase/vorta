@@ -8,7 +8,7 @@ from pytest import mark
 
 import vorta.borg
 import vorta.scheduler
-from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
+from vorta.scheduler import PendingJob, ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 
 PROFILE_NAME = 'Default'
@@ -76,6 +76,95 @@ def test_manual_mode():
     # test
     scheduler.set_timer_for_profile(profile.id)
     assert len(scheduler.timers) == 0
+
+
+def test_pending_jobs_reports_the_scheduled_run(clockmock):
+    """A profile holding a time on the clock shows up as a pending job."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.pending_jobs() == [PendingJob(profile.id, PROFILE_NAME, profile.repo.url, dt(2020, 5, 6, 7, 30))]
+
+    scheduler.remove_job(profile.id)
+    assert scheduler.pending_jobs() == []
+
+
+def test_pending_jobs_includes_a_run_too_far_ahead_for_a_timer(clockmock):
+    """A run beyond QTimer's range gets no timer, but it still has a time and is still due."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'weeks'
+    profile.schedule_interval_count = 5
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.TOO_FAR_AHEAD
+    assert scheduler.pending_jobs() == [PendingJob(profile.id, PROFILE_NAME, profile.repo.url, time + td(weeks=5))]
+
+
+def test_pending_jobs_drops_a_profile_deleted_under_its_timer(clockmock):
+    """A timer can outlive the profile it belongs to, and the jobs view must not trip over it."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+    assert len(scheduler.pending_jobs()) == 1
+
+    BackupProfileModel.delete_by_id(profile.id)
+    assert scheduler.pending_jobs() == []
+
+
+def test_pending_jobs_ignores_profiles_without_a_scheduled_run(clockmock):
+    """A profile that never ran has no time to show, so it isn't pending."""
+    scheduler = VortaScheduler()
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.NO_PREVIOUS_BACKUP
+    assert scheduler.pending_jobs() == []
 
 
 def test_set_timer_for_missing_profile():
