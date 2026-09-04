@@ -343,7 +343,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="419" />
         <source>(Select exactly one archive)</source>
-        <translation type="unfinished" />
+        <translation>(Välj exakt ett arkiv)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="467" />
@@ -374,12 +374,12 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="163" />
         <source>Scheduled</source>
-        <translation type="unfinished" />
+        <translation>Schemalagd</translation>
     </message>
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="165" />
         <source>User initiated</source>
-        <translation type="unfinished" />
+        <translation>Startad av användaren</translation>
     </message>
     <message>
         <source>Pruning finished.</source>
@@ -450,12 +450,12 @@
     <message>
         <location filename="../../borg/change_passphrase.py" line="18" />
         <source>Changing Borg passphrase…</source>
-        <translation type="unfinished" />
+        <translation>Ändrar Borg-lösenfras…</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="39" />
         <source>Passphrase changed.</source>
-        <translation type="unfinished" />
+        <translation>Lösenfrasen ändrades.</translation>
     </message>
 </context><context>
     <name>BorgCheckJob</name>
@@ -474,17 +474,17 @@
     <message>
         <location filename="../../borg/compact.py" line="32" />
         <source>Errors during compaction. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Fel under komprimeringen. Se %1 för detaljer.</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="15" />
         <source>Starting repository compaction...</source>
-        <translation type="unfinished" />
+        <translation>Startar arkivkomprimering...</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="37" />
         <source>Compaction completed.</source>
-        <translation type="unfinished" />
+        <translation>Komprimeringen är klar.</translation>
     </message>
 </context><context>
     <name>BorgCreateJob</name>
@@ -643,7 +643,7 @@
     <message>
         <location filename="../../borg/rename.py" line="10" />
         <source>Renaming archive…</source>
-        <translation type="unfinished" />
+        <translation>Byter namn på arkivet…</translation>
     </message>
     <message>
         <location filename="../../borg/rename.py" line="48" />
@@ -662,7 +662,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19" />
         <source>Change Passphrase</source>
-        <translation type="unfinished" />
+        <translation>Ändra lösenfras</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29" />
@@ -672,48 +672,48 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33" />
         <source>Update</source>
-        <translation type="unfinished" />
+        <translation>Uppdatera</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="66" />
         <source>Unable to change the borg passphrase.</source>
-        <translation type="unfinished" />
+        <translation>Det gick inte att ändra Borg-lösenfrasen.</translation>
     </message>
 </context><context>
     <name>ChangeRepositoryPass</name>
     <message>
         <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="0" />
         <source>Change the borg passphrase</source>
-        <translation type="unfinished" />
+        <translation>Ändra Borg-lösenfrasen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="0" />
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation type="unfinished" />
+        <translation>OBS! Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
     </message>
 </context><context>
     <name>CustomPresetsHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="97" />
         <source>Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the %1. To add multiple patterns at once, use the "Raw" tab.</source>
-        <translation type="unfinished" />
+        <translation>Mönster som du lägger till här används för att exkludera filer och mappar från säkerhetskopieringen. Se %1 för mer information om hur du använder mönster. Använd fliken "Rå" för att lägga till flera mönster samtidigt.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="103" />
         <source>documentation</source>
-        <translation type="unfinished" />
+        <translation>dokumentationen</translation>
     </message>
 </context><context>
     <name>Dialog</name>
     <message>
         <location filename="../../views/dialogs/exception.py" line="47" />
         <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
-        <translation type="unfinished" />
+        <translation>Du kan rapportera detta problem på %1. Sök efter liknande problem innan du rapporterar.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/exception.py" line="51" />
         <source>Github</source>
-        <translation type="unfinished" />
+        <translation>GitHub</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="32" />
