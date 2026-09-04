@@ -1639,12 +1639,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Monthly:</source>
-        <translation type="unfinished" />
+        <translation>Månadsvis:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Annual:</source>
-        <translation type="unfinished" />
+        <translation>Årligen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1654,7 +1654,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
-        <translation type="unfinished" />
+        <translation>“&lt;heltal&gt;&lt;tecken&gt;”, där tecknet är “H”, “d”, “w”, “m”, “y”</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1665,7 +1665,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Available variables: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</source>
-        <translation type="unfinished" />
+        <translation>Tillgängliga variabler: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1721,17 +1721,17 @@
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="33" />
         <source>Enter passphrase (already loaded from the export file)</source>
-        <translation type="unfinished" />
+        <translation>Ange lösenfras (redan läst från exportfilen)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="40" />
         <source>Enter passphrase (already loaded from your keyring)</source>
-        <translation type="unfinished" />
+        <translation>Ange lösenfras (redan läst från din nyckelring)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="48" />
         <source>(Name is not used yet)</source>
-        <translation type="unfinished" />
+        <translation>(Namnet används inte ännu)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="55" />
@@ -1775,29 +1775,29 @@
     <message>
         <location filename="../../keyring/kwallet.py" line="123" />
         <source>Create Wallet</source>
-        <translation type="unfinished" />
+        <translation>Skapa Wallet</translation>
     </message>
     <message>
         <location filename="../../keyring/kwallet.py" line="124" />
         <source>Enter a name for the new wallet:</source>
-        <translation type="unfinished" />
+        <translation>Ange ett namn för den nya Wallet:</translation>
     </message>
     <message>
         <location filename="../../keyring/kwallet.py" line="128" />
         <source>Could not determine a valid wallet name. Aborting unlock attempt.</source>
-        <translation type="unfinished" />
+        <translation>Kunde inte fastställa ett giltigt Wallet-namn. Avbryter upplåsningsförsöket.</translation>
     </message>
     <message>
         <location filename="../../keyring/kwallet.py" line="140" />
         <source>Failed to open wallet. Aborting unlock attempt.</source>
-        <translation type="unfinished" />
+        <translation>Kunde inte öppna Wallet. Avbryter upplåsningsförsöket.</translation>
     </message>
 </context><context>
     <name>LogPage</name>
     <message>
         <location filename="../../views/log_page.py" line="41" />
         <source>View the logs</source>
-        <translation type="unfinished" />
+        <translation>Visa loggarna</translation>
     </message>
     <message>
         <location filename="../../views/partials/event_log_table_model.py" line="27" />
@@ -1834,7 +1834,7 @@
     <message>
         <location filename="../../views/main_window.py" line="113" />
         <source>Create new profile</source>
-        <translation type="unfinished" />
+        <translation>Skapa ny profil</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="114" />
@@ -1854,7 +1854,7 @@
     <message>
         <location filename="../../views/main_window.py" line="246" />
         <source>Cannot delete the last profile.</source>
-        <translation type="unfinished" />
+        <translation>Det går inte att ta bort den sista profilen.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="277" />
@@ -1905,7 +1905,7 @@
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="49" />
         <source>Settings</source>
-        <translation type="unfinished" />
+        <translation>Inställningar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
@@ -1920,17 +1920,17 @@
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Delete current profile</source>
-        <translation type="unfinished" />
+        <translation>Ta bort aktuell profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Rename current profile</source>
-        <translation type="unfinished" />
+        <translation>Byt namn på aktuell profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Export current profile</source>
-        <translation type="unfinished" />
+        <translation>Exportera aktuell profil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
