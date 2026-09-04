@@ -1935,12 +1935,12 @@
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source> Settings / About</source>
-        <translation type="unfinished" />
+        <translation> Inställningar / Om</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>About</source>
-        <translation type="unfinished" />
+        <translation>Om</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
@@ -1996,24 +1996,24 @@
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Select All</source>
-        <translation type="unfinished" />
+        <translation>Markera alla</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Select None</source>
-        <translation type="unfinished" />
+        <translation>Avmarkera alla</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Run backups over metered networks</source>
-        <translation type="unfinished" />
+        <translation>Kör säkerhetskopieringar via nätverk med datagräns</translation>
     </message>
 </context><context>
     <name>PasswordInput</name>
     <message>
         <location filename="../../views/partials/password_input.py" line="145" />
         <source>Passwords must be identical and at least {0} characters long.</source>
-        <translation type="unfinished" />
+        <translation>Lösenorden måste vara identiska och minst {0} tecken långa.</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="151" />
@@ -2023,12 +2023,12 @@
     <message>
         <location filename="../../views/partials/password_input.py" line="155" />
         <source>Passwords must be at least {0} characters long.</source>
-        <translation type="unfinished" />
+        <translation>Lösenorden måste vara minst {0} tecken långa.</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="87" />
         <source>Enter passphrase:</source>
-        <translation type="unfinished" />
+        <translation>Ange lösenfras:</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="88" />
@@ -2038,12 +2038,12 @@
     <message>
         <location filename="../../views/partials/password_input.py" line="91" />
         <source>Enter new encryption passphrase</source>
-        <translation type="unfinished" />
+        <translation>Ange ny krypteringslösenfras</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="92" />
         <source>Confirm new encryption passphrase</source>
-        <translation type="unfinished" />
+        <translation>Bekräfta ny krypteringslösenfras</translation>
     </message>
 </context><context>
     <name>PasswordLineEdit</name>
@@ -2051,48 +2051,48 @@
         <location filename="../../views/partials/password_input.py" line="56" />
         <location filename="../../views/partials/password_input.py" line="26" />
         <source>Show password</source>
-        <translation type="unfinished" />
+        <translation>Visa lösenord</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="52" />
         <source>Hide password</source>
-        <translation type="unfinished" />
+        <translation>Dölj lösenord</translation>
     </message>
 </context><context>
     <name>RawExclusionsHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="112" />
         <source>You can use this field to add multiple patterns at once. Each pattern should be on a separate line.</source>
-        <translation type="unfinished" />
+        <translation>Du kan använda detta fält för att lägga till flera mönster samtidigt. Varje mönster ska ligga på en egen rad.</translation>
     </message>
 </context><context>
     <name>RepoCheckJob</name>
     <message>
         <location filename="../../borg/check.py" line="30" />
         <source>Repo check failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Arkivkontrollen misslyckades. Se %1 för detaljer.</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="33" />
         <source>Passphrase change failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Ändringen av lösenfras misslyckades. Se %1 för detaljer.</translation>
     </message>
 </context><context>
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
         <source>New Repository…</source>
-        <translation type="unfinished" />
+        <translation>Nytt arkiv…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
         <source>Existing Repository…</source>
-        <translation type="unfinished" />
+        <translation>Befintligt arkiv…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
         <source>Unlink Repository…</source>
-        <translation type="unfinished" />
+        <translation>Koppla från arkiv…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="52" />
