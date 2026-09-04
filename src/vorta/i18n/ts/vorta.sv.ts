@@ -1069,17 +1069,17 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="892" />
         <source>modified</source>
-        <translation type="unfinished" />
+        <translation>ändrad</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="894" />
         <source>removed</source>
-        <translation type="unfinished" />
+        <translation>borttagen</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="896" />
         <source>added</source>
-        <translation type="unfinished" />
+        <translation>tillagd</translation>
     </message>
 </context><context>
     <name>EditProfileWindow</name>
@@ -1093,7 +1093,7 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="195" />
         <source>Copy</source>
-        <translation type="unfinished" />
+        <translation>Kopiera</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="201" />
@@ -1103,28 +1103,28 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="208" />
         <source>Toggle</source>
-        <translation type="unfinished" />
+        <translation>Växla</translation>
     </message>
 </context><context>
     <name>ExcludeIfPresentHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="124" />
         <source>Folders that contain the following files will be excluded from backups.</source>
-        <translation type="unfinished" />
+        <translation>Mappar som innehåller följande filer exkluderas från säkerhetskopieringar.</translation>
     </message>
 </context><context>
     <name>ExclusionPresetsHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="106" />
         <source>These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that are used for each preset, switch to the "Preview" tab after enabling it.</source>
-        <translation type="unfinished" />
+        <translation>Dessa förinställningar tillhandahålls av communityn och är en bra utgångspunkt för att exkludera vissa filtyper. Du kan aktivera eller inaktivera dem efter behov. Om du vill se mönstren som används för varje förinställning växlar du till fliken "Förhandsgranska" efter att ha aktiverat den.</translation>
     </message>
 </context><context>
     <name>ExclusionsPreviewHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="118" />
         <source>This is a preview of the patterns that will be used to exclude files and folders from the backup.</source>
-        <translation type="unfinished" />
+        <translation>Det här är en förhandsgranskning av mönstren som används för att exkludera filer och mappar från säkerhetskopieringen.</translation>
     </message>
 </context><context>
     <name>ExistingRepoWindow</name>
@@ -1136,12 +1136,12 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="234" />
         <source>Password:</source>
-        <translation type="unfinished" />
+        <translation>Lösenord:</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="235" />
         <source>Enter the encryption passphrase</source>
-        <translation type="unfinished" />
+        <translation>Ange krypteringslösenfrasen</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="242" />
@@ -1158,7 +1158,7 @@
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="39" />
         <source>Disclose your borg passphrase (No passphrase set)</source>
-        <translation type="unfinished" />
+        <translation>Visa din Borg-lösenfras (ingen lösenfras angiven)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="44" />
@@ -1196,12 +1196,12 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="216" />
         <source>Copy</source>
-        <translation type="unfinished" />
+        <translation>Kopiera</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="222" />
         <source>Expand recursively</source>
-        <translation type="unfinished" />
+        <translation>Expandera rekursivt</translation>
     </message>
 </context><context>
     <name>ExtractTree</name>
@@ -1213,7 +1213,7 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="446" />
         <source>Last Modified</source>
-        <translation type="unfinished" />
+        <translation>Senast ändrad</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="448" />
@@ -1223,7 +1223,7 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="450" />
         <source>Health</source>
-        <translation type="unfinished" />
+        <translation>Hälsa</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="529" />
@@ -1233,17 +1233,17 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="531" />
         <source>Directory</source>
-        <translation type="unfinished" />
+        <translation>Katalog</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="533" />
         <source>Symbolic link</source>
-        <translation type="unfinished" />
+        <translation>Symbolisk länk</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="535" />
         <source>FIFO pipe</source>
-        <translation type="unfinished" />
+        <translation>FIFO-rör</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="537" />
