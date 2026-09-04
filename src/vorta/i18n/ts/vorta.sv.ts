@@ -1417,7 +1417,7 @@
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <source>Copy to clipboard</source>
-        <translation type="unfinished" />
+        <translation>Kopiera till urklipp</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
@@ -1491,7 +1491,11 @@
 
                       Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
             </source>
-        <translation type="unfinished" />
+        <translation>
+             Vorta är en plattformsoberoende klient med öppen källkod som förenklar hanteringen av Borg-säkerhetskopior.
+
+                      Copyright (C) 2018-2020 Manuel Riel och Vorta-bidragsgivare (se CONTRIBUTORS.md)
+            </translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
@@ -1521,12 +1525,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Refresh archive list</source>
-        <translation type="unfinished" />
+        <translation>Uppdatera arkivlistan</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Check the consistency of the repository</source>
-        <translation type="unfinished" />
+        <translation>Kontrollera arkivets integritet</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1536,7 +1540,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Prune the archives in this repository</source>
-        <translation type="unfinished" />
+        <translation>Rensa arkiven i detta arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1546,27 +1550,27 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Optimize disk space by defragmenting the repository</source>
-        <translation type="unfinished" />
+        <translation>Optimera diskutrymmet genom att defragmentera arkivet</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Compact</source>
-        <translation type="unfinished" />
+        <translation>Komprimera</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Recalculate selected archive's size(s)</source>
-        <translation type="unfinished" />
+        <translation>Beräkna om storleken för valt arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Recalculate</source>
-        <translation type="unfinished" />
+        <translation>Beräkna om</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Compare two archives</source>
-        <translation type="unfinished" />
+        <translation>Jämför två arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1576,7 +1580,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Extract selected archive</source>
-        <translation type="unfinished" />
+        <translation>Extrahera valt arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1586,22 +1590,22 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Rename selected archive</source>
-        <translation type="unfinished" />
+        <translation>Byt namn på valt arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Rename…</source>
-        <translation type="unfinished" />
+        <translation>Byt namn…</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Delete selected archive(s)</source>
-        <translation type="unfinished" />
+        <translation>Ta bort valda arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Delete</source>
-        <translation type="unfinished" />
+        <translation>Ta bort</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1611,7 +1615,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Hourly:</source>
-        <translation type="unfinished" />
+        <translation>Varje timme:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1625,12 +1629,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Daily:</source>
-        <translation type="unfinished" />
+        <translation>Dagligen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Weekly:</source>
-        <translation type="unfinished" />
+        <translation>Veckovis:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
