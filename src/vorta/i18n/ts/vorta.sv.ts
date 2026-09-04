@@ -2475,24 +2475,24 @@
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>Post-backup:</source>
-        <translation type="unfinished" />
+        <translation>Efter säkerhetskopiering:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>echo "Backup of $repo_url ended with $returncode."</source>
-        <translation type="unfinished" />
+        <translation>echo "Säkerhetskopieringen av $repo_url avslutades med $returncode."</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>--dry-run --noflags</source>
-        <translation type="unfinished" />
+        <translation>--dry-run --noflags</translation>
     </message>
 </context><context>
     <name>SourceTab</name>
     <message>
         <location filename="../../views/source_tab.py" line="94" />
         <source>Copy</source>
-        <translation type="unfinished" />
+        <translation>Kopiera</translation>
     </message>
     <message>
         <location filename="../../views/source_tab.py" line="97" />
@@ -2502,7 +2502,7 @@
     <message>
         <location filename="../../views/source_tab.py" line="251" />
         <source>Total Size: {size}, {count} files</source>
-        <translation type="unfinished" />
+        <translation>Total storlek: {size}, {count} filer</translation>
     </message>
     <message>
         <location filename="../../views/partials/source_files_table_model.py" line="34" />
@@ -2551,7 +2551,7 @@
     <message>
         <location filename="../../application.py" line="357" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Borg avslutades med varningsstatus (rc 1). Se %1 för detaljer.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="137" />
@@ -2576,17 +2576,17 @@
     <message>
         <location filename="../../application.py" line="224" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
-        <translation type="unfinished" />
+        <translation>Utan detta blir vissa filer inte åtkomliga och säkerhetskopian kan bli ofullständig. Ange behörigheten %1 för Vorta i %2.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="230" />
         <source>Full Disk Access</source>
-        <translation type="unfinished" />
+        <translation>Full diskåtkomst</translation>
     </message>
     <message>
         <location filename="../../application.py" line="233" />
         <source>System Preferences &gt; Security &amp; Privacy</source>
-        <translation type="unfinished" />
+        <translation>Systeminställningar &gt; Säkerhet och integritet</translation>
     </message>
     <message>
         <location filename="../../application.py" line="251" />
@@ -2601,12 +2601,12 @@
     <message>
         <location filename="../../application.py" line="254" />
         <source>Break the lock</source>
-        <translation type="unfinished" />
+        <translation>Bryt låset</translation>
     </message>
     <message>
         <location filename="../../application.py" line="258" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
-        <translation type="unfinished" />
+        <translation>Gör endast detta om du är säker på att ingen annan Borg-process på någon dator har åtkomst till arkivet. Avbryt eller bryt låset?</translation>
     </message>
     <message>
         <location filename="../../application.py" line="274" />
@@ -2646,22 +2646,22 @@
     <message>
         <location filename="../../application.py" line="364" />
         <source>Repository data check for repo was killed by signal %s.</source>
-        <translation type="unfinished" />
+        <translation>Kontrollen av arkivdata för arkivet avslutades av signalen %s.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="365" />
         <source>The process running the check job got a kill signal. Try again.</source>
-        <translation type="unfinished" />
+        <translation>Processen som kör kontrolljobbet fick en avslutningssignal. Försök igen.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="368" />
         <source>Repository data check for repo %s failed. Error code %s</source>
-        <translation type="unfinished" />
+        <translation>Kontrollen av arkivdata för arkivet %s misslyckades. Felkod %s</translation>
     </message>
     <message>
         <location filename="../../application.py" line="373" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
-        <translation type="unfinished" />
+        <translation>Överväg att reparera eller återskapa arkivet snart för att undvika att data saknas.</translation>
     </message>
     <message>
         <source>Repository data check for repo %s failed</source>
@@ -2672,13 +2672,13 @@
     <message>
         <location filename="../../filedialog.py" line="36" />
         <source>Show hidden files</source>
-        <translation type="unfinished" />
+        <translation>Visa dolda filer</translation>
     </message>
     <message>
         <location filename="../../filedialog.py" line="117" />
         <location filename="../../filedialog.py" line="103" />
         <source>Permission Denied</source>
-        <translation type="unfinished" />
+        <translation>Åtkomst nekad</translation>
     </message>
 </context><context>
     <name>VortaScheduler</name>
@@ -2709,7 +2709,7 @@
     <message>
         <location filename="../../scheduler.py" line="619" />
         <source>Error during backup creation for %s.</source>
-        <translation type="unfinished" />
+        <translation>Fel när säkerhetskopiering skapades för %s.</translation>
     </message>
     <message>
         <source>Error during backup creation.</source>
