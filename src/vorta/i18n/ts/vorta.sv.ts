@@ -1248,37 +1248,37 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="537" />
         <source>Hard link</source>
-        <translation type="unfinished" />
+        <translation>Hårdlänk</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="539" />
         <source>Socket</source>
-        <translation type="unfinished" />
+        <translation>Socket</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="541" />
         <source>Block special file</source>
-        <translation type="unfinished" />
+        <translation>Blockspecialfil</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="543" />
         <source>Character special file</source>
-        <translation type="unfinished" />
+        <translation>Teckenspecialfil</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="550" />
         <source>healthy</source>
-        <translation type="unfinished" />
+        <translation>felfri</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="552" />
         <source>broken</source>
-        <translation type="unfinished" />
+        <translation>trasig</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="565" />
         <source>Linked to: {}</source>
-        <translation type="unfinished" />
+        <translation>Länkad till: {}</translation>
     </message>
 </context><context>
     <name>Form</name>
@@ -1290,32 +1290,32 @@
     <message>
         <location filename="../../views/repo_tab.py" line="32" />
         <source>Help on compression types</source>
-        <translation type="unfinished" />
+        <translation>Hjälp om komprimeringstyper</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="29" />
         <source>%1 to report a bug.</source>
-        <translation type="unfinished" />
+        <translation>%1 för att rapportera ett fel.</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="30" />
         <source>%1 to view the docs.</source>
-        <translation type="unfinished" />
+        <translation>%1 för att se dokumentationen.</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="31" />
         <source>%1 to view Git repo.</source>
-        <translation type="unfinished" />
+        <translation>%1 för att se Git-arkivet.</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="32" />
         <source>Click here</source>
-        <translation type="unfinished" />
+        <translation>Klicka här</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="33" />
         <source>View the logs</source>
-        <translation type="unfinished" />
+        <translation>Visa loggarna</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="106" />
@@ -1376,7 +1376,7 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="45" />
         <source>Trigger</source>
-        <translation type="unfinished" />
+        <translation>Utlösare</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1396,22 +1396,22 @@
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="0" />
         <source>Recalculate source size and file count</source>
-        <translation type="unfinished" />
+        <translation>Beräkna om källstorlek och antal filer</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="0" />
         <source>Manage Excluded Items…</source>
-        <translation type="unfinished" />
+        <translation>Hantera exkluderade objekt…</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="0" />
         <source>Add sources</source>
-        <translation type="unfinished" />
+        <translation>Lägg till källor</translation>
     </message>
     <message>
         <location filename="../../assets/UI/source_tab.ui" line="0" />
         <source>Remove the selected source</source>
-        <translation type="unfinished" />
+        <translation>Ta bort den valda källan</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
