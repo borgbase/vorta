@@ -169,12 +169,12 @@
     <message>
         <location filename="../../views/archive/archive_delete.py" line="23" />
         <source>Are you sure you want to delete all the selected archives?</source>
-        <translation type="unfinished" />
+        <translation>Är du säker på att du vill ta bort alla valda arkiv?</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_delete.py" line="25" />
         <source>Are you sure you want to delete the selected archive?</source>
-        <translation type="unfinished" />
+        <translation>Är du säker på att du vill ta bort det valda arkivet?</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_delete.py" line="26" />
@@ -184,7 +184,7 @@
     <message>
         <location filename="../../views/archive/archive_delete.py" line="39" />
         <source>Archives deleted.</source>
-        <translation type="unfinished" />
+        <translation>Arkiven togs bort.</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_delete.py" line="41" />
@@ -196,7 +196,7 @@
     <message>
         <location filename="../../views/archive/archive_diff.py" line="62" />
         <source>Processing diff results.</source>
-        <translation type="unfinished" />
+        <translation>Bearbetar diffresultat.</translation>
     </message>
 </context><context>
     <name>ArchiveExtract</name>
@@ -208,7 +208,7 @@
     <message>
         <location filename="../../views/archive/archive_extract.py" line="46" />
         <source>Processing archive contents</source>
-        <translation type="unfinished" />
+        <translation>Bearbetar arkivinnehåll</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_extract.py" line="69" />
@@ -228,33 +228,33 @@
         <location filename="../../views/archive/archive_mount.py" line="72" />
         <location filename="../../views/archive/archive_mount.py" line="55" />
         <source>Unmount</source>
-        <translation type="unfinished" />
+        <translation>Avmontera</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="56" />
         <source>Unmount the selected archive from the file system</source>
-        <translation type="unfinished" />
+        <translation>Avmontera det valda arkivet från filsystemet</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="76" />
         <location filename="../../views/archive/archive_mount.py" line="60" />
         <source>Mount…</source>
-        <translation type="unfinished" />
+        <translation>Montera…</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="62" />
         <source>Mount the selected archive as a folder in the file system</source>
-        <translation type="unfinished" />
+        <translation>Montera det valda arkivet som en mapp i filsystemet</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="73" />
         <source>Unmount the repository from the file system</source>
-        <translation type="unfinished" />
+        <translation>Avmontera arkivet från filsystemet</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="78" />
         <source>Mount the repository as a folder in the file system</source>
-        <translation type="unfinished" />
+        <translation>Montera arkivet som en mapp i filsystemet</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="109" />
@@ -291,7 +291,7 @@
     <message>
         <location filename="../../views/archive/archive_rename.py" line="72" />
         <source>Renaming archive...</source>
-        <translation type="unfinished" />
+        <translation>Byter namn på arkivet...</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_rename.py" line="86" />
@@ -303,7 +303,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="205" />
         <source>Copy</source>
-        <translation type="unfinished" />
+        <translation>Kopiera</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="225" />
@@ -313,12 +313,12 @@
     <message>
         <location filename="../../views/archive_tab.py" line="289" />
         <source>(This feature needs Borg 1.2.0 or higher)</source>
-        <translation type="unfinished" />
+        <translation>(Den här funktionen kräver Borg 1.2.0 eller senare)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="304" />
         <source>Archives for {}</source>
-        <translation type="unfinished" />
+        <translation>Arkiv för {}</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="328" />
@@ -328,17 +328,17 @@
     <message>
         <location filename="../../views/archive_tab.py" line="382" />
         <source>(borg already running)</source>
-        <translation type="unfinished" />
+        <translation>(Borg körs redan)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="392" />
         <source>(Select minimum one archive)</source>
-        <translation type="unfinished" />
+        <translation>(Välj minst ett arkiv)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="404" />
         <source>(Select two archives)</source>
-        <translation type="unfinished" />
+        <translation>(Välj två arkiv)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="419" />
