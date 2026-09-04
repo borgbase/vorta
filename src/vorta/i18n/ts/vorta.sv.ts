@@ -2356,59 +2356,59 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Manual only</source>
-        <translation type="unfinished" />
+        <translation>Endast manuellt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Backup periodically</source>
-        <translation type="unfinished" />
+        <translation>Säkerhetskopiera regelbundet</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Interval:</source>
-        <translation type="unfinished" />
+        <translation>Intervall:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Backup daily</source>
-        <translation type="unfinished" />
+        <translation>Säkerhetskopiera dagligen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Time:</source>
-        <translation type="unfinished" />
+        <translation>Tid:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Missed backups:</source>
-        <translation type="unfinished" />
+        <translation>Missade säkerhetskopieringar:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Run missed backups on startup or wakeup</source>
-        <translation type="unfinished" />
+        <translation>Kör missade säkerhetskopieringar vid uppstart eller uppvaknande</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Autopruning:</source>
-        <translation type="unfinished" />
+        <translation>Automatisk rensning:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Prune after each backup</source>
-        <translation type="unfinished" />
+        <translation>Rensa efter varje säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Validation:</source>
-        <translation type="unfinished" />
+        <translation>Validering:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Validate repository data</source>
-        <translation type="unfinished" />
+        <translation>Validera arkivdata</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2419,12 +2419,12 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Compaction:</source>
-        <translation type="unfinished" />
+        <translation>Komprimering:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Compact repository</source>
-        <translation type="unfinished" />
+        <translation>Komprimera arkivet</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2436,17 +2436,17 @@
     <message>
         <location filename="../../views/shell_commands_page.py" line="31" />
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
-        <translation type="unfinished" />
+        <translation>Kör anpassade skalkommandon före och efter varje säkerhetskopiering. Själva säkerhetskopieringen och kommandot efter säkerhetskopieringen körs endast om kommandot före säkerhetskopieringen avslutas utan fel (returkod 0). Tillgängliga variabler: %1</translation>
     </message>
     <message>
         <location filename="../../views/shell_commands_page.py" line="43" />
         <source>Extra arguments for %1. Possible options are listed in %2.</source>
-        <translation type="unfinished" />
+        <translation>Ytterligare argument för %1. Möjliga alternativ listas i %2.</translation>
     </message>
     <message>
         <location filename="../../views/shell_commands_page.py" line="47" />
         <source>the borg documentation</source>
-        <translation type="unfinished" />
+        <translation>Borg-dokumentationen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
@@ -2456,12 +2456,12 @@
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>Pre-backup:</source>
-        <translation type="unfinished" />
+        <translation>Före säkerhetskopiering:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>echo "Before backup of $repo_url"</source>
-        <translation type="unfinished" />
+        <translation>echo "Före säkerhetskopiering av $repo_url"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
