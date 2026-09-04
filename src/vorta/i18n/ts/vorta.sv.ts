@@ -2711,7 +2711,7 @@
     <message>
         <location filename="../../application.py" line="120" />
         <source>Running Pre-backup Command...</source>
-        <translation type="unfinished" />
+        <translation>Kör kommandot före säkerhetskopiering...</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="31" />
@@ -2741,7 +2741,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="148" />
         <source>Select a backup repository first.</source>
-        <translation type="unfinished" />
+        <translation>Välj först ett säkerhetskopieringsarkiv.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="152" />
@@ -2805,27 +2805,27 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="24" />
         <source>Notifications</source>
-        <translation type="unfinished" />
+        <translation>Aviseringar</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="25" />
         <source>Startup</source>
-        <translation type="unfinished" />
+        <translation>Uppstart</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="26" />
         <source>Information</source>
-        <translation type="unfinished" />
+        <translation>Information</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="27" />
         <source>Security</source>
-        <translation type="unfinished" />
+        <translation>Säkerhet</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="28" />
         <source>Updates</source>
-        <translation type="unfinished" />
+        <translation>Uppdateringar</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="37" />
@@ -2835,7 +2835,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="44" />
         <source>Notify about successful background tasks</source>
-        <translation type="unfinished" />
+        <translation>Informera om lyckade bakgrundsuppgifter</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="51" />
@@ -2845,17 +2845,17 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="52" />
         <source>Add Vorta to the systems autostart list</source>
-        <translation type="unfinished" />
+        <translation>Lägg till Vorta i systemets autostartlista</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="59" />
         <source>Show main window of Vorta on launch</source>
-        <translation type="unfinished" />
+        <translation>Visa Vortas huvudfönster vid start</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="60" />
         <source>Make Vorta appear on screen instead of minimizing to system tray</source>
-        <translation type="unfinished" />
+        <translation>Visa Vorta på skärmen i stället för att minimera till systemfältet</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="70" />
@@ -2865,17 +2865,17 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="71" />
         <source>When adding a new source, calculate its size and the number of files.</source>
-        <translation type="unfinished" />
+        <translation>Beräkna storleken och antalet filer när en ny källa läggs till.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="80" />
         <source>Use the same unit of measurement for archive sizes</source>
-        <translation type="unfinished" />
+        <translation>Använd samma måttenhet för arkivstorlekar</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="81" />
         <source>When enabled, all archive sizes will use the same unit of measurement, such as  KB or MB. This can make archive sizes easier to compare.</source>
-        <translation type="unfinished" />
+        <translation>När detta är aktiverat använder alla arkivstorlekar samma måttenhet, till exempel KB eller MB. Det kan göra arkivstorlekar lättare att jämföra.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="92" />
@@ -2885,17 +2885,17 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="93" />
         <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
-        <translation type="unfinished" />
+        <translation>Annars lagrar Vortas konfigurationsdatabas lösenordet i klartext.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="102" />
         <source>Try to replace file permissions when mounting an archive</source>
-        <translation type="unfinished" />
+        <translation>Försök att ersätta filbehörigheter när ett arkiv monteras</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="106" />
         <source>Set owner to current user and umask to 0277</source>
-        <translation type="unfinished" />
+        <translation>Ange ägaren som aktuell användare och umask till 0277</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="158" />
@@ -2905,7 +2905,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="159" />
         <source>Uses Sparkle to find new updates published on Github.</source>
-        <translation type="unfinished" />
+        <translation>Använder Sparkle för att hitta nya uppdateringar som publiceras på GitHub.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="166" />
@@ -2915,33 +2915,33 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="167" />
         <source>Needs Vorta restart to apply.</source>
-        <translation type="unfinished" />
+        <translation>Vorta måste startas om för att tillämpa ändringen.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="174" />
         <source>Check for Full Disk Access on startup</source>
-        <translation type="unfinished" />
+        <translation>Kontrollera full diskåtkomst vid uppstart</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="178" />
         <source>Alerts user when full disk access permission has not been provided</source>
-        <translation type="unfinished" />
+        <translation>Varnar användaren när behörigheten för full diskåtkomst saknas</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="189" />
         <source>If the system tray isn't available, ask whether to continue in the background on exit</source>
-        <translation type="unfinished" />
+        <translation>Fråga vid avslut om programmet ska fortsätta i bakgrunden om systemfältet inte är tillgängligt</translation>
     </message>
 </context><context>
     <name>utils</name>
     <message>
         <location filename="../../keyring/abc.py" line="42" />
         <source>Storing password in your password manager.</source>
-        <translation type="unfinished" />
+        <translation>Lagrar lösenordet i din lösenordshanterare.</translation>
     </message>
     <message>
         <location filename="../../keyring/abc.py" line="44" />
         <source>Saving password with Vorta settings.</source>
-        <translation type="unfinished" />
+        <translation>Sparar lösenordet med Vorta-inställningarna.</translation>
     </message>
 </context></TS>
