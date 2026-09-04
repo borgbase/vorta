@@ -840,17 +840,17 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Exclude If Present</source>
-        <translation type="unfinished" />
+        <translation>Exkludera om den finns</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Preview</source>
-        <translation type="unfinished" />
+        <translation>Förhandsgranska</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
         <source>Choose archives for diff</source>
-        <translation type="unfinished" />
+        <translation>Välj arkiv för diff</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
@@ -895,7 +895,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <source>Choose files to extract</source>
-        <translation type="unfinished" />
+        <translation>Välj filer att extrahera</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
@@ -915,7 +915,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
         <source>Enter passphrase</source>
-        <translation type="unfinished" />
+        <translation>Ange lösenfras</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
@@ -930,7 +930,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
         <source>Include Borg passphrase in export. Use with caution!</source>
-        <translation type="unfinished" />
+        <translation>Inkludera Borg-lösenfrasen i exporten. Använd med försiktighet!</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
@@ -950,7 +950,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
         <source>Profile Name:</source>
-        <translation type="unfinished" />
+        <translation>Profilnamn:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
@@ -975,7 +975,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
         <source>Do not change this if you want SSH to automatically find the key.</source>
-        <translation type="unfinished" />
+        <translation>Ändra inte detta om du vill att SSH automatiskt ska hitta nyckeln.</translation>
     </message>
     <message>
         <source>Dialog</source>
@@ -1002,12 +1002,12 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="152" />
         <source>Copy</source>
-        <translation type="unfinished" />
+        <translation>Kopiera</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="160" />
         <source>Expand recursively</source>
-        <translation type="unfinished" />
+        <translation>Expandera rekursivt</translation>
     </message>
 </context><context>
     <name>DiffTree</name>
@@ -1019,7 +1019,7 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="795" />
         <source>Change</source>
-        <translation type="unfinished" />
+        <translation>Ändra</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="797" />
@@ -1029,12 +1029,12 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="799" />
         <source>Balance</source>
-        <translation type="unfinished" />
+        <translation>Balans</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="870" />
         <source>Added {}, deleted {}</source>
-        <translation type="unfinished" />
+        <translation>Tillagda {}, borttagna {}</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="877" />
@@ -1044,27 +1044,27 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="879" />
         <source>Directory</source>
-        <translation type="unfinished" />
+        <translation>Katalog</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="881" />
         <source>Link</source>
-        <translation type="unfinished" />
+        <translation>Länk</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="883" />
         <source>Block device file</source>
-        <translation type="unfinished" />
+        <translation>Blockenhetsfil</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="885" />
         <source>Character device file</source>
-        <translation type="unfinished" />
+        <translation>Teckenenhetsfil</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="890" />
         <source>unchanged</source>
-        <translation type="unfinished" />
+        <translation>oförändrad</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="892" />
