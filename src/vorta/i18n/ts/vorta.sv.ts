@@ -38,55 +38,55 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="170" />
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
-        <translation type="unfinished" />
+        <translation>Repokey-ChaCha20-Poly1305 (rekommenderas, nyckeln lagras i arkivet)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="174" />
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
-        <translation type="unfinished" />
+        <translation>Keyfile-ChaCha20-Poly1305 (nyckeln lagras i hemkatalogen)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="177" />
         <source>Repokey-AES256-OCB</source>
-        <translation type="unfinished" />
+        <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="178" />
         <source>Keyfile-AES256-OCB</source>
-        <translation type="unfinished" />
+        <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
         <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
         <source>None (not recommended)</source>
-        <translation type="unfinished" />
+        <translation>Ingen (rekommenderas inte)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
-        <translation type="unfinished" />
+        <translation>Repokey-Blake2 (rekommenderas, nyckeln lagras i arkivet)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="184" />
         <source>Repokey</source>
-        <translation type="unfinished" />
+        <translation>Repokey</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="185" />
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
-        <translation type="unfinished" />
+        <translation>Nyckelfil-Blake2 (nyckeln lagras i hemkatalogen)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
         <source>Keyfile</source>
-        <translation type="unfinished" />
+        <translation>Nyckelfil</translation>
     </message>
 </context><context>
     <name>AddRepository</name>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Add Repository</source>
-        <translation type="unfinished" />
+        <translation>Lägg till arkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -106,12 +106,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
-        <translation type="unfinished" />
+        <translation>ssh://abc123@abc123.repo.borgbase.com/./repo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Choose a local folder</source>
-        <translation type="unfinished" />
+        <translation>Välj en lokal mapp</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -122,17 +122,17 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Choose a remote repository</source>
-        <translation type="unfinished" />
+        <translation>Välj ett fjärrarkiv</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Repository Name:</source>
-        <translation type="unfinished" />
+        <translation>Arkivnamn:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Macbook Pro Office (optional)</source>
-        <translation type="unfinished" />
+        <translation>Macbook Pro Office (valfritt)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -157,7 +157,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation type="unfinished" />
+        <translation>OBS! Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
     </message>
 </context><context>
     <name>ArchiveDelete</name>
