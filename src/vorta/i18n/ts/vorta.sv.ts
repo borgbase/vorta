@@ -2097,7 +2097,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="52" />
         <source>Change Passphrase…</source>
-        <translation type="unfinished" />
+        <translation>Ändra lösenfras…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="63" />
@@ -2132,23 +2132,23 @@
     <message>
         <location filename="../../views/repo_tab.py" line="115" />
         <source>No repository selected</source>
-        <translation type="unfinished" />
+        <translation>Inget arkiv valt</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="145" />
         <source>N/A</source>
         <comment>Not available.</comment>
-        <translation type="unfinished" />
+        <translation>Ej tillgängligt</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="146" />
         <source>Select a repository first.</source>
-        <translation type="unfinished" />
+        <translation>Välj först ett arkiv.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="147" />
         <source>Try refreshing the metadata of any archive.</source>
-        <translation type="unfinished" />
+        <translation>Försök att uppdatera metadata för ett arkiv.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="211" />
@@ -2168,7 +2168,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="262" />
         <source>Could not find public key.</source>
-        <translation type="unfinished" />
+        <translation>Kunde inte hitta offentlig nyckel.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="264" />
@@ -2188,42 +2188,42 @@
     <message>
         <location filename="../../views/repo_tab.py" line="337" />
         <source>Repository was Detached</source>
-        <translation type="unfinished" />
+        <translation>Arkivet kopplades från</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="338" />
         <source>The repository remains available for other profiles.</source>
-        <translation type="unfinished" />
+        <translation>Arkivet är fortfarande tillgängligt för andra profiler.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="370" />
         <source>Invalid Encryption Type</source>
-        <translation type="unfinished" />
+        <translation>Ogiltig krypteringstyp</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="371" />
         <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
-        <translation type="unfinished" />
+        <translation>Det går inte att ändra arkivets lösenfras. Krypteringstypen måste vara repokey.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="390" />
         <source>Passphrase Changed</source>
-        <translation type="unfinished" />
+        <translation>Lösenfrasen ändrad</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="391" />
         <source>The borg passphrase was successfully changed.</source>
-        <translation type="unfinished" />
+        <translation>Borg-lösenfrasen ändrades.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="394" />
         <source>Passphrase Change Failed</source>
-        <translation type="unfinished" />
+        <translation>Ändring av lösenfras misslyckades</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
-        <translation type="unfinished" />
+        <translation>Det går inte att ändra arkivets lösenfras. Försök igen.</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>
@@ -2261,7 +2261,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="110" />
         <source>Repository name must be less than 65 characters.</source>
-        <translation type="unfinished" />
+        <translation>Arkivnamnet måste vara kortare än 65 tecken.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="114" />
@@ -2274,7 +2274,7 @@
         <location filename="../../views/dialogs/repo/ssh.py" line="50" />
         <location filename="../../views/dialogs/repo/ssh.py" line="33" />
         <source>Generate and copy to clipboard</source>
-        <translation type="unfinished" />
+        <translation>Generera och kopiera till urklipp</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="65" />
@@ -2335,7 +2335,7 @@
     <message>
         <location filename="../../views/schedule_page.py" line="119" />
         <source>Run a manual backup first</source>
-        <translation type="unfinished" />
+        <translation>Kör först en manuell säkerhetskopiering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2351,7 +2351,7 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Backup schedule:</source>
-        <translation type="unfinished" />
+        <translation>Säkerhetskopieringsschema:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
