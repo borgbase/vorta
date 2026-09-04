@@ -718,12 +718,12 @@
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="32" />
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
-        <translation type="unfinished" />
+        <translation>Profiler gör det möjligt att konfigurera olika säkerhetskopierings- och arkivinställningar, inklusive olika scheman.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="36" />
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
-        <translation type="unfinished" />
+        <translation>Alla profiler får åtkomst till samma arkiv och samma %1-nycklar. De globala programinställningarna i %2 delas mellan profiler.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="21" />
@@ -743,23 +743,23 @@
     <message>
         <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
         <source>Vorta quit unexpectedly. </source>
-        <translation type="unfinished" />
+        <translation>Vorta avslutades oväntat. </translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
         <source>Crash Report:</source>
-        <translation type="unfinished" />
+        <translation>Kraschrapport:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
         <source>Copy to Clipboard</source>
-        <translation type="unfinished" />
+        <translation>Kopiera till urklipp</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Diff Result</source>
-        <translation type="unfinished" />
+        <translation>Diffresultat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
@@ -775,67 +775,67 @@
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Keep folders on top when sorting</source>
-        <translation type="unfinished" />
+        <translation>Behåll mappar överst vid sortering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Folders First</source>
-        <translation type="unfinished" />
+        <translation>Mappar först</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Set display mode of diff view</source>
-        <translation type="unfinished" />
+        <translation>Ange visningsläge för diffvyn</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Tree</source>
-        <translation type="unfinished" />
+        <translation>Träd</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Tree, simplified</source>
-        <translation type="unfinished" />
+        <translation>Träd, förenklat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Flat</source>
-        <translation type="unfinished" />
+        <translation>Platt</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Collapse All</source>
-        <translation type="unfinished" />
+        <translation>Fäll ihop alla</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Add patterns to exclude</source>
-        <translation type="unfinished" />
+        <translation>Lägg till mönster för exkludering</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Custom</source>
-        <translation type="unfinished" />
+        <translation>Anpassad</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Exclude Files/Folders</source>
-        <translation type="unfinished" />
+        <translation>Exkludera filer/mappar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Presets</source>
-        <translation type="unfinished" />
+        <translation>Förinställningar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Raw</source>
-        <translation type="unfinished" />
+        <translation>Rå</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
