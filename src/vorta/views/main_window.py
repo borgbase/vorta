@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtCore import QPoint, Qt, QTimer
 from PyQt6.QtCore import pyqtSignal as Signal
 from PyQt6.QtGui import QFontMetrics, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
@@ -380,3 +380,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
             elif not SettingsModel.get(key="disable_background_state").value:
                 self.app.quit()
         event.accept()
+        # Closing only hides the window: Qt keeps the native window and its backing store
+        # (~28 MB on a Retina display) alive while Vorta sits in the tray. Release them once
+        # the close has gone through (Qt hides the widget after this handler returns).
+        QTimer.singleShot(0, self._release_native_window)
+
+    def _release_native_window(self):
+        if not self.isVisible():
+            self.destroy()  # show() creates the native window again
