@@ -63,6 +63,13 @@ class VortaApp(QtSingleApplication):
         init_translations(self)
 
         self.setQuitOnLastWindowClosed(False)
+        if sys.platform == 'darwin' and not getattr(sys, 'frozen', False):
+            # The app bundle is an LSUIElement: no Dock icon, and it keeps running in the tray
+            # without windows. Give a plain `vorta` run the same activation policy, otherwise
+            # macOS sends the process a quit Apple Event ~2 s after its last window is closed.
+            from AppKit import NSApp, NSApplicationActivationPolicyAccessory
+
+            NSApp.setActivationPolicy_(NSApplicationActivationPolicyAccessory)
         self.jobs_manager = JobsManager()
         self.scheduler = VortaScheduler()
 
