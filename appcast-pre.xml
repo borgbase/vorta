@@ -6,6 +6,44 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.11.6</title>
+      <description><![CDATA[<h2>Fixes</h2>
+<ul>
+<li>Fix crash in the scheduler when a profile no longer exists</li>
+<li>Schedule runs beyond QTimer's 24.8 day ceiling by re-arming a deadline timer in chunks (#2547)</li>
+<li>Detect resume from sleep on systems without logind (#2537)</li>
+<li>Release the main window's native window when it is closed (#2555)</li>
+<li>Keep a plain <code>vorta</code> run alive after its window is closed on macOS (#2556)</li>
+</ul>
+<h2>Performance</h2>
+<ul>
+<li>Cut ~150 MB of startup memory on macOS by loading Sparkle without PyObjC's class scan (#2551)</li>
+<li>Stop growing <code>PATH</code> on every Borg job on macOS (#2552)</li>
+</ul>
+<h2>Scheduler groundwork</h2>
+<ul>
+<li>Add <code>JobModel</code>, a persistent scheduler job store (#2530)</li>
+<li>Add <code>SchedulerPauseModel</code> so pauses survive a restart (#2532)</li>
+</ul>
+<h2>Translations</h2>
+<ul>
+<li>Move string extraction to <code>pylupdate6</code> and resync every locale (#2546, #2543)</li>
+<li>Improve and complete the Swedish translation (#2539)</li>
+<li>Update macFUSE wording (#2542)</li>
+</ul>
+<h2>Internal</h2>
+<ul>
+<li>Convert the archive, source file and log tables to <code>QTableView</code> + <code>QAbstractTableModel</code> (#2515, #2517, #2519, #2523)</li>
+<li>Peel diff, rename, delete and check/compact/prune out of <code>ArchiveTab</code> into <code>views/archive/</code> helpers (#2525, #2526)</li>
+<li>Refactor <code>MiscTab</code> to use a store helper for settings filtering (#2514)</li>
+<li>Packaging: collect <code>assets/UI</code> recursively in the PyInstaller spec (#2553); fetch Sparkle from upstream instead of the disabled cask</li>
+</ul>]]></description>
+      <pubDate>2026-09-07T15:26:38Z</pubDate>
+      <sparkle:version>0.11.6</sparkle:version>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.6</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.6/Vorta-v0.11.6-arm.dmg" length="48857466" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.5</title>
       <description><![CDATA[<h2>Bug fixes</h2>
 <ul>
