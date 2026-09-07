@@ -1,11 +1,12 @@
 from PyQt6 import uic
-from PyQt6.QtCore import QSortFilterProxyModel, Qt
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractItemView, QHeaderView
 
 from vorta.store.models import JobModel
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
 from vorta.views.partials.jobs_table_model import JobRow, JobsTableModel
+from vorta.views.partials.sort_proxy import SortProxyModel
 
 uifile = get_asset('UI/jobs_page.ui')
 JobsPageUI, JobsPageBase = uic.loadUiType(uifile)
@@ -19,7 +20,7 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
         self.setupUi(self)
 
         self._model = JobsTableModel(self)
-        self._proxy = QSortFilterProxyModel(self)
+        self._proxy = SortProxyModel(self)
         self._proxy.setSourceModel(self._model)
         self.jobsTable.setModel(self._proxy)
 
@@ -28,6 +29,7 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
 
         self.init_ui()
         self.track_backup_finished(self.reload_records)
+        self.track_signal(self.app.scheduler.jobs_changed, self.reload_records)
         self.track_signal(self.app.scheduler.schedule_changed, self.reload_pending)
         self.reload_records()
         self.reload_pending()

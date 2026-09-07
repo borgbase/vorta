@@ -96,8 +96,8 @@ def test_schedule_tab_forwards_profile_provider_to_child_pages(qapp: VortaApp, q
     assert tab.jobsPage.profile().id == profile.id
 
 
-def test_jobs_page_merges_pending_runs_with_stored_records(qapp: VortaApp, clockmock):
-    """The jobs page shows both halves: what the scheduler is holding, and what it already recorded."""
+def test_jobs_page_merges_pending_runs_with_stored_records(qapp: VortaApp, qtbot, clockmock, mocker):
+    """The jobs page shows both halves, and a skip that pauses the profile must not empty either one."""
     page = qapp.main_window.scheduleTab.jobsPage
 
     time_now = dt(2020, 5, 6, 4, 30)
@@ -118,17 +118,28 @@ def test_jobs_page_merges_pending_runs_with_stored_records(qapp: VortaApp, clock
         start_time=time_now,
         end_time=time_now,
     )
-    JobModel.create(
-        profile=profile.id,
-        profile_name=profile.name,
-        status=JobModel.Status.SKIPPED.value,
-        reason='Repository is busy with another job.',
-    )
-    page.reload_records()
 
     # Arming a timer emits `schedule_changed`, which is what the page listens to for pending runs.
     qapp.scheduler.set_timer_for_profile(profile.id)
 
     model = page.jobsTable.model()
-    statuses = {model.data(model.index(row, JobsTableModel.COL_STATUS)) for row in range(model.rowCount())}
-    assert statuses == {'scheduled', 'skipped'}
+
+    def statuses():
+        return {model.data(model.index(row, JobsTableModel.COL_STATUS)) for row in range(model.rowCount())}
+
+    # The page outlives earlier tests, so take its record count as the baseline rather than assuming zero.
+    page.reload_records()
+    rows_before = model.rowCount()
+    assert JobModel.Status.SCHEDULED.value in statuses()
+    assert JobModel.Status.PAUSED.value not in statuses()
+
+    # A busy repo records a skip and pauses the profile, with no Borg job to announce either.
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    qapp.scheduler.create_backup(profile.id)
+
+    # One row more: the skip arrives on its own signal, and the paused run keeps its row instead of vanishing.
+    qtbot.waitUntil(lambda: model.rowCount() == rows_before + 1)
+    assert JobModel.Status.PAUSED.value in statuses()
+    assert JobModel.Status.SKIPPED.value in statuses()
+
+    qapp.scheduler.unpause(profile.id)

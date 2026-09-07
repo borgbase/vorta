@@ -259,6 +259,7 @@ class JobModel(BaseModel):
         FAILED = 'failed'
         SKIPPED = 'skipped'
         INTERRUPTED = 'interrupted'
+        PAUSED = 'paused'
 
     class Type(Enum):
         BACKUP = 'backup'

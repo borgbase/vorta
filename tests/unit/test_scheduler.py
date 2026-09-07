@@ -99,14 +99,16 @@ def test_pending_jobs_reports_the_scheduled_run(clockmock):
     )
 
     scheduler.set_timer_for_profile(profile.id)
-    assert scheduler.pending_jobs() == [PendingJob(profile.id, PROFILE_NAME, profile.repo.url, dt(2020, 5, 6, 7, 30))]
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, dt(2020, 5, 6, 7, 30), JobModel.Status.SCHEDULED.value)
+    ]
 
     scheduler.remove_job(profile.id)
     assert scheduler.pending_jobs() == []
 
 
-def test_pending_jobs_includes_a_run_too_far_ahead_for_a_timer(clockmock):
-    """A run beyond QTimer's range gets no timer, but it still has a time and is still due."""
+def test_pending_jobs_includes_a_run_beyond_a_single_timer_chunk(clockmock):
+    """A run further out than one timer chunk is armed in chunks, and is pending the whole way."""
     scheduler = VortaScheduler()
 
     time = dt(2020, 5, 6, 4, 30)
@@ -125,8 +127,30 @@ def test_pending_jobs_includes_a_run_too_far_ahead_for_a_timer(clockmock):
 
     scheduler.set_timer_for_profile(profile.id)
 
-    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.TOO_FAR_AHEAD
-    assert scheduler.pending_jobs() == [PendingJob(profile.id, PROFILE_NAME, profile.repo.url, time + td(weeks=5))]
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, time + td(weeks=5), JobModel.Status.SCHEDULED.value)
+    ]
+
+
+def test_pending_jobs_includes_a_paused_profile(clockmock):
+    """A pause is a held time, so it stays on the jobs table with the status the schedule page shows."""
+    scheduler = VortaScheduler()
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    scheduler.pause(profile.id)
+    paused_until = scheduler.next_job_for_profile(profile.id).time
+
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, paused_until, JobModel.Status.PAUSED.value)
+    ]
+
+    scheduler.unpause(profile.id)
 
 
 def test_pending_jobs_drops_a_profile_deleted_under_its_timer(clockmock):
@@ -626,6 +650,14 @@ def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     assert job.profile_name == PROFILE_NAME
 
 
+def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
+    """The jobs view refreshes its records off this signal, and a skip runs no Borg job to announce it."""
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+
+    with qtbot.waitSignal(qapp.scheduler.jobs_changed, timeout=1000):
+        qapp.scheduler.create_backup(1)
+
+
 def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
     """An unexpected prepare() failure is recorded as failed, not skipped."""
     mocker.patch(
@@ -668,7 +700,7 @@ def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
     assert job.trigger == JobModel.Trigger.CATCHUP.value
 
 
-def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
+def test_set_timer_records_skip_when_network_down_for_catchup(qtbot, clockmock):
     """A catch-up run blocked by a down network is recorded as a skipped JobModel row."""
     scheduler = VortaScheduler()
     scheduler._net_up = False
@@ -694,7 +726,9 @@ def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
     )
     jobs_before = JobModel.select().count()
 
-    scheduler.set_timer_for_profile(profile.id)
+    # This skip is recorded while the scheduler holds its lock, so the signal has to leave it first.
+    with qtbot.waitSignal(scheduler.jobs_changed, timeout=1000):
+        scheduler.set_timer_for_profile(profile.id)
 
     assert JobModel.select().count() == jobs_before + 1
     job = JobModel.select().order_by(JobModel.id.desc()).get()

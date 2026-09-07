@@ -48,7 +48,7 @@ class JobRow(NamedTuple):
             repo_url=pending.repo_url,
             job_type=JobModel.Type.BACKUP.value,
             trigger=JobModel.Trigger.SCHEDULED.value,
-            status=JobModel.Status.SCHEDULED.value,
+            status=pending.status,
             reason=None,
         )
 
@@ -97,11 +97,17 @@ class JobsTableModel(QAbstractTableModel):
         return len(self._HEADERS)
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
-        if not index.isValid() or role != Qt.ItemDataRole.DisplayRole:
+        if not index.isValid():
             return None
 
         row = self._rows[index.row()]
         column = index.column()
+
+        if role == Qt.ItemDataRole.UserRole:
+            return self._sort_key(row, column)
+
+        if role != Qt.ItemDataRole.DisplayRole:
+            return None
 
         if column == self.COL_TIME:
             return row.time.strftime('%Y-%m-%d %H:%M')
@@ -117,6 +123,12 @@ class JobsTableModel(QAbstractTableModel):
             return row.status
         if column == self.COL_REASON:
             return row.reason
+        return None
+
+    def _sort_key(self, row: JobRow, column: int) -> Any:
+        # JobRow fields are declared in column order, so the raw value sorts the column.
+        if 0 <= column < len(row):
+            return row[column]
         return None
 
     def headerData(
