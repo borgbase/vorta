@@ -77,9 +77,29 @@ class ScheduleStatus(NamedTuple):
     time: dt | None = None
 
 
+#: Timer states that hold a time for a run, and the row status each one shows as.
+PENDING_STATUSES = {
+    ScheduleStatusType.SCHEDULED: JobModel.Status.SCHEDULED.value,
+    ScheduleStatusType.PAUSED: JobModel.Status.PAUSED.value,
+}
+
+
+class PendingJob(NamedTuple):
+    """A run the scheduler is holding a time for, but that hasn't been recorded yet."""
+
+    profile_id: int
+    profile_name: str
+    repo_url: str | None
+    scheduled_at: dt
+    status: str
+
+
 class VortaScheduler(QtCore.QObject):
     #: The schedule for a profile changed.
     schedule_changed = QtCore.pyqtSignal()
+
+    #: A job outcome was recorded.
+    jobs_changed = QtCore.pyqtSignal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -519,6 +539,24 @@ class VortaScheduler(QtCore.QObject):
             return ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
         return ScheduleStatus(job['type'], time=job.get('dt'))  # type: ignore[arg-type]
 
+    def pending_jobs(self) -> list[PendingJob]:
+        """The runs currently on the clock, soonest first."""
+        pending = []
+
+        for profile_id, timer in self.timers.items():
+            status = PENDING_STATUSES.get(timer['type'])
+            if status is None:
+                continue
+
+            profile = BackupProfileModel.get_or_none(id=profile_id)
+            if profile is None:
+                continue
+
+            repo_url = profile.repo.url if profile.repo else None
+            pending.append(PendingJob(profile_id, profile.name, repo_url, timer['dt'], status))
+
+        return sorted(pending, key=lambda job: job.scheduled_at)
+
     def _record_skip(
         self,
         profile: BackupProfileModel,
@@ -545,9 +583,15 @@ class VortaScheduler(QtCore.QObject):
             if scheduled_at is None:
                 JobModel.create(**lookup, **details)
             else:
-                JobModel.get_or_create(**lookup, defaults=details)
+                _, recorded = JobModel.get_or_create(**lookup, defaults=details)
+                if not recorded:
+                    return
         except pw.PeeweeException:
             logger.warning('Could not record job for profile %s.', profile.id, exc_info=True)
+            return
+
+        # Two of the call sites hold `self.lock`, and the jobs view reads the table on this signal.
+        QTimer.singleShot(0, self.jobs_changed.emit)
 
     def create_backup(self, profile_id: int, trigger: str = JobModel.Trigger.SCHEDULED.value) -> None:
         notifier = VortaNotifications.pick()
