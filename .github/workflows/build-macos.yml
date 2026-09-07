@@ -19,6 +19,11 @@ on:
 
 env:
   PYTHON_VERSION: ${{ vars.PYTHON_VERSION || '3.12' }}
+  # Pin the minimum macOS the build targets, so the runner image does not
+  # silently set it. Values match the PyQt6 wheel platform tags
+  # (macosx_10_14_x86_64 / macosx_11_0_arm64).
+  DEPLOYMENT_TARGET_ARM: '11.0'
+  DEPLOYMENT_TARGET_INTEL: '10.14'
 
 jobs:
   build:
@@ -58,7 +63,14 @@ jobs:
       env:
         BORG_VERSION: ${{ inputs.borg_version }}
       run: |
-        if [ "$(uname -m)" = "arm64" ]; then BORG_ARCHIVE="borg-macos-15-arm64-gh.tgz"; else BORG_ARCHIVE="borg-macos-15-x86_64-gh.tgz"; fi
+        if [ "$(uname -m)" = "arm64" ]; then
+          BORG_ARCHIVE="borg-macos-15-arm64-gh.tgz"
+          export MACOSX_DEPLOYMENT_TARGET="${DEPLOYMENT_TARGET_ARM}"
+        else
+          BORG_ARCHIVE="borg-macos-15-x86_64-gh.tgz"
+          export MACOSX_DEPLOYMENT_TARGET="${DEPLOYMENT_TARGET_INTEL}"
+        fi
+        echo "Building with MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET}"
         uv run pyinstaller --clean --noconfirm package/vorta.spec
         sh package/fetch-sparkle.sh dist/Vorta.app/Contents/Frameworks
         curl -LJO "https://github.com/borgbackup/borg/releases/download/${BORG_VERSION}/${BORG_ARCHIVE}"

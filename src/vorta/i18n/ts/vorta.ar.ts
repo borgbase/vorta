@@ -1711,10 +1711,6 @@
         <source>Archive Name:</source>
         <translation>اسم الأرشيف:</translation>
     </message>
-    <message>
-        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
-        <translation type="vanished">لتحميل الأرشيفات، ثبّت أولاً "FUSE لنظام التشغيل macOSquot; من هنا%1.</translation>
-    </message>
 </context><context>
     <name>ImportWindow</name>
     <message>
