@@ -20,7 +20,7 @@ clean:
 
 dist/Vorta.app:  ## Build macOS app locally (without Borg)
 	uv run pyinstaller --clean --noconfirm package/vorta.spec
-	cp -R ${HOMEBREW}/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+	sh package/fetch-sparkle.sh dist/Vorta.app/Contents/Frameworks
 	rm -rf build/vorta dist/vorta
 
 dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
