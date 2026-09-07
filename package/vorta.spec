@@ -21,7 +21,9 @@ a = Analysis([os.path.join(SRC_DIR, '__main__.py')],
              pathex=[SRC_DIR],
              binaries=[],
              datas=[
-                (os.path.join(SRC_DIR, 'assets/UI/*'), 'assets/UI'),
+                # A directory (not a glob) is collected recursively with its layout intact;
+                # 'assets/UI/*' flattened the dialogs' subfolders into assets/UI.
+                (os.path.join(SRC_DIR, 'assets/UI'), 'assets/UI'),
                 (os.path.join(SRC_DIR, 'assets/icons/*'), 'assets/icons'),
                 (os.path.join(SRC_DIR, 'assets/exclusion_presets/*'), 'assets/exclusion_presets'),
                 (os.path.join(SRC_DIR, 'i18n/qm/*'), 'vorta/i18n/qm'),
