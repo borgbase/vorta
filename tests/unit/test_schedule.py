@@ -7,6 +7,8 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QWidget
 
 import vorta.scheduler
+import vorta.scheduler.scheduling
+import vorta.scheduler.state
 from vorta.application import VortaApp
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.views.partials.jobs_table_model import JobsTableModel
@@ -18,7 +20,8 @@ PROFILE_NAME = 'Default'
 @pytest.fixture
 def clockmock(monkeypatch):
     datetime_mock = MagicMock(wraps=dt)
-    monkeypatch.setattr(vorta.scheduler, "dt", datetime_mock)
+    for module in (vorta.scheduler, vorta.scheduler.scheduling, vorta.scheduler.state):
+        monkeypatch.setattr(module, "dt", datetime_mock)
 
     return datetime_mock
 
