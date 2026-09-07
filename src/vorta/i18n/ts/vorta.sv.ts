@@ -568,19 +568,19 @@
 </context><context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="309" />
+        <location filename="../../borg/borg_job.py" line="312" />
         <location filename="../../borg/borg_job.py" line="69" />
         <source>Files</source>
         <translation>Filer</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="310" />
+        <location filename="../../borg/borg_job.py" line="313" />
         <location filename="../../borg/borg_job.py" line="70" />
         <source>Original</source>
         <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="312" />
+        <location filename="../../borg/borg_job.py" line="315" />
         <location filename="../../borg/borg_job.py" line="71" />
         <source>Deduplicated</source>
         <translation>Deduplicerat</translation>
@@ -591,7 +591,7 @@
         <translation>Komprimerat</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="354" />
+        <location filename="../../borg/borg_job.py" line="357" />
         <source>Task started</source>
         <translation>Uppgift startad</translation>
     </message>
@@ -1319,8 +1319,8 @@
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="106" />
-        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
-        <translation>För att montera arkiv installerar du först ”FUSE för macOS” %1.</translation>
+        <source>To mount archives, first install macFUSE from %1.</source>
+        <translation>För att montera arkiv installerar du först macFUSE från %1.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="107" />
@@ -1684,6 +1684,10 @@
         <translation>Arkivnamn:</translation>
     </message>
     <message>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation type="vanished">För att montera arkiv installerar du först ”FUSE för macOS” %1.</translation>
+    </message>
+    <message>
         <source>Refresh</source>
         <translation type="vanished">Uppdatera</translation>
     </message>
@@ -1848,52 +1852,52 @@
         <translation>Bekräfta borttagning</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="246" />
+        <location filename="../../views/main_window.py" line="247" />
         <source>Cannot delete the last profile.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="277" />
+        <location filename="../../views/main_window.py" line="278" />
         <source>Profile import successful!</source>
         <translation>Profilimport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278" />
+        <location filename="../../views/main_window.py" line="279" />
         <source>Profile {} imported.</source>
         <translation>Profil {} importerad.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="285" />
+        <location filename="../../views/main_window.py" line="286" />
         <source>Load profile</source>
         <translation>Läs in profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="287" />
+        <location filename="../../views/main_window.py" line="288" />
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Alla filer (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="293" />
+        <location filename="../../views/main_window.py" line="294" />
         <source>Failed to import profile</source>
         <translation>Kunde inte importera profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="347" />
+        <location filename="../../views/main_window.py" line="348" />
         <source>Task cancelled</source>
         <translation>Uppgift avbruten</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="363" />
+        <location filename="../../views/main_window.py" line="364" />
         <source>Should Vorta continue to run in the background?</source>
         <translation>Ska Vorta fortsätta köras i bakgrunden?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="373" />
+        <location filename="../../views/main_window.py" line="374" />
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="374" />
+        <location filename="../../views/main_window.py" line="375" />
         <source>Don't show this again</source>
         <translation>Visa inte detta igen</translation>
     </message>
@@ -2329,6 +2333,11 @@
         <translation>Veckor</translation>
     </message>
     <message>
+        <location filename="../../views/schedule_page.py" line="117" />
+        <source>Paused until %s</source>
+        <translation>Pausad till %s</translation>
+    </message>
+    <message>
         <location filename="../../views/schedule_page.py" line="119" />
         <source>Run a manual backup first</source>
         <translation type="unfinished" />
@@ -2536,117 +2545,117 @@
 </context><context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="350" />
+        <location filename="../../application.py" line="357" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="130" />
+        <location filename="../../application.py" line="137" />
         <source>Vorta Backup</source>
         <translation>Vorta-säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="193" />
+        <location filename="../../application.py" line="200" />
         <source>No Borg Binary Found</source>
         <translation>Ingen Borg-binärfil hittades</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="194" />
+        <location filename="../../application.py" line="201" />
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta kunde inte hitta någon användbar Borg Backup-binärfil.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="216" />
+        <location filename="../../application.py" line="223" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta behöver fullständig diskåtkomst för fullständiga säkerhetskopior</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="217" />
+        <location filename="../../application.py" line="224" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="223" />
+        <location filename="../../application.py" line="230" />
         <source>Full Disk Access</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="226" />
+        <location filename="../../application.py" line="233" />
         <source>System Preferences &gt; Security &amp; Privacy</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="244" />
+        <location filename="../../application.py" line="251" />
         <source>Repository In Use</source>
         <translation>Förrådet används</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="246" />
+        <location filename="../../application.py" line="253" />
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="247" />
+        <location filename="../../application.py" line="254" />
         <source>Break the lock</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="251" />
+        <location filename="../../application.py" line="258" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="267" />
+        <location filename="../../application.py" line="274" />
         <source>No Repository Permissions</source>
         <translation>Ingen behörighet till förrådet</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="297" />
+        <location filename="../../application.py" line="304" />
         <source>Failed to import profile</source>
         <translation>Kunde inte importera profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="299" />
+        <location filename="../../application.py" line="306" />
         <source>Failed to import a profile from {}:</source>
         <translation>Kunde inte importera en profil från {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="303" />
+        <location filename="../../application.py" line="310" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Överväg att ta bort eller reparera denna fil, för att få bort detta meddelande.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="310" />
+        <location filename="../../application.py" line="317" />
         <source>Profile import successful!</source>
         <translation>Profilimport slutförd!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="311" />
+        <location filename="../../application.py" line="318" />
         <source>Profile {} imported.</source>
         <translation>Profil {} importerad.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="344" />
+        <location filename="../../application.py" line="351" />
         <source>Repo Check Failed</source>
         <translation>Förrådskontroll misslyckades</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="357" />
+        <location filename="../../application.py" line="364" />
         <source>Repository data check for repo was killed by signal %s.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="358" />
+        <location filename="../../application.py" line="365" />
         <source>The process running the check job got a kill signal. Try again.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="361" />
+        <location filename="../../application.py" line="368" />
         <source>Repository data check for repo %s failed. Error code %s</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="366" />
+        <location filename="../../application.py" line="373" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
         <translation type="unfinished" />
     </message>
@@ -2670,31 +2679,31 @@
 </context><context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="438" />
+        <location filename="../../scheduler.py" line="504" />
         <source>None scheduled</source>
         <translation>Inget schemalagt</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="622" />
-        <location filename="../../scheduler.py" line="552" />
-        <location filename="../../scheduler.py" line="541" />
-        <location filename="../../scheduler.py" line="523" />
-        <location filename="../../scheduler.py" line="504" />
+        <location filename="../../scheduler.py" line="688" />
+        <location filename="../../scheduler.py" line="618" />
+        <location filename="../../scheduler.py" line="607" />
+        <location filename="../../scheduler.py" line="589" />
+        <location filename="../../scheduler.py" line="570" />
         <source>Vorta Backup</source>
         <translation>Vorta-säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="505" />
+        <location filename="../../scheduler.py" line="571" />
         <source>Starting background backup for %s.</source>
         <translation>Startar säkerhetskopiering i bakgrunden för %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="542" />
+        <location filename="../../scheduler.py" line="608" />
         <source>Backup successful for %s.</source>
         <translation>Säkerhetskopieringen för %s slutfördes.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="553" />
+        <location filename="../../scheduler.py" line="619" />
         <source>Error during backup creation for %s.</source>
         <translation type="unfinished" />
     </message>
@@ -2705,7 +2714,7 @@
 </context><context>
     <name>messages</name>
     <message>
-        <location filename="../../application.py" line="120" />
+        <location filename="../../application.py" line="127" />
         <source>Running Pre-backup Command...</source>
         <translation type="unfinished" />
     </message>
@@ -2714,7 +2723,7 @@
         <location filename="../../borg/compact.py" line="30" />
         <location filename="../../borg/create.py" line="44" />
         <location filename="../../borg/check.py" line="28" />
-        <location filename="../../application.py" line="351" />
+        <location filename="../../application.py" line="358" />
         <source>logs</source>
         <translation>loggarna</translation>
     </message>

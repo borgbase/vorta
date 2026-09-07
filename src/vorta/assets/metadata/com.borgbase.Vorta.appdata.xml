@@ -41,6 +41,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="v0.11.6" date="2026-09-07" type="stable" urgency="medium">
+      <description>
+        <p>See Github for detailed release notes: github.com/borgbase/vorta/releases</p>
+      </description>
+    </release>
     <release version="v0.11.5" date="2026-05-11" type="stable" urgency="medium">
       <description>
         <p>See Github for detailed release notes: github.com/borgbase/vorta/releases</p>
