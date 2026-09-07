@@ -44,6 +44,13 @@ def pytest_configure(config):
     _original_getaddrinfo = socket.getaddrinfo
     socket.getaddrinfo = lambda *args, **kwargs: []
 
+    # Saving a SettingsModel row (init_db(), toggling a setting in the misc tab) applies the
+    # autostart setting via vorta.autostart.open_app_at_startup, which edits the developer's real
+    # Login Items on macOS and ~/.config/autostart on Linux. Keep the test suite away from those.
+    import vorta.store.connection
+
+    vorta.store.connection.open_app_at_startup = lambda enabled=True: None
+
     # Mock WiFi enumeration to prevent hangs on headless CI (utils.get_sorted_wifis)
     import vorta.utils
 
