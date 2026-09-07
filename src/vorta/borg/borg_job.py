@@ -207,8 +207,11 @@ class BorgJob(JobInterface):
         # More info at https://github.com/borgbase/vorta/issues/2100
         # Set the path to also find homebrew installs of Borg, and avoid falling back to the embedded binary.
         if sys.platform == 'darwin':
-            current_path = os.environ.get("PATH", "/usr/bin:/bin")
-            os.environ["PATH"] = f"{current_path}:/opt/homebrew/bin:/usr/local/bin"
+            # This runs for every job, so only add the directories that are still missing.
+            path_dirs = os.environ.get("PATH", "/usr/bin:/bin").split(os.pathsep)
+            missing_dirs = [d for d in ("/opt/homebrew/bin", "/usr/local/bin") if d not in path_dirs]
+            if missing_dirs:
+                os.environ["PATH"] = os.pathsep.join(path_dirs + missing_dirs)
         # Now continue looking for the borg binary to use
         borg_in_path = shutil.which('borg')
 
