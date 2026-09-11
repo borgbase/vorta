@@ -10,7 +10,9 @@ from pytest import mark
 
 import vorta.borg
 import vorta.scheduler
-from vorta.scheduler import ScheduleStatus, ScheduleStatusType, VortaScheduler
+import vorta.scheduler.scheduling
+import vorta.scheduler.state
+from vorta.scheduler import PendingJob, ScheduleStatus, ScheduleStatusType, VortaScheduler
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel, SchedulerPauseModel
 
 PROFILE_NAME = 'Default'
@@ -22,7 +24,8 @@ MANUAL_SCHEDULE = 'off'
 @pytest.fixture
 def clockmock(monkeypatch):
     datetime_mock = MagicMock(wraps=dt)
-    monkeypatch.setattr(vorta.scheduler, "dt", datetime_mock)
+    for module in (vorta.scheduler, vorta.scheduler.scheduling, vorta.scheduler.state):
+        monkeypatch.setattr(module, "dt", datetime_mock)
 
     return datetime_mock
 
@@ -78,6 +81,119 @@ def test_manual_mode():
     # test
     scheduler.set_timer_for_profile(profile.id)
     assert len(scheduler.timers) == 0
+
+
+def test_pending_jobs_reports_the_scheduled_run(clockmock):
+    """A profile holding a time on the clock shows up as a pending job."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, dt(2020, 5, 6, 7, 30), JobModel.Status.SCHEDULED.value)
+    ]
+
+    scheduler.remove_job(profile.id)
+    assert scheduler.pending_jobs() == []
+
+
+def test_pending_jobs_includes_a_run_beyond_a_single_timer_chunk(clockmock):
+    """A run further out than one timer chunk is armed in chunks, and is pending the whole way."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'weeks'
+    profile.schedule_interval_count = 5
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, time + td(weeks=5), JobModel.Status.SCHEDULED.value)
+    ]
+
+
+def test_pending_jobs_includes_a_paused_profile(clockmock):
+    """A pause is a held time, so it stays on the jobs table with the status the schedule page shows."""
+    scheduler = VortaScheduler()
+
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    scheduler.pause(profile.id)
+    paused_until = scheduler.next_job_for_profile(profile.id).time
+
+    assert scheduler.pending_jobs() == [
+        PendingJob(profile.id, PROFILE_NAME, profile.repo.url, paused_until, JobModel.Status.PAUSED.value)
+    ]
+
+    scheduler.unpause(profile.id)
+
+
+def test_pending_jobs_drops_a_profile_deleted_under_its_timer(clockmock):
+    """A timer can outlive the profile it belongs to, and the jobs view must not trip over it."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+    assert len(scheduler.pending_jobs()) == 1
+
+    BackupProfileModel.delete_by_id(profile.id)
+    assert scheduler.pending_jobs() == []
+
+
+def test_pending_jobs_ignores_profiles_without_a_scheduled_run(clockmock):
+    """A profile that never ran has no time to show, so it isn't pending."""
+    scheduler = VortaScheduler()
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.NO_PREVIOUS_BACKUP
+    assert scheduler.pending_jobs() == []
 
 
 def test_set_timer_for_missing_profile():
@@ -175,7 +291,7 @@ def test_deleting_a_paused_profile_clears_the_pause(qapp, qtbot, mocker):
 
     prepare_mock = mocker.patch('vorta.scheduler.BorgCreateJob.prepare')
     mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
-    mocker.patch.object(qapp.scheduler, '_net_up', True)
+    mocker.patch.object(qapp.scheduler._timers, '_net_up', True)
     qtbot.mouseClick(main.profileDeleteButton, QtCore.Qt.MouseButton.LeftButton)
 
     # The overdue occurrence must not start a backup on the profile being deleted.
@@ -537,6 +653,14 @@ def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     assert job.profile_name == PROFILE_NAME
 
 
+def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
+    """The jobs view refreshes its records off this signal, and a skip runs no Borg job to announce it."""
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+
+    with qtbot.waitSignal(qapp.scheduler.jobs_changed, timeout=1000):
+        qapp.scheduler.create_backup(1)
+
+
 def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
     """An unexpected prepare() failure is recorded as failed, not skipped."""
     mocker.patch(
@@ -579,7 +703,7 @@ def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
     assert job.trigger == JobModel.Trigger.CATCHUP.value
 
 
-def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
+def test_set_timer_records_skip_when_network_down_for_catchup(qtbot, clockmock):
     """A catch-up run blocked by a down network is recorded as a skipped JobModel row."""
     scheduler = VortaScheduler()
     scheduler._net_up = False
@@ -605,7 +729,9 @@ def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
     )
     jobs_before = JobModel.select().count()
 
-    scheduler.set_timer_for_profile(profile.id)
+    # This skip is recorded while the scheduler holds its lock, so the signal has to leave it first.
+    with qtbot.waitSignal(scheduler.jobs_changed, timeout=1000):
+        scheduler.set_timer_for_profile(profile.id)
 
     assert JobModel.select().count() == jobs_before + 1
     job = JobModel.select().order_by(JobModel.id.desc()).get()
@@ -617,6 +743,80 @@ def test_set_timer_records_skip_when_network_down_for_catchup(clockmock):
     # Re-evaluating the same missed run must not add a second row.
     scheduler.set_timer_for_profile(profile.id)
     assert JobModel.select().count() == jobs_before + 1
+
+
+def test_catchup_is_submitted_after_the_lock_is_released(mocker, clockmock):
+    """The catch-up run used to be submitted inside `lock`, which reentered it in `create_backup`."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    last_run = time - td(hours=6)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_run,
+        end_time=last_run,
+    )
+
+    submitted = []
+    mocker.patch.object(
+        scheduler,
+        'create_backup',
+        side_effect=lambda profile_id, trigger: submitted.append((profile_id, trigger, scheduler.lock.locked())),
+    )
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value, False)]
+
+
+def test_create_backup_does_not_hold_the_lock_while_preparing(qapp, mocker):
+    """`prepare()` can spin the event loop through a keyring dialog, so the lock has to be free."""
+    scheduler = qapp.scheduler
+    held = []
+
+    def prepare(profile):
+        held.append(scheduler.lock.locked())
+        return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
+
+    mocker.patch('vorta.scheduler.BorgCreateJob.prepare', side_effect=prepare)
+
+    scheduler.create_backup(1)
+
+    assert held == [False]
+    scheduler.unpause(1)
+
+
+def test_create_backup_ignores_a_reentrant_run_for_the_same_profile(qapp, mocker):
+    """Nothing marks the profile busy until `add_job`, so a tick mid-`prepare()` must not resubmit."""
+    scheduler = qapp.scheduler
+    prepared = []
+
+    def prepare(profile):
+        prepared.append(profile.id)
+        if len(prepared) == 1:
+            # what a timer tick does while the keyring dialog is open
+            scheduler.create_backup(profile.id)
+        return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
+
+    mocker.patch('vorta.scheduler.BorgCreateJob.prepare', side_effect=prepare)
+
+    scheduler.create_backup(1)
+
+    assert prepared == [1]
+    scheduler.unpause(1)
 
 
 def test_wall_clock_gap_is_treated_as_a_resume(mocker, clockmock):
