@@ -20,6 +20,38 @@ def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     del qapp._msg
 
 
+def test_create_quota_error(qapp, borg_json_output, mocker, qtbot):
+    main = qapp.main_window
+    mocker.patch.object(vorta.application.QMessageBox, 'show')
+
+    stdout, stderr = borg_json_output('create_quota')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(lambda: hasattr(qapp, '_msg'), **pytest._wait_defaults)
+    assert "is full" in qapp._msg.text()
+    assert "Disk quota exceeded" in qapp._msg.detailedText()
+    del qapp._msg
+
+
+def test_create_lock_failed_generic(qapp, borg_json_output, mocker, qtbot):
+    main = qapp.main_window
+    mocker.patch.object(vorta.application.QMessageBox, 'show')
+
+    stdout, stderr = borg_json_output('create_lockfail')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(lambda: hasattr(qapp, '_msg'), **pytest._wait_defaults)
+    assert "Borg could not lock the repository" in qapp._msg.text()
+    assert "Read-only file system" in qapp._msg.detailedText()
+    del qapp._msg
+
+
 def test_create_lock(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
     mocker.patch.object(vorta.application.QMessageBox, 'show')
