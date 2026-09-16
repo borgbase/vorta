@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import shutil
 from datetime import datetime, timedelta
@@ -29,6 +30,8 @@ from .models import (
 )
 from .settings import get_misc_settings
 
+logger = logging.getLogger(__name__)
+
 SCHEMA_VERSION = 23
 
 
@@ -42,6 +45,17 @@ def cleanup_db() -> None:
     # Clean up database
     DB.execute_sql("VACUUM")
     DB.close()
+
+
+def recover_interrupted_jobs() -> None:
+    """Runs still marked as running at startup belong to a process that died mid-backup."""
+    try:
+        JobModel.update(
+            status=JobModel.Status.INTERRUPTED.value,
+            reason='Vorta stopped while this backup was running.',
+        ).where(JobModel.status == JobModel.Status.RUNNING.value).execute()
+    except pw.PeeweeException:
+        logger.warning('Could not recover interrupted jobs.', exc_info=True)
 
 
 def init_db(con: pw.SqliteDatabase | None = None) -> None:
@@ -90,6 +104,8 @@ def init_db(con: pw.SqliteDatabase | None = None) -> None:
 
     # Delete old job records after 6 months. Nothing derives scheduling state from them.
     JobModel.delete().where(JobModel.created_at < six_months_ago).execute()
+
+    recover_interrupted_jobs()
 
     # Migrations
     current_schema, created = SchemaVersion.get_or_create(id=1, defaults={'version': SCHEMA_VERSION})

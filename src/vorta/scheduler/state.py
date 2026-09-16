@@ -224,12 +224,7 @@ class SchedulerState:
             'status': status,
             'scheduled_at': scheduled_at,
         }
-        details = {
-            'profile_name': profile.name,
-            'repo_url': profile.repo.url if profile.repo else None,
-            'job_type': JobModel.Type.BACKUP.value,
-            'reason': reason,
-        }
+        details = {**self._job_fields(profile), 'reason': reason}
 
         try:
             if scheduled_at is None:
@@ -242,5 +237,51 @@ class SchedulerState:
             logger.warning('Could not record job for profile %s.', profile.id, exc_info=True)
             return
 
-        # `arm_profile` records under the scheduler's lock, and the jobs view reads the table here.
+        self._announce_job()
+
+    def _job_fields(self, profile: BackupProfileModel) -> dict[str, str | None]:
+        return {
+            'profile_name': profile.name,
+            'repo_url': profile.repo.url if profile.repo else None,
+            'job_type': JobModel.Type.BACKUP.value,
+        }
+
+    def _announce_job(self) -> None:
+        # A caller can be holding the scheduler's lock, as `arm_profile` is, and the jobs view reads the table here.
         QTimer.singleShot(0, self.scheduler.jobs_changed.emit)
+
+    def record_start(self, profile: BackupProfileModel, trigger: str) -> int | None:
+        """Record a submitted run, returning the row id its outcome will settle."""
+        try:
+            job = JobModel.create(
+                profile=str(profile.id),
+                trigger=trigger,
+                status=JobModel.Status.RUNNING.value,
+                **self._job_fields(profile),
+            )
+        except pw.PeeweeException:
+            logger.warning('Could not record run for profile %s.', profile.id, exc_info=True)
+            return None
+
+        self._announce_job()
+        return job.id
+
+    def record_finish(
+        self, record_id: int, status: str, log_entry_id: int | None = None, reason: str | None = None
+    ) -> None:
+        """Settle a recorded run with its outcome and the log entry it produced."""
+        try:
+            settled = (
+                JobModel.update(status=status, event_log=log_entry_id, reason=reason)
+                .where(JobModel.id == record_id)
+                .execute()
+            )
+        except pw.PeeweeException:
+            logger.warning('Could not settle job record %s.', record_id, exc_info=True)
+            return
+
+        if not settled:
+            logger.warning('Job record %s was gone before its outcome could be stored.', record_id)
+            return
+
+        self._announce_job()

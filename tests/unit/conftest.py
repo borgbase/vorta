@@ -131,6 +131,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Using disconnect_all() instead of disconnect() to ensure ALL handlers are removed,
     # not just one (which can leave stale connections from previous tests)
     disconnect_all(qapp.scheduler.schedule_changed)
+    disconnect_all(qapp.scheduler.jobs_changed)
 
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
@@ -158,6 +159,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Disconnect signals
     disconnect_all(qapp.backup_finished_event)
     disconnect_all(qapp.scheduler.schedule_changed)
+    disconnect_all(qapp.scheduler.jobs_changed)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
