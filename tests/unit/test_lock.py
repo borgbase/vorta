@@ -28,6 +28,8 @@ def test_create_quota_error(qapp, borg_json_output, mocker, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
+    # Prevent thread collision with the job still finishing from the previous test
+    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(qapp, '_msg'), **pytest._wait_defaults)
@@ -44,6 +46,8 @@ def test_create_lock_failed_generic(qapp, borg_json_output, mocker, qtbot):
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
 
+    # Prevent thread collision with the job still finishing from the previous test
+    qtbot.waitUntil(lambda: main.createStartBtn.isEnabled(), **pytest._wait_defaults)
     qtbot.mouseClick(main.createStartBtn, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: hasattr(qapp, '_msg'), **pytest._wait_defaults)

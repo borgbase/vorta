@@ -254,7 +254,7 @@ class VortaApp(QtSingleApplication):
             cancelButton = msg.addButton(self.tr("Cancel"), QMessageBox.ButtonRole.RejectRole)
             msg.addButton(self.tr("Break the lock"), QMessageBox.ButtonRole.AcceptRole)
             msg.setDefaultButton(cancelButton)
-            msg.setText(self.tr(f"The repository at {repo_url} might be in use elsewhere."))
+            msg.setText(self.tr("The repository at {} might be in use elsewhere.").format(repo_url))
             msg.setInformativeText(
                 self.tr(
                     "Only break the lock if you are certain no other Borg process "
@@ -273,7 +273,9 @@ class VortaApp(QtSingleApplication):
             # and not the text after it, because that text comes from strerror and is
             # localized. ENOSPC is 28 everywhere, EDQUOT is 122 on Linux and 69 on
             # macOS/BSD. For a remote repository the errno originates on the server, so
-            # the local platform's errno constants are not a valid comparison here.
+            # the local platform's errno constants are not a valid comparison here and we
+            # accept all three. On Linux 69 is ESRMNT instead, but that never surfaces in
+            # practice, so the ambiguity is not worth handling.
             errno_match = re.search(r'\[Errno (\d+)\]', borg_message)
             err = int(errno_match.group(1)) if errno_match else None
 
