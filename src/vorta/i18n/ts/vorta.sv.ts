@@ -157,7 +157,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation>OBS! Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
+        <translation>OBS: Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
     </message>
 </context><context>
     <name>ArchiveDelete</name>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../../views/archive/archive_rename.py" line="72" />
         <source>Renaming archive...</source>
-        <translation>Byter namn på arkivet...</translation>
+        <translation>Byter namn på arkivet…</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_rename.py" line="86" />
@@ -479,7 +479,7 @@
     <message>
         <location filename="../../borg/compact.py" line="15" />
         <source>Starting repository compaction...</source>
-        <translation>Startar arkivkomprimering...</translation>
+        <translation>Startar arkivkomprimering…</translation>
     </message>
     <message>
         <location filename="../../borg/compact.py" line="37" />
@@ -689,7 +689,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="0" />
         <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
-        <translation>OBS! Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
+        <translation>OBS: Spara en säkerhetskopia av lösenfrasen på en separat plats.</translation>
     </message>
 </context><context>
     <name>CustomPresetsHelp</name>
@@ -1624,7 +1624,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Use -1 for unlimited</source>
-        <translation>Använd -1 för obegränsat.</translation>
+        <translation>Använd -1 för obegränsat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1654,7 +1654,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
-        <translation>“&lt;heltal&gt;&lt;tecken&gt;”, där tecknet är “H”, “d”, “w”, “m”, “y”</translation>
+        <translation>“&lt;int&gt;&lt;char&gt;”, där char är “H”, “d”, “w”, “m”, “y”</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -2720,7 +2720,7 @@
     <message>
         <location filename="../../application.py" line="127" />
         <source>Running Pre-backup Command...</source>
-        <translation>Kör kommandot före säkerhetskopiering...</translation>
+        <translation>Kör kommandot före säkerhetskopiering…</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="31" />
@@ -2889,7 +2889,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="92" />
         <source>Store repository passwords in system keychain, if available</source>
-        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig.</translation>
+        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="93" />
