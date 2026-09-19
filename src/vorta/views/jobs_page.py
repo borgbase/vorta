@@ -5,8 +5,8 @@ from PyQt6.QtWidgets import QAbstractItemView, QHeaderView
 from vorta.store.models import JobModel
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
+from vorta.views.partials.jobs_filter_proxy import JobsFilterProxyModel
 from vorta.views.partials.jobs_table_model import JobRow, JobsTableModel
-from vorta.views.partials.sort_proxy import SortProxyModel
 
 uifile = get_asset('UI/jobs_page.ui')
 JobsPageUI, JobsPageBase = uic.loadUiType(uifile)
@@ -20,7 +20,7 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
         self.setupUi(self)
 
         self._model = JobsTableModel(self)
-        self._proxy = SortProxyModel(self)
+        self._proxy = JobsFilterProxyModel(self)
         self._proxy.setSourceModel(self._model)
         self.jobsTable.setModel(self._proxy)
 
@@ -35,6 +35,7 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
         self.reload_pending()
 
     def init_ui(self):
+        self.init_filters()
         self.jobsTable.setAlternatingRowColors(True)
         header = self.jobsTable.horizontalHeader()
         header.setVisible(True)
@@ -44,6 +45,21 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
         self.jobsTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.jobsTable.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.jobsTable.sortByColumn(JobsTableModel.COL_TIME, Qt.SortOrder.DescendingOrder)
+
+    def init_filters(self):
+        for combo, column in (
+            (self.profileFilter, JobsTableModel.COL_PROFILE),
+            (self.repoFilter, JobsTableModel.COL_REPOSITORY),
+            (self.statusFilter, JobsTableModel.COL_STATUS),
+        ):
+            combo.addItem(self.tr('All'), None)
+            combo.currentIndexChanged.connect(lambda i, c=combo, col=column: self.on_filter_changed(c, col))
+
+        for status in JobModel.Status:
+            self.statusFilter.addItem(status.value, status.value)
+
+    def on_filter_changed(self, combo, column):
+        self._proxy.set_filter(column, combo.currentData())
 
     def reload_records(self):
         records = JobModel.select().order_by(JobModel.created_at.desc()).limit(RECORD_LIMIT)
@@ -55,4 +71,25 @@ class JobsPage(BaseTab, JobsPageBase, JobsPageUI):
         self._redraw()
 
     def _redraw(self):
-        self._model.set_rows(self._pending + self._records)
+        rows = self._pending + self._records
+        self._refresh_row_filters(rows)
+        self._model.set_rows(rows)
+
+    def _refresh_row_filters(self, rows):
+        for combo, values in (
+            (self.profileFilter, {r.profile_name for r in rows if r.profile_name}),
+            (self.repoFilter, {r.repo_url for r in rows if r.repo_url}),
+        ):
+            # Keep the selection on offer: a pending run can leave the rows on an unrelated event.
+            selected = combo.currentData()
+            choices = sorted(values | {selected}) if selected else sorted(values)
+            if choices == [combo.itemData(i) for i in range(1, combo.count())]:
+                continue
+
+            combo.blockSignals(True)
+            combo.clear()
+            combo.addItem(self.tr('All'), None)
+            for value in choices:
+                combo.addItem(value, value)
+            combo.setCurrentIndex(combo.findData(selected) if selected else 0)
+            combo.blockSignals(False)
