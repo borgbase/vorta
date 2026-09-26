@@ -10,9 +10,11 @@ from pytest import mark
 
 import vorta.borg
 import vorta.scheduler
+import vorta.scheduler.execution
 import vorta.scheduler.scheduling
 import vorta.scheduler.state
 from vorta.scheduler import PendingJob, ScheduleStatus, ScheduleStatusType, VortaScheduler
+from vorta.store.connection import recover_interrupted_jobs
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel, SchedulerPauseModel
 
 PROFILE_NAME = 'Default'
@@ -24,7 +26,7 @@ MANUAL_SCHEDULE = 'off'
 @pytest.fixture
 def clockmock(monkeypatch):
     datetime_mock = MagicMock(wraps=dt)
-    for module in (vorta.scheduler, vorta.scheduler.scheduling, vorta.scheduler.state):
+    for module in (vorta.scheduler, vorta.scheduler.execution, vorta.scheduler.scheduling, vorta.scheduler.state):
         monkeypatch.setattr(module, "dt", datetime_mock)
 
     return datetime_mock
@@ -59,13 +61,22 @@ def prepare(func):
 
 @prepare
 def test_scheduler_create_backup(qapp, qtbot, mocker, borg_json_output):
-    """Test running a backup with `create_backup`."""
+    """A run submitted by the scheduler is recorded, then settled as completed against its log entry."""
     events_before = EventLogModel.select().count()
 
     with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
         qapp.scheduler.create_backup(1)
 
     assert EventLogModel.select().count() == events_before + 1
+
+    # `backup_finished_event` is emitted just before the `result` signal that carries the run into `notify`.
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.COMPLETED.value)
+
+    job = JobModel.get_by_id(job.id)
+    assert job.trigger == JobModel.Trigger.SCHEDULED.value
+    # Post-backup tasks log runs of their own, so match the linked entry rather than the newest row.
+    assert job.event_log.subcommand == 'create'
 
 
 def test_manual_mode():
@@ -289,7 +300,7 @@ def test_deleting_a_paused_profile_clears_the_pause(qapp, qtbot, mocker):
     qapp.scheduler.pause(profile.id)
     assert SchedulerPauseModel.get_or_none(profile=profile.id) is not None
 
-    prepare_mock = mocker.patch('vorta.scheduler.BorgCreateJob.prepare')
+    prepare_mock = mocker.patch('vorta.scheduler.execution.BorgCreateJob.prepare')
     mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.Yes)
     mocker.patch.object(qapp.scheduler._timers, '_net_up', True)
     qtbot.mouseClick(main.profileDeleteButton, QtCore.Qt.MouseButton.LeftButton)
@@ -614,7 +625,7 @@ def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, 
     """Test that notifier.deliver() is not called with level='error' when
     prepare() returns level='info' (e.g. WiFi disallowed or metered connection)."""
     mocker.patch(
-        'vorta.scheduler.BorgCreateJob.prepare',
+        'vorta.scheduler.execution.BorgCreateJob.prepare',
         return_value={
             'ok': False,
             'message': 'Current Wifi is not allowed.',
@@ -634,7 +645,7 @@ def test_create_backup_no_error_notification_on_info_level(qapp, qtbot, mocker, 
 def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     """A skipped scheduled backup is recorded as a JobModel row with its reason."""
     mocker.patch(
-        'vorta.scheduler.BorgCreateJob.prepare',
+        'vorta.scheduler.execution.BorgCreateJob.prepare',
         return_value={
             'ok': False,
             'message': 'Current Wifi is not allowed.',
@@ -664,7 +675,7 @@ def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
 def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
     """An unexpected prepare() failure is recorded as failed, not skipped."""
     mocker.patch(
-        'vorta.scheduler.BorgCreateJob.prepare',
+        'vorta.scheduler.execution.BorgCreateJob.prepare',
         return_value={
             'ok': False,
             'message': 'Add a backup repository first.',
@@ -691,6 +702,138 @@ def test_create_backup_records_skip_when_repo_busy(qapp, mocker):
     job = JobModel.select().order_by(JobModel.id.desc()).get()
     assert job.status == JobModel.Status.SKIPPED.value
     assert job.reason == 'Repository is busy with another job.'
+
+
+@prepare
+def test_create_backup_records_a_running_job(qapp, qtbot, mocker, borg_json_output):
+    """A submitted run is on the jobs table as running before its outcome is known."""
+    started = []
+    real_add_job = qapp.jobs_manager.add_job
+
+    def capture(job):
+        record = JobModel.select().order_by(JobModel.id.desc()).get()
+        started.append((record.status, record.trigger, record.profile_name))
+        return real_add_job(job)
+
+    mocker.patch.object(qapp.jobs_manager, 'add_job', side_effect=capture)
+
+    with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
+        qapp.scheduler.create_backup(1)
+
+    assert started == [(JobModel.Status.RUNNING.value, JobModel.Trigger.SCHEDULED.value, PROFILE_NAME)]
+
+    # `notify` arrives after `backup_finished_event`; let it settle here rather than in the next test.
+    record = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(record.id).status == JobModel.Status.COMPLETED.value)
+
+
+def test_a_failed_run_is_recorded_as_failed(qapp, qtbot, mocker, borg_json_output):
+    """A non-zero return code settles the recorded run as failed rather than skipped."""
+    stdout, stderr = borg_json_output('create')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=2)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
+        qapp.scheduler.create_backup(1)
+
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+
+
+@prepare
+def test_recording_a_run_emits_jobs_changed(qapp, qtbot, mocker, borg_json_output):
+    """The jobs view refreshes off this signal, so submitting a run has to announce itself."""
+    # Silence the settling emit, so only the submission can satisfy the wait.
+    settle = mocker.patch.object(qapp.scheduler, 'record_finish')
+
+    with qtbot.waitSignal(qapp.scheduler.jobs_changed, timeout=1000):
+        qapp.scheduler.create_backup(1)
+
+    # The run is still in flight; drain it here so `notify` cannot land in the next test.
+    qtbot.waitUntil(lambda: settle.called)
+
+
+@mark.parametrize(
+    'errors, expected',
+    [
+        ([], None),
+        (None, None),
+        ([(30, 'a warning')], 'a warning'),
+        ([(30, 'a warning'), (40, 'the real problem'), (40, 'a later one')], 'the real problem'),
+    ],
+)
+def test_worst_error_picks_the_most_severe_message(errors, expected):
+    """A failed run shows the worst thing Borg said, not the first or last thing."""
+    assert vorta.scheduler.execution.worst_error(errors) == expected
+
+
+@prepare
+def test_a_submitted_run_stops_being_pending(qapp, qtbot, mocker, borg_json_output):
+    """The fired timer still holds the run, so without dropping it the page lists the run twice."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=dt.now(),
+        end_time=dt.now(),
+    )
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    assert len(qapp.scheduler.pending_jobs()) == 1
+
+    pending_during_run = []
+    real_add_job = qapp.jobs_manager.add_job
+
+    def capture(job):
+        pending_during_run.append(qapp.scheduler.pending_jobs())
+        return real_add_job(job)
+
+    mocker.patch.object(qapp.jobs_manager, 'add_job', side_effect=capture)
+
+    with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
+        qapp.scheduler.create_backup(profile.id)
+
+    assert pending_during_run == [[]]
+
+    record = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(record.id).status == JobModel.Status.COMPLETED.value)
+
+
+def test_interrupted_runs_are_recovered_at_startup(qapp):
+    """A row still marked running belongs to a process that died mid-backup."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    stale = JobModel.create(
+        profile=str(profile.id),
+        profile_name=profile.name,
+        status=JobModel.Status.RUNNING.value,
+        trigger=JobModel.Trigger.SCHEDULED.value,
+    )
+
+    settled = JobModel.create(
+        profile=str(profile.id),
+        profile_name=profile.name,
+        status=JobModel.Status.COMPLETED.value,
+        trigger=JobModel.Trigger.SCHEDULED.value,
+    )
+
+    recover_interrupted_jobs()
+
+    stale = JobModel.get_by_id(stale.id)
+    assert stale.status == JobModel.Status.INTERRUPTED.value
+    assert stale.reason == 'Vorta stopped while this backup was running.'
+    assert JobModel.get_by_id(settled.id).status == JobModel.Status.COMPLETED.value
+
+
+def test_post_backup_tasks_ignores_a_deleted_profile(qapp):
+    """The profile can be deleted between the run finishing and its follow-up jobs starting."""
+    qapp.scheduler.post_backup_tasks(-1)
 
 
 def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
@@ -791,7 +934,7 @@ def test_create_backup_does_not_hold_the_lock_while_preparing(qapp, mocker):
         held.append(scheduler.lock.locked())
         return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
 
-    mocker.patch('vorta.scheduler.BorgCreateJob.prepare', side_effect=prepare)
+    mocker.patch('vorta.scheduler.execution.BorgCreateJob.prepare', side_effect=prepare)
 
     scheduler.create_backup(1)
 
@@ -811,7 +954,7 @@ def test_create_backup_ignores_a_reentrant_run_for_the_same_profile(qapp, mocker
             scheduler.create_backup(profile.id)
         return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
 
-    mocker.patch('vorta.scheduler.BorgCreateJob.prepare', side_effect=prepare)
+    mocker.patch('vorta.scheduler.execution.BorgCreateJob.prepare', side_effect=prepare)
 
     scheduler.create_backup(1)
 

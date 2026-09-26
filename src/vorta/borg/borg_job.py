@@ -343,6 +343,8 @@ class BorgJob(JobInterface):
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.end_time = dt.now()
+        result['log_entry_id'] = log_entry.id
+
         with db_lock:
             log_entry.save()
             self.process_result(result)
