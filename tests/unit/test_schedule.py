@@ -147,3 +147,41 @@ def test_jobs_page_merges_pending_runs_with_stored_records(qapp: VortaApp, qtbot
     assert JobModel.Status.SKIPPED.value in statuses()
 
     qapp.scheduler.unpause(profile.id)
+
+
+def test_jobs_page_filter_combos_follow_the_rows(qapp: VortaApp):
+    """Profile choices are rebuilt from the rows, and neither a reload nor a vanished value drops the selection."""
+    page = qapp.main_window.scheduleTab.jobsPage
+    page.reload_records()
+    model = page.jobsTable.model()
+
+    record = JobModel.create(
+        profile=1,
+        profile_name='FilterTestProfile',
+        repo_url='filter-test-repo',
+        job_type=JobModel.Type.BACKUP.value,
+        status=JobModel.Status.FAILED.value,
+        trigger=JobModel.Trigger.SCHEDULED.value,
+        created_at=dt(2020, 5, 6, 4, 30),
+    )
+    page.reload_records()
+    rows_unfiltered = model.rowCount()
+
+    page.profileFilter.setCurrentIndex(page.profileFilter.findData('FilterTestProfile'))
+    assert model.rowCount() == 1
+
+    # A reload rebuilds the combo, and the view the user set up has to survive it.
+    page.reload_records()
+    assert page.profileFilter.currentData() == 'FilterTestProfile'
+    assert model.rowCount() == 1
+
+    # A value can leave the rows on an unrelated event, so it stays on offer rather than resetting the filter.
+    record.delete_instance()
+    page.reload_records()
+
+    assert page.profileFilter.currentData() == 'FilterTestProfile'
+    assert page.profileFilter.findData('FilterTestProfile') != -1
+    assert model.rowCount() == 0
+
+    page.profileFilter.setCurrentIndex(0)
+    assert model.rowCount() == rows_unfiltered - 1
