@@ -1,0 +1,8 @@
+{"original_size": 321757264, "compressed_size": 302994872, "deduplicated_size": 0, "nfiles": 1010, "path": "Users/user/Documents/plan.pdf", "time": 1654700723.321005, "type": "archive_progress", "finished": false}
+{"type": "file_status", "status": "M", "path": "/Users/user/Documents/plan.pdf"}
+{"original_size": 473579978, "compressed_size": 444583871, "deduplicated_size": 0, "nfiles": 1567, "path": "Users/user/Documents/report.pdf", "time": 1654700723.521086, "type": "archive_progress", "finished": false}
+{"type": "file_status", "status": "M", "path": "/Users/user/Documents/report.pdf"}
+{"time": 1654700723.764089, "type": "archive_progress", "finished": true}
+{"message": "Saving files cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1654700723.790658}
+{"message": "Saving chunks cache", "operation": 2, "msgid": "cache.commit", "type": "progress_message", "finished": false, "time": 1654700723.8089201}
+{"name": "borg.repository", "time": 1654700723.81, "message": "Remote: Storage quota: 10.48 MB out of 1.00 GB used.", "type": "log_message", "levelname": "INFO"}
