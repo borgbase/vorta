@@ -2,10 +2,11 @@ import datetime
 import platform
 
 from PyQt6 import uic
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 from PyQt6.QtWidgets import QApplication
 
 from vorta._version import __version__
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import borg_compat, get_asset
 from vorta.views.utils import get_colored_icon
@@ -43,11 +44,11 @@ class ExceptionDialog(ExceptionDialogBase, ExceptionDialogUI):
         self.ignoreButton.clicked.connect(self.close)
         self.copyButton.clicked.connect(self.copy_report_to_clipboard)
 
-        self.report_issue_text = trans_late(
+        self.report_issue_text = QT_TRANSLATE_NOOP(
             'Dialog',
             'You can report this issue on %1. Please search for similar issues before reporting.',
         )
-        self.report_issue_link_text = trans_late('Dialog', 'Github')
+        self.report_issue_link_text = QT_TRANSLATE_NOOP('Dialog', 'Github')
         self._set_report_link()
 
         self.copyButton.setIcon(get_colored_icon('copy'))

@@ -1,4 +1,5 @@
-from vorta.i18n import trans_late
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
+
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
@@ -44,7 +45,7 @@ class BorgInfoRepoJob(BorgJob):
         if params['password'] != '':
             # Cannot tell if repo has encryption, assuming based off of password
             if not cls.keyring.is_unlocked:
-                ret['message'] = trans_late('messages', 'Please unlock your password manager.')
+                ret['message'] = QT_TRANSLATE_NOOP('messages', 'Please unlock your password manager.')
                 return ret
 
         ret['repo_name'] = params['repo_name']

@@ -7,8 +7,12 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QWidget
 
 import vorta.scheduler
+import vorta.scheduler.execution
+import vorta.scheduler.scheduling
+import vorta.scheduler.state
 from vorta.application import VortaApp
-from vorta.store.models import BackupProfileModel, EventLogModel
+from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
+from vorta.views.partials.jobs_table_model import JobsTableModel
 from vorta.views.schedule_tab import ScheduleTab
 
 PROFILE_NAME = 'Default'
@@ -17,7 +21,8 @@ PROFILE_NAME = 'Default'
 @pytest.fixture
 def clockmock(monkeypatch):
     datetime_mock = MagicMock(wraps=dt)
-    monkeypatch.setattr(vorta.scheduler, "dt", datetime_mock)
+    for module in (vorta.scheduler, vorta.scheduler.execution, vorta.scheduler.scheduling, vorta.scheduler.state):
+        monkeypatch.setattr(module, "dt", datetime_mock)
 
     return datetime_mock
 
@@ -92,3 +97,91 @@ def test_schedule_tab_forwards_profile_provider_to_child_pages(qapp: VortaApp, q
     assert tab.shellCommandsPage.profile().id == profile.id
     assert tab.networksPage.profile().id == profile.id
     assert tab.logPage.profile().id == profile.id
+    assert tab.jobsPage.profile().id == profile.id
+
+
+def test_jobs_page_merges_pending_runs_with_stored_records(qapp: VortaApp, qtbot, clockmock, mocker):
+    """The jobs page shows both halves, and a skip that pauses the profile must not empty either one."""
+    page = qapp.main_window.scheduleTab.jobsPage
+
+    time_now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time_now
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = False
+    profile.schedule_mode = 'interval'
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=time_now,
+        end_time=time_now,
+    )
+
+    # Arming a timer emits `schedule_changed`, which is what the page listens to for pending runs.
+    qapp.scheduler.set_timer_for_profile(profile.id)
+
+    model = page.jobsTable.model()
+
+    def statuses():
+        return {model.data(model.index(row, JobsTableModel.COL_STATUS)) for row in range(model.rowCount())}
+
+    # The page outlives earlier tests, so take its record count as the baseline rather than assuming zero.
+    page.reload_records()
+    rows_before = model.rowCount()
+    assert JobModel.Status.SCHEDULED.value in statuses()
+    assert JobModel.Status.PAUSED.value not in statuses()
+
+    # A busy repo records a skip and pauses the profile, with no Borg job to announce either.
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    qapp.scheduler.create_backup(profile.id)
+
+    # One row more: the skip arrives on its own signal, and the paused run keeps its row instead of vanishing.
+    qtbot.waitUntil(lambda: model.rowCount() == rows_before + 1)
+    assert JobModel.Status.PAUSED.value in statuses()
+    assert JobModel.Status.SKIPPED.value in statuses()
+
+    qapp.scheduler.unpause(profile.id)
+
+
+def test_jobs_page_filter_combos_follow_the_rows(qapp: VortaApp):
+    """Profile choices are rebuilt from the rows, and neither a reload nor a vanished value drops the selection."""
+    page = qapp.main_window.scheduleTab.jobsPage
+    page.reload_records()
+    model = page.jobsTable.model()
+
+    record = JobModel.create(
+        profile=1,
+        profile_name='FilterTestProfile',
+        repo_url='filter-test-repo',
+        job_type=JobModel.Type.BACKUP.value,
+        status=JobModel.Status.FAILED.value,
+        trigger=JobModel.Trigger.SCHEDULED.value,
+        created_at=dt(2020, 5, 6, 4, 30),
+    )
+    page.reload_records()
+    rows_unfiltered = model.rowCount()
+
+    page.profileFilter.setCurrentIndex(page.profileFilter.findData('FilterTestProfile'))
+    assert model.rowCount() == 1
+
+    # A reload rebuilds the combo, and the view the user set up has to survive it.
+    page.reload_records()
+    assert page.profileFilter.currentData() == 'FilterTestProfile'
+    assert model.rowCount() == 1
+
+    # A value can leave the rows on an unrelated event, so it stays on offer rather than resetting the filter.
+    record.delete_instance()
+    page.reload_records()
+
+    assert page.profileFilter.currentData() == 'FilterTestProfile'
+    assert page.profileFilter.findData('FilterTestProfile') != -1
+    assert model.rowCount() == 0
+
+    page.profileFilter.setCurrentIndex(0)
+    assert model.rowCount() == rows_unfiltered - 1

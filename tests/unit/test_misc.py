@@ -8,6 +8,8 @@ from PyQt6 import QtCore
 from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import QCheckBox, QFormLayout, QMessageBox
 
+import vorta.autostart
+import vorta.store.connection
 import vorta.store.models
 import vorta.views.partials.archive_table_model
 from vorta.store.models import SettingsModel
@@ -37,15 +39,16 @@ def test_toggle_all_settings(qapp, qtbot):
 
 
 @pytest.mark.skipif(sys.platform != "linux", reason="testing autostart path for Linux only")
-def test_autostart_linux(qapp, qtbot):
+def test_autostart_linux(qapp, qtbot, monkeypatch, tmp_path):
     """Checks that autostart path is added correctly on Linux when setting is enabled."""
+    # conftest stubs out open_app_at_startup; use the real one here, but in a private config dir
+    monkeypatch.setattr(vorta.store.connection, 'open_app_at_startup', vorta.autostart.open_app_at_startup)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
     setting = "Automatically start Vorta at login"
 
     # ensure file is present when autostart is enabled
     _click_toggle_setting(setting, qapp, qtbot)
-    autostart_path = (
-        Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
-    )
+    autostart_path = tmp_path / "autostart" / "vorta.desktop"
     qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
     with open(autostart_path) as desktop_file:
         desktop_file_text = desktop_file.read()
@@ -53,8 +56,7 @@ def test_autostart_linux(qapp, qtbot):
 
     # ensure file is removed when autostart is disabled
     _click_toggle_setting(setting, qapp, qtbot)
-    if sys.platform == 'linux':
-        assert not os.path.exists(autostart_path)
+    assert not autostart_path.exists()
 
 
 def test_enable_background_question(qapp, monkeypatch, mocker):

@@ -25,8 +25,11 @@ def get_updater():
             'Frameworks',
             'Sparkle.framework',
         )
-        objc.loadBundle('Sparkle', globals(), bundle_path)
-        sparkle = SUUpdater.sharedUpdater()  # noqa: F821
+        # Only load the framework. The default class scan (`scan_classes=True`) wraps every
+        # Objective-C class in the process (tens of thousands) as a Python class and keeps
+        # them in this module's globals for the lifetime of the app, costing well over 100 MB.
+        objc.loadBundle('Sparkle', globals(), bundle_path, scan_classes=False)
+        sparkle = objc.lookUpClass('SUUpdater').sharedUpdater()
 
         # A default Appcast URL is set in vorta.spec, when setting it here it's saved to defaults,
         # so we need both cases.

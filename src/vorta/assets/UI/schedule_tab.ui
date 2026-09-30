@@ -93,6 +93,21 @@
       <layout class="QGridLayout" name="shellCommandsLayout">
       </layout>
       </widget>
+     <widget class="QWidget" name="page_jobs">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>687</width>
+        <height>384</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Jobs</string>
+      </attribute>
+      <layout class="QGridLayout" name="jobsLayout">
+      </layout>
+      </widget>
     </widget>
    </item>
   </layout>

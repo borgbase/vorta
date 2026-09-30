@@ -3,7 +3,7 @@ import sys
 from typing import Dict, Optional
 
 from PyQt6 import QtCore, uic
-from PyQt6.QtCore import QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QItemSelectionModel, QMimeData, QPoint, Qt, pyqtSlot
 from PyQt6.QtGui import QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QAbstractItemView,
@@ -17,13 +17,9 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from vorta.borg.check import BorgCheckJob
-from vorta.borg.compact import BorgCompactJob
-from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.info_archive import BorgInfoArchiveJob
 from vorta.borg.list_repo import BorgListRepoJob
-from vorta.borg.prune import BorgPruneJob
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, SettingsModel
 from vorta.utils import (
@@ -32,12 +28,15 @@ from vorta.utils import (
     get_asset,
     get_mount_points,
 )
+from vorta.views.archive.archive_delete import ArchiveDelete
 from vorta.views.archive.archive_diff import ArchiveDiff
 from vorta.views.archive.archive_extract import ArchiveExtract
+from vorta.views.archive.archive_maintenance import ArchiveMaintenance
 from vorta.views.archive.archive_mount import ArchiveMount
 from vorta.views.archive.archive_rename import ArchiveRename
 from vorta.views.base_tab import BaseTab
-from vorta.views.partials.archive_table_model import SIZE_DECIMAL_DIGITS, ArchiveSortProxyModel, ArchiveTableModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
+from vorta.views.partials.sort_proxy import SortProxyModel
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/archive_tab.ui')
@@ -76,6 +75,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.archive_extract = ArchiveExtract(self)
         self.archive_diff = ArchiveDiff(self)
         self.archive_rename = ArchiveRename(self)
+        self.archive_delete = ArchiveDelete(self)
+        self.archive_maintenance = ArchiveMaintenance(self)
 
         #: Tooltip dict to save the tooltips set in the designer
         self.tooltip_dict: Dict[QWidget, str] = {}
@@ -86,7 +87,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         # Model + sort proxy (proxy sorts on SortRole for correct non-string ordering)
         self.archive_model = ArchiveTableModel(self)
-        self.archive_proxy = ArchiveSortProxyModel(self)
+        self.archive_proxy = SortProxyModel(self)
         self.archive_proxy.setSourceModel(self.archive_model)
         self.archiveTable.setModel(self.archive_proxy)
 
@@ -102,14 +103,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         delegate = IconDelegate(self.archiveTable)
         self.archiveTable.setItemDelegateForColumn(ArchiveTableModel.COL_TRIGGER, delegate)
 
-        self.mount_help_text = trans_late('Form', 'To mount archives, first install "FUSE for macOS" from %1.')
-        self.mount_help_link_text = trans_late('Form', 'here')
-        self.pruning_help_text = trans_late(
+        self.mount_help_text = QT_TRANSLATE_NOOP('Form', 'To mount archives, first install macFUSE from %1.')
+        self.mount_help_link_text = QT_TRANSLATE_NOOP('Form', 'here')
+        self.pruning_help_text = QT_TRANSLATE_NOOP(
             'Form',
             'Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. '
             'Usually you will keep more newer and fewer old archives. Read %1.',
         )
-        self.pruning_help_link_text = trans_late('Form', 'more')
+        self.pruning_help_link_text = QT_TRANSLATE_NOOP('Form', 'more')
         self._init_help_texts()
 
         if sys.platform != 'darwin':
@@ -138,14 +139,14 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.bMountArchive.clicked.connect(self.archive_mount.bmountarchive_clicked)
         self.bRefreshArchive.clicked.connect(self.refresh_archive_info)
         self.bRename.clicked.connect(self.archive_rename.cell_double_clicked)
-        self.bDelete.clicked.connect(self.delete_action)
+        self.bDelete.clicked.connect(self.archive_delete.delete_action)
         self.bExtract.clicked.connect(self.archive_extract.extract_action)
-        self.compactButton.clicked.connect(self.compact_action)
+        self.compactButton.clicked.connect(self.archive_maintenance.compact_action)
 
         # other signals
         self.bList.clicked.connect(self.refresh_archive_list)
-        self.bPrune.clicked.connect(self.prune_action)
-        self.bCheck.clicked.connect(self.check_action)
+        self.bPrune.clicked.connect(self.archive_maintenance.prune_action)
+        self.bCheck.clicked.connect(self.archive_maintenance.check_action)
         self.bDiff.clicked.connect(self.archive_diff.diff_action)
         self.bMountRepo.clicked.connect(self.archive_mount.bmountrepo_clicked)
 
@@ -158,8 +159,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         # Connect prune setting signals (only once in init, not in populate_from_profile)
         for i in self.prune_intervals:
-            getattr(self, f'prune_{i}').valueChanged.connect(self.save_prune_setting)
-        self.prune_keep_within.editingFinished.connect(self.save_prune_setting)
+            getattr(self, f'prune_{i}').valueChanged.connect(self.archive_maintenance.save_prune_setting)
+        self.prune_keep_within.editingFinished.connect(self.archive_maintenance.save_prune_setting)
 
         self.track_profile_change(call_now=True)
         self.set_icons()
@@ -211,7 +212,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             (self.bMountArchive, self.archive_mount.bmountarchive_clicked),
             (self.bExtract, self.archive_extract.extract_action),
             (self.bRename, self.archive_rename.cell_double_clicked),
-            (self.bDelete, self.delete_action),
+            (self.bDelete, self.archive_delete.delete_action),
         ]
 
         for button, connection in button_connection_pairs:
@@ -273,6 +274,19 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
         # Restore states
         self.on_selection_change()
+
+    def toggle_compact_button_visibility(self):
+        """
+        Enable or disable the compact button depending on the Borg version.
+        This function runs once on startup, and every time the profile is changed.
+        """
+        if borg_compat.check("COMPACT_SUBCOMMAND"):
+            self.compactButton.setEnabled(True)
+            self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
+        else:
+            self.compactButton.setEnabled(False)
+            tooltip = self.tooltip_dict[self.compactButton]
+            self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))
 
     def populate_from_profile(self, preserve_view=False):
         """Populate archive list and prune settings from profile."""
@@ -461,59 +475,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         else:
             self.prunePrefixPreview.setText(preview)
 
-    def check_action(self):
-        params = BorgCheckJob.prepare(self.profile())
-        if not params['ok']:
-            self._set_status(params['message'])
-            return
-
-        # Conditions are met (borg binary available, etc)
-        archives = self.selected_archives()
-        if archives:
-            params['cmd'][-1] += f'::{archives[0].name}'
-
-        job = BorgCheckJob(params['cmd'], params, self.profile().repo.id)
-        job.updated.connect(self._set_status)
-        job.result.connect(self.check_result)
-        self._toggle_all_buttons(False)
-        self.app.jobs_manager.add_job(job)
-
-    def check_result(self, result):
-        if result['returncode'] == 0:
-            self._toggle_all_buttons(True)
-
-    def compact_action(self):
-        params = BorgCompactJob.prepare(self.profile())
-        if params['ok']:
-            job = BorgCompactJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self._set_status)
-            job.result.connect(self.compact_result)
-            self._toggle_all_buttons(False)
-            self.app.jobs_manager.add_job(job)
-        else:
-            self._set_status(params['message'])
-
-    def compact_result(self, result):
-        self._toggle_all_buttons(True)
-
-    def prune_action(self):
-        params = BorgPruneJob.prepare(self.profile())
-        if params['ok']:
-            job = BorgPruneJob(params['cmd'], params, self.profile().repo.id)
-            job.updated.connect(self._set_status)
-            job.result.connect(self.prune_result)
-            self._toggle_all_buttons(False)
-            self.app.jobs_manager.add_job(job)
-        else:
-            self._set_status(params['message'])
-
-    def prune_result(self, result):
-        if result['returncode'] == 0:
-            self._set_status(self.tr('Pruning finished.'))
-            self.refresh_archive_list()
-        else:
-            self._toggle_all_buttons(True)
-
     def refresh_archive_list(self):
         params = BorgListRepoJob.prepare(self.profile())
         if params['ok']:
@@ -558,13 +519,6 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         archives = self.selected_archives()
         return archives[0].name if archives else None
 
-    def save_prune_setting(self, new_value=None):
-        profile = self.profile()
-        for i in self.prune_intervals:
-            setattr(profile, f'prune_{i}', getattr(self, f'prune_{i}').value())
-        profile.prune_keep_within = self.prune_keep_within.text()
-        profile.save()
-
     def confirm_dialog(self, title, text):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
@@ -574,62 +528,3 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         msg.button(QMessageBox.StandardButton.Yes).setText(self.tr("Yes"))
         msg.button(QMessageBox.StandardButton.Cancel).setText(self.tr("Cancel"))
         return msg.exec() == QMessageBox.StandardButton.Yes
-
-    def delete_action(self):
-        # Since this function modify the UI, we can't put the whole function in a JobQueue.
-
-        # determine selected archives
-        archives = [archive.name for archive in self.selected_archives()]
-
-        if not archives:
-            self._set_status(self.tr("No archive selected"))
-            return
-
-        params = BorgDeleteJob.prepare(self.profile(), archives)
-        if not params['ok']:
-            self._set_status(params['message'])
-            return
-
-        if len(archives) > 1:
-            body = self.tr("Are you sure you want to delete all the selected archives?")
-        else:
-            body = self.tr("Are you sure you want to delete the selected archive?")
-        if not self.confirm_dialog(self.tr("Confirm deletion"), body):
-            return
-
-        job = BorgDeleteJob(params['cmd'], params, self.profile().repo.id)
-        job.updated.connect(self._set_status)
-        job.result.connect(self.delete_result)
-        self._toggle_all_buttons(False)
-        self.app.jobs_manager.add_job(job)
-
-    def delete_result(self, result):
-        archives = result['params']['archives']
-        if result['returncode'] == 0:
-            if len(archives) > 1:
-                status = self.tr('Archives deleted.')
-            else:
-                status = self.tr('Archive deleted.')
-            self._set_status(status)
-
-            repo = self.profile().repo
-            for archive in archives:
-                archive_obj = ArchiveModel.get_or_none(name=archive, repo=repo)
-                if archive_obj:
-                    archive_obj.delete_instance()
-            self.populate_from_profile(preserve_view=True)
-
-        self._toggle_all_buttons(True)
-
-    def toggle_compact_button_visibility(self):
-        """
-        Enable or disable the compact button depending on the Borg version.
-        This function runs once on startup, and every time the profile is changed.
-        """
-        if borg_compat.check("COMPACT_SUBCOMMAND"):
-            self.compactButton.setEnabled(True)
-            self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
-        else:
-            self.compactButton.setEnabled(False)
-            tooltip = self.tooltip_dict[self.compactButton]
-            self.compactButton.setToolTip(tooltip + " " + self.tr("(This feature needs Borg 1.2.0 or higher)"))

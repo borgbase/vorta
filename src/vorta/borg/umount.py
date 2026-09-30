@@ -1,8 +1,8 @@
 import os.path
 
 import psutil
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 
-from ..i18n import trans_late
 from .borg_job import BorgJob
 
 
@@ -26,10 +26,10 @@ class BorgUmountJob(BorgJob):
         ret['active_mount_points'] = archive_mount_points
 
         if len(archive_mount_points) == 0:
-            ret['message'] = trans_late('messages', 'No active Borg mounts found.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'No active Borg mounts found.')
             return ret
         if os.path.realpath(mount_point) not in archive_mount_points:
-            ret['message'] = trans_late('messages', 'Mount point not active.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Mount point not active.')
             return ret
 
         if archive_name:
