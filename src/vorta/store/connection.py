@@ -11,6 +11,7 @@ from playhouse import signals
 
 from vorta import config
 from vorta.autostart import open_app_at_startup
+from vorta.log import set_file_logging
 
 from .migrations import run_migrations
 from .models import (
@@ -39,6 +40,13 @@ SCHEMA_VERSION = 23
 def setup_autostart(model_class: type, instance: SettingsModel, created: bool) -> None:
     if instance.key == 'autostart':
         open_app_at_startup(instance.value)
+
+
+@signals.post_save(sender=SettingsModel)
+def setup_file_logging(model_class: type, instance: SettingsModel, created: bool) -> None:
+    # Also runs at startup, since init_db() saves every setting.
+    if instance.key == 'enable_file_logging':
+        set_file_logging(bool(instance.value))
 
 
 def cleanup_db() -> None:
