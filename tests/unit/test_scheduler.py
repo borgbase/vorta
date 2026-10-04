@@ -836,6 +836,75 @@ def test_post_backup_tasks_ignores_a_deleted_profile(qapp):
     qapp.scheduler.post_backup_tasks(-1)
 
 
+@pytest.fixture
+def post_backup_jobs(qapp, mocker):
+    """Prune is on, so post_backup_tasks() queues a prune and an archive refresh job (mocked)."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = True
+    profile.validation_on = False
+    profile.compaction_on = False
+    profile.save()
+
+    params = {'ok': True, 'cmd': ['borg'], 'profile_id': profile.id, 'profile_name': profile.name}
+    for job_class in ('BorgPruneJob', 'BorgListRepoJob'):
+        mocker.patch.object(vorta.scheduler.execution, job_class).prepare.return_value = params
+
+    added = []
+    mocker.patch.object(qapp.jobs_manager, 'add_job', side_effect=added.append)
+    notifier = MagicMock()
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick', return_value=notifier)
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+    return added, notifier, params
+
+
+def test_post_backup_tasks_notify_after_jobs_finish(qapp, post_backup_jobs):
+    """The 'Post Backup Tasks successful' notification waits for the queued jobs, see #2562."""
+    added, notifier, params = post_backup_jobs
+    assert len(added) == 2
+    for job in added:
+        job.result.connect.assert_called_once_with(qapp.scheduler.post_backup_task_finished)
+    notifier.deliver.assert_not_called()
+
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 0})
+    notifier.deliver.assert_not_called()
+
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 0})
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == 'info'
+    assert 'Post Backup Tasks successful for Default' in notifier.deliver.call_args.args[1]
+
+
+def test_post_backup_tasks_notify_failure(qapp, post_backup_jobs):
+    """If one of the queued jobs fails, the final notification is an error."""
+    _, notifier, params = post_backup_jobs
+
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 2})
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 0})
+
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == 'error'
+    assert 'Post Backup Tasks failed for Default' in notifier.deliver.call_args.args[1]
+
+
+def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
+    """With no follow-up jobs to run, the notification is shown right away, as before."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = False
+    profile.validation_on = False
+    profile.compaction_on = False
+    profile.save()
+    add_job = mocker.patch.object(qapp.jobs_manager, 'add_job')
+    notifier = MagicMock()
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick', return_value=notifier)
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+
+    add_job.assert_not_called()
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == 'info'
+
+
 def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
     """A catch-up run that gets skipped is not recorded as an ordinary scheduled run."""
     mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
