@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from packaging import version
 
+from vorta.borg.borg_job import BorgJob
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
@@ -40,6 +41,10 @@ class SchedulerExecution:
 
         #: profiles being submitted, so a timer tick cannot submit one twice
         self._submitting: set[int] = set()
+
+        #: post-backup jobs still running per profile, and whether one of them failed
+        self._post_backup_pending: dict[int, int] = {}
+        self._post_backup_failed: dict[int, bool] = {}
 
     def create_backup(self, profile_id: int, trigger: str) -> None:
         notifier = VortaNotifications.pick()
@@ -146,19 +151,17 @@ class SchedulerExecution:
             logger.info('Profile not found. Maybe deleted?')
             return
 
-        notifier = VortaNotifications.pick()
         logger.info('Doing post-backup jobs for %s', profile.name)
+        jobs: list[BorgJob] = []
         if profile.prune_on:
             msg = BorgPruneJob.prepare(profile)
             if msg['ok']:
-                job = BorgPruneJob(msg['cmd'], msg, profile.repo.id)
-                self.scheduler.app.jobs_manager.add_job(job)
+                jobs.append(BorgPruneJob(msg['cmd'], msg, profile.repo.id))
 
                 # Refresh archives
                 msg = BorgListRepoJob.prepare(profile)
                 if msg['ok']:
-                    job = BorgListRepoJob(msg['cmd'], msg, profile.repo.id)
-                    self.scheduler.app.jobs_manager.add_job(job)
+                    jobs.append(BorgListRepoJob(msg['cmd'], msg, profile.repo.id))
 
         validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = (
@@ -173,8 +176,7 @@ class SchedulerExecution:
         if profile.validation_on and recent_validations == 0:
             msg = BorgCheckJob.prepare(profile)
             if msg['ok']:
-                job = BorgCheckJob(msg['cmd'], msg, profile.repo.id)
-                self.scheduler.app.jobs_manager.add_job(job)
+                jobs.append(BorgCheckJob(msg['cmd'], msg, profile.repo.id))
 
         compaction_cutoff = dt.now() - timedelta(days=7 * profile.compaction_weeks)
         recent_compactions = (
@@ -194,12 +196,48 @@ class SchedulerExecution:
         ):
             msg = BorgCompactJob.prepare(profile)
             if msg['ok']:
-                job = BorgCompactJob(msg['cmd'], msg, profile.repo.id)
-                self.scheduler.app.jobs_manager.add_job(job)
+                jobs.append(BorgCompactJob(msg['cmd'], msg, profile.repo.id))
 
-        logger.info('Finished background task for profile %s', profile.name)
-        notifier.deliver(
-            self.scheduler.tr('Vorta Backup'),
-            self.scheduler.tr('Post Backup Tasks successful for %s' % profile.name),
-            level='info',
-        )
+        if not jobs:
+            self._notify_post_backup_tasks_done(profile.name, failed=False)
+            return
+
+        # Notify once all queued jobs have finished, not when they are queued.
+        # Start a fresh count: jobs of an earlier batch that were cancelled from the queue never report back.
+        self._post_backup_pending[profile.id] = len(jobs)
+        self._post_backup_failed.pop(profile.id, None)
+        for job in jobs:
+            job.result.connect(self.scheduler.post_backup_task_finished)
+            self.scheduler.app.jobs_manager.add_job(job)
+
+    def post_backup_task_finished(self, result: dict[str, Any]) -> None:
+        profile_id = result['params']['profile_id']
+        if profile_id not in self._post_backup_pending:
+            return
+
+        if result['returncode'] not in [0, 1]:
+            self._post_backup_failed[profile_id] = True
+
+        self._post_backup_pending[profile_id] -= 1
+        if self._post_backup_pending[profile_id] > 0:
+            return
+
+        del self._post_backup_pending[profile_id]
+        failed = self._post_backup_failed.pop(profile_id, False)
+        self._notify_post_backup_tasks_done(result['params']['profile_name'], failed)
+
+    def _notify_post_backup_tasks_done(self, profile_name: str, failed: bool) -> None:
+        logger.info('Finished background task for profile %s', profile_name)
+        notifier = VortaNotifications.pick()
+        if failed:
+            notifier.deliver(
+                self.scheduler.tr('Vorta Backup'),
+                self.scheduler.tr('Post Backup Tasks failed for %s') % profile_name,
+                level='error',
+            )
+        else:
+            notifier.deliver(
+                self.scheduler.tr('Vorta Backup'),
+                self.scheduler.tr('Post Backup Tasks successful for %s') % profile_name,
+                level='info',
+            )
