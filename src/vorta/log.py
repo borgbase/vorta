@@ -13,10 +13,12 @@ from vorta import config
 
 logger = logging.getLogger()
 file_handler: TimedRotatingFileHandler | None = None
+console_handler: logging.StreamHandler | None = None
+in_background = False
 
 
-def init_logger(background=False):
-    global file_handler
+def init_logger(background=False, log_to_file=True):
+    global file_handler, console_handler, in_background
     logger.setLevel(logging.DEBUG)
     logging.getLogger('peewee').setLevel(logging.INFO)
     logging.getLogger('PyQt6').setLevel(logging.INFO)
@@ -32,25 +34,35 @@ def init_logger(background=False):
     fh.namer = lambda log_name: log_name.replace(".log", "") + ".log"
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
-    logger.addHandler(fh)
     file_handler = fh
 
-    if background:
-        pass
-    else:  # log to console, when running in foreground
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        ch.setFormatter(formatter)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(formatter)
+    console_handler = ch
+    in_background = background
+
+    if not background:  # log to console, when running in foreground
         logger.addHandler(ch)
+
+    set_file_logging(log_to_file)
 
 
 def set_file_logging(enabled: bool) -> None:
-    """Add or remove the log file handler, depending on the `enable_file_logging` setting."""
+    """Add or remove the log file handler, depending on the `enable_file_logging` setting.
+
+    In background mode there is no console handler, so it is added while file logging is off.
+    Otherwise nothing would be logged at all.
+    """
     if file_handler is None:  # logger not initialized, e.g. in tests
         return
     if enabled:
         if file_handler not in logger.handlers:
             logger.addHandler(file_handler)
+        if in_background and console_handler is not None:
+            logger.removeHandler(console_handler)
     else:
         logger.removeHandler(file_handler)
         file_handler.close()
+        if in_background and console_handler is not None and console_handler not in logger.handlers:
+            logger.addHandler(console_handler)

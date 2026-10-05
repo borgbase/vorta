@@ -66,6 +66,20 @@ def recover_interrupted_jobs() -> None:
         logger.warning('Could not recover interrupted jobs.', exc_info=True)
 
 
+def file_logging_enabled(con: pw.SqliteDatabase) -> bool:
+    """Read the `enable_file_logging` setting before init_db(), so the logger is set up correctly from the start."""
+    if not os.path.exists(con.database):  # first start: let init_db() create the file with the right umask
+        return True
+    try:
+        with con.connection_context(), con.bind_ctx([SettingsModel]):
+            enabled = (
+                SettingsModel.select(SettingsModel.value).where(SettingsModel.key == 'enable_file_logging').scalar()
+            )
+    except pw.PeeweeException:  # settings table not created yet
+        return True
+    return enabled is None or bool(enabled)
+
+
 def init_db(con: pw.SqliteDatabase | None = None) -> None:
     if con is not None:
         os.umask(0o0077)
