@@ -1,0 +1,48 @@
+{
+  "archive": {
+    "command_line": [
+      "/Users/manu/.pyenv/versions/3.7.1/bin/borg",
+      "create",
+      "--list",
+      "--progress",
+      "--info",
+      "--log-json",
+      "--json",
+      "w66xh7lj@w66xh7lj.repo.borgbase.com:repo::test-snapadkkfdddasdf",
+      "/Users/manu/Documents/financial/Allianz"
+    ],
+    "duration": 4.454152,
+    "end": "2018-11-06T14:24:09.000000",
+    "id": "b7a67208a9329bc48f7e2953b9803ffe0175e776a49d7f1a9c07581e3e7b5a17",
+    "limits": {
+      "max_archive_size": 2.851491780813361e-05
+    },
+    "name": "test-snapadkkfdddasdf",
+    "start": "2018-11-06T14:24:04.000000",
+    "stats": {
+      "compressed_size": 2954077,
+      "deduplicated_size": 2954077,
+      "nfiles": 10,
+      "original_size": 3038309
+    }
+  },
+  "cache": {
+    "path": "/Users/manu/.cache/borg/daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb",
+    "stats": {
+      "total_chunks": 97,
+      "total_csize": 23892256,
+      "total_size": 27955635,
+      "total_unique_chunks": 63,
+      "unique_csize": 13435127,
+      "unique_size": 15520474
+    }
+  },
+  "encryption": {
+    "mode": "repokey-blake2"
+  },
+  "repository": {
+    "id": "daf2e2b94a1b57f0effc96939813ef58d0af04414f92f87c3e092a99adaa90eb",
+    "last_modified": "2018-11-06T14:24:14.000000",
+    "location": "ssh://w66xh7lj@w66xh7lj.repo.borgbase.com/./repo"
+  }
+}
