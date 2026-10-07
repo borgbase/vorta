@@ -52,7 +52,7 @@ class FilePathInfoAsync(QThread):
         self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
-def normalize_path(path):
+def normalize_path(path: str) -> str:
     """normalize paths for MacOS (but do nothing on other platforms)"""
     # HFS+ converts paths to a canonical form, so users shouldn't be required to enter an exact match.
     # Windows and Unix filesystems allow different forms, so users always have to enter an exact match.
@@ -62,7 +62,7 @@ def normalize_path(path):
 # prepare patterns as borg does
 # see `FnmatchPattern._prepare` at
 # https://github.com/borgbackup/borg/blob/master//src/borg/patterns.py
-def prepare_pattern(pattern):
+def prepare_pattern(pattern: str) -> str:
     """Prepare and process fnmatch patterns as borg does"""
     if pattern.endswith(os.path.sep):
         # trailing sep indicates that the contents should be excluded
