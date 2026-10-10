@@ -29,16 +29,16 @@ class NetworksPage(BaseTab, NetworksBase, NetworksUI):
         self.track_profile_change(self.populate_wifi, call_now=True)
 
     def on_metered_networks_state_changed(self, state):
-        profile = self.profile()
-        attr = 'dont_run_on_metered_networks'
-        new_value = state != Qt.CheckState.Checked
-        self.save_profile_attr(attr, new_value)
-        self.meteredNetworksCheckBox.setChecked(False if profile.dont_run_on_metered_networks else True)
+        new_value = Qt.CheckState(state) != Qt.CheckState.Checked
+        self.save_profile_attr('dont_run_on_metered_networks', new_value)
 
     def populate_wifi(self):
         self.wifiListWidget.clear()
         profile = self.profile()
         if profile:
+            self.meteredNetworksCheckBox.blockSignals(True)
+            self.meteredNetworksCheckBox.setChecked(not profile.dont_run_on_metered_networks)
+            self.meteredNetworksCheckBox.blockSignals(False)
             for wifi in get_sorted_wifis(profile):
                 item = QListWidgetItem()
                 item.setText(wifi.ssid)
