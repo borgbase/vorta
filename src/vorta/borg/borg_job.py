@@ -13,22 +13,43 @@ from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
 
 from PyQt6 import QtCore
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
 from vorta.borg.jobs_manager import JobInterface
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.store.models import EventLogModel
+from vorta.store.models import EventLogModel, db_lock
 from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
-db_lock = Lock()
 logger = logging.getLogger(__name__)
 
 FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
+
+TRACEBACK_HEADER = 'Traceback (most recent call last):'
+
+
+def summarize_traceback(message: str) -> str:
+    """
+    Borg logs unexpected errors as a full Python traceback, followed by system info.
+    Return only the line with the exception, e.g. `PermissionError: [Errno 13] Permission denied: '/repo'`,
+    so it can be shown to the user. Other messages are returned unchanged.
+    """
+    if not message.startswith(TRACEBACK_HEADER):
+        return message
+
+    # With chained exceptions, the last traceback has the exception that was raised in the end.
+    last_traceback = message.rsplit(TRACEBACK_HEADER, 1)[1]
+    for line in last_traceback.splitlines():
+        # The lines of the stack frames are indented, the exception line is not.
+        if line.strip() and not line[0].isspace():
+            return line
+    return message
+
 
 """
 All methods in this class must be thread safe. Particularly,
@@ -66,10 +87,10 @@ class BorgJob(JobInterface):
 
         # Declare labels here for translation
         self.category_label = {
-            "files": trans_late("BorgJob", "Files"),
-            "original": trans_late("BorgJob", "Original"),
-            "deduplicated": trans_late("BorgJob", "Deduplicated"),
-            "compressed": trans_late("BorgJob", "Compressed"),
+            "files": QT_TRANSLATE_NOOP("BorgJob", "Files"),
+            "original": QT_TRANSLATE_NOOP("BorgJob", "Original"),
+            "deduplicated": QT_TRANSLATE_NOOP("BorgJob", "Deduplicated"),
+            "compressed": QT_TRANSLATE_NOOP("BorgJob", "Compressed"),
         }
 
         cmd[0] = self.prepare_bin()
@@ -141,15 +162,15 @@ class BorgJob(JobInterface):
         ret = {'ok': False}
 
         if cls.prepare_bin() is None:
-            ret['message'] = trans_late('messages', 'Borg binary was not found.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Borg binary was not found.')
             return ret
 
         if profile.repo is None:
-            ret['message'] = trans_late('messages', 'Select a backup repository first.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Select a backup repository first.')
             return ret
 
         if not borg_compat.check('JSON_LOG'):
-            ret['message'] = trans_late('messages', 'Your Borg version is too old. >=1.1.0 is required.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Your Borg version is too old. >=1.1.0 is required.')
             return ret
 
         # Try to get password from chosen keyring backend.
@@ -160,7 +181,7 @@ class BorgJob(JobInterface):
 
             # Check if keyring is locked
             if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-                ret['message'] = trans_late(
+                ret['message'] = QT_TRANSLATE_NOOP(
                     'messages',
                     'Please unlock your system password manager or disable it under Settings',
                 )
@@ -180,7 +201,7 @@ class BorgJob(JobInterface):
 
         # Password is required for encryption, cannot continue
         if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
-            ret['message'] = trans_late(
+            ret['message'] = QT_TRANSLATE_NOOP(
                 'messages',
                 "Your repo passphrase was stored in a password manager which is no longer available.\n"
                 "Try unlinking and re-adding your repo.",
@@ -207,8 +228,11 @@ class BorgJob(JobInterface):
         # More info at https://github.com/borgbase/vorta/issues/2100
         # Set the path to also find homebrew installs of Borg, and avoid falling back to the embedded binary.
         if sys.platform == 'darwin':
-            current_path = os.environ.get("PATH", "/usr/bin:/bin")
-            os.environ["PATH"] = f"{current_path}:/opt/homebrew/bin:/usr/local/bin"
+            # This runs for every job, so only add the directories that are still missing.
+            path_dirs = os.environ.get("PATH", "/usr/bin:/bin").split(os.pathsep)
+            missing_dirs = [d for d in ("/opt/homebrew/bin", "/usr/local/bin") if d not in path_dirs]
+            if missing_dirs:
+                os.environ["PATH"] = os.pathsep.join(path_dirs + missing_dirs)
         # Now continue looking for the borg binary to use
         borg_in_path = shutil.which('borg')
 
@@ -282,21 +306,23 @@ class BorgJob(JobInterface):
                         parsed = json.loads(line)
 
                         if parsed['type'] == 'log_message':
+                            message = summarize_traceback(parsed['message'])
                             context = {
                                 'msgid': parsed.get('msgid'),
+                                'message': parsed.get('message', ''),
                                 'repo_url': self.params['repo_url'],
                                 'profile_name': self.params.get('profile_name'),
                                 'cmd': self.params['cmd'][1],
                             }
                             self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}', context
+                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
                             )
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
 
                             if level_int >= logging.WARNING:
                                 # Append log to list of error messages
-                                error_messages.append((level_int, parsed["message"]))
+                                error_messages.append((level_int, message))
 
                         elif parsed['type'] == 'file_status':
                             self.app.backup_log_event.emit(
@@ -306,10 +332,10 @@ class BorgJob(JobInterface):
                             self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
                         elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
                             msg = (
-                                f"{translate('BorgJob','Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob','Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
                                 # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
-                                f"{translate('BorgJob','Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
                     except json.decoder.JSONDecodeError:
@@ -339,6 +365,8 @@ class BorgJob(JobInterface):
         log_entry.returncode = p.returncode
         log_entry.repo_url = self.params.get('repo_url', None)
         log_entry.end_time = dt.now()
+        result['log_entry_id'] = log_entry.id
+
         with db_lock:
             log_entry.save()
             self.process_result(result)

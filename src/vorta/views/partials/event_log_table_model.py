@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from typing import Any, List, Optional
 
-from PyQt6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, Qt
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.store.models import EventLogModel
 
 
@@ -24,11 +24,11 @@ class EventLogTableModel(QAbstractTableModel):
     COL_RETURNCODE = 4
 
     _HEADERS = (
-        trans_late('LogPage', 'Time'),
-        trans_late('LogPage', 'Category'),
-        trans_late('LogPage', 'Subcommand'),
-        trans_late('LogPage', 'Repository'),
-        trans_late('LogPage', 'Returncode'),
+        QT_TRANSLATE_NOOP('LogPage', 'Time'),
+        QT_TRANSLATE_NOOP('LogPage', 'Category'),
+        QT_TRANSLATE_NOOP('LogPage', 'Subcommand'),
+        QT_TRANSLATE_NOOP('LogPage', 'Repository'),
+        QT_TRANSLATE_NOOP('LogPage', 'Returncode'),
     )
 
     def __init__(self, parent: Optional[Any] = None):

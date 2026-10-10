@@ -1,1915 +1,2952 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="sv">
+<TS version="2.1" language="sv">
 <context>
     <name>AddProfileWindow</name>
     <message>
-        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="30" />
         <source>Please enter a profile name.</source>
         <translation>Ange ett profilnamn.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="31" />
         <source>A profile with this name already exists.</source>
-        <translation>Det finns redan en profil med det här namne.</translation>
+        <translation>Det finns redan en profil med det här namnet.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="24"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27" />
         <source>Save</source>
         <translation>Spara</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="25"/>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="28" />
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
-</context>
-<context>
+</context><context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="80"/>
-        <source>Repository Path:</source>
-        <translation>Förrådssökväg:</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="83"/>
-        <source>Choose Location of Borg Repository</source>
-        <translation>Välj en plats för Borg-förrådet</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="112"/>
-        <source>Repository URL:</source>
-        <translation>Förrådets URL:</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="138"/>
-        <source>Unable to add your repository.</source>
-        <translation>Kunde inte lägga till ditt förråd.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="165"/>
-        <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Ange en giltig förråds-URL eller välj en lokal mapp.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="169"/>
-        <source>This repo has already been added.</source>
-        <translation>Detta förråd har redan lagts till.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="105"/>
-        <source>Show my passwords</source>
-        <translation>Visa mina lösenord</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="90"/>
-        <source>Autofilled password from password manager.</source>
-        <translation>Automatiskt ifyllt lösenord från lösenordshanterare.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="102"/>
-        <source>Hide my passwords</source>
-        <translation>Dölj mina lösenord</translation>
-    </message>
-</context>
-<context>
-    <name>AddRepository</name>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="60"/>
-        <source>Initialize New Backup Repository</source>
-        <translation>Starta nytt säkerhetskopieringsförråd</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="67"/>
-        <source>Repository URL:</source>
-        <translation>Förråds-URL:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="82"/>
-        <source>csvis8xq@csvis8xq.repo.borgbase.com:repo</source>
-        <translation>csvis8xq@csvis8xq.repo.borgbase.com:repo</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="89"/>
-        <source>Choose a local path as repository.</source>
-        <translation>Välj en lokal mapp som förråd.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="103"/>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="201"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="139" />
         <source>Encryption:</source>
         <translation>Kryptering:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="179"/>
-        <source>SSH Key:</source>
-        <translation>SSH-nyckel:</translation>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="156" />
+        <source>Autofilled password from password manager.</source>
+        <translation>Lösenordet fylldes i automatiskt från lösenordshanteraren.</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="193"/>
-        <source>Automatically choose SSH Key (default)</source>
-        <translation>Välj SSH-nyckel automatiskt (standard)</translation>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="170" />
+        <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="247"/>
-        <source>Add</source>
-        <translation>Lägg till</translation>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="174" />
+        <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="254"/>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="177" />
+        <source>Repokey-AES256-OCB</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="33"/>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="178" />
+        <source>Keyfile-AES256-OCB</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
+        <source>None (not recommended)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
+        <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="184" />
+        <source>Repokey</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="185" />
+        <source>Keyfile-Blake2 (Key stored in home directory)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
+        <source>Keyfile</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>AddRepository</name>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Add Repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>General</source>
         <translation>Allmänt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="158"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Initialize New Backup Repository</source>
+        <translation>Initiera nytt säkerhetskopieringsförråd</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Repository URL:</source>
+        <translation>Förrådets URL:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>ssh://abc123@abc123.repo.borgbase.com/./repo</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Choose a local folder</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Choose a remote repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Repository Name:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Macbook Pro Office (optional)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Advanced</source>
         <translation>Avancerat</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="218"/>
-        <source>Extra Borg Arguments:</source>
-        <translation>Extra Borg-argument:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="116"/>
-        <source>Borg passphrase:</source>
-        <translation>Borg-lösenfras:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="143"/>
-        <source>Confirm passphrase:</source>
-        <translation>Bekräfta lösenfras:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="150"/>
-        <source>TextLabel</source>
-        <translation>TextEtikett</translation>
-    </message>
-</context>
-<context>
-    <name>ArchiveTab</name>
-    <message>
-        <location filename="../../views/archive_tab.py" line="144"/>
-        <source>Archives for %s</source>
-        <translation>Arkiv för %s</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="177"/>
-        <source>Archives</source>
-        <translation>Arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="194"/>
-        <source>Preview: %s</source>
-        <translation>Förhandsgranska: %s</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="198"/>
-        <source>Error in archive name template.</source>
-        <translation>Fel i arkivets namnmall.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="242"/>
-        <source>Pruning finished.</source>
-        <translation>Beskärning slutförd.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="261"/>
-        <source>Refreshed archives.</source>
-        <translation>Uppdaterade arkiv.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="315"/>
-        <source>Choose Mount Point</source>
-        <translation>Välj monteringspunkt</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="321"/>
-        <source>Mounted successfully.</source>
-        <translation>Montering slutförd.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="348"/>
-        <source>Mount point not active.</source>
-        <translation>Monteringspunkt inte aktiv.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="355"/>
-        <source>Un-mounted successfully.</source>
-        <translation>Avmontering slutförd.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="393"/>
-        <source>Select an archive to restore first.</source>
-        <translation>Välj först ett arkiv att återställa.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="413"/>
-        <source>Choose Extraction Point</source>
-        <translation>Välj extraheringspunkt</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="478"/>
-        <source>Archive deleted.</source>
-        <translation>Arkiv borttaget.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="463"/>
-        <source>Confirm deletion</source>
-        <translation>Bekräfta borttagning</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="563"/>
-        <source>No archive selected</source>
-        <translation>Inget arkiv valt</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="463"/>
-        <source>Are you sure you want to delete the archive?</source>
-        <translation>Vill du verkligen ta bort arkivet?</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="449"/>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="450"/>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="98"/>
-        <source>Action cancelled.</source>
-        <translation>Åtgärden avbruten.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="361"/>
-        <source>Unmounting failed. Make sure no programs are using {}</source>
-        <translation>Avmontering misslyckades. Tillse att inget program använder {}</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="117"/>
-        <source>Select an archive first.</source>
-        <translation>Välj ett arkiv först.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="537"/>
-        <source>Change name</source>
-        <translation>Byt namn</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="537"/>
-        <source>New archive name:</source>
-        <translation>Nytt arkivnamn:</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="547"/>
-        <source>Archive name cannot be blank.</source>
-        <translation>Arkivnamnet kan inte lämnas tomt.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="552"/>
-        <source>An archive with this name already exists.</source>
-        <translation>Det finns redan ett arkiv med det namnet.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="567"/>
-        <source>Archive renamed.</source>
-        <translation>Arkiv namnändrat.</translation>
-    </message>
-    <message>
-        <location filename="../../views/archive_tab.py" line="278"/>
-        <source>Refreshed archive.</source>
-        <translation>Uppdaterade arkiv.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgBreakJob</name>
-    <message>
-        <location filename="../../borg/break_lock.py" line="8"/>
-        <source>Breaking repository lock...</source>
-        <translation>Bryter förrådslås...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/break_lock.py" line="12"/>
-        <source>Repository lock broken. Please redo your last action.</source>
-        <translation>Förrådslås uppbrutet. Upprepa senaste åtgärden.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgCheckJob</name>
-    <message>
-        <location filename="../../borg/check.py" line="8"/>
-        <source>Starting consistency check...</source>
-        <translation>Startar konsekvenskontroll...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/check.py" line="17"/>
-        <source>Check completed.</source>
-        <translation>Kontroll slutförd.</translation>
-    </message>
-    <message>
-        <location filename="../../borg/check.py" line="14"/>
-        <source>Repo check failed. See logs for details.</source>
-        <translation>Förrådskontroll misslyckades, Se logg för detaljerad info.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgCreateJob</name>
-    <message>
-        <location filename="../../borg/create.py" line="36"/>
-        <source>Backup finished with warnings. See the %1 for details.</source>
-        <translation>Säkerhetskopiering slutfördes med varningar. Se loggar för detaljerad info.</translation>
-    </message>
-    <message>
-        <location filename="../../borg/create.py" line="38"/>
-        <source>Backup finished.</source>
-        <translation>Säkerhetskopiering slutförd.</translation>
-    </message>
-    <message>
-        <location filename="../../borg/create.py" line="45"/>
-        <source>Backup started.</source>
-        <translation>Säkerhetskopiering startad.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgDeleteJob</name>
-    <message>
-        <location filename="../../borg/delete.py" line="8"/>
-        <source>Deleting archive...</source>
-        <translation>Tar bort arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/delete.py" line="13"/>
-        <source>Archive deleted.</source>
-        <translation>Arkiv borttaget.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgDiffJob</name>
-    <message>
-        <location filename="../../borg/diff.py" line="9"/>
-        <source>Requesting differences between archives...</source>
-        <translation>Begär olikheter mellan arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/diff.py" line="13"/>
-        <source>Obtained differences between archives.</source>
-        <translation>Mottog olikheter mellan arkiv.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgExtractJob</name>
-    <message>
-        <location filename="../../borg/extract.py" line="8"/>
-        <source>Downloading files from archive...</source>
-        <translation>Laddar ner filer från arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/extract.py" line="13"/>
-        <source>Restored files from archive.</source>
-        <translation>Återställde filer från arkiv.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgInfoArchiveJob</name>
-    <message>
-        <location filename="../../borg/info_archive.py" line="9"/>
-        <source>Refreshing archive...</source>
-        <translation>Uppdaterar arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/info_archive.py" line="14"/>
-        <source>Refreshing archive done.</source>
-        <translation>Arkiv uppdaterade.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgInfoRepoJob</name>
-    <message>
-        <location filename="../../borg/info_repo.py" line="9"/>
-        <source>Validating existing repo...</source>
-        <translation>Validerar befintligt förråd...</translation>
-    </message>
-</context>
-<context>
-    <name>BorgInitJob</name>
-    <message>
-        <location filename="../../borg/init.py" line="8"/>
-        <source>Setting up new repo...</source>
-        <translation>Skapar nytt förråd...</translation>
-    </message>
-</context>
-<context>
-    <name>BorgJob</name>
-    <message>
-        <location filename="../../borg/borg_job.py" line="66"/>
-        <source>Files</source>
-        <translation>Filer</translation>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="67"/>
-        <source>Original</source>
-        <translation>Original</translation>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="68"/>
-        <source>Deduplicated</source>
-        <translation>Deduplicerat</translation>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="69"/>
-        <source>Compressed</source>
-        <translation>Komprimerat</translation>
-    </message>
-    <message>
-        <location filename="../../borg/borg_job.py" line="299"/>
-        <source>Task started</source>
-        <translation>Åtgärd startad</translation>
-    </message>
-</context>
-<context>
-    <name>BorgListArchiveJob</name>
-    <message>
-        <location filename="../../borg/list_archive.py" line="8"/>
-        <source>Getting archive content...</source>
-        <translation>Hämtar arkivinnehåll...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/list_archive.py" line="12"/>
-        <source>Done getting archive content.</source>
-        <translation>Arkivinnehåll hämtat.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgListRepoJob</name>
-    <message>
-        <location filename="../../borg/list_repo.py" line="10"/>
-        <source>Refreshing archives...</source>
-        <translation>Uppdaterar arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/list_repo.py" line="15"/>
-        <source>Refreshing archives done.</source>
-        <translation>Arkiv uppdaterade.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgMountJob</name>
-    <message>
-        <location filename="../../borg/mount.py" line="9"/>
-        <source>Mounting archive into folder...</source>
-        <translation>Monterar arkiv i mapp...</translation>
-    </message>
-</context>
-<context>
-    <name>BorgPruneJob</name>
-    <message>
-        <location filename="../../borg/prune.py" line="9"/>
-        <source>Pruning old archives...</source>
-        <translation>Beskär gamla arkiv...</translation>
-    </message>
-    <message>
-        <location filename="../../borg/prune.py" line="14"/>
-        <source>Pruning done.</source>
-        <translation>Beskärning slutförd.</translation>
-    </message>
-</context>
-<context>
-    <name>BorgUmountJob</name>
-    <message>
-        <location filename="../../borg/umount.py" line="10"/>
-        <source>Unmounting archive...</source>
-        <translation>Avmonterar arkiv...</translation>
-    </message>
-</context>
-<context>
-    <name>Dialog</name>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="25"/>
-        <source>Archive:</source>
-        <translation>Arkiv:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="38"/>
-        <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
-        <translation>nyx2.local-2018-11-16T09:49:58 från November 16, 2018</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="63"/>
-        <source>Note: If you select a top-level folder and deselect its children, they will still be restored.</source>
-        <translation>Notera: Om du väljer en toppnivåmapp och väljer bort dess undermappar, kommer de ändå att återställas.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="88"/>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="95"/>
-        <source>Extract</source>
-        <translation>Extrahera</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="35"/>
-        <source>Add Backup Profile</source>
-        <translation>Lägg till säkerhetskopieringsprofil</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="56"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Backup profiles allow for granular backups from different sources to different destinations. You could e.g. back up essential documents to a remote repository via Wifi, while doing a full backup onto a local storage device.&lt;/p&gt;&lt;p&gt;Repositories and SSH keys are shared between profiles. Source folders, active destination repo, allowed networks, pruning, validation and scheduling are per-profile.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Säkerhetskopieringsprofiler möjliggör detaljerade säkerhetskopior från olika källor till olika mål. Du kan t.ex. säkerhetskopiera viktiga dokument till ett fjärrförråd via Wifi, samtidigt som du gör en fullständig säkerhetskopia på en lokal lagringsenhet.&lt;/p&gt;&lt;p&gt;Förråd och SSH-nycklar delas mellan profiler. Källmappar, aktiva målförråd, tillåtna nätverk, beskärning, validering och schemaläggning är per profil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="84"/>
-        <source>Profile Name</source>
-        <translation>Profilnamn</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="43"/>
-        <source>Generate SSH Key</source>
-        <translation>Generera SSH-nyckel</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="55"/>
-        <source>Key Format:</source>
-        <translation>Nyckelformat:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="72"/>
-        <source>Key Length:</source>
-        <translation>Nyckellängd:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
-        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
-        <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fixad för Ed25519. %1.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="94"/>
-        <source>More</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="107"/>
-        <source>Output File:</source>
-        <translation>Utdatafil:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="119"/>
-        <source>Don't change this if you want SSH to automatically find the key.</source>
-        <translation>Ändra inte om du vill att SSH skall hitta nyckeln automatiskt.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="128"/>
-        <source>Close</source>
-        <translation>Stäng</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="141"/>
-        <source>Generate and copy to Clipboard</source>
-        <translation>Generera och kopiera till urklipp</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="25"/>
-        <source>Select two archives</source>
-        <translation>Välj två arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="60"/>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="65"/>
-        <source>Size</source>
-        <translation>Storlek</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="70"/>
-        <source>Duration</source>
-        <translation>Varaktighet</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="75"/>
-        <source>Mount Point</source>
-        <translation>Moneringspunkt</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="80"/>
-        <source>Name</source>
-        <translation>Namn</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="113"/>
-        <source>Diff</source>
-        <translation>Diff</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="25"/>
-        <source>Difference between</source>
-        <translation>Skillnad mellan</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="38"/>
-        <source>nyx2.local-2018-11-16T09:49:58 </source>
-        <translation>nyx2.local-2018-11-16T09:49:58 </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="45"/>
-        <source>and</source>
-        <translation>och</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="58"/>
-        <source>nyx2.local-2018-10-16T09:49:58 </source>
-        <translation>nyx2.local-2018-10-16T09:49:58 </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="101"/>
-        <source>Ok</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="23"/>
-        <source>If set, sharing this file with others will disclose your borg passphrase. Use with caution!</source>
-        <translation>Vid aktivering, avslöjas din borg-lösenfras om du delar den här filen med andra. Använd detta med försiktighet!</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="26"/>
-        <source>Include borg passphrase in export</source>
-        <translation>Ta med borg-lösenfrasen i exporten</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="25"/>
-        <source>Borg passphrase:</source>
-        <translation>Borg-lösenfras:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="53"/>
-        <source>Overwrite existing profile</source>
-        <translation>Skriv över befintlig profil</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="60"/>
-        <source>Overwrite existing settings</source>
-        <translation>Skriv över befintliga inställningar</translation>
-    </message>
-</context>
-<context>
-    <name>EditProfileWindow</name>
-    <message>
-        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="68"/>
-        <source>Rename Profile</source>
-        <translation>Byt profilnamn</translation>
-    </message>
-</context>
-<context>
-    <name>ExistingRepoWindow</name>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="192"/>
-        <source>Connect to existing Repository</source>
-        <translation>Anslut till befintligt förråd</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="210"/>
-        <source>Show my password</source>
-        <translation>Visa mitt lösenord</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="207"/>
-        <source>Hide my password</source>
-        <translation>Dölj mitt lösenord</translation>
-    </message>
-</context>
-<context>
-    <name>ExportWindow</name>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="29"/>
-        <source>Export Profile</source>
-        <translation>Exportera profil</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="38"/>
-        <source>The current profile_export has no password</source>
-        <translation>Den aktuella profile_export har inget lösenord</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="43"/>
-        <source>Save profile_export</source>
-        <translation>Spara profile_export</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="55"/>
-        <source>Error while exporting</source>
-        <translation>Fel vid export</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="71"/>
-        <source>The file {} could not be created. Please choose another location.</source>
-        <translation>Filen {} kunde inte skapas. Välj en annan plats.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="78"/>
-        <source>Profile export successful!</source>
-        <translation>Profilexport slutförd!</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/export.py" line="78"/>
-        <source>Profile export written to {}.</source>
-        <translation>Profilexport skriven på {}.</translation>
-    </message>
-</context>
-<context>
-    <name>Form</name>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="14"/>
-        <source>Form</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="44"/>
-        <source>Archives</source>
-        <translation>Arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="72"/>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="79"/>
-        <source>Size</source>
-        <translation>Storlek</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="82"/>
-        <source>Duration</source>
-        <translation>Varaktighet</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="87"/>
-        <source>Mount Point</source>
-        <translation>Monteringspunkt</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="92"/>
-        <source>Name</source>
-        <translation>Namn</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="125"/>
-        <source>Check</source>
-        <translation>Kontrollera</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="145"/>
-        <source>Prune</source>
-        <translation>Beskär</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="155"/>
-        <source>Refresh</source>
-        <translation>Uppdatera</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="202"/>
-        <source>Prune Options and Archive Naming</source>
-        <translation>Beskärningsalternativ och arkivnamngivning</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="229"/>
-        <source>Keep</source>
-        <translation>Bevara</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="256"/>
-        <source>Use -1 for unlimited.</source>
-        <translation>Använd -1 för obegränsat.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="249"/>
-        <source> hourly, </source>
-        <translation> varje timma, </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="269"/>
-        <source> daily, </source>
-        <translation> varje dag, </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="283"/>
-        <source> weekly, </source>
-        <translation> varje vecka, </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="297"/>
-        <source> monthly and</source>
-        <translation> varje månad och</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="311"/>
-        <source> annual archives</source>
-        <translation> årliga arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="338"/>
-        <source>No matter what, keep all archives of the last:</source>
-        <translation>Oavsett, bevara alla arkiv för de senaste:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="348"/>
-        <source>24H, 1d, 52w, 12m, 1y</source>
-        <translation>24T, 1d, 52v, 12m, 1å</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="388"/>
-        <source>Archive Name:</source>
-        <translation>Arkivnamn:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="431"/>
-        <source>Available variables: hostname, profile_id, profile_slug, now, utc_now, user</source>
-        <translation>Tillgängliga variabler: hostname, profile_id, profile_slug, now, utc_now, user</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="398"/>
-        <source>{hostname}-{profile_slug}-</source>
-        <translation>{hostname}-{profile_slug}-</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="441"/>
-        <source>Prune Prefix:</source>
-        <translation>Beskärningsprefix:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="71"/>
-        <source>0.0</source>
-        <translation>0.0</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="55"/>
-        <source>Repository:</source>
-        <translation>Förråd:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="128"/>
-        <source>Select Backup Destination</source>
-        <translation>Välj målmapp för säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="136"/>
-        <source>Unlink Repository (This doesn't delete any data. You can always add a repo again later.)</source>
-        <translation>Avlänka förrådet (Detta tar inte bort någon data. Du kan alltid lägga till ett förråd igen, senare.)</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="164"/>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>SSH Key:</source>
         <translation>SSH-nyckel:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="185"/>
-        <source>Copy public SSH key to clipboard.</source>
-        <translation>Kopiera offentlig SSH-nyckel till urklipp.</translation>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Automatically choose SSH Key (default)</source>
+        <translation>Välj SSH-nyckel automatiskt (standard)</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="222"/>
-        <source>To securely access remote repositories. Keep default to use all your existing keys. Or create new key.</source>
-        <translation>Behåll standard för att använda alla befintliga nycklar, eller skapa en ny nyckel, för säker åtkomst till fjärrförråd.</translation>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>Extra Borg Arguments:</source>
+        <translation>Ytterligare Borg-argument:</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="246"/>
-        <source>Compression:</source>
-        <translation>Komprimering:</translation>
+        <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
+        <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
+        <translation type="unfinished" />
     </message>
+</context><context>
+    <name>ArchiveDelete</name>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="347"/>
-        <source>Encryption:</source>
-        <translation>Kryptering:</translation>
+        <location filename="../../views/archive/archive_delete.py" line="14" />
+        <source>No archive selected</source>
+        <translation>Inget arkiv valt</translation>
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="387"/>
-        <source>Original Size:</source>
-        <translation>Ursprunglig storlek:</translation>
+        <location filename="../../views/archive/archive_delete.py" line="23" />
+        <source>Are you sure you want to delete all the selected archives?</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="401"/>
-        <source>Deduplicated Size:</source>
-        <translation>Deduplicerad storlek:</translation>
+        <location filename="../../views/archive/archive_delete.py" line="25" />
+        <source>Are you sure you want to delete the selected archive?</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="408"/>
-        <source>Compressed Size:</source>
-        <translation>Komprimerad storlek:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="45"/>
-        <source>Schedule</source>
-        <translation>Schema</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="86"/>
-        <source>Backup manually</source>
-        <translation>Säkerhetskopiera manuellt</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="143"/>
-        <source>Backup every </source>
-        <translation>Säkerhetskopiera varje </translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="110"/>
-        <source>Backup daily at</source>
-        <translation>Säkerhetskopiera varje dag</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="279"/>
-        <source>Validate repository data every</source>
-        <translation>Validera förrådsdata varje</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="299"/>
-        <source>weeks</source>
-        <translation>veckor</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="225"/>
-        <source>Prune old Archives after each backup</source>
-        <translation>Beskär gamla arkiv efter varje säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="191"/>
-        <source>Next Backup:</source>
-        <translation>Nästa säkerhetskopiering:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="345"/>
-        <source>Networks</source>
-        <translation>Nätverk</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="357"/>
-        <source>Allowed Networks:</source>
-        <translation>Betrodda nätverk:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="406"/>
-        <source>Log</source>
-        <translation>Logg</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="431"/>
-        <source>Time</source>
-        <translation>Tid</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="436"/>
-        <source>Category</source>
-        <translation>Kategori</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="441"/>
-        <source>Subcommand</source>
-        <translation>Underkommando</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="446"/>
-        <source>Repository</source>
-        <translation>Förråd</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="451"/>
-        <source>Returncode</source>
-        <translation>Returkod</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="468"/>
-        <source>Shell Commands</source>
-        <translation>Skalkommandon</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="477"/>
-        <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0).</source>
-        <translation>Kör anpassade skalkommandon före och efter säkerhetskopiering. Det faktiska säkerhetskopierings- och eftersäkerhetskopieringskommandot körs bara om kommandot före säkerhetskopieringen avslutas utan fel (returkod 0).</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="496"/>
-        <source>Pre-backup command to run BEFORE backups</source>
-        <translation>Försäkerhetskopieringskommando att köra FÖRE säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="506"/>
-        <source>Post-backup command to run AFTER backups</source>
-        <translation>Eftersäkerhetskopieringskommando att köra EFTER säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="519"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Available env variables: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tillgängliga miljövariabler: &lt;span style=" font-family:'Courier';"&gt;$repo_url, $profile_name, $profile_slug, $returncode&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="20"/>
-        <source>Source Folders and Files to Back Up:</source>
-        <translation>Källmappar och filer att säkerhetskopiera:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="94"/>
-        <source>Add Folder</source>
-        <translation>Lägg till mapp</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="108"/>
-        <source>Remove</source>
-        <translation>Ta bort</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="164"/>
-        <source>Exclude If Present (exclude folders with these files):</source>
-        <translation>Undanta om finnes (undanta mappar med dessa filer):</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="135"/>
-        <source>Diff</source>
-        <translation>Diff</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="183"/>
-        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
-        <translation>För att montera arkiv, installerarar du först "FUSE för macOS" from %1.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="183"/>
-        <source>here</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="208"/>
-        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
-        <translation>Beskärning tar bort äldre arkiv. Du kan välja antal arkiv att bevara per timma, dag etc. Normalt vill man bevara fler nyare och färre äldre arkiv. Läs %1.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="208"/>
-        <source>more</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="64"/>
-        <source>Vorta Version:</source>
-        <translation>Vorta-version:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="81"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Report&lt;/span&gt;&lt;/a&gt; a Bug |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;| &lt;a href="https://github.com/borgbase/vorta/issues/new/choose"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Rapportera&lt;/span&gt;&lt;/a&gt; ett fel |&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="91"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Log&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href="file:///"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;Logg&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="127"/>
-        <source>Borg Version:</source>
-        <translation>Borg-version:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="134"/>
-        <source>1.1.8</source>
-        <translation>1.1.8</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/misc_tab.ui" line="141"/>
-        <source>/usr/bin/borg</source>
-        <translation>/usr/bin/borg</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="96"/>
-        <source>For simple and secure backup hosting, try %1.</source>
-        <translation>Fjärr- eller lokalt säkerhetskopieringsförråd. För enkel och säker lagring kan du prova %1.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="288"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compression used for new data. Can be changed and doesn't affect deduplication. Read &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Komprimering använd för ny data. Kan ändras och påverkar inte deduplicering. Läs &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-compression"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="154"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exclude Patterns (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;more&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undantagsmall. Läs (&lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;mer&lt;/span&gt;&lt;/a&gt;):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="180"/>
-        <source>E.g. **/.cache</source>
-        <translation>T.ex. **/.cache</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="193"/>
-        <source>E.g. .nobackup</source>
-        <translation>T.ex. .nobackup</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/repo_tab.ui" line="146"/>
-        <source>Copy repo URL to clipboard</source>
-        <translation>Kopiera förråds-URL till urklipp</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="364"/>
-        <source>Don't run backup over metered networks</source>
-        <translation>Kör inte säkerhetskopiering över nätverk med datamätare</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="101"/>
-        <source>Add File(s)</source>
-        <translation>Lägg till fil(er)</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="115"/>
-        <source>One folder or file per line</source>
-        <translation>En mapp eller fil per rad</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="118"/>
-        <source>Paste Folders/Files</source>
-        <translation>Klistra in mappar/filer</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="434"/>
-        <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
-        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="69"/>
-        <source>Path</source>
-        <translation>Sökväg</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="74"/>
-        <source>Type</source>
-        <translation>Typ</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="84"/>
-        <source>File Count</source>
-        <translation>Antal filer</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/source_tab.ui" line="125"/>
-        <source>Recalculate sizes</source>
-        <translation>Beräkna om storlekar</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/archive_tab.ui" line="102"/>
-        <source>Selected Archive</source>
-        <translation>Valt arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="542"/>
-        <source>Add these arguments when creating a backup. See &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;the documentation&lt;/span&gt;&lt;/a&gt; for more information.</source>
-        <translation>Lägg till dessa argument när en säkerhetskopia skapas. Se &lt;a href="https://borgbackup.readthedocs.io/en/stable/usage/create.html"&gt;&lt;span style=" text-decoration: underline; color:#0984e3;"&gt;dokumentationen&lt;/span&gt;&lt;/a&gt; för mer information.</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="558"/>
-        <source>Arguments to add. E.g. --dry-run</source>
-        <translation>Argument att lägga till. T.ex. --dry-run</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="198"/>
-        <source>-</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/schedule_tab.ui" line="252"/>
-        <source>Run missed backups right after startup or wakeup</source>
-        <translation>Kör saknade säkerhetskopieringar direkt efter uppstart eller väckning</translation>
-    </message>
-</context>
-<context>
-    <name>ImportWindow</name>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="25"/>
-        <source>Import Profile</source>
-        <translation>Importera profil</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="33"/>
-        <source>The passphrase has been loaded from the export file</source>
-        <translation>Lösenfrasen har lästs in från exportfilen</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="40"/>
-        <source>The passphrase has been loaded from your keyring</source>
-        <translation>Lösenfrasen har lästs in från din nyckelring</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="50"/>
-        <source>A profile with the name {} does not exist. Nothing to overwrite.</source>
-        <translation>Det finns ingen profil med namnet {}. Det finns inget att skriva över.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="61"/>
-        <source>Error while importing</source>
-        <translation>Fel vid import</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="77"/>
-        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
- {0}
- {1}</source>
-        <translation>Schemauppgraderingsfel, skicka en felrapport med hjälp av länken i inställningsfliken och ange följande fel:
- {0}
- {1}</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="80"/>
-        <source>Newer profile_export export files cannot be used on older versions.</source>
-        <translation>Nyare profile_export exportfiler kan inte användas i äldre versioner.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="82"/>
-        <source>Cannot read profile_export export file due to permission error.</source>
-        <translation>Kan inte läsa profile_export exportfil på grund av behörighetsfel.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/import.py" line="84"/>
-        <source>Profile export file not found.</source>
-        <translation>Profilexportfil hittades inte</translation>
-    </message>
-</context>
-<context>
-    <name>MainWindow</name>
-    <message>
-        <location filename="../../views/main_window.py" line="255"/>
-        <source>Task cancelled</source>
-        <translation>Aktivitet avbruten</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="20"/>
-        <source>MainWindow</source>
-        <translation>Huvudfönster</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="51"/>
-        <source>Current Profile:</source>
-        <translation>Aktuell profil:</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="84"/>
-        <source>Rename Profile</source>
-        <translation>Byt namn på profilen</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="107"/>
-        <source>Delete Profile</source>
-        <translation>Ta bort profilen</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="148"/>
-        <source>Repository</source>
-        <translation>Förråd</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="153"/>
-        <source>Sources</source>
-        <translation>Källor</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="158"/>
-        <source>Schedule</source>
-        <translation>Schema</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="163"/>
-        <source>Archives</source>
-        <translation>Arkiv</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="168"/>
-        <source>Misc</source>
-        <translation>Inställningar</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="190"/>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="36"/>
-        <source>Start Backup</source>
-        <translation>Starta säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="239"/>
-        <source>Latest</source>
-        <translation>Senast</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="244"/>
-        <source>Reset App</source>
-        <translation>Återställ programmet</translation>
-    </message>
-    <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="68"/>
-        <source>Add Profile</source>
-        <translation>Lägg till profil</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="163"/>
-        <source>Are you sure you want to delete profile '{}'?</source>
-        <translation>Vill du verkligen ta bort profilen "{}"?</translation>
-    </message>
-    <message>
-        <location filename="../../views/main_window.py" line="164"/>
+        <location filename="../../views/archive/archive_delete.py" line="26" />
         <source>Confirm deletion</source>
         <translation>Bekräfta borttagning</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="272"/>
-        <source>Should Vorta continue to run in the background?</source>
-        <translation>Skall Vorta fortsätta köra i bakgrunden?</translation>
+        <location filename="../../views/archive/archive_delete.py" line="39" />
+        <source>Archives deleted.</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="277"/>
-        <source>Quit</source>
-        <translation>Avsluta</translation>
+        <location filename="../../views/archive/archive_delete.py" line="41" />
+        <source>Archive deleted.</source>
+        <translation>Arkivet har tagits bort.</translation>
+    </message>
+</context><context>
+    <name>ArchiveDiff</name>
+    <message>
+        <location filename="../../views/archive/archive_diff.py" line="62" />
+        <source>Processing diff results.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ArchiveExtract</name>
+    <message>
+        <location filename="../../views/archive/archive_extract.py" line="38" />
+        <source>Select an archive to restore first.</source>
+        <translation>Välj först ett arkiv att återställa.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278"/>
-        <source>Don't show this again</source>
-        <translation>Visa inte detta igen</translation>
+        <location filename="../../views/archive/archive_extract.py" line="46" />
+        <source>Processing archive contents</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="83"/>
-        <source>Import from file...</source>
-        <translation>Importera från fil...</translation>
+        <location filename="../../views/archive/archive_extract.py" line="69" />
+        <source>Choose Extraction Point</source>
+        <translation>Välj plats för extrahering</translation>
+    </message>
+</context><context>
+    <name>ArchiveMaintenance</name>
+    <message>
+        <location filename="../../views/archive/archive_maintenance.py" line="58" />
+        <source>Pruning finished.</source>
+        <translation>Beskärning slutförd.</translation>
+    </message>
+</context><context>
+    <name>ArchiveMount</name>
+    <message>
+        <location filename="../../views/archive/archive_mount.py" line="72" />
+        <location filename="../../views/archive/archive_mount.py" line="55" />
+        <source>Unmount</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="174"/>
-        <source>Can't delete the last profile.</source>
-        <translation>Kan inte ta bort senaste profilen.</translation>
+        <location filename="../../views/archive/archive_mount.py" line="56" />
+        <source>Unmount the selected archive from the file system</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="202"/>
-        <source>Profile import successful!</source>
-        <translation>Profilimport slutförd!</translation>
+        <location filename="../../views/archive/archive_mount.py" line="76" />
+        <location filename="../../views/archive/archive_mount.py" line="60" />
+        <source>Mount…</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="202"/>
-        <source>Profile {} imported.</source>
-        <translation>Profil {} importerad.</translation>
+        <location filename="../../views/archive/archive_mount.py" line="62" />
+        <source>Mount the selected archive as a folder in the file system</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="211"/>
-        <source>Load profile</source>
-        <translation>Läs in profil</translation>
+        <location filename="../../views/archive/archive_mount.py" line="73" />
+        <source>Unmount the repository from the file system</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="211"/>
-        <source>JSON (*.json);;All files (*)</source>
-        <translation>JSON (*.json);;Alla filer (*)</translation>
+        <location filename="../../views/archive/archive_mount.py" line="78" />
+        <source>Mount the repository as a folder in the file system</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../assets/UI/mainwindow.ui" line="97"/>
-        <source>Export Profile</source>
-        <translation>Exportera profil</translation>
+        <location filename="../../views/archive/archive_mount.py" line="109" />
+        <source>Choose Mount Point</source>
+        <translation>Välj monteringspunkt</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="220"/>
-        <source>Failed to import profile</source>
-        <translation>Kunde inte importera profil</translation>
-    </message>
-</context>
-<context>
-    <name>RepoTab</name>
-    <message>
-        <location filename="../../views/repo_tab.py" line="26"/>
-        <source>+ Initialize New Repository</source>
-        <translation>+ Starta nytt förråd</translation>
+        <location filename="../../views/archive/archive_mount.py" line="114" />
+        <source>Mounted successfully.</source>
+        <translation>Monteringen lyckades.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="27"/>
-        <source>+ Add Existing Repository</source>
-        <translation>+ Lägg till befintligt förråd</translation>
+        <location filename="../../views/archive/archive_mount.py" line="168" />
+        <source>Un-mounted successfully.</source>
+        <translation>Avmonteringen lyckades.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="48"/>
-        <source>No Compression</source>
-        <translation>Ingen komprimering</translation>
+        <location filename="../../views/archive/archive_mount.py" line="183" />
+        <source>Unmounting failed. Make sure no programs are using {}</source>
+        <translation>Avmonteringen misslyckades. Kontrollera att inga program använder {}</translation>
+    </message>
+</context><context>
+    <name>ArchiveRename</name>
+    <message>
+        <location filename="../../views/archive/archive_rename.py" line="58" />
+        <source>Archive name cannot be blank.</source>
+        <translation>Arkivnamnet kan inte lämnas tomt.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="111"/>
-        <source>Automatically choose SSH Key (default)</source>
-        <translation>Välj SSH-nyckel auomatiskt (standard)</translation>
+        <location filename="../../views/archive/archive_rename.py" line="62" />
+        <source>An archive with this name already exists.</source>
+        <translation>Det finns redan ett arkiv med det namnet.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="112"/>
-        <source>Create New Key</source>
-        <translation>Skapa ny nyckel</translation>
+        <location filename="../../views/archive/archive_rename.py" line="72" />
+        <source>Renaming archive...</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="149"/>
-        <source>Public Key Copied to Clipboard</source>
-        <translation>Offentlig nyckel kopierad till urklipp</translation>
+        <location filename="../../views/archive/archive_rename.py" line="86" />
+        <source>Archive renamed.</source>
+        <translation>Arkivet har bytt namn.</translation>
+    </message>
+</context><context>
+    <name>ArchiveTab</name>
+    <message>
+        <location filename="../../views/archive_tab.py" line="205" />
+        <source>Copy</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="150"/>
-        <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>Den valda offentliga SSH-nyckeln kopierades till urklipp. Använd den till att ställa in behörigheter för fjärrförråd.</translation>
+        <location filename="../../views/archive_tab.py" line="225" />
+        <source>Action cancelled.</source>
+        <translation>Åtgärden avbröts.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="155"/>
-        <source>Couldn't find public key.</source>
-        <translation>Kunde inte hitta offentlig nyckel.</translation>
+        <location filename="../../views/archive_tab.py" line="289" />
+        <source>(This feature needs Borg 1.2.0 or higher)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="157"/>
-        <source>Select a public key from the dropdown first.</source>
-        <translation>Välj först en offentlig nyckel i listrutan.</translation>
+        <location filename="../../views/archive_tab.py" line="304" />
+        <source>Archives for {}</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="213"/>
-        <source>Repository was Unlinked</source>
-        <translation>Förrådet blev avlänkat</translation>
+        <location filename="../../views/archive_tab.py" line="328" />
+        <source>Archives</source>
+        <translation>Arkiv</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="214"/>
-        <source>You can always connect it again later.</source>
-        <translation>Du kan alltid återansluta det senare.</translation>
+        <location filename="../../views/archive_tab.py" line="382" />
+        <source>(borg already running)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="38"/>
-        <source>LZ4 (modern, default)</source>
-        <translation>LZ4 (modern, standard)</translation>
+        <location filename="../../views/archive_tab.py" line="392" />
+        <source>(Select minimum one archive)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="39"/>
-        <source>Zstandard Level 3 (modern)</source>
-        <translation>Zstandard nivå 3 (modern)</translation>
+        <location filename="../../views/archive_tab.py" line="404" />
+        <source>(Select two archives)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="40"/>
-        <source>Zstandard Level 8 (modern)</source>
-        <translation>Zstandard nivå 8 (modern)</translation>
+        <location filename="../../views/archive_tab.py" line="419" />
+        <source>(Select exactly one archive)</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="46"/>
-        <source>ZLIB Level 6 (auto, legacy)</source>
-        <translation>ZLIB nivå 6 (auto, äldre)</translation>
+        <location filename="../../views/archive_tab.py" line="467" />
+        <source>Preview: %s</source>
+        <translation>Förhandsvisning: %s</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="47"/>
-        <source>LZMA Level 6 (auto, legacy)</source>
-        <translation>LZMA nivå 6 (auto, äldre)</translation>
+        <location filename="../../views/archive_tab.py" line="471" />
+        <source>Error in archive name template.</source>
+        <translation>Fel i mallen för arkivnamn.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="228"/>
-        <source>Select a repository from the dropdown first.</source>
-        <translation>Välj först ett förråd från listrutan.</translation>
-    </message>
-</context>
-<context>
-    <name>SSHAddWindow</name>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="35"/>
-        <source>ED25519 (Recommended)</source>
-        <translation>ED25519 (Rekommenderas)</translation>
+        <location filename="../../views/archive_tab.py" line="515" />
+        <location filename="../../views/archive_tab.py" line="492" />
+        <source>Refreshed archives.</source>
+        <translation>Arkiven har uppdaterats.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="36"/>
-        <source>RSA (Legacy)</source>
-        <translation>RSA (Äldre)</translation>
+        <location filename="../../views/archive_tab.py" line="528" />
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="37"/>
-        <source>ECDSA</source>
-        <translation>ECDSA</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="46"/>
-        <source>High (Recommended)</source>
-        <translation>Hög (Rekommenderas)</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="47"/>
-        <source>Medium</source>
-        <translation>Medel</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="60"/>
-        <source>Key file already exists. Not overwriting.</source>
-        <translation>Nyckelfilen finns redan. Skriver inte över.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="72"/>
-        <source>New key was copied to clipboard and written to %s.</source>
-        <translation>Ny nyckel kopierades till urklipp och skrevs till %s.</translation>
-    </message>
-    <message>
-        <location filename="../../views/dialogs/repo/ssh.py" line="74"/>
-        <source>Error during key generation.</source>
-        <translation>Fel vid nyckelgenerering.</translation>
-    </message>
-</context>
-<context>
-    <name>ScheduleTab</name>
-    <message>
-        <location filename="../../views/schedule_tab.py" line="43"/>
-        <source>Minutes</source>
-        <translation>Minuter</translation>
-    </message>
-    <message>
-        <location filename="../../views/schedule_tab.py" line="44"/>
-        <source>Hours</source>
-        <translation>Timmar</translation>
-    </message>
-    <message>
-        <location filename="../../views/schedule_tab.py" line="45"/>
-        <source>Days</source>
-        <translation>Dagar</translation>
-    </message>
-    <message>
-        <location filename="../../views/schedule_tab.py" line="46"/>
-        <source>Weeks</source>
-        <translation>Veckor</translation>
-    </message>
-</context>
-<context>
-    <name>SourceTab</name>
-    <message>
-        <location filename="../../views/source_tab.py" line="173"/>
-        <source>Choose directory to back up</source>
-        <translation>Välj mapp att säkerhetskopiera</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="173"/>
-        <source>Choose file(s) to back up</source>
-        <translation>Välj fil(er) att säkerhetskopiera</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="130"/>
-        <source>Folder</source>
-        <translation>Mapp</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="134"/>
-        <source>File</source>
-        <translation>Fil</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="102"/>
-        <source>Calculating...</source>
-        <translation>Beräknar...</translation>
-    </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="164"/>
-        <source>You don't have read access to {dir}.</source>
-        <translation>Du har inte läsåtkomst till {dir}.</translation>
-    </message>
-</context>
-<context>
-    <name>TrayMenu</name>
-    <message>
-        <location filename="../../tray_menu.py" line="42"/>
-        <source>Vorta for Borg Backup</source>
-        <translation>Vorta för Borg Backup</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="53"/>
-        <source>Cancel Backup</source>
-        <translation>Avbryt säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="56"/>
-        <source>Next Task: %s</source>
-        <translation>Nästa aktivitet: %s</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="65"/>
-        <source>Backup Now</source>
-        <translation>Säkerhetskopiera nu</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="70"/>
-        <source>Quit</source>
-        <translation>Avsluta</translation>
-    </message>
-    <message>
-        <location filename="../../tray_menu.py" line="52"/>
-        <source>Task in progress</source>
-        <translation>Åtgärd pågår</translation>
-    </message>
-</context>
-<context>
-    <name>VortaApp</name>
-    <message>
-        <location filename="../../application.py" line="129"/>
-        <source>Vorta Backup</source>
-        <translation>Vorta säkerhetskopiering</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="191"/>
-        <source>No Borg Binary Found</source>
-        <translation>Ingen Borg-binär hittades</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="192"/>
-        <source>Vorta was unable to locate a usable Borg Backup binary.</source>
-        <translation>Vorta kunde inte hitta någon användbar Borg Backup-binär.</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="229"/>
-        <source>Repository In Use</source>
-        <translation>Förråd som används</translation>
-    </message>
-    <message>
-        <location filename="../../application.py" line="231"/>
-        <source>Abort</source>
+        <location filename="../../views/archive_tab.py" line="529" />
+        <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="232"/>
-        <source>Continue</source>
-        <translation>Fortsätt</translation>
+        <location filename="../../views/partials/archive_table_model.py" line="163" />
+        <source>Scheduled</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="234"/>
-        <source>The repository at {repo_url} might be in use elsewhere.</source>
-        <translation>Förrådet på {repo_url} kanske används någon annan stans.</translation>
+        <location filename="../../views/partials/archive_table_model.py" line="165" />
+        <source>User initiated</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="235"/>
-        <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Abort or break the lock?</source>
-        <translation>Bryt bara låset om du är säker på att ingen annan Borg-process, på någon maskin, använder förrådet. Vill du avbryta eller bryta låset?</translation>
+        <source>Pruning finished.</source>
+        <translation type="vanished">Beskärning slutförd.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="243"/>
-        <source>You do not have permission to access the repository at {repo_url}. Gain access and try again.</source>
-        <translation>Du har inte behörighet att komma åt förrådet på {repo_url}. Skaffa åtkomst och försök igen.</translation>
+        <source>Choose Mount Point</source>
+        <translation type="vanished">Välj monteringspunkt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="246"/>
-        <source>No Repository Permissions</source>
-        <translation>Inga förrådsrättigheter</translation>
+        <source>Mounted successfully.</source>
+        <translation type="vanished">Monteringen lyckades.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="210"/>
-        <source>Vorta needs Full Disk Access for complete Backups</source>
-        <translation>Vorta behöver fullständig diskåtkomst för fullständiga säkerhetskopior</translation>
+        <source>Un-mounted successfully.</source>
+        <translation type="vanished">Avmonteringen lyckades.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="211"/>
-        <source>Without this, some files won't be accessible and you may end up with an incomplete backup. Please set &lt;b&gt;Full Disk Access&lt;/b&gt; permission for Vorta in &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;System Preferences &gt; Security &amp; Privacy&lt;/a&gt;.</source>
-        <translation>Utan detta kommer vissa filer inte att vara tillgängliga och det kan sluta med en ofullständig säkerhetskopia.  Ange &lt;b&gt;fullständig diskåtkomstbehörighet&lt;/b&gt; för Vorta i &lt;a href='x-apple.systempreferences:com.apple.preference.security?Privacy'&gt;Systeminställningar &gt; Säkerhet &amp; sekretess&lt;/a&gt;.</translation>
+        <source>Unmounting failed. Make sure no programs are using {}</source>
+        <translation type="vanished">Avmonteringen misslyckades. Kontrollera att inga program använder {}</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
-        <source>Profile import successful!</source>
-        <translation>Profilimport slutförd!</translation>
+        <source>Select an archive to restore first.</source>
+        <translation type="vanished">Välj först ett arkiv att återställa.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="283"/>
-        <source>Profile {} imported.</source>
-        <translation>Profil {} importerad.</translation>
+        <source>Choose Extraction Point</source>
+        <translation type="vanished">Välj plats för extrahering</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
-        <source>Failed to import profile</source>
-        <translation>Kunde inte importera profil</translation>
+        <source>Archive name cannot be blank.</source>
+        <translation type="vanished">Arkivnamnet kan inte lämnas tomt.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
-        <source>Failed to import a profile from {}:</source>
-        <translation>Kunde inte importera en profil från {}:</translation>
+        <source>An archive with this name already exists.</source>
+        <translation type="vanished">Det finns redan ett arkiv med det namnet.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="270"/>
-        <source>Consider removing or repairing this file to get rid of this message.</source>
-        <translation>Överväg att ta bort eller reparera denna fil, för att få bort detta meddelande.</translation>
+        <source>No archive selected</source>
+        <translation type="vanished">Inget arkiv valt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="295"/>
-        <source>Repo Check Failed</source>
-        <translation>Förrådskontroll misslyckades</translation>
+        <source>Confirm deletion</source>
+        <translation type="vanished">Bekräfta borttagning</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="296"/>
-        <source>Repository data check for repo %s failed</source>
-        <translation>Datakontroll för förrådet %s misslyckades</translation>
+        <source>Archive deleted.</source>
+        <translation type="vanished">Arkivet har tagits bort.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="297"/>
-        <source>Repair or recreate the repository soon to avoid missing data.</source>
-        <translation>Reparera eller omskapa förrådet snart, för att undvika att data saknas.</translation>
+        <source>Archive renamed.</source>
+        <translation type="vanished">Arkivet har bytt namn.</translation>
     </message>
-</context>
-<context>
-    <name>VortaScheduler</name>
+</context><context>
+    <name>BorgBreakJob</name>
     <message>
-        <location filename="../../scheduler.py" line="143"/>
-        <source>None scheduled</source>
-        <translation>Ej schemalagd</translation>
+        <location filename="../../borg/break_lock.py" line="7" />
+        <source>Breaking repository lock…</source>
+        <translation>Bryter låset för förrådet…</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="190"/>
-        <source>Vorta Backup</source>
-        <translation>Vorta säkerhetskopiering</translation>
+        <location filename="../../borg/break_lock.py" line="12" />
+        <source>Repository lock broken. Please redo your last action.</source>
+        <translation>Låset för förrådet har brutits. Upprepa den senaste åtgärden.</translation>
+    </message>
+</context><context>
+    <name>BorgChangePassJob</name>
+    <message>
+        <location filename="../../borg/change_passphrase.py" line="18" />
+        <source>Changing Borg passphrase…</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../scheduler.py" line="162"/>
-        <source>Starting background backup for %s.</source>
-        <translation>Starta säkerhetskopiering i bakgrunden för %s.</translation>
+        <location filename="../../borg/change_passphrase.py" line="39" />
+        <source>Passphrase changed.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>BorgCheckJob</name>
+    <message>
+        <location filename="../../borg/check.py" line="14" />
+        <source>Starting consistency check…</source>
+        <translation>Startar konsekvenskontroll…</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="184"/>
-        <source>Backup successful for %s.</source>
-        <translation>Säkerhetskopiering slutförd för %s.</translation>
+        <location filename="../../borg/check.py" line="36" />
+        <source>Check completed.</source>
+        <translation>Kontroll slutförd.</translation>
+    </message>
+</context><context>
+    <name>BorgCompactJob</name>
+    <message>
+        <location filename="../../borg/compact.py" line="32" />
+        <source>Errors during compaction. See the %1 for details.</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../scheduler.py" line="190"/>
-        <source>Error during backup creation.</source>
-        <translation>Fel vid skapande av säkerhetskopia.</translation>
+        <location filename="../../borg/compact.py" line="15" />
+        <source>Starting repository compaction...</source>
+        <translation type="unfinished" />
     </message>
-</context>
-<context>
-    <name>app</name>
     <message>
-        <location filename="../../__main__.py" line="22"/>
+        <location filename="../../borg/compact.py" line="37" />
+        <source>Compaction completed.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>BorgCreateJob</name>
+    <message>
+        <location filename="../../borg/create.py" line="46" />
+        <source>Backup finished with warnings. See the %1 for details.</source>
+        <translation>Säkerhetskopieringen slutfördes med varningar. Se %1 för mer information.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="52" />
+        <source>Backup finished.</source>
+        <translation>Säkerhetskopieringen är klar.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="59" />
+        <source>Backup started.</source>
+        <translation>Säkerhetskopieringen har startats.</translation>
+    </message>
+</context><context>
+    <name>BorgDeleteJob</name>
+    <message>
+        <location filename="../../borg/delete.py" line="12" />
+        <source>Deleting archive…</source>
+        <translation>Tar bort arkiv…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/delete.py" line="25" />
+        <source>Archive deleted.</source>
+        <translation>Arkivet har tagits bort.</translation>
+    </message>
+</context><context>
+    <name>BorgDiffJob</name>
+    <message>
+        <location filename="../../borg/diff.py" line="10" />
+        <source>Requesting differences between archives…</source>
+        <translation>Hämtar skillnader mellan arkiv…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/diff.py" line="16" />
+        <source>Obtained differences between archives.</source>
+        <translation>Skillnaderna mellan arkiven har hämtats.</translation>
+    </message>
+</context><context>
+    <name>BorgExtractJob</name>
+    <message>
+        <location filename="../../borg/extract.py" line="16" />
+        <source>Downloading files from archive…</source>
+        <translation>Hämtar filer från arkivet…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/extract.py" line="23" />
+        <source>Restored files from archive.</source>
+        <translation>Filerna har återställts från arkivet.</translation>
+    </message>
+</context><context>
+    <name>BorgInfoArchiveJob</name>
+    <message>
+        <location filename="../../borg/info_archive.py" line="10" />
+        <source>Refreshing archive…</source>
+        <translation>Uppdaterar arkiv…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/info_archive.py" line="15" />
+        <source>Refreshing archive done.</source>
+        <translation>Arkivet har uppdaterats.</translation>
+    </message>
+</context><context>
+    <name>BorgInfoRepoJob</name>
+    <message>
+        <location filename="../../borg/info_repo.py" line="11" />
+        <source>Validating existing repo…</source>
+        <translation>Validerar befintligt förråd…</translation>
+    </message>
+</context><context>
+    <name>BorgInitJob</name>
+    <message>
+        <location filename="../../borg/init.py" line="9" />
+        <source>Setting up new repo…</source>
+        <translation>Skapar nytt förråd…</translation>
+    </message>
+</context><context>
+    <name>BorgJob</name>
+    <message>
+        <location filename="../../borg/borg_job.py" line="312" />
+        <location filename="../../borg/borg_job.py" line="69" />
+        <source>Files</source>
+        <translation>Filer</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="313" />
+        <location filename="../../borg/borg_job.py" line="70" />
+        <source>Original</source>
+        <translation>Original</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="315" />
+        <location filename="../../borg/borg_job.py" line="71" />
+        <source>Deduplicated</source>
+        <translation>Deduplicerat</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="72" />
+        <source>Compressed</source>
+        <translation>Komprimerat</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="357" />
+        <source>Task started</source>
+        <translation>Uppgift startad</translation>
+    </message>
+</context><context>
+    <name>BorgListArchiveJob</name>
+    <message>
+        <location filename="../../borg/list_archive.py" line="9" />
+        <source>Getting archive content…</source>
+        <translation>Hämtar arkivinnehåll…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_archive.py" line="14" />
+        <source>Done getting archive content.</source>
+        <translation>Arkivinnehållet har hämtats.</translation>
+    </message>
+</context><context>
+    <name>BorgListRepoJob</name>
+    <message>
+        <location filename="../../borg/list_repo.py" line="12" />
+        <source>Refreshing archives…</source>
+        <translation>Uppdaterar arkiv…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_repo.py" line="17" />
+        <source>Refreshing archives done.</source>
+        <translation>Arkiven har uppdaterats.</translation>
+    </message>
+</context><context>
+    <name>BorgMountJob</name>
+    <message>
+        <location filename="../../borg/mount.py" line="14" />
+        <source>Mounting archive into folder…</source>
+        <translation>Monterar arkiv i mapp…</translation>
+    </message>
+</context><context>
+    <name>BorgPruneJob</name>
+    <message>
+        <location filename="../../borg/prune.py" line="10" />
+        <source>Pruning old archives…</source>
+        <translation>Beskär äldre arkiv…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/prune.py" line="23" />
+        <source>Pruning done.</source>
+        <translation>Beskärning slutförd.</translation>
+    </message>
+</context><context>
+    <name>BorgRenameJob</name>
+    <message>
+        <location filename="../../borg/rename.py" line="10" />
+        <source>Renaming archive…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/rename.py" line="48" />
+        <source>Archive renamed.</source>
+        <translation>Arkivet har bytt namn.</translation>
+    </message>
+</context><context>
+    <name>BorgUmountJob</name>
+    <message>
+        <location filename="../../borg/umount.py" line="11" />
+        <source>Unmounting archive…</source>
+        <translation>Avmonterar arkiv…</translation>
+    </message>
+</context><context>
+    <name>ChangeBorgPassphraseWindow</name>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19" />
+        <source>Change Passphrase</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29" />
+        <source>Repository:</source>
+        <translation>Förråd:</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33" />
+        <source>Update</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="66" />
+        <source>Unable to change the borg passphrase.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ChangeRepositoryPass</name>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="0" />
+        <source>Change the borg passphrase</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/change_passphrase.ui" line="0" />
+        <source>NOTE: Keep a backup of your passphrase in a separate location.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>CustomPresetsHelp</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="97" />
+        <source>Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the %1. To add multiple patterns at once, use the "Raw" tab.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="103" />
+        <source>documentation</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>Dialog</name>
+    <message>
+        <location filename="../../views/dialogs/exception.py" line="47" />
+        <source>You can report this issue on %1. Please search for similar issues before reporting.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/exception.py" line="51" />
+        <source>Github</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="32" />
+        <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="36" />
+        <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="21" />
+        <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
+        <translation>2048 eller 4096 för RSA, 384 eller 521 för ECDSA. Fast värde för Ed25519. %1.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="25" />
+        <source>More</source>
+        <translation>Mer</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
         <source>Fatal Error</source>
         <translation>Allvarligt fel</translation>
     </message>
     <message>
-        <location filename="../../__main__.py" line="23"/>
-        <source>Uncaught exception, please file a report with this text at
-https://github.com/borgbase/vorta/issues/new
-</source>
-        <translation>Oväntat undantag, skicka in en rapport med denna text inkluderad till
-https://github.com/borgbase/vorta/issues/new
-</translation>
-    </message>
-</context>
-<context>
-    <name>messages</name>
-    <message>
-        <location filename="../../borg/version.py" line="20"/>
-        <source>Borg binary was not found.</source>
-        <translation>Borg-binär hittades inte.</translation>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
+        <source>Vorta quit unexpectedly. </source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/version.py" line="20"/>
-        <source>logs</source>
-        <translation type="unfinished"/>
+        <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
+        <source>Crash Report:</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="140"/>
-        <source>Add a backup repository first.</source>
-        <translation>Lägg först till ett säkerhetskopieringsförråd.</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/create.py" line="82"/>
-        <source>Add some folders to back up first.</source>
-        <translation>Lägg först till någon mapp att säkerhetskopiera.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Diff Result</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/create.py" line="98"/>
-        <source>Current Wifi is not allowed.</source>
-        <translation>Aktuellt Wifi är inte tillåtet.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>nyx2.local-2018-11-16T09:49:58 </source>
+        <translation>nyx2.local-2018-11-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="115"/>
-        <source>Repo folder not mounted or moved.</source>
-        <translation>Förrådsmapp inte monterad eller flyttad.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>nyx2.local-2018-10-16T09:49:58 </source>
+        <translation>nyx2.local-2018-10-16T09:49:58 </translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="111"/>
-        <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>Kommandot före säkerhetskopiering returnerade en icke-nollavslutningskod.</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Keep folders on top when sorting</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/create.py" line="165"/>
-        <source>Starting backup...</source>
-        <translation>Startar säkerhetskopiering...</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Folders First</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/umount.py" line="27"/>
-        <source>No active Borg mounts found.</source>
-        <translation>Inga aktiva Borg-monteringar hittades.</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Set display mode of diff view</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="144"/>
-        <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
-        <translation>Din Borg-version är för gammal. &gt;=1.1.0 är obligatoriskt.</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Tree</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/create.py" line="119"/>
-        <source>Your current Borg version does not support ZStd compression.</source>
-        <translation>Din nuvarande Borg-version stödjer inte ZStd-komprimering.</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Tree, simplified</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/create.py" line="103"/>
-        <source>Not running backup over metered connection.</source>
-        <translation>Säkerhetskopiering över anslutning med datamätare körs inte.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Flat</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/info_repo.py" line="43"/>
-        <source>Please unlock your password manager.</source>
-        <translation>Lås upp din lösenordshanterare.</translation>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
+        <source>Collapse All</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="171"/>
-        <source>Your repo passphrase was stored in a password manager which is no longer available.
-Try unlinking and re-adding your repo.</source>
-        <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
-Försök avlänka och återansluta ditt förråd.</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Add patterns to exclude</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="155"/>
-        <source>Please unlock your system password manager or disable it under Settings</source>
-        <translation>Lås upp din lösenordshanterare eller avaktivera den under Inställningar</translation>
-    </message>
-</context>
-<context>
-    <name>settings</name>
-    <message>
-        <location filename="../../store/settings.py" line="10"/>
-        <source>Display notifications when background tasks fail</source>
-        <translation>Visa meddelanden när bakgrundsaktiviteter misslyckas</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Custom</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="15"/>
-        <source>Also notify about successful background tasks</source>
-        <translation>Visa meddelanden också  för lyckade bakgrundsaktiviteter</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Exclude Files/Folders</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="20"/>
-        <source>Automatically start Vorta at login</source>
-        <translation>Starta Vorta automatiskt vid inloggning</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Presets</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="25"/>
-        <source>Open main window on startup</source>
-        <translation>Öppna huvudfönstret vid programstart</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Raw</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="30"/>
-        <source>Get statistics of file/folder when added</source>
-        <translation>Hämta statistik för fil/mapp när den läggs till</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Exclude If Present</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="35"/>
-        <source>Store repository passwords in system keychain, if available.</source>
-        <translation>Lagra förrådslösenord i systemets nyckelkedja, om tillgänglig.</translation>
+        <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
+        <source>Preview</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="40"/>
-        <source>Try to replace existing permissions when mounting an archive.</source>
-        <translation>Försök att ersätta befintliga behörigheter när arkiv monteras.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Choose archives for diff</source>
+        <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="60"/>
-        <source>Check for updates on startup</source>
-        <translation>Sök efter uppdateringar vid programstart</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Select two archives</source>
+        <translation>Välj två arkiv</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="65"/>
-        <source>Include pre-release versions when checking for updates</source>
-        <translation>Inkludera förhandsversioner vid sökning efter uppdateringar</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Date</source>
+        <translation>Datum</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="73"/>
-        <source>Display background exit dialog</source>
-        <translation>Visa dialog när bakgrundsaktiviteter avslutas</translation>
-    </message>
-</context>
-<context>
-    <name>utils</name>
-    <message>
-        <location filename="../../utils.py" line="412"/>
-        <source>Passwords must be identical and greater than 8 characters long.</source>
-        <translation>Lösenord måste vara identiska och längre än 8 tecken.</translation>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Size</source>
+        <translation>Storlek</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="414"/>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Duration</source>
+        <translation>Varaktighet</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Mount Point</source>
+        <translation>Monteringspunkt</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Name</source>
+        <translation>Namn</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Cancel</source>
+        <translation>Avbryt</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
+        <source>Diff</source>
+        <translation>Diff</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <source>Choose files to extract</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <source>Archive:</source>
+        <translation>Arkiv:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
+        <source>nyx2.local-2018-11-16T09:49:58 from November 16, 2018</source>
+        <translation>nyx2.local-2018-11-16T09:49:58 från 16 november 2018</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
+        <source>Borg passphrase:</source>
+        <translation>Borg-lösenfras:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
+        <source>Enter passphrase</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
+        <source>Overwrite existing profile</source>
+        <translation>Skriv över befintlig profil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
+        <source>Overwrite existing settings</source>
+        <translation>Skriv över befintliga inställningar</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
+        <source>Include Borg passphrase in export. Use with caution!</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
+        <source>Include borg passphrase in export</source>
+        <translation>Inkludera Borg-lösenfrasen i exporten</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
+        <source>Add Profile</source>
+        <translation>Lägg till profil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
+        <source>Add Backup Profile</source>
+        <translation>Lägg till säkerhetskopieringsprofil</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
+        <source>Profile Name:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
+        <source>Generate SSH Key</source>
+        <translation>Generera SSH-nyckel</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
+        <source>Key Format:</source>
+        <translation>Nyckelformat:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
+        <source>Key Length:</source>
+        <translation>Nyckellängd:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
+        <source>Output File:</source>
+        <translation>Utdatafil:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
+        <source>Do not change this if you want SSH to automatically find the key.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Dialog</source>
+        <translation type="vanished">Dialog</translation>
+    </message>
+    <message>
+        <source>Profile Name</source>
+        <translation type="vanished">Profilnamn</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">Stäng</translation>
+    </message>
+    <message>
+        <source>and</source>
+        <translation type="vanished">och</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="vanished">OK</translation>
+    </message>
+</context><context>
+    <name>DiffResultDialog</name>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="152" />
+        <source>Copy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="160" />
+        <source>Expand recursively</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>DiffTree</name>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="793" />
+        <source>Name</source>
+        <translation>Namn</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="795" />
+        <source>Change</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="797" />
+        <source>Size</source>
+        <translation>Storlek</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="799" />
+        <source>Balance</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="870" />
+        <source>Added {}, deleted {}</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="877" />
+        <source>File</source>
+        <translation>Fil</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="879" />
+        <source>Directory</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="881" />
+        <source>Link</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="883" />
+        <source>Block device file</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="885" />
+        <source>Character device file</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="890" />
+        <source>unchanged</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="892" />
+        <source>modified</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="894" />
+        <source>removed</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/diff_result.py" line="896" />
+        <source>added</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>EditProfileWindow</name>
+    <message>
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="89" />
+        <source>Rename Profile</source>
+        <translation>Byt profilnamn</translation>
+    </message>
+</context><context>
+    <name>ExcludeDialog</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="195" />
+        <source>Copy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="201" />
+        <source>Remove</source>
+        <translation>Ta bort</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="208" />
+        <source>Toggle</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ExcludeIfPresentHelp</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="124" />
+        <source>Folders that contain the following files will be excluded from backups.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ExclusionPresetsHelp</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="106" />
+        <source>These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that are used for each preset, switch to the "Preview" tab after enabling it.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ExclusionsPreviewHelp</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="118" />
+        <source>This is a preview of the patterns that will be used to exclude files and folders from the backup.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ExistingRepoWindow</name>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="231" />
+        <source>Connect to existing Repository</source>
+        <translation>Anslut till befintligt förråd</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="234" />
+        <source>Password:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="235" />
+        <source>Enter the encryption passphrase</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="242" />
+        <source>Autofilled password from password manager.</source>
+        <translation>Lösenordet fylldes i automatiskt från lösenordshanteraren.</translation>
+    </message>
+</context><context>
+    <name>ExportWindow</name>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="30" />
+        <source>Export Profile</source>
+        <translation>Exportera profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="39" />
+        <source>Disclose your borg passphrase (No passphrase set)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="44" />
+        <source>Save profile_export</source>
+        <translation>Spara profile_export-filen</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="52" />
+        <source>Error while exporting</source>
+        <translation>Fel vid export</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="68" />
+        <source>The file {} could not be created. Please choose another location.</source>
+        <translation>Filen {} kunde inte skapas. Välj en annan plats.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="74" />
+        <source>Profile export successful!</source>
+        <translation>Profilexporten slutfördes!</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/export_window.py" line="75" />
+        <source>Profile export written to {}.</source>
+        <translation>Profilexporten sparades i {}.</translation>
+    </message>
+</context><context>
+    <name>ExtractDialog</name>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="138" />
+        <location filename="../../views/dialogs/archive/extract.py" line="110" />
+        <source>Extract</source>
+        <translation>Extrahera</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="216" />
+        <source>Copy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="222" />
+        <source>Expand recursively</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>ExtractTree</name>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="444" />
+        <source>Name</source>
+        <translation>Namn</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="446" />
+        <source>Last Modified</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="448" />
+        <source>Size</source>
+        <translation>Storlek</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="450" />
+        <source>Health</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="529" />
+        <source>File</source>
+        <translation>Fil</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="531" />
+        <source>Directory</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="533" />
+        <source>Symbolic link</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="535" />
+        <source>FIFO pipe</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="537" />
+        <source>Hard link</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="539" />
+        <source>Socket</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="541" />
+        <source>Block special file</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="543" />
+        <source>Character special file</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="550" />
+        <source>healthy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="552" />
+        <source>broken</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/archive/extract.py" line="565" />
+        <source>Linked to: {}</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>Form</name>
+    <message>
+        <location filename="../../views/repo_tab.py" line="31" />
+        <source>For simple and secure backup hosting, try %1.</source>
+        <translation>Prova %1 för enkel och säker lagring av säkerhetskopior.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="32" />
+        <source>Help on compression types</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/about_tab.py" line="29" />
+        <source>%1 to report a bug.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/about_tab.py" line="30" />
+        <source>%1 to view the docs.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/about_tab.py" line="31" />
+        <source>%1 to view Git repo.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/about_tab.py" line="32" />
+        <source>Click here</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/about_tab.py" line="33" />
+        <source>View the logs</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="106" />
+        <source>To mount archives, first install macFUSE from %1.</source>
+        <translation>För att montera arkiv installerar du först macFUSE från %1.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="107" />
+        <source>here</source>
+        <translation>härifrån</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="108" />
+        <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
+        <translation>Beskärning tar bort äldre arkiv. Du kan välja hur många arkiv per timme, dag, vecka osv. som ska behållas. Vanligtvis behåller man fler nya och färre gamla arkiv. Läs %1.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="113" />
+        <source>more</source>
+        <translation>mer</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/source_files_table_model.py" line="29" />
+        <source>Path</source>
+        <translation>Sökväg</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="41" />
+        <location filename="../../views/partials/source_files_table_model.py" line="30" />
+        <source>Size</source>
+        <translation>Storlek</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/source_files_table_model.py" line="31" />
+        <source>File Count</source>
+        <translation>Antal filer</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="40" />
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="42" />
+        <source>Duration</source>
+        <translation>Varaktighet</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="43" />
+        <source>Mount Point</source>
+        <translation>Monteringspunkt</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="44" />
+        <source>Name</source>
+        <translation>Namn</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/archive_table_model.py" line="45" />
+        <source>Trigger</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <location filename="../../assets/UI/misc_tab.ui" line="0" />
+        <source>Form</source>
+        <translation>Formulär</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <source>Source Folders and Files to Back Up:</source>
+        <translation>Källmappar och filer att säkerhetskopiera:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <source>Recalculate source size and file count</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <source>Manage Excluded Items…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <source>Add sources</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/source_tab.ui" line="0" />
+        <source>Remove the selected source</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Copy to clipboard</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Repository:</source>
+        <translation>Förråd:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Select Backup Destination</source>
+        <translation>Välj mål för säkerhetskopiering</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>SSH Key:</source>
+        <translation>SSH-nyckel:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Compression:</source>
+        <translation>Komprimering:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Encryption:</source>
+        <translation>Kryptering:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Original Size:</source>
+        <translation>Ursprunglig storlek:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Deduplicated Size:</source>
+        <translation>Deduplicerad storlek:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/repo_tab.ui" line="0" />
+        <source>Compressed Size:</source>
+        <translation>Komprimerad storlek:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>Vorta Version:</source>
+        <translation>Vorta-version:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>0.0</source>
+        <translation>0.0</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>Borg Version:</source>
+        <translation>Borg-version:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>1.1.8</source>
+        <translation>1.1.8</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>/usr/bin/borg</source>
+        <translation>/usr/bin/borg</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/about_tab.ui" line="0" />
+        <source>
+             Vorta is a cross-platform, open-source client designed to simplify the management of Borg backups.
+
+                      Copyright (C) 2018-2020 Manuel Riel and Vorta contributors (see CONTRIBUTORS.md)
+            </source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Schedule</source>
+        <translation>Schema</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Networks</source>
+        <translation>Nätverk</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Log</source>
+        <translation>Logg</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Shell Commands</source>
+        <translation>Skalkommandon</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Archives</source>
+        <translation>Arkiv</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Refresh archive list</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Check the consistency of the repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Check</source>
+        <translation>Kontrollera</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Prune the archives in this repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Prune</source>
+        <translation>Beskär</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Optimize disk space by defragmenting the repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Compact</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Recalculate selected archive's size(s)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Recalculate</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Compare two archives</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Diff</source>
+        <translation>Diff</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Extract selected archive</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Extract…</source>
+        <translation>Extrahera</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Rename selected archive</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Rename…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Delete selected archive(s)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Delete</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Prune Options and Archive Naming</source>
+        <translation>Beskärningsalternativ och arkivnamngivning</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Hourly:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Use -1 for unlimited</source>
+        <translation>Använd -1 för obegränsat.</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Daily:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Weekly:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Monthly:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Annual:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>No matter what, keep all archives of the last:</source>
+        <translation>Behåll alla arkiv från de senaste, oavsett övriga inställningar:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>24H, 1d, 52w, 12m, 1y</source>
+        <translation>24T, 1d, 52v, 12m, 1å</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Available variables: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>{hostname}-{profile_slug}-</source>
+        <translation>{hostname}-{profile_slug}-</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Prune Prefix:</source>
+        <translation>Beskärningsprefix:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
+        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/archive_tab.ui" line="0" />
+        <source>Archive Name:</source>
+        <translation>Arkivnamn:</translation>
+    </message>
+    <message>
+        <source>To mount archives, first install "FUSE for macOS" from %1.</source>
+        <translation type="vanished">För att montera arkiv installerar du först ”FUSE för macOS” %1.</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="vanished">Uppdatera</translation>
+    </message>
+    <message>
+        <source>Keep</source>
+        <translation type="vanished">Behåll</translation>
+    </message>
+    <message>
+        <source> hourly, </source>
+        <translation type="vanished"> per timme, </translation>
+    </message>
+    <message>
+        <source> daily, </source>
+        <translation type="vanished"> per dag, </translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="vanished">Typ</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="vanished">-</translation>
+    </message>
+</context><context>
+    <name>ImportWindow</name>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="25" />
+        <source>Import Profile</source>
+        <translation>Importera profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="33" />
+        <source>Enter passphrase (already loaded from the export file)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="40" />
+        <source>Enter passphrase (already loaded from your keyring)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="48" />
+        <source>(Name is not used yet)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="55" />
+        <source>Error while importing</source>
+        <translation>Fel vid import</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="72" />
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error: 
+ {0} 
+ {1}</source>
+        <translation>Uppgraderingen av schemat misslyckades. Skicka en felrapport via länken på fliken Inställningar och ange följande fel:
+ {0}
+ {1}</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="80" />
+        <source>Newer profile_export export files cannot be used on older versions.</source>
+        <translation>Nyare exportfiler av typen profile_export kan inte användas med äldre versioner.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="85" />
+        <source>Cannot read profile_export export file due to permission error.</source>
+        <translation>Det går inte att läsa exportfilen av typen profile_export på grund av ett behörighetsfel.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/profile/import_window.py" line="88" />
+        <source>Profile export file not found.</source>
+        <translation>Profilexportfilen hittades inte.</translation>
+    </message>
+    <message>
+        <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
+ {0}
+ {1}</source>
+        <translation type="vanished">Uppgraderingen av schemat misslyckades. Skicka en felrapport via länken på fliken Inställningar och ange följande fel:
+ {0}
+ {1}</translation>
+    </message>
+</context><context>
+    <name>KWallet</name>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="123" />
+        <source>Create Wallet</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="124" />
+        <source>Enter a name for the new wallet:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="128" />
+        <source>Could not determine a valid wallet name. Aborting unlock attempt.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="140" />
+        <source>Failed to open wallet. Aborting unlock attempt.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>LogPage</name>
+    <message>
+        <location filename="../../views/log_page.py" line="41" />
+        <source>View the logs</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/event_log_table_model.py" line="27" />
+        <source>Time</source>
+        <translation>Tid</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/event_log_table_model.py" line="28" />
+        <source>Category</source>
+        <translation>Kategori</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/event_log_table_model.py" line="29" />
+        <source>Subcommand</source>
+        <translation>Underkommando</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/event_log_table_model.py" line="30" />
+        <source>Repository</source>
+        <translation>Förråd</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/event_log_table_model.py" line="31" />
+        <source>Returncode</source>
+        <translation>Returkod</translation>
+    </message>
+</context><context>
+    <name>MainWindow</name>
+    <message>
+        <location filename="../../views/main_window.py" line="57" />
+        <source>Start Backup</source>
+        <translation>Starta säkerhetskopiering</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="113" />
+        <source>Create new profile</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="114" />
+        <source>Import from file…</source>
+        <translation>Importera från fil…</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="230" />
+        <source>Are you sure you want to delete profile '{}'?</source>
+        <translation>Vill du verkligen ta bort profilen "{}"?</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="233" />
+        <source>Confirm deletion</source>
+        <translation>Bekräfta borttagning</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="247" />
+        <source>Cannot delete the last profile.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="278" />
+        <source>Profile import successful!</source>
+        <translation>Profilimport slutförd!</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="279" />
+        <source>Profile {} imported.</source>
+        <translation>Profil {} importerad.</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="286" />
+        <source>Load profile</source>
+        <translation>Läs in profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="288" />
+        <source>JSON (*.json);;All files (*)</source>
+        <translation>JSON (*.json);;Alla filer (*)</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="294" />
+        <source>Failed to import profile</source>
+        <translation>Kunde inte importera profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="348" />
+        <source>Task cancelled</source>
+        <translation>Uppgift avbruten</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="364" />
+        <source>Should Vorta continue to run in the background?</source>
+        <translation>Ska Vorta fortsätta köras i bakgrunden?</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="374" />
+        <source>Quit</source>
+        <translation>Avsluta</translation>
+    </message>
+    <message>
+        <location filename="../../views/main_window.py" line="375" />
+        <source>Don't show this again</source>
+        <translation>Visa inte detta igen</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <location filename="../../views/dialogs/profile/profile_add_edit.py" line="49" />
+        <source>Settings</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>MainWindow</source>
+        <translation>Huvudfönster</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Current Profile:</source>
+        <translation>Aktuell profil:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Delete current profile</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Rename current profile</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Export current profile</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source> Settings / About</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>About</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Repository</source>
+        <translation>Förråd</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Sources</source>
+        <translation>Källor</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Schedule</source>
+        <translation>Schema</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Archives</source>
+        <translation>Arkiv</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Cancel</source>
+        <translation>Avbryt</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Latest</source>
+        <translation>Senaste</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/main_window.ui" line="0" />
+        <source>Reset App</source>
+        <translation>Återställ programmet</translation>
+    </message>
+    <message>
+        <source>Misc</source>
+        <translation type="vanished">Inställningar</translation>
+    </message>
+</context><context>
+    <name>NetworksPage</name>
+    <message>
+        <location filename="../../assets/UI/networks_page.ui" line="0" />
+        <source>Networks</source>
+        <translation>Nätverk</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/networks_page.ui" line="0" />
+        <source>Allowed Networks:</source>
+        <translation>Tillåtna nätverk:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/networks_page.ui" line="0" />
+        <source>Select All</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/networks_page.ui" line="0" />
+        <source>Select None</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/networks_page.ui" line="0" />
+        <source>Run backups over metered networks</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>PasswordInput</name>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="145" />
+        <source>Passwords must be identical and at least {0} characters long.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="151" />
         <source>Passwords must be identical.</source>
         <translation>Lösenorden måste vara identiska.</translation>
     </message>
     <message>
-        <location filename="../../utils.py" line="416"/>
-        <source>Passwords must be greater than 8 characters long.</source>
-        <translation>Lösenord måste vara längre än 8 tecken.</translation>
+        <location filename="../../views/partials/password_input.py" line="155" />
+        <source>Passwords must be at least {0} characters long.</source>
+        <translation type="unfinished" />
     </message>
-</context>
-</TS>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="87" />
+        <source>Enter passphrase:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="88" />
+        <source>Confirm passphrase:</source>
+        <translation>Bekräfta lösenfras:</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="91" />
+        <source>Enter new encryption passphrase</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="92" />
+        <source>Confirm new encryption passphrase</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>PasswordLineEdit</name>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="56" />
+        <location filename="../../views/partials/password_input.py" line="26" />
+        <source>Show password</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/password_input.py" line="52" />
+        <source>Hide password</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>RawExclusionsHelp</name>
+    <message>
+        <location filename="../../views/dialogs/archive/exclude.py" line="112" />
+        <source>You can use this field to add multiple patterns at once. Each pattern should be on a separate line.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>RepoCheckJob</name>
+    <message>
+        <location filename="../../borg/check.py" line="30" />
+        <source>Repo check failed. See the %1 for details.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/change_passphrase.py" line="33" />
+        <source>Passphrase change failed. See the %1 for details.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>RepoTab</name>
+    <message>
+        <location filename="../../views/repo_tab.py" line="41" />
+        <source>New Repository…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="42" />
+        <source>Existing Repository…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="49" />
+        <source>Unlink Repository…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="52" />
+        <source>Change Passphrase…</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="63" />
+        <source>LZ4 (modern, default)</source>
+        <translation>LZ4 (modern, standard)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="64" />
+        <source>Zstandard Level 3 (modern)</source>
+        <translation>Zstandard nivå 3 (modern)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="65" />
+        <source>Zstandard Level 8 (modern)</source>
+        <translation>Zstandard nivå 8 (modern)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="71" />
+        <source>ZLIB Level 6 (auto, legacy)</source>
+        <translation>ZLIB nivå 6 (auto, äldre)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="72" />
+        <source>LZMA Level 6 (auto, legacy)</source>
+        <translation>LZMA nivå 6 (auto, äldre)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="73" />
+        <source>No Compression</source>
+        <translation>Ingen komprimering</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="115" />
+        <source>No repository selected</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="145" />
+        <source>N/A</source>
+        <comment>Not available.</comment>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="146" />
+        <source>Select a repository first.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="147" />
+        <source>Try refreshing the metadata of any archive.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="211" />
+        <source>Automatically choose SSH Key (default)</source>
+        <translation>Välj SSH-nyckel automatiskt (standard)</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="254" />
+        <source>Public Key Copied to Clipboard</source>
+        <translation>Offentlig nyckel kopierad till urklipp</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="256" />
+        <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
+        <translation>Den valda offentliga SSH-nyckeln kopierades till urklipp. Använd den till att ställa in behörigheter för fjärrförråd.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="262" />
+        <source>Could not find public key.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="264" />
+        <source>Select a public key from the dropdown first.</source>
+        <translation>Välj först en offentlig nyckel i listrutan.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="334" />
+        <source>Repository was Unlinked</source>
+        <translation>Förrådet har kopplats bort</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="335" />
+        <source>You can always connect it again later.</source>
+        <translation>Du kan alltid återansluta det senare.</translation>
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="337" />
+        <source>Repository was Detached</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="338" />
+        <source>The repository remains available for other profiles.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="370" />
+        <source>Invalid Encryption Type</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="371" />
+        <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="390" />
+        <source>Passphrase Changed</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="391" />
+        <source>The borg passphrase was successfully changed.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="394" />
+        <source>Passphrase Change Failed</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/repo_tab.py" line="395" />
+        <source>Unable to change the repository passphrase. Please try again.</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>RepoWindow</name>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="57" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="38" />
+        <source>Add</source>
+        <translation>Lägg till</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="71" />
+        <source>Repository Path:</source>
+        <translation>Förrådets sökväg:</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="74" />
+        <source>Choose Location of Borg Repository</source>
+        <translation>Välj plats för Borg-förrådet</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="83" />
+        <source>Repository URL:</source>
+        <translation>Förrådets URL:</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="96" />
+        <source>Unable to add your repository.</source>
+        <translation>Det gick inte att lägga till förrådet.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="106" />
+        <source>Please enter a valid repo URL or select a local path.</source>
+        <translation>Ange en giltig förråds-URL eller välj en lokal sökväg.</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="110" />
+        <source>Repository name must be less than 65 characters.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/repo_add.py" line="114" />
+        <source>This repo has already been added.</source>
+        <translation>Detta förråd har redan lagts till.</translation>
+    </message>
+</context><context>
+    <name>SSHAddWindow</name>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="50" />
+        <location filename="../../views/dialogs/repo/ssh.py" line="33" />
+        <source>Generate and copy to clipboard</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="65" />
+        <source>ED25519 (Recommended)</source>
+        <translation>ED25519 (rekommenderas)</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="66" />
+        <source>RSA (Legacy)</source>
+        <translation>RSA (äldre)</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="67" />
+        <source>ECDSA</source>
+        <translation>ECDSA</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="76" />
+        <source>High (Recommended)</source>
+        <translation>Hög (rekommenderas)</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="77" />
+        <source>Medium</source>
+        <translation>Medel</translation>
+    </message>
+    <message>
+        <location filename="../../views/dialogs/repo/ssh.py" line="90" />
+        <source>Key file already exists. Not overwriting.</source>
+        <translation>Nyckelfilen finns redan. Skriver inte över.</translation>
+    </message>
+    <message>
+        <source>Error during key generation.</source>
+        <translation type="vanished">Fel vid nyckelgenerering.</translation>
+    </message>
+</context><context>
+    <name>SchedulePage</name>
+    <message>
+        <location filename="../../views/schedule_page.py" line="29" />
+        <source>Minutes</source>
+        <translation>Minuter</translation>
+    </message>
+    <message>
+        <location filename="../../views/schedule_page.py" line="30" />
+        <source>Hours</source>
+        <translation>Timmar</translation>
+    </message>
+    <message>
+        <location filename="../../views/schedule_page.py" line="31" />
+        <source>Days</source>
+        <translation>Dagar</translation>
+    </message>
+    <message>
+        <location filename="../../views/schedule_page.py" line="32" />
+        <source>Weeks</source>
+        <translation>Veckor</translation>
+    </message>
+    <message>
+        <location filename="../../views/schedule_page.py" line="117" />
+        <source>Paused until %s</source>
+        <translation>Pausad till %s</translation>
+    </message>
+    <message>
+        <location filename="../../views/schedule_page.py" line="119" />
+        <source>Run a manual backup first</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <location filename="../../views/schedule_page.py" line="121" />
+        <source>None scheduled</source>
+        <translation>Inget schemalagt</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Schedule</source>
+        <translation>Schema</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Backup schedule:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Manual only</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Backup periodically</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Interval:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Backup daily</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Time:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Missed backups:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Run missed backups on startup or wakeup</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Autopruning:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Prune after each backup</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Validation:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Validate repository data</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>weeks</source>
+        <translation>veckor</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Compaction:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Compact repository</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_page.ui" line="0" />
+        <source>Next Backup:</source>
+        <translation>Nästa säkerhetskopiering:</translation>
+    </message>
+</context><context>
+    <name>ShellCommandsPage</name>
+    <message>
+        <location filename="../../views/shell_commands_page.py" line="31" />
+        <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/shell_commands_page.py" line="43" />
+        <source>Extra arguments for %1. Possible options are listed in %2.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/shell_commands_page.py" line="47" />
+        <source>the borg documentation</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>Shell Commands</source>
+        <translation>Skalkommandon</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>Pre-backup:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>echo "Before backup of $repo_url"</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>Post-backup:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>echo "Backup of $repo_url ended with $returncode."</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
+        <source>--dry-run --noflags</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>SourceTab</name>
+    <message>
+        <location filename="../../views/source_tab.py" line="94" />
+        <source>Copy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="97" />
+        <source>Remove</source>
+        <translation>Ta bort</translation>
+    </message>
+    <message>
+        <location filename="../../views/source_tab.py" line="251" />
+        <source>Total Size: {size}, {count} files</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/source_files_table_model.py" line="34" />
+        <source>Calculating…</source>
+        <translation>Beräknar…</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation type="vanished">Mapp</translation>
+    </message>
+</context><context>
+    <name>TrayMenu</name>
+    <message>
+        <location filename="../../tray_menu.py" line="49" />
+        <source>Vorta for Borg Backup</source>
+        <translation>Vorta för Borg Backup</translation>
+    </message>
+    <message>
+        <location filename="../../tray_menu.py" line="59" />
+        <source>Task in progress</source>
+        <translation>Uppgift pågår</translation>
+    </message>
+    <message>
+        <location filename="../../tray_menu.py" line="60" />
+        <source>Cancel Backup</source>
+        <translation>Avbryt säkerhetskopiering</translation>
+    </message>
+    <message>
+        <location filename="../../tray_menu.py" line="63" />
+        <source>Next Task: %s</source>
+        <translation>Nästa uppgift: %s</translation>
+    </message>
+    <message>
+        <location filename="../../tray_menu.py" line="72" />
+        <location filename="../../tray_menu.py" line="66" />
+        <source>Backup Now</source>
+        <translation>Säkerhetskopiera nu</translation>
+    </message>
+    <message>
+        <location filename="../../tray_menu.py" line="77" />
+        <source>Quit</source>
+        <translation>Avsluta</translation>
+    </message>
+</context><context>
+    <name>VortaApp</name>
+    <message>
+        <location filename="../../application.py" line="357" />
+        <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="137" />
+        <source>Vorta Backup</source>
+        <translation>Vorta-säkerhetskopiering</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="200" />
+        <source>No Borg Binary Found</source>
+        <translation>Ingen Borg-binärfil hittades</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="201" />
+        <source>Vorta was unable to locate a usable Borg Backup binary.</source>
+        <translation>Vorta kunde inte hitta någon användbar Borg Backup-binärfil.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="223" />
+        <source>Vorta needs Full Disk Access for complete Backups</source>
+        <translation>Vorta behöver fullständig diskåtkomst för fullständiga säkerhetskopior</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="224" />
+        <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="230" />
+        <source>Full Disk Access</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="233" />
+        <source>System Preferences &gt; Security &amp; Privacy</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="251" />
+        <source>Repository In Use</source>
+        <translation>Förrådet används</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="253" />
+        <source>Cancel</source>
+        <translation>Avbryt</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="254" />
+        <source>Break the lock</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="258" />
+        <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="274" />
+        <source>No Repository Permissions</source>
+        <translation>Ingen behörighet till förrådet</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="304" />
+        <source>Failed to import profile</source>
+        <translation>Kunde inte importera profil</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="306" />
+        <source>Failed to import a profile from {}:</source>
+        <translation>Kunde inte importera en profil från {}:</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="310" />
+        <source>Consider removing or repairing this file to get rid of this message.</source>
+        <translation>Överväg att ta bort eller reparera denna fil, för att få bort detta meddelande.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="317" />
+        <source>Profile import successful!</source>
+        <translation>Profilimport slutförd!</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="318" />
+        <source>Profile {} imported.</source>
+        <translation>Profil {} importerad.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="351" />
+        <source>Repo Check Failed</source>
+        <translation>Förrådskontroll misslyckades</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="364" />
+        <source>Repository data check for repo was killed by signal %s.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="365" />
+        <source>The process running the check job got a kill signal. Try again.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="368" />
+        <source>Repository data check for repo %s failed. Error code %s</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="373" />
+        <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Repository data check for repo %s failed</source>
+        <translation type="vanished">Datakontroll för förrådet %s misslyckades</translation>
+    </message>
+</context><context>
+    <name>VortaFileDialog</name>
+    <message>
+        <location filename="../../filedialog.py" line="36" />
+        <source>Show hidden files</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../filedialog.py" line="117" />
+        <location filename="../../filedialog.py" line="103" />
+        <source>Permission Denied</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>VortaScheduler</name>
+    <message>
+        <location filename="../../scheduler.py" line="504" />
+        <source>None scheduled</source>
+        <translation>Inget schemalagt</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler.py" line="688" />
+        <location filename="../../scheduler.py" line="618" />
+        <location filename="../../scheduler.py" line="607" />
+        <location filename="../../scheduler.py" line="589" />
+        <location filename="../../scheduler.py" line="570" />
+        <source>Vorta Backup</source>
+        <translation>Vorta-säkerhetskopiering</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler.py" line="571" />
+        <source>Starting background backup for %s.</source>
+        <translation>Startar säkerhetskopiering i bakgrunden för %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler.py" line="608" />
+        <source>Backup successful for %s.</source>
+        <translation>Säkerhetskopieringen för %s slutfördes.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler.py" line="619" />
+        <source>Error during backup creation for %s.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Error during backup creation.</source>
+        <translation type="vanished">Fel vid skapande av säkerhetskopia.</translation>
+    </message>
+</context><context>
+    <name>messages</name>
+    <message>
+        <location filename="../../application.py" line="127" />
+        <source>Running Pre-backup Command...</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/change_passphrase.py" line="31" />
+        <location filename="../../borg/compact.py" line="30" />
+        <location filename="../../borg/create.py" line="44" />
+        <location filename="../../borg/check.py" line="28" />
+        <location filename="../../application.py" line="358" />
+        <source>logs</source>
+        <translation>loggarna</translation>
+    </message>
+    <message>
+        <location filename="../../borg/umount.py" line="29" />
+        <source>No active Borg mounts found.</source>
+        <translation>Inga aktiva Borg-monteringar hittades.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/umount.py" line="32" />
+        <source>Mount point not active.</source>
+        <translation>Monteringspunkten är inte aktiv.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/version.py" line="21" />
+        <location filename="../../borg/borg_job.py" line="144" />
+        <source>Borg binary was not found.</source>
+        <translation>Borg-binärfilen hittades inte.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="148" />
+        <source>Select a backup repository first.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="152" />
+        <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
+        <translation>Din Borg-version är för gammal. Version 1.1.0 eller senare krävs.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="163" />
+        <source>Please unlock your system password manager or disable it under Settings</source>
+        <translation>Lås upp systemets lösenordshanterare eller inaktivera den under Inställningar</translation>
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="183" />
+        <source>Your repo passphrase was stored in a password manager which is no longer available.
+Try unlinking and re-adding your repo.</source>
+        <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
+Försök att koppla bort och lägga till förrådet igen.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="112" />
+        <source>Add some folders to back up first.</source>
+        <translation>Lägg först till någon mapp att säkerhetskopiera.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="124" />
+        <source>Current Wifi is not allowed.</source>
+        <translation>Det aktuella Wi-Fi-nätverket är inte tillåtet.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="133" />
+        <source>Not running backup over metered connection.</source>
+        <translation>Säkerhetskopiering körs inte över en databegränsad anslutning.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="142" />
+        <source>Pre-backup command returned non-zero exit code.</source>
+        <translation>Kommandot före säkerhetskopieringen returnerade en avslutningskod som inte är noll.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="146" />
+        <source>Repo folder not mounted or moved.</source>
+        <translation>Förrådsmappen är inte monterad eller har flyttats.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="150" />
+        <source>Your current Borg version does not support ZStd compression.</source>
+        <translation>Din nuvarande Borg-version stödjer inte ZStd-komprimering.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/create.py" line="216" />
+        <source>Starting backup…</source>
+        <translation>Startar säkerhetskopiering…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/info_repo.py" line="48" />
+        <source>Please unlock your password manager.</source>
+        <translation>Lås upp din lösenordshanterare.</translation>
+    </message>
+</context><context>
+    <name>settings</name>
+    <message>
+        <location filename="../../store/settings.py" line="24" />
+        <source>Notifications</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="25" />
+        <source>Startup</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="26" />
+        <source>Information</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="27" />
+        <source>Security</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="28" />
+        <source>Updates</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="37" />
+        <source>Display notifications when background tasks fail</source>
+        <translation>Visa aviseringar när bakgrundsuppgifter misslyckas</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="44" />
+        <source>Notify about successful background tasks</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="51" />
+        <source>Automatically start Vorta at login</source>
+        <translation>Starta Vorta automatiskt vid inloggning</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="52" />
+        <source>Add Vorta to the systems autostart list</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="59" />
+        <source>Show main window of Vorta on launch</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="60" />
+        <source>Make Vorta appear on screen instead of minimizing to system tray</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="70" />
+        <source>Get statistics of file/folder when added</source>
+        <translation>Hämta statistik för fil/mapp när den läggs till</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="71" />
+        <source>When adding a new source, calculate its size and the number of files.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="80" />
+        <source>Use the same unit of measurement for archive sizes</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="81" />
+        <source>When enabled, all archive sizes will use the same unit of measurement, such as  KB or MB. This can make archive sizes easier to compare.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="92" />
+        <source>Store repository passwords in system keychain, if available</source>
+        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig.</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="93" />
+        <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="102" />
+        <source>Try to replace file permissions when mounting an archive</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="106" />
+        <source>Set owner to current user and umask to 0277</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="158" />
+        <source>Check for updates on startup</source>
+        <translation>Sök efter uppdateringar vid programstart</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="159" />
+        <source>Uses Sparkle to find new updates published on Github.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="166" />
+        <source>Include pre-release versions when checking for updates</source>
+        <translation>Inkludera förhandsversioner vid sökning efter uppdateringar</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="167" />
+        <source>Needs Vorta restart to apply.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="174" />
+        <source>Check for Full Disk Access on startup</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="178" />
+        <source>Alerts user when full disk access permission has not been provided</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="189" />
+        <source>If the system tray isn't available, ask whether to continue in the background on exit</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>utils</name>
+    <message>
+        <location filename="../../keyring/abc.py" line="42" />
+        <source>Storing password in your password manager.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../keyring/abc.py" line="44" />
+        <source>Saving password with Vorta settings.</source>
+        <translation type="unfinished" />
+    </message>
+</context></TS>

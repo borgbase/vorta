@@ -58,7 +58,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTableWidget" name="sourceFilesWidget">
+       <widget class="QTableView" name="sourceFilesWidget">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -71,9 +71,9 @@
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
         </property>
-        <attribute name="horizontalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
         <attribute name="horizontalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
@@ -83,21 +83,6 @@
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
-        <column>
-         <property name="text">
-          <string>Path</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Size</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>File Count</string>
-         </property>
-        </column>
        </widget>
       </item>
       <item>

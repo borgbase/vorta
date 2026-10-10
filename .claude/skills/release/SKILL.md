@@ -12,7 +12,7 @@ Guide the user through all release steps interactively. Confirm before each dest
 Before starting, verify the repository is ready:
 
 ```bash
-git status  # Must be clean, on master branch
+make release-preflight  # Clean tree, no staged changes, on master
 ```
 
 If there are uncommitted changes, stop and ask the user to resolve them first.
@@ -32,17 +32,21 @@ __version__ = "X.Y.Z"  # New version
 
 ### 2.3 Update translations (optional)
 
-Note: Use `command op` to bypass shell function issues with 1Password CLI.
-
 ```bash
-command op run -- make translations-update
+make translations-from-source  # extract strings, merge into every .ts
+make translations-to-qm        # compile .qm files
 ```
 
-If this fails (e.g., 1Password not configured), ask user if they want to skip or fix it.
+This runs `pylupdate6` locally; no 1Password needed. New strings arrive as
+`type="unfinished"` — use `/translate review <lang>` to fill them in, or ship them
+untranslated (they fall back to English).
 
 ### 2.4 Update metadata and create commit + tag
 
-Note: `make bump-version` has a preflight check that requires a clean tree, but we've already edited `_version.py`. Perform the steps manually instead:
+Note: there is no `make bump-version` target — these steps live here instead.
+
+**Important:** add a *new* `<release>` entry at the top of `<releases>`. Do not
+rewrite the existing ones; the version history is consumed by AppStream/Flatpak.
 
 1. Update appdata.xml with new version and today's date:
 ```bash
@@ -118,14 +122,18 @@ uv run twine upload dist/vorta-X.Y.Z.tar.gz
 
 ### 7.1 Trigger both architecture builds
 
-Default Borg version: 1.4.3 (ask user if they want different)
+Default Borg version: 1.4.4 (ask user if they want different)
+
+There is no `branch` input — dispatch against the tag with `--ref` so the DMG is
+built from exactly what was tagged. Runner choices are `macos-26`, `macos-26-intel`,
+`macos-15`, `macos-15-intel`.
 
 ```bash
-# ARM build (Apple Silicon) - uses macos-14
-gh workflow run build-macos.yml -f branch=master -f macos_version=macos-14 -f borg_version=1.4.3
+# ARM build (Apple Silicon)
+gh workflow run build-macos.yml --ref vX.Y.Z -f macos_version=macos-15 -f borg_version=1.4.4
 
-# Intel build - uses macos-15-intel (x86_64 runner)
-gh workflow run build-macos.yml -f branch=master -f macos_version=macos-15-intel -f borg_version=1.4.3
+# Intel build (x86_64 runner)
+gh workflow run build-macos.yml --ref vX.Y.Z -f macos_version=macos-15-intel -f borg_version=1.4.4
 ```
 
 ### 7.2 Wait for builds to complete
