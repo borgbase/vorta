@@ -14,7 +14,7 @@ from vorta import config
 logger = logging.getLogger()
 
 
-def init_logger(background=False):
+def init_logger(background: bool = False) -> None:
     logger.setLevel(logging.DEBUG)
     logging.getLogger('peewee').setLevel(logging.INFO)
     logging.getLogger('PyQt6').setLevel(logging.INFO)
