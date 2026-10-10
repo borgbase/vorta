@@ -26,6 +26,7 @@ def get_misc_settings() -> list[dict[str, Any]]:
     information = QT_TRANSLATE_NOOP('settings', 'Information')
     security = QT_TRANSLATE_NOOP('settings', 'Security')
     updates = QT_TRANSLATE_NOOP('settings', 'Updates')
+    logs = QT_TRANSLATE_NOOP('settings', 'Logging')
 
     # Default settings for all platforms.
     settings: list[dict[str, Any]] = [
@@ -104,6 +105,16 @@ def get_misc_settings() -> list[dict[str, Any]]:
                 'Try to replace file permissions when mounting an archive',
             ),
             'tooltip': QT_TRANSLATE_NOOP('settings', 'Set owner to current user and umask to 0277'),
+        },
+        {
+            'key': 'enable_file_logging',
+            'value': True,
+            'type': 'checkbox',
+            'group': logs,
+            'label': QT_TRANSLATE_NOOP('settings', 'Enable logging to file'),
+            'tooltip': QT_TRANSLATE_NOOP(
+                'settings', 'When disabled, logs are only written to the console (e.g. journald when run via systemd).'
+            ),
         },
         {
             'key': 'previous_profile_id',

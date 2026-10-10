@@ -11,6 +11,7 @@ from playhouse import signals
 
 from vorta import config
 from vorta.autostart import open_app_at_startup
+from vorta.log import set_file_logging
 
 from .migrations import run_migrations
 from .models import (
@@ -41,6 +42,13 @@ def setup_autostart(model_class: type, instance: SettingsModel, created: bool) -
         open_app_at_startup(instance.value)
 
 
+@signals.post_save(sender=SettingsModel)
+def setup_file_logging(model_class: type, instance: SettingsModel, created: bool) -> None:
+    # Also runs at startup, since init_db() saves every setting.
+    if instance.key == 'enable_file_logging':
+        set_file_logging(bool(instance.value))
+
+
 def cleanup_db() -> None:
     # Clean up database
     DB.execute_sql("VACUUM")
@@ -56,6 +64,20 @@ def recover_interrupted_jobs() -> None:
         ).where(JobModel.status == JobModel.Status.RUNNING.value).execute()
     except pw.PeeweeException:
         logger.warning('Could not recover interrupted jobs.', exc_info=True)
+
+
+def file_logging_enabled(con: pw.SqliteDatabase) -> bool:
+    """Read the `enable_file_logging` setting before init_db(), so the logger is set up correctly from the start."""
+    if not os.path.exists(con.database):  # first start: let init_db() create the file with the right umask
+        return True
+    try:
+        with con.connection_context(), con.bind_ctx([SettingsModel]):
+            enabled = (
+                SettingsModel.select(SettingsModel.value).where(SettingsModel.key == 'enable_file_logging').scalar()
+            )
+    except pw.PeeweeException:  # settings table not created yet
+        return True
+    return enabled is None or bool(enabled)
 
 
 def init_db(con: pw.SqliteDatabase | None = None) -> None:

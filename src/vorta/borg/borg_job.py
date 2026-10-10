@@ -30,6 +30,27 @@ logger = logging.getLogger(__name__)
 FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
+TRACEBACK_HEADER = 'Traceback (most recent call last):'
+
+
+def summarize_traceback(message: str) -> str:
+    """
+    Borg logs unexpected errors as a full Python traceback, followed by system info.
+    Return only the line with the exception, e.g. `PermissionError: [Errno 13] Permission denied: '/repo'`,
+    so it can be shown to the user. Other messages are returned unchanged.
+    """
+    if not message.startswith(TRACEBACK_HEADER):
+        return message
+
+    # With chained exceptions, the last traceback has the exception that was raised in the end.
+    last_traceback = message.rsplit(TRACEBACK_HEADER, 1)[1]
+    for line in last_traceback.splitlines():
+        # The lines of the stack frames are indented, the exception line is not.
+        if line.strip() and not line[0].isspace():
+            return line
+    return message
+
+
 """
 All methods in this class must be thread safe. Particularly,
 I strongly unadvised global variable and class variables.
@@ -285,6 +306,7 @@ class BorgJob(JobInterface):
                         parsed = json.loads(line)
 
                         if parsed['type'] == 'log_message':
+                            message = summarize_traceback(parsed['message'])
                             context = {
                                 'msgid': parsed.get('msgid'),
                                 'message': parsed.get('message', ''),
@@ -293,14 +315,14 @@ class BorgJob(JobInterface):
                                 'cmd': self.params['cmd'][1],
                             }
                             self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {parsed["message"]}', context
+                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
                             )
                             level_int = getattr(logging, parsed["levelname"])
                             logger.log(level_int, parsed["message"])
 
                             if level_int >= logging.WARNING:
                                 # Append log to list of error messages
-                                error_messages.append((level_int, parsed["message"]))
+                                error_messages.append((level_int, message))
 
                         elif parsed['type'] == 'file_status':
                             self.app.backup_log_event.emit(
