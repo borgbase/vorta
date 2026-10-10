@@ -167,6 +167,25 @@ class BackupProfileModel(BaseModel):
 
         return excludes
 
+    def get_exclude_if_present_files(self) -> list[str]:
+        """
+        Return the enabled 'exclude if present' file names.
+
+        Each line is stored as '[x] name' (enabled) or '[] name' (disabled). Profiles saved
+        before v0.10.0 have plain names without a prefix. Those were all active back then,
+        so they count as enabled, the same as in the exclude dialog.
+        """
+        files = []
+        for line in str(self.exclude_if_present or '').split('\n'):
+            line = line.strip()
+            if line.startswith('[]'):
+                continue
+            if line.startswith('[x]'):
+                line = line[3:].strip()
+            if line:
+                files.append(line)
+        return files
+
     class Meta:
         database = DB
 
