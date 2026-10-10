@@ -62,29 +62,27 @@ def test_no_log_file_when_disabled(log_dir):
 
 def test_console_logging_in_background(log_dir):
     """In background mode, logs go to the console while file logging is off, so they are not lost."""
-    handlers = vorta.log.logger.handlers
     vorta.log.init_logger(background=True)
-    assert vorta.log.file_handler in handlers
-    assert vorta.log.console_handler not in handlers
+    assert vorta.log.file_handler in vorta.log.logger.handlers
+    assert vorta.log.console_handler not in vorta.log.logger.handlers
 
     vorta.log.set_file_logging(False)
-    assert vorta.log.file_handler not in handlers
-    assert vorta.log.console_handler in handlers
+    assert vorta.log.file_handler not in vorta.log.logger.handlers
+    assert vorta.log.console_handler in vorta.log.logger.handlers
 
     vorta.log.set_file_logging(True)
-    assert vorta.log.file_handler in handlers
-    assert vorta.log.console_handler not in handlers
+    assert vorta.log.file_handler in vorta.log.logger.handlers
+    assert vorta.log.console_handler not in vorta.log.logger.handlers
 
 
 def test_console_logging_in_foreground(log_dir):
-    handlers = vorta.log.logger.handlers
     vorta.log.init_logger(background=False, log_to_file=False)
-    assert vorta.log.file_handler not in handlers
-    assert vorta.log.console_handler in handlers
+    assert vorta.log.file_handler not in vorta.log.logger.handlers
+    assert vorta.log.console_handler in vorta.log.logger.handlers
 
     vorta.log.set_file_logging(True)
-    assert vorta.log.file_handler in handlers
-    assert vorta.log.console_handler in handlers
+    assert vorta.log.file_handler in vorta.log.logger.handlers
+    assert vorta.log.console_handler in vorta.log.logger.handlers
 
 
 def test_file_logging_enabled(monkeypatch, tmp_path):
