@@ -2,6 +2,7 @@
 This file contains tests for the Archive tab to test the various archive related borg commands.
 """
 
+import subprocess
 import sys
 from collections import namedtuple
 
@@ -13,6 +14,7 @@ import vorta.borg
 import vorta.utils
 import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
+from vorta.borg.extract import include_pattern
 from vorta.store.models import ArchiveModel
 
 
@@ -110,6 +112,36 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, a
     qtbot.waitUntil(lambda: 'Restored files from archive.' in main.progressText.text(), **pytest._wait_defaults)
 
     assert [item.basename for item in tmpdir.listdir()] == ['private' if sys.platform == 'darwin' else 'tmp']
+
+
+def test_extract_file_with_line_break_in_name(tmp_path):
+    """Borg can restore a selected file whose name contains a line break (#2568)."""
+    src = tmp_path / 'src'
+    src.mkdir()
+    name = 'two\nlines.txt'
+    (src / name).write_text('test')
+    (src / 'other.txt').write_text('test')
+
+    repo = tmp_path / 'repo'
+    if vorta.utils.borg_compat.check('V2'):
+        subprocess.run(['borg', '-r', str(repo), 'rcreate', '--encryption=none'], check=True)
+        subprocess.run(['borg', '-r', str(repo), 'create', 'a1', 'src'], cwd=tmp_path, check=True)
+        extract_cmd = ['borg', '-r', str(repo), 'extract', 'a1']
+    else:
+        subprocess.run(['borg', 'init', '--encryption=none', str(repo)], check=True)
+        subprocess.run(['borg', 'create', f'{repo}::a1', 'src'], cwd=tmp_path, check=True)
+        extract_cmd = ['borg', 'extract', f'{repo}::a1']
+
+    # Same file layout BorgExtractJob writes, with only the file above selected.
+    patterns = tmp_path / 'patterns'
+    patterns.write_text('P pf\n' + include_pattern(f'src/{name}') + '- fm:*\n')
+
+    dest = tmp_path / 'dest'
+    dest.mkdir()
+    subprocess.run(extract_cmd + ['--patterns-from', str(patterns)], cwd=dest, check=True)
+
+    assert (dest / 'src' / name).read_text() == 'test'
+    assert not (dest / 'src' / 'other.txt').exists()
 
 
 def test_archive_delete(qapp, qtbot, mocker, archive_env):

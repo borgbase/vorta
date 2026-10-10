@@ -1,7 +1,10 @@
+import re
+
 import pytest
 from PyQt6.QtCore import QModelIndex, Qt
 
 import vorta.borg
+from vorta.borg.extract import include_pattern
 from vorta.store.models import ArchiveModel
 from vorta.views.dialogs.archive.extract import (
     ExtractDialog,
@@ -199,3 +202,18 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
     assert dialog.model.mode == expected_mode
     assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
+
+
+def test_include_pattern():
+    assert include_pattern('home/user/file.txt') == '+ home/user/file.txt\n'
+
+    # A line break in the name must not split the line (#2568).
+    for path in ['home/user/two\nlines (1).txt', 'home/user/odd\rname[1].txt', 'a\r\nb']:
+        line = include_pattern(path)
+        assert line.endswith('\n')
+        assert '\n' not in line[:-1] and '\r' not in line
+        assert line.startswith('+ re:')
+        regex = line[len('+ re:') : -1]
+        assert re.search(regex, path)
+        assert not re.search(regex, path + 'x')
+        assert not re.search(regex, 'x' + path)
