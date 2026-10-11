@@ -1,3 +1,4 @@
+import re
 import tempfile
 
 from PyQt6.QtCore import QModelIndex, Qt
@@ -7,6 +8,20 @@ from vorta.views.dialogs.archive.extract import ExtractTree, FileData
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
 
 from .borg_job import BorgJob
+
+
+def include_pattern(path: str) -> str:
+    """
+    Return the patterns file line that includes `path`.
+
+    Borg reads the patterns file line by line, so a file name with a line break would split
+    the line and make Borg reject the whole file (#2568). Such paths are written as an
+    anchored regex instead, where each line break is written as its regex escape.
+    """
+    if '\n' in path or '\r' in path:
+        regex = re.escape(path).replace('\n', 'n').replace('\r', 'r')
+        return f'+ re:^{regex}\\Z\n'
+    return f'+ {path}\n'
 
 
 class BorgExtractJob(BorgJob):
@@ -55,7 +70,7 @@ class BorgExtractJob(BorgJob):
 
                 item: FileSystemItem[FileData] = new_index.internalPointer()
                 if item.data.checkstate == Qt.CheckState.Checked:
-                    pattern_file.write("+ " + path_to_str(item.path) + "\n")
+                    pattern_file.write(include_pattern(path_to_str(item.path)))
 
         pattern_file.write("- fm:*\n")
         pattern_file.flush()
