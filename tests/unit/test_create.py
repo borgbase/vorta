@@ -77,3 +77,30 @@ def test_prepare_returns_info_level_when_metered_connection(mocker):
     mocker.patch('vorta.borg.create.get_network_status_monitor', return_value=mock_monitor)
     result = BorgCreateJob.prepare(default_profile)
     assert result.get('level') == 'info'
+
+
+def test_create_exclude_if_present():
+    """Plain names saved before v0.10.0 have no [x]/[] prefix and must still be used (#2369)."""
+    default_profile = BackupProfileModel.get()
+    default_profile.exclude_if_present = '.NO_BACKUP\n[x] .nobackup\n[] CACHEDIR.TAG\n'
+
+    result = BorgCreateJob.prepare(default_profile)
+
+    cmd = result['cmd']
+    assert cmd.count('--exclude-if-present') == 2
+    assert cmd[cmd.index('.NO_BACKUP') - 1] == '--exclude-if-present'
+    assert cmd[cmd.index('.nobackup') - 1] == '--exclude-if-present'
+    assert 'CACHEDIR.TAG' not in cmd
+
+
+def test_get_exclude_if_present_files():
+    profile = BackupProfileModel.get()
+
+    profile.exclude_if_present = None
+    assert profile.get_exclude_if_present_files() == []
+
+    profile.exclude_if_present = '[] .nobackup\n[] CACHEDIR.TAG'
+    assert profile.get_exclude_if_present_files() == []
+
+    profile.exclude_if_present = '[x] .nobackup\n.NO_BACKUP\n\n[]  CACHEDIR.TAG\n[x]'
+    assert profile.get_exclude_if_present_files() == ['.nobackup', '.NO_BACKUP']

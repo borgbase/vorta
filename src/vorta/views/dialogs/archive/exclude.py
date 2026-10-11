@@ -241,10 +241,8 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         preview = self.profile.get_combined_exclusion_string()
         if self.profile.exclude_if_present:
             preview += '\n# Exclude if present'
-            for f in self.profile.exclude_if_present.split('\n'):
-                f = f.strip()
-                if f.startswith('[x]'):
-                    preview += '\n' + f[3:].strip()
+            for f in self.profile.get_exclude_if_present_files():
+                preview += '\n' + f
         self.exclusionsPreviewText.setPlainText(preview)
 
     def copy_preview_to_clipboard(self):
