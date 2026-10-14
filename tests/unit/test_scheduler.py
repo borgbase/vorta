@@ -364,6 +364,36 @@ def test_simple_schedule(clockmock):
     assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
 
 
+def test_next_job_with_deleted_profile(clockmock):
+    """When a scheduled profile is deleted, next_job must remove the stale timer and not crash."""
+    scheduler = VortaScheduler()
+
+    time = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = time
+
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = 7
+    profile.schedule_fixed_minute = 30
+    profile.save()
+
+    event = EventLogModel(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=time, end_time=time
+    )
+    event.save()
+
+    scheduler.set_timer_for_profile(profile.id)
+    assert len(scheduler.timers) == 1
+
+    # Simulate deleting the profile
+    profile.delete_instance()
+    assert BackupProfileModel.get_or_none(id=profile.id) is None
+
+    # next_job should handle the deleted profile gracefully without raising AttributeError
+    assert scheduler.next_job() == 'None scheduled'
+    assert len(scheduler.timers) == 0
+
+
 def test_schedule_past_the_qtimer_range(clockmock):
     """A four-week interval is longer than a QTimer can wait, but still a scheduled run."""
     scheduler = VortaScheduler()

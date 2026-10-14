@@ -301,15 +301,19 @@ class SchedulerTimers:
         if len(scheduled) == 0:
             return self.scheduler.tr("None scheduled")
 
-        closest_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
-        profile_id, timer = closest_job
-        time = timer["dt"]
-        profile = BackupProfileModel.get_or_none(id=profile_id)
+        for profile_id, timer in sorted(scheduled.items(), key=lambda item: item[1]["dt"]):
+            profile = BackupProfileModel.get_or_none(id=profile_id)
+            if profile is None:
+                self.remove_job(profile_id)
+                continue
 
-        time_format = "%H:%M"
-        if time - now > timedelta(days=1):
-            time_format = "%b %d, %H:%M"
-        return f"{time.strftime(time_format)} ({profile.name})"
+            time = timer["dt"]
+            time_format = "%H:%M"
+            if time - now > timedelta(days=1):
+                time_format = "%b %d, %H:%M"
+            return f"{time.strftime(time_format)} ({profile.name})"
+
+        return self.scheduler.tr("None scheduled")
 
     def next_job_for_profile(self, profile_id: int) -> ScheduleStatus:
         job = self.timers.get(profile_id)
