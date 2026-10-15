@@ -80,16 +80,59 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
     assert tab.bCheck.isEnabled()
 
 
-def test_repo_prune(qapp, qtbot, mocker, borg_json_output, archive_env):
+@pytest.mark.parametrize('stdout_content', ['', 'not json', '{"foo": 1}', '{"archives": null}'])
+def test_repo_list_invalid_output_keeps_archives(qapp, qtbot, mocker, archive_env, tmp_path, stdout_content):
+    """Unreadable borg list output must not wipe the local archive list (#2412)."""
     main, tab = archive_env
+    assert ArchiveModel.select().count() == 2
 
-    stdout, stderr = borg_json_output('prune')
+    (tmp_path / 'stdout').write_text(stdout_content)
+    (tmp_path / 'stderr').write_text('')
+    stdout, stderr = open(tmp_path / 'stdout'), open(tmp_path / 'stderr')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    tab._set_status('')
+    try:
+        tab.refresh_archive_list()
+        qtbot.waitUntil(lambda: 'Local list kept' in tab.mountErrors.text(), **pytest._wait_defaults)
+    finally:
+        stdout.close()
+        stderr.close()
+
+    assert ArchiveModel.select().count() == 2
+    assert tab.archiveTable.model().rowCount() == 2
+
+
+def test_repo_list_empty_repo_removes_archives(qapp, qtbot, mocker, archive_env, tmp_path):
+    main, tab = archive_env
+
+    (tmp_path / 'stdout').write_text('{"archives": []}')
+    (tmp_path / 'stderr').write_text('')
+    stdout, stderr = open(tmp_path / 'stdout'), open(tmp_path / 'stderr')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    tab._set_status('')
+    try:
+        tab.refresh_archive_list()
+        qtbot.waitUntil(lambda: 'Refreshed archives.' in tab.mountErrors.text(), **pytest._wait_defaults)
+    finally:
+        stdout.close()
+        stderr.close()
+
+    assert ArchiveModel.select().count() == 0
+
+
+def test_repo_prune(qapp, qtbot, mock_borg_popen, archive_env):
+    main, tab = archive_env
+
+    mock_borg_popen(['prune', 'list'])
 
     qtbot.mouseClick(tab.bPrune, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: ArchiveModel.select().count() == 6, **pytest._wait_defaults)
 
 
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):

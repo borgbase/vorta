@@ -126,7 +126,7 @@ class BackupProfileModel(BaseModel):
     def get_exclude_if_present_patterns(self) -> list[tuple[str, bool]]:
         """(pattern, enabled) pairs. Unprefixed lines are from Vorta < 0.10 and count as enabled."""
         patterns = []
-        for line in (self.exclude_if_present or '').split('\n'):
+        for line in str(self.exclude_if_present or '').split('\n'):
             line = line.strip()
             if line.startswith('[x]'):
                 pattern, enabled = line[3:].strip(), True

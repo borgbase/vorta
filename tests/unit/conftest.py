@@ -8,6 +8,7 @@ from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 import vorta
 import vorta.application
+import vorta.borg.borg_job
 import vorta.borg.jobs_manager
 from vorta.store.models import (
     ArchiveModel,
@@ -206,6 +207,25 @@ def borg_json_output():
             f.close()
         except Exception:
             pass
+
+
+@pytest.fixture
+def mock_borg_popen(mocker, borg_json_output):
+    """
+    Mock Popen with fresh file handles per call, for tests that chain jobs (e.g. prune -> list).
+    Usage: mock_borg_popen(['prune', 'list']). Extra calls reuse the last subcommand.
+    """
+
+    def _mock(subcommands):
+        calls = iter(subcommands)
+
+        def _popen(*args, **kwargs):
+            stdout, stderr = borg_json_output(next(calls, subcommands[-1]))
+            return mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+
+        return mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=_popen)
+
+    return _mock
 
 
 @pytest.fixture
