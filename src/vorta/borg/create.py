@@ -167,17 +167,9 @@ class BorgCreateJob(BorgJob):
         ]
         cmd += extra_cmd_options
 
-        # Function to extend command with exclude-if-present patterns
-        if profile.exclude_if_present is not None:
-            patterns = []
-            for f in profile.exclude_if_present.split('\n'):
-                f = f.strip()
-                if f.startswith('[x]'):
-                    patterns.append(f[3:].strip())  # Remove the '[x]' prefix
-
-            for pattern in patterns:
-                if pattern.strip():
-                    cmd.extend(['--exclude-if-present', pattern])
+        for pattern, enabled in profile.get_exclude_if_present_patterns():
+            if enabled:
+                cmd.extend(['--exclude-if-present', pattern])
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
@@ -193,12 +185,6 @@ class BorgCreateJob(BorgJob):
             pattern_file.flush()
             cmd.extend(['--exclude-from', pattern_file.name])
             ret['cleanup_files'].append(pattern_file)
-
-        # Currently not in use, but may be added back to the UI later.
-        # if profile.exclude_if_present is not None:
-        #     for f in profile.exclude_if_present.split('\n'):
-        #         if f.strip():
-        #             cmd.extend(['--exclude-if-present', f.strip()])
 
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)

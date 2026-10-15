@@ -241,10 +241,9 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         preview = self.profile.get_combined_exclusion_string()
         if self.profile.exclude_if_present:
             preview += '\n# Exclude if present'
-            for f in self.profile.exclude_if_present.split('\n'):
-                f = f.strip()
-                if f.startswith('[x]'):
-                    preview += '\n' + f[3:].strip()
+            for pattern, enabled in self.profile.get_exclude_if_present_patterns():
+                if enabled:
+                    preview += '\n' + pattern
         self.exclusionsPreviewText.setPlainText(preview)
 
     def copy_preview_to_clipboard(self):
@@ -417,35 +416,14 @@ class ExcludeDialog(ExcludeDialogBase, ExcludeDialogUi):
         self.profile.save()
         self.populate_preview_tab()
 
-    def normalize_exclude_if_present_patterns(self):
-        '''
-        Ensure all patterns in exclude_if_present start with either [x] or [].
-        '''
-        patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
-        normalized_patterns = []
-        for pattern in patterns:
-            if not pattern.startswith('[x]') and not pattern.startswith('[]'):
-                pattern = '[x] ' + pattern
-            normalized_patterns.append(pattern)
-        self.profile.exclude_if_present = '\n'.join(normalized_patterns)
-        self.profile.save()
-
     def populate_exclude_if_present_patterns(self):
         '''
         Populate the 'Exclude If Present' list from the profile.
         '''
-        self.normalize_exclude_if_present_patterns()
-        patterns = self.profile.exclude_if_present.split('\n') if self.profile.exclude_if_present else []
-        for pattern in patterns:
-            item = QStandardItem()
-            if pattern.startswith('[x]'):
-                item.setText(pattern[4:])
-                item.setCheckable(True)
-                item.setCheckState(Qt.CheckState.Checked)
-            elif pattern.startswith('[]'):
-                item.setText(pattern[3:])
-                item.setCheckable(True)
-                item.setCheckState(Qt.CheckState.Unchecked)
+        for pattern, enabled in self.profile.get_exclude_if_present_patterns():
+            item = QStandardItem(pattern)
+            item.setCheckable(True)
+            item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
             self.excludeIfPresentModel.appendRow(item)
 
     def raw_exclusions_saved(self):
