@@ -9,7 +9,7 @@ from peewee import SqliteDatabase
 from vorta import config
 from vorta._version import __version__
 from vorta.log import init_logger, logger
-from vorta.store.connection import init_db
+from vorta.store.connection import file_logging_enabled, init_db
 from vorta.updater import get_updater
 from vorta.utils import DEFAULT_DIR_FLAG, parse_args
 from vorta.views.dialogs.exception import ExceptionDialog
@@ -62,8 +62,6 @@ def main():
             # instead we're using whatever dir is passed as an argument
             config.init_dev_mode(want_development)
 
-    init_logger(background=want_background)
-
     # Init database
     sqlite_db = SqliteDatabase(
         config.SETTINGS_DIR / 'settings.db',
@@ -71,6 +69,8 @@ def main():
             'journal_mode': 'wal',
         },
     )
+    # Read the setting first, so nothing is written to the log file while init_db() runs if it is disabled.
+    init_logger(background=want_background, log_to_file=file_logging_enabled(sqlite_db))
     init_db(sqlite_db)
 
     # Init app after database is available

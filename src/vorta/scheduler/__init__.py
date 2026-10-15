@@ -178,3 +178,6 @@ class VortaScheduler(QtCore.QObject):
 
     def post_backup_tasks(self, profile_id: int) -> None:
         self._execution.post_backup_tasks(profile_id)
+
+    def post_backup_task_finished(self, result: dict[str, Any]) -> None:
+        self._execution.post_backup_task_finished(result)

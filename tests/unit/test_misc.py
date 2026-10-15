@@ -140,6 +140,19 @@ def test_check_full_disk_access(qapp, mocker):
     mock_qmessagebox.assert_not_called()
 
 
+def test_toggle_file_logging(qapp, qtbot, monkeypatch):
+    """Checks that toggling the setting enables and disables the log file handler."""
+    set_file_logging = Mock()
+    monkeypatch.setattr(vorta.store.connection, 'set_file_logging', set_file_logging)
+    setting = "Enable logging to file"
+
+    _click_toggle_setting(setting, qapp, qtbot)
+    set_file_logging.assert_called_with(False)
+
+    _click_toggle_setting(setting, qapp, qtbot)
+    set_file_logging.assert_called_with(True)
+
+
 def _click_toggle_setting(setting, qapp, qtbot):
     """Toggle setting checkbox in the misc tab"""
     miscTab = qapp.main_window.miscTab

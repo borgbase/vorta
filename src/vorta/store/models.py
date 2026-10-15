@@ -123,6 +123,21 @@ class BackupProfileModel(BaseModel):
     def slug(self) -> str:
         return slugify(self.name)
 
+    def get_exclude_if_present_patterns(self) -> list[tuple[str, bool]]:
+        """(pattern, enabled) pairs. Unprefixed lines are from Vorta < 0.10 and count as enabled."""
+        patterns = []
+        for line in str(self.exclude_if_present or '').split('\n'):
+            line = line.strip()
+            if line.startswith('[x]'):
+                pattern, enabled = line[3:].strip(), True
+            elif line.startswith('[]'):
+                pattern, enabled = line[2:].strip(), False
+            else:
+                pattern, enabled = line, True
+            if pattern:
+                patterns.append((pattern, enabled))
+        return patterns
+
     def get_combined_exclusion_string(self) -> str:
         allPresets = get_exclusion_presets()
         excludes = ""

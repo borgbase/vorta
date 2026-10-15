@@ -489,7 +489,10 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
     def list_result(self, result):
         self._toggle_all_buttons(True)
         if result['returncode'] == 0:
-            self._set_status(self.tr('Refreshed archives.'))
+            if result.get('ok') is False:
+                self._set_status(self.tr('Could not read archive list from Borg. Local list kept.'))
+            else:
+                self._set_status(self.tr('Refreshed archives.'))
             self.populate_from_profile()
 
     def refresh_archive_info(self):

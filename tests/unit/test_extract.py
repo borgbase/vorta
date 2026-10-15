@@ -1,8 +1,12 @@
+import fnmatch
+import re
+
 import pytest
 from PyQt6.QtCore import QModelIndex, Qt
 
 import vorta.borg
-from vorta.store.models import ArchiveModel
+from vorta.borg.extract import BorgExtractJob, _include_pattern
+from vorta.store.models import ArchiveModel, BackupProfileModel
 from vorta.views.dialogs.archive.extract import (
     ExtractDialog,
     ExtractTree,
@@ -199,3 +203,67 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
     assert dialog.model.mode == expected_mode
     assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
+
+
+def borg_fnmatch(pattern, path):
+    """Mimic borg's FnmatchPattern matching of an item and everything below it."""
+    return re.match(fnmatch.translate(pattern + '/*'), path + '/') is not None
+
+
+@pytest.mark.parametrize(
+    "path, expected",
+    [
+        ("home/user/file", "+ home/user/file"),
+        ("home/a b/file", "+ home/a b/file"),
+        ("home/x\nPRIMARY y", "+ fm:home/x?PRIMARY y"),
+        ("home/x\r\ny", "+ fm:home/x??y"),
+        ("home/trailing ", "+ fm:home/trailing?"),
+        ("home/tab\t", "+ fm:home/tab?"),
+        (" lead", "+ fm:?lead"),
+        ("home/[a]*?\nb", "+ fm:home/[[]a][*][?]?b"),
+    ],
+)
+def test_include_pattern(path, expected):
+    assert _include_pattern(path) == expected
+
+    line = _include_pattern(path)
+    assert len(line.splitlines()) == 1
+    assert line == line.strip()
+    if line.startswith('+ fm:'):
+        pattern = line[len('+ fm:') :]
+        assert borg_fnmatch(pattern, path)
+        assert borg_fnmatch(pattern, path + '/child')
+
+
+def test_include_pattern_escapes_metachars():
+    pattern = _include_pattern("d/[a]*?\n")[len('+ fm:') :]
+    assert borg_fnmatch(pattern, "d/[a]*?\n")
+    assert not borg_fnmatch(pattern, "d/a*?\n")
+    assert not borg_fnmatch(pattern, "d/[a]xx\n")
+
+
+def test_extract_prepare_newline_filename(qapp):
+    lines = [
+        updated("a", {}),
+        updated("a/x\nPRIMARY y", {"mode": "-rw-r--r--"}),
+        updated("a/trailing ", {"mode": "-rw-r--r--"}),
+        updated("a/plain", {"mode": "-rw-r--r--"}),
+    ]
+    model = ExtractTree()
+    parse_json_lines(lines, model)
+    select(model, model.indexPath(("a",)))
+
+    profile = BackupProfileModel.get()
+    ret = BorgExtractJob.prepare(profile, 'archive', model, '/tmp')
+    assert ret['ok']
+
+    with open(ret['cleanup_files'][0].name) as f:
+        content = f.read().splitlines()
+
+    assert content[0] == "P pf"
+    assert content[-1] == "- fm:*"
+    assert all(line[:2] in ("P ", "+ ", "- ") for line in content)
+    assert "+ fm:a/x?PRIMARY y" in content
+    assert "+ fm:a/trailing?" in content
+    assert "+ a/plain" in content
+    assert "+ a" in content

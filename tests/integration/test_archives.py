@@ -2,17 +2,20 @@
 This file contains tests for the Archive tab to test the various archive related borg commands.
 """
 
+import subprocess
 import sys
 from collections import namedtuple
 
 import psutil
 import pytest
+from packaging.version import Version
 from PyQt6 import QtCore
 
 import vorta.borg
 import vorta.utils
 import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
+from vorta.borg.extract import _include_pattern
 from vorta.store.models import ArchiveModel
 
 
@@ -142,3 +145,30 @@ def test_archive_rename(qapp, qtbot, mocker, archive_env):
 
     # Successful rename case
     qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
+
+
+def test_extract_unsafe_filenames(tmpdir, borg_version):
+    """Files with line breaks or edge whitespace in their name can be restored via a pattern file."""
+    is_borg_v2 = borg_version[1] >= Version('2.0.0b1')
+    repo = tmpdir.mkdir('repo')
+    src = tmpdir.mkdir('src')
+    dest = tmpdir.mkdir('dest')
+
+    wanted = ['a\nPRIMARY b', 'c\r\nd', 'trailing ']
+    for name in wanted + ['other']:
+        src.join(name).write('test')
+
+    if is_borg_v2:
+        subprocess.run(['borg', '-r', str(repo), 'rcreate', '--encryption=none'], check=True)
+        subprocess.run(['borg', '-r', str(repo), 'create', 'a1', *wanted, 'other'], cwd=str(src), check=True)
+    else:
+        subprocess.run(['borg', 'init', '--encryption=none', str(repo)], check=True)
+        subprocess.run(['borg', 'create', f'{repo}::a1', *wanted, 'other'], cwd=str(src), check=True)
+
+    pattern_file = tmpdir.join('patterns')
+    pattern_file.write('P pf\n' + ''.join(_include_pattern(name) + '\n' for name in wanted) + '- fm:*\n')
+
+    archive = ['-r', str(repo), 'a1'] if is_borg_v2 else [f'{repo}::a1']
+    subprocess.run(['borg', 'extract', *archive, '--patterns-from', str(pattern_file)], cwd=str(dest), check=True)
+
+    assert sorted(item.basename for item in dest.listdir()) == sorted(wanted)
