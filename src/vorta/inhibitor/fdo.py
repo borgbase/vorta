@@ -50,7 +50,7 @@ class FdoLogin1DBusAdaptor(QObject):
         )
 
     def inhibit(self, name: str) -> QtDBus.QDBusUnixFileDescriptor:
-        return self._pm.call('Inhibit', 'shutdown:sleep', 'Vorta', name, 'block')
+        return self._pm.call('Inhibit', 'idle', 'Vorta', name, 'block')
 
 
 class UnsupportedException(Exception):
