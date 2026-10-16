@@ -232,13 +232,23 @@ def parse_json_lines(lines, model: "ExtractTree"):
     for item in lines:
         path = PurePath(item["path"])
 
-        size = item["size"]
-        mode = item["mode"]
-        file_type = FileType(mode[0])
-        user = item["user"]
-        group = item["group"]
-        health = item["healthy"]
-        source_path = item["source"] if "source" in item else None
+        size = item.get("size", 0)
+        mode = item.get("mode", "")
+        file_type = FileType(mode[0]) if mode else FileType.FILE
+        user = item.get("user", "")
+        group = item.get("group", "")
+
+        # Borg 1 uses boolean "healthy": true/false.
+        # Borg 2 uses string "health": "healthy"/"broken" from the {health} format placeholder.
+        health_raw = item.get("healthy")
+        if health_raw is None:
+            health_raw = item.get("health", True)
+        if isinstance(health_raw, str):
+            health = health_raw.lower() == "healthy"
+        else:
+            health = bool(health_raw)
+
+        source_path = item.get("source") or None
 
         # For python >= 3.7 this would work
         # modified = datetime.fromisoformat(item["mtime"]).ctime()
@@ -248,9 +258,15 @@ def parse_json_lines(lines, model: "ExtractTree"):
         # except ValueError:
         #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S")
 
-        modified = QDateTime.fromString(
-            item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
+        mtime_str = (
+            item.get("isomtime" if borg_compat.check("V122") else "mtime") or item.get("mtime") or item.get("isomtime")
         )
+        if mtime_str:
+            modified = QDateTime.fromString(mtime_str, Qt.DateFormat.ISODateWithMs)
+            if not modified.isValid():
+                modified = QDateTime.fromString(mtime_str, Qt.DateFormat.ISODate)
+        else:
+            modified = QDateTime.currentDateTime()
 
         items.append(
             (
@@ -273,9 +289,17 @@ class ExtractSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: ExtractFileItem = index.internalPointer()
-        if item is None or item.data is None:
-            return ""
         column = index.column()
+
+        if item is None or item.data is None:
+            if column == 1:
+                return QDateTime()
+            elif column == 2:
+                return -1
+            elif column == 3:
+                return False
+            else:
+                return ""
 
         if column == 0:
             # file name
