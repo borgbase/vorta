@@ -14,6 +14,7 @@ class FdoInhibitor(Inhibitor):
     def __init__(self, name: str):
         super().__init__(name)
         self._pm = FdoLogin1DBusAdaptor.get_login1_adaptor()
+        self._fd = None
 
     def inhibit(self):
         try:
@@ -24,7 +25,6 @@ class FdoInhibitor(Inhibitor):
 
     def uninhibit(self):
         if self._fd is not None:
-            os.close(self._fd.fileDescriptor())
             logger.debug("released power management inhibitor: %s", self._name)
         else:
             logger.warning("power management inhibitor was not active")
