@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import logging
 import os
@@ -11,12 +13,14 @@ from collections import namedtuple
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6 import QtCore
 from PyQt6.QtCore import QT_TRANSLATE_NOOP
 from PyQt6.QtWidgets import QApplication
 
-from vorta import application
+if TYPE_CHECKING:
+    from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
