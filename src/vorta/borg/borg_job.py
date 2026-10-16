@@ -70,6 +70,7 @@ class BorgJob(JobInterface):
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
+    should_inhibit = False
 
     def __init__(self, cmd, params, site="default"):
         """
@@ -85,9 +86,6 @@ class BorgJob(JobInterface):
         super().__init__()
         self.site_id = site
         self.app: application.VortaApp = QApplication.instance()
-        # Default state is should_inhibit false. Subclasses can set should_inhibit in their own
-        # constructors
-        self.should_inhibit = False
 
         # Declare labels here for translation
         self.category_label = {
@@ -255,132 +253,133 @@ class BorgJob(JobInterface):
 
     def run(self):
         with self.get_inhibitor():
-            self.started_event()
-            with db_lock:
-                log_entry = EventLogModel(
-                    category=self.params.get('category', 'user'),
-                    subcommand=self.cmd[1],
-                    profile=self.params.get('profile_id', None),
-                )
-                log_entry.save()
+            self._run()
 
-                # logs: put cmd arguments with special strings in quotation marks
-                quote_strings = [' ', '*', '?', 're:']
-                cmd_args_to_log = self.cmd[:]
-                for i, arg in enumerate(cmd_args_to_log):
-                    if any(quotestr in arg for quotestr in quote_strings):
-                        cmd_args_to_log[i] = "'" + arg + "'"  # add quotes
-
-                logger.info('Running command: %s', ' '.join(cmd_args_to_log))
-                del cmd_args_to_log
-
-            p = Popen(
-                self.cmd,
-                stdout=PIPE,
-                stderr=PIPE,
-                bufsize=1,
-                universal_newlines=True,
-                env=self.env,
-                cwd=self.cwd,
-                start_new_session=True,
+    def _run(self):
+        self.started_event()
+        with db_lock:
+            log_entry = EventLogModel(
+                category=self.params.get('category', 'user'),
+                subcommand=self.cmd[1],
+                profile=self.params.get('profile_id', None),
             )
-            error_messages = []  # List of error messages included in the result
+            log_entry.save()
 
-            self.process = p
+            # logs: put cmd arguments with special strings in quotation marks
+            quote_strings = [' ', '*', '?', 're:']
+            cmd_args_to_log = self.cmd[:]
+            for i, arg in enumerate(cmd_args_to_log):
+                if any(quotestr in arg for quotestr in quote_strings):
+                    cmd_args_to_log[i] = "'" + arg + "'"  # add quotes
 
-            # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
-            os.set_blocking(p.stdout.fileno(), False)
-            os.set_blocking(p.stderr.fileno(), False)
+            logger.info('Running command: %s', ' '.join(cmd_args_to_log))
+            del cmd_args_to_log
 
-            def read_async(fd):
-                try:
-                    return fd.read()
-                except (IOError, TypeError):
-                    return ''
+        p = Popen(
+            self.cmd,
+            stdout=PIPE,
+            stderr=PIPE,
+            bufsize=1,
+            universal_newlines=True,
+            env=self.env,
+            cwd=self.cwd,
+            start_new_session=True,
+        )
+        error_messages = []  # List of error messages included in the result
 
-            stdout = []
-            while True:
-                # Wait for new output
-                select.select([p.stdout, p.stderr], [], [], 0.1)
+        self.process = p
 
-                stdout.append(read_async(p.stdout))
-                stderr = read_async(p.stderr)
-                if stderr:
-                    for line in stderr.split('\n'):
-                        try:
-                            parsed = json.loads(line)
+        # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
+        os.set_blocking(p.stdout.fileno(), False)
+        os.set_blocking(p.stderr.fileno(), False)
 
-                            if parsed['type'] == 'log_message':
-                                message = summarize_traceback(parsed['message'])
-                                context = {
-                                    'msgid': parsed.get('msgid'),
-                                    'message': parsed.get('message', ''),
-                                    'repo_url': self.params['repo_url'],
-                                    'profile_name': self.params.get('profile_name'),
-                                    'cmd': self.params['cmd'][1],
-                                }
-                                self.app.backup_log_event.emit(
-                                    f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
-                                )
-                                level_int = getattr(logging, parsed["levelname"])
-                                logger.log(level_int, parsed["message"])
-
-                                if level_int >= logging.WARNING:
-                                    # Append log to list of error messages
-                                    error_messages.append((level_int, message))
-
-                            elif parsed['type'] == 'file_status':
-                                self.app.backup_log_event.emit(
-                                    f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
-                                )
-                            elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                                self.app.backup_log_event.emit(
-                                    f'[{self.params["profile_name"]}] {parsed["message"]}', {}
-                                )
-                            elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
-                                msg = (
-                                    f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
-                                    f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                    # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
-                                    f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
-                                )
-                                self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
-                        except json.decoder.JSONDecodeError:
-                            msg = line.strip()
-                            if msg:  # Log only if there is something to log.
-                                self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
-                                logger.warning(msg)
-
-                if p.poll() is not None:
-                    time.sleep(0.1)
-                    stdout.append(read_async(p.stdout))
-                    break
-
-            result = {
-                'params': self.params,
-                'returncode': self.process.returncode,
-                'cmd': self.cmd,
-                'errors': error_messages,
-            }
-            stdout = ''.join(stdout)
-
+        def read_async(fd):
             try:
-                result['data'] = json.loads(stdout)
-            except ValueError:
-                result['data'] = stdout
+                return fd.read()
+            except (IOError, TypeError):
+                return ''
 
-            log_entry.returncode = p.returncode
-            log_entry.repo_url = self.params.get('repo_url', None)
-            log_entry.end_time = dt.now()
-            result['log_entry_id'] = log_entry.id
+        stdout = []
+        while True:
+            # Wait for new output
+            select.select([p.stdout, p.stderr], [], [], 0.1)
 
-            with db_lock:
-                log_entry.save()
-                self.process_result(result)
+            stdout.append(read_async(p.stdout))
+            stderr = read_async(p.stderr)
+            if stderr:
+                for line in stderr.split('\n'):
+                    try:
+                        parsed = json.loads(line)
 
-            self.finished_event(result)
-            for tmpfile in self.cleanup_files:
-                tmpfile.close()
+                        if parsed['type'] == 'log_message':
+                            message = summarize_traceback(parsed['message'])
+                            context = {
+                                'msgid': parsed.get('msgid'),
+                                'message': parsed.get('message', ''),
+                                'repo_url': self.params['repo_url'],
+                                'profile_name': self.params.get('profile_name'),
+                                'cmd': self.params['cmd'][1],
+                            }
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
+                            )
+                            level_int = getattr(logging, parsed["levelname"])
+                            logger.log(level_int, parsed["message"])
+
+                            if level_int >= logging.WARNING:
+                                # Append log to list of error messages
+                                error_messages.append((level_int, message))
+
+                        elif parsed['type'] == 'file_status':
+                            self.app.backup_log_event.emit(
+                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
+                            )
+                        elif parsed['type'] == 'progress_percent' and parsed.get("message"):
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
+                        elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
+                            msg = (
+                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
+                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
+                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                            )
+                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
+                    except json.decoder.JSONDecodeError:
+                        msg = line.strip()
+                        if msg:  # Log only if there is something to log.
+                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                            logger.warning(msg)
+
+            if p.poll() is not None:
+                time.sleep(0.1)
+                stdout.append(read_async(p.stdout))
+                break
+
+        result = {
+            'params': self.params,
+            'returncode': self.process.returncode,
+            'cmd': self.cmd,
+            'errors': error_messages,
+        }
+        stdout = ''.join(stdout)
+
+        try:
+            result['data'] = json.loads(stdout)
+        except ValueError:
+            result['data'] = stdout
+
+        log_entry.returncode = p.returncode
+        log_entry.repo_url = self.params.get('repo_url', None)
+        log_entry.end_time = dt.now()
+        result['log_entry_id'] = log_entry.id
+
+        with db_lock:
+            log_entry.save()
+            self.process_result(result)
+
+        self.finished_event(result)
+        for tmpfile in self.cleanup_files:
+            tmpfile.close()
 
     def process_result(self, result):
         pass
