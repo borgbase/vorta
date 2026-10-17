@@ -16,11 +16,11 @@ class Inhibitor(object):
 
             return IOKitInhibitor(what)
         else:
-            from .fdo import FdoInhibitor, UnsupportedException
+            from .fdo import FdoInhibitor
 
             try:
                 return FdoInhibitor(what)
-            except UnsupportedException:
+            except Exception:
                 logger.warning("systemd inhibitor not available", exc_info=True)
                 return NullInhibitor(what)
 

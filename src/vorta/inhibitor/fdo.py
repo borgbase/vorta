@@ -18,7 +18,7 @@ class FdoInhibitor(Inhibitor):
         super().__init__(name)
         self._bus = QtDBus.QDBusConnection.sessionBus()
         if not self._bus.isConnected():
-            raise UnsupportedException("cannot connect to session bus")
+            raise DBusException("cannot connect to session bus")
         self._inhibit_request_handle: Optional[str] = None
         self._inhibit_request: Optional[QtDBus.QDBusInterface] = None
 
@@ -31,7 +31,7 @@ class FdoInhibitor(Inhibitor):
                 self._bus,
             )
             if not inhibit_iface.isValid():
-                raise UnsupportedException("invalid desktop dbus interface")
+                raise DBusException("invalid desktop dbus interface")
 
             # enforce uint through the call
             flags = QVariant(_INHIBIT_SUSPEND)
@@ -48,7 +48,7 @@ class FdoInhibitor(Inhibitor):
             )
 
             logger.debug("inhibit acquired: %s", self._inhibit_request_handle)
-        except DBusException:
+        except Exception:
             logger.warning("failed to inhibit", exc_info=True)
             self._inhibit_request = None
 
@@ -57,7 +57,7 @@ class FdoInhibitor(Inhibitor):
             try:
                 logger.debug("released inhibit: %s", self._inhibit_request_handle)
                 self._inhibit_request.call("Close")
-            except DBusException:
+            except Exception:
                 logger.warning("failed to release inhibit: %s", self._inhibit_request_handle)
         else:
             logger.warning("no active inhibit")
@@ -72,7 +72,7 @@ class FdoDesktopDBusAdaptor(QObject):
     def get_desktop_adaptor(cls) -> 'FdoDesktopDBusAdaptor':
         bus = QtDBus.QDBusConnection.systemBus()
         if not bus.isConnected():
-            raise UnsupportedException("Can't connect to system bus")
+            raise DBusException("Can't connect to system bus")
         return cls(parent=None, bus=bus)
 
     def __init__(self, parent, bus):
@@ -83,7 +83,3 @@ class FdoDesktopDBusAdaptor(QObject):
 
     def inhibit(self, name: str) -> QtDBus.QDBusInterface:
         return self._pm.call('Inhibit', 'sleep', 'Vorta', name, 'block')
-
-
-class UnsupportedException(Exception):
-    """PowerManagement is not available"""
