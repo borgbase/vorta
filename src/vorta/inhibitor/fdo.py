@@ -1,8 +1,8 @@
 import logging
-import os
+from typing import Optional
 
 from PyQt6 import QtDBus
-from PyQt6.QtCore import QObject
+from PyQt6.QtCore import QMetaType, QObject, QVariant
 
 from vorta.dbus import DBusException, get_result
 from vorta.inhibitor.abc import Inhibitor
@@ -10,34 +10,66 @@ from vorta.inhibitor.abc import Inhibitor
 logger = logging.getLogger(__name__)
 
 
+_INHIBIT_SUSPEND = 4
+
+
 class FdoInhibitor(Inhibitor):
     def __init__(self, name: str):
         super().__init__(name)
-        self._pm = FdoLogin1DBusAdaptor.get_login1_adaptor()
-        self._fd = None
+        self._bus = QtDBus.QDBusConnection.sessionBus()
+        if not self._bus.isConnected():
+            raise UnsupportedException("cannot connect to session bus")
+        self._inhibit_request_handle: Optional[str] = None
+        self._inhibit_request: Optional[QtDBus.QDBusInterface] = None
 
     def inhibit(self):
         try:
-            self._fd = get_result(self._pm.inhibit(self._name))
-            logger.debug("acquired power management inhibitor: %s", self._name)
+            inhibit_iface = QtDBus.QDBusInterface(
+                'org.freedesktop.portal.Desktop',
+                '/org/freedesktop/portal/desktop',
+                'org.freedesktop.portal.Inhibit',
+                self._bus,
+            )
+            if not inhibit_iface.isValid():
+                raise UnsupportedException("invalid desktop dbus interface")
+
+            # enforce uint through the call
+            flags = QVariant(_INHIBIT_SUSPEND)
+            flags.convert(QMetaType(QMetaType.Type.UInt.value))
+
+            result = inhibit_iface.call('Inhibit', '', flags, {"reason": self._name})
+            self._inhibit_request_handle = get_result(result)
+
+            self._inhibit_request = QtDBus.QDBusInterface(
+                "org.freedesktop.portal.Desktop",
+                self._inhibit_request_handle,
+                "org.freedesktop.portal.Request",
+                QtDBus.QDBusConnection.sessionBus(),
+            )
+
+            logger.debug("inhibit acquired: %s", self._inhibit_request_handle)
         except DBusException:
-            logger.exception("Failed to activate power management inhibitor")
+            logger.warning("failed to inhibit", exc_info=True)
+            self._inhibit_request = None
 
     def uninhibit(self):
-        if self._fd is not None:
-            logger.debug("released power management inhibitor: %s", self._name)
+        if self._inhibit_request is not None:
+            try:
+                logger.debug("released inhibit: %s", self._inhibit_request_handle)
+                self._inhibit_request.call("Close")
+            except DBusException:
+                logger.warning("failed to release inhibit: %s", self._inhibit_request_handle)
         else:
-            logger.warning("power management inhibitor was not active")
-        self._fd = None
+            logger.warning("no active inhibit")
 
 
-class FdoLogin1DBusAdaptor(QObject):
+class FdoDesktopDBusAdaptor(QObject):
     """
     Adapter to the org.freedesktop.login1 DBus interface.
     """
 
     @classmethod
-    def get_login1_adaptor(cls) -> 'FdoLogin1DBusAdaptor':
+    def get_desktop_adaptor(cls) -> 'FdoDesktopDBusAdaptor':
         bus = QtDBus.QDBusConnection.systemBus()
         if not bus.isConnected():
             raise UnsupportedException("Can't connect to system bus")
@@ -46,10 +78,10 @@ class FdoLogin1DBusAdaptor(QObject):
     def __init__(self, parent, bus):
         super().__init__(parent)
         self._pm = QtDBus.QDBusInterface(
-            'org.freedesktop.login1', '/org/freedesktop/login1', 'org.freedesktop.login1.Manager', bus
+            'org.freedesktop.portal.Desktop', '/org/freedesktop/portal/desktop', 'org.freedesktop.portal.Inhibit', bus
         )
 
-    def inhibit(self, name: str) -> QtDBus.QDBusUnixFileDescriptor:
+    def inhibit(self, name: str) -> QtDBus.QDBusInterface:
         return self._pm.call('Inhibit', 'sleep', 'Vorta', name, 'block')
 
 
