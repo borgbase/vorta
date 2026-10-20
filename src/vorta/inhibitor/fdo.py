@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from PyQt6 import QtDBus
-from PyQt6.QtCore import QMetaType, QObject, QVariant
+from PyQt6.QtCore import QMetaType, QVariant
 
 from vorta.dbus import DBusException, get_result
 from vorta.inhibitor.abc import Inhibitor
@@ -55,31 +55,11 @@ class FdoInhibitor(Inhibitor):
     def uninhibit(self):
         if self._inhibit_request is not None:
             try:
+                msg = self._inhibit_request.call("Close")
+                if msg.type() == msg.MessageType.ErrorMessage:
+                    raise DBusException(msg.errorMessage())
                 logger.debug("released inhibit: %s", self._inhibit_request_handle)
-                self._inhibit_request.call("Close")
             except Exception:
-                logger.warning("failed to release inhibit: %s", self._inhibit_request_handle)
+                logger.warning("failed to release inhibit: %s", self._inhibit_request_handle, exc_info=True)
         else:
-            logger.warning("no active inhibit")
-
-
-class FdoDesktopDBusAdaptor(QObject):
-    """
-    Adapter to the org.freedesktop.login1 DBus interface.
-    """
-
-    @classmethod
-    def get_desktop_adaptor(cls) -> 'FdoDesktopDBusAdaptor':
-        bus = QtDBus.QDBusConnection.systemBus()
-        if not bus.isConnected():
-            raise DBusException("Can't connect to system bus")
-        return cls(parent=None, bus=bus)
-
-    def __init__(self, parent, bus):
-        super().__init__(parent)
-        self._pm = QtDBus.QDBusInterface(
-            'org.freedesktop.portal.Desktop', '/org/freedesktop/portal/desktop', 'org.freedesktop.portal.Inhibit', bus
-        )
-
-    def inhibit(self, name: str) -> QtDBus.QDBusInterface:
-        return self._pm.call('Inhibit', 'sleep', 'Vorta', name, 'block')
+            logger.debug("no active inhibit")

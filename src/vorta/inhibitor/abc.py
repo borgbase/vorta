@@ -21,7 +21,7 @@ class Inhibitor(object):
             try:
                 return FdoInhibitor(what)
             except Exception:
-                logger.warning("systemd inhibitor not available", exc_info=True)
+                logger.warning("desktop portal inhibitor not available", exc_info=True)
                 return NullInhibitor(what)
 
     @classmethod
