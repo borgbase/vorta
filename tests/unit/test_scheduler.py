@@ -664,6 +664,46 @@ def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     assert job.profile_name == PROFILE_NAME
 
 
+def test_rescheduling_during_prepare_does_not_deadlock(qapp, mocker, monkeypatch):
+    """
+    A pre-backup command makes `prepare()` spin the event loop, so a timer tick can reschedule mid-submission (#2588).
+
+    Holding the scheduler lock across `prepare()` deadlocked on that tick, and a missed run must not be submitted twice.
+    """
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 1
+    profile.schedule_make_up_missed = True
+    profile.save()
+    last_time = dt.now() - td(days=1)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_time,
+        end_time=last_time,
+    )
+    monkeypatch.setattr(qapp.scheduler, '_net_up', True)
+    submissions = mocker.spy(qapp.scheduler._execution, 'create_backup')
+
+    def reenter(_profile):
+        # Fail rather than hang if the lock is still held here.
+        assert qapp.scheduler.lock.acquire(blocking=False)
+        qapp.scheduler.lock.release()
+        qapp.scheduler.reload_all_timers()
+        return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
+
+    prepare_mock = mocker.patch('vorta.scheduler.execution.BorgCreateJob.prepare', side_effect=reenter)
+
+    qapp.scheduler.create_backup(profile.id)
+
+    assert submissions.call_count == 2  # the outer run and the catch-up the reschedule asked for
+    assert prepare_mock.call_count == 1
+    assert not qapp.scheduler.lock.locked()
+
+
 def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
     """The jobs view refreshes its records off this signal, and a skip runs no Borg job to announce it."""
     mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
