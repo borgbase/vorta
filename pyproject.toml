@@ -109,6 +109,8 @@ addopts = "-vs"
 testpaths = ["tests"]
 pythonpath = ["tests/unit"]
 qt_default_raising = true
+# Dump all thread stacks when a test hangs, e.g. on D-Bus in CI.
+faulthandler_timeout = 300
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
