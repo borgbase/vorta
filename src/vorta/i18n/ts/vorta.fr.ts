@@ -356,18 +356,23 @@
         <translation>Erreur du gabarit de nom d'archive. </translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="515" />
-        <location filename="../../views/archive_tab.py" line="492" />
+        <location filename="../../views/archive_tab.py" line="493" />
+        <source>Could not read archive list from Borg. Local list kept.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="518" />
+        <location filename="../../views/archive_tab.py" line="495" />
         <source>Refreshed archives.</source>
         <translation>Archives mises à jour. </translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="528" />
+        <location filename="../../views/archive_tab.py" line="531" />
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="529" />
+        <location filename="../../views/archive_tab.py" line="532" />
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -513,17 +518,17 @@
 </context><context>
     <name>BorgCreateJob</name>
     <message>
-        <location filename="../../borg/create.py" line="46" />
+        <location filename="../../borg/create.py" line="48" />
         <source>Backup finished with warnings. See the %1 for details.</source>
         <translation>La sauvegarde s'est terminé avec des avertissements. Consultez les logs pour plus de détails.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="52" />
+        <location filename="../../borg/create.py" line="54" />
         <source>Backup finished.</source>
         <translation>Sauvegarde terminée.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="59" />
+        <location filename="../../borg/create.py" line="61" />
         <source>Backup started.</source>
         <translation>Début de la sauvegarde.</translation>
     </message>
@@ -554,12 +559,12 @@
 </context><context>
     <name>BorgExtractJob</name>
     <message>
-        <location filename="../../borg/extract.py" line="16" />
+        <location filename="../../borg/extract.py" line="42" />
         <source>Downloading files from archive…</source>
         <translation>Téléchargement des fichiers depuis l'archive</translation>
     </message>
     <message>
-        <location filename="../../borg/extract.py" line="23" />
+        <location filename="../../borg/extract.py" line="49" />
         <source>Restored files from archive.</source>
         <translation>Fichiers restaurés depuis l'archive.</translation>
     </message>
@@ -585,37 +590,37 @@
 </context><context>
     <name>BorgInitJob</name>
     <message>
-        <location filename="../../borg/init.py" line="9" />
+        <location filename="../../borg/init.py" line="11" />
         <source>Setting up new repo…</source>
         <translation>Configurer un nouveau dépôt...</translation>
     </message>
 </context><context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="312" />
-        <location filename="../../borg/borg_job.py" line="69" />
+        <location filename="../../borg/borg_job.py" line="341" />
+        <location filename="../../borg/borg_job.py" line="92" />
         <source>Files</source>
         <translation>Fichiers</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="313" />
-        <location filename="../../borg/borg_job.py" line="70" />
+        <location filename="../../borg/borg_job.py" line="342" />
+        <location filename="../../borg/borg_job.py" line="93" />
         <source>Original</source>
         <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="315" />
-        <location filename="../../borg/borg_job.py" line="71" />
+        <location filename="../../borg/borg_job.py" line="344" />
+        <location filename="../../borg/borg_job.py" line="94" />
         <source>Deduplicated</source>
         <translation>Dédupliqué</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="72" />
+        <location filename="../../borg/borg_job.py" line="95" />
         <source>Compressed</source>
         <translation>Compressé</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="357" />
+        <location filename="../../borg/borg_job.py" line="388" />
         <source>Task started</source>
         <translation>Tâche débutée</translation>
     </message>
@@ -634,14 +639,19 @@
 </context><context>
     <name>BorgListRepoJob</name>
     <message>
-        <location filename="../../borg/list_repo.py" line="12" />
+        <location filename="../../borg/list_repo.py" line="15" />
         <source>Refreshing archives…</source>
         <translation>Rafraîchissement des archives…</translation>
     </message>
     <message>
-        <location filename="../../borg/list_repo.py" line="17" />
+        <location filename="../../borg/list_repo.py" line="20" />
         <source>Refreshing archives done.</source>
         <translation>Rafraîchissement des archives terminé.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_repo.py" line="48" />
+        <source>Could not read archive list from Borg. Local list kept.</source>
+        <translation type="unfinished" />
     </message>
 </context><context>
     <name>BorgMountJob</name>
@@ -1526,6 +1536,11 @@
         <translation>Commandes de terminal</translation>
     </message>
     <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Jobs</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Archives</source>
         <translation>Archives</translation>
@@ -1765,6 +1780,64 @@
         <translation type="vanished">Échec de la mise à niveau de la base de donnée, veuillez remplir un rapport de bug en utilisant le lien dans l'onglet Paramètres avec l'erreur suivante :
 {0}
 {1}</translation>
+    </message>
+</context><context>
+    <name>JobsPage</name>
+    <message>
+        <location filename="../../views/jobs_page.py" line="91" />
+        <location filename="../../views/jobs_page.py" line="55" />
+        <source>All</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="69" />
+        <source>Time</source>
+        <translation type="unfinished">Temps</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="70" />
+        <source>Profile</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="71" />
+        <source>Repository</source>
+        <translation type="unfinished">Dépôts</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="72" />
+        <source>Type</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="73" />
+        <source>Trigger</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="74" />
+        <source>Status</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="75" />
+        <source>Reason</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Profile:</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Repository:</source>
+        <translation type="unfinished">Dépôt :</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Status:</source>
+        <translation type="unfinished" />
     </message>
 </context><context>
     <name>KWallet</name>
@@ -2429,6 +2502,50 @@
         <translation>Prochaine sauvegarde :</translation>
     </message>
 </context><context>
+    <name>SchedulerExecution</name>
+    <message>
+        <location filename="../../scheduler/execution.py" line="246" />
+        <location filename="../../scheduler/execution.py" line="240" />
+        <location filename="../../scheduler/execution.py" line="136" />
+        <location filename="../../scheduler/execution.py" line="125" />
+        <location filename="../../scheduler/execution.py" line="98" />
+        <location filename="../../scheduler/execution.py" line="75" />
+        <source>Vorta Backup</source>
+        <translation type="unfinished">Vorta Backup</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="76" />
+        <source>Starting background backup for %s.</source>
+        <translation type="unfinished">Début de la sauvegarde en arrière-plan pour %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="126" />
+        <source>Backup successful for %s.</source>
+        <translation type="unfinished">Sauvegarde réussie pour %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="137" />
+        <source>Error during backup creation for %s.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="241" />
+        <source>Post Backup Tasks failed for %s</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="247" />
+        <source>Post Backup Tasks successful for %s</source>
+        <translation type="unfinished" />
+    </message>
+</context><context>
+    <name>SchedulerTimers</name>
+    <message>
+        <location filename="../../scheduler/scheduling.py" line="302" />
+        <source>None scheduled</source>
+        <translation type="unfinished">Aucune planifiée</translation>
+    </message>
+</context><context>
     <name>ShellCommandsPage</name>
     <message>
         <location filename="../../views/shell_commands_page.py" line="31" />
@@ -2541,117 +2658,152 @@
 </context><context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="357" />
+        <location filename="../../application.py" line="389" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="137" />
+        <location filename="../../application.py" line="138" />
         <source>Vorta Backup</source>
         <translation>Sauvegarde Vorta</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="200" />
+        <location filename="../../application.py" line="201" />
         <source>No Borg Binary Found</source>
         <translation>Aucun binaire de Borg n'a été trouvé</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="201" />
+        <location filename="../../application.py" line="202" />
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta n'a pas pu localiser un binaire de Borg Backup utilisable.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="223" />
+        <location filename="../../application.py" line="224" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta a besoin de l'Accès complet au disque pour effectuer les sauvegardes</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="224" />
+        <location filename="../../application.py" line="225" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="230" />
+        <location filename="../../application.py" line="231" />
         <source>Full Disk Access</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="233" />
+        <location filename="../../application.py" line="234" />
         <source>System Preferences &gt; Security &amp; Privacy</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="251" />
+        <location filename="../../application.py" line="252" />
         <source>Repository In Use</source>
         <translation>Dépôt en cours d'utilisation</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="253" />
+        <location filename="../../application.py" line="254" />
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="254" />
+        <location filename="../../application.py" line="255" />
         <source>Break the lock</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="258" />
+        <location filename="../../application.py" line="257" />
+        <source>The repository at {} might be in use elsewhere.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="259" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="274" />
+        <location filename="../../application.py" line="285" />
+        <source>Repository Storage Full</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="286" />
+        <source>The storage backing the repository at {} is full.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="288" />
+        <source>Borg could not create its lock file, so no operation can run — including pruning, which would free space. Free up space outside the repository, then try again.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="294" />
         <source>No Repository Permissions</source>
         <translation>Pas de permissions sur ce dépôt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="304" />
+        <location filename="../../application.py" line="296" />
+        <source>You do not have permission to access the repository at {}. Gain access and try again.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="301" />
+        <source>Repository Lock Failed</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="302" />
+        <source>Borg could not lock the repository at {}.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../application.py" line="336" />
         <source>Failed to import profile</source>
         <translation>Échec de l'importation du profil</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="306" />
+        <location filename="../../application.py" line="338" />
         <source>Failed to import a profile from {}:</source>
         <translation>Échec de l'import d'un profil depuis {};</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="310" />
+        <location filename="../../application.py" line="342" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Veuillez retirer ou réparer ce fichier pour masquer ce message.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="317" />
+        <location filename="../../application.py" line="349" />
         <source>Profile import successful!</source>
         <translation>Profil importé avec succès !</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="318" />
+        <location filename="../../application.py" line="350" />
         <source>Profile {} imported.</source>
         <translation>Profil {} importé</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="351" />
+        <location filename="../../application.py" line="383" />
         <source>Repo Check Failed</source>
         <translation>Echec de la vérification du dépôt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="364" />
+        <location filename="../../application.py" line="396" />
         <source>Repository data check for repo was killed by signal %s.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="365" />
+        <location filename="../../application.py" line="397" />
         <source>The process running the check job got a kill signal. Try again.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="368" />
+        <location filename="../../application.py" line="400" />
         <source>Repository data check for repo %s failed. Error code %s</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../application.py" line="373" />
+        <location filename="../../application.py" line="405" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
         <translation type="unfinished" />
     </message>
@@ -2691,33 +2843,20 @@
 </context><context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="504" />
         <source>None scheduled</source>
-        <translation>Aucune planifiée</translation>
+        <translation type="vanished">Aucune planifiée</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="688" />
-        <location filename="../../scheduler.py" line="618" />
-        <location filename="../../scheduler.py" line="607" />
-        <location filename="../../scheduler.py" line="589" />
-        <location filename="../../scheduler.py" line="570" />
         <source>Vorta Backup</source>
-        <translation>Vorta Backup</translation>
+        <translation type="vanished">Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="571" />
         <source>Starting background backup for %s.</source>
-        <translation>Début de la sauvegarde en arrière-plan pour %s.</translation>
+        <translation type="vanished">Début de la sauvegarde en arrière-plan pour %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="608" />
         <source>Backup successful for %s.</source>
-        <translation>Sauvegarde réussie pour %s.</translation>
-    </message>
-    <message>
-        <location filename="../../scheduler.py" line="619" />
-        <source>Error during backup creation for %s.</source>
-        <translation type="unfinished" />
+        <translation type="vanished">Sauvegarde réussie pour %s.</translation>
     </message>
     <message>
         <source>Error during backup creation.</source>
@@ -2726,16 +2865,16 @@
 </context><context>
     <name>messages</name>
     <message>
-        <location filename="../../application.py" line="127" />
+        <location filename="../../application.py" line="128" />
         <source>Running Pre-backup Command...</source>
         <translation type="unfinished" />
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="31" />
         <location filename="../../borg/compact.py" line="30" />
-        <location filename="../../borg/create.py" line="44" />
+        <location filename="../../borg/create.py" line="46" />
         <location filename="../../borg/check.py" line="28" />
-        <location filename="../../application.py" line="358" />
+        <location filename="../../application.py" line="390" />
         <source>logs</source>
         <translation type="unfinished" />
     </message>
@@ -2751,64 +2890,64 @@
     </message>
     <message>
         <location filename="../../borg/version.py" line="21" />
-        <location filename="../../borg/borg_job.py" line="144" />
+        <location filename="../../borg/borg_job.py" line="167" />
         <source>Borg binary was not found.</source>
         <translation>Le binaire Borg est introuvable.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="148" />
+        <location filename="../../borg/borg_job.py" line="171" />
         <source>Select a backup repository first.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="152" />
+        <location filename="../../borg/borg_job.py" line="175" />
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Votre version de Borg est trop ancienne. Une version &gt;=1.1.0 est requise.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="163" />
+        <location filename="../../borg/borg_job.py" line="186" />
         <source>Please unlock your system password manager or disable it under Settings</source>
         <translation>Veuillez déverrouiller votre gestionnaire de mot de passe système ou le désactiver dans l'onglet Paramètres.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="183" />
+        <location filename="../../borg/borg_job.py" line="206" />
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Le mot de passe du dépôt a été enregistré dans un gestionnaire de mot de passe qui n'est plus disponible.
 Essayez de dissocier et d'ajouter le dépôt à nouveau.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="112" />
+        <location filename="../../borg/create.py" line="114" />
         <source>Add some folders to back up first.</source>
         <translation>Ajouter des dossiers à sauvegarder d'abord. </translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="124" />
+        <location filename="../../borg/create.py" line="126" />
         <source>Current Wifi is not allowed.</source>
         <translation>Ce réseau WI-FI n'est pas autorisé.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="133" />
+        <location filename="../../borg/create.py" line="135" />
         <source>Not running backup over metered connection.</source>
         <translation>Connexion limitée : la sauvegarde ne va pas être lancée.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="142" />
+        <location filename="../../borg/create.py" line="144" />
         <source>Pre-backup command returned non-zero exit code.</source>
         <translation>La commande pré-sauvegarde a retourné un code de retour non nul. </translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="146" />
+        <location filename="../../borg/create.py" line="148" />
         <source>Repo folder not mounted or moved.</source>
         <translation>Le dossier des dépôts n'est pas monté ou a été déplacé. </translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="150" />
+        <location filename="../../borg/create.py" line="152" />
         <source>Your current Borg version does not support ZStd compression.</source>
         <translation>La version actuelle de Borg ne supporte pas la compression ZStd.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="216" />
+        <location filename="../../borg/create.py" line="204" />
         <source>Starting backup…</source>
         <translation>Début de la sauvegarde...</translation>
     </message>
@@ -2845,107 +2984,122 @@ Essayez de dissocier et d'ajouter le dépôt à nouveau.</translation>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="37" />
+        <location filename="../../store/settings.py" line="29" />
+        <source>Logging</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="38" />
         <source>Display notifications when background tasks fail</source>
         <translation>Afficher une notifications lorsqu'une tâche en arrière-plan échoue.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="44" />
+        <location filename="../../store/settings.py" line="45" />
         <source>Notify about successful background tasks</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="51" />
+        <location filename="../../store/settings.py" line="52" />
         <source>Automatically start Vorta at login</source>
         <translation>Lancer automatiquement Vorta à l'ouverture de session</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="52" />
+        <location filename="../../store/settings.py" line="53" />
         <source>Add Vorta to the systems autostart list</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="59" />
+        <location filename="../../store/settings.py" line="60" />
         <source>Show main window of Vorta on launch</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="60" />
+        <location filename="../../store/settings.py" line="61" />
         <source>Make Vorta appear on screen instead of minimizing to system tray</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="70" />
+        <location filename="../../store/settings.py" line="71" />
         <source>Get statistics of file/folder when added</source>
         <translation>Obtenir des statistiques sur les fichiers/dossiers lors de l'ajout</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="71" />
+        <location filename="../../store/settings.py" line="72" />
         <source>When adding a new source, calculate its size and the number of files.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="80" />
+        <location filename="../../store/settings.py" line="81" />
         <source>Use the same unit of measurement for archive sizes</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="81" />
+        <location filename="../../store/settings.py" line="82" />
         <source>When enabled, all archive sizes will use the same unit of measurement, such as  KB or MB. This can make archive sizes easier to compare.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="92" />
+        <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
         <translation>Stocker les mots de passe du dépôt dans le trousseau de clés du système, si disponible</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="93" />
+        <location filename="../../store/settings.py" line="94" />
         <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="102" />
+        <location filename="../../store/settings.py" line="103" />
         <source>Try to replace file permissions when mounting an archive</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="106" />
+        <location filename="../../store/settings.py" line="107" />
         <source>Set owner to current user and umask to 0277</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="158" />
+        <location filename="../../store/settings.py" line="114" />
+        <source>Enable logging to file</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="115" />
+        <source>When disabled, logs are only written to the console (e.g. journald when run via systemd).</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="169" />
         <source>Check for updates on startup</source>
         <translation>Vérifier les mises à jour au démarrage</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="159" />
+        <location filename="../../store/settings.py" line="170" />
         <source>Uses Sparkle to find new updates published on Github.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="166" />
+        <location filename="../../store/settings.py" line="177" />
         <source>Include pre-release versions when checking for updates</source>
         <translation>Rechercher également les versions bêta lors de la vérification des mises à jour</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="167" />
+        <location filename="../../store/settings.py" line="178" />
         <source>Needs Vorta restart to apply.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="174" />
+        <location filename="../../store/settings.py" line="185" />
         <source>Check for Full Disk Access on startup</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="178" />
+        <location filename="../../store/settings.py" line="189" />
         <source>Alerts user when full disk access permission has not been provided</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../store/settings.py" line="189" />
+        <location filename="../../store/settings.py" line="200" />
         <source>If the system tray isn't available, ask whether to continue in the background on exit</source>
         <translation type="unfinished" />
     </message>
