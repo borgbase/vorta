@@ -6,6 +6,40 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.12.0</title>
+      <description><![CDATA[<h2>New</h2>
+<ul>
+<li>Jobs page: pending runs and recorded jobs in one table, filterable by profile, repository and status (#2538, #2565)</li>
+<li>Block system sleep while a backup is running (#2410)</li>
+<li>Retry failed checks and compactions after the next backup (#2586)</li>
+<li>Setting to disable file logging (#2570)</li>
+</ul>
+<h2>Fixes</h2>
+<ul>
+<li>Fix a crash after closing the file picker on Python 3.11 with PyQt6 6.12</li>
+<li>Fix macOS 27 tray crash by moving to PyQt6 6.12 (#2566)</li>
+<li>Fix restore of filenames containing newlines (#2025)</li>
+<li>Fix exclude-if-present entries from Vorta 0.8 being ignored (#2369)</li>
+<li>Fix source size estimate ignoring prefixed exclusion patterns (#2576)</li>
+<li>Fix the metered networks checkbox not saving or surviving a restart (#2573)</li>
+<li>Keep the local archive list when <code>borg list</code> output is unreadable (#2412)</li>
+<li>Show the actual Borg error in the status bar instead of the full traceback (#2572)</li>
+<li>Show the post-backup notification after follow-up jobs finish (#2571)</li>
+<li>Distinguish lock failure causes instead of always blaming permissions (#2545)</li>
+<li>Scheduler: stop holding the lock across job submission, and record scheduled runs through their full lifecycle (#2558, #2560)</li>
+<li>Linux: change StartupWMClass to <code>com.borgbase.Vorta</code> (#2536)</li>
+</ul>
+<h2>Requirements</h2>
+<ul>
+<li>Python 3.11 or newer (3.10 reached end of life on 2026-10-01). Tested on 3.11-3.14.</li>
+</ul>]]></description>
+      <pubDate>2026-11-03T22:12:18Z</pubDate>
+      <sparkle:version>0.12.0</sparkle:version>
+      <sparkle:minimumSystemVersion>14.4</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.12.0</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.12.0/Vorta-v0.12.0-arm.dmg" length="45623459" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.11.6</title>
       <description><![CDATA[<h2>Fixes</h2>
 <ul>
