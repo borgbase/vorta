@@ -664,6 +664,46 @@ def test_create_backup_records_skip_reason(qapp, qtbot, mocker):
     assert job.profile_name == PROFILE_NAME
 
 
+def test_rescheduling_during_prepare_does_not_deadlock(qapp, mocker, monkeypatch):
+    """
+    A pre-backup command makes `prepare()` spin the event loop, so a timer tick can reschedule mid-submission (#2588).
+
+    Holding the scheduler lock across `prepare()` deadlocked on that tick, and a missed run must not be submitted twice.
+    """
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 1
+    profile.schedule_make_up_missed = True
+    profile.save()
+    last_time = dt.now() - td(days=1)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=last_time,
+        end_time=last_time,
+    )
+    monkeypatch.setattr(qapp.scheduler, '_net_up', True)
+    submissions = mocker.spy(qapp.scheduler._execution, 'create_backup')
+
+    def reenter(_profile):
+        # Fail rather than hang if the lock is still held here.
+        assert qapp.scheduler.lock.acquire(blocking=False)
+        qapp.scheduler.lock.release()
+        qapp.scheduler.reload_all_timers()
+        return {'ok': False, 'message': 'Current Wifi is not allowed.', 'level': 'info'}
+
+    prepare_mock = mocker.patch('vorta.scheduler.execution.BorgCreateJob.prepare', side_effect=reenter)
+
+    qapp.scheduler.create_backup(profile.id)
+
+    assert submissions.call_count == 2  # the outer run and the catch-up the reschedule asked for
+    assert prepare_mock.call_count == 1
+    assert not qapp.scheduler.lock.locked()
+
+
 def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
     """The jobs view refreshes its records off this signal, and a skip runs no Borg job to announce it."""
     mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
@@ -903,6 +943,52 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     add_job.assert_not_called()
     notifier.deliver.assert_called_once()
     assert notifier.deliver.call_args.kwargs['level'] == 'info'
+
+
+@mark.parametrize(
+    'task, subcommand, returncode, age, expect_queued',
+    [
+        ('validation', None, None, None, True),
+        ('validation', 'check', 0, td(), False),
+        ('validation', 'check', 2, td(), True),  # #2586
+        ('validation', 'check', -1, td(), True),  # interrupted
+        ('validation', 'check', 0, td(weeks=4), True),
+        ('compaction', '--info', 0, td(), False),
+        ('compaction', '--info', 2, td(), True),
+    ],
+)
+def test_post_backup_tasks_only_count_successful_runs(qapp, mocker, task, subcommand, returncode, age, expect_queued):
+    """A failed or interrupted check/compaction must not postpone the next one."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = False
+    profile.validation_on = task == 'validation'
+    profile.validation_weeks = 3
+    profile.compaction_on = task == 'compaction'
+    profile.compaction_weeks = 3
+    profile.save()
+
+    EventLogModel.delete().where(EventLogModel.repo_url == profile.repo.url).execute()
+    if subcommand is not None:
+        EventLogModel.create(
+            subcommand=subcommand,
+            category='scheduled',
+            returncode=returncode,
+            repo_url=profile.repo.url,
+            start_time=dt.now() - age,
+        )
+
+    job_class = {'validation': 'BorgCheckJob', 'compaction': 'BorgCompactJob'}[task]
+    params = {'ok': True, 'cmd': ['borg'], 'profile_id': profile.id, 'profile_name': profile.name}
+    job_mock = mocker.patch.object(vorta.scheduler.execution, job_class)
+    job_mock.prepare.return_value = params
+    mocker.patch.object(vorta.scheduler.execution, 'borg_compat', MagicMock(version='1.2.4'))
+    added = []
+    mocker.patch.object(qapp.jobs_manager, 'add_job', side_effect=added.append)
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick')
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+
+    assert added == ([job_mock.return_value] if expect_queued else [])
 
 
 def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
