@@ -1,4 +1,4 @@
-from vorta.i18n import trans_late
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 
 from .borg_job import BorgJob
 
@@ -18,7 +18,7 @@ class BorgVersionJob(BorgJob):
         ret = {'ok': False}
 
         if cls.prepare_bin() is None:
-            ret['message'] = trans_late('messages', 'Borg binary was not found.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Borg binary was not found.')
             return ret
 
         ret['cmd'] = ['borg', '--version']

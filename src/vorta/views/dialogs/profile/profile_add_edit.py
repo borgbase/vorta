@@ -1,7 +1,8 @@
 from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 from PyQt6.QtWidgets import QDialogButtonBox
 
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, italic
 from vorta.store.models import BackupProfileModel
 from vorta.utils import get_asset
@@ -26,13 +27,13 @@ class AddProfileWindow(AddProfileBase, AddProfileUI):
         self.buttonBox.button(QDialogButtonBox.StandardButton.Save).setText(self.tr("Save"))
         self.buttonBox.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Cancel"))
 
-        self.name_blank = trans_late('AddProfileWindow', 'Please enter a profile name.')
-        self.name_exists = trans_late('AddProfileWindow', 'A profile with this name already exists.')
-        self.profile_explainer_p1 = trans_late(
+        self.name_blank = QT_TRANSLATE_NOOP('AddProfileWindow', 'Please enter a profile name.')
+        self.name_exists = QT_TRANSLATE_NOOP('AddProfileWindow', 'A profile with this name already exists.')
+        self.profile_explainer_p1 = QT_TRANSLATE_NOOP(
             'Dialog',
             'Profiles allow configuring of different backup and repository settings including different schedules.',
         )
-        self.profile_explainer_p2 = trans_late(
+        self.profile_explainer_p2 = QT_TRANSLATE_NOOP(
             'Dialog',
             'All profiles will be able to access the same repositories as well as the same %1 keys. '
             'The global application settings in %2 are shared across profiles.',

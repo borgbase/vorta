@@ -6,4 +6,4 @@ brew 'qt'
 brew 'hub'
 brew 'xmlstarlet'
 cask 'qt-creator'
-cask 'sparkle'
+# Sparkle is fetched from its upstream release by package/fetch-sparkle.sh

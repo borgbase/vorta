@@ -1,3 +1,4 @@
+import pytest
 from test_constants import TEST_SOURCE_DIR
 
 from vorta.borg.create import BorgCreateJob
@@ -77,3 +78,29 @@ def test_prepare_returns_info_level_when_metered_connection(mocker):
     mocker.patch('vorta.borg.create.get_network_status_monitor', return_value=mock_monitor)
     result = BorgCreateJob.prepare(default_profile)
     assert result.get('level') == 'info'
+
+
+@pytest.mark.parametrize(
+    'value, expected',
+    [
+        (None, []),
+        ('', []),
+        ('.NO_BACKUP\nCACHEDIR.TAG', [('.NO_BACKUP', True), ('CACHEDIR.TAG', True)]),
+        ('[x] keep.me\n[] off.me', [('keep.me', True), ('off.me', False)]),
+        ('[x]nospace\n[]nospace.off', [('nospace', True), ('nospace.off', False)]),
+        ('\n  \n[x] a\n[] \n', [('a', True)]),
+    ],
+)
+def test_exclude_if_present_patterns(value, expected):
+    profile = BackupProfileModel(exclude_if_present=value)
+    assert profile.get_exclude_if_present_patterns() == expected
+
+
+def test_create_exclude_if_present_legacy_lines():
+    """Unprefixed lines from Vorta < 0.10 must still be passed to borg (#2369)."""
+    default_profile = BackupProfileModel.get()
+    default_profile.exclude_if_present = '.NO_BACKUP\n[x] keep.me\n[] off.me\n\n'
+    cmd = BorgCreateJob.prepare(default_profile)['cmd']
+
+    pairs = [cmd[i + 1] for i, arg in enumerate(cmd) if arg == '--exclude-if-present']
+    assert pairs == ['.NO_BACKUP', 'keep.me']

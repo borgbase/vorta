@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QWidget
 
 from vorta.keyring.abc import VortaKeyring
 from vorta.utils import (
+    FilePathInfoAsync,
     choose_file_dialog,
     find_best_unit_for_sizes,
     get_path_datasize,
@@ -158,6 +159,71 @@ def test_get_path_datasize(tmpdir):
     data_size, files_count = get_path_datasize(str(excluded_dir), exclude_patterns)
     assert data_size == 0
     assert files_count == 0
+
+
+PREFIXED_PATTERN_FILES = {
+    'keep.txt': 'k',
+    'a.pyc': 'pyc',
+    'proj/node_modules/mod.js': 'module',
+    'proj/src/app.py': 'app.py',
+    'odd[1]*/inner.txt': 'literal',
+    'odd1x/inner.txt': 'globbed',
+    'cache/blob.bin': 'cacheblob',
+    'cache2/blob.bin': 'cache2blob',
+}
+
+
+def make_pattern_tree(tmpdir):
+    root = tmpdir.mkdir('root')
+    for rel_path, content in PREFIXED_PATTERN_FILES.items():
+        root.join(rel_path).write(content, ensure=True)
+    return root
+
+
+def expected_datasize(excluded):
+    included = [content for path, content in PREFIXED_PATTERN_FILES.items() if path not in excluded]
+    return sum(len(content) for content in included), len(included)
+
+
+@pytest.mark.parametrize(
+    'patterns, excluded',
+    [
+        (['fm:*/node_modules'], ['proj/node_modules/mod.js']),
+        (['fm:*.pyc'], ['a.pyc']),
+        (['pf:{root}/proj'], ['proj/node_modules/mod.js', 'proj/src/app.py']),
+        (['pf:{root}/odd[1]*'], ['odd[1]*/inner.txt']),  # literal, so odd1x is kept
+        (['pp:{root}/cache'], ['cache/blob.bin']),  # prefix ends at a path component, so cache2 is kept
+        ([r're:\.(py|js)$'], ['proj/node_modules/mod.js', 'proj/src/app.py']),
+        (['fm:*.pyc', 'pf:{root}/cache2'], ['a.pyc', 'cache2/blob.bin']),
+        # ignored: sh: isn't supported by the estimate, unknown style, invalid regex
+        (['sh:**/node_modules'], []),
+        (['xx:*'], []),
+        (['re:('], []),
+    ],
+)
+def test_get_path_datasize_prefixed_patterns(tmpdir, patterns, excluded):
+    """
+    Test that get_path_datasize() handles borg's pattern style prefixes.
+    """
+    root = make_pattern_tree(tmpdir)
+    exclude_patterns = [p.format(root=root) for p in patterns]
+
+    assert get_path_datasize(str(root), exclude_patterns) == expected_datasize(excluded)
+
+
+def test_file_path_info_ignores_comments(tmpdir):
+    """
+    Test that comment and empty lines of the exclusion string aren't used as patterns.
+    """
+    root = make_pattern_tree(tmpdir)
+    exclude_str = f"# custom added rules\npf:{root}/proj\n\n# raw exclusions\n  # fm:*.pyc\nfm:*.pyc\n"
+
+    file_info = FilePathInfoAsync(str(root), exclude_str)
+
+    assert file_info.exclude_patterns == [f'pf:{root}/proj', 'fm:*.pyc']
+    assert get_path_datasize(str(root), file_info.exclude_patterns) == expected_datasize(
+        ['proj/node_modules/mod.js', 'proj/src/app.py', 'a.pyc']
+    )
 
 
 def test_is_system_tray_available(mocker):

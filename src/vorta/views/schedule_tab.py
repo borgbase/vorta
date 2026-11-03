@@ -2,6 +2,7 @@ from PyQt6 import uic
 
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
+from vorta.views.jobs_page import JobsPage
 from vorta.views.log_page import LogPage
 from vorta.views.networks_page import NetworksPage
 from vorta.views.schedule_page import SchedulePage
@@ -21,6 +22,7 @@ class ScheduleTab(BaseTab, ScheduleBase, ScheduleUI):
         self.init_shell_commands_page()
         self.init_networks_page()
         self.init_schedule_page()
+        self.init_jobs_page()
         self.track_palette_change(call_now=True)
         self.track_backup_finished(self.logPage.populate_logs)
 
@@ -44,8 +46,14 @@ class ScheduleTab(BaseTab, ScheduleBase, ScheduleUI):
         self.scheduleLayout.addWidget(self.schedulePage)
         self.schedulePage.show()
 
+    def init_jobs_page(self):
+        self.jobsPage = JobsPage(self, profile_provider=self.profile)
+        self.jobsLayout.addWidget(self.jobsPage)
+        self.jobsPage.show()
+
     def set_icons(self):
         self.toolBox.setItemIcon(0, get_colored_icon('clock-o'))
         self.toolBox.setItemIcon(1, get_colored_icon('wifi'))
         self.toolBox.setItemIcon(2, get_colored_icon('tasks'))
         self.toolBox.setItemIcon(3, get_colored_icon('terminal'))
+        self.toolBox.setItemIcon(4, get_colored_icon('view-list-details'))

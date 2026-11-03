@@ -5,6 +5,8 @@ from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
 class BorgInitJob(BorgJob):
+    should_inhibit = True
+
     def started_event(self):
         self.updated.emit(self.tr('Setting up new repo…'))
 

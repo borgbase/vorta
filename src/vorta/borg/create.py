@@ -4,10 +4,10 @@ import subprocess
 import tempfile
 from datetime import datetime as dt
 
-from PyQt6.QtCore import QCoreApplication
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QCoreApplication
 
 from vorta import config
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import ArchiveModel, RepoModel, SourceFileModel, WifiSettingModel
 from vorta.utils import borg_compat, format_archive_name, get_network_status_monitor
@@ -16,6 +16,8 @@ from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
+    should_inhibit = True
+
     def process_result(self, result):
         if result['returncode'] in [0, 1] and 'archive' in result['data']:
             new_archive, created = ArchiveModel.get_or_create(
@@ -109,7 +111,7 @@ class BorgCreateJob(BorgJob):
             suffix_command = shlex.split(sep + s2)
 
         if n_backup_folders == 0 and '--paths-from-command' not in extra_cmd_options:
-            ret['message'] = trans_late('messages', 'Add some folders to back up first.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Add some folders to back up first.')
             return ret
 
         network_status_monitor = get_network_status_monitor()
@@ -121,7 +123,7 @@ class BorgCreateJob(BorgJob):
                 & (WifiSettingModel.profile == profile)
             )
             if wifi_is_disallowed.count() > 0 and profile.repo.is_remote_repo():
-                ret['message'] = trans_late('messages', 'Current Wifi is not allowed.')
+                ret['message'] = QT_TRANSLATE_NOOP('messages', 'Current Wifi is not allowed.')
                 ret['level'] = 'info'
                 return ret
 
@@ -130,7 +132,7 @@ class BorgCreateJob(BorgJob):
             and profile.dont_run_on_metered_networks
             and network_status_monitor.is_network_metered()
         ):
-            ret['message'] = trans_late('messages', 'Not running backup over metered connection.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Not running backup over metered connection.')
             ret['level'] = 'info'
             return ret
 
@@ -139,15 +141,15 @@ class BorgCreateJob(BorgJob):
 
         # Run user-supplied pre-backup command
         if cls.pre_post_backup_cmd(ret) != 0:
-            ret['message'] = trans_late('messages', 'Pre-backup command returned non-zero exit code.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Pre-backup command returned non-zero exit code.')
             return ret
 
         if not profile.repo.is_remote_repo() and not os.path.exists(profile.repo.url):
-            ret['message'] = trans_late('messages', 'Repo folder not mounted or moved.')
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Repo folder not mounted or moved.')
             return ret
 
         if 'zstd' in profile.compression and not borg_compat.check('ZSTD'):
-            ret['message'] = trans_late(
+            ret['message'] = QT_TRANSLATE_NOOP(
                 'messages',
                 'Your current Borg version does not support ZStd compression.',
             )
@@ -167,17 +169,9 @@ class BorgCreateJob(BorgJob):
         ]
         cmd += extra_cmd_options
 
-        # Function to extend command with exclude-if-present patterns
-        if profile.exclude_if_present is not None:
-            patterns = []
-            for f in profile.exclude_if_present.split('\n'):
-                f = f.strip()
-                if f.startswith('[x]'):
-                    patterns.append(f[3:].strip())  # Remove the '[x]' prefix
-
-            for pattern in patterns:
-                if pattern.strip():
-                    cmd.extend(['--exclude-if-present', pattern])
+        for pattern, enabled in profile.get_exclude_if_present_patterns():
+            if enabled:
+                cmd.extend(['--exclude-if-present', pattern])
 
         # Add excludes
         # Partly inspired by borgmatic/borgmatic/borg/create.py
@@ -194,12 +188,6 @@ class BorgCreateJob(BorgJob):
             cmd.extend(['--exclude-from', pattern_file.name])
             ret['cleanup_files'].append(pattern_file)
 
-        # Currently not in use, but may be added back to the UI later.
-        # if profile.exclude_if_present is not None:
-        #     for f in profile.exclude_if_present.split('\n'):
-        #         if f.strip():
-        #             cmd.extend(['--exclude-if-present', f.strip()])
-
         # Add repo url and source dirs.
         new_archive_name = format_archive_name(profile, profile.new_archive_name)
 
@@ -213,7 +201,7 @@ class BorgCreateJob(BorgJob):
 
         cmd += suffix_command
 
-        ret['message'] = trans_late('messages', 'Starting backup…')
+        ret['message'] = QT_TRANSLATE_NOOP('messages', 'Starting backup…')
         ret['ok'] = True
         ret['cmd'] = cmd
 

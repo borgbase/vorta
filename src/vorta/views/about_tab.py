@@ -2,10 +2,11 @@ import logging
 from datetime import datetime
 
 from PyQt6 import QtCore, uic
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 
 from vorta import config
 from vorta._version import __version__
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.utils import get_asset
 from vorta.views.base_tab import BaseTab
@@ -25,11 +26,11 @@ class AboutTab(BaseTab, AboutTabBase, AboutTabUI):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
         self.versionLabel.setText(__version__)
-        self.bug_report_text = trans_late('Form', '%1 to report a bug.')
-        self.docs_text = trans_late('Form', '%1 to view the docs.')
-        self.repo_text = trans_late('Form', '%1 to view Git repo.')
-        self.click_here = trans_late('Form', 'Click here')
-        self.view_logs_text = trans_late('Form', 'View the logs')
+        self.bug_report_text = QT_TRANSLATE_NOOP('Form', '%1 to report a bug.')
+        self.docs_text = QT_TRANSLATE_NOOP('Form', '%1 to view the docs.')
+        self.repo_text = QT_TRANSLATE_NOOP('Form', '%1 to view Git repo.')
+        self.click_here = QT_TRANSLATE_NOOP('Form', 'Click here')
+        self.view_logs_text = QT_TRANSLATE_NOOP('Form', 'View the logs')
         self._set_links()
         self.gpl_logo.setPixmap(get_colored_icon('gpl_logo', scaled_height=40, return_qpixmap=True))
         self.python_logo.setPixmap(get_colored_icon('python_logo', scaled_height=40, return_qpixmap=True))

@@ -3,7 +3,7 @@ export APPSTREAM_METADATA := src/vorta/assets/metadata/com.borgbase.Vorta.appdat
 VERSION := $(shell uv run python -c "from src.vorta._version import __version__; print(__version__)")
 
 .PHONY: help clean lint test test-unit test-integration \
-        bump-version pypi-release release-preflight changelog update-appcast \
+        pypi-release release-preflight changelog update-appcast \
         translations-from-source translations-to-qm \
         flatpak-install
 .DEFAULT_GOAL := help
@@ -20,7 +20,7 @@ clean:
 
 dist/Vorta.app:  ## Build macOS app locally (without Borg)
 	uv run pyinstaller --clean --noconfirm package/vorta.spec
-	cp -R ${HOMEBREW}/Caskroom/sparkle/*/Sparkle.framework dist/Vorta.app/Contents/Frameworks/
+	sh package/fetch-sparkle.sh dist/Vorta.app/Contents/Frameworks
 	rm -rf build/vorta dist/vorta
 
 dist/Vorta.dmg: dist/Vorta.app  ## Create notarized macOS DMG for distribution.
@@ -39,16 +39,8 @@ release-preflight:  ## Check release prerequisites
 	@echo "Version: ${VERSION}"
 	@echo "All checks passed"
 
-bump-version: release-preflight  ## Tag new version. First set new version number in src/vorta/_version.py
-	xmlstarlet ed -L -u 'component/releases/release/@date' -v $(shell date +%F) ${APPSTREAM_METADATA}
-	xmlstarlet ed -L -u 'component/releases/release/@version' -v v${VERSION} ${APPSTREAM_METADATA}
-	git commit -a -m "Bump version to v${VERSION}"
-	git tag -a v${VERSION} -m "Release v${VERSION}"
-
-translations-from-source:  ## Extract strings from source code / UI files, merge into .ts.
-	pylupdate5 -verbose -translate-function trans_late \
-			   $$(find ${VORTA_SRC} -iname "*.py" -o -iname "*.ui") \
-			   -ts ${VORTA_SRC}/i18n/ts/vorta.en.ts
+translations-from-source:  ## Extract strings from source code / UI files, merge into every .ts.
+	pylupdate6 $(foreach f,$(wildcard ${VORTA_SRC}/i18n/ts/vorta.*.ts),--ts $f) ${VORTA_SRC}
 
 translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls ${VORTA_SRC}/i18n/ts/vorta.*.ts); do lrelease $$f -qm ${VORTA_SRC}/i18n/qm/$$(basename $$f .ts).qm; done

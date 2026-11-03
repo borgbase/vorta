@@ -8,11 +8,13 @@ from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 import vorta
 import vorta.application
+import vorta.borg.borg_job
 import vorta.borg.jobs_manager
 from vorta.store.models import (
     ArchiveModel,
     BackupProfileModel,
     EventLogModel,
+    JobModel,
     RepoModel,
     RepoPassword,
     SchemaVersion,
@@ -59,6 +61,7 @@ models = [
     ArchiveModel,
     WifiSettingModel,
     EventLogModel,
+    JobModel,
     SchemaVersion,
 ]
 
@@ -99,6 +102,13 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     )
     vorta.store.connection.init_db(mock_db)
 
+    # The scheduler outlives the per-test DB, so drop pauses and timers armed by earlier tests.
+    for _, timer in qapp.scheduler.pauses.values():
+        timer.stop()
+    qapp.scheduler.pauses.clear()
+    for profile_id in list(qapp.scheduler.timers):
+        qapp.scheduler.remove_job(profile_id)
+
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
     keyring_setting.value = False
@@ -129,6 +139,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Using disconnect_all() instead of disconnect() to ensure ALL handlers are removed,
     # not just one (which can leave stale connections from previous tests)
     disconnect_all(qapp.scheduler.schedule_changed)
+    disconnect_all(qapp.scheduler.jobs_changed)
 
     # Reload the window to apply the mock data
     # If this test has the `window_load` fixture,
@@ -156,6 +167,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Disconnect signals
     disconnect_all(qapp.backup_finished_event)
     disconnect_all(qapp.scheduler.schedule_changed)
+    disconnect_all(qapp.scheduler.jobs_changed)
 
     # Clear the workers dict to prevent accumulation of dead thread references
     qapp.jobs_manager.workers.clear()
@@ -205,6 +217,25 @@ def borg_json_output():
 
 
 @pytest.fixture
+def mock_borg_popen(mocker, borg_json_output):
+    """
+    Mock Popen with fresh file handles per call, for tests that chain jobs (e.g. prune -> list).
+    Usage: mock_borg_popen(['prune', 'list']). Extra calls reuse the last subcommand.
+    """
+
+    def _mock(subcommands):
+        calls = iter(subcommands)
+
+        def _popen(*args, **kwargs):
+            stdout, stderr = borg_json_output(next(calls, subcommands[-1]))
+            return mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+
+        return mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=_popen)
+
+    return _mock
+
+
+@pytest.fixture
 def rootdir():
     return os.path.dirname(os.path.abspath(__file__))
 
@@ -218,5 +249,5 @@ def archive_env(qapp, qtbot):
     tab: ArchiveTab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.populate_from_profile()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() == 2, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.archiveTable.model().rowCount() == 2, **pytest._wait_defaults)
     return main, tab

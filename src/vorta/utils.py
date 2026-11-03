@@ -60,32 +60,51 @@ def normalize_path(path):
 
 
 # prepare patterns as borg does
-# see `FnmatchPattern._prepare` at
-# https://github.com/borgbackup/borg/blob/master//src/borg/patterns.py
-def prepare_pattern(pattern):
-    """Prepare and process fnmatch patterns as borg does"""
-    if pattern.endswith(os.path.sep):
-        # trailing sep indicates that the contents should be excluded
-        # but not the directory it self.
-        pattern = os.path.normpath(pattern).rstrip(os.path.sep)
-        pattern += os.path.sep + '*' + os.path.sep
-    else:
-        pattern = os.path.normpath(pattern) + os.path.sep + '*'
+# see `parse_pattern` and the pattern classes at
+# https://github.com/borgbackup/borg/blob/1.4-maint/src/borg/patterns.py
+def prepare_pattern(pattern) -> Optional[Callable[[str], bool]]:
+    """Return a function that checks a path (without leading sep) against the pattern as borg does,
+    or None if the pattern style isn't supported here."""
+    sep = os.path.sep
+    style = 'fm'  # borg's default style for exclude patterns
+    if len(pattern) > 2 and pattern[2] == ':' and pattern[:2].isalnum():
+        style, pattern = pattern[:2], pattern[3:]
 
-    pattern = pattern.lstrip(os.path.sep)  # sep at beginning is removed
-    return re.compile(fnmatch.translate(pattern))
+    if style == 'fm':
+        if pattern.endswith(sep):
+            # trailing sep indicates that the contents should be excluded
+            # but not the directory it self.
+            pattern = os.path.normpath(pattern).rstrip(sep) + sep + '*' + sep
+        else:
+            pattern = os.path.normpath(pattern) + sep + '*'
+        regex = re.compile(fnmatch.translate(pattern.lstrip(sep)))  # sep at beginning is removed
+        return lambda path: regex.match(path + sep) is not None
+    if style == 'pf':
+        pattern = os.path.normpath(pattern).lstrip(sep)
+        return lambda path: path == pattern
+    if style == 'pp':
+        pattern = (os.path.normpath(pattern).rstrip(sep) + sep).lstrip(sep)
+        return lambda path: (path + sep).startswith(pattern)
+    if style == 're':
+        try:
+            regex = re.compile(pattern)  # not normalized, as in borg
+        except re.error:
+            return None
+        return lambda path: regex.search(path) is not None
+    # 'sh' would need a port of borg's shellpattern.translate(). Treating it as fnmatch would let '*'
+    # match across '/' and over-exclude, so sh: patterns are skipped here, like unknown styles.
+    return None
 
 
-def match(pattern: re.Pattern, path: str):
+def match(pattern: Callable[[str], bool], path: str):
     """Check whether a path matches the given pattern."""
-    path = path.lstrip(os.path.sep) + os.path.sep
-    return pattern.match(path) is not None
+    return pattern(path.lstrip(os.path.sep))
 
 
 def get_directory_size(dir_path, exclude_patterns):
     '''Get number of files only and total size in bytes from a path.
     Based off https://stackoverflow.com/a/17936789'''
-    exclude_patterns = [prepare_pattern(p) for p in exclude_patterns]
+    exclude_patterns = [m for m in map(prepare_pattern, exclude_patterns) if m is not None]
 
     data_size_filtered = 0
     seen = set()

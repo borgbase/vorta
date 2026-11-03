@@ -1,7 +1,7 @@
 import importlib
 import logging
 
-from vorta.i18n import trans_late
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +39,9 @@ class VortaKeyring:
 
     def get_backend_warning(self):
         if self.is_system:
-            return trans_late('utils', 'Storing password in your password manager.')
+            return QT_TRANSLATE_NOOP('utils', 'Storing password in your password manager.')
         else:
-            return trans_late('utils', 'Saving password with Vorta settings.')
+            return QT_TRANSLATE_NOOP('utils', 'Saving password with Vorta settings.')
 
     def set_password(self, service, repo_url, password):
         """

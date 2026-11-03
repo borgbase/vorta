@@ -8,6 +8,32 @@ from vorta.views.partials.treemodel import FileSystemItem, path_to_str
 
 from .borg_job import BorgJob
 
+_FNMATCH_ESCAPES = {'*': '[*]', '?': '[?]', '[': '[[]'}
+
+
+def _include_pattern(path: str) -> str:
+    """Return a pattern file line that includes `path`.
+
+    Borg reads pattern files line by line and strips surrounding whitespace, with no
+    escape mechanism. Paths containing line breaks or leading/trailing whitespace are
+    therefore expressed as `fm:` patterns with those characters replaced by `?`.
+    """
+    if '\n' not in path and '\r' not in path and path == path.strip():
+        return '+ ' + path
+
+    stripped = path.lstrip()
+    lead = len(path) - len(stripped)
+    stripped = stripped.rstrip()
+    trail = len(path) - lead - len(stripped)
+
+    chars = []
+    for i, c in enumerate(path):
+        if c in '\n\r' or i < lead or i >= len(path) - trail:
+            chars.append('?')
+        else:
+            chars.append(_FNMATCH_ESCAPES.get(c, c))
+    return '+ fm:' + ''.join(chars)
+
 
 class BorgExtractJob(BorgJob):
     def started_event(self):
@@ -55,7 +81,7 @@ class BorgExtractJob(BorgJob):
 
                 item: FileSystemItem[FileData] = new_index.internalPointer()
                 if item.data.checkstate == Qt.CheckState.Checked:
-                    pattern_file.write("+ " + path_to_str(item.path) + "\n")
+                    pattern_file.write(_include_pattern(path_to_str(item.path)) + "\n")
 
         pattern_file.write("- fm:*\n")
         pattern_file.flush()

@@ -260,7 +260,7 @@ def archive_env(qapp, qtbot):
     tab: ArchiveTab = main.archiveTab
     main.tabWidget.setCurrentIndex(3)
     tab.refresh_archive_list()
-    qtbot.waitUntil(lambda: tab.archiveTable.rowCount() > 0, **pytest._wait_defaults)
+    qtbot.waitUntil(lambda: tab.archiveTable.model().rowCount() > 0, **pytest._wait_defaults)
     return main, tab
 
 

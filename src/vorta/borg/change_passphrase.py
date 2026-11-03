@@ -1,8 +1,10 @@
 from typing import Any, Dict
 
+from PyQt6.QtCore import QT_TRANSLATE_NOOP
+
 from vorta import config
 from vorta.borg._compatibility import MIN_BORG_FOR_FEATURE
-from vorta.i18n import trans_late, translate
+from vorta.i18n import translate
 from vorta.i18n.richtext import escape, format_richtext, link
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
@@ -46,7 +48,7 @@ class BorgChangePassJob(BorgJob):
 
         if not borg_compat.check('CHANGE_PASSPHRASE'):
             ret['ok'] = False
-            ret['message'] = trans_late(
+            ret['message'] = QT_TRANSLATE_NOOP(
                 'messages',
                 'This feature needs Borg {} or higher.'.format(MIN_BORG_FOR_FEATURE['CHANGE_PASSPHRASE']),
             )

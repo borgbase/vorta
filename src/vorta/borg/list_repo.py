@@ -1,9 +1,12 @@
+import logging
 from datetime import datetime as dt
 
 from vorta.store.models import ArchiveModel, RepoModel
 from vorta.utils import borg_compat
 
 from .borg_job import BorgJob
+
+logger = logging.getLogger(__name__)
 
 
 class BorgListRepoJob(BorgJob):
@@ -36,26 +39,36 @@ class BorgListRepoJob(BorgJob):
         return ret
 
     def process_result(self, result):
-        if result['returncode'] == 0:
-            repo, created = RepoModel.get_or_create(url=result['cmd'][-1])
-            if not result['data']:
-                result['data'] = {}  # TODO: Workaround for tests. Can't read mock results 2x.
-            remote_archives = result['data'].get('archives', [])
+        if result['returncode'] != 0:
+            return
 
-            # Delete archives that don't exist on the remote side
-            for archive in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
-                if not list(filter(lambda s: s['id'] == archive.snapshot_id, remote_archives)):
-                    archive.delete_instance()
+        data = result['data']
+        if not isinstance(data, dict) or not isinstance(data.get('archives'), list):
+            # Never treat unreadable output as "no archives" - that would wipe the local list.
+            msg = self.tr('Could not read archive list from Borg. Local list kept.')
+            logger.warning('Unexpected borg list output (%s): %.200r', type(data).__name__, data)
+            result['errors'].append((logging.WARNING, msg))
+            result['ok'] = False
+            return
 
-            # Add remote archives we don't have locally.
-            for archive in result['data'].get('archives', []):
-                new_archive, _ = ArchiveModel.get_or_create(
-                    snapshot_id=archive['id'],
-                    repo=repo.id,
-                    defaults={
-                        'name': archive['name'],
-                        # Convert to local time (for Borg 2.x UTC timestamps) before storing as naive datetime
-                        'time': dt.fromisoformat(archive['time']).astimezone().replace(tzinfo=None),
-                    },
-                )
-                new_archive.save()
+        repo, _ = RepoModel.get_or_create(url=result['cmd'][-1])
+        remote_archives = data['archives']
+        remote_ids = {a['id'] for a in remote_archives}
+
+        # Delete archives that don't exist on the remote side
+        for archive in ArchiveModel.select().where(ArchiveModel.repo == repo.id):
+            if archive.snapshot_id not in remote_ids:
+                archive.delete_instance()
+
+        # Add remote archives we don't have locally.
+        for archive in remote_archives:
+            new_archive, _ = ArchiveModel.get_or_create(
+                snapshot_id=archive['id'],
+                repo=repo.id,
+                defaults={
+                    'name': archive['name'],
+                    # Convert to local time (for Borg 2.x UTC timestamps) before storing as naive datetime
+                    'time': dt.fromisoformat(archive['time']).astimezone().replace(tzinfo=None),
+                },
+            )
+            new_archive.save()

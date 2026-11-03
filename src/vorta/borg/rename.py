@@ -9,6 +9,10 @@ class BorgRenameJob(BorgJob):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Renaming archive…')}")
 
+    def finished_event(self, result):
+        self.app.backup_finished_event.emit(result)
+        self.result.emit(result)
+
     def log_event(self, msg):
         self.app.backup_log_event.emit(msg)
 

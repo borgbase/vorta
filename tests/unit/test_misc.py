@@ -8,8 +8,12 @@ from PyQt6 import QtCore
 from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import QCheckBox, QFormLayout, QMessageBox
 
+import vorta.autostart
+import vorta.store.connection
 import vorta.store.models
+import vorta.views.partials.archive_table_model
 from vorta.store.models import SettingsModel
+from vorta.views.partials.archive_table_model import ArchiveTableModel
 
 
 def test_toggle_all_settings(qapp, qtbot):
@@ -35,15 +39,16 @@ def test_toggle_all_settings(qapp, qtbot):
 
 
 @pytest.mark.skipif(sys.platform != "linux", reason="testing autostart path for Linux only")
-def test_autostart_linux(qapp, qtbot):
+def test_autostart_linux(qapp, qtbot, monkeypatch, tmp_path):
     """Checks that autostart path is added correctly on Linux when setting is enabled."""
+    # conftest stubs out open_app_at_startup; use the real one here, but in a private config dir
+    monkeypatch.setattr(vorta.store.connection, 'open_app_at_startup', vorta.autostart.open_app_at_startup)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
     setting = "Automatically start Vorta at login"
 
     # ensure file is present when autostart is enabled
     _click_toggle_setting(setting, qapp, qtbot)
-    autostart_path = (
-        Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~") + '/.config') + "/autostart") / "vorta.desktop"
-    )
+    autostart_path = tmp_path / "autostart" / "vorta.desktop"
     qtbot.waitUntil(lambda: autostart_path.exists(), **pytest._wait_defaults)
     with open(autostart_path) as desktop_file:
         desktop_file_text = desktop_file.read()
@@ -51,8 +56,7 @@ def test_autostart_linux(qapp, qtbot):
 
     # ensure file is removed when autostart is disabled
     _click_toggle_setting(setting, qapp, qtbot)
-    if sys.platform == 'linux':
-        assert not os.path.exists(autostart_path)
+    assert not autostart_path.exists()
 
 
 def test_enable_background_question(qapp, monkeypatch, mocker):
@@ -80,14 +84,19 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
     tab = qapp.main_window.archiveTab
     setting = "Use the same unit of measurement for archive sizes"
 
-    # set mocks
+    # set mocks (size formatting now lives in the table model)
     mock_setting = mocker.patch.object(vorta.views.archive_tab.SettingsModel, "get", return_value=Mock(value=True))
-    mock_pretty_bytes = mocker.patch.object(vorta.views.archive_tab, "pretty_bytes")
+    mock_pretty_bytes = mocker.patch.object(vorta.views.partials.archive_table_model, "pretty_bytes")
 
-    # with setting enabled, fixed units should be determined and passed to pretty_bytes as an 'int'
+    def render_size():
+        index = tab.archiveTable.model().index(0, ArchiveTableModel.COL_SIZE)
+        index.data(QtCore.Qt.ItemDataRole.DisplayRole)
+
+    # with setting enabled, a fixed unit is determined and passed to pretty_bytes as an 'int'
     tab.populate_from_profile()
+    render_size()
     mock_pretty_bytes.assert_called()
-    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    kwargs_list = mock_pretty_bytes.call_args.kwargs
     assert 'fixed_unit' in kwargs_list
     assert isinstance(kwargs_list['fixed_unit'], int)
 
@@ -97,8 +106,9 @@ def test_enable_fixed_units(qapp, qtbot, mocker):
 
     # with setting disabled, pretty_bytes should be called with fixed units set to 'None'
     tab.populate_from_profile()
+    render_size()
     mock_pretty_bytes.assert_called()
-    kwargs_list = mock_pretty_bytes.call_args_list[0].kwargs
+    kwargs_list = mock_pretty_bytes.call_args.kwargs
     assert 'fixed_unit' in kwargs_list
     assert kwargs_list['fixed_unit'] is None
 
@@ -128,6 +138,19 @@ def test_check_full_disk_access(qapp, mocker):
     # See that pop-up does not occur
     qapp.check_darwin_permissions()
     mock_qmessagebox.assert_not_called()
+
+
+def test_toggle_file_logging(qapp, qtbot, monkeypatch):
+    """Checks that toggling the setting enables and disables the log file handler."""
+    set_file_logging = Mock()
+    monkeypatch.setattr(vorta.store.connection, 'set_file_logging', set_file_logging)
+    setting = "Enable logging to file"
+
+    _click_toggle_setting(setting, qapp, qtbot)
+    set_file_logging.assert_called_with(False)
+
+    _click_toggle_setting(setting, qapp, qtbot)
+    set_file_logging.assert_called_with(True)
 
 
 def _click_toggle_setting(setting, qapp, qtbot):
