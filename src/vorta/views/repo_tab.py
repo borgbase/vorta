@@ -286,7 +286,33 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         window.open()
 
     def repo_select_action(self):
-        self.save_profile_attr('repo', self.repoSelector.currentData())
+        profile = self.profile()
+        new_repo_id = self.repoSelector.currentData()
+        if new_repo_id == profile.repo_id:
+            return
+
+        old_repo = profile.repo
+        if old_repo is not None and new_repo_id is not None and old_repo.archives.exists():
+            new_repo = RepoModel.get_by_id(new_repo_id)
+            message = QMessageBox(self)
+            message.setIcon(QMessageBox.Icon.Warning)
+            message.setTextFormat(QtCore.Qt.TextFormat.PlainText)
+            message.setWindowTitle(self.tr('Change Repository?'))
+            message.setText(
+                self.tr(
+                    'The current repository "{0}" contains backups. '
+                    'Switch this profile to "{1}"? Existing backups will remain in the current repository.'
+                ).format(old_repo.name or old_repo.url, new_repo.name or new_repo.url)
+            )
+            message.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            message.setDefaultButton(QMessageBox.StandardButton.No)
+            if message.exec() != QMessageBox.StandardButton.Yes:
+                # Restoring the selection must not trigger another save or confirmation.
+                with QtCore.QSignalBlocker(self.repoSelector):
+                    self.repoSelector.setCurrentIndex(self.repoSelector.findData(old_repo.id))
+                return
+
+        self.save_profile_attr('repo', new_repo_id)
         self.init_repo_stats()
 
     def process_new_repo(self, result):
