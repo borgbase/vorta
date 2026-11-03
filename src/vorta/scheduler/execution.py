@@ -23,6 +23,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+#: Borg exits with 1 on warnings, which still counts as a completed run.
+SUCCESS_RETURNCODES = (0, 1)
+
 
 def worst_error(errors: list[tuple[int, str]] | None) -> str | None:
     """The most severe message Borg logged, to show as the reason a run failed."""
@@ -109,7 +112,7 @@ class SchedulerExecution:
         notifier = VortaNotifications.pick()
         profile_name = result['params']['profile_name']
         profile_id = result['params']['profile'].id
-        succeeded = result['returncode'] in [0, 1]
+        succeeded = result['returncode'] in SUCCESS_RETURNCODES
 
         record_id = result['params'].get('job_record_id')
         if record_id is not None:
@@ -163,11 +166,13 @@ class SchedulerExecution:
                 if msg['ok']:
                     jobs.append(BorgListRepoJob(msg['cmd'], msg, profile.repo.id))
 
+        # Only successful runs count, so a failed or interrupted check or compaction is retried after the next backup.
         validation_cutoff = dt.now() - timedelta(days=7 * profile.validation_weeks)
         recent_validations = (
             EventLogModel.select()
             .where(
                 (EventLogModel.subcommand == 'check')
+                & (EventLogModel.returncode.in_(SUCCESS_RETURNCODES))
                 & (EventLogModel.start_time > validation_cutoff)
                 & (EventLogModel.repo_url == profile.repo.url)
             )
@@ -183,6 +188,7 @@ class SchedulerExecution:
             EventLogModel.select()
             .where(
                 (EventLogModel.subcommand == '--info')
+                & (EventLogModel.returncode.in_(SUCCESS_RETURNCODES))
                 & (EventLogModel.start_time > compaction_cutoff)
                 & (EventLogModel.repo_url == profile.repo.url)
             )
@@ -215,7 +221,7 @@ class SchedulerExecution:
         if profile_id not in self._post_backup_pending:
             return
 
-        if result['returncode'] not in [0, 1]:
+        if result['returncode'] not in SUCCESS_RETURNCODES:
             self._post_backup_failed[profile_id] = True
 
         self._post_backup_pending[profile_id] -= 1

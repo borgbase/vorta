@@ -945,6 +945,52 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     assert notifier.deliver.call_args.kwargs['level'] == 'info'
 
 
+@mark.parametrize(
+    'task, subcommand, returncode, age, expect_queued',
+    [
+        ('validation', None, None, None, True),
+        ('validation', 'check', 0, td(), False),
+        ('validation', 'check', 2, td(), True),  # #2586
+        ('validation', 'check', -1, td(), True),  # interrupted
+        ('validation', 'check', 0, td(weeks=4), True),
+        ('compaction', '--info', 0, td(), False),
+        ('compaction', '--info', 2, td(), True),
+    ],
+)
+def test_post_backup_tasks_only_count_successful_runs(qapp, mocker, task, subcommand, returncode, age, expect_queued):
+    """A failed or interrupted check/compaction must not postpone the next one."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = False
+    profile.validation_on = task == 'validation'
+    profile.validation_weeks = 3
+    profile.compaction_on = task == 'compaction'
+    profile.compaction_weeks = 3
+    profile.save()
+
+    EventLogModel.delete().where(EventLogModel.repo_url == profile.repo.url).execute()
+    if subcommand is not None:
+        EventLogModel.create(
+            subcommand=subcommand,
+            category='scheduled',
+            returncode=returncode,
+            repo_url=profile.repo.url,
+            start_time=dt.now() - age,
+        )
+
+    job_class = {'validation': 'BorgCheckJob', 'compaction': 'BorgCompactJob'}[task]
+    params = {'ok': True, 'cmd': ['borg'], 'profile_id': profile.id, 'profile_name': profile.name}
+    job_mock = mocker.patch.object(vorta.scheduler.execution, job_class)
+    job_mock.prepare.return_value = params
+    mocker.patch.object(vorta.scheduler.execution, 'borg_compat', MagicMock(version='1.2.4'))
+    added = []
+    mocker.patch.object(qapp.jobs_manager, 'add_job', side_effect=added.append)
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick')
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+
+    assert added == ([job_mock.return_value] if expect_queued else [])
+
+
 def test_create_backup_keeps_the_catchup_trigger(qapp, mocker):
     """A catch-up run that gets skipped is not recorded as an ordinary scheduled run."""
     mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
