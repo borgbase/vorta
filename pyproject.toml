@@ -36,7 +36,7 @@ dependencies = [
     "pyobjc-framework-Cocoa<13; sys_platform == 'darwin'",
     "pyobjc-framework-CoreWLAN<13; sys_platform == 'darwin'",
     "pyobjc-framework-LaunchServices<13; sys_platform == 'darwin'",
-    "pyqt6",
+    "pyqt6>=6.12",
     "secretstorage; sys_platform != 'darwin'",
 ]
 
