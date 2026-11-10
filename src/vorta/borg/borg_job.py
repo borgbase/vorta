@@ -304,9 +304,9 @@ class BorgJob(JobInterface):
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
 
-            line = read_async(p.stdout)
-            self.process_intermediate(line, True)
-            stdout.append(line)
+            d = read_async(p.stdout)
+            self.process_intermediate(d, True)
+            stdout.append(d)
             stderr = read_async(p.stderr)
             if stderr:
                 for line in stderr.split('\n'):
@@ -354,9 +354,9 @@ class BorgJob(JobInterface):
 
             if p.poll() is not None:
                 time.sleep(0.1)
-                line = read_async(p.stdout)
-                self.process_intermediate(line, True)
-                stdout.append(line)
+                d = read_async(p.stdout)
+                self.process_intermediate(d, True)
+                stdout.append(d)
                 break
 
         self.process_intermediate('', False)
