@@ -35,17 +35,17 @@ def relative_path(p1: PathLike, p2: PathLike) -> Path:
 def path_to_str(path: PathLike) -> str:
     """Return a string representation of a path."""
     if not path:
-        return ''
+        return ""
 
     return osp.join(*path)
 
 
 #: Type of FileSystemItem's data
-T = TypeVar('T')
-FileSystemItemLike = Union[Tuple[Union[PurePath, Path], Optional[T]], 'FileSystemItem']
+T = TypeVar("T")
+FileSystemItemLike = Union[Tuple[Union[PurePath, Path], Optional[T]], "FileSystemItem"]
 
 #: Default return value
-A = TypeVar('A')
+A = TypeVar("A")
 
 
 class FileSystemItem(Generic[T]):
@@ -71,7 +71,7 @@ class FileSystemItem(Generic[T]):
         The parent of the item.
     """
 
-    __slots__ = ['path', 'children', 'data', '_parent', 'subpath']
+    __slots__ = ["path", "children", "data", "_parent", "subpath"]
 
     def __init__(self, path: PathLike, data: T):
         """Init."""
@@ -93,7 +93,7 @@ class FileSystemItem(Generic[T]):
     #     """Get an iterable view of the item's children."""
     #     return self.child_map.values()
 
-    def add(self, child: 'FileSystemItem[T]', _subpath: str = None, _check: bool = True):
+    def add(self, child: "FileSystemItem[T]", _subpath: str = None, _check: bool = True):
         """
         Add a child.
 
@@ -125,7 +125,7 @@ class FileSystemItem(Generic[T]):
         child._parent = self
         self.children.insert(i, child)
 
-    def addChildren(self, children: List['FileSystemItem[T]']):
+    def addChildren(self, children: List["FileSystemItem[T]"]):
         """
         Add a list of children.
 
@@ -146,7 +146,7 @@ class FileSystemItem(Generic[T]):
         pass
 
     @overload
-    def remove(self, child: 'FileSystemItem[T]') -> None:
+    def remove(self, child: "FileSystemItem[T]") -> None:
         pass
 
     def remove(self, child_subpath_index):
@@ -212,7 +212,7 @@ class FileSystemItem(Generic[T]):
         else:
             raise IndexError("Index {} out of range(0, 2)".format(index))
 
-    def get(self, subpath: str, default: Optional[A] = None) -> Union[Tuple[int, 'FileSystemItem[T]'], Optional[A]]:
+    def get(self, subpath: str, default: Optional[A] = None) -> Union[Tuple[int, "FileSystemItem[T]"], Optional[A]]:
         """
         Find direct child with given subpath.
 
@@ -235,7 +235,7 @@ class FileSystemItem(Generic[T]):
                 return i, child
         return default
 
-    def get_path(self, path: PathLike) -> Optional['FileSystemItem[T]']:
+    def get_path(self, path: PathLike) -> Optional["FileSystemItem[T]"]:
         """
         Get the item with the given subpath relative to this item.
 
@@ -331,7 +331,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         #: simple list of items
         FLAT = enum.auto()
 
-    def __init__(self, mode: 'FileTreeModel.DisplayMode' = DisplayMode.TREE, parent=None):
+    def __init__(self, mode: "FileTreeModel.DisplayMode" = DisplayMode.TREE, parent=None):
         """Init."""
         super().__init__(parent)
         self.root: FileSystemItem[T] = FileSystemItem([], None)
@@ -556,7 +556,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         self.endResetModel()
 
-    def setMode(self, value: 'DisplayMode'):
+    def setMode(self, value: "DisplayMode"):
         """
         Set the display mode of the tree model.
 
@@ -970,7 +970,7 @@ class FileTreeSortProxyModel(QSortFilterProxyModel):
             else:
                 path = relative_path(parent.internalPointer().path, item.path)
 
-            return path[0] if path else ''
+            return path[0] if path else ""
 
         # standard tree mode
         return item.subpath

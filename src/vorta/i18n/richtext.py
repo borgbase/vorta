@@ -24,9 +24,7 @@ def format_richtext(template: str, *args: str) -> str:
 def link(url: str, text: str, color: str = "#0984e3") -> str:
     safe_url = html_escape(url, quote=True)
     safe_text = escape(text)
-    return (
-        f'<a href="{safe_url}">' f'<span style=" text-decoration: underline; color:{color};">{safe_text}</span>' f"</a>"
-    )
+    return f'<a href="{safe_url}"><span style=" text-decoration: underline; color:{color};">{safe_text}</span></a>'
 
 
 def bold(text: str) -> str:

@@ -3,7 +3,7 @@ import queue
 import threading
 from abc import abstractmethod
 
-from PyQt6.QtCore import QObject
+from PyQt6.QtCore import QObject, pyqtSlot
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class SiteWorker(threading.Thread):
                 return
 
 
-class JobsManager:
+class JobsManager(QObject):
     """
     This class is a complete scheduler. Only use this class and not SiteWorker.
     This class MUST BE use as a singleton.
@@ -74,33 +74,20 @@ class JobsManager:
     """
 
     def __init__(self):
-        self.jobs = dict()  # jobs by site > queue
-        self.workers = dict()  # threads by site
-        self.jobs_lock = threading.Lock()  # for atomic queue operations, like cancelling
+        super().__init__()
+        self.queued_jobs = dict()  # job list by site (queue)
+        self.active_jobs = dict()  # current (job, inhibitor) by site
 
     def is_worker_running(self, site=None):
         """
         See if there are any active jobs.
         The user can't start a backup if a job is running. The scheduler can.
 
-        If site is None, check if there is any worker active for any site (repo).
-        If site is not None, only check if there is a worker active for the given site (repo).
-
-        Note: We check both is_alive() and current_job because the backup_finished_event
-        signal is emitted from within job.run(), before the thread exits. By checking
-        current_job (which is cleared after job.run() returns), we avoid the race condition
-        where the thread is still alive but the job has finished.
+        Checks if a job is queued or currently running for the site
         """
-        if site is not None:
-            if site in self.workers:
-                worker = self.workers[site]
-                if worker.is_alive() and worker.current_job is not None:
-                    return True
-        else:
-            for _, worker in self.workers.items():
-                if worker.is_alive() and worker.current_job is not None:
-                    return True
-        return False
+        return (site in self.queued_jobs and self.queued_jobs[site]) or (
+            site in self.active_jobs and self.active_jobs[site]
+        )
 
     def add_job(self, job):
         logger.debug("Add job for site %s", job.repo_id())
@@ -109,26 +96,21 @@ class JobsManager:
             logger.error("repo_id( must be an int or str. Got %s", type(job.repo_id()))
             return 1
 
-        # Ensure a job queue exists for site/repo
-        with self.jobs_lock:
-            if job.repo_id() not in self.jobs:
-                self.jobs[job.repo_id()] = queue.Queue()
-        # Don't need lock when adding a job
-        self.jobs[job.repo_id()].put(job)
+        repo_id = job.repo_id()
 
-        # If there is an existing thread for this site, do nothing. It will just
-        # take the next job from the queue. If not, start a new thread.
-        with self.jobs_lock:
-            if job.repo_id() in self.workers and self.workers[job.repo_id()].is_alive():
-                return
-            else:
-                self.workers[job.repo_id()] = SiteWorker(jobs=self.jobs[job.repo_id()])
-                self.workers[job.repo_id()].start()
+        # There is no active job here, we can start it
+        if repo_id not in self.active_jobs:
+            self._job_start(job)
+        else:
+            if repo_id not in self.queued_jobs:
+                self.queued_jobs[repo_id] = []
+            self.queued_jobs[repo_id].append(job)
 
     def cancel_all_jobs(self):
         """
         Remove pending jobs and ask all workers to cancel their current jobs.
         """
+        raise NotImplementedError()
         with self.jobs_lock:
             for site_id, worker in self.workers.items():
                 if worker.is_alive():  # if a worker is active, first empty the queue
@@ -142,3 +124,25 @@ class JobsManager:
                     worker.current_job.cancel()
 
         logger.info("Finished cancelling all jobs")
+
+    def _job_start(self, job):
+        # Assumes inside the jobs_lock
+        # Move the job onto the current thread so emissions happen on the right thread
+        inhibitor = job.get_inhibitor()
+        job.result.connect(lambda _r: self._job_ended(job.repo_id()))
+        self.active_jobs[job.repo_id()] = (job, inhibitor)
+        inhibitor.inhibit()
+        job.run()
+
+    @pyqtSlot(QObject)
+    def _job_ended(self, repo_id: str):
+        # Release the active inhibitor and then see if there is another queued job
+        # Assumes internal state is as expected
+        _, inhibitor = self.active_jobs[repo_id]
+        inhibitor.uninhibit()
+
+        del self.active_jobs[repo_id]
+
+        if repo_id in self.queued_jobs and self.queued_jobs[repo_id]:
+            next_job = self.queued_jobs[repo_id].pop(0)
+            self._job_start(next_job)

@@ -112,7 +112,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.buttonBox.addButton(self.extractButton, QDialogButtonBox.ButtonRole.AcceptRole)
 
         self.archiveNameLabel.setText(f"{archive.name}, {archive.time}")
-        diff_result_display_mode = SettingsModel.get(key='extract_files_display_mode').str_value
+        diff_result_display_mode = SettingsModel.get(key="extract_files_display_mode").str_value
 
         # connect signals
         self.comboBoxDisplayMode.currentIndexChanged.connect(self.change_display_mode)
@@ -139,8 +139,8 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
     def set_icons(self):
         """Set or update the icons in the right color scheme."""
-        self.bFoldersOnTop.setIcon(get_colored_icon('folder-on-top'))
-        self.bCollapseAll.setIcon(get_colored_icon('angle-up-solid'))
+        self.bFoldersOnTop.setIcon(get_colored_icon("folder-on-top"))
+        self.bCollapseAll.setIcon(get_colored_icon("angle-up-solid"))
         self.comboBoxDisplayMode.setItemIcon(0, get_colored_icon("view-list-tree"))
         self.comboBoxDisplayMode.setItemIcon(1, get_colored_icon("view-list-tree"))
 
@@ -173,7 +173,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
         index = self.sortproxy.mapToSource(index)
         item: ExtractFileItem = index.internalPointer()
-        path = PurePath('/', *item.path)
+        path = PurePath("/", *item.path)
 
         data = QMimeData()
         data.setUrls([QUrl(path.as_uri())])
@@ -199,7 +199,7 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             raise Exception("Unknown item in comboBoxDisplayMode with index {}".format(selection))
 
         SettingsModel.update({SettingsModel.str_value: str(selection)}).where(
-            SettingsModel.key == 'extract_files_display_mode'
+            SettingsModel.key == "extract_files_display_mode"
         ).execute()
 
         self.model.setMode(mode)
@@ -213,12 +213,12 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
 
         menu = QMenu(self.treeView)
 
-        menu.addAction(get_colored_icon('copy'), self.tr("Copy"), lambda: self.copy_item(index))
+        menu.addAction(get_colored_icon("copy"), self.tr("Copy"), lambda: self.copy_item(index))
 
         if self.model.getMode() != self.model.DisplayMode.FLAT:
             menu.addSeparator()
             menu.addAction(
-                get_colored_icon('angle-down-solid'),
+                get_colored_icon("angle-down-solid"),
                 self.tr("Expand recursively"),
                 lambda: self.treeView.expandRecursively(index),
             )
@@ -249,7 +249,8 @@ def parse_json_lines(lines, model: "ExtractTree"):
         #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S")
 
         modified = QDateTime.fromString(
-            item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
+            item["isomtime" if borg_compat.check("V122") else "mtime"],
+            Qt.DateFormat.ISODateWithMs,
         )
 
         items.append(
@@ -451,7 +452,11 @@ class ExtractTree(FileTreeModel[FileData]):
 
         return None
 
-    def data(self, index: QModelIndex, role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole):
+    def data(
+        self,
+        index: QModelIndex,
+        role: Union[int, Qt.ItemDataRole] = Qt.ItemDataRole.DisplayRole,
+    ):
         """
         Get the data for the given role and index.
 

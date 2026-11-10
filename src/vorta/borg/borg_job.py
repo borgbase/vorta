@@ -13,7 +13,7 @@ from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Lock
 
 from PyQt6 import QtCore
-from PyQt6.QtCore import QT_TRANSLATE_NOOP
+from PyQt6.QtCore import QT_TRANSLATE_NOOP, QProcess, QProcessEnvironment, pyqtSlot
 from PyQt6.QtWidgets import QApplication
 
 from vorta import application
@@ -28,10 +28,10 @@ from vorta.utils import borg_compat, pretty_bytes
 keyring_lock = Lock()
 logger = logging.getLogger(__name__)
 
-FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'encryption'])
-FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
+FakeRepo = namedtuple("Repo", ["url", "name", "id", "extra_borg_arguments", "encryption"])
+FakeProfile = namedtuple("FakeProfile", ["id", "repo", "name", "ssh_key"])
 
-TRACEBACK_HEADER = 'Traceback (most recent call last):'
+TRACEBACK_HEADER = "Traceback (most recent call last):"
 
 
 def summarize_traceback(message: str) -> str:
@@ -98,39 +98,58 @@ class BorgJob(JobInterface):
         cmd[0] = self.prepare_bin()
 
         # Add extra Borg args to command. Never pass None.
-        extra_args_str = params.get('extra_borg_arguments')
+        extra_args_str = params.get("extra_borg_arguments")
         if extra_args_str is not None and len(extra_args_str) > 0:
             extra_args = shlex.split(extra_args_str)
             cmd = cmd[:2] + extra_args + cmd[2:]
 
-        env = os.environ.copy()
-        env['BORG_HOSTNAME_IS_UNIQUE'] = '1'
-        env['BORG_RELOCATED_REPO_ACCESS_IS_OK'] = '1'
-        env['BORG_RSH'] = 'ssh'
+        env = QProcessEnvironment.systemEnvironment()
+        env.insert("BORG_HOSTNAME_IS_UNIQUE", "1")
+        env.insert("BORG_RELOCATED_REPO_ACCESS_IS_OK", "1")
+        env.insert("BORG_RSH", "ssh")
 
-        if 'additional_env' in params:
-            env = {**env, **params['additional_env']}
+        if "additional_env" in params:
+            for k, v in params["additional_env"].items():
+                env.insert(k, v)
 
-        password = params.get('password')
+        password = params.get("password")
         if password is not None:
-            env['BORG_PASSPHRASE'] = password
+            env.insert("BORG_PASSPHRASE", password)
         else:
-            env['BORG_PASSPHRASE'] = '9999999'  # Set dummy password to avoid prompt.
+            env.insert("BORG_PASSPHRASE", "9999999")  # Set dummy password to avoid prompt.
 
-        if env.get('BORG_PASSCOMMAND', False):
-            env.pop('BORG_PASSPHRASE', None)  # Unset passphrase
+        # TODO: How to express this?
+        # if env.get("BORG_PASSCOMMAND", False):
+        #     env.pop("BORG_PASSPHRASE", None)  # Unset passphrase
 
-        ssh_key = params.get('ssh_key')
+        ssh_key = params.get("ssh_key")
         if ssh_key is not None:
-            ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key}')
-            env['BORG_RSH'] += f' -i {ssh_key_path}'
+            ssh_key_path = os.path.expanduser(f"~/.ssh/{ssh_key}")
+            env.insert("BORG_RSH", env.value("BORG_RSH") + f" -i {ssh_key_path}")
 
-        self.env = env
         self.cmd = cmd
-        self.cwd = params.get('cwd', None)
         self.params = params
-        self.process = None
-        self.cleanup_files = params.get('cleanup_files', [])
+        self.cleanup_files = params.get("cleanup_files", [])
+
+        self.proc = QProcess(self)
+        self.proc.setWorkingDirectory(params.get("cwd", None))
+        self.proc.setProcessEnvironment(env)
+        self.proc.setProgram(cmd[0])
+        self.proc.setArguments(cmd[1:])
+
+        self.proc.readyReadStandardError.connect(self.on_stderr_ready)
+        self.proc.readyReadStandardOutput.connect(self.on_stdout_ready)
+        self.proc.finished.connect(self.on_exit)
+        self.proc.errorOccurred.connect(self.on_process_error)
+
+        self.log_entry = EventLogModel(
+            category=self.params.get("category", "user"),
+            subcommand=self.cmd[1],
+            profile=self.params.get("profile_id", None),
+        )
+        # accumulators from the running process
+        self.stdout = []
+        self.error_messages = []
 
     def repo_id(self):
         return self.site_id
@@ -161,65 +180,65 @@ class BorgJob(JobInterface):
 
         :return: dict(ok: book, message: str)
         """
-        ret = {'ok': False}
+        ret = {"ok": False}
 
         if cls.prepare_bin() is None:
-            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Borg binary was not found.')
+            ret["message"] = QT_TRANSLATE_NOOP("messages", "Borg binary was not found.")
             return ret
 
         if profile.repo is None:
-            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Select a backup repository first.')
+            ret["message"] = QT_TRANSLATE_NOOP("messages", "Select a backup repository first.")
             return ret
 
-        if not borg_compat.check('JSON_LOG'):
-            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Your Borg version is too old. >=1.1.0 is required.')
+        if not borg_compat.check("JSON_LOG"):
+            ret["message"] = QT_TRANSLATE_NOOP("messages", "Your Borg version is too old. >=1.1.0 is required.")
             return ret
 
         # Try to get password from chosen keyring backend.
         with keyring_lock:
             cls.keyring = VortaKeyring.get_keyring()
             logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
-            ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
+            ret["password"] = cls.keyring.get_password("vorta-repo", profile.repo.url)
 
             # Check if keyring is locked
-            if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
-                ret['message'] = QT_TRANSLATE_NOOP(
-                    'messages',
-                    'Please unlock your system password manager or disable it under Settings',
+            if profile.repo.encryption != "none" and not cls.keyring.is_unlocked:
+                ret["message"] = QT_TRANSLATE_NOOP(
+                    "messages",
+                    "Please unlock your system password manager or disable it under Settings",
                 )
                 return ret
 
             # Try to fall back to DB Keyring, if we use the system keychain.
-            if ret['password'] is None and cls.keyring.is_system:
-                logger.debug('Password not found in primary keyring. Falling back to VortaDBKeyring.')
-                ret['password'] = VortaDBKeyring().get_password('vorta-repo', profile.repo.url)
+            if ret["password"] is None and cls.keyring.is_system:
+                logger.debug("Password not found in primary keyring. Falling back to VortaDBKeyring.")
+                ret["password"] = VortaDBKeyring().get_password("vorta-repo", profile.repo.url)
 
                 # Give warning and continue if password is found there.
-                if ret['password'] is not None:
+                if ret["password"] is not None:
                     logger.warning(
-                        'Found password in database, but secure storage was available. '
-                        'Consider re-adding the repo to use it.'
+                        "Found password in database, but secure storage was available. "
+                        "Consider re-adding the repo to use it."
                     )
 
         # Password is required for encryption, cannot continue
-        if ret['password'] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != 'none':
-            ret['message'] = QT_TRANSLATE_NOOP(
-                'messages',
+        if ret["password"] is None and not isinstance(profile.repo, FakeRepo) and profile.repo.encryption != "none":
+            ret["message"] = QT_TRANSLATE_NOOP(
+                "messages",
                 "Your repo passphrase was stored in a password manager which is no longer available.\n"
                 "Try unlinking and re-adding your repo.",
             )
             return ret
 
-        ret['ssh_key'] = profile.ssh_key
-        ret['repo_id'] = profile.repo.id
-        ret['repo_url'] = profile.repo.url
-        ret['repo_name'] = profile.repo.name
-        ret['extra_borg_arguments'] = profile.repo.extra_borg_arguments
-        ret['profile_name'] = profile.name
-        ret['profile_id'] = profile.id
+        ret["ssh_key"] = profile.ssh_key
+        ret["repo_id"] = profile.repo.id
+        ret["repo_url"] = profile.repo.url
+        ret["repo_name"] = profile.repo.name
+        ret["extra_borg_arguments"] = profile.repo.extra_borg_arguments
+        ret["profile_name"] = profile.name
+        ret["profile_id"] = profile.id
 
-        ret['ok'] = True
-        ret['cleanup_files'] = []
+        ret["ok"] = True
+        ret["cleanup_files"] = []
 
         return ret
 
@@ -229,163 +248,156 @@ class BorgJob(JobInterface):
         # On MacOS, the PATH environment variable does not seem to be set when run as a pyinstaller binary.
         # More info at https://github.com/borgbase/vorta/issues/2100
         # Set the path to also find homebrew installs of Borg, and avoid falling back to the embedded binary.
-        if sys.platform == 'darwin':
+        if sys.platform == "darwin":
             # This runs for every job, so only add the directories that are still missing.
             path_dirs = os.environ.get("PATH", "/usr/bin:/bin").split(os.pathsep)
             missing_dirs = [d for d in ("/opt/homebrew/bin", "/usr/local/bin") if d not in path_dirs]
             if missing_dirs:
                 os.environ["PATH"] = os.pathsep.join(path_dirs + missing_dirs)
         # Now continue looking for the borg binary to use
-        borg_in_path = shutil.which('borg')
+        borg_in_path = shutil.which("borg")
 
         if borg_in_path:
             return borg_in_path
-        elif sys.platform == 'darwin':
+        elif sys.platform == "darwin":
             # macOS: Look in pyinstaller bundle
             from Foundation import NSBundle
 
             mainBundle = NSBundle.mainBundle()
 
-            bundled_borg = os.path.join(mainBundle.bundlePath(), 'Contents', 'Resources', 'borg-dir', 'borg.exe')
+            bundled_borg = os.path.join(mainBundle.bundlePath(), "Contents", "Resources", "borg-dir", "borg.exe")
             if os.path.isfile(bundled_borg):
                 return bundled_borg
         return None
 
     def run(self):
-        with self.get_inhibitor():
-            self._run()
-
-    def _run(self):
         self.started_event()
         with db_lock:
-            log_entry = EventLogModel(
-                category=self.params.get('category', 'user'),
-                subcommand=self.cmd[1],
-                profile=self.params.get('profile_id', None),
-            )
-            log_entry.save()
+            self.log_entry.save()
 
             # logs: put cmd arguments with special strings in quotation marks
-            quote_strings = [' ', '*', '?', 're:']
+            quote_strings = [" ", "*", "?", "re:"]
             cmd_args_to_log = self.cmd[:]
             for i, arg in enumerate(cmd_args_to_log):
                 if any(quotestr in arg for quotestr in quote_strings):
                     cmd_args_to_log[i] = "'" + arg + "'"  # add quotes
 
-            logger.info('Running command: %s', ' '.join(cmd_args_to_log))
+            logger.info("Running command: %s", " ".join(cmd_args_to_log))
             del cmd_args_to_log
 
-        p = Popen(
-            self.cmd,
-            stdout=PIPE,
-            stderr=PIPE,
-            bufsize=1,
-            universal_newlines=True,
-            env=self.env,
-            cwd=self.cwd,
-            start_new_session=True,
-        )
-        error_messages = []  # List of error messages included in the result
+        self.proc.start()
 
-        self.process = p
+    @pyqtSlot()
+    def on_stderr_ready(self):
+        stderr = self.proc.readAllStandardError().data()
+        if stderr:
+            for line in stderr.split(b"\n"):
+                parsed = json.loads(line)
+                try:
+                    if parsed["type"] == "log_message":
+                        message = summarize_traceback(parsed["message"])
+                        context = {
+                            "msgid": parsed.get("msgid"),
+                            "message": parsed.get("message", ""),
+                            "repo_url": self.params["repo_url"],
+                            "profile_name": self.params.get("profile_name"),
+                            "cmd": self.params["cmd"][1],
+                        }
+                        self.app.backup_log_event.emit(
+                            f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}',
+                            context,
+                        )
+                        level_int = getattr(logging, parsed["levelname"])
+                        logger.log(level_int, parsed["message"])
 
-        # Prevent blocking of stdout/err. Via https://stackoverflow.com/a/7730201/3983708
-        os.set_blocking(p.stdout.fileno(), False)
-        os.set_blocking(p.stderr.fileno(), False)
+                        if level_int >= logging.WARNING:
+                            # Append log to list of error messages
+                            self.error_messages.append((level_int, message))
 
-        def read_async(fd):
-            try:
-                return fd.read()
-            except (IOError, TypeError):
-                return ''
+                    elif parsed["type"] == "file_status":
+                        self.app.backup_log_event.emit(
+                            f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})',
+                            {},
+                        )
+                    elif parsed["type"] == "progress_percent" and parsed.get("message"):
+                        self.app.backup_log_event.emit(
+                            f'[{self.params["profile_name"]}] {parsed["message"]}',
+                            {},
+                        )
+                    elif parsed["type"] == "archive_progress" and not parsed.get("finished", False):
+                        msg = (
+                            f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                            f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
+                            # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
+                            f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                        )
+                        self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
+                except json.decoder.JSONDecodeError:
+                    msg = line.strip()
+                    if msg:  # Log only if there is something to log.
+                        self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                        logger.warning(msg)
 
-        stdout = []
-        while True:
-            # Wait for new output
-            select.select([p.stdout, p.stderr], [], [], 0.1)
+    @pyqtSlot()
+    def on_stdout_ready(self, more=True):
+        d = self.proc.readAllStandardOutput().data()
+        if d:
+            self.process_intermediate(d, more)
+            self.stdout.append(str(d, "utf-8"))
 
-            stdout.append(read_async(p.stdout))
-            stderr = read_async(p.stderr)
-            if stderr:
-                for line in stderr.split('\n'):
-                    try:
-                        parsed = json.loads(line)
+    @pyqtSlot(int, QProcess.ExitStatus)
+    def on_exit(self, returncode, status):
+        # Final reads from the subprocess
+        self.on_stdout_ready(False)
+        self.on_stderr_ready()
+        # The process crashed and the returncode is meaningless
+        if status == QProcess.ExitStatus.CrashExit:
+            returncode = -1
+        self.handle_exit(returncode)
 
-                        if parsed['type'] == 'log_message':
-                            message = summarize_traceback(parsed['message'])
-                            context = {
-                                'msgid': parsed.get('msgid'),
-                                'message': parsed.get('message', ''),
-                                'repo_url': self.params['repo_url'],
-                                'profile_name': self.params.get('profile_name'),
-                                'cmd': self.params['cmd'][1],
-                            }
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
-                            )
-                            level_int = getattr(logging, parsed["levelname"])
-                            logger.log(level_int, parsed["message"])
+    @pyqtSlot(QProcess.ProcessError)
+    def on_process_error(self, e: QProcess.ProcessError):
+        # We don't both handling reading buffer since the process was killed arbitrarily
+        # This specific path is handled by on_exit
+        if e == QProcess.ProcessError.Crashed:
+            return
+        logger.error("process failed: %s", e)
+        self.handle_exit(-2)
 
-                            if level_int >= logging.WARNING:
-                                # Append log to list of error messages
-                                error_messages.append((level_int, message))
-
-                        elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
-                            )
-                        elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
-                        elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
-                            msg = (
-                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
-                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
-                            )
-                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
-                    except json.decoder.JSONDecodeError:
-                        msg = line.strip()
-                        if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
-                            logger.warning(msg)
-
-            if p.poll() is not None:
-                time.sleep(0.1)
-                stdout.append(read_async(p.stdout))
-                break
-
+    def handle_exit(self, returncode: int):
         result = {
-            'params': self.params,
-            'returncode': self.process.returncode,
-            'cmd': self.cmd,
-            'errors': error_messages,
+            "params": self.params,
+            "cmd": self.cmd,
+            "errors": self.error_messages,
+            "returncode": returncode,
         }
-        stdout = ''.join(stdout)
-
+        stdout = "".join(self.stdout)
         try:
-            result['data'] = json.loads(stdout)
+            result["data"] = json.loads(stdout)
         except ValueError:
-            result['data'] = stdout
+            result["data"] = stdout
 
-        log_entry.returncode = p.returncode
-        log_entry.repo_url = self.params.get('repo_url', None)
-        log_entry.end_time = dt.now()
-        result['log_entry_id'] = log_entry.id
+        self.log_entry.returncode = returncode
+        self.log_entry.repo_url = self.params.get("repo_url", None)
+        self.log_entry.end_time = dt.now()
+        result["log_entry_id"] = self.log_entry.id
 
         with db_lock:
-            log_entry.save()
+            self.log_entry.save()
             self.process_result(result)
 
         self.finished_event(result)
         for tmpfile in self.cleanup_files:
             tmpfile.close()
 
+    def process_intermediate(self, data: bytes, more: bool):
+        pass
+
     def process_result(self, result):
         pass
 
     def started_event(self):
-        self.updated.emit(self.tr('Task started'))
+        self.updated.emit(self.tr("Task started"))
 
     def finished_event(self, result):
         self.result.emit(result)
@@ -397,3 +409,26 @@ class BorgJob(JobInterface):
         else:
             logger.debug("job will not inhibit")
             return Inhibitor.get_noop_inhibitor()
+
+
+class LineOrientedJob(BorgJob):
+    lineReady = QtCore.pyqtSignal(str)
+
+    def __init__(self, cmd, params, site="default"):
+        super().__init__(cmd, params, site)
+        self.buffer = ""
+
+    def process_intermediate(self, data: bytes, more: bool):
+        self.buffer += str(data, "utf-8")
+
+        # TODO: This needs to handle errors
+        lines = self.buffer.split("\n")
+
+        for line in lines[:-1]:
+            if line:
+                self.lineReady.emit(line)
+        self.buffer = lines[-1]
+
+        if not more:
+            self.lineReady.emit(self.buffer)
+            self.buffer = b""
