@@ -1,9 +1,9 @@
 from vorta.utils import borg_compat
 
-from .borg_job import BorgJob
+from .borg_job import LineOrientedBorgJob
 
 
-class BorgListArchiveJob(BorgJob):
+class BorgListArchiveJob(LineOrientedBorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Getting archive content…')}")
