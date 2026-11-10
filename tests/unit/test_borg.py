@@ -6,7 +6,7 @@ import pytest
 import vorta.application
 import vorta.borg
 import vorta.store.models
-from vorta.borg.borg_job import BorgJob, summarize_traceback
+from vorta.borg.borg_job import BorgJob, LineOrientedBorgJob, summarize_traceback
 from vorta.borg.prune import BorgPruneJob
 
 
@@ -37,6 +37,22 @@ def test_prepare_bin_does_not_grow_path(monkeypatch):
     assert os.environ['PATH'] == path_after_first_call
     path_dirs = path_after_first_call.split(os.pathsep)
     assert len(path_dirs) == len(set(path_dirs))
+
+
+def test_line_oriented_borg_job_emits_complete_lines(qapp, monkeypatch):
+    monkeypatch.setattr(LineOrientedBorgJob, 'prepare_bin', classmethod(lambda cls: 'borg'))
+    job = LineOrientedBorgJob(['borg', 'list'], {})
+    received = []
+    job.lineReceived.connect(received.append)
+
+    job.process_intermediate('first\nsec', True)
+    assert received == ['first']
+
+    job.process_intermediate('ond\nthird\nlast', True)
+    assert received == ['first', 'second', 'third']
+
+    job.process_intermediate('', False)
+    assert received == ['first', 'second', 'third', 'last']
 
 
 def _traceback_of(func):
