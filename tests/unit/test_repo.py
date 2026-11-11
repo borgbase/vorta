@@ -1,3 +1,5 @@
+import json
+import logging
 import os
 import uuid
 from typing import Any, Dict
@@ -8,6 +10,7 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg.borg_job
+from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
 
@@ -134,6 +137,156 @@ def test_repo_add_failure(qapp, qtbot, borg_json_output):
     qtbot.keyClicks(add_repo_window.repoURL, 'aaa')
     qtbot.mouseClick(add_repo_window.saveButton, QtCore.Qt.MouseButton.LeftButton)
     assert add_repo_window.errorText.text().startswith('Please enter a valid repo URL')
+
+
+@pytest.mark.parametrize('open_method', ['new_repo', 'add_existing_repo'])
+@pytest.mark.parametrize(
+    'result_payload, expected_status',
+    [
+        (
+            {'returncode': 2, 'errors': [(logging.WARNING, 'minor warning'), (logging.ERROR, 'Passphrase is wrong.')]},
+            'Unable to add your repository.\nPassphrase is wrong.',
+        ),
+        (
+            {'returncode': 2, 'errors': [(logging.ERROR, '   ')], 'stderr_error': 'SSH connection closed'},
+            'Unable to add your repository.\nSSH connection closed',
+        ),
+        ({'returncode': 2, 'errors': []}, 'Unable to add your repository.'),
+        (
+            {'returncode': 2, 'errors': [(logging.ERROR, 'x' * 350)]},
+            f"Unable to add your repository.\n{'x' * 300}...",
+        ),
+    ],
+)
+def test_repo_dialog_displays_borg_error(qapp, qtbot, open_method, result_payload, expected_status):
+    tab = qapp.main_window.repoTab
+    getattr(tab, open_method)()
+    window = tab._window
+    qtbot.addWidget(window)
+
+    window.saveButton.setEnabled(False)
+    window.run_result(result_payload)
+
+    assert window.saveButton.isEnabled()
+    assert window.errorText.text() == expected_status
+    window.close()
+
+
+@pytest.mark.parametrize(
+    'stderr_lines, expected_detail, expect_json_errors',
+    [
+        (
+            [
+                json.dumps(
+                    {
+                        'type': 'log_message',
+                        'levelname': 'CRITICAL',
+                        'message': 'passphrase supplied in BORG_PASSPHRASE is incorrect',
+                    }
+                )
+            ],
+            'passphrase supplied in BORG_PASSPHRASE is incorrect',
+            True,
+        ),
+        (
+            [
+                "Warning: Permanently added 'host.example.com' (ED25519) to the list of known hosts.",
+                'Permission denied (publickey).',
+            ],
+            'Permission denied (publickey).',
+            False,
+        ),
+        (
+            [
+                'Traceback (most recent call last):',
+                '  File "/borg/archiver.py", line 1, in main',
+                'RuntimeError: could not open repository',
+                'Platform: Linux 6.8',
+            ],
+            'RuntimeError: could not open repository',
+            False,
+        ),
+    ],
+)
+def test_existing_repo_job_surfaces_stderr_errors(
+    qapp, qtbot, mocker, tmp_path, stderr_lines, expected_detail, expect_json_errors
+):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    qtbot.addWidget(window)
+
+    mocker.patch.object(BorgInfoRepoJob, 'prepare_bin', return_value='borg')
+    mocker.patch.object(vorta.borg.borg_job.borg_compat, 'check', side_effect=lambda feat: feat == 'JSON_LOG')
+
+    stdout_path = tmp_path / 'stdout.log'
+    stderr_path = tmp_path / 'stderr.log'
+    stdout_path.write_text('')
+    stderr_path.write_text('\n'.join(stderr_lines) + '\n')
+
+    with stdout_path.open() as stdout_f, stderr_path.open() as stderr_f:
+        popen_result = mocker.MagicMock(stdout=stdout_f, stderr=stderr_f, returncode=2)
+        popen_result.poll.return_value = 2
+        mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+        params = BorgInfoRepoJob.prepare(
+            {
+                'ssh_key': None,
+                'repo_url': f'user@example.com:{uuid.uuid4()}',
+                'repo_name': 'Test Repo',
+                'password': '',
+                'extra_borg_arguments': '',
+            }
+        )
+        assert params['ok']
+        job = BorgInfoRepoJob(params['cmd'], params)
+        job.result.connect(window.run_result)
+        with qtbot.waitSignal(job.result, **pytest._wait_defaults) as blocker:
+            job.run()
+
+    assert bool(blocker.args[0]['errors']) is expect_json_errors
+    assert window.errorText.text() == f'Unable to add your repository.\n{expected_detail}'
+    window.close()
+
+
+def test_borg_job_reassembles_split_json_stderr(qapp, qtbot, mocker, tmp_path):
+    """Non-blocking stderr reads split mid-line still parse as JSON errors once completed."""
+    mocker.patch.object(BorgInfoRepoJob, 'prepare_bin', return_value='borg')
+    mocker.patch.object(vorta.borg.borg_job.borg_compat, 'check', side_effect=lambda feat: feat == 'JSON_LOG')
+    mocker.patch.object(vorta.borg.borg_job.os, 'set_blocking')
+    mocker.patch.object(vorta.borg.borg_job.select, 'select', return_value=([], [], []))
+
+    payload = json.dumps({'type': 'log_message', 'levelname': 'ERROR', 'message': 'Repository does not exist.'})
+    split_at = len(payload) // 2
+    stderr_chunks = [payload[:split_at], payload[split_at:] + '\n', '']
+
+    stdout_f = mocker.MagicMock()
+    stdout_f.fileno.return_value = 10
+    stdout_f.read.return_value = ''
+    stderr_f = mocker.MagicMock()
+    stderr_f.fileno.return_value = 11
+    stderr_f.read.side_effect = stderr_chunks
+
+    popen_result = mocker.MagicMock(stdout=stdout_f, stderr=stderr_f, returncode=2)
+    popen_result.poll.side_effect = [None, 2]
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    params = BorgInfoRepoJob.prepare(
+        {
+            'ssh_key': None,
+            'repo_url': f'user@example.com:{uuid.uuid4()}',
+            'repo_name': 'Test Repo',
+            'password': '',
+            'extra_borg_arguments': '',
+        }
+    )
+    assert params['ok']
+    job = BorgInfoRepoJob(params['cmd'], params)
+    with qtbot.waitSignal(job.result, **pytest._wait_defaults) as blocker:
+        job.run()
+
+    assert blocker.args[0]['errors'] == [(logging.ERROR, 'Repository does not exist.')]
+    assert blocker.args[0]['stderr_error'] is None
 
 
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):

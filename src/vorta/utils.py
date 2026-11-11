@@ -579,3 +579,12 @@ def search(key, iterable: Iterable, func: Callable = None) -> Tuple[int, Any]:
             return i, item
 
     return None
+
+
+def worst_error(errors: Optional[List[Tuple[int, str]]]) -> Optional[str]:
+    """The most severe message Borg logged, to show as the reason a run failed."""
+    if not errors:
+        return None
+
+    worst = max(level for level, _ in errors)
+    return next(message for level, message in errors if level == worst)

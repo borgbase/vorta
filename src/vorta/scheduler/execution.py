@@ -16,7 +16,7 @@ from vorta.borg.prune import BorgPruneJob
 from vorta.i18n import translate
 from vorta.notifications import VortaNotifications
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
-from vorta.utils import borg_compat
+from vorta.utils import borg_compat, worst_error
 
 if TYPE_CHECKING:
     from vorta.scheduler import VortaScheduler
@@ -25,15 +25,6 @@ logger = logging.getLogger(__name__)
 
 #: Borg exits with 1 on warnings, which still counts as a completed run.
 SUCCESS_RETURNCODES = (0, 1)
-
-
-def worst_error(errors: list[tuple[int, str]] | None) -> str | None:
-    """The most severe message Borg logged, to show as the reason a run failed."""
-    if not errors:
-        return None
-
-    worst = max(level for level, _ in errors)
-    return next(message for level, message in errors if level == worst)
 
 
 class SchedulerExecution:

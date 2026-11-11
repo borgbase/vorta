@@ -6,6 +6,7 @@ import shlex
 import shutil
 import signal
 import sys
+import textwrap
 import time
 from collections import namedtuple
 from datetime import datetime as dt
@@ -50,6 +51,18 @@ def summarize_traceback(message: str) -> str:
         if line.strip() and not line[0].isspace():
             return line
     return message
+
+
+def summarize_stderr(lines: list[str]) -> str | None:
+    """Extract the most actionable message from plain-text stderr lines."""
+    for idx, line in enumerate(lines):
+        if line.lstrip().startswith(TRACEBACK_HEADER):
+            tb = textwrap.dedent('\n'.join(lines[idx:])).lstrip()
+            return summarize_traceback(tb).strip()
+    for line in reversed(lines):
+        if stripped := line.strip():
+            return stripped
+    return None
 
 
 """
@@ -285,7 +298,8 @@ class BorgJob(JobInterface):
             cwd=self.cwd,
             start_new_session=True,
         )
-        error_messages = []  # List of error messages included in the result
+        error_messages = []  # List of JSON error messages included in the result
+        stderr_messages = []  # Non-JSON stderr lines preserved as fallback errors
 
         self.process = p
 
@@ -299,7 +313,53 @@ class BorgJob(JobInterface):
             except (IOError, TypeError):
                 return ''
 
+        def process_stderr_line(line: str) -> None:
+            try:
+                parsed = json.loads(line)
+
+                if parsed['type'] == 'log_message':
+                    message = summarize_traceback(parsed['message'])
+                    context = {
+                        'msgid': parsed.get('msgid'),
+                        'message': parsed.get('message', ''),
+                        'repo_url': self.params['repo_url'],
+                        'profile_name': self.params.get('profile_name'),
+                        'cmd': self.params['cmd'][1],
+                    }
+                    self.app.backup_log_event.emit(
+                        f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
+                    )
+                    level_int = getattr(logging, parsed["levelname"])
+                    logger.log(level_int, parsed["message"])
+
+                    if level_int >= logging.WARNING:
+                        # Append log to list of error messages
+                        error_messages.append((level_int, message))
+
+                elif parsed['type'] == 'file_status':
+                    self.app.backup_log_event.emit(
+                        f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
+                    )
+                elif parsed['type'] == 'progress_percent' and parsed.get("message"):
+                    self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
+                elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
+                    msg = (
+                        f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
+                        f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
+                        # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
+                        f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
+                    )
+                    self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
+            except json.decoder.JSONDecodeError:
+                msg = line.strip()
+                if msg:  # Log only if there is something to log.
+                    self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
+                    logger.warning(msg)
+                    # Preserve indentation so summarize_traceback can skip indented stack frame lines.
+                    stderr_messages.append(line.rstrip('\r'))
+
         stdout = []
+        stderr_buffer = ''
         while True:
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
@@ -307,52 +367,20 @@ class BorgJob(JobInterface):
             stdout.append(read_async(p.stdout))
             stderr = read_async(p.stderr)
             if stderr:
-                for line in stderr.split('\n'):
-                    try:
-                        parsed = json.loads(line)
-
-                        if parsed['type'] == 'log_message':
-                            message = summarize_traceback(parsed['message'])
-                            context = {
-                                'msgid': parsed.get('msgid'),
-                                'message': parsed.get('message', ''),
-                                'repo_url': self.params['repo_url'],
-                                'profile_name': self.params.get('profile_name'),
-                                'cmd': self.params['cmd'][1],
-                            }
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["levelname"]}: {message}', context
-                            )
-                            level_int = getattr(logging, parsed["levelname"])
-                            logger.log(level_int, parsed["message"])
-
-                            if level_int >= logging.WARNING:
-                                # Append log to list of error messages
-                                error_messages.append((level_int, message))
-
-                        elif parsed['type'] == 'file_status':
-                            self.app.backup_log_event.emit(
-                                f'[{self.params["profile_name"]}] {parsed["path"]} ({parsed["status"]})', {}
-                            )
-                        elif parsed['type'] == 'progress_percent' and parsed.get("message"):
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {parsed["message"]}', {})
-                        elif parsed['type'] == 'archive_progress' and not parsed.get('finished', False):
-                            msg = (
-                                f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
-                                f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
-                                f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
-                            )
-                            self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
-                    except json.decoder.JSONDecodeError:
-                        msg = line.strip()
-                        if msg:  # Log only if there is something to log.
-                            self.app.backup_log_event.emit(f'[{self.params["profile_name"]}] {msg}', {})
-                            logger.warning(msg)
+                stderr_buffer += stderr
+                lines = stderr_buffer.split('\n')
+                stderr_buffer = lines.pop()
+                for line in lines:
+                    process_stderr_line(line)
 
             if p.poll() is not None:
                 time.sleep(0.1)
                 stdout.append(read_async(p.stdout))
+                stderr_buffer += read_async(p.stderr)
+                if stderr_buffer:
+                    for line in stderr_buffer.split('\n'):
+                        process_stderr_line(line)
+                    stderr_buffer = ''
                 break
 
         result = {
@@ -360,6 +388,7 @@ class BorgJob(JobInterface):
             'returncode': self.process.returncode,
             'cmd': self.cmd,
             'errors': error_messages,
+            'stderr_error': summarize_stderr(stderr_messages),
         }
         stdout = ''.join(stdout)
 
