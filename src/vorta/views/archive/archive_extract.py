@@ -35,7 +35,7 @@ class ArchiveExtract:
 
             job = BorgListArchiveJob(params['cmd'], params, self.tab.profile().repo.id)
             job.updated.connect(self.tab.mountErrors.setText)
-            job.lineReceived.connect(self.extract_receive_line)
+            job.linesReceived.connect(self.extract_receive_line)
             job.result.connect(self.extract_list_result)
             self.tab.app.jobs_manager.add_job(job)
             return job
