@@ -411,7 +411,7 @@ class BorgJob(JobInterface):
 class LineOrientedBorgJob(BorgJob):
     """A BorgJob for which emitting lines as they are received is meaingful"""
 
-    lineReceived = QtCore.pyqtSignal(str)
+    lineReceived = QtCore.pyqtSignal(list)
 
     def __init__(self, cmd, params, site="default"):
         super().__init__(cmd, params, site)
@@ -421,10 +421,12 @@ class LineOrientedBorgJob(BorgJob):
         if stdout_data:
             self.buffer += stdout_data
             lines = self.buffer.split("\n")
-            for line in lines[:-1]:
-                self.lineReceived.emit(line)
+
+            to_emit = lines[:-1]
+            if to_emit:
+                self.lineReceived.emit(to_emit)
             self.buffer = lines[-1]
 
         if not more and self.buffer:
-            self.lineReceived.emit(self.buffer)
+            self.lineReceived.emit([self.buffer])
             self.buffer = ''

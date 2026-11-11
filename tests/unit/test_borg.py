@@ -43,7 +43,7 @@ def test_line_oriented_borg_job_emits_complete_lines(qapp, monkeypatch):
     monkeypatch.setattr(LineOrientedBorgJob, 'prepare_bin', classmethod(lambda cls: 'borg'))
     job = LineOrientedBorgJob(['borg', 'list'], {})
     received = []
-    job.lineReceived.connect(received.append)
+    job.lineReceived.connect(received.extend)
 
     job.process_intermediate('first\nsec', True)
     assert received == ['first']

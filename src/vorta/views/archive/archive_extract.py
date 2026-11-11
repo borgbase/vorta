@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 from PyQt6 import QtCore
 
@@ -41,8 +42,8 @@ class ArchiveExtract:
         else:
             self.tab._set_status(self.tab.tr('Select an archive to restore first.'))
 
-    def extract_receive_line(self, line):
-        items = [json.loads(line)]
+    def extract_receive_line(self, lines: List[str]):
+        items = [json.loads(line) for line in lines]
         parse_json_lines(items, self.model)
 
     def extract_list_result(self, result):
