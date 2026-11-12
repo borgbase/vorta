@@ -25,6 +25,14 @@ logger = logging.getLogger(__name__)
 
 #: Borg exits with 1 on warnings, which still counts as a completed run.
 SUCCESS_RETURNCODES = (0, 1)
+#: Except for `borg check`, which exits with 1 when it finds repository inconsistencies.
+CHECK_SUCCESS_RETURNCODES = (0,)
+
+
+def run_succeeded(subcommand: str | None, returncode: int) -> bool:
+    if subcommand == 'check':
+        return returncode in CHECK_SUCCESS_RETURNCODES
+    return returncode in SUCCESS_RETURNCODES
 
 
 def worst_error(errors: list[tuple[int, str]] | None) -> str | None:
@@ -175,7 +183,7 @@ class SchedulerExecution:
             EventLogModel.select()
             .where(
                 (EventLogModel.subcommand == 'check')
-                & (EventLogModel.returncode.in_(SUCCESS_RETURNCODES))
+                & (EventLogModel.returncode.in_(CHECK_SUCCESS_RETURNCODES))
                 & (EventLogModel.start_time > validation_cutoff)
                 & (EventLogModel.repo_url == profile.repo.url)
             )
@@ -224,7 +232,9 @@ class SchedulerExecution:
         if profile_id not in self._post_backup_pending:
             return
 
-        if result['returncode'] not in SUCCESS_RETURNCODES:
+        cmd = result.get('cmd') or []
+        subcommand = cmd[1] if len(cmd) > 1 else None
+        if not run_succeeded(subcommand, result['returncode']):
             self._post_backup_failed[profile_id] = True
 
         self._post_backup_pending[profile_id] -= 1
