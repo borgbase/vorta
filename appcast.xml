@@ -6,6 +6,22 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.12.1</title>
+      <description><![CDATA[<ul>
+<li>Clarify repository menu labels for initializing vs. adding existing repos (#2509)</li>
+<li>Turn off Sparkle's automatic update checks when updates are disabled (#2583)</li>
+<li>Don't count a check that found inconsistencies as a validation (#2591)</li>
+<li>Fix extract dialog crash on Borg 2.0 archives and sort type errors</li>
+<li>Skip migration steps that add an already-existing column (#2587)</li>
+<li>Complete and review translations for all 12 supported locales; fix translation contexts, interpolation and plurals</li>
+</ul>]]></description>
+      <pubDate>2026-11-12T16:44:28Z</pubDate>
+      <sparkle:version>0.12.1</sparkle:version>
+      <sparkle:minimumSystemVersion>14.4</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.12.1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.12.1/Vorta-v0.12.1-arm.dmg" length="45686573" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.12.0</title>
       <description><![CDATA[<h2>New</h2>
 <ul>
@@ -648,20 +664,6 @@ well as many other improvements. Thanks to everyone who contributed!</p>
       <sparkle:version>0.8.3</sparkle:version>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.3</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.8.2</title>
-      <description><![CDATA[<p>This is the first stable release for the v0.8 branch. Please
-see previous pre-releases for detailed changes. Main changes:</p>
-<ul>
-<li>Refactor Borg job scheduling. By @bastiencyr</li>
-<li>Remove APScheduler dependency and use QTimer directly</li>
-<li>Python 3.10 compatibility</li>
-</ul>]]></description>
-      <pubDate>2021-11-27T17:05:32Z</pubDate>
-      <sparkle:version>0.8.2</sparkle:version>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.2</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.2/vorta-0.8.2.dmg" length="45873831" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
