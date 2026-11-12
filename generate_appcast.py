@@ -1,3 +1,4 @@
+import re
 import sys
 import requests
 from lxml import etree as ET
@@ -17,6 +18,17 @@ def fetch_github_releases():
         return response.json()
     else:
         raise Exception(f"Failed to fetch releases: {response.status_code}")
+
+# Read the macOS floor baked into the app's Info.plist, so Sparkle doesn't offer
+# an update to systems that can't launch it.
+def fetch_minimum_system_version(tag):
+    url = f"https://raw.githubusercontent.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/{tag}/package/vorta.spec"
+    response = requests.get(url)
+    if response.status_code == 404:
+        return None
+    response.raise_for_status()
+    match = re.search(r"['\"]LSMinimumSystemVersion['\"]\s*:\s*['\"]([\d.]+)['\"]", response.text)
+    return match.group(1) if match else None
 
 # Function to create Appcast XML
 def generate_appcast_xml(releases, include_prereleases=False):
@@ -64,6 +76,11 @@ def generate_appcast_xml(releases, include_prereleases=False):
 
         sparkle_version = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'version'))
         sparkle_version.text = release['tag_name'][1:]
+
+        min_system_version = fetch_minimum_system_version(release['tag_name'])
+        if min_system_version:
+            sparkle_min_system = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'minimumSystemVersion'))
+            sparkle_min_system.text = min_system_version
 
         sparkle_releasenotes = ET.SubElement(item, ET.QName(nsmap['sparkle'], 'fullReleaseNotesLink'))
         sparkle_releasenotes.text = release['html_url']

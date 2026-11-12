@@ -90,6 +90,7 @@
 </ul>]]></description>
       <pubDate>2026-09-07T15:26:38Z</pubDate>
       <sparkle:version>0.11.6</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.6</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.6/Vorta-v0.11.6-arm.dmg" length="48857466" type="application/x-apple-diskimage"/>
     </item>
@@ -103,6 +104,7 @@
 </ul>]]></description>
       <pubDate>2026-05-11T16:34:27Z</pubDate>
       <sparkle:version>0.11.5</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.5</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.5/Vorta-v0.11.5-arm.dmg" length="48806525" type="application/x-apple-diskimage"/>
     </item>
@@ -140,6 +142,7 @@
 </ul>]]></description>
       <pubDate>2026-04-28T16:38:18Z</pubDate>
       <sparkle:version>0.11.4</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.4</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.4/Vorta-v0.11.4-arm.dmg" length="48323777" type="application/x-apple-diskimage"/>
     </item>
@@ -163,6 +166,7 @@
 <p><strong>PyPi</strong>: <code>pip install vorta==0.11.3</code></p>]]></description>
       <pubDate>2026-01-26T14:11:38Z</pubDate>
       <sparkle:version>0.11.3</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.3</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.3/Vorta-v0.11.3-arm.dmg" length="48504884" type="application/x-apple-diskimage"/>
     </item>
@@ -196,6 +200,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.11.1...v0.11.2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.11.1...v0.11.2</a></p>]]></description>
       <pubDate>2026-01-01T18:32:00Z</pubDate>
       <sparkle:version>0.11.2</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.2</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.2/Vorta-v0.11.2-arm.dmg" length="48510183" type="application/x-apple-diskimage"/>
     </item>
@@ -212,6 +217,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.11.0...v0.11.1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.11.0...v0.11.1</a></p>]]></description>
       <pubDate>2025-12-15T15:12:48Z</pubDate>
       <sparkle:version>0.11.1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.1/Vorta-v0.11.1-arm.dmg" length="48201686" type="application/x-apple-diskimage"/>
     </item>
@@ -266,6 +272,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0</a></p>]]></description>
       <pubDate>2025-11-28T13:01:27Z</pubDate>
       <sparkle:version>0.11.0</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.0</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0/Vorta-v0.11.0-arm.dmg" length="45384722" type="application/x-apple-diskimage"/>
     </item>
@@ -316,6 +323,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0-beta1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.3...v0.11.0-beta1</a></p>]]></description>
       <pubDate>2025-10-05T15:46:17Z</pubDate>
       <sparkle:version>0.11.0-beta1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.11.0-beta1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.11.0-beta1/Vorta-v0.11.0-beta1-arm.dmg" length="45233619" type="application/x-apple-diskimage"/>
     </item>
@@ -336,6 +344,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.2...v0.10.3" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.2...v0.10.3</a></p>]]></description>
       <pubDate>2024-12-23T10:53:51Z</pubDate>
       <sparkle:version>0.10.3</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.3</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.3/Vorta-v0.10.3-arm.dmg" length="47042665" type="application/x-apple-diskimage"/>
     </item>
@@ -357,6 +366,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.1...v0.10.2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.1...v0.10.2</a></p>]]></description>
       <pubDate>2024-12-05T14:21:30Z</pubDate>
       <sparkle:version>0.10.2</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.2</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.2/Vorta-v0.10.2-arm.dmg" length="46556159" type="application/x-apple-diskimage"/>
     </item>
@@ -371,6 +381,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.10.0...v0.10.1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.10.0...v0.10.1</a></p>]]></description>
       <pubDate>2024-11-10T17:48:32Z</pubDate>
       <sparkle:version>0.10.1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.1/Vorta-v0.10.1-arm.dmg" length="46059443" type="application/x-apple-diskimage"/>
     </item>
@@ -444,6 +455,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0</a></p>]]></description>
       <pubDate>2024-11-10T08:40:32Z</pubDate>
       <sparkle:version>0.10.0</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.0</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0/Vorta-v0.10.0-arm.dmg" length="46055868" type="application/x-apple-diskimage"/>
     </item>
@@ -505,6 +517,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1...v0.10.0-beta1</a></p>]]></description>
       <pubDate>2024-10-18T11:16:56Z</pubDate>
       <sparkle:version>0.10.0-beta1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.10.0-beta1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.10.0-beta1/Vorta-0.10.0-beta1_arm64.dmg" length="46078394" type="application/x-apple-diskimage"/>
     </item>
@@ -521,6 +534,7 @@
 <p><a href="https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80" rel="nofollow">https://github.com/borgbase/vorta/assets/3916435/32f61d0a-bd38-4d32-af8a-4751f7c3fa80</a></p>]]></description>
       <pubDate>2024-01-10T13:26:55Z</pubDate>
       <sparkle:version>0.9.1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1/Vorta-0.9.1.dmg" length="44508913" type="application/octet-stream"/>
     </item>
@@ -551,6 +565,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1-beta2...v0.9.1-beta3</a></p>]]></description>
       <pubDate>2023-11-30T07:23:45Z</pubDate>
       <sparkle:version>0.9.1-beta3</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1-beta3</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta3/Vorta-v0.9.1-beta3.dmg" length="46116863" type="application/octet-stream"/>
     </item>
@@ -568,6 +583,7 @@
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.9.1-beta1...v0.9.1-beta2</a></p>]]></description>
       <pubDate>2023-10-27T13:15:16Z</pubDate>
       <sparkle:version>0.9.1-beta2</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1-beta2</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta2/Vorta-v0.9.1-beta2.dmg" length="46729547" type="application/octet-stream"/>
     </item>
@@ -634,6 +650,7 @@ f0a5a362 ci: Add ruff including print checks
 8571ef6c Remove paramiko from dependencies</p>]]></description>
       <pubDate>2023-09-27T11:18:06Z</pubDate>
       <sparkle:version>0.9.1-beta1</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.1-beta1</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.1-beta1/vorta-v0.9.1-beta1.dmg" length="46552081" type="application/octet-stream"/>
     </item>
@@ -644,6 +661,7 @@ f0a5a362 ci: Add ruff including print checks
 <p>Thanks to @i1sm3ky and @real-yfprojects for making this happen.</p>]]></description>
       <pubDate>2023-04-17T10:47:45Z</pubDate>
       <sparkle:version>0.9.0</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.9.0</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.9.0/vorta-0.9.0.dmg" length="45550876" type="application/octet-stream"/>
     </item>
@@ -689,6 +707,7 @@ a4ab7e7 Specify build system (minor) (#1580)
 7886354 Remove pip install dependency. By @abdeoliveira (#1578)</p>]]></description>
       <pubDate>2023-04-09T13:56:05Z</pubDate>
       <sparkle:version>0.8.11</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.11</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.11/vorta-0.8.11.dmg" length="46329987" type="application/octet-stream"/>
     </item>
@@ -729,6 +748,7 @@ b072496 Populate repo info from profile after populating dropdowns.
 648c916 Update flatpak install rule, remove flatpak folder. By @Hofer-Julian</p>]]></description>
       <pubDate>2023-01-22T12:07:17Z</pubDate>
       <sparkle:version>0.8.10</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.10</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.10/vorta-0.8.10.dmg" length="50434914" type="application/octet-stream"/>
     </item>
@@ -743,6 +763,7 @@ new translations for Dutch.</p>
 7550ae5 Pin pyobjc to v8 branch</p>]]></description>
       <pubDate>2022-11-05T19:32:16Z</pubDate>
       <sparkle:version>0.8.9</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.9</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.9/vorta-0.8.9.dmg" length="47477762" type="application/octet-stream"/>
     </item>
@@ -797,6 +818,7 @@ fd88d7f Fix seconds and microseconds for fixed schedule and fix scheduling for t
 305db92 Log json diff line parsing errors. By @real-yfprojects (#1369)</p>]]></description>
       <pubDate>2022-11-04T10:15:15Z</pubDate>
       <sparkle:version>0.8.8</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.8</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.8/vorta-0.8.8.dmg" length="47476131" type="application/octet-stream"/>
     </item>
@@ -811,6 +833,7 @@ fd88d7f Fix seconds and microseconds for fixed schedule and fix scheduling for t
 </ul>]]></description>
       <pubDate>2022-06-17T05:01:39Z</pubDate>
       <sparkle:version>0.8.7</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.7</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.7/vorta-0.8.7.dmg" length="47092718" type="application/octet-stream"/>
     </item>
@@ -823,6 +846,7 @@ not be available everywhere:</p>
 </ul>]]></description>
       <pubDate>2022-05-26T04:00:58Z</pubDate>
       <sparkle:version>0.8.6</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.6</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.6/vorta-0.8.6.dmg" length="47016894" type="application/octet-stream"/>
     </item>
@@ -844,6 +868,7 @@ not be available everywhere:</p>
 <p><strong>Full Changelog</strong>: <a href="https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5" rel="nofollow">https://github.com/borgbase/vorta/compare/v0.8.4...v0.8.5</a></p>]]></description>
       <pubDate>2022-05-24T06:20:09Z</pubDate>
       <sparkle:version>0.8.5</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.5</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.5/vorta-0.8.5.dmg" length="46957306" type="application/octet-stream"/>
     </item>
@@ -879,6 +904,7 @@ well as many other improvements. Thanks to everyone who contributed!</p>
 </ul>]]></description>
       <pubDate>2022-05-06T12:39:57Z</pubDate>
       <sparkle:version>0.8.4</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.4</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.4/vorta-0.8.4.dmg" length="47039883" type="application/octet-stream"/>
     </item>
@@ -896,6 +922,7 @@ well as many other improvements. Thanks to everyone who contributed!</p>
 </ul>]]></description>
       <pubDate>2022-01-27T12:46:11Z</pubDate>
       <sparkle:version>0.8.3</sparkle:version>
+      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.3</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream"/>
     </item>
