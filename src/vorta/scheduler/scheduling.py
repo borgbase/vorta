@@ -6,10 +6,11 @@ import threading
 from collections.abc import Callable
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from PyQt6.QtCore import QTimer
 
+from vorta.i18n import translate
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import get_network_status_monitor
 
@@ -104,6 +105,9 @@ class SchedulerTimers:
         self.net_status = get_network_status_monitor()
         self.net_status.network_status_changed.connect(scheduler.networkStatusChanged)
         self._net_up = self.net_status.is_network_active()
+
+    def tr(self, *args: Any, **kwargs: Any) -> str:
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def networkStatusChanged(self, up: bool):
         reload = self._net_up != up
@@ -299,7 +303,7 @@ class SchedulerTimers:
 
         scheduled = {profile_id: timer for profile_id, timer in self.timers.items() if is_scheduled(timer)}
         if len(scheduled) == 0:
-            return self.scheduler.tr("None scheduled")
+            return self.tr("None scheduled")
 
         closest_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
         profile_id, timer = closest_job

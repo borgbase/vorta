@@ -1,11 +1,15 @@
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.prune import BorgPruneJob
+from vorta.i18n import translate
 
 
 class ArchiveMaintenance:
     def __init__(self, tab):
         self.tab = tab
+
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def check_action(self):
         params = BorgCheckJob.prepare(self.tab.profile())
@@ -55,7 +59,7 @@ class ArchiveMaintenance:
 
     def prune_result(self, result):
         if result['returncode'] == 0:
-            self.tab._set_status(self.tab.tr('Pruning finished.'))
+            self.tab._set_status(self.tr('Pruning finished.'))
             self.tab.refresh_archive_list()
         else:
             self.tab._toggle_all_buttons(True)

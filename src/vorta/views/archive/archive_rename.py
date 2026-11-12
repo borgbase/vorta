@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QDesktopServices
 
 from vorta.borg.rename import BorgRenameJob
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 from vorta.views.partials.archive_table_model import ArchiveTableModel
 
@@ -10,6 +11,9 @@ from vorta.views.partials.archive_table_model import ArchiveTableModel
 class ArchiveRename:
     def __init__(self, tab):
         self.tab = tab
+
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def cell_double_clicked(self, index=None):
         """Open a mounted archive's folder, or start an in-place rename."""
@@ -55,11 +59,11 @@ class ArchiveRename:
 
         if not new_name:
             self._revert_name(top_left, original)
-            self.tab._set_status(self.tab.tr('Archive name cannot be blank.'))
+            self.tab._set_status(self.tr('Archive name cannot be blank.'))
             return
 
         if ArchiveModel.get_or_none(name=new_name, repo=profile.repo) is not None:
-            self.tab._set_status(self.tab.tr('An archive with this name already exists.'))
+            self.tab._set_status(self.tr('An archive with this name already exists.'))
             self._revert_name(top_left, original)
             return
 
@@ -69,7 +73,7 @@ class ArchiveRename:
             self._revert_name(top_left, original)
             return
 
-        self.tab._set_status(self.tab.tr('Renaming archive...'))
+        self.tab._set_status(self.tr('Renaming archive...'))
         job = BorgRenameJob(params['cmd'], params, profile.repo.id)
         job.updated.connect(self.tab._set_status)
         job.result.connect(self.rename_result)
@@ -83,7 +87,7 @@ class ArchiveRename:
     def rename_result(self, result):
         if result['returncode'] == 0:
             self.tab.refresh_archive_info()
-            self.tab._set_status(self.tab.tr('Archive renamed.'))
+            self.tab._set_status(self.tr('Archive renamed.'))
             self.tab.renamed_archive_original_name = None
             self.tab.populate_from_profile()
         else:

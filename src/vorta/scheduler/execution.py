@@ -49,6 +49,9 @@ class SchedulerExecution:
         self._post_backup_pending: dict[int, int] = {}
         self._post_backup_failed: dict[int, bool] = {}
 
+    def tr(self, *args: Any, **kwargs: Any) -> str:
+        return translate(self.__class__.__name__, *args, **kwargs)
+
     def create_backup(self, profile_id: int, trigger: str) -> None:
         notifier = VortaNotifications.pick()
         profile = BackupProfileModel.get_or_none(id=profile_id)
@@ -72,8 +75,8 @@ class SchedulerExecution:
         try:
             logger.info('Starting background backup for %s', profile.name)
             notifier.deliver(
-                self.scheduler.tr('Vorta Backup'),
-                self.scheduler.tr('Starting background backup for %s.') % profile.name,
+                self.tr('Vorta Backup'),
+                self.tr('Starting background backup for %s.') % profile.name,
                 level='info',
             )
             msg = BorgCreateJob.prepare(profile)
@@ -95,7 +98,7 @@ class SchedulerExecution:
                     logger.error('Conditions for backup not met. Aborting.')
                     logger.error(msg['message'])
                     notifier.deliver(
-                        self.scheduler.tr('Vorta Backup'),
+                        self.tr('Vorta Backup'),
                         translate('messages', msg['message']),
                         level='error',
                     )
@@ -122,8 +125,8 @@ class SchedulerExecution:
 
         if succeeded:
             notifier.deliver(
-                self.scheduler.tr('Vorta Backup'),
-                self.scheduler.tr('Backup successful for %s.') % profile_name,
+                self.tr('Vorta Backup'),
+                self.tr('Backup successful for %s.') % profile_name,
                 level='info',
             )
             logger.info('Backup creation successful.')
@@ -133,8 +136,8 @@ class SchedulerExecution:
             self.scheduler.post_backup_tasks(profile_id)
         else:
             notifier.deliver(
-                self.scheduler.tr('Vorta Backup'),
-                self.scheduler.tr('Error during backup creation for %s.') % profile_name,
+                self.tr('Vorta Backup'),
+                self.tr('Error during backup creation for %s.') % profile_name,
                 level='error',
             )
             logger.error('Error during backup creation.')
@@ -237,13 +240,13 @@ class SchedulerExecution:
         notifier = VortaNotifications.pick()
         if failed:
             notifier.deliver(
-                self.scheduler.tr('Vorta Backup'),
-                self.scheduler.tr('Post Backup Tasks failed for %s') % profile_name,
+                self.tr('Vorta Backup'),
+                self.tr('Post Backup Tasks failed for %s') % profile_name,
                 level='error',
             )
         else:
             notifier.deliver(
-                self.scheduler.tr('Vorta Backup'),
-                self.scheduler.tr('Post Backup Tasks successful for %s') % profile_name,
+                self.tr('Vorta Backup'),
+                self.tr('Post Backup Tasks successful for %s') % profile_name,
                 level='info',
             )

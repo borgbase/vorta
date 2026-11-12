@@ -1,6 +1,7 @@
 from PyQt6.QtCore import Qt
 
 from vorta.borg.diff import BorgDiffJob
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 from vorta.views.dialogs.archive import diff_result
 from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
@@ -9,6 +10,9 @@ from vorta.views.dialogs.archive.diff_result import DiffResultDialog, DiffTree
 class ArchiveDiff:
     def __init__(self, tab):
         self.tab = tab
+
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def diff_action(self):
         """
@@ -59,7 +63,7 @@ class ArchiveDiff:
         if result['returncode'] == 0:
             archive_newer = ArchiveModel.get(name=result['params']['archive_name_newer'])
             archive_older = ArchiveModel.get(name=result['params']['archive_name_older'])
-            self.tab._set_status(self.tab.tr("Processing diff results."))
+            self.tab._set_status(self.tr("Processing diff results."))
 
             model = DiffTree()
 

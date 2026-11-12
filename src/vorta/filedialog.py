@@ -104,7 +104,7 @@ class VortaFileDialog(QDialog):
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Icon.Warning)
                     msg.setWindowTitle(self.tr("Permission Denied"))
-                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.setText(self.tr("You don't have read access to {path}.").format(path=path))
                     msg.exec()
                     return []
                 return [path]
@@ -118,7 +118,7 @@ class VortaFileDialog(QDialog):
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Icon.Warning)
                     msg.setWindowTitle(self.tr("Permission Denied"))
-                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.setText(self.tr("You don't have read access to {path}.").format(path=path))
                     msg.exec()
                     return []
                 paths.append(path)

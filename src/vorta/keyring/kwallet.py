@@ -75,7 +75,7 @@ class VortaKWallet5Keyring(VortaKeyring):
         ):
             return None
         password = self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
-        logger.debug(translate("KWallet", f"Retrieved password for repo {repo_url}"))
+        logger.debug(translate("KWallet", "Retrieved password for repo {repo_url}").format(repo_url=repo_url))
         return password
 
     def get_result(self, method, args=[]):
@@ -94,7 +94,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             result = self.iface.call(QtDBus.QDBus.CallMode.AutoDetect, method)
 
         if result.type() == QDBusMessage.MessageType.ErrorMessage:
-            logger.error(translate("KWallet", f"Method '{method}' returned an error message."))
+            logger.error(translate("KWallet", "Method '{method}' returned an error message.").format(method=method))
             return None
 
         arguments = result.arguments()
