@@ -107,6 +107,88 @@ def test_repo_unlink_shared_repository_keeps_dropdown_entry(qapp, qtbot, mocker,
     mock_text.assert_called_with('The repository remains available for other profiles.')
 
 
+@pytest.mark.parametrize('response', ['yes', 'no', 'close', 'escape', 'default'])
+def test_repo_switch_confirmation(qapp, qtbot, mocker, response):
+    tab = qapp.main_window.repoTab
+    profile = tab.profile()
+    old_repo_id = profile.repo_id
+    new_repo = RepoModel.create(url='/tmp/other-repository', name='Other repository', encryption='none')
+    tab.populate_from_profile()
+    messages = []
+
+    def answer():
+        message = qapp.activeModalWidget()
+        messages.append(message)
+        if response == 'close':
+            message.close()
+        elif response == 'escape':
+            qtbot.keyClick(message, QtCore.Qt.Key.Key_Escape)
+        elif response == 'default':
+            qtbot.keyClick(message, QtCore.Qt.Key.Key_Return)
+        else:
+            button = QMessageBox.StandardButton.Yes if response == 'yes' else QMessageBox.StandardButton.No
+            qtbot.mouseClick(message.button(button), QtCore.Qt.MouseButton.LeftButton)
+
+    changed = mocker.Mock()
+    tab.repo_changed.connect(changed)
+    archives_before = list(ArchiveModel.select().dicts())
+
+    QtCore.QTimer.singleShot(0, answer)
+    tab.repoSelector.setCurrentIndex(tab.repoSelector.findData(new_repo.id))
+
+    expected_id = new_repo.id if response == 'yes' else old_repo_id
+    assert BackupProfileModel.get_by_id(profile.id).repo_id == expected_id
+    assert tab.repoSelector.currentData() == expected_id
+    assert list(ArchiveModel.select().dicts()) == archives_before
+    assert len(messages) == 1
+    assert messages[0].defaultButton() == messages[0].button(QMessageBox.StandardButton.No)
+    assert messages[0].textFormat() == QtCore.Qt.TextFormat.PlainText
+    assert profile.repo.url in messages[0].text()
+    assert new_repo.name in messages[0].text()
+    assert changed.call_count == (1 if response == 'yes' else 0)
+
+    if response != 'yes':
+        response = 'yes'
+        QtCore.QTimer.singleShot(0, answer)
+        tab.repoSelector.setCurrentIndex(tab.repoSelector.findData(new_repo.id))
+        assert BackupProfileModel.get_by_id(profile.id).repo_id == new_repo.id
+        assert len(messages) == 2
+        assert changed.call_count == 1
+
+
+@pytest.mark.parametrize('current_repo', ['empty', 'unset'])
+def test_repo_switch_without_backups_does_not_prompt(qapp, mocker, current_repo):
+    tab = qapp.main_window.repoTab
+    profile = tab.profile()
+    new_repo = RepoModel.create(url='/tmp/other-repository', encryption='none')
+    # Backups in the destination must not trigger a warning about the source.
+    ArchiveModel.update(repo=new_repo.id).execute()
+    if current_repo == 'unset':
+        profile.repo = None
+        profile.save()
+    tab.populate_from_profile()
+    prompt = mocker.patch.object(QMessageBox, 'exec')
+
+    tab.repoSelector.setCurrentIndex(tab.repoSelector.findData(new_repo.id))
+
+    assert BackupProfileModel.get_by_id(profile.id).repo_id == new_repo.id
+    assert tab.repoSelector.currentData() == new_repo.id
+    prompt.assert_not_called()
+
+
+def test_repo_profile_refresh_does_not_prompt(qapp, mocker):
+    tab = qapp.main_window.repoTab
+    profile = tab.profile()
+    prompt = mocker.patch.object(QMessageBox, 'exec')
+
+    tab.populate_from_profile()
+    tab.repo_select_action()
+
+    assert tab.repoSelector.currentData() == profile.repo_id
+    assert BackupProfileModel.get_by_id(profile.id).repo_id == profile.repo_id
+    prompt.assert_not_called()
+
+
 def test_password_autofill(qapp, qtbot):
     main = qapp.main_window
     tab = main.repoTab
