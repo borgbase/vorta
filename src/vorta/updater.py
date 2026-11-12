@@ -40,8 +40,10 @@ def get_updater():
 
         sparkle.setFeedURL_(appcast_nsurl)
 
-        if SettingsModel.get(key='check_for_updates').value:
-            sparkle.setAutomaticallyChecksForUpdates_(True)
+        # Sparkle persists this in user defaults, so it must also be turned off explicitly.
+        check_for_updates = bool(SettingsModel.get(key='check_for_updates').value)
+        sparkle.setAutomaticallyChecksForUpdates_(check_for_updates)
+        if check_for_updates:
             sparkle.checkForUpdatesInBackground()
 
         sparkle.setAutomaticallyDownloadsUpdates_(False)
