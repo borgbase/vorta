@@ -2168,13 +2168,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Nytt förråd…</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Initiera tomt förråd…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Befintligt förråd…</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Använd befintligt förråd…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2316,6 +2316,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Kunde inte ändra förrådets lösenfras. Försök igen.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">Nytt förråd…</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Befintligt förråd…</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>
