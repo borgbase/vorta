@@ -927,6 +927,23 @@ def test_post_backup_tasks_notify_failure(qapp, post_backup_jobs):
     assert 'Post Backup Tasks failed for Default' in notifier.deliver.call_args.args[1]
 
 
+@mark.parametrize(
+    'subcommand, expect_level',
+    [
+        ('prune', 'info'),  # rc 1 is a warning
+        ('check', 'error'),  # rc 1 means inconsistencies were found, see #2591
+    ],
+)
+def test_post_backup_tasks_check_warning_is_failure(qapp, post_backup_jobs, subcommand, expect_level):
+    _, notifier, params = post_backup_jobs
+
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 1, 'cmd': ['borg', subcommand]})
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 0, 'cmd': ['borg', 'list']})
+
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == expect_level
+
+
 def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     """With no follow-up jobs to run, the notification is shown right away, as before."""
     profile = BackupProfileModel.get(name='Default')
@@ -950,6 +967,7 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     [
         ('validation', None, None, None, True),
         ('validation', 'check', 0, td(), False),
+        ('validation', 'check', 1, td(), True),  # #2591: inconsistencies found
         ('validation', 'check', 2, td(), True),  # #2586
         ('validation', 'check', -1, td(), True),  # interrupted
         ('validation', 'check', 0, td(weeks=4), True),
