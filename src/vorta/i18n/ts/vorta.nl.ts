@@ -2166,13 +2166,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Nieuwe repo…</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Lege repo initialiseren…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Bestaande repo…</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Bestaande repo gebruiken…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2314,6 +2314,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Kan de toegangszin van de repo niet wijzigen. Probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">Nieuwe repo…</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Bestaande repo…</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>

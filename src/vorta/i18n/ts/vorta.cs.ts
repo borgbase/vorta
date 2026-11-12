@@ -2168,13 +2168,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Nový repozitář…</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Inicializovat prázdný repozitář…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Existující repozitář…</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Použít existující repozitář…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2316,6 +2316,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Nebylo možné změnit heslovou frázi repozitáře. Zkuste to znovu.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">Nový repozitář…</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Existující repozitář…</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>

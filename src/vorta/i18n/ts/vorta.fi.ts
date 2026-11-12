@@ -2164,13 +2164,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Uusi tietovarasto...</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Alusta tyhjä tietovarasto…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Aikaisemmin luotu tietovarasto...</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Käytä olemassa olevaa tietovarastoa…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2312,6 +2312,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Tietovaraston salauslausetta ei voitu vaihtaa. Yritä uudelleen.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">Uusi tietovarasto...</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Aikaisemmin luotu tietovarasto...</translation>
     </message>
     <message>
         <source>N/A</source>

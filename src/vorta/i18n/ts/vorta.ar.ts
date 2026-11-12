@@ -2160,13 +2160,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>مستودع جديد…</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>تهيئة مستودع فارغ…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>مستودع موجود…</translation>
+        <source>Use Existing Repository…</source>
+        <translation>استخدام مستودع موجود…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2308,6 +2308,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>تعذر تغيير عبارة مرور المستودع. يرجى المحاولة مرة أخرى.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">مستودع جديد…</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">مستودع موجود…</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>

@@ -2164,13 +2164,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Novo Repositorio...</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Inicializar repositorio baleiro…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Repositorio Existente...</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Usar repositorio existente…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2312,6 +2312,14 @@
         <location filename="../../views/repo_tab.py" line="395" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Non é posible cambiar a frase de paso do repositorio. Ténteo de novo.</translation>
+    </message>
+    <message>
+        <source>New Repository…</source>
+        <translation type="vanished">Novo Repositorio...</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Repositorio Existente...</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>
