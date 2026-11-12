@@ -573,30 +573,30 @@
 </context><context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="341" />
-        <location filename="../../borg/borg_job.py" line="92" />
+        <location filename="../../borg/borg_job.py" line="345" />
+        <location filename="../../borg/borg_job.py" line="96" />
         <source>Files</source>
         <translation>Filer</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="342" />
-        <location filename="../../borg/borg_job.py" line="93" />
+        <location filename="../../borg/borg_job.py" line="346" />
+        <location filename="../../borg/borg_job.py" line="97" />
         <source>Original</source>
         <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="344" />
-        <location filename="../../borg/borg_job.py" line="94" />
+        <location filename="../../borg/borg_job.py" line="348" />
+        <location filename="../../borg/borg_job.py" line="98" />
         <source>Deduplicated</source>
         <translation>Deduplicerat</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="95" />
+        <location filename="../../borg/borg_job.py" line="99" />
         <source>Compressed</source>
         <translation>Komprimerat</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="388" />
+        <location filename="../../borg/borg_job.py" line="392" />
         <source>Task started</source>
         <translation>Uppgift startad</translation>
     </message>
@@ -1216,77 +1216,77 @@
 </context><context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="444" />
+        <location filename="../../views/dialogs/archive/extract.py" line="468" />
         <source>Name</source>
         <translation>Namn</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="446" />
+        <location filename="../../views/dialogs/archive/extract.py" line="470" />
         <source>Last Modified</source>
         <translation>Senast ändrad</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="448" />
+        <location filename="../../views/dialogs/archive/extract.py" line="472" />
         <source>Size</source>
         <translation>Storlek</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="450" />
+        <location filename="../../views/dialogs/archive/extract.py" line="474" />
         <source>Health</source>
         <translation>Hälsa</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="529" />
+        <location filename="../../views/dialogs/archive/extract.py" line="553" />
         <source>File</source>
         <translation>Fil</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="531" />
+        <location filename="../../views/dialogs/archive/extract.py" line="555" />
         <source>Directory</source>
         <translation>Katalog</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="533" />
+        <location filename="../../views/dialogs/archive/extract.py" line="557" />
         <source>Symbolic link</source>
         <translation>Symbolisk länk</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="535" />
+        <location filename="../../views/dialogs/archive/extract.py" line="559" />
         <source>FIFO pipe</source>
         <translation>FIFO-rör</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="537" />
+        <location filename="../../views/dialogs/archive/extract.py" line="561" />
         <source>Hard link</source>
         <translation>Hård länk</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="539" />
+        <location filename="../../views/dialogs/archive/extract.py" line="563" />
         <source>Socket</source>
         <translation>Uttag (socket)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="541" />
+        <location filename="../../views/dialogs/archive/extract.py" line="565" />
         <source>Block special file</source>
         <translation>Speciell blockfil</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="543" />
+        <location filename="../../views/dialogs/archive/extract.py" line="567" />
         <source>Character special file</source>
         <translation>Speciell teckenfil</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="550" />
+        <location filename="../../views/dialogs/archive/extract.py" line="574" />
         <source>healthy</source>
         <translation>hel</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="552" />
+        <location filename="../../views/dialogs/archive/extract.py" line="576" />
         <source>broken</source>
         <translation>trasig</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="565" />
+        <location filename="../../views/dialogs/archive/extract.py" line="589" />
         <source>Linked to: {}</source>
         <translation>Länkad till: {}</translation>
     </message>
@@ -2539,37 +2539,37 @@
 </context><context>
     <name>SchedulerExecution</name>
     <message>
-        <location filename="../../scheduler/execution.py" line="249" />
-        <location filename="../../scheduler/execution.py" line="243" />
-        <location filename="../../scheduler/execution.py" line="139" />
-        <location filename="../../scheduler/execution.py" line="128" />
-        <location filename="../../scheduler/execution.py" line="101" />
-        <location filename="../../scheduler/execution.py" line="78" />
+        <location filename="../../scheduler/execution.py" line="259" />
+        <location filename="../../scheduler/execution.py" line="253" />
+        <location filename="../../scheduler/execution.py" line="147" />
+        <location filename="../../scheduler/execution.py" line="136" />
+        <location filename="../../scheduler/execution.py" line="109" />
+        <location filename="../../scheduler/execution.py" line="86" />
         <source>Vorta Backup</source>
         <translation>Vorta-säkerhetskopiering</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="79" />
+        <location filename="../../scheduler/execution.py" line="87" />
         <source>Starting background backup for %s.</source>
         <translation>Startar säkerhetskopiering i bakgrunden för %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="129" />
+        <location filename="../../scheduler/execution.py" line="137" />
         <source>Backup successful for %s.</source>
         <translation>Säkerhetskopieringen för %s slutfördes.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="140" />
+        <location filename="../../scheduler/execution.py" line="148" />
         <source>Error during backup creation for %s.</source>
         <translation>Fel vid skapande av säkerhetskopia för %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="244" />
+        <location filename="../../scheduler/execution.py" line="254" />
         <source>Post Backup Tasks failed for %s</source>
         <translation>Efterföljande uppgifter misslyckades för %s</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="250" />
+        <location filename="../../scheduler/execution.py" line="260" />
         <source>Post Backup Tasks successful for %s</source>
         <translation>Efterföljande uppgifter slutfördes för %s</translation>
     </message>
@@ -2918,27 +2918,27 @@
     </message>
     <message>
         <location filename="../../borg/version.py" line="21" />
-        <location filename="../../borg/borg_job.py" line="167" />
+        <location filename="../../borg/borg_job.py" line="171" />
         <source>Borg binary was not found.</source>
         <translation>Borg-binärfilen hittades inte.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="171" />
+        <location filename="../../borg/borg_job.py" line="175" />
         <source>Select a backup repository first.</source>
         <translation>Välj ett säkerhetskopieringsförråd först.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="175" />
+        <location filename="../../borg/borg_job.py" line="179" />
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Din Borg-version är för gammal. Version 1.1.0 eller senare krävs.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="186" />
+        <location filename="../../borg/borg_job.py" line="190" />
         <source>Please unlock your system password manager or disable it under Settings</source>
         <translation>Lås upp systemets lösenordshanterare eller inaktivera den under Inställningar</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="206" />
+        <location filename="../../borg/borg_job.py" line="210" />
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Din förrådslösenfras lagrades i en lösenordshanterare som inte längre är tillgänglig.
