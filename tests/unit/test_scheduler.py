@@ -1,3 +1,5 @@
+import gc
+import weakref
 from datetime import datetime as dt
 from datetime import timedelta as td
 from functools import wraps
@@ -416,7 +418,7 @@ def test_deadline_timer_waits_in_chunks(clockmock):
 
 
 def test_overriding_a_pause_stops_the_old_timer(clockmock):
-    """The replaced timer holds a reference cycle, so it has to be stopped, not just dropped."""
+    """The replaced timer is stopped explicitly, not just dropped, so it cannot fire once more."""
     profile = BackupProfileModel.get(name=PROFILE_NAME)
     profile.schedule_mode = INTERVAL_SCHEDULE
     profile.save()
@@ -448,6 +450,26 @@ def test_deadline_timer_in_the_past_defers_to_the_event_loop(clockmock):
     assert fired == [True]
 
     timer.stop()
+
+
+def test_dropped_deadline_timer_dies_without_the_cycle_collector(clockmock):
+    """A dropped timer must not linger in a reference cycle (#2595).
+
+    A slot capturing its own QTimer keeps the timer alive until the cyclic GC runs,
+    which can happen on a SiteWorker thread; destroying the QTimer off its owner
+    thread then segfaults the event loop. Dropping the last external reference has
+    to destroy the timer right there, on the arming thread.
+    """
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    timer = vorta.scheduler.arm_deadline_timer(dt(2020, 5, 7, 4, 30), lambda: None)
+    timer_ref = weakref.ref(timer)
+
+    gc.disable()
+    try:
+        del timer
+        assert timer_ref() is None, 'timer survived only via a reference cycle'
+    finally:
+        gc.enable()
 
 
 def test_far_future_pause_runs_its_full_length(clockmock):
