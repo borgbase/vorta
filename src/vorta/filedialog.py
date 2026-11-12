@@ -57,12 +57,12 @@ class VortaFileDialog(QDialog):
         self.label = QLabel(self.tr(title))
         layout.addWidget(self.label)
 
-        self.model = QFileSystemModel()
+        self.model = QFileSystemModel(self)
         self.model.setRootPath(QDir.rootPath())
 
         # Allow files and directories except '.' and '..'
         self.model.setFilter(QDir.Filter.AllEntries | QDir.Filter.NoDotAndDotDot)
-        self.model.directoryLoaded.connect(lambda _: self.tree.resizeColumnToContents(0))
+        self.model.directoryLoaded.connect(self.resize_tree_column)
 
         self.tree = QTreeView()
         self.tree.setModel(self.model)
@@ -71,8 +71,8 @@ class VortaFileDialog(QDialog):
         self.tree.setHeaderHidden(True)
 
         # Resize the width when the directory is collapsed/expanded
-        self.tree.expanded.connect(lambda _: self.tree.resizeColumnToContents(0))
-        self.tree.collapsed.connect(lambda _: self.tree.resizeColumnToContents(0))
+        self.tree.expanded.connect(self.resize_tree_column)
+        self.tree.collapsed.connect(self.resize_tree_column)
 
         layout.addWidget(self.tree)
 
@@ -89,6 +89,9 @@ class VortaFileDialog(QDialog):
         self.btnHome.clicked.connect(self.go_home)
         self.btnUp.clicked.connect(self.go_up)
 
+    def resize_tree_column(self, *_):
+        self.tree.resizeColumnToContents(0)
+
     def selected_paths(self):
         indexes = self.tree.selectionModel().selectedIndexes()
         paths = []
@@ -101,7 +104,7 @@ class VortaFileDialog(QDialog):
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Icon.Warning)
                     msg.setWindowTitle(self.tr("Permission Denied"))
-                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.setText(self.tr("You don't have read access to {path}.").format(path=path))
                     msg.exec()
                     return []
                 return [path]
@@ -115,7 +118,7 @@ class VortaFileDialog(QDialog):
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Icon.Warning)
                     msg.setWindowTitle(self.tr("Permission Denied"))
-                    msg.setText(self.tr(f"You don't have read access to {path}."))
+                    msg.setText(self.tr("You don't have read access to {path}.").format(path=path))
                     msg.exec()
                     return []
                 paths.append(path)

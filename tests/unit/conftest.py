@@ -102,6 +102,13 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     )
     vorta.store.connection.init_db(mock_db)
 
+    # The scheduler outlives the per-test DB, so drop pauses and timers armed by earlier tests.
+    for _, timer in qapp.scheduler.pauses.values():
+        timer.stop()
+    qapp.scheduler.pauses.clear()
+    for profile_id in list(qapp.scheduler.timers):
+        qapp.scheduler.remove_job(profile_id)
+
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
     keyring_setting.value = False

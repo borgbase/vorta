@@ -15,6 +15,9 @@ class ArchiveMount:
     def __init__(self, tab):
         self.tab = tab
 
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
+
     def bmountarchive_clicked(self):
         """
         Handle MountArchive being clicked.
@@ -52,15 +55,13 @@ class ArchiveMount:
         if archive_name in self.tab.mount_points:
             self.tab.bMountArchive.setIcon(get_colored_icon('eject'))
             if not icon_only:
-                self.tab.bMountArchive.setText(self.tab.tr("Unmount"))
-                self.tab.bMountArchive.setToolTip(self.tab.tr('Unmount the selected archive from the file system'))
+                self.tab.bMountArchive.setText(self.tr("Unmount"))
+                self.tab.bMountArchive.setToolTip(self.tr('Unmount the selected archive from the file system'))
         else:
             self.tab.bMountArchive.setIcon(get_colored_icon('folder-open'))
             if not icon_only:
-                self.tab.bMountArchive.setText(self.tab.tr("Mount…"))
-                self.tab.bMountArchive.setToolTip(
-                    self.tab.tr("Mount the selected archive as a folder in the file system")
-                )
+                self.tab.bMountArchive.setText(self.tr("Mount…"))
+                self.tab.bMountArchive.setToolTip(self.tr("Mount the selected archive as a folder in the file system"))
 
     def bmountrepo_refresh(self):
         """
@@ -69,13 +70,13 @@ class ArchiveMount:
         This also updates the icon of the button.
         """
         if self.tab.repo_mount_point:
-            self.tab.bMountRepo.setText(self.tab.tr("Unmount"))
-            self.tab.bMountRepo.setToolTip(self.tab.tr('Unmount the repository from the file system'))
+            self.tab.bMountRepo.setText(self.tr("Unmount"))
+            self.tab.bMountRepo.setToolTip(self.tr('Unmount the repository from the file system'))
             self.tab.bMountRepo.setIcon(get_colored_icon('eject'))
         else:
-            self.tab.bMountRepo.setText(self.tab.tr("Mount…"))
+            self.tab.bMountRepo.setText(self.tr("Mount…"))
             self.tab.bMountRepo.setIcon(get_colored_icon('folder-open'))
-            self.tab.bMountRepo.setToolTip(self.tab.tr("Mount the repository as a folder in the file system"))
+            self.tab.bMountRepo.setToolTip(self.tr("Mount the repository as a folder in the file system"))
 
     def mount_action(self, archive_name=None):
         """
@@ -106,12 +107,12 @@ class ArchiveMount:
                     job.result.connect(self.mount_result)
                     self.tab.app.jobs_manager.add_job(job)
 
-        dialog = choose_file_dialog(self.tab, self.tab.tr("Choose Mount Point"), want_folder=True)
+        dialog = choose_file_dialog(self.tab, self.tr("Choose Mount Point"), want_folder=True)
         dialog.open(receive)
 
     def mount_result(self, result):
         if result['returncode'] == 0:
-            self.tab._set_status(self.tab.tr('Mounted successfully.'))
+            self.tab._set_status(self.tr('Mounted successfully.'))
 
             mount_point = result['params']['mount_point']
 
@@ -151,7 +152,7 @@ class ArchiveMount:
             profile = self.tab.profile()
             params = BorgUmountJob.prepare(profile, mount_point, archive_name=archive_name)
             if not params['ok']:
-                self.tab._set_status(translate('message', params['message']))
+                self.tab._set_status(translate('messages', params['message']))
                 return
 
             job = BorgUmountJob(params['cmd'], params, self.tab.profile().repo.id)
@@ -165,7 +166,7 @@ class ArchiveMount:
         mount_point = result['params']['mount_point']
 
         if result['returncode'] == 0:
-            self.tab._set_status(self.tab.tr('Un-mounted successfully.'))
+            self.tab._set_status(self.tr('Un-mounted successfully.'))
 
             if archive_name:
                 # unmount single archive
@@ -179,6 +180,4 @@ class ArchiveMount:
                 self.tab.repo_mount_point = None
                 self.bmountrepo_refresh()
         else:
-            self.tab._set_status(
-                self.tab.tr('Unmounting failed. Make sure no programs are using {}').format(mount_point)
-            )
+            self.tab._set_status(self.tr('Unmounting failed. Make sure no programs are using {}').format(mount_point))

@@ -248,7 +248,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         if total_size is not None:
             total_files = total_files or 0
             self.totalSizeLabel.setText(
-                self.tr("Total Size: {size}, {count} files").format(size=pretty_bytes(total_size), count=total_files)
+                self.tr("Total Size: {size}, %n file(s)", "", int(total_files)).format(size=pretty_bytes(total_size))
             )
         else:
             self.totalSizeLabel.setText("")

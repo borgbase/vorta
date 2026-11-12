@@ -234,7 +234,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        msg.setText(self.tr(f'Error during key generation. Exited with code {exit_code}.'))
+        msg.setText(self.tr('Error during key generation. Exited with code {exit_code}.').format(exit_code=exit_code))
         msg.show()
 
     def ssh_copy_to_clipboard_action(self):

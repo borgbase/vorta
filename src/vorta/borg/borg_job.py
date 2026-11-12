@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from vorta import application
 from vorta.borg.jobs_manager import JobInterface
 from vorta.i18n import translate
+from vorta.inhibitor.abc import Inhibitor
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
 from vorta.store.models import EventLogModel, db_lock
@@ -73,6 +74,7 @@ class BorgJob(JobInterface):
     updated = QtCore.pyqtSignal(str)
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
+    should_inhibit = False
 
     def __init__(self, cmd, params, site="default"):
         """
@@ -254,6 +256,10 @@ class BorgJob(JobInterface):
         return None
 
     def run(self):
+        with self.get_inhibitor():
+            self._run()
+
+    def _run(self):
         self.started_event()
         with db_lock:
             log_entry = EventLogModel(
@@ -338,7 +344,7 @@ class BorgJob(JobInterface):
                             msg = (
                                 f"{translate('BorgJob', 'Files')}: {parsed['nfiles']}, "
                                 f"{translate('BorgJob', 'Original')}: {pretty_bytes(parsed['original_size'])}, "
-                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, "
+                                # f"{translate('BorgJob','Compressed')}: {pretty_bytes(parsed['compressed_size'])}, " # noqa: E501
                                 f"{translate('BorgJob', 'Deduplicated')}: {pretty_bytes(parsed.get('deduplicated_size', 0))}"  # noqa: E501
                             )
                             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {msg}")
@@ -387,3 +393,11 @@ class BorgJob(JobInterface):
 
     def finished_event(self, result):
         self.result.emit(result)
+
+    def get_inhibitor(self) -> Inhibitor:
+        if self.should_inhibit:
+            logger.debug("job will inhibit")
+            return Inhibitor.get_inhibitor(f"borg {self.cmd[1]}")
+        else:
+            logger.debug("job will not inhibit")
+            return Inhibitor.get_noop_inhibitor()

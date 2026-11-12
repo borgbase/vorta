@@ -32,9 +32,11 @@ If you are asked a follow-up question on your PR, respond with specifics about y
 uv sync              # Install dependencies
 make test            # Run all tests (via nox, multiple Borg versions)
 make test-unit       # Run unit tests only
-make lint            # Run linters (ruff)
+make lint                      # Run linters (ruff)
+make translations-from-source  # Extract translatable strings into src/vorta/i18n/ts/vorta.<lang>.ts
+make translations-to-qm        # Compile .ts catalogs to src/vorta/i18n/qm/vorta.<lang>.qm
 ```
 
-See [CLAUDE.md](../CLAUDE.md) for the full project structure and architecture overview, and our [contributor guide](https://vorta.borgbase.com/contributing/) for additional details on coding, translation, and packaging.
+Translations live in `src/vorta/i18n/ts/vorta.<lang>.ts`; see [`.claude/skills/translate/SKILL.md`](../.claude/skills/translate/SKILL.md) for terminology glossaries and conventions. See [CLAUDE.md](../CLAUDE.md) for the full project structure and architecture overview, and our [contributor guide](https://vorta.borgbase.com/contributing/) for additional details on coding, translation, and packaging.
 
 *By submitting a contribution, you provide it under the terms of the [project license](../LICENSE.txt) and affirm the [Developer Certificate of Origin](https://developercertificate.org/).*
