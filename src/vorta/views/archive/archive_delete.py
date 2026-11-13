@@ -1,4 +1,5 @@
 from vorta.borg.delete import BorgDeleteJob
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 
 
@@ -6,12 +7,15 @@ class ArchiveDelete:
     def __init__(self, tab):
         self.tab = tab
 
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
+
     def delete_action(self):
         # Since this function modifies the UI, we can't put the whole function in a JobQueue.
         archives = [archive.name for archive in self.tab.selected_archives()]
 
         if not archives:
-            self.tab._set_status(self.tab.tr("No archive selected"))
+            self.tab._set_status(self.tr("No archive selected"))
             return
 
         params = BorgDeleteJob.prepare(self.tab.profile(), archives)
@@ -20,10 +24,10 @@ class ArchiveDelete:
             return
 
         if len(archives) > 1:
-            body = self.tab.tr("Are you sure you want to delete all the selected archives?")
+            body = self.tr("Are you sure you want to delete all the selected archives?")
         else:
-            body = self.tab.tr("Are you sure you want to delete the selected archive?")
-        if not self.tab.confirm_dialog(self.tab.tr("Confirm deletion"), body):
+            body = self.tr("Are you sure you want to delete the selected archive?")
+        if not self.tab.confirm_dialog(self.tr("Confirm deletion"), body):
             return
 
         job = BorgDeleteJob(params['cmd'], params, self.tab.profile().repo.id)
@@ -36,9 +40,9 @@ class ArchiveDelete:
         archives = result['params']['archives']
         if result['returncode'] == 0:
             if len(archives) > 1:
-                status = self.tab.tr('Archives deleted.')
+                status = self.tr('Archives deleted.')
             else:
-                status = self.tab.tr('Archive deleted.')
+                status = self.tr('Archive deleted.')
             self.tab._set_status(status)
 
             repo = self.tab.profile().repo

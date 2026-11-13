@@ -3,13 +3,15 @@ from __future__ import annotations
 import enum
 import logging
 import threading
+import weakref
 from collections.abc import Callable
 from datetime import datetime as dt
 from datetime import timedelta
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from PyQt6.QtCore import QTimer
 
+from vorta.i18n import translate
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import get_network_status_monitor
 
@@ -32,25 +34,36 @@ def arm_deadline_timer(deadline: dt, on_expiry: Callable[[], None]) -> QTimer:
 
     Waits longer than `MAX_TIMER_MS` are split into chunks, and every chunk is measured
     against the wall clock again, so the deadline holds however far ahead it is.
+
+    The timeout slot holds the timer only weakly: a closure capturing it strongly would
+    form a reference cycle, and a dropped timer would then linger until the cyclic GC
+    runs — on whatever thread happens to allocate, e.g. a SiteWorker. Destroying a
+    QTimer off its owner thread corrupts the event loop's timer registry and crashes
+    the process (#2595). Without the cycle, the last external reference owns the timer
+    and releases it deterministically on the thread that armed it.
     """
     timer = QTimer()
     timer.setSingleShot(True)
+    timer_ref = weakref.ref(timer)
 
     def remaining_ms() -> float:
         return (deadline - dt.now()).total_seconds() * 1000 + TIMER_GRACE_MS
 
-    def rearm() -> None:
-        timer.setInterval(int(max(0, min(remaining_ms(), MAX_TIMER_MS))))
-        timer.start()
+    def rearm(t: QTimer) -> None:
+        t.setInterval(int(max(0, min(remaining_ms(), MAX_TIMER_MS))))
+        t.start()
 
     def on_timeout() -> None:
+        t = timer_ref()
+        if t is None:  # timer already dropped; nothing left to re-arm
+            return
         if remaining_ms() <= 0:
             on_expiry()
         else:
-            rearm()
+            rearm(t)
 
     timer.timeout.connect(on_timeout)
-    rearm()
+    rearm(timer)
     return timer
 
 
@@ -104,6 +117,9 @@ class SchedulerTimers:
         self.net_status = get_network_status_monitor()
         self.net_status.network_status_changed.connect(scheduler.networkStatusChanged)
         self._net_up = self.net_status.is_network_active()
+
+    def tr(self, *args: Any, **kwargs: Any) -> str:
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def networkStatusChanged(self, up: bool):
         reload = self._net_up != up
@@ -299,7 +315,7 @@ class SchedulerTimers:
 
         scheduled = {profile_id: timer for profile_id, timer in self.timers.items() if is_scheduled(timer)}
         if len(scheduled) == 0:
-            return self.scheduler.tr("None scheduled")
+            return self.tr("None scheduled")
 
         closest_job = min(scheduled.items(), key=lambda item: item[1]["dt"])
         profile_id, timer = closest_job

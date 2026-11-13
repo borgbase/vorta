@@ -47,6 +47,14 @@ make dist/Vorta.dmg  # Create notarized macOS DMG
 uv sync  # Install dependencies and project in editable mode
 ```
 
+### Translations
+```bash
+make translations-from-source         # Extract strings from Python/UI files into src/vorta/i18n/ts/vorta.*.ts
+make translations-to-qm               # Compile .ts files into binary src/vorta/i18n/qm/vorta.*.qm catalogs
+LANG=de_DE uv run vorta --foreground  # Run Vorta in a specific locale
+```
+See `.claude/skills/translate/SKILL.md` and `.claude/skills/translate/glossaries/` for workflow and per-language terminology glossaries.
+
 ## Architecture
 
 ### Core Components
@@ -68,6 +76,11 @@ uv sync  # Install dependencies and project in editable mode
   - Tab classes (`repo_tab.py`, `source_tab.py`, `archive_tab.py`, etc.) manage their respective UI sections.
   - UI layouts are defined in `.ui` files under `src/vorta/assets/UI/`.
 
+
+- **`src/vorta/i18n/`**: Internationalization and localization
+  - `__init__.py`: `init_translations()` and `translate()` helpers wrapping `QCoreApplication.translate`.
+  - `richtext.py`: `format_richtext()`, `link()`, `bold()`, and `escape()` for safe HTML `%1`/`%2` substitutions.
+  - `ts/` and `qm/`: Qt Linguist `.ts` source catalogs and compiled `.qm` binaries for 12 supported locales.
 ### Platform-Specific Code
 
 - **`src/vorta/keyring/`**: Platform-specific password storage (macOS Keychain, KWallet, SecretStorage, or fallback DB storage)

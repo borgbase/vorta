@@ -55,8 +55,9 @@ Compile all .ts files to binary .qm format.
    arrive as `type="unfinished"`, and strings that vanished from the code are kept as
    `type="vanished"`. It is idempotent — a second run is a no-op.
 2. Read each .ts file in `src/vorta/i18n/ts/`
-3. Count strings with `<translation type="unfinished"/>` (untranslated), ignoring
-   `type="vanished"` entries
+3. Count strings where `<translation>` has attribute `type="unfinished"` (untranslated/unreviewed), ignoring `type="vanished"` entries. Note that `type="unfinished"` occurs in two XML forms:
+   - Empty self-closing tags: `<translation type="unfinished" />` or `<translation type="unfinished"/>`
+   - Heuristic pre-filled tags produced by `pylupdate6` when strings move across contexts: `<translation type="unfinished">Suggested text</translation>`
 4. Count total live `<message>` elements (again ignoring `vanished`)
 5. Display a summary table:
 
@@ -69,14 +70,14 @@ es          45              450      90.0%
 
 ---
 
-## Command: `/translate translate <lang>`
+## Command: `/translate review <lang>`
 
-Generate translations for a specific language.
+Generate and review translations for a specific language (`/translate translate <lang>` is an accepted alias).
 
 ### Step 1: Parse the .ts file
 
 Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
-- Untranslated strings: `<translation type="unfinished"/>`
+- Untranslated or unreviewed strings: any `<message>` whose `<translation>` has `type="unfinished"`, including both empty `<translation type="unfinished" />` (`<translation type="unfinished"/>`) and heuristic pre-filled `<translation type="unfinished">Suggested text</translation>` (which must be verified against the new context and glossary before removing `type="unfinished"`)
 - Existing translations for context
 
 ### Step 2: Load glossary and scan for consistency
@@ -124,6 +125,8 @@ the context.
 kept with `<translation type="vanished">`. Leave them alone — they are what lets a
 future rewording recover its old translation. Do not count them as untranslated.
 
+
+**Delegated `.tr()` helper convention:** Non-`QObject` UI and scheduler helper classes (`ArchiveDelete`, `ArchiveDiff`, `ArchiveExtract`, `ArchiveMaintenance`, `ArchiveMount`, `ArchiveRename`, `SchedulerExecution`, `SchedulerTimers`, etc.) define `def tr(self, *args, **kwargs): return translate(self.__class__.__name__, *args, **kwargs)` and call `self.tr(...)` (never `self.tab.tr(...)` or `self.scheduler.tr(...)`) so `pylupdate6`'s class-based `<context><name>` matches runtime lookup.
 ### Step 4: Generate translations with context
 
 For each untranslated string, consider:
@@ -148,7 +151,13 @@ For each untranslated string, consider:
    - **Menu items:** Title Case
    - **Descriptions/tooltips:** Sentence case
    - **Technical terms:** Keep English for: Borg, BorgBackup, SSH, repository (or use locale-appropriate term)
-   - **Placeholders:** Preserve `{variable}` and `%s` patterns exactly
+   - **Placeholders:** Preserve all five placeholder formats used in Vorta exactly:
+     - Qt plural (`numerus="yes"`): `%n` inside `<numerusform>` elements matching the target language's Qt plural count (2 for `de`/`es`/`fi`/`fr`/`gl`/`it`/`nl`/`sv`, 3 for `cs`/`ru`/`sk`, 6 for `ar`)
+     - Python printf: `%s`, `%d`
+     - Python `str.format` & archive-name template variables (`format_archive_name` in `src/vorta/utils.py`): `{}`, `{0}`, `{1}`, `{size}`, `{path}`, `{repo_url}`, `{exit_code}`, `{method}`, `{hostname}`, `{fqdn}`, `{profile_id}`, `{profile_slug}`, `{now:...}`, `{utc_now:...}`, `{user}` — NEVER translate variable names before `:` (e.g., keep `{now:%Y-%m-%d-%H%M%S}`)
+     - Rich-text `format_richtext()` (`src/vorta/i18n/richtext.py`): `%1`, `%2` (replaced in reverse numeric order with HTML links or bold spans)
+     - Shell command template variables in `ShellCommandsPage`: `$repo_url`, `$profile_name`, `$profile_slug`, `$returncode` (keep variable names verbatim in English)
+   - **Link-text grammar rule (`%1`/`%2` substitutions):** Standalone link strings (`here`, `more`, `logs`, `documentation`, `Click here`, `Github`, `Full Disk Access`, `System Preferences > Security & Privacy`) are injected into `%1`/`%2` templates (e.g., `To mount archives, first install macFUSE from %1.` + `here`, `See the %1 for details.` + `logs`, `Read %1.` + `more`). Always check the surrounding `%1` sentence in the same class/context so prepositions and grammatical case/articles fit seamlessly without duplication (e.g., avoid `"från" + "här"` in Swedish by placing the preposition inside or outside consistently).
 
 ### Step 5: Terminology check
 
@@ -156,7 +165,7 @@ Before writing translations, cross-check all generated translations against the 
 
 ### Step 6: Update the .ts file
 
-Replace `<translation type="unfinished"/>` with `<translation>Translated text</translation>`
+Replace `<translation type="unfinished" />` (and verified `<translation type="unfinished">Suggested text</translation>`) with `<translation>Translated text</translation>`
 
 **Important XML rules:**
 - Preserve exact XML structure and indentation
@@ -197,13 +206,13 @@ done
 - Use formal/informal tone based on the target language's conventions
 - Preserve keyboard shortcuts (e.g., "&File" where & indicates Alt+F)
 - Keep URLs unchanged
-- Preserve formatting placeholders (`{0}`, `%s`, `%d`, etc.)
+- Preserve all formatting placeholders (`%n`, `%s`, `%d`, `%1`, `%2`, `{}`, `{0}`, `{1}`, `{size}`, `{path}`, `{repo_url}`, `{exit_code}`, `{method}`, `{hostname}`, `{profile_slug}`, `{now:...}`, `$repo_url`, `$profile_name`, `$profile_slug`, `$returncode`) and ensure standalone link-text strings (`here`, `more`, `logs`, `documentation`, etc.) grammatically fit their surrounding `%1`/`%2` sentences
 
 ### DON'T:
 - Translate proper nouns: Borg, BorgBackup, Vorta, SSH, URL
 - Change technical identifiers or paths
 - Add or remove punctuation unnecessarily
-- Translate placeholder text that's clearly an example (e.g., email@example.com)
+- Translate placeholder text that's clearly a literal syntax example (e.g., `email@example.com`, or Borg `--keep-within` unit suffixes `24H, 1d, 52w, 12m, 1y` where `H`, `d`, `w`, `m`, `y` are literal CLI tokens)
 - Translate based on code-internal names instead of actual UI labels (e.g., code says "Misc" but UI shows "Settings / About" — translate as "Settings")
 
 ### RTL Languages (Arabic):

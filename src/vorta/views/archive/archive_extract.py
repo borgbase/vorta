@@ -5,6 +5,7 @@ from PyQt6 import QtCore
 
 from vorta.borg.extract import BorgExtractJob
 from vorta.borg.list_archive import BorgListArchiveJob
+from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 from vorta.utils import choose_file_dialog
 from vorta.views.dialogs.archive import extract as extract_dialog
@@ -14,6 +15,9 @@ from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree, pars
 class ArchiveExtract:
     def __init__(self, tab):
         self.tab = tab
+
+    def tr(self, *args, **kwargs):
+        return translate(self.__class__.__name__, *args, **kwargs)
 
     def extract_action(self):
         """
@@ -40,7 +44,7 @@ class ArchiveExtract:
             self.tab.app.jobs_manager.add_job(job)
             return job
         else:
-            self.tab._set_status(self.tab.tr('Select an archive to restore first.'))
+            self.tab._set_status(self.tr('Select an archive to restore first.'))
 
     def extract_receive_line(self, lines: List[str]):
         items = [json.loads(line) for line in lines]
@@ -71,7 +75,7 @@ class ArchiveExtract:
                     else:
                         self.tab._set_status(params['message'])
 
-            dialog = choose_file_dialog(self.tab, self.tab.tr("Choose Extraction Point"), want_folder=True)
+            dialog = choose_file_dialog(self.tab, self.tr("Choose Extraction Point"), want_folder=True)
             dialog.open(receive)
 
         window = ExtractDialog(archive, model)

@@ -38,8 +38,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
 
-        self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
-        self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
+        self.menuAddRepo.addAction(self.tr("Initialize Empty Repository…"), self.new_repo)
+        self.menuAddRepo.addAction(self.tr("Use Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
 
@@ -234,7 +234,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        msg.setText(self.tr(f'Error during key generation. Exited with code {exit_code}.'))
+        msg.setText(self.tr('Error during key generation. Exited with code {exit_code}.').format(exit_code=exit_code))
         msg.show()
 
     def ssh_copy_to_clipboard_action(self):

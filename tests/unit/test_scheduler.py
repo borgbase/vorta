@@ -1,3 +1,5 @@
+import gc
+import weakref
 from datetime import datetime as dt
 from datetime import timedelta as td
 from functools import wraps
@@ -416,7 +418,7 @@ def test_deadline_timer_waits_in_chunks(clockmock):
 
 
 def test_overriding_a_pause_stops_the_old_timer(clockmock):
-    """The replaced timer holds a reference cycle, so it has to be stopped, not just dropped."""
+    """The replaced timer is stopped explicitly, not just dropped, so it cannot fire once more."""
     profile = BackupProfileModel.get(name=PROFILE_NAME)
     profile.schedule_mode = INTERVAL_SCHEDULE
     profile.save()
@@ -448,6 +450,26 @@ def test_deadline_timer_in_the_past_defers_to_the_event_loop(clockmock):
     assert fired == [True]
 
     timer.stop()
+
+
+def test_dropped_deadline_timer_dies_without_the_cycle_collector(clockmock):
+    """A dropped timer must not linger in a reference cycle (#2595).
+
+    A slot capturing its own QTimer keeps the timer alive until the cyclic GC runs,
+    which can happen on a SiteWorker thread; destroying the QTimer off its owner
+    thread then segfaults the event loop. Dropping the last external reference has
+    to destroy the timer right there, on the arming thread.
+    """
+    clockmock.now.return_value = dt(2020, 5, 6, 4, 30)
+    timer = vorta.scheduler.arm_deadline_timer(dt(2020, 5, 7, 4, 30), lambda: None)
+    timer_ref = weakref.ref(timer)
+
+    gc.disable()
+    try:
+        del timer
+        assert timer_ref() is None, 'timer survived only via a reference cycle'
+    finally:
+        gc.enable()
 
 
 def test_far_future_pause_runs_its_full_length(clockmock):
@@ -927,6 +949,23 @@ def test_post_backup_tasks_notify_failure(qapp, post_backup_jobs):
     assert 'Post Backup Tasks failed for Default' in notifier.deliver.call_args.args[1]
 
 
+@mark.parametrize(
+    'subcommand, expect_level',
+    [
+        ('prune', 'info'),  # rc 1 is a warning
+        ('check', 'error'),  # rc 1 means inconsistencies were found, see #2591
+    ],
+)
+def test_post_backup_tasks_check_warning_is_failure(qapp, post_backup_jobs, subcommand, expect_level):
+    _, notifier, params = post_backup_jobs
+
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 1, 'cmd': ['borg', subcommand]})
+    qapp.scheduler.post_backup_task_finished({'params': params, 'returncode': 0, 'cmd': ['borg', 'list']})
+
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == expect_level
+
+
 def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     """With no follow-up jobs to run, the notification is shown right away, as before."""
     profile = BackupProfileModel.get(name='Default')
@@ -950,6 +989,7 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     [
         ('validation', None, None, None, True),
         ('validation', 'check', 0, td(), False),
+        ('validation', 'check', 1, td(), True),  # #2591: inconsistencies found
         ('validation', 'check', 2, td(), True),  # #2586
         ('validation', 'check', -1, td(), True),  # interrupted
         ('validation', 'check', 0, td(weeks=4), True),
