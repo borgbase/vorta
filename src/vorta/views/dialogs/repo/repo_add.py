@@ -14,7 +14,7 @@ from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
-from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
+from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys, worst_error
 from vorta.views.partials.password_input import PasswordInput, PasswordLineEdit
 from vorta.views.utils import get_colored_icon
 
@@ -93,7 +93,18 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             self.added_repo.emit(result)
             self.accept()
         else:
-            self._set_status(self.tr('Unable to add your repository.'))
+            status = self.tr('Unable to add your repository.')
+            error = (
+                worst_error(
+                    [(level, msg.strip()) for level, msg in (result.get('errors') or []) if msg and msg.strip()]
+                )
+                or (result.get('stderr_error') or '').strip()
+            )
+            if error:
+                if len(error) > 300:
+                    error = error[:300] + '...'
+                status = f'{status}\n{error}'
+            self._set_status(status)
 
     def init_ssh_key(self):
         keys = get_private_keys()

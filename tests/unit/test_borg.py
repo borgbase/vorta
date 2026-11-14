@@ -6,7 +6,7 @@ import pytest
 import vorta.application
 import vorta.borg
 import vorta.store.models
-from vorta.borg.borg_job import BorgJob, summarize_traceback
+from vorta.borg.borg_job import BorgJob, summarize_stderr, summarize_traceback
 from vorta.borg.prune import BorgPruneJob
 
 
@@ -64,6 +64,24 @@ def test_summarize_traceback():
     # Other messages are not changed.
     for message in ['Failed to create/acquire the lock /repo/lock.exclusive (timeout).', '', sysinfo]:
         assert summarize_traceback(message) == message
+
+
+def test_summarize_stderr():
+    assert summarize_stderr([]) is None
+    assert summarize_stderr(['   ', '']) is None
+    assert summarize_stderr(['Warning: Permanently added host.', 'Permission denied (publickey).', '   ']) == (
+        'Permission denied (publickey).'
+    )
+    assert (
+        summarize_stderr(
+            [
+                '  Traceback (most recent call last):',
+                '    File "/borg/archiver.py", line 1, in main',
+                '  RuntimeError: could not open repository',
+            ]
+        )
+        == 'RuntimeError: could not open repository'
+    )
 
 
 def test_borg_job_shows_exception_instead_of_traceback(qapp, qtbot, mocker, borg_json_output):
