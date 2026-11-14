@@ -412,10 +412,10 @@ class BorgJob(JobInterface):
             return Inhibitor.get_noop_inhibitor()
 
 
-class LineOrientedBorgJob(BorgJob):
-    """A BorgJob for which emitting lines as they are received is meaingful"""
+class LineOrientedJsonBorgJob(BorgJob):
+    """A BorgJob for which emitting nljson as received is meaingful"""
 
-    linesReceived = QtCore.pyqtSignal(list)
+    objReceived = QtCore.pyqtSignal(list)
 
     def __init__(self, cmd, params, site="default"):
         super().__init__(cmd, params, site)
@@ -426,11 +426,11 @@ class LineOrientedBorgJob(BorgJob):
             self.buffer += stdout_data
             lines = self.buffer.split("\n")
 
-            to_emit = lines[:-1]
+            to_emit = [json.loads(line) for line in lines[:-1]]
             if to_emit:
-                self.linesReceived.emit(to_emit)
+                self.objReceived.emit(to_emit)
             self.buffer = lines[-1]
 
         if not more and self.buffer:
-            self.linesReceived.emit([self.buffer])
+            self.objReceived.emit([json.loads(self.buffer)])
             self.buffer = ''

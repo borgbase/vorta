@@ -39,15 +39,14 @@ class ArchiveExtract:
 
             job = BorgListArchiveJob(params['cmd'], params, self.tab.profile().repo.id)
             job.updated.connect(self.tab.mountErrors.setText)
-            job.linesReceived.connect(self.extract_receive_line)
+            job.objReceived.connect(self.extract_receive_files)
             job.result.connect(self.extract_list_result)
             self.tab.app.jobs_manager.add_job(job)
             return job
         else:
             self.tab._set_status(self.tr('Select an archive to restore first.'))
 
-    def extract_receive_line(self, lines: List[str]):
-        items = [json.loads(line) for line in lines]
+    def extract_receive_files(self, items: List[dict]):
         parse_json_lines(items, self.model)
 
     def extract_list_result(self, result):
