@@ -1,3 +1,6 @@
+import json
+from typing import List
+
 from PyQt6 import QtCore
 
 from vorta.borg.extract import BorgExtractJob
@@ -6,7 +9,7 @@ from vorta.i18n import translate
 from vorta.store.models import ArchiveModel
 from vorta.utils import choose_file_dialog
 from vorta.views.dialogs.archive import extract as extract_dialog
-from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree
+from vorta.views.dialogs.archive.extract import ExtractDialog, ExtractTree, parse_json_lines
 
 
 class ArchiveExtract:
@@ -26,6 +29,7 @@ class ArchiveExtract:
         if archives:
             archive_name = archives[0].name
             params = BorgListArchiveJob.prepare(profile, archive_name)
+            self.model = ExtractTree()
 
             if not params['ok']:
                 self.tab._set_status(params['message'])
@@ -35,22 +39,22 @@ class ArchiveExtract:
 
             job = BorgListArchiveJob(params['cmd'], params, self.tab.profile().repo.id)
             job.updated.connect(self.tab.mountErrors.setText)
+            job.objReceived.connect(self.extract_receive_files)
             job.result.connect(self.extract_list_result)
             self.tab.app.jobs_manager.add_job(job)
             return job
         else:
             self.tab._set_status(self.tr('Select an archive to restore first.'))
 
+    def extract_receive_files(self, items: List[dict]):
+        parse_json_lines(items, self.model)
+
     def extract_list_result(self, result):
         """Process the contents of the archive to extract."""
         self.tab._set_status('')
         if result['returncode'] == 0:
             archive = ArchiveModel.get(name=result['params']['archive_name'])
-            model = ExtractTree()
-            self.tab._set_status(self.tr("Processing archive contents"))
-            self.tab._t = extract_dialog.ParseThread(result['data'], model)
-            self.tab._t.finished.connect(lambda: self.extract_show_dialog(archive, model))
-            self.tab._t.start()
+            self.extract_show_dialog(archive, self.model)
 
     def extract_show_dialog(self, archive, model):
         """Show the dialog for choosing the archive contents to extract."""

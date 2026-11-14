@@ -6,7 +6,7 @@ import pytest
 import vorta.application
 import vorta.borg
 import vorta.store.models
-from vorta.borg.borg_job import BorgJob, summarize_traceback
+from vorta.borg.borg_job import BorgJob, LineOrientedJsonBorgJob, summarize_traceback
 from vorta.borg.prune import BorgPruneJob
 
 
@@ -37,6 +37,25 @@ def test_prepare_bin_does_not_grow_path(monkeypatch):
     assert os.environ['PATH'] == path_after_first_call
     path_dirs = path_after_first_call.split(os.pathsep)
     assert len(path_dirs) == len(set(path_dirs))
+
+
+def test_line_oriented_json_borg_job_emits_complete_objects(qapp, monkeypatch):
+    monkeypatch.setattr(LineOrientedJsonBorgJob, 'prepare_bin', classmethod(lambda cls: 'borg'))
+    job = LineOrientedJsonBorgJob(['borg', 'list'], {})
+    received = []
+    job.objReceived.connect(received.extend)
+
+    job.process_intermediate('{"path":"first"}\n{"path":"sec', True)
+    assert received == [{'path': 'first'}]
+
+    job.process_intermediate('', True)
+    assert received == [{'path': 'first'}]
+
+    job.process_intermediate('ond"}\n{"path":"third"}\n{"path":"last"}', True)
+    assert received == [{'path': 'first'}, {'path': 'second'}, {'path': 'third'}]
+
+    job.process_intermediate('', False)
+    assert received == [{'path': 'first'}, {'path': 'second'}, {'path': 'third'}, {'path': 'last'}]
 
 
 def _traceback_of(func):

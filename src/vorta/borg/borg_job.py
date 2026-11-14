@@ -308,7 +308,9 @@ class BorgJob(JobInterface):
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
 
-            stdout.append(read_async(p.stdout))
+            d = read_async(p.stdout)
+            self.process_intermediate(d, True)
+            stdout.append(d)
             stderr = read_async(p.stderr)
             if stderr:
                 for line in stderr.split('\n'):
@@ -356,8 +358,12 @@ class BorgJob(JobInterface):
 
             if p.poll() is not None:
                 time.sleep(0.1)
-                stdout.append(read_async(p.stdout))
+                d = read_async(p.stdout)
+                self.process_intermediate(d, True)
+                stdout.append(d)
                 break
+
+        self.process_intermediate('', False)
 
         result = {
             'params': self.params,
@@ -388,6 +394,9 @@ class BorgJob(JobInterface):
     def process_result(self, result):
         pass
 
+    def process_intermediate(self, stdout_data: str, more: bool):
+        pass
+
     def started_event(self):
         self.updated.emit(self.tr('Task started'))
 
@@ -401,3 +410,27 @@ class BorgJob(JobInterface):
         else:
             logger.debug("job will not inhibit")
             return Inhibitor.get_noop_inhibitor()
+
+
+class LineOrientedJsonBorgJob(BorgJob):
+    """A BorgJob for which emitting nljson as received is meaingful"""
+
+    objReceived = QtCore.pyqtSignal(list)
+
+    def __init__(self, cmd, params, site="default"):
+        super().__init__(cmd, params, site)
+        self.buffer = ""
+
+    def process_intermediate(self, stdout_data: str, more: bool):
+        if stdout_data:
+            self.buffer += stdout_data
+            lines = self.buffer.split("\n")
+
+            to_emit = [json.loads(line) for line in lines[:-1]]
+            if to_emit:
+                self.objReceived.emit(to_emit)
+            self.buffer = lines[-1]
+
+        if not more and self.buffer:
+            self.objReceived.emit([json.loads(self.buffer)])
+            self.buffer = ''
