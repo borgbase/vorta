@@ -1,6 +1,8 @@
 import os
 import signal
 import sys
+import threading
+from traceback import format_exception
 
 from peewee import SqliteDatabase
 
@@ -8,17 +10,27 @@ from peewee import SqliteDatabase
 # because we will be overriding the modules variables
 from vorta import config
 from vorta._version import __version__
+from vorta.borg.jobs_manager import report_exception_to_main_thread
 from vorta.log import init_logger, logger
 from vorta.store.connection import file_logging_enabled, init_db
 from vorta.updater import get_updater
 from vorta.utils import DEFAULT_DIR_FLAG, parse_args
-from vorta.views.dialogs.exception import ExceptionDialog
+from vorta.views.dialogs.exception import show_exception_dialog
+
+
+def thread_exception_hook(args):
+    """Last resort for exceptions that escape a thread, e.g. a `SiteWorker`."""
+    if issubclass(args.exc_type, SystemExit):
+        return
+    exc_info = (args.exc_type, args.exc_value, args.exc_traceback)
+    logger.critical('Uncaught exception in thread %s', getattr(args.thread, 'name', None), exc_info=exc_info)
+    full_exception = ''.join(format_exception(*exc_info))
+    del exc_info, args  # Keep no reference to the traceback and its frames.
+    report_exception_to_main_thread(full_exception)
 
 
 def main():
     def exception_handler(type, value, tb):
-        from traceback import format_exception
-
         logger.critical(
             "Uncaught exception, file a report at https://github.com/borgbase/vorta/issues/new/choose",
             exc_info=(type, value, tb),
@@ -26,16 +38,13 @@ def main():
         full_exception = ''.join(format_exception(type, value, tb))
 
         if app:
-            exception_dialog = ExceptionDialog(full_exception)
-            exception_dialog.show()
-            exception_dialog.raise_()
-            exception_dialog.activateWindow()
-            exception_dialog.exec()
+            show_exception_dialog(full_exception)
         else:
             # Crashed before app startup, cannot translate
             sys.exit(1)
 
     sys.excepthook = exception_handler
+    threading.excepthook = thread_exception_hook
     app = None
 
     args = parse_args()

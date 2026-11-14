@@ -9,6 +9,7 @@ import shutil
 import signal
 import sys
 import time
+import traceback
 from collections import namedtuple
 from datetime import datetime as dt
 from subprocess import PIPE, Popen, TimeoutExpired
@@ -21,7 +22,7 @@ from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
     from vorta import application
-from vorta.borg.jobs_manager import JobInterface
+from vorta.borg.jobs_manager import JobInterface, report_exception_to_main_thread
 from vorta.i18n import translate
 from vorta.inhibitor.abc import Inhibitor
 from vorta.keyring.abc import VortaKeyring
@@ -36,6 +37,10 @@ FakeRepo = namedtuple('Repo', ['url', 'name', 'id', 'extra_borg_arguments', 'enc
 FakeProfile = namedtuple('FakeProfile', ['id', 'repo', 'name', 'ssh_key'])
 
 TRACEBACK_HEADER = 'Traceback (most recent call last):'
+
+# Return code reported when a job raised in Vorta. Same as Borg's error code; results
+# from such a job also carry an `exception` key.
+JOB_EXCEPTION_RETURNCODE = 2
 
 
 def summarize_traceback(message: str) -> str:
@@ -75,6 +80,11 @@ class BorgJob(JobInterface):
     result = QtCore.pyqtSignal(dict)
     keyring = None  # Store keyring to minimize imports
     should_inhibit = False
+    emits_backup_finished = False  # True for job types that emit app.backup_finished_event
+
+    # Per-run state, reset in run(). Class defaults keep the helpers safe without run().
+    _result_emitted = False
+    _backup_finished_emitted = False
 
     def __init__(self, cmd, params, site="default"):
         """
@@ -256,8 +266,101 @@ class BorgJob(JobInterface):
         return None
 
     def run(self):
-        with self.get_inhibitor():
-            self._run()
+        self._result_emitted = False
+        self._backup_finished_emitted = False
+        self._finished_event_entered = False
+        self._log_entry = None
+        self._log_entry_final_saved = False
+        self._error_messages = []
+        self.process = None
+        try:
+            with self.get_inhibitor():
+                self._run()
+        except Exception as exc:
+            # Handled here, outside _run's `with db_lock:`, because db_lock is not reentrant.
+            self._finish_after_exception(exc)
+        finally:
+            self._close_cleanup_files()
+
+    def _close_cleanup_files(self):
+        for tmpfile in self.cleanup_files:
+            try:
+                tmpfile.close()
+            except Exception:
+                logger.exception('Could not close temporary file of %s', type(self).__name__)
+
+    def _finish_after_exception(self, exc):
+        """
+        Finish a job that raised, so the UI, scheduler and event log see it end.
+
+        Slow steps run before the result is emitted: the main window only re-enables its
+        buttons if the worker is no longer running when it handles the result.
+        """
+        job_name = type(self).__name__
+        logger.error('%s raised an unexpected exception', job_name, exc_info=exc)
+        tb_text = ''.join(traceback.format_exception(exc))
+        try:
+            # First line only: some messages, like peewee's DoesNotExist, carry the SQL on further lines.
+            summary = f'{type(exc).__name__}: {exc}'.splitlines()[0]
+        except Exception:
+            summary = type(exc).__name__
+
+        try:
+            process = self.process
+            if process is not None and process.poll() is None:
+                self.cancel()
+                try:
+                    process.wait(timeout=5)
+                except TimeoutExpired:
+                    logger.warning('Borg process of %s did not exit after cancel', job_name)
+        except Exception:
+            logger.exception('Could not stop the Borg process of %s', job_name)
+
+        log_entry = self._log_entry
+        if log_entry is not None and not self._log_entry_final_saved:
+            try:
+                log_entry.returncode = JOB_EXCEPTION_RETURNCODE
+                log_entry.end_time = dt.now()
+                log_entry.repo_url = self.params.get('repo_url')
+                with db_lock:
+                    log_entry.save()
+            except Exception:
+                logger.exception('Could not save the event log entry of %s', job_name)
+
+        self._close_cleanup_files()
+
+        fail_result = {
+            'params': self.params,
+            'cmd': self.cmd,
+            'returncode': JOB_EXCEPTION_RETURNCODE,
+            'errors': [*self._error_messages, (logging.CRITICAL, summary)],
+            'data': {},
+            'log_entry_id': log_entry.id if log_entry is not None else None,
+            'exception': summary,
+        }
+
+        if not self._finished_event_entered:
+            self._finished_event_entered = True
+            try:
+                self.finished_event(fail_result)
+            except Exception:
+                logger.exception('finished_event of %s raised while handling an exception', job_name)
+
+        # Some finished_event implementations post success-sounding text, so say it failed last.
+        try:
+            profile_name = self.params.get('profile_name')
+            prefix = f'[{profile_name}] ' if profile_name else ''
+            self.app.backup_progress_event.emit(prefix + self.tr('Task failed: {}').format(summary))
+        except Exception:
+            logger.exception('Could not report the failure of %s', job_name)
+
+        for emit in (self._emit_backup_finished, self._emit_result):
+            try:
+                emit(fail_result)
+            except Exception:
+                logger.exception('Could not emit the failure result of %s', job_name)
+
+        report_exception_to_main_thread(tb_text)
 
     def _run(self):
         self.started_event()
@@ -268,6 +371,7 @@ class BorgJob(JobInterface):
                 profile=self.params.get('profile_id', None),
             )
             log_entry.save()
+            self._log_entry = log_entry
 
             # logs: put cmd arguments with special strings in quotation marks
             quote_strings = [' ', '*', '?', 're:']
@@ -290,6 +394,7 @@ class BorgJob(JobInterface):
             start_new_session=True,
         )
         error_messages = []  # List of error messages included in the result
+        self._error_messages = error_messages
 
         self.process = p
 
@@ -379,11 +484,11 @@ class BorgJob(JobInterface):
 
         with db_lock:
             log_entry.save()
+            self._log_entry_final_saved = True
             self.process_result(result)
 
+        self._finished_event_entered = True
         self.finished_event(result)
-        for tmpfile in self.cleanup_files:
-            tmpfile.close()
 
     def process_result(self, result):
         pass
@@ -392,6 +497,18 @@ class BorgJob(JobInterface):
         self.updated.emit(self.tr('Task started'))
 
     def finished_event(self, result):
+        self._emit_result(result)
+
+    def _emit_backup_finished(self, result):
+        if not self.emits_backup_finished or self._backup_finished_emitted:
+            return
+        self._backup_finished_emitted = True
+        self.app.backup_finished_event.emit(result)
+
+    def _emit_result(self, result):
+        if self._result_emitted:
+            return
+        self._result_emitted = True
         self.result.emit(result)
 
     def get_inhibitor(self) -> Inhibitor:

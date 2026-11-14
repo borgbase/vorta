@@ -802,6 +802,25 @@ def test_a_failed_run_is_recorded_as_failed(qapp, qtbot, mocker, borg_json_outpu
     qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
 
 
+def test_a_crashing_run_is_recorded_as_failed(qapp, qtbot, mocker):
+    """A run whose job raises still settles as failed and re-arms the profile, see #2600."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE  # pause() does nothing for unscheduled profiles
+    profile.save()
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', side_effect=FileNotFoundError(2, 'No such file or directory', 'borg')
+    )
+
+    with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
+        qapp.scheduler.create_backup(profile.id)
+
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+    assert 'FileNotFoundError' in JobModel.get_by_id(job.id).reason
+    qtbot.waitUntil(lambda: qapp.scheduler.paused(profile.id))
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.PAUSED
+
+
 @prepare
 def test_recording_a_run_emits_jobs_changed(qapp, qtbot, mocker, borg_json_output):
     """The jobs view refreshes off this signal, so submitting a run has to announce itself."""
@@ -964,6 +983,32 @@ def test_post_backup_tasks_check_warning_is_failure(qapp, post_backup_jobs, subc
 
     notifier.deliver.assert_called_once()
     assert notifier.deliver.call_args.kwargs['level'] == expect_level
+
+
+def test_post_backup_tasks_notify_failure_of_a_raising_job(qapp, qtbot, mocker, borg_json_output):
+    """A post-backup job that raises still counts as finished, so the notification is sent."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = True
+    profile.validation_on = False
+    profile.compaction_on = False
+    profile.save()
+
+    def popen(cmd, **kwargs):
+        if cmd[1] == 'prune':
+            raise FileNotFoundError(2, 'No such file or directory', 'borg')
+        stdout, stderr = borg_json_output('list')
+        return MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=popen)
+    notifier = MagicMock()
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick', return_value=notifier)
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+
+    qtbot.waitUntil(lambda: notifier.deliver.called, **pytest._wait_defaults)
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == 'error'
+    assert 'Post Backup Tasks failed for Default' in notifier.deliver.call_args.args[1]
 
 
 def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):

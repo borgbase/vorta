@@ -7,6 +7,8 @@ from .borg_job import BorgJob
 
 
 class BorgDeleteJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Deleting archive…')}")
@@ -20,8 +22,8 @@ class BorgDeleteJob(BorgJob):
         repo.total_unique_chunks = None
         repo.save()
 
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")
 
     @classmethod

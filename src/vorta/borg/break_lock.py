@@ -2,16 +2,18 @@ from .borg_job import BorgJob
 
 
 class BorgBreakJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Breaking repository lock…')}")
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
+        self._emit_backup_finished(result)
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Repository lock broken. Please redo your last action.')}"
         )
-        self.result.emit(result)
+        self._emit_result(result)
 
     @classmethod
     def prepare(cls, profile):

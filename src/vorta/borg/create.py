@@ -16,6 +16,7 @@ from .borg_job import BorgJob
 
 
 class BorgCreateJob(BorgJob):
+    emits_backup_finished = True
     should_inhibit = True
 
     def process_result(self, result):
@@ -62,8 +63,8 @@ class BorgCreateJob(BorgJob):
 
     def finished_event(self, result):
         self.pre_post_backup_cmd(self.params, cmd='post_backup_cmd', returncode=result['returncode'])
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
 
     @classmethod
     def pre_post_backup_cmd(cls, params, cmd='pre_backup_cmd', returncode=0):

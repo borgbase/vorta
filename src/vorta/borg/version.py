@@ -11,7 +11,7 @@ class BorgVersionJob(BorgJob):
     """
 
     def finished_event(self, result):
-        self.result.emit(result)
+        self._emit_result(result)
 
     @classmethod
     def prepare(cls):

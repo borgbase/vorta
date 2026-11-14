@@ -287,7 +287,7 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
 
 
-def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_env):
+def test_inline_archive_rename(qapp, qtbot, mocker, mock_borg_popen, archive_env):
     """
     Tests the functionality of in-line renaming an archive.
     """
@@ -295,9 +295,8 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
 
     tab.archiveTable.selectRow(0)
     new_archive_name = 'idf89d8f9d8fd98'
-    stdout, stderr = borg_json_output('rename')
-    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
-    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+    # A successful rename queues a `borg info` refresh of the renamed archive.
+    mock_borg_popen(['rename', 'info'])
 
     # Trigger inline editing through the real entry point so is_editing / original name are set.
     index = tab.archiveTable.model().index(0, 4)
@@ -314,6 +313,15 @@ def test_inline_archive_rename(qapp, qtbot, mocker, borg_json_output, archive_en
     # Successful rename case
     qtbot.waitUntil(lambda: tab.archiveTable.model().index(0, 4).data() == new_archive_name, **pytest._wait_defaults)
     assert tab.archiveTable.model().index(0, 4).data() == new_archive_name
+
+    # The rename result queues a refresh of the selected archives, if any. Let it finish here,
+    # so it does not run into the next test.
+    qtbot.waitUntil(
+        lambda: tab.remaining_refresh_archives == 0
+        and tab.mountErrors.text() in ('Archive renamed.', 'Refreshed archives.')
+        and not qapp.jobs_manager.is_worker_running(),
+        **pytest._wait_defaults,
+    )
 
 
 def test_archiveitem_contextmenu(qapp, qtbot, archive_env):
