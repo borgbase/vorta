@@ -25,10 +25,7 @@ class BorgRenameJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'rename', '--info', '--log-json']
-        if borg_compat.check('V2'):
-            cmd.extend(["-r", profile.repo.url, old_archive_name, new_archive_name])
-        else:
-            cmd.extend([f'{profile.repo.url}::{old_archive_name}', new_archive_name])
+        cmd += borg_compat.repo_args(profile.repo.url, old_archive_name) + [new_archive_name]
 
         ret['old_archive_name'] = old_archive_name
         ret['new_archive_name'] = new_archive_name
