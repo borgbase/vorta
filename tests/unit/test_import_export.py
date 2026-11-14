@@ -87,6 +87,56 @@ def test_import_bootstrap_success(qapp, mocker):
     assert BackupProfileModel.select().count() == 2
 
 
+@pytest.mark.parametrize(
+    'content',
+    [
+        '{"SchemaVersion": {"version": 9999}}',
+        'not json',
+        '[]',
+    ],
+    ids=['newer-schema', 'invalid-json', 'not-an-object'],
+)
+def test_import_bootstrap_failure_no_profiles(qapp, mocker, tmp_path, window_load, content):
+    bootstrap_file = tmp_path / '.vorta-init.json'
+    bootstrap_file.write_text(content)
+    critical = mocker.patch.object(QMessageBox, 'critical')
+    pick = mocker.patch('vorta.application.VortaNotifications.pick')
+
+    BackupProfileModel.delete().execute()
+    assert BackupProfileModel.select().count() == 0
+
+    qapp.bootstrap_profile(bootstrap_file)
+
+    critical.assert_called_once()
+    assert critical.call_args[0][1] == 'Failed to import profile'
+    assert str(bootstrap_file) in critical.call_args[0][2]
+    assert bootstrap_file.exists()
+    pick.assert_not_called()
+    # Must pass before window_load(): a failing MainWindow() leaves qapp without a main_window for later tests.
+    assert [p.name for p in BackupProfileModel.select()] == ['Default']
+
+    # Only the idle branch of build_menu() reads the profiles.
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=False)
+    qapp.tray.build_menu()
+
+    window_load()
+    assert qapp.main_window.current_profile.name == 'Default'
+
+
+def test_import_bootstrap_failure_existing_profile(qapp, mocker, tmp_path):
+    bootstrap_file = tmp_path / '.vorta-init.json'
+    bootstrap_file.write_text('{"SchemaVersion": {"version": 9999}}')
+    critical = mocker.patch.object(QMessageBox, 'critical')
+    pick = mocker.patch('vorta.application.VortaNotifications.pick')
+
+    qapp.bootstrap_profile(bootstrap_file)
+
+    critical.assert_called_once()
+    assert bootstrap_file.exists()
+    pick.assert_not_called()
+    assert [p.name for p in BackupProfileModel.select()] == ['Default']
+
+
 def test_import_fail_not_json(qapp, rootdir, monkeypatch):
     BAD_FILE = os.path.join(rootdir, 'profile_exports', 'invalid_no_json.json')
 
