@@ -273,6 +273,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         """
 
         def profile_imported_event(profile):
+            # Populating no longer re-arms. Before the modal, so the old timer isn't live while it is open.
+            self.app.scheduler.set_timer_for_profile(profile.id)
             QMessageBox.information(
                 None,
                 self.tr('Profile import successful!'),

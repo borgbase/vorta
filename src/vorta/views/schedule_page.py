@@ -18,7 +18,6 @@ class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
     def __init__(self, parent=None, profile_provider=None):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(self)
-        self.hasPopulatedScheduleFields = False
 
         self.schedulerRadioMapping = {
             'off': self.scheduleOffRadio,
@@ -56,13 +55,8 @@ class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
 
         self.track_signal(self.app.scheduler.schedule_changed, self.draw_next_scheduled_backup)
         self.track_profile_change(call_now=True)
-        self.hasPopulatedScheduleFields = True
 
     def on_scheduler_change(self, _):
-        # Wait until we've populated fields _from_ the schedule before populating them back
-        if not self.hasPopulatedScheduleFields:
-            return
-
         logger.debug("Updating schedule due to field change")
         profile = self.profile()
         for label, obj in self.schedulerRadioMapping.items():
@@ -83,10 +77,19 @@ class SchedulePage(BaseTab, SchedulePageBase, SchedulePageUI):
 
     def populate_from_profile(self):
         profile = self.profile()
+        # Not blocked: toggled drives the frames, and setChecked() doesn't emit clicked.
         self.schedulerRadioMapping[profile.schedule_mode].setChecked(True)
-        self.scheduleIntervalUnit.setCurrentIndex(self.scheduleIntervalUnit.findData(profile.schedule_interval_unit))
-        self.scheduleIntervalCount.setValue(profile.schedule_interval_count)
-        self.scheduleFixedTime.setTime(QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
+        # Loading must not save a mix with the previous profile's values and re-arm the timer from it (#2611).
+        with (
+            QtCore.QSignalBlocker(self.scheduleIntervalUnit),
+            QtCore.QSignalBlocker(self.scheduleIntervalCount),
+            QtCore.QSignalBlocker(self.scheduleFixedTime),
+        ):
+            self.scheduleIntervalUnit.setCurrentIndex(
+                self.scheduleIntervalUnit.findData(profile.schedule_interval_unit)
+            )
+            self.scheduleIntervalCount.setValue(profile.schedule_interval_count)
+            self.scheduleFixedTime.setTime(QtCore.QTime(profile.schedule_fixed_hour, profile.schedule_fixed_minute))
 
         self.validationCheckBox.setCheckState(
             QtCore.Qt.CheckState.Checked if profile.validation_on else QtCore.Qt.CheckState.Unchecked
