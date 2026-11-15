@@ -895,6 +895,108 @@ def test_a_failed_run_is_recorded_as_failed(qapp, qtbot, mocker, borg_json_outpu
     qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
 
 
+def test_failed_scheduled_run_does_not_restart(qapp, qtbot, mocker, borg_json_output):
+    # The per-test teardown disconnects backup_finished_event, so use a fresh scheduler.
+    scheduler = VortaScheduler()
+    mocker.patch.object(qapp, 'scheduler', scheduler)
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 1
+    profile.schedule_make_up_missed = True
+    profile.save()
+    previous = dt.now() - td(hours=2)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=previous,
+        end_time=previous,
+    )
+    stdout, stderr = borg_json_output('create')
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', return_value=mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=2)
+    )
+    submit = mocker.spy(scheduler._execution, 'create_backup')
+
+    scheduler.create_backup(profile.id)
+    job = JobModel.select().get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+    assert submit.call_count == 1
+    assert JobModel.select().count() == 1
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.PAUSED
+    scheduler.clear_pause(profile.id)
+
+
+def test_manual_backup_rearms_schedule(qapp, qtbot, mocker, borg_json_output):
+    scheduler = VortaScheduler()
+    mocker.patch.object(qapp, 'scheduler', scheduler)
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.NO_PREVIOUS_BACKUP
+    stdout, stderr = borg_json_output('create')
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', return_value=mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    )
+
+    qapp.create_backup_action()
+    qtbot.waitUntil(lambda: scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED)
+    scheduler.remove_job(profile.id)
+
+
+@pytest.mark.parametrize('action', ['reload_all_timers', 'create_backup'])
+@pytest.mark.parametrize('paused', [False, True])
+def test_unset_repo_drops_schedule(qapp, qtbot, action, paused):
+    scheduler = qapp.scheduler
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    if paused:
+        scheduler.pause(profile.id)
+    profile.repo = None
+    profile.save()
+
+    with qtbot.waitSignal(scheduler.schedule_changed):
+        if action == 'create_backup':
+            scheduler.create_backup(profile.id)
+        else:
+            scheduler.reload_all_timers()
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
+
+
+@pytest.mark.parametrize('paused', [False, True])
+def test_network_down_refreshes_schedule(qapp, qtbot, monkeypatch, paused):
+    scheduler = qapp.scheduler
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    assert profile.repo.is_remote_repo()
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    if paused:
+        scheduler.pause(profile.id)
+    expected = scheduler.next_job_for_profile(profile.id) if paused else ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
+    monkeypatch.setattr(scheduler, '_net_up', False)
+
+    with qtbot.waitSignal(scheduler.schedule_changed):
+        scheduler.reload_all_timers()
+    assert scheduler.next_job_for_profile(profile.id) == expected
+    assert scheduler.paused(profile.id) == paused
+
+
 def test_a_crashing_run_is_recorded_as_failed(qapp, qtbot, mocker):
     """A run whose job raises still settles as failed and re-arms the profile, see #2600."""
     profile = BackupProfileModel.get(name=PROFILE_NAME)

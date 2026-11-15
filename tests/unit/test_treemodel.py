@@ -1,9 +1,41 @@
 from pathlib import PurePath
 
 import pytest
-from PyQt6.QtCore import QModelIndex
+from PyQt6.QtCore import QModelIndex, Qt, qInstallMessageHandler
 
 from vorta.views.partials.treemodel import FileSystemItem, FileTreeModel
+
+SIMPLIFIED_TREE_ITEMS = [
+    (PurePath('a'), 0),
+    (PurePath('a/a'), 1),
+    (PurePath('a/c'), 3),
+    (PurePath('a/b/a'), 4),
+    (PurePath('a/b/b'), 5),
+    (PurePath('a/b'), 2),
+    (PurePath('b'), 6),
+    (PurePath('b/a'), 7),
+    (PurePath('b/b'), 8),
+    (PurePath('c'), 9),
+    (PurePath('c/a'), 10),
+    (PurePath('c/a/b'), 11),
+    (PurePath('c/a/b/c'), 12),
+    (PurePath('c/a/b/a'), 13),
+    (PurePath('c/a/b/a/b/c'), 14),
+    (PurePath('c/a/b/b/c/a'), 15),
+]
+
+# `b/c/d` collapses into a single row that is not at the same position as `d` inside `c`
+COLLAPSED_CHAIN_ITEMS = [(PurePath(p), i) for i, p in enumerate(['a', 'a/x', 'a/w', 'b/c/d/e', 'b/c/d/f'])]
+
+# the root holds only a chain, so the topmost merged item is a child of the root
+SINGLE_CHAIN_ITEMS = [(PurePath('a/b/x'), 0), (PurePath('a/b/y'), 1)]
+
+ITEM_LISTS = pytest.mark.parametrize(
+    'items',
+    [SIMPLIFIED_TREE_ITEMS, COLLAPSED_CHAIN_ITEMS, SINGLE_CHAIN_ITEMS],
+    ids=['simplified_tree', 'collapsed_chain', 'single_chain'],
+)
+MODES = pytest.mark.parametrize('mode', list(FileTreeModel.DisplayMode), ids=lambda m: m.name)
 
 
 class TreeModelImp(FileTreeModel):
@@ -15,6 +47,35 @@ class TreeModelImp(FileTreeModel):
 
     def _merge_data(self, item, data):
         return super()._merge_data(item, data)
+
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if index.isValid() and role == Qt.ItemDataRole.DisplayRole:
+            return index.internalPointer().subpath
+        return None
+
+
+def check_parents(model, parent=QModelIndex()):
+    for row in range(model.rowCount(parent)):
+        child = model.index(row, 0, parent)
+        assert child.isValid() and child.row() == row
+        assert model.parent(child) == parent
+        check_parents(model, child)
+
+
+def check_model(qtmodeltester, model, force_py):
+    # The C++ tester only logs failures, which pytest-qt does not catch when capturing is off (`-s` in addopts).
+    messages = []
+
+    def handler(mode, context, message):
+        if context.category == 'qt.modeltest':
+            messages.append(message)
+
+    previous = qInstallMessageHandler(handler)
+    try:
+        qtmodeltester.check(model, force_py=force_py)
+    finally:
+        qInstallMessageHandler(previous)
+    assert not messages, '\n'.join(messages)
 
 
 class TestFileSystemItem:
@@ -253,27 +314,8 @@ class TestFileTreeModel:
         assert model.rowCount() == 2
 
     def test_simplified_tree(self):
-        items = [
-            (PurePath('a'), 0),
-            (PurePath('a/a'), 1),
-            (PurePath('a/c'), 3),
-            (PurePath('a/b/a'), 4),
-            (PurePath('a/b/b'), 5),
-            (PurePath('a/b'), 2),
-            (PurePath('b'), 6),
-            (PurePath('b/a'), 7),
-            (PurePath('b/b'), 8),
-            (PurePath('c'), 9),
-            (PurePath('c/a'), 10),
-            (PurePath('c/a/b'), 11),
-            (PurePath('c/a/b/c'), 12),
-            (PurePath('c/a/b/a'), 13),
-            (PurePath('c/a/b/a/b/c'), 14),
-            (PurePath('c/a/b/b/c/a'), 15),
-        ]
-
         model = TreeModelImp()
-        model.addItems(items)
+        model.addItems(SIMPLIFIED_TREE_ITEMS)
 
         # test tree representation
         model.setMode(model.DisplayMode.SIMPLIFIED_TREE)
@@ -297,9 +339,9 @@ class TestFileTreeModel:
         cababc = model.index(0, 0, cab)
         cabbca = model.index(1, 0, cab)
         assert cababc.internalPointer().data == 14
-        assert model.parent(cababc).internalId() == cab.internalId()
+        assert model.parent(cababc) == cab
         assert cabbca.internalPointer().data == 15
-        assert model.parent(cabbca).internalId() == cab.internalId()
+        assert model.parent(cabbca) == cab
         assert cabc.internalPointer().data == 12
 
         # test combined add
@@ -317,7 +359,7 @@ class TestFileTreeModel:
         assert model.rowCount(ca) == 2
         caa = model.index(0, 0, ca)
         assert caa.internalPointer().data == 31
-        assert caa.parent().internalId() == ca.internalId()
+        assert caa.parent() == ca
 
         # test combined remove
         model.removeItem(PurePath('a/a/a').parts)
@@ -349,3 +391,64 @@ class TestFileTreeModel:
         model.setMode(model.DisplayMode.TREE)
 
         assert model.rowCount() == 3
+
+    @ITEM_LISTS
+    @MODES
+    def test_parent_matches_index(self, items, mode):
+        model = TreeModelImp()
+        model.addItems(items)
+        model.setMode(mode)
+        check_parents(model)
+
+        model.addItem((PurePath('c/a/a'), 31))
+        check_parents(model)
+
+        model.removeItem(PurePath('c/a/a'))
+        check_parents(model)
+
+    def test_parent_row_of_collapsed_chain(self):
+        model = TreeModelImp()
+        model.addItems(COLLAPSED_CHAIN_ITEMS)
+        model.setMode(model.DisplayMode.SIMPLIFIED_TREE)
+
+        bcd = model.index(1, 0)
+        assert model.index(0, 0, bcd).parent().row() == 1
+
+    @ITEM_LISTS
+    @MODES
+    @pytest.mark.parametrize('force_py', [False, True])
+    def test_model_tester(self, qtmodeltester, items, mode, force_py):
+        model = TreeModelImp()
+        model.addItems(items)
+        model.setMode(mode)
+        check_model(qtmodeltester, model, force_py)
+
+    @pytest.mark.parametrize(
+        'mode', [FileTreeModel.DisplayMode.TREE, FileTreeModel.DisplayMode.SIMPLIFIED_TREE], ids=lambda m: m.name
+    )
+    def test_index_out_of_range(self, mode):
+        model = TreeModelImp()
+        model.addItems(COLLAPSED_CHAIN_ITEMS)
+        model.setMode(mode)
+
+        top = model.index(0, 0)
+        leaf = model.index(0, 0, top)
+        for parent in [QModelIndex(), top, leaf]:
+            assert not model.index(model.rowCount(parent), 0, parent).isValid()
+            assert not model.index(-1, 0, parent).isValid()
+            assert not model.index(0, 1, parent).isValid()
+
+    @MODES
+    def test_index_out_of_range_empty(self, mode):
+        model = TreeModelImp()
+        model.setMode(mode)
+        assert not model.index(0, 0).isValid()
+        assert not model.index(-1, 0).isValid()
+
+    def test_index_out_of_range_flat(self):
+        model = TreeModelImp()
+        model.addItems(COLLAPSED_CHAIN_ITEMS)
+        model.setMode(model.DisplayMode.FLAT)
+        assert not model.index(model.rowCount(), 0).isValid()
+        assert not model.index(-1, 0).isValid()
+        assert not model.index(0, 1).isValid()
