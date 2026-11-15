@@ -10,13 +10,15 @@ logger = logging.getLogger(__name__)
 
 
 class BorgListRepoJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives…')}")
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archives done.')}")
 
     @classmethod
@@ -28,10 +30,10 @@ class BorgListRepoJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         if borg_compat.check('V2'):
-            cmd = ['borg', 'repo-list', '--info', '--log-json', '--json', '-r']
+            cmd = ['borg', 'repo-list', '--info', '--log-json', '--json']
         else:
             cmd = ['borg', 'list', '--info', '--log-json', '--json']
-        cmd.append(f'{profile.repo.url}')
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['ok'] = True
         ret['cmd'] = cmd
@@ -51,7 +53,7 @@ class BorgListRepoJob(BorgJob):
             result['ok'] = False
             return
 
-        repo, _ = RepoModel.get_or_create(url=result['cmd'][-1])
+        repo, _ = RepoModel.get_or_create(url=result['params']['repo_url'])
         remote_archives = data['archives']
         remote_ids = {a['id'] for a in remote_archives}
 

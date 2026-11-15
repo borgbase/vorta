@@ -7,7 +7,66 @@ import vorta.application
 import vorta.borg
 import vorta.store.models
 from vorta.borg.borg_job import BorgJob, LineOrientedJsonBorgJob, summarize_traceback
+from vorta.borg.compact import BorgCompactJob
+from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.prune import BorgPruneJob
+from vorta.store.models import BackupProfileModel, RepoModel, db_lock
+
+
+@pytest.mark.parametrize('job_class', [BorgPruneJob, BorgDeleteJob])
+@pytest.mark.parametrize('outcome', [0, 1, 2, 'exception'])
+def test_repo_stats_reset_under_lock_before_finished(qapp, mocker, borg_json_output, job_class, outcome):
+    """Even a failed prune/delete can change the repo; clear stats before notifying the UI."""
+    profile = BackupProfileModel.get()
+    repo = profile.repo
+    fields = ('total_size', 'unique_csize', 'unique_size', 'total_unique_chunks')
+    for field in fields:
+        setattr(repo, field, 100)
+    repo.save()
+    save = RepoModel.save
+    lock_states = []
+
+    def save_repo(repo, *args, **kwargs):
+        lock_states.append(db_lock.locked())
+        return save(repo, *args, **kwargs)
+
+    mocker.patch.object(RepoModel, 'save', autospec=True, side_effect=save_repo)
+    stdout, stderr = borg_json_output('prune')
+    process = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=outcome)
+    if outcome == 'exception':
+        mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=OSError('Cannot start Borg'))
+    else:
+        mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=process)
+    params = job_class.prepare(profile, ['test-archive']) if job_class is BorgDeleteJob else job_class.prepare(profile)
+    job = job_class(params['cmd'], params, repo.id)
+    process_result = mocker.spy(job, 'process_result')
+    stats_at_finish = []
+
+    def record_stats(result):
+        saved_repo = RepoModel.get_by_id(repo.id)
+        stats_at_finish.append([getattr(saved_repo, field) for field in fields])
+
+    qapp.backup_finished_event.connect(record_stats)
+    try:
+        job.run()
+    finally:
+        qapp.backup_finished_event.disconnect(record_stats)
+
+    assert lock_states == [True]
+    assert stats_at_finish == [[None] * len(fields)]
+    process_result.assert_called_once()
+
+
+def test_compact_start_message(qapp, qtbot, monkeypatch):
+    """Keep the profile prefix separate from the translated status message."""
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '1.2.4')
+    params = BorgCompactJob.prepare(BackupProfileModel.get())
+    job = BorgCompactJob(params['cmd'], params)
+
+    with qtbot.waitSignal(qapp.backup_progress_event) as signal:
+        job.started_event()
+
+    assert signal.args == [f"[{params['profile_name']}] Starting repository compaction..."]
 
 
 def test_borg_prune(qapp, qtbot, mocker, borg_json_output):

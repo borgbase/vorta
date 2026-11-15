@@ -5,6 +5,19 @@ import vorta.application
 import vorta.borg.borg_job
 
 
+def test_break_lock_prepare_error_is_translated(qapp, qtbot, mocker):
+    profile = qapp.main_window.current_profile
+    params = {'ok': False, 'message': 'Select a backup repository first.'}
+    mocker.patch.object(vorta.application.BorgBreakJob, 'prepare', return_value=params)
+    translate = mocker.patch.object(vorta.application, 'translate', return_value='Translated prepare error')
+
+    with qtbot.waitSignal(qapp.backup_progress_event) as signal:
+        qapp.break_lock(profile)
+
+    translate.assert_called_once_with('messages', params['message'])
+    assert signal.args == [f'[{profile.name}] Translated prepare error']
+
+
 def test_create_perm_error(qapp, borg_json_output, mocker, qtbot):
     main = qapp.main_window
     mocker.patch.object(vorta.application.QMessageBox, 'show')

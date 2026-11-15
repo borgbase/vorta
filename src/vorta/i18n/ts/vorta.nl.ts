@@ -26,58 +26,58 @@
 </context><context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="139" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="148" />
         <source>Encryption:</source>
         <translation>Versleuteling:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="156" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
         <source>Autofilled password from password manager.</source>
         <translation>Automatisch ingevuld wachtwoord door wachtwoorbeheerder.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="170" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (aanbevolen - wordt bewaard in de repo)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="174" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (sleutel in je persoonlijke map)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="177" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="178" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
-        <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="196" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="188" />
         <source>None (not recommended)</source>
         <translation>Geen (niet aanbevolen)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="192" />
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (aanbevolen - wordt bewaard in de repo)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="184" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="193" />
         <source>Repokey</source>
         <translation>Reposleutel</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="185" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="194" />
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (sleutel in je persoonlijke map)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="195" />
         <source>Keyfile</source>
         <translation>Sleutelbestand</translation>
     </message>
@@ -218,7 +218,7 @@
 </context><context>
     <name>ArchiveMaintenance</name>
     <message>
-        <location filename="../../views/archive/archive_maintenance.py" line="62" />
+        <location filename="../../views/archive/archive_maintenance.py" line="58" />
         <source>Pruning finished.</source>
         <translation>Opruimen voltooid.</translation>
     </message>
@@ -301,78 +301,78 @@
 </context><context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="205" />
+        <location filename="../../views/archive_tab.py" line="206" />
         <source>Copy</source>
         <translation>Kopiëren</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="225" />
+        <location filename="../../views/archive_tab.py" line="228" />
         <source>Action cancelled.</source>
         <translation>Handeling afgebroken.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="289" />
+        <location filename="../../views/archive_tab.py" line="292" />
         <source>(This feature needs Borg 1.2.0 or higher)</source>
         <translation>(Voor deze functie is Borg 1.2.0 of nieuwer vereist.)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="304" />
+        <location filename="../../views/archive_tab.py" line="307" />
         <source>Archives for {}</source>
         <translation>Archieven van {}</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="328" />
+        <location filename="../../views/archive_tab.py" line="331" />
         <source>Archives</source>
         <translation>Archieven</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="382" />
+        <location filename="../../views/archive_tab.py" line="385" />
         <source>(borg already running)</source>
         <translation>(borg is al actief)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="392" />
+        <location filename="../../views/archive_tab.py" line="395" />
         <source>(Select minimum one archive)</source>
         <translation>(selecteer minimaal één archief)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="404" />
+        <location filename="../../views/archive_tab.py" line="407" />
         <source>(Select two archives)</source>
         <translation>(selecteer twee archieven)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="419" />
+        <location filename="../../views/archive_tab.py" line="422" />
         <source>(Select exactly one archive)</source>
         <translation>(kies één archief)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="467" />
+        <location filename="../../views/archive_tab.py" line="470" />
         <source>Preview: %s</source>
         <translation>Voorvertoning: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="471" />
+        <location filename="../../views/archive_tab.py" line="474" />
         <source>Error in archive name template.</source>
         <translation>Fout in archiefnaamsjabloon.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="493" />
+        <location filename="../../views/archive_tab.py" line="496" />
         <source>Could not read archive list from Borg. Local list kept.</source>
         <translation>Kan de archieflijst niet uitlezen uit Borg. De lokale lijst blijft behouden.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="518" />
-        <location filename="../../views/archive_tab.py" line="495" />
+        <location filename="../../views/archive_tab.py" line="532" />
+        <location filename="../../views/archive_tab.py" line="498" />
         <source>Refreshed archives.</source>
         <translation>De archieven zijn ververst.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="531" />
+        <location filename="../../views/archive_tab.py" line="545" />
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="532" />
+        <location filename="../../views/archive_tab.py" line="546" />
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
@@ -485,125 +485,130 @@
 </context><context>
     <name>BorgBreakJob</name>
     <message>
-        <location filename="../../borg/break_lock.py" line="7" />
+        <location filename="../../borg/break_lock.py" line="23" />
+        <source>Breaking the repository lock failed. See the %1 for details.</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/break_lock.py" line="14" />
         <source>Breaking repository lock…</source>
         <translation>Repovergrendeling opheffen…</translation>
     </message>
     <message>
-        <location filename="../../borg/break_lock.py" line="12" />
+        <location filename="../../borg/break_lock.py" line="19" />
         <source>Repository lock broken. Please redo your last action.</source>
         <translation>De repovergrendeling is opgeheven. Voer je laatste actie opnieuw uit.</translation>
     </message>
 </context><context>
     <name>BorgChangePassJob</name>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="16" />
+        <location filename="../../borg/change_passphrase.py" line="18" />
         <source>Changing Borg passphrase…</source>
         <translation>Borg-toegangszin wijzigen…</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="37" />
+        <location filename="../../borg/change_passphrase.py" line="39" />
         <source>Passphrase changed.</source>
         <translation>Toegangszin gewijzigd.</translation>
     </message>
 </context><context>
     <name>BorgCheckJob</name>
     <message>
-        <location filename="../../borg/check.py" line="14" />
+        <location filename="../../borg/check.py" line="16" />
         <source>Starting consistency check…</source>
         <translation>Consistentiecontrole starten…</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="36" />
+        <location filename="../../borg/check.py" line="38" />
         <source>Check completed.</source>
         <translation>Controle voltooid.</translation>
     </message>
 </context><context>
     <name>BorgCompactJob</name>
     <message>
-        <location filename="../../borg/compact.py" line="32" />
+        <location filename="../../borg/compact.py" line="34" />
         <source>Errors during compaction. See the %1 for details.</source>
         <translation>Er zijn fouten opgetreden tijdens het vrijmaken van reporuimte. Bekijk voor meer informatie de %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/compact.py" line="15" />
+        <location filename="../../borg/compact.py" line="17" />
         <source>Starting repository compaction...</source>
         <translation>Reporuimte vrijmaken starten...</translation>
     </message>
     <message>
-        <location filename="../../borg/compact.py" line="37" />
+        <location filename="../../borg/compact.py" line="39" />
         <source>Compaction completed.</source>
         <translation>Reporuimte vrijgemaakt.</translation>
     </message>
 </context><context>
     <name>BorgCreateJob</name>
     <message>
-        <location filename="../../borg/create.py" line="48" />
+        <location filename="../../borg/create.py" line="49" />
         <source>Backup finished with warnings. See the %1 for details.</source>
         <translation>Back-up voltooid met waarschuwingen. Bekijk voor meer informatie de %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="54" />
+        <location filename="../../borg/create.py" line="55" />
         <source>Backup finished.</source>
         <translation>Back-up voltooid.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="61" />
+        <location filename="../../borg/create.py" line="62" />
         <source>Backup started.</source>
         <translation>Back-up gestart.</translation>
     </message>
 </context><context>
     <name>BorgDeleteJob</name>
     <message>
-        <location filename="../../borg/delete.py" line="12" />
+        <location filename="../../borg/delete.py" line="14" />
         <source>Deleting archive…</source>
         <translation>Archief verwijderen…</translation>
     </message>
     <message>
-        <location filename="../../borg/delete.py" line="25" />
+        <location filename="../../borg/delete.py" line="22" />
         <source>Archive deleted.</source>
         <translation>Het archief is verwijderd.</translation>
     </message>
 </context><context>
     <name>BorgDiffJob</name>
     <message>
-        <location filename="../../borg/diff.py" line="10" />
+        <location filename="../../borg/diff.py" line="12" />
         <source>Requesting differences between archives…</source>
         <translation>Verschillen tussen archieven opvragen…</translation>
     </message>
     <message>
-        <location filename="../../borg/diff.py" line="16" />
+        <location filename="../../borg/diff.py" line="18" />
         <source>Obtained differences between archives.</source>
         <translation>Verschillen tussen archieven opgehaald.</translation>
     </message>
 </context><context>
     <name>BorgExtractJob</name>
     <message>
-        <location filename="../../borg/extract.py" line="42" />
+        <location filename="../../borg/extract.py" line="44" />
         <source>Downloading files from archive…</source>
         <translation>Bestanden downloaden uit archief…</translation>
     </message>
     <message>
-        <location filename="../../borg/extract.py" line="49" />
+        <location filename="../../borg/extract.py" line="51" />
         <source>Restored files from archive.</source>
         <translation>Bestanden hersteld uit archief.</translation>
     </message>
 </context><context>
     <name>BorgInfoArchiveJob</name>
     <message>
-        <location filename="../../borg/info_archive.py" line="10" />
+        <location filename="../../borg/info_archive.py" line="12" />
         <source>Refreshing archive…</source>
         <translation>Archief vernieuwen…</translation>
     </message>
     <message>
-        <location filename="../../borg/info_archive.py" line="15" />
+        <location filename="../../borg/info_archive.py" line="17" />
         <source>Refreshing archive done.</source>
         <translation>Archief vernieuwd.</translation>
     </message>
 </context><context>
     <name>BorgInfoRepoJob</name>
     <message>
-        <location filename="../../borg/info_repo.py" line="11" />
+        <location filename="../../borg/info_repo.py" line="27" />
         <source>Validating existing repo…</source>
         <translation>Bezig met valideren van bestaande repo…</translation>
     </message>
@@ -617,59 +622,64 @@
 </context><context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="345" />
-        <location filename="../../borg/borg_job.py" line="96" />
+        <location filename="../../borg/borg_job.py" line="473" />
+        <location filename="../../borg/borg_job.py" line="116" />
         <source>Files</source>
         <translation>Bestanden</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="346" />
-        <location filename="../../borg/borg_job.py" line="97" />
+        <location filename="../../borg/borg_job.py" line="474" />
+        <location filename="../../borg/borg_job.py" line="117" />
         <source>Original</source>
         <translation>Origineel</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="348" />
-        <location filename="../../borg/borg_job.py" line="98" />
+        <location filename="../../borg/borg_job.py" line="476" />
+        <location filename="../../borg/borg_job.py" line="118" />
         <source>Deduplicated</source>
         <translation>Uitgepakt</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="99" />
+        <location filename="../../borg/borg_job.py" line="119" />
         <source>Compressed</source>
         <translation>Ingepakt</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="392" />
+        <location filename="../../borg/borg_job.py" line="376" />
+        <source>Task failed: {}</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="521" />
         <source>Task started</source>
         <translation>Taak gestart</translation>
     </message>
 </context><context>
     <name>BorgListArchiveJob</name>
     <message>
-        <location filename="../../borg/list_archive.py" line="9" />
+        <location filename="../../borg/list_archive.py" line="11" />
         <source>Getting archive content…</source>
         <translation>Archiefinhoud ophalen…</translation>
     </message>
     <message>
-        <location filename="../../borg/list_archive.py" line="14" />
+        <location filename="../../borg/list_archive.py" line="16" />
         <source>Done getting archive content.</source>
         <translation>Archiefinhoud opgehaald.</translation>
     </message>
 </context><context>
     <name>BorgListRepoJob</name>
     <message>
-        <location filename="../../borg/list_repo.py" line="15" />
+        <location filename="../../borg/list_repo.py" line="17" />
         <source>Refreshing archives…</source>
         <translation>Archieven vernieuwen…</translation>
     </message>
     <message>
-        <location filename="../../borg/list_repo.py" line="20" />
+        <location filename="../../borg/list_repo.py" line="22" />
         <source>Refreshing archives done.</source>
         <translation>Archieven vernieuwd.</translation>
     </message>
     <message>
-        <location filename="../../borg/list_repo.py" line="48" />
+        <location filename="../../borg/list_repo.py" line="50" />
         <source>Could not read archive list from Borg. Local list kept.</source>
         <translation>Kan de archieflijst niet uitlezen uit Borg. De lokale lijst blijft behouden.</translation>
     </message>
@@ -683,24 +693,24 @@
 </context><context>
     <name>BorgPruneJob</name>
     <message>
-        <location filename="../../borg/prune.py" line="10" />
+        <location filename="../../borg/prune.py" line="11" />
         <source>Pruning old archives…</source>
         <translation>Oude archieven vernietigen…</translation>
     </message>
     <message>
-        <location filename="../../borg/prune.py" line="23" />
+        <location filename="../../borg/prune.py" line="19" />
         <source>Pruning done.</source>
         <translation>Vernietigen voltooid.</translation>
     </message>
 </context><context>
     <name>BorgRenameJob</name>
     <message>
-        <location filename="../../borg/rename.py" line="10" />
+        <location filename="../../borg/rename.py" line="12" />
         <source>Renaming archive…</source>
         <translation>Archiefnaam wijzigen…</translation>
     </message>
     <message>
-        <location filename="../../borg/rename.py" line="48" />
+        <location filename="../../borg/rename.py" line="44" />
         <source>Archive renamed.</source>
         <translation>De archiefnaam is gewijzigd.</translation>
     </message>
@@ -714,22 +724,22 @@
 </context><context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="20" />
         <source>Change Passphrase</source>
         <translation>Toegangszin wijzigen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="30" />
         <source>Repository:</source>
         <translation>Repo:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="34" />
         <source>Update</source>
         <translation>Bijwerken</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="66" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="67" />
         <source>Unable to change the borg passphrase.</source>
         <translation>Kan de Borg-toegangszin niet wijzigen.</translation>
     </message>
@@ -1034,84 +1044,84 @@
 </context><context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="152" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="147" />
         <source>Copy</source>
         <translation>Kopiëren</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="160" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="155" />
         <source>Expand recursively</source>
         <translation>Recursief uitklappen</translation>
     </message>
 </context><context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="793" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="755" />
         <source>Name</source>
         <translation>Naam</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="795" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="757" />
         <source>Change</source>
         <translation>Wijzigen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="797" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="759" />
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="799" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="761" />
         <source>Balance</source>
         <translation>Balans</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="870" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="820" />
         <source>Added {}, deleted {}</source>
         <translation>Toegevoegd: {} - Verwijderd: {}</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="877" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="827" />
         <source>File</source>
         <translation>Bestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="879" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="829" />
         <source>Directory</source>
         <translation>Map</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="881" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="831" />
         <source>Link</source>
         <translation>Link</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="883" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="833" />
         <source>Block device file</source>
         <translation>Blokapparaatbestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="885" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="835" />
         <source>Character device file</source>
         <translation>Tekenapparaatbestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="890" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="840" />
         <source>unchanged</source>
         <translation>ongewijzigd</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="892" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="842" />
         <source>modified</source>
         <translation>bewerkt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="894" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="844" />
         <source>removed</source>
         <translation>verwijderd</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="896" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="846" />
         <source>added</source>
         <translation>toegevoegd</translation>
     </message>
@@ -1163,22 +1173,22 @@
 </context><context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="231" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="240" />
         <source>Connect to existing Repository</source>
         <translation>Verbinden met externe repo</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="234" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="243" />
         <source>Password:</source>
         <translation>Wachtwoord:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="235" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="244" />
         <source>Enter the encryption passphrase</source>
         <translation>Voer de versleutelingstoegangszin in</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="242" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
         <translation>Automatisch ingevuld wachtwoord door wachtwoorbeheerder.</translation>
     </message>
@@ -1222,95 +1232,95 @@
 </context><context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="138" />
-        <location filename="../../views/dialogs/archive/extract.py" line="110" />
+        <location filename="../../views/dialogs/archive/extract.py" line="133" />
+        <location filename="../../views/dialogs/archive/extract.py" line="105" />
         <source>Extract</source>
         <translation>Uitpakken</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="216" />
+        <location filename="../../views/dialogs/archive/extract.py" line="204" />
         <source>Copy</source>
         <translation>Kopiëren</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="222" />
+        <location filename="../../views/dialogs/archive/extract.py" line="210" />
         <source>Expand recursively</source>
         <translation>Recursief uitklappen</translation>
     </message>
 </context><context>
     <name>ExtractTree</name>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="468" />
+        <location filename="../../views/dialogs/archive/extract.py" line="444" />
         <source>Name</source>
         <translation>Naam</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="470" />
+        <location filename="../../views/dialogs/archive/extract.py" line="446" />
         <source>Last Modified</source>
         <translation>Laatst bewerkt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="472" />
+        <location filename="../../views/dialogs/archive/extract.py" line="448" />
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="474" />
+        <location filename="../../views/dialogs/archive/extract.py" line="450" />
         <source>Health</source>
         <translation>Gezondheid</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="553" />
+        <location filename="../../views/dialogs/archive/extract.py" line="517" />
         <source>File</source>
         <translation>Bestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="555" />
+        <location filename="../../views/dialogs/archive/extract.py" line="519" />
         <source>Directory</source>
         <translation>Map</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="557" />
+        <location filename="../../views/dialogs/archive/extract.py" line="521" />
         <source>Symbolic link</source>
         <translation>Symbolische snelkoppeling</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="559" />
+        <location filename="../../views/dialogs/archive/extract.py" line="523" />
         <source>FIFO pipe</source>
         <translation>FIFO-sluis</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="561" />
+        <location filename="../../views/dialogs/archive/extract.py" line="525" />
         <source>Hard link</source>
         <translation>Harde snelkoppeling</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="563" />
+        <location filename="../../views/dialogs/archive/extract.py" line="527" />
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="565" />
+        <location filename="../../views/dialogs/archive/extract.py" line="529" />
         <source>Block special file</source>
         <translation>Speciaal blokbestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="567" />
+        <location filename="../../views/dialogs/archive/extract.py" line="531" />
         <source>Character special file</source>
         <translation>Speciaal tekenbestand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="574" />
+        <location filename="../../views/dialogs/archive/extract.py" line="538" />
         <source>healthy</source>
         <translation>goed</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="576" />
+        <location filename="../../views/dialogs/archive/extract.py" line="540" />
         <source>broken</source>
         <translation>beschadigd</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="589" />
+        <location filename="../../views/dialogs/archive/extract.py" line="553" />
         <source>Linked to: {}</source>
         <translation>Gekoppeld aan {}</translation>
     </message>
@@ -1352,22 +1362,22 @@
         <translation>Logboek bekijken</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="106" />
+        <location filename="../../views/archive_tab.py" line="107" />
         <source>To mount archives, first install macFUSE from %1.</source>
         <translation>Om archieven aan te koppelen, installeer eerst macFUSE via %1.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="107" />
+        <location filename="../../views/archive_tab.py" line="108" />
         <source>here</source>
         <translation>hier</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="108" />
+        <location filename="../../views/archive_tab.py" line="109" />
         <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
         <translation>Met vernietigen verwijder je oude archieven. Je kunt het aantal uurlijkse, dagelijkse, etc. te behouden archieven bepalen. Meestal willen gebruikers meer nieuwere en minder oudere archieven behouden. Lees %1.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="113" />
+        <location filename="../../views/archive_tab.py" line="114" />
         <source>more</source>
         <translation>meer</translation>
     </message>
@@ -1862,22 +1872,22 @@
         <translation>Methode '{method}' gaf een foutmelding terug.</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="123" />
+        <location filename="../../keyring/kwallet.py" line="128" />
         <source>Create Wallet</source>
         <translation>Portefeuille aanmaken</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="124" />
+        <location filename="../../keyring/kwallet.py" line="129" />
         <source>Enter a name for the new wallet:</source>
         <translation>Voer een naam in voor de nieuwe portefeuille:</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="128" />
+        <location filename="../../keyring/kwallet.py" line="133" />
         <source>Could not determine a valid wallet name. Aborting unlock attempt.</source>
         <translation>Kan geen geldige portefeuillenaam bepalen. Ontgrendelingspoging afgebroken.</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="140" />
+        <location filename="../../keyring/kwallet.py" line="145" />
         <source>Failed to open wallet. Aborting unlock attempt.</source>
         <translation>Kan portefeuille niet openen. Ontgrendelingspoging afgebroken.</translation>
     </message>
@@ -1916,77 +1926,77 @@
 </context><context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="57" />
+        <location filename="../../views/main_window.py" line="58" />
         <source>Start Backup</source>
         <translation>Back-up starten</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="113" />
+        <location filename="../../views/main_window.py" line="115" />
         <source>Create new profile</source>
         <translation>Nieuw profiel</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="114" />
+        <location filename="../../views/main_window.py" line="116" />
         <source>Import from file…</source>
         <translation>Importeren uit bestand…</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="230" />
+        <location filename="../../views/main_window.py" line="231" />
         <source>Are you sure you want to delete profile '{}'?</source>
         <translation>Weet je zeker dat je ‘{}’ wilt verwijderen?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="233" />
+        <location filename="../../views/main_window.py" line="234" />
         <source>Confirm deletion</source>
         <translation>Verwijderen bevestigen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="247" />
+        <location filename="../../views/main_window.py" line="248" />
         <source>Cannot delete the last profile.</source>
         <translation>Het laatste profiel kan niet worden verwijderd.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278" />
+        <location filename="../../views/main_window.py" line="281" />
         <source>Profile import successful!</source>
         <translation>Het importeren is voltooid!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="279" />
+        <location filename="../../views/main_window.py" line="282" />
         <source>Profile {} imported.</source>
         <translation>‘{}’ is geïmporteerd.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="286" />
+        <location filename="../../views/main_window.py" line="289" />
         <source>Load profile</source>
         <translation>Profiel laden</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="288" />
+        <location filename="../../views/main_window.py" line="291" />
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Alle bestanden (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="294" />
+        <location filename="../../views/main_window.py" line="297" />
         <source>Failed to import profile</source>
         <translation>Het profiel kan niet worden geïmporteerd</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="348" />
+        <location filename="../../views/main_window.py" line="351" />
         <source>Task cancelled</source>
         <translation>Taak afgebroken</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="364" />
+        <location filename="../../views/main_window.py" line="367" />
         <source>Should Vorta continue to run in the background?</source>
         <translation>Wil je dat Vorta blijft draaien op de achtergrond?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="374" />
+        <location filename="../../views/main_window.py" line="377" />
         <source>Quit</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="375" />
+        <location filename="../../views/main_window.py" line="378" />
         <source>Don't show this again</source>
         <translation>Niet meer tonen</translation>
     </message>
@@ -2153,12 +2163,12 @@
 </context><context>
     <name>RepoCheckJob</name>
     <message>
-        <location filename="../../borg/check.py" line="30" />
+        <location filename="../../borg/check.py" line="32" />
         <source>Repo check failed. See the %1 for details.</source>
         <translation>De repocontrole is mislukt. Bekijk voor meer informatie de %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="31" />
+        <location filename="../../borg/change_passphrase.py" line="33" />
         <source>Passphrase change failed. See the %1 for details.</source>
         <translation>Wijzigen van toegangszin mislukt. Bekijk voor meer informatie de %1.</translation>
     </message>
@@ -2266,52 +2276,52 @@
         <translation>Kies een openbare sleutel in het uitklapmenu.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="334" />
+        <location filename="../../views/repo_tab.py" line="336" />
         <source>Repository was Unlinked</source>
         <translation>De repo is ontkoppeld</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="335" />
+        <location filename="../../views/repo_tab.py" line="337" />
         <source>You can always connect it again later.</source>
         <translation>Je kunt deze later opnieuw koppelen.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="337" />
+        <location filename="../../views/repo_tab.py" line="339" />
         <source>Repository was Detached</source>
         <translation>Repo is ontkoppeld</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="338" />
+        <location filename="../../views/repo_tab.py" line="340" />
         <source>The repository remains available for other profiles.</source>
         <translation>De repo blijft beschikbaar voor andere profielen.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="370" />
+        <location filename="../../views/repo_tab.py" line="372" />
         <source>Invalid Encryption Type</source>
         <translation>Ongeldig versleutelingstype</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="371" />
+        <location filename="../../views/repo_tab.py" line="373" />
         <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
         <translation>Kan de toegangszin van de repo niet wijzigen. Het versleutelingstype moet repokey zijn.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="390" />
+        <location filename="../../views/repo_tab.py" line="392" />
         <source>Passphrase Changed</source>
         <translation>Toegangszin gewijzigd</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="391" />
+        <location filename="../../views/repo_tab.py" line="393" />
         <source>The borg passphrase was successfully changed.</source>
         <translation>De Borg-toegangszin is gewijzigd.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="394" />
+        <location filename="../../views/repo_tab.py" line="396" />
         <source>Passphrase Change Failed</source>
         <translation>Wijzigen van toegangszin mislukt</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="395" />
+        <location filename="../../views/repo_tab.py" line="397" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Kan de toegangszin van de repo niet wijzigen. Probeer het opnieuw.</translation>
     </message>
@@ -2326,43 +2336,43 @@
 </context><context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="57" />
-        <location filename="../../views/dialogs/repo/repo_add.py" line="38" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="59" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="40" />
         <source>Add</source>
         <translation>Toevoegen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="71" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="73" />
         <source>Repository Path:</source>
         <translation>Repolocatie:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="74" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="76" />
         <source>Choose Location of Borg Repository</source>
         <translation>Geef de locatie op van de Borg-repo</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="83" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="85" />
         <source>Repository URL:</source>
         <translation>Repo-url:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="96" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="98" />
         <source>Unable to add your repository.</source>
         <translation>De repo kan niet worden toegevoegd.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="106" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="108" />
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Voer een geldige repo-url in of kies een lokale locatie.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="110" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112" />
         <source>Repository name must be less than 65 characters.</source>
         <translation>De reponaam mag maximaal 65 tekens bevatten.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="114" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="116" />
         <source>This repo has already been added.</source>
         <translation>Deze repo is al toegevoegd.</translation>
     </message>
@@ -2407,38 +2417,38 @@
 </context><context>
     <name>SchedulePage</name>
     <message>
-        <location filename="../../views/schedule_page.py" line="29" />
+        <location filename="../../views/schedule_page.py" line="28" />
         <source>Minutes</source>
         <translation>Minuten</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="30" />
+        <location filename="../../views/schedule_page.py" line="29" />
         <source>Hours</source>
         <translation>Uur</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="31" />
+        <location filename="../../views/schedule_page.py" line="30" />
         <source>Days</source>
         <translation>Dagen</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="32" />
+        <location filename="../../views/schedule_page.py" line="31" />
         <source>Weeks</source>
         <translation>Weken</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="117" />
+        <location filename="../../views/schedule_page.py" line="120" />
         <source>Paused until %s</source>
         <translation>Gepauzeerd tot %s</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="119" />
+        <location filename="../../views/schedule_page.py" line="122" />
         <source>Run a manual backup first</source>
         <translation>Voer eerst een handmatige back-up uit</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
-        <location filename="../../views/schedule_page.py" line="121" />
+        <location filename="../../views/schedule_page.py" line="124" />
         <source>None scheduled</source>
         <translation>Niks ingepland</translation>
     </message>
@@ -2533,44 +2543,44 @@
 </context><context>
     <name>SchedulerExecution</name>
     <message>
-        <location filename="../../scheduler/execution.py" line="259" />
-        <location filename="../../scheduler/execution.py" line="253" />
-        <location filename="../../scheduler/execution.py" line="147" />
-        <location filename="../../scheduler/execution.py" line="136" />
-        <location filename="../../scheduler/execution.py" line="109" />
-        <location filename="../../scheduler/execution.py" line="86" />
+        <location filename="../../scheduler/execution.py" line="266" />
+        <location filename="../../scheduler/execution.py" line="260" />
+        <location filename="../../scheduler/execution.py" line="153" />
+        <location filename="../../scheduler/execution.py" line="142" />
+        <location filename="../../scheduler/execution.py" line="115" />
+        <location filename="../../scheduler/execution.py" line="92" />
         <source>Vorta Backup</source>
         <translation>Vorta-back-up</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="87" />
+        <location filename="../../scheduler/execution.py" line="93" />
         <source>Starting background backup for %s.</source>
         <translation>Er wordt een achtergrondback-up gestart voor %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="137" />
+        <location filename="../../scheduler/execution.py" line="143" />
         <source>Backup successful for %s.</source>
         <translation>Back-up voltooid voor %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="148" />
+        <location filename="../../scheduler/execution.py" line="154" />
         <source>Error during backup creation for %s.</source>
         <translation>Fout tijdens aanmaken van back-up voor ‘%s’.</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="254" />
+        <location filename="../../scheduler/execution.py" line="261" />
         <source>Post Backup Tasks failed for %s</source>
         <translation>Na-back-uptaken mislukt voor %s</translation>
     </message>
     <message>
-        <location filename="../../scheduler/execution.py" line="260" />
+        <location filename="../../scheduler/execution.py" line="267" />
         <source>Post Backup Tasks successful for %s</source>
         <translation>Na-back-uptaken geslaagd voor %s</translation>
     </message>
 </context><context>
     <name>SchedulerTimers</name>
     <message>
-        <location filename="../../scheduler/scheduling.py" line="306" />
+        <location filename="../../scheduler/scheduling.py" line="342" />
         <source>None scheduled</source>
         <translation>Niks ingepland</translation>
     </message>
@@ -2634,7 +2644,7 @@
         <translation>Verwijderen</translation>
     </message>
     <message numerus="yes">
-        <location filename="../../views/source_tab.py" line="251" />
+        <location filename="../../views/source_tab.py" line="258" />
         <source>Total Size: {size}, %n file(s)</source>
         <translation>
             <numerusform>Totale grootte: {size}, %n bestand</numerusform>
@@ -2686,152 +2696,152 @@
 </context><context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="389" />
+        <location filename="../../application.py" line="413" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
         <translation>Borg is afgesloten met waarschuwingsstatus (rc 1). Bekijk voor meer informatie de %1.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="138" />
+        <location filename="../../application.py" line="144" />
         <source>Vorta Backup</source>
         <translation>Vorta-back-up</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="201" />
+        <location filename="../../application.py" line="219" />
         <source>No Borg Binary Found</source>
         <translation>Borg is niet aangetroffen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="202" />
+        <location filename="../../application.py" line="220" />
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta heeft Borg niet aangetroffen op je systeem.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="224" />
+        <location filename="../../application.py" line="242" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Vorta heeft volledige schijftoegang nodig om volledige back-ups te kunnen maken</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="225" />
+        <location filename="../../application.py" line="243" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
         <translation>Zonder deze toegang zijn sommige bestanden ontoegankelijk, wat kan leiden tot een onvolledige back-up. Verleen de bevoegdheid %1 via %2.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="231" />
+        <location filename="../../application.py" line="249" />
         <source>Full Disk Access</source>
         <translation>Volledige schijftoegang</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="234" />
+        <location filename="../../application.py" line="252" />
         <source>System Preferences &gt; Security &amp; Privacy</source>
         <translation>Systeemvoorkeuren &gt; Beveiliging en privacy</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="252" />
+        <location filename="../../application.py" line="270" />
         <source>Repository In Use</source>
         <translation>De repo is in gebruik</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="254" />
+        <location filename="../../application.py" line="272" />
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="255" />
+        <location filename="../../application.py" line="273" />
         <source>Break the lock</source>
         <translation>Vergrendeling opheffen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="257" />
+        <location filename="../../application.py" line="275" />
         <source>The repository at {} might be in use elsewhere.</source>
         <translation>De repo, {}, is mogelijk al in gebruik.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="259" />
+        <location filename="../../application.py" line="277" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
         <translation>Hef de vergrendeling alleen op als je zeker weet dat geen enkel ander Borg-proces op welke computer dan ook de repo gebruikt. Annuleren of vergrendeling opheffen?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="285" />
+        <location filename="../../application.py" line="303" />
         <source>Repository Storage Full</source>
         <translation>Repo-opslag vol</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="286" />
+        <location filename="../../application.py" line="304" />
         <source>The storage backing the repository at {} is full.</source>
         <translation>De opslagruimte van de repo op {} is vol.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="288" />
+        <location filename="../../application.py" line="306" />
         <source>Borg could not create its lock file, so no operation can run — including pruning, which would free space. Free up space outside the repository, then try again.</source>
         <translation>Borg kon geen vergrendelingsbestand aanmaken, waardoor er geen enkele bewerking kan worden uitgevoerd — ook geen vernietigen om ruimte vrij te maken. Maak ruimte vrij buiten de repo en probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="294" />
+        <location filename="../../application.py" line="312" />
         <source>No Repository Permissions</source>
         <translation>Niet bevoegd</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="296" />
+        <location filename="../../application.py" line="314" />
         <source>You do not have permission to access the repository at {}. Gain access and try again.</source>
         <translation>Je hebt geen toegang tot de repo ‘{}’. Verkrijg toegang en probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="301" />
+        <location filename="../../application.py" line="319" />
         <source>Repository Lock Failed</source>
         <translation>Repovergrendeling mislukt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="302" />
+        <location filename="../../application.py" line="320" />
         <source>Borg could not lock the repository at {}.</source>
         <translation>Borg kon de repo op {} niet vergrendelen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="336" />
+        <location filename="../../application.py" line="355" />
         <source>Failed to import profile</source>
         <translation>Het profiel kan niet worden geïmporteerd</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="338" />
+        <location filename="../../application.py" line="357" />
         <source>Failed to import a profile from {}:</source>
         <translation>Het profiel kan niet worden geïmporteerd uit {}:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="342" />
+        <location filename="../../application.py" line="361" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Verwijder of repareer het bestand om deze melding te verwerpen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="349" />
+        <location filename="../../application.py" line="368" />
         <source>Profile import successful!</source>
         <translation>Het importeren is voltooid!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="350" />
+        <location filename="../../application.py" line="369" />
         <source>Profile {} imported.</source>
         <translation>‘{}’ is geïmporteerd.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="383" />
+        <location filename="../../application.py" line="407" />
         <source>Repo Check Failed</source>
         <translation>Repocontrole mislukt</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="396" />
+        <location filename="../../application.py" line="420" />
         <source>Repository data check for repo was killed by signal %s.</source>
         <translation>De repogegevenscontrole is mislukt wegens %s.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="397" />
+        <location filename="../../application.py" line="421" />
         <source>The process running the check job got a kill signal. Try again.</source>
         <translation>Het proces is afgebroken door een afbreeksignaal. Probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="400" />
+        <location filename="../../application.py" line="424" />
         <source>Repository data check for repo %s failed. Error code %s</source>
         <translation>De repogegevenscontrole op %s is mislukt. Foutcode: %s</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="405" />
+        <location filename="../../application.py" line="429" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
         <translation>Repareer de repo of maak deze opnieuw aan om gegevensverlies te voorkomen.</translation>
     </message>
@@ -2903,16 +2913,17 @@
 </context><context>
     <name>messages</name>
     <message>
-        <location filename="../../application.py" line="128" />
+        <location filename="../../application.py" line="134" />
         <source>Running Pre-backup Command...</source>
         <translation>Voor-back-upopdracht uitvoeren...</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="29" />
-        <location filename="../../borg/compact.py" line="30" />
-        <location filename="../../borg/create.py" line="46" />
-        <location filename="../../borg/check.py" line="28" />
-        <location filename="../../application.py" line="390" />
+        <location filename="../../borg/change_passphrase.py" line="31" />
+        <location filename="../../borg/break_lock.py" line="21" />
+        <location filename="../../borg/compact.py" line="32" />
+        <location filename="../../borg/create.py" line="47" />
+        <location filename="../../borg/check.py" line="30" />
+        <location filename="../../application.py" line="414" />
         <source>logs</source>
         <translation>logboeken</translation>
     </message>
@@ -2927,75 +2938,75 @@
         <translation>Het aankoppelpunt is niet in gebruik.</translation>
     </message>
     <message>
-        <location filename="../../borg/version.py" line="21" />
-        <location filename="../../borg/borg_job.py" line="171" />
+        <location filename="../../borg/version.py" line="18" />
+        <location filename="../../borg/borg_job.py" line="191" />
         <source>Borg binary was not found.</source>
         <translation>Borg is niet aangetroffen.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="175" />
+        <location filename="../../borg/borg_job.py" line="195" />
         <source>Select a backup repository first.</source>
         <translation>Kies eerst een back-uprepo.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="179" />
+        <location filename="../../borg/borg_job.py" line="199" />
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Je Borg-versie is verouderd. &gt;=1.1.0 is vereist.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="190" />
+        <location filename="../../borg/borg_job.py" line="208" />
         <source>Please unlock your system password manager or disable it under Settings</source>
         <translation>Ontgrendel de wachtwoordbeheerder van je systeem of schakel deze uit in de Instellingen</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="210" />
+        <location filename="../../borg/borg_job.py" line="233" />
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>De toegangszin van je repo was opgeslagen in een wachtwoordbeheerder die niet meer beschikbaar is.
 Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="114" />
+        <location filename="../../borg/create.py" line="115" />
         <source>Add some folders to back up first.</source>
         <translation>Voeg eerst te back-uppen mappen toe.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="126" />
+        <location filename="../../borg/create.py" line="127" />
         <source>Current Wifi is not allowed.</source>
         <translation>Niet toegestaan op het huidige wifi-netwerk.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="135" />
+        <location filename="../../borg/create.py" line="136" />
         <source>Not running backup over metered connection.</source>
         <translation>Er wordt geen back-up uitgevoerd op een netwerk met beperkte data.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="144" />
+        <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
         <translation>De voor-back-upopdracht koppelde afsluitcode nul terug.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="148" />
+        <location filename="../../borg/create.py" line="149" />
         <source>Repo folder not mounted or moved.</source>
         <translation>De repomap is niet aangekoppeld of verplaatst.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="152" />
+        <location filename="../../borg/create.py" line="153" />
         <source>Your current Borg version does not support ZStd compression.</source>
         <translation>Je huidige Borg-versie ondersteunt geen ZStd-compressie.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="204" />
+        <location filename="../../borg/create.py" line="202" />
         <source>Starting backup…</source>
         <translation>Bezig met starten van back-up…</translation>
     </message>
     <message>
-        <location filename="../../borg/change_passphrase.py" line="49" />
+        <location filename="../../borg/change_passphrase.py" line="51" />
         <source>This feature needs Borg {} or higher.</source>
         <translation>Deze functie vereist Borg {} of nieuwer.</translation>
     </message>
     <message>
-        <location filename="../../borg/info_repo.py" line="48" />
+        <location filename="../../borg/info_repo.py" line="65" />
         <source>Please unlock your password manager.</source>
         <translation>Ontgrendel je wachtwoordbeheerder.</translation>
     </message>

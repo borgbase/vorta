@@ -12,6 +12,9 @@ MIN_BORG_FOR_FEATURE = {
     # add new version-checks here.
 }
 
+# Borg 2 --match-archives prefix for an identical (non-pattern) name match.
+MATCH_ID = 'id:'
+
 
 class BorgCompatibility:
     """
@@ -33,3 +36,19 @@ class BorgCompatibility:
     def get_version(self):
         """Returns the version and path of the Borg binary."""
         return self.version, self.path
+
+    def match_archive(self, name: str) -> str:
+        """Borg 2 `--match-archives` value that matches exactly this archive name."""
+        return MATCH_ID + name
+
+    def repo_args(self, url, archive=None, *, match=False) -> list[str]:
+        """
+        Repository (and optional archive) arguments for the Borg version in use.
+
+        With `match`, Borg 2 selects the archive via `-a id:NAME`, for commands without an archive positional.
+        """
+        if self.check('V2'):
+            if archive is None:
+                return ['-r', url]
+            return ['-r', url, '-a', self.match_archive(archive)] if match else ['-r', url, archive]
+        return [url] if archive is None else [f'{url}::{archive}']

@@ -226,6 +226,23 @@ def test_file_path_info_ignores_comments(tmpdir):
     )
 
 
+def test_get_directory_size_stops_when_requested(tmpdir):
+    """The directory walk ends early once ``should_stop`` returns True."""
+    root = make_pattern_tree(tmpdir)
+    full = get_path_datasize(str(root), [])
+
+    assert get_path_datasize(str(root), [], lambda: True) == (0, 0)
+
+    calls = []
+
+    def stop_on_second_call():
+        calls.append(None)
+        return len(calls) >= 2
+
+    partial = get_path_datasize(str(root), [], stop_on_second_call)
+    assert partial[1] < full[1]
+
+
 def test_is_system_tray_available(mocker):
     """
     Sanity check to ensure proper behavior

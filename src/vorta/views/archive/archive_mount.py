@@ -91,7 +91,7 @@ class ArchiveMount:
         profile = self.tab.profile()
         params = BorgMountJob.prepare(profile, archive=archive_name)
         if not params['ok']:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
             return
 
         def receive():

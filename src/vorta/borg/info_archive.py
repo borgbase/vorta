@@ -5,13 +5,15 @@ from .borg_job import BorgJob
 
 
 class BorgInfoArchiveJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive…')}")
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Refreshing archive done.')}")
 
     @classmethod
@@ -22,10 +24,7 @@ class BorgInfoArchiveJob(BorgJob):
 
         ret['ok'] = True
         ret['cmd'] = ['borg', 'info', '--log-json', '--json']
-        if borg_compat.check('V2'):
-            ret['cmd'].extend(["-r", profile.repo.url, '-a', archive_name])
-        else:
-            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
+        ret['cmd'] += borg_compat.repo_args(profile.repo.url, archive_name, match=True)
         ret['archive_name'] = archive_name
 
         return ret
@@ -49,12 +48,13 @@ class BorgInfoArchiveJob(BorgJob):
                 archive.name = remote_archive['name']  # in case name changed
                 # archive.time = parser.parse(remote_archive['time'])
                 archive.duration = remote_archive['duration']
-                archive.size = remote_archive['stats']['deduplicated_size']
+                # Borg 2 cannot report the deduplicated size of an existing archive. Keep the one from create.
+                archive.size = remote_archive['stats'].get('deduplicated_size', archive.size)
 
                 archive.save()
 
-            if 'cache' in result['data']:
-                stats = result['data']['cache']['stats']
+            stats = result['data'].get('cache', {}).get('stats')  # Borg 2 has no cache stats
+            if stats:
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
                 repo.unique_size = stats['unique_size']

@@ -67,6 +67,11 @@ def pytest_configure(config):
     # missing. The modal alert would then block forever once pytest-qt processes events (Linux).
     vorta.application.VortaApp._alert_missing_borg = lambda self: None
 
+    # A job that raises reports its traceback to this slot, which opens a modal ExceptionDialog.
+    # Keep the real slot reachable for tests of the slot itself.
+    vorta.application.VortaApp._real_job_exception_response = vorta.application.VortaApp.job_exception_response
+    vorta.application.VortaApp.job_exception_response = lambda self, exception: None
+
 
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory):

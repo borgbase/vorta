@@ -32,7 +32,7 @@ class ArchiveExtract:
             self.model = ExtractTree()
 
             if not params['ok']:
-                self.tab._set_status(params['message'])
+                self.tab._set_status(translate('messages', params['message']))
                 return
             self.tab._set_status('')
             self.tab._toggle_all_buttons(False)
@@ -72,7 +72,7 @@ class ArchiveExtract:
                         job.result.connect(self.extract_archive_result)
                         self.tab.app.jobs_manager.add_job(job)
                     else:
-                        self.tab._set_status(params['message'])
+                        self.tab._set_status(translate('messages', params['message']))
 
             dialog = choose_file_dialog(self.tab, self.tr("Choose Extraction Point"), want_folder=True)
             dialog.open(receive)

@@ -1,25 +1,21 @@
-from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, format_archive_name
 
-from .borg_job import BorgJob
+from .borg_job import BorgJob, invalidate_repo_stats
 
 
 class BorgPruneJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning old archives…')}")
 
-    def finished_event(self, result):
-        # set repo stats to N/A
-        repo = RepoModel.get(id=result['params']['repo_id'])
-        repo.total_size = None
-        repo.unique_csize = None
-        repo.unique_size = None
-        repo.total_unique_chunks = None
-        repo.save()
+    def process_result(self, result):
+        invalidate_repo_stats(result['params']['repo_id'])
 
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+    def finished_event(self, result):
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")
 
     @classmethod
@@ -58,10 +54,7 @@ class BorgPruneJob(BorgJob):
         if profile.prune_keep_within:
             pruning_opts += ['--keep-within', profile.prune_keep_within]
         cmd += pruning_opts
-        if borg_compat.check('V2'):
-            cmd.extend(["-r", profile.repo.url])
-        else:
-            cmd.append(f'{profile.repo.url}')
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['ok'] = True
         ret['cmd'] = cmd

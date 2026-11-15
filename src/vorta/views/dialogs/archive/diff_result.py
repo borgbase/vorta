@@ -1,6 +1,5 @@
 import enum
 import json
-import logging
 import re
 from dataclasses import dataclass
 from pathlib import PurePath
@@ -27,14 +26,11 @@ from vorta.views.partials.treemodel import (
     FileTreeModel,
     FileTreeSortProxyModel,
     path_to_str,
-    relative_path,
 )
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset('UI/dialogs/archive/diff_result.ui')
 DiffResultUI, DiffResultBase = uic.loadUiType(uifile)
-
-logger = logging.getLogger(__name__)
 
 
 class ParseThread(QThread):
@@ -93,7 +89,6 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         self.sortproxy = DiffSortProxyModel(self)
         self.sortproxy.setSourceModel(self.model)
         self.treeView.setModel(self.sortproxy)
-        self.sortproxy.sorted.connect(self.slot_sorted)
 
         self.treeView.setSortingEnabled(True)
 
@@ -212,13 +207,6 @@ class DiffResultDialog(DiffResultBase, DiffResultUI):
         ).execute()
 
         self.model.setMode(mode)
-
-    def slot_sorted(self, column, order):
-        """React the tree view being sorted."""
-        # reveal selection
-        selectedRows = self.treeView.selectionModel().selectedRows()
-        if selectedRows:
-            self.treeView.scrollTo(selectedRows[0])
 
 
 # ---- Output parsing --------------------------------------------------------
@@ -611,24 +599,6 @@ class ChangeType(enum.Enum):
             return 'M'
         return ''
 
-    def __ge__(self, other):
-        """Greater than or equal for enums."""
-        if self.__class__ is other.__class__:
-            return other >= self
-        return NotImplemented
-
-    def __gt__(self, other):
-        """Greater than for enums."""
-        if self.__class__ is other.__class__:
-            return other < self
-        return NotImplemented
-
-    def __le__(self, other):
-        """Lower than or equal for enums."""
-        if self.__class__ is other.__class__:
-            return self.value == other.value or self < other
-        return NotImplemented
-
     def __lt__(self, other):
         """Lower than for enums."""
         if self.__class__ is other.__class__:
@@ -667,14 +637,6 @@ DiffItem = FileSystemItem[DiffData]
 
 class DiffTree(FileTreeModel[DiffData]):
     """The file tree model for diff results."""
-
-    def _make_filesystemitem(self, path, data):
-        return super()._make_filesystemitem(path, data)
-
-    def _merge_data(self, item, data):
-        if data:
-            logger.debug('Overriding data for {}'.format(path_to_str(item.path)))
-        return super()._merge_data(item, data)
 
     def _flat_filter(self, item):
         """
@@ -827,19 +789,7 @@ class DiffTree(FileTreeModel[DiffData]):
 
         if role == Qt.ItemDataRole.DisplayRole:
             if column == 0:
-                # name
-                if self.mode == self.DisplayMode.FLAT:
-                    return path_to_str(item.path)
-
-                if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
-                    parent = index.parent()
-                    if parent == QModelIndex():
-                        return path_to_str(relative_path(self.root.path, item.path))
-
-                    return path_to_str(relative_path(parent.internalPointer().path, item.path))
-
-                # standard tree mode
-                return item.subpath
+                return self.display_name(index)
             elif column == 1:
                 # change type
                 return item.data.change_type.short()

@@ -1,11 +1,23 @@
 import logging
 import queue
 import threading
+import traceback
 from abc import abstractmethod
 
 from PyQt6.QtCore import QObject
+from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)
+
+
+def report_exception_to_main_thread(tb_text: str):
+    """Ask the app to show the exception dialog, if the app supports it. Never raises."""
+    try:
+        job_exception_event = getattr(QApplication.instance(), 'job_exception_event', None)
+        if job_exception_event is not None:
+            job_exception_event.emit(tb_text)
+    except Exception:
+        logger.exception('Could not report an exception to the main thread')
 
 
 class JobInterface(QObject):
@@ -54,15 +66,23 @@ class SiteWorker(threading.Thread):
         while True:
             try:
                 job = self.jobs.get(False)
-                self.current_job = job
-                logger.debug("Start job on site: %s", job.repo_id())
-                job.run()
-                self.current_job = None
-                logger.debug("Finish job for site: %s", job.repo_id())
             except queue.Empty:
                 if job is not None:
                     logger.debug("No more jobs for site: %s", job.repo_id())
                 return
+
+            self.current_job = job
+            try:
+                logger.debug("Start job on site: %s", job.repo_id())
+                job.run()
+            except Exception:
+                # Backstop for jobs that do not handle their own exceptions. Keep serving the queue.
+                logger.exception("Job %s raised", type(job).__name__)
+                report_exception_to_main_thread(traceback.format_exc())
+            finally:
+                self.current_job = None
+            # Log only after clearing current_job: the UI unblocks once no job is running.
+            logger.debug("Finish job for site: %s", job.repo_id())
 
 
 class JobsManager:

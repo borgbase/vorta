@@ -1,5 +1,7 @@
+import copy
 import datetime
 import json
+import logging
 from json import JSONDecodeError
 
 from playhouse.shortcuts import dict_to_model, model_to_dict
@@ -15,6 +17,9 @@ from vorta.store.models import (
     SourceFileModel,
     WifiSettingModel,
 )
+from vorta.store.settings import get_misc_settings
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileExport:
@@ -76,7 +81,7 @@ class ProfileExport:
         if include_settings:
             # Add WifiSettingModel
             profile_dict['WifiSettingModel'] = [
-                model_to_dict(wifi, recurse=False)
+                model_to_dict(wifi, recurse=False, exclude=[WifiSettingModel.id])
                 for wifi in WifiSettingModel.select().where(WifiSettingModel.profile == profile.id)
             ]
             # Add SettingsModel
@@ -84,86 +89,107 @@ class ProfileExport:
         return ProfileExport(profile_dict)
 
     def to_db(self, overwrite_profile=False, overwrite_settings=True):
-        profile_schema = self._profile_dict['SchemaVersion']['version']
+        # Select the keyring before any DB write: the choice depends on the current `use_system_keyring`.
         keyring = VortaKeyring.get_keyring()
+        profile_dict = copy.deepcopy(self._profile_dict)
+
+        profile_schema = profile_dict['SchemaVersion']['version']
         if SCHEMA_VERSION < profile_schema:
             raise VersionException()
         elif SCHEMA_VERSION > profile_schema:
             # Add model upgrading code here, only needed if not adding columns
             if profile_schema < 16:
-                for sourcedir in self._profile_dict['SourceFileModel']:
+                for sourcedir in profile_dict.get('SourceFileModel', []):
                     sourcedir['dir_files_count'] = -1
                     sourcedir['dir_size'] = -1
                     sourcedir['path_isdir'] = False
 
-        existing_profile = None
-        if overwrite_profile:
-            existing_profile = BackupProfileModel.get_or_none(BackupProfileModel.name == self.name)
-            if existing_profile:
-                self._profile_dict['id'] = existing_profile.id
-        if not overwrite_profile or not existing_profile:
-            # Guarantee uniqueness of ids
-            while BackupProfileModel.get_or_none(BackupProfileModel.id == self.id) is not None:
-                self._profile_dict['id'] += 1
+        # Pop the extra sections so the rest matches BackupProfileModel.
+        # A missing section leaves the existing rows alone, an empty one clears them.
+        sections = {}
+        for key in ('SettingsModel', 'WifiSettingModel', 'SourceFileModel', 'ExclusionModel'):
+            if key in profile_dict:
+                sections[key] = profile_dict.pop(key)
+        password = profile_dict.pop('password', None)
+        profile_dict.pop('SchemaVersion')
+        repo_url = self.repo_url
 
-            # Add suffix in case names are the same
-            if BackupProfileModel.get_or_none(BackupProfileModel.name == self.name) is not None:
-                suffix = 1
-                while BackupProfileModel.get_or_none(BackupProfileModel.name == f"{self.name}-{suffix}") is not None:
-                    suffix += 1
-                self._profile_dict['name'] = f"{self.name}-{suffix}"
+        # IMMEDIATE takes the write lock upfront, so a concurrent writer is waited for via the busy timeout.
+        with DB.atomic('IMMEDIATE'):
+            profile_id = profile_dict['id']
+            profile_name = profile_dict['name']
+            existing_profile = None
+            if overwrite_profile:
+                existing_profile = BackupProfileModel.get_or_none(BackupProfileModel.name == profile_name)
+                if existing_profile:
+                    profile_id = existing_profile.id
+            if not existing_profile:
+                # Guarantee uniqueness of ids
+                while BackupProfileModel.get_or_none(BackupProfileModel.id == profile_id) is not None:
+                    profile_id += 1
 
-        # Load existing repo or restore it
-        if self._profile_dict['repo']:
-            repo = RepoModel.get_or_none(RepoModel.url == self.repo_url)
-            if repo is None:
-                # Load repo from export
-                repo = dict_to_model(RepoModel, self._profile_dict['repo'])
-                repo.save(force_insert=True)
-            self._profile_dict['repo'] = model_to_dict(repo)
+                # Add suffix in case names are the same
+                if BackupProfileModel.get_or_none(BackupProfileModel.name == profile_name) is not None:
+                    suffix = 1
+                    while (
+                        BackupProfileModel.get_or_none(BackupProfileModel.name == f"{profile_name}-{suffix}")
+                        is not None
+                    ):
+                        suffix += 1
+                    profile_name = f"{profile_name}-{suffix}"
+            profile_dict['id'] = profile_id
+            profile_dict['name'] = profile_name
 
-        if self.repo_password:
-            keyring.set_password('vorta-repo', self.repo_url, self.repo_password)
-            del self._profile_dict['password']
+            # Load existing repo or restore it
+            if profile_dict.get('repo'):
+                repo = RepoModel.get_or_none(RepoModel.url == repo_url)
+                if repo is None:
+                    repo = dict_to_model(RepoModel, profile_dict['repo'])
+                    repo.save(force_insert=True)
+                profile_dict['repo'] = model_to_dict(repo)
 
-        # Delete and recreate the tables to clear them
-        if overwrite_settings:
-            DB.drop_tables([SettingsModel, WifiSettingModel])
-            DB.create_tables([SettingsModel, WifiSettingModel])
-            SettingsModel.insert_many(self._profile_dict['SettingsModel']).execute()
-            WifiSettingModel.insert_many(self._profile_dict['WifiSettingModel']).execute()
+            # Raises AttributeError on keys unknown to this schema, which rolls back the whole import.
+            new_profile = dict_to_model(BackupProfileModel, profile_dict)
+            new_profile.save(force_insert=existing_profile is None)
 
-        # Set the profile ids to match new profile
-        for source in self._profile_dict['SourceFileModel']:
-            source['profile'] = self.id
-        # Delete existing Sources to avoid duplicates
-        SourceFileModel.delete().where(SourceFileModel.profile == self.id).execute()
-        SourceFileModel.insert_many(self._profile_dict['SourceFileModel']).execute()
+            for key, model in (
+                ('SourceFileModel', SourceFileModel),
+                ('ExclusionModel', ExclusionModel),
+                ('WifiSettingModel', WifiSettingModel),
+            ):
+                # A new profile must not inherit rows orphaned under its id.
+                if key not in sections and existing_profile:
+                    continue
+                rows = sections.get(key, [])
+                for row in rows:
+                    row.pop('id', None)
+                    row['profile'] = profile_id
+                model.delete().where(model.profile == profile_id).execute()
+                model.insert_many(rows).execute()
 
-        # Restore ExclusionModel entries
-        if 'ExclusionModel' in self._profile_dict:
-            for exclusion in self._profile_dict['ExclusionModel']:
-                exclusion['profile'] = self.id
-            ExclusionModel.delete().where(ExclusionModel.profile == self.id).execute()
-            ExclusionModel.insert_many(self._profile_dict['ExclusionModel']).execute()
+            if overwrite_settings and 'SettingsModel' in sections:
+                self._update_settings(sections['SettingsModel'])
 
-        # Delete added dictionaries to make it match BackupProfileModel
-        del self._profile_dict['SettingsModel']
-        del self._profile_dict['SourceFileModel']
-        del self._profile_dict['WifiSettingModel']
-        del self._profile_dict['SchemaVersion']
-        if 'ExclusionModel' in self._profile_dict:
-            del self._profile_dict['ExclusionModel']
+        if password and repo_url and keyring is not None:
+            try:
+                keyring.set_password('vorta-repo', repo_url, password)
+            except Exception:
+                logger.warning('Could not store the imported repository password.', exc_info=True)
 
-        # dict to profile
-        new_profile = dict_to_model(BackupProfileModel, self._profile_dict)
-        if overwrite_profile and existing_profile:
-            force_insert = False
-        else:
-            force_insert = True
-        new_profile.save(force_insert=force_insert)
         init_db()  # rerun db init code to perform the same operations on the new as as on application boot
         return new_profile
+
+    @staticmethod
+    def _update_settings(rows):
+        """Update existing settings in place, except machine-local ones. Never inserts rows."""
+        skipped_keys = {s['key'] for s in get_misc_settings() if s['type'] == 'internal'} | {'use_system_keyring'}
+        for row in rows:
+            key = row.get('key')
+            if key in skipped_keys:
+                continue
+            values = {field: row[field] for field in ('value', 'str_value') if field in row}
+            if values:
+                SettingsModel.update(**values).where(SettingsModel.key == key).execute()
 
     @classmethod
     def from_json(cls, filename):

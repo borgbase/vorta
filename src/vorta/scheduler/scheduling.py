@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 from PyQt6.QtCore import QTimer
 
 from vorta.i18n import translate
+from vorta.scheduler.execution import SUCCESS_RETURNCODES
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import get_network_status_monitor
 
@@ -151,6 +152,15 @@ class SchedulerTimers:
         with self.lock:  # Acquire lock
             self.remove_job(profile_id)  # reset schedule
 
+            if profile.repo is None:  # No backups without repo set
+                logger.debug(
+                    'Nothing scheduled for profile %s because of unset repo.',
+                    profile_id,
+                )
+                # Emit signal so that e.g. the GUI can react to the new schedule
+                self.scheduler.schedule_changed.emit()
+                return
+
             pause = self.scheduler.pauses.get(profile_id)
             if pause is not None:
                 pause_end, timer = pause
@@ -164,15 +174,6 @@ class SchedulerTimers:
                     return
                 else:
                     self.scheduler.clear_pause(profile_id)
-
-            if profile.repo is None:  # No backups without repo set
-                logger.debug(
-                    'Nothing scheduled for profile %s because of unset repo.',
-                    profile_id,
-                )
-                # Emit signal so that e.g. the GUI can react to the new schedule
-                self.scheduler.schedule_changed.emit()
-                return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
@@ -189,9 +190,9 @@ class SchedulerTimers:
                     EventLogModel.subcommand == 'create',
                     EventLogModel.category == 'scheduled',
                     EventLogModel.profile == profile.id,
-                    0 <= EventLogModel.returncode <= 1,
+                    EventLogModel.returncode.in_(SUCCESS_RETURNCODES),
                 )
-                .order_by(EventLogModel.end_time.desc())
+                .order_by(EventLogModel.start_time.desc())
                 .first()
             )
 
@@ -202,9 +203,9 @@ class SchedulerTimers:
                     .where(
                         EventLogModel.subcommand == 'create',
                         EventLogModel.profile == profile.id,
-                        0 <= EventLogModel.returncode <= 1,
+                        EventLogModel.returncode.in_(SUCCESS_RETURNCODES),
                     )
-                    .order_by(EventLogModel.end_time.desc())
+                    .order_by(EventLogModel.start_time.desc())
                     .first()
                 )
 
@@ -227,14 +228,16 @@ class SchedulerTimers:
                 next_time = last_time + timedelta(**interval)
 
             elif profile.schedule_mode == 'fixed':
-                last_time = last_run_log.end_time
+                last_time = last_run_log.start_time
 
                 next_time = last_time.replace(
                     hour=profile.schedule_fixed_hour,
                     minute=profile.schedule_fixed_minute,
                     second=0,
                     microsecond=0,
-                ) + timedelta(days=1)
+                )
+                if next_time <= last_time:
+                    next_time += timedelta(days=1)
 
             else:
                 # unknown schedule mode
@@ -245,7 +248,11 @@ class SchedulerTimers:
             needs_network = profile.repo is not None and profile.repo.is_remote_repo()
             # handle missing of a scheduled time
             if next_time <= dt.now():
-                if profile.schedule_make_up_missed and (self._net_up or not needs_network):
+                running = self._running_backup(profile)
+                if running is not None:
+                    logger.debug('Not catching up %s (%s), its backup is still running', profile.name, profile_id)
+                    last_time = running.start_time
+                elif profile.schedule_make_up_missed and (self._net_up or not needs_network):
                     logger.debug(
                         'Catching up by running job for %s (%s)',
                         profile.name,
@@ -294,18 +301,35 @@ class SchedulerTimers:
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.scheduler.schedule_changed.emit()
 
+    def _running_backup(self, profile: BackupProfileModel) -> EventLogModel | None:
+        """This profile's newest backup log row if that backup is still running, else None."""
+        if not self.scheduler.app.jobs_manager.is_worker_running(site=profile.repo.id):
+            return None
+        newest = (
+            EventLogModel.select()
+            .where(EventLogModel.subcommand == 'create', EventLogModel.profile == profile.id)
+            .order_by(EventLogModel.id.desc())
+            .first()
+        )
+        if newest is not None and newest.returncode == EventLogModel.returncode.default:
+            return newest
+        return None
+
     def reload_all_timers(self) -> None:
         logger.debug('Refreshing all scheduler timers')
         for profile in BackupProfileModel.select():
             # Only set a timer for the profile if the network is actually up
             if profile.repo is None:
                 logger.debug("nothing scheduled for %s because of unset repo", profile.id)
+                self.scheduler.set_timer_for_profile(profile.id)
             elif not profile.repo.is_remote_repo() or self._net_up:
                 logger.debug("scheduling %s", profile.id)
                 self.scheduler.set_timer_for_profile(profile.id)
             else:
                 logger.debug("Network is down, not scheduling %s", profile.id)
-                self.remove_job(profile.id)
+                if not self.scheduler.paused(profile.id):
+                    self.remove_job(profile.id)
+                self.scheduler.schedule_changed.emit()
 
     def next_job(self) -> str:
         now = dt.now()

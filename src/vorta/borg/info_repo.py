@@ -6,6 +6,22 @@ from vorta.utils import borg_compat
 from .borg_job import BorgJob, FakeProfile, FakeRepo
 
 
+def encryption_mode(encryption):
+    """
+    Return a Borg 1 style mode like `repokey-blake2`, which Vorta stores and compares against.
+
+    Borg >= 2.0.0b22 reports only the cipher name (`chacha20-poly1305`) plus `keyfile` when the key is stored
+    as a keyfile, so the key storage is added here. Its plaintext ciphers (`none`, `none-sha256`, ...) map to `none`.
+    """
+    if 'mode' in encryption:
+        return encryption['mode']
+    name = encryption['encryption']
+    if name == 'none' or name.startswith('none-'):
+        return 'none'
+    storage = 'keyfile' if 'keyfile' in encryption else 'repokey'
+    return f'{storage}-{name}'
+
+
 class BorgInfoRepoJob(BorgJob):
     def started_event(self):
         self.updated.emit(self.tr('Validating existing repo…'))
@@ -31,10 +47,10 @@ class BorgInfoRepoJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         if borg_compat.check('V2'):
-            cmd = ["borg", "repo-info", "--info", "--json", "--log-json", "-r"]
+            cmd = ["borg", "repo-info", "--info", "--json", "--log-json"]
         else:
             cmd = ["borg", "info", "--info", "--json", "--log-json"]
-        cmd.append(profile.repo.url)
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['additional_env'] = {
             'BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK': "yes",
@@ -42,11 +58,12 @@ class BorgInfoRepoJob(BorgJob):
         }
 
         ret['password'] = params['password']  # Empty password is '', which disables prompt
-        if params['password'] != '':
+        # Unlock now, even without a password, so process_result() can store the passphrase.
+        unlocked = cls.keyring.try_unlock()
+        if params['password'] != '' and not unlocked:
             # Cannot tell if repo has encryption, assuming based off of password
-            if not cls.keyring.is_unlocked:
-                ret['message'] = QT_TRANSLATE_NOOP('messages', 'Please unlock your password manager.')
-                return ret
+            ret['message'] = QT_TRANSLATE_NOOP('messages', 'Please unlock your password manager.')
+            return ret
 
         ret['repo_name'] = params['repo_name']
         ret['ok'] = True
@@ -56,16 +73,20 @@ class BorgInfoRepoJob(BorgJob):
 
     def process_result(self, result):
         if result['returncode'] == 0:
+            data = result['data']
+            # Parse before get_or_create(), so an unexpected shape cannot leave an orphan repo row.
+            encryption = encryption_mode(data['encryption']) if 'encryption' in data else None
+            stats = data.get('cache', {}).get('stats')  # Borg 2 has no cache stats
+
             new_repo, _ = RepoModel.get_or_create(
-                url=result['cmd'][-1], defaults={'name': result['params']['repo_name']}
+                url=result['params']['repo_url'], defaults={'name': result['params']['repo_name']}
             )
-            if 'cache' in result['data']:
-                stats = result['data']['cache']['stats']
+            if stats:
                 new_repo.total_size = stats['total_size']
                 new_repo.unique_size = stats['unique_size']
                 new_repo.total_unique_chunks = stats['total_unique_chunks']
-            if 'encryption' in result['data']:
-                new_repo.encryption = result['data']['encryption']['mode']
+            if encryption is not None:
+                new_repo.encryption = encryption
             if new_repo.encryption != 'none':
                 self.keyring.set_password("vorta-repo", new_repo.url, result['params']['password'])
             new_repo.extra_borg_arguments = result['params']['extra_borg_arguments']

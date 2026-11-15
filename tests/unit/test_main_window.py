@@ -33,3 +33,25 @@ def test_close_releases_native_window(qapp, qtbot, monkeypatch):
     if was_visible:
         qapp.open_main_window_action()
         qtbot.waitUntil(shown, **pytest._wait_defaults)
+
+
+def test_long_log_message_keeps_layout(qapp):
+    """A long log message is clipped to the two-line log label and must not change the layout."""
+    main = qapp.main_window
+    was_visible = main.isVisible()
+    main.show()  # geometry is only updated while the window is shown
+    main.set_log('')
+    qapp.processEvents()
+    height = main.logText.height()
+    min_size = main.minimumSizeHint()
+    assert height == main.logText.fontMetrics().lineSpacing() * 2
+
+    for message in ('/long/path' * 30, 'x' * 300, 'word ' * 60):
+        main.set_log(message)
+        qapp.processEvents()
+        assert message in main.logText.text()
+        assert main.logText.height() == height
+        assert main.minimumSizeHint() == min_size
+
+    main.set_log('')
+    main.setVisible(was_visible)

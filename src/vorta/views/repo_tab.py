@@ -286,7 +286,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         window.open()
 
     def repo_select_action(self):
-        self.save_profile_attr('repo', self.repoSelector.currentData())
+        profile = self.save_profile_attr('repo', self.repoSelector.currentData())
+        self.app.scheduler.set_timer_for_profile(profile.id)
         self.init_repo_stats()
 
     def process_new_repo(self, result):
@@ -319,6 +320,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         repo_deleted = not repo.is_shared_with_other_profiles(excluding_profile_id=profile.id)
         profile.repo = None
         profile.save()
+        self.app.scheduler.set_timer_for_profile(profile.id)
         if repo_deleted:
             repo.delete_instance(recursive=True)
 

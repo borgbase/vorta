@@ -537,7 +537,7 @@ def test_interval(clockmock, passed_time, scheduled, now, unit, count, added_tim
         profile=profile.id,
         returncode=0,
         category='scheduled' if scheduled else '',
-        start_time=time - passed_time,
+        start_time=time - passed_time - td(hours=2),
         end_time=time - passed_time,
     )
     event.save()
@@ -587,18 +587,89 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     # run test
     expected = time.replace(hour=hour, minute=minute)
 
-    if time >= expected or last_time.date() == expected.date():
+    if time >= expected:
         expected += td(days=1)
 
     scheduler.set_timer_for_profile(profile.id)
     assert scheduler.timers[profile.id]['dt'] == expected
 
 
+@mark.parametrize('scheduled', [True, False])
+@mark.parametrize('catch_up', [True, False])
+@mark.parametrize(
+    'start, end, hour, minute, expected, missed',
+    [
+        (dt(2020, 5, 4, 23, 30), dt(2020, 5, 5, 0, 20), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 4, 23, 59), dt(2020, 5, 5, 0, 3), 23, 59, dt(2020, 5, 5, 23, 59), False),
+        (dt(2020, 5, 5, 0, 31), dt(2020, 5, 5, 0, 50), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 5, 9), dt(2020, 5, 5, 9, 40), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 4, 21), dt(2020, 5, 4, 22, 30), 21, 0, dt(2020, 5, 5, 21), False),
+        (dt(2020, 5, 4, 0, 5), dt(2020, 5, 5, 1, 5), 0, 5, dt(2020, 5, 6, 0, 5), True),
+    ],
+)
+def test_fixed_uses_run_start(clockmock, scheduled, catch_up, start, end, hour, minute, expected, missed):
+    """Crossing midnight or catching up must not consume the next daily slot (#2612)."""
+    clockmock.now.return_value = end
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = hour
+    profile.schedule_fixed_minute = minute
+    profile.schedule_make_up_missed = catch_up
+    profile.save()
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled' if scheduled else '',
+        start_time=start,
+        end_time=end,
+    )
+
+    catch_up_profile = scheduler._timers.arm_profile(profile.id)
+
+    if missed and catch_up:
+        assert catch_up_profile == profile.id
+    else:
+        assert catch_up_profile is None
+        assert scheduler.timers[profile.id]['dt'] == expected
+
+
+@mark.parametrize('category', ['scheduled', ''])
+def test_fixed_uses_latest_start(clockmock, category):
+    """Old migrated end times must not make an older run take precedence."""
+    clockmock.now.return_value = dt(2020, 5, 5, 12)
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = 23
+    profile.schedule_fixed_minute = 30
+    profile.schedule_make_up_missed = True
+    profile.save()
+    for start, end in [
+        (dt(2020, 5, 4, 8), dt(2020, 5, 5, 12)),
+        (dt(2020, 5, 5, 0, 31), dt(2020, 5, 5, 0, 50)),
+    ]:
+        EventLogModel.create(
+            subcommand='create',
+            profile=profile.id,
+            returncode=0,
+            category=category,
+            start_time=start,
+            end_time=end,
+        )
+
+    assert scheduler._timers.arm_profile(profile.id) is None
+    assert scheduler.timers[profile.id]['dt'] == dt(2020, 5, 5, 23, 30)
+
+
 @mark.parametrize(
     "now, hour, minute, time_since_last_run, expect_catchup",
     [
         (td(hours=9), 18, 00, td(hours=12), False),
-        (td(hours=9), 18, 00, td(hours=24), False),
+        (td(hours=9), 18, 00, td(hours=24), True),
         (td(hours=9), 18, 00, td(hours=36), True),
         (td(hours=20), 18, 00, td(hours=2), False),
         (td(hours=20), 18, 00, td(hours=24), True),
@@ -734,6 +805,28 @@ def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
         qapp.scheduler.create_backup(1)
 
 
+def test_announced_job_outlives_its_scheduler(qapp, qtbot):
+    """A queued `jobs_changed` is dropped with its scheduler instead of being emitted on freed memory."""
+    scheduler = VortaScheduler()
+    scheduler_ref = weakref.ref(scheduler)
+
+    # The app holds every scheduler through this connection, until the `init_db` teardown drops it the same way.
+    while True:
+        try:
+            qapp.backup_finished_event.disconnect()
+        except TypeError:
+            break
+    # PyQt releases a disconnected slot, and the scheduler its lambda captures, through `deleteLater`.
+    QtCore.QCoreApplication.sendPostedEvents(None, QtCore.QEvent.Type.DeferredDelete)
+
+    scheduler.record_skip(BackupProfileModel.get(name=PROFILE_NAME), JobModel.Trigger.SCHEDULED.value, 'test')
+    del scheduler
+    gc.collect()
+    assert scheduler_ref() is None
+
+    qtbot.wait(50)  # delivers the queued announcement; with a dangling emit this segfaults
+
+
 def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
     """An unexpected prepare() failure is recorded as failed, not skipped."""
     mocker.patch(
@@ -800,6 +893,127 @@ def test_a_failed_run_is_recorded_as_failed(qapp, qtbot, mocker, borg_json_outpu
 
     job = JobModel.select().order_by(JobModel.id.desc()).get()
     qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+
+
+def test_failed_scheduled_run_does_not_restart(qapp, qtbot, mocker, borg_json_output):
+    # The per-test teardown disconnects backup_finished_event, so use a fresh scheduler.
+    scheduler = VortaScheduler()
+    mocker.patch.object(qapp, 'scheduler', scheduler)
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 1
+    profile.schedule_make_up_missed = True
+    profile.save()
+    previous = dt.now() - td(hours=2)
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled',
+        start_time=previous,
+        end_time=previous,
+    )
+    stdout, stderr = borg_json_output('create')
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', return_value=mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=2)
+    )
+    submit = mocker.spy(scheduler._execution, 'create_backup')
+
+    scheduler.create_backup(profile.id)
+    job = JobModel.select().get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+    assert submit.call_count == 1
+    assert JobModel.select().count() == 1
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.PAUSED
+    scheduler.clear_pause(profile.id)
+
+
+def test_manual_backup_rearms_schedule(qapp, qtbot, mocker, borg_json_output):
+    scheduler = VortaScheduler()
+    mocker.patch.object(qapp, 'scheduler', scheduler)
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.save()
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.NO_PREVIOUS_BACKUP
+    stdout, stderr = borg_json_output('create')
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', return_value=mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    )
+
+    qapp.create_backup_action()
+    qtbot.waitUntil(lambda: scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED)
+    scheduler.remove_job(profile.id)
+
+
+@pytest.mark.parametrize('action', ['reload_all_timers', 'create_backup'])
+@pytest.mark.parametrize('paused', [False, True])
+def test_unset_repo_drops_schedule(qapp, qtbot, action, paused):
+    scheduler = qapp.scheduler
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    if paused:
+        scheduler.pause(profile.id)
+    profile.repo = None
+    profile.save()
+
+    with qtbot.waitSignal(scheduler.schedule_changed):
+        if action == 'create_backup':
+            scheduler.create_backup(profile.id)
+        else:
+            scheduler.reload_all_timers()
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
+
+
+@pytest.mark.parametrize('paused', [False, True])
+def test_network_down_refreshes_schedule(qapp, qtbot, monkeypatch, paused):
+    scheduler = qapp.scheduler
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    assert profile.repo.is_remote_repo()
+    scheduler.set_timer_for_profile(profile.id)
+    assert scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+    if paused:
+        scheduler.pause(profile.id)
+    expected = scheduler.next_job_for_profile(profile.id) if paused else ScheduleStatus(ScheduleStatusType.UNSCHEDULED)
+    monkeypatch.setattr(scheduler, '_net_up', False)
+
+    with qtbot.waitSignal(scheduler.schedule_changed):
+        scheduler.reload_all_timers()
+    assert scheduler.next_job_for_profile(profile.id) == expected
+    assert scheduler.paused(profile.id) == paused
+
+
+def test_a_crashing_run_is_recorded_as_failed(qapp, qtbot, mocker):
+    """A run whose job raises still settles as failed and re-arms the profile, see #2600."""
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = INTERVAL_SCHEDULE  # pause() does nothing for unscheduled profiles
+    profile.save()
+    mocker.patch.object(
+        vorta.borg.borg_job, 'Popen', side_effect=FileNotFoundError(2, 'No such file or directory', 'borg')
+    )
+
+    with qtbot.waitSignal(qapp.backup_finished_event, **pytest._wait_defaults):
+        qapp.scheduler.create_backup(profile.id)
+
+    job = JobModel.select().order_by(JobModel.id.desc()).get()
+    qtbot.waitUntil(lambda: JobModel.get_by_id(job.id).status == JobModel.Status.FAILED.value)
+    assert 'FileNotFoundError' in JobModel.get_by_id(job.id).reason
+    qtbot.waitUntil(lambda: qapp.scheduler.paused(profile.id))
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.PAUSED
 
 
 @prepare
@@ -966,6 +1180,32 @@ def test_post_backup_tasks_check_warning_is_failure(qapp, post_backup_jobs, subc
     assert notifier.deliver.call_args.kwargs['level'] == expect_level
 
 
+def test_post_backup_tasks_notify_failure_of_a_raising_job(qapp, qtbot, mocker, borg_json_output):
+    """A post-backup job that raises still counts as finished, so the notification is sent."""
+    profile = BackupProfileModel.get(name='Default')
+    profile.prune_on = True
+    profile.validation_on = False
+    profile.compaction_on = False
+    profile.save()
+
+    def popen(cmd, **kwargs):
+        if cmd[1] == 'prune':
+            raise FileNotFoundError(2, 'No such file or directory', 'borg')
+        stdout, stderr = borg_json_output('list')
+        return MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', side_effect=popen)
+    notifier = MagicMock()
+    mocker.patch.object(vorta.scheduler.execution.VortaNotifications, 'pick', return_value=notifier)
+
+    qapp.scheduler.post_backup_tasks(profile.id)
+
+    qtbot.waitUntil(lambda: notifier.deliver.called, **pytest._wait_defaults)
+    notifier.deliver.assert_called_once()
+    assert notifier.deliver.call_args.kwargs['level'] == 'error'
+    assert 'Post Backup Tasks failed for Default' in notifier.deliver.call_args.args[1]
+
+
 def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
     """With no follow-up jobs to run, the notification is shown right away, as before."""
     profile = BackupProfileModel.get(name='Default')
@@ -993,8 +1233,11 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
         ('validation', 'check', 2, td(), True),  # #2586
         ('validation', 'check', -1, td(), True),  # interrupted
         ('validation', 'check', 0, td(weeks=4), True),
-        ('compaction', '--info', 0, td(), False),
-        ('compaction', '--info', 2, td(), True),
+        ('compaction', 'compact', 0, td(), False),
+        ('compaction', 'compact', 2, td(), True),
+        ('compaction', 'compact', 0, td(weeks=4), True),
+        ('compaction', '--info', 0, td(), False),  # legacy rows from before #2607
+        ('compaction', 'key', 0, td(), True),  # a passphrase change is not a compaction
     ],
 )
 def test_post_backup_tasks_only_count_successful_runs(qapp, mocker, task, subcommand, returncode, age, expect_queued):
@@ -1118,6 +1361,198 @@ def test_catchup_is_submitted_after_the_lock_is_released(mocker, clockmock):
     scheduler.set_timer_for_profile(profile.id)
 
     assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value, False)]
+
+
+def _every_three_hours(make_up_missed):
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = make_up_missed
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+    return profile
+
+
+def _daily_at_ten():
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = 10
+    profile.schedule_fixed_minute = 0
+    profile.save()
+    return profile
+
+
+def _log_backup(profile, when, returncode, category='scheduled'):
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=returncode,
+        category=category,
+        start_time=when,
+        end_time=when,
+    )
+
+
+def _record_submissions(mocker, scheduler):
+    submitted = []
+    mocker.patch.object(
+        scheduler, 'create_backup', side_effect=lambda profile_id, trigger: submitted.append((profile_id, trigger))
+    )
+    return submitted
+
+
+@mark.parametrize('category', ['scheduled', 'user'])
+@mark.parametrize(
+    'newest_returncode, counts', [(-9, False), (-1, False), (2, False), (130, False), (0, True), (1, True)]
+)
+def test_only_successful_runs_count_as_the_last_backup(clockmock, category, newest_returncode, counts):
+    """A killed (-N) or unfinished (-1) run used to pass the `0 <= returncode <= 1` filter as a success."""
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=False)
+
+    older, newer = now - td(hours=2), now - td(hours=1)
+    _log_backup(profile, older, 0, category)
+    _log_backup(profile, newer, newest_returncode, category)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    expected = (newer if counts else older) + td(hours=3)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.SCHEDULED, expected)
+
+
+def test_mixed_categories_fall_back_to_a_successful_manual_run(clockmock):
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=False)
+
+    manual = now - td(hours=2)
+    _log_backup(profile, manual, 0, 'user')
+    _log_backup(profile, now - td(hours=1), 2)
+    _log_backup(profile, now - td(minutes=30), -1)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, manual + td(hours=3)
+    )
+
+
+@mark.parametrize('returncode', [-9, -1])
+def test_a_profile_with_only_unfinished_runs_has_no_previous_backup(clockmock, returncode):
+    """Like a first backup that failed, a killed or interrupted one leaves nothing to schedule from."""
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=1), returncode)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.NO_PREVIOUS_BACKUP)
+
+
+@mark.parametrize('mode', [INTERVAL_SCHEDULE, FIXED_SCHEDULE])
+def test_an_interrupted_run_is_caught_up(mocker, clockmock, mode):
+    """A run Vorta died during leaves its log row at -1; it must not hide the missed run."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    if mode == INTERVAL_SCHEDULE:
+        now = dt(2020, 5, 6, 4, 30)
+        profile = _every_three_hours(make_up_missed=True)
+        _log_backup(profile, now - td(hours=6), 0)
+        _log_backup(profile, now - td(hours=1), -1)
+    else:
+        now = dt(2020, 5, 6, 12, 0)
+        profile = _daily_at_ten()
+        _log_backup(profile, dt(2020, 5, 5, 10, 0), 0)
+        _log_backup(profile, dt(2020, 5, 6, 10, 5), -1)
+    clockmock.now.return_value = now
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value)]
+
+
+@mark.parametrize('category', ['scheduled', 'user'])
+@mark.parametrize(
+    'mode, now, rows, expected',
+    [
+        (
+            INTERVAL_SCHEDULE,
+            dt(2020, 5, 6, 4, 30),
+            [(dt(2020, 5, 6, 0, 30), 0), (dt(2020, 5, 6, 3, 30), -1)],
+            dt(2020, 5, 6, 6, 30),
+        ),
+        (
+            FIXED_SCHEDULE,
+            dt(2020, 5, 6, 10, 20),
+            [(dt(2020, 5, 5, 10, 0), 0), (dt(2020, 5, 6, 10, 0), -1)],
+            dt(2020, 5, 7, 10, 0),
+        ),
+    ],
+    ids=[INTERVAL_SCHEDULE, FIXED_SCHEDULE],
+)
+def test_a_running_backup_is_not_caught_up_again(qapp, mocker, clockmock, category, mode, now, rows, expected):
+    """Re-arming during a run must not see its unfinished row as a missed run and get skipped as busy."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True) if mode == INTERVAL_SCHEDULE else _daily_at_ten()
+    for when, returncode in rows:
+        _log_backup(profile, when, returncode, category)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+    jobs_before = JobModel.select().count()
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == []
+    assert JobModel.select().count() == jobs_before
+    assert not scheduler.paused(profile.id)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.SCHEDULED, expected)
+
+
+def test_a_finished_failure_is_caught_up_while_the_repo_is_busy(qapp, mocker, clockmock):
+    """Only an unfinished newest row holds back the catch-up, not a busy repo alone."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=4), 0)
+    _log_backup(profile, now - td(hours=1), 2)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value)]
+
+
+def test_a_late_started_running_backup_keeps_its_own_schedule(qapp, mocker, clockmock):
+    """A catch-up that is still running sets the interval grid, not the older success it caught up on."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=5, minutes=50), 0)
+    _log_backup(profile, now - td(minutes=10), -1)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == []
+    assert not scheduler.paused(profile.id)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, now + td(hours=2, minutes=50)
+    )
 
 
 def test_create_backup_does_not_hold_the_lock_while_preparing(qapp, mocker):
