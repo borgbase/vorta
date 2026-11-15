@@ -1243,6 +1243,20 @@ def test_mixed_categories_fall_back_to_a_successful_manual_run(clockmock):
     )
 
 
+@mark.parametrize('returncode', [-9, -1])
+def test_a_profile_with_only_unfinished_runs_has_no_previous_backup(clockmock, returncode):
+    """Like a first backup that failed, a killed or interrupted one leaves nothing to schedule from."""
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=1), returncode)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.NO_PREVIOUS_BACKUP)
+
+
 @mark.parametrize('mode', [INTERVAL_SCHEDULE, FIXED_SCHEDULE])
 def test_an_interrupted_run_is_caught_up(mocker, clockmock, mode):
     """A run Vorta died during leaves its log row at -1; it must not hide the missed run."""
