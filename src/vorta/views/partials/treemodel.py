@@ -16,7 +16,6 @@ from PyQt6.QtCore import (
     QObject,
     QSortFilterProxyModel,
     Qt,
-    pyqtSignal,
 )
 
 #: A representation of a path
@@ -124,18 +123,6 @@ class FileSystemItem(Generic[T]):
         # add
         child._parent = self
         self.children.insert(i, child)
-
-    def addChildren(self, children: List['FileSystemItem[T]']):
-        """
-        Add a list of children.
-
-        Parameters
-        ----------
-        children : List[FileSystemItem]
-            The children to add.
-        """
-        for child in children:
-            self.add(child)
 
     @overload
     def remove(self, subpath: str) -> None:
@@ -310,9 +297,7 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         Add the given data to the item.
     _flat_filter
         Return whether an item is part of the flat model representation.
-    flags
     columnCount
-    headerData
 
     """
 
@@ -629,26 +614,22 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
 
         return self.root.get_path(path)  # handles empty path
 
-    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole):
-        """
-        Get the data for the given role and index.
+    def display_name(self, index: QModelIndex) -> str:
+        """Return the name shown in the first column for `index` in the current mode."""
+        item: FileSystemItem[T] = index.internalPointer()
 
-        The indexes internal pointer references the corresponding
-        `FileSystemItem`.
+        if self.mode == self.DisplayMode.FLAT:
+            return path_to_str(item.path)
 
-        Parameters
-        ----------
-        index : QModelIndex
-            The index of the item.
-        role : int, optional
-            The data role, by default Qt.ItemDataRole.DisplayRole
+        if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
+            parent = index.parent()
+            if parent == QModelIndex():
+                return path_to_str(relative_path(self.root.path, item.path))
 
-        Returns
-        -------
-        Any
-            The data, return None if no data is available for the role.
-        """
-        return super().data(index, role)
+            return path_to_str(relative_path(parent.internalPointer().path, item.path))
+
+        # standard tree mode
+        return item.subpath
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         """
@@ -873,63 +854,11 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         row, _ = top_item._parent.get(top_item.subpath)
         return self.createIndex(row, 0, parent_item)
 
-    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
-        """
-        Returns the item flags for the given index.
-
-        The base class implementation returns a combination of flags
-        that enables the item (ItemIsEnabled) and
-        allows it to be selected (ItemIsSelectable).
-
-        Parameters
-        ----------
-        index : QModelIndex
-            The index.
-
-        Returns
-        -------
-        Qt.ItemFlags
-            The flags.
-        """
-        return super().flags(index)
-
-    def headerData(
-        self,
-        section: int,
-        orientation: Qt.Orientation,
-        role: int = Qt.ItemDataRole.DisplayRole,
-    ):
-        """
-        Get the data for the given role and section in the given header.
-
-        The header is identified by its orientation.
-        For horizontal headers, the section number corresponds to
-        the column number. Similarly, for vertical headers,
-        the section number corresponds to the row number.
-
-        Parameters
-        ----------
-        section : int
-            The row or column number.
-        orientation : Qt.Orientation
-            The orientation of the header.
-        role : int, optional
-            The data role, by default Qt.ItemDataRole.DisplayRole
-
-        Returns
-        -------
-        Any
-            The data for the specified header section.
-        """
-        return super().headerData(section, orientation, role)
-
 
 class FileTreeSortProxyModel(QSortFilterProxyModel):
     """
     Sort a FileTreeModel.
     """
-
-    sorted = pyqtSignal(int, Qt.SortOrder)
 
     def __init__(self, parent=None) -> None:
         """Init."""

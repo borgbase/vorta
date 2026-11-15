@@ -1,7 +1,7 @@
 from pathlib import PurePath
 
 import pytest
-from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
+from PyQt6.QtCore import QDateTime, QItemSelectionModel, QModelIndex, Qt
 from PyQt6.QtWidgets import QMenu
 from test_treemodel import check_model, check_parents
 
@@ -500,3 +500,37 @@ def test_diff_tree_parent_matches_index(qtmodeltester, mode, force_py):
     model.setMode(mode)
     check_parents(model)
     check_model(qtmodeltester, model, force_py)
+
+
+@pytest.mark.parametrize(
+    'mode, expected',
+    [
+        (FileTreeModel.DisplayMode.TREE, ['a', '  b', '    c', '      file', '  z', 'x', '  y', '    only']),
+        (FileTreeModel.DisplayMode.SIMPLIFIED_TREE, ['a', '  b/c', '    file', '  z', 'x/y', '  only']),
+        (FileTreeModel.DisplayMode.FLAT, ['a/b/c/file', 'a/z', 'x/y/only']),
+    ],
+    ids=['TREE', 'SIMPLIFIED_TREE', 'FLAT'],
+)
+def test_diff_tree_display_name(mode, expected):
+    """The first column shows the subpath, the merged relative path or the full path, depending on the mode."""
+    model = DiffTree()
+    parse_diff_json(
+        [
+            {'path': 'a/b/c/file', 'changes': [{'type': 'modified', 'added': 5, 'removed': 3}]},
+            {'path': 'a/z', 'changes': [{'type': 'added', 'size': 7}]},
+            {'path': 'x/y/only', 'changes': [{'type': 'added', 'size': 1}]},
+        ],
+        model,
+    )
+    model.setMode(mode)
+
+    names = []
+
+    def walk(parent, depth):
+        for row in range(model.rowCount(parent)):
+            index = model.index(row, 0, parent)
+            names.append('  ' * depth + model.data(index, Qt.ItemDataRole.DisplayRole))
+            walk(index, depth + 1)
+
+    walk(QModelIndex(), 0)
+    assert names == expected

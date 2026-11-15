@@ -42,12 +42,6 @@ class TreeModelImp(FileTreeModel):
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
         return 1
 
-    def _make_filesystemitem(self, path, data):
-        return super()._make_filesystemitem(path, data)
-
-    def _merge_data(self, item, data):
-        return super()._merge_data(item, data)
-
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if index.isValid() and role == Qt.ItemDataRole.DisplayRole:
             return index.internalPointer().subpath
