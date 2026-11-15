@@ -153,7 +153,7 @@ class VortaDarwinKeyring(VortaKeyring):
 
     def try_unlock(self):
         if not self.is_unlocked:
-            # No password given, so the system shows its unlock dialog.
+            # No password is passed, so that the system asks the user for it.
             SecKeychainUnlock(self.login_keychain, 0, None, False)
         return bool(self.is_unlocked)
 
