@@ -92,6 +92,3 @@ class BorgExtractJob(BorgJob):
         ret['cwd'] = destination_folder
 
         return ret
-
-    def process_result(self, result: dict):
-        pass

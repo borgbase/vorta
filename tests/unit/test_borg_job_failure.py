@@ -141,7 +141,7 @@ def test_unexpected_stderr_json_stops_borg(qapp, profile, mocker, emitted, tmp_p
     process.send_signal.assert_any_call(signal.SIGINT)
 
 
-def test_finished_event_raising_before_its_emits(qapp, profile, mocker, borg_json_output, emitted):
+def test_process_result_with_missing_repo(qapp, profile, mocker, borg_json_output, emitted):
     """Prune looks up the repo before emitting. A missing repo still ends with one failure result."""
     stdout, stderr = borg_json_output('prune')
     mocker.patch.object(
@@ -213,9 +213,11 @@ def test_process_result_raising(qapp, profile, mocker, borg_json_output, emitted
         vorta.borg.borg_job, 'Popen', return_value=MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     )
     params = BorgRenameJob.prepare(profile, 'not-in-the-database', 'new-name')
+    process_result = mocker.spy(BorgRenameJob, 'process_result')
 
     results = run_job(BorgRenameJob, params, emitted)
 
+    process_result.assert_called_once()
     assert len(results) == 1
     assert len(emitted['backup_finished']) == 1
     assert results[0]['returncode'] == JOB_EXCEPTION_RETURNCODE

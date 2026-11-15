@@ -1,10 +1,9 @@
 import re
 from typing import List
 
-from vorta.store.models import RepoModel
 from vorta.utils import borg_compat
 
-from .borg_job import BorgJob
+from .borg_job import BorgJob, invalidate_repo_stats
 
 
 class BorgDeleteJob(BorgJob):
@@ -14,15 +13,10 @@ class BorgDeleteJob(BorgJob):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Deleting archive…')}")
 
-    def finished_event(self, result):
-        # set repo stats to N/A
-        repo = RepoModel.get(id=result['params']['repo_id'])
-        repo.total_size = None
-        repo.unique_csize = None
-        repo.unique_size = None
-        repo.total_unique_chunks = None
-        repo.save()
+    def process_result(self, result):
+        invalidate_repo_stats(result['params']['repo_id'])
 
+    def finished_event(self, result):
         self._emit_backup_finished(result)
         self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Archive deleted.')}")

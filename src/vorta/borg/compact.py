@@ -14,7 +14,7 @@ class BorgCompactJob(BorgJob):
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']} {self.tr('Starting repository compaction...')}]"
+            f"[{self.params['profile_name']}] {self.tr('Starting repository compaction...')}"
         )
 
     def finished_event(self, result: Dict[str, Any]):
