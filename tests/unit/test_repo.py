@@ -415,3 +415,16 @@ def test_password_autofill_invalid_url(qapp, qtbot, mocker):
     qtbot.keyClicks(tab._window.repoURL, 'aaa')
 
     keyring.get_password.assert_not_called()
+
+
+def test_password_autofill_existing_repo(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    password = str(uuid.uuid4())
+    VortaKeyring.get_keyring().set_password('vorta-repo', test_repo_url, password)
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+
+    assert window.passwordInput.get_password() == password

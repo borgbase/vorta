@@ -117,6 +117,13 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 
         return True
 
+    def keyring_password(self, url):
+        """Return a stored password for `url` without prompting to unlock the keyring."""
+        if not (re.match(r'.+:.+', url) or os.path.isabs(url)):
+            return None
+        keyring = VortaKeyring.get_keyring()
+        return keyring.get_password('vorta-repo', url) if keyring.is_unlocked else None
+
     @property
     def values(self):
         out = dict(
@@ -149,13 +156,6 @@ class AddRepoWindow(RepoWindow):
 
         self.display_backend_warning()
         self.init_encryption()
-
-    def keyring_password(self, url):
-        """Return a stored password for `url` without prompting to unlock the keyring."""
-        if not (re.match(r'.+:.+', url) or os.path.isabs(url)):
-            return None
-        keyring = VortaKeyring.get_keyring()
-        return keyring.get_password('vorta-repo', url) if keyring.is_unlocked else None
 
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''

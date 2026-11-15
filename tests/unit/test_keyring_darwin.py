@@ -31,4 +31,6 @@ def test_try_unlock_mocked(states, unlock_calls):
     ):
         assert keyring.try_unlock() is bool(states[-1])
         assert unlock.call_count == unlock_calls
+        if unlock_calls:
+            unlock.assert_called_once_with(keyring.login_keychain, 0, None, False)
         set_keychain.assert_not_called()

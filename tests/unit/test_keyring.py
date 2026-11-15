@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import BackupProfileModel
@@ -63,4 +64,26 @@ def test_prepare_unencrypted_repo_unlocked_keyring(keyring):
 
     assert ret['ok'] is True
     assert ret['password'] == 'pw'
+    keyring.try_unlock.assert_not_called()
+
+
+INFO_PARAMS = {'repo_url': 'host.example.com:repo', 'repo_name': 'repo', 'extra_borg_arguments': '', 'ssh_key': None}
+
+
+def test_info_repo_prepare_unlocks_for_typed_password(keyring):
+    keyring.try_unlock.return_value = False
+
+    ret = BorgInfoRepoJob.prepare({**INFO_PARAMS, 'password': 'pw'})
+
+    assert ret['ok'] is False
+    assert ret['message'] == 'Please unlock your password manager.'
+    keyring.try_unlock.assert_called_once()
+    keyring.get_password.assert_not_called()
+
+
+def test_info_repo_prepare_no_password_no_unlock(keyring):
+    ret = BorgInfoRepoJob.prepare({**INFO_PARAMS, 'password': ''})
+
+    assert ret['ok'] is True
+    assert ret['password'] == ''
     keyring.try_unlock.assert_not_called()
