@@ -47,6 +47,7 @@ class VortaDarwinKeyring(VortaKeyring):
             ),
             ('SecKeychainGetStatus', b'i^{OpaqueSecKeychainRef=}o^I'),
             ('SecKeychainItemDelete', b'i^{OpaqueSecKeychainItemRef=}'),
+            ('SecKeychainUnlock', b'i^{OpaqueSecKeychainRef=}I*Z'),
         ]
 
         objc.loadBundleFunctions(Security, globals(), S_functions)
@@ -149,6 +150,12 @@ class VortaDarwinKeyring(VortaKeyring):
         result, keychain_status = SecKeychainGetStatus(self.login_keychain, None)
 
         return keychain_status & kSecUnlockStateStatus
+
+    def try_unlock(self):
+        if not self.is_unlocked:
+            # No password given, so the system shows its unlock dialog.
+            SecKeychainUnlock(self.login_keychain, 0, None, False)
+        return bool(self.is_unlocked)
 
     @classmethod
     def get_priority(cls):

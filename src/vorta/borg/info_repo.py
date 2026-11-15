@@ -44,7 +44,7 @@ class BorgInfoRepoJob(BorgJob):
         ret['password'] = params['password']  # Empty password is '', which disables prompt
         if params['password'] != '':
             # Cannot tell if repo has encryption, assuming based off of password
-            if not cls.keyring.is_unlocked:
+            if not cls.keyring.try_unlock():
                 ret['message'] = QT_TRANSLATE_NOOP('messages', 'Please unlock your password manager.')
                 return ret
 
