@@ -10,7 +10,7 @@ from test_constants import TEST_TEMP_DIR
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from vorta.store.models import ArchiveModel, BackupProfileModel
+from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel
 from vorta.views.partials.archive_table_model import ArchiveTableModel
 
 
@@ -149,8 +149,8 @@ def test_repo_prune(qapp, qtbot, mock_borg_popen, archive_env):
     qtbot.waitUntil(lambda: ArchiveModel.select().count() == 6, **pytest._wait_defaults)
 
 
-def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
-    vorta.utils.borg_compat.version = '1.2.0'
+def test_repo_compact(qapp, qtbot, mocker, monkeypatch, borg_json_output, archive_env):
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '1.2.0')
     main, tab = archive_env
     tab.toggle_compact_button_visibility()
 
@@ -163,7 +163,8 @@ def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
     qtbot.waitUntil(
         lambda: 'compaction freed about 56.00 kB repository space' in main.logText.text(), **pytest._wait_defaults
     )
-    vorta.utils.borg_compat.version = '1.1.0'
+    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
+    assert EventLogModel.select().order_by(EventLogModel.id.desc()).first().subcommand == 'compact'
 
 
 def test_check(qapp, mocker, borg_json_output, qtbot, archive_env):

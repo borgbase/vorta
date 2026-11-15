@@ -21,7 +21,7 @@ class BorgMountJob(BorgJob):
         else:
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
-        cmd = ['borg', '--log-json', 'mount']
+        cmd = ['borg', 'mount', '--log-json']
 
         # Try to override existing permissions when mounting an archive. May help to read
         # files that come from a different system, like a restrictive NAS.

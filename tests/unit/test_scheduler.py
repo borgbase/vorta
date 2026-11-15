@@ -1233,8 +1233,11 @@ def test_post_backup_tasks_without_jobs_notify_at_once(qapp, mocker):
         ('validation', 'check', 2, td(), True),  # #2586
         ('validation', 'check', -1, td(), True),  # interrupted
         ('validation', 'check', 0, td(weeks=4), True),
-        ('compaction', '--info', 0, td(), False),
-        ('compaction', '--info', 2, td(), True),
+        ('compaction', 'compact', 0, td(), False),
+        ('compaction', 'compact', 2, td(), True),
+        ('compaction', 'compact', 0, td(weeks=4), True),
+        ('compaction', '--info', 0, td(), False),  # legacy rows from before #2607
+        ('compaction', 'key', 0, td(), True),  # a passphrase change is not a compaction
     ],
 )
 def test_post_backup_tasks_only_count_successful_runs(qapp, mocker, task, subcommand, returncode, age, expect_queued):

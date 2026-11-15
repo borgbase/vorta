@@ -54,7 +54,7 @@ class BorgChangePassJob(BorgJob):
             ).format(MIN_BORG_FOR_FEATURE['CHANGE_PASSPHRASE'])
             return ret
 
-        cmd = ['borg', '--info', '--log-json', 'key', 'change-passphrase']
+        cmd = ['borg', 'key', 'change-passphrase', '--info', '--log-json']
         cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['additional_env'] = {'BORG_NEW_PASSPHRASE': new_passphrase}
