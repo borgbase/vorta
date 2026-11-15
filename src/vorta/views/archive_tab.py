@@ -70,6 +70,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         self.remaining_refresh_archives = (
             0  # number of archives that are left to refresh before action buttons are enabled again
         )
+        self._refresh_generation = 0
 
         self.archive_mount = ArchiveMount(self)
         self.archive_extract = ArchiveExtract(self)
@@ -222,6 +223,8 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         menu.popup(self.archiveTable.viewport().mapToGlobal(pos))
 
     def cancel_action(self):
+        self._refresh_generation += 1
+        self.remaining_refresh_archives = 0
         self._set_status(self.tr("Action cancelled."))
         self._toggle_all_buttons(True)
 
@@ -266,13 +269,13 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self.bDiff,
             self.bMountRepo,
             self.bDelete,
-            self.compactButton,
             self.fArchiveActions,
         ]:
             button.setEnabled(enabled)
             button.repaint()
 
         # Restore states
+        self.toggle_compact_button_visibility()
         self.on_selection_change()
 
     def toggle_compact_button_visibility(self):
@@ -281,7 +284,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         This function runs once on startup, and every time the profile is changed.
         """
         if borg_compat.check("COMPACT_SUBCOMMAND"):
-            self.compactButton.setEnabled(True)
+            self.compactButton.setEnabled(self.repoactions_enabled)
             self.compactButton.setToolTip(self.tooltip_dict[self.compactButton])
         else:
             self.compactButton.setEnabled(False)
@@ -497,21 +500,32 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
 
     def refresh_archive_info(self):
         archive_names = [archive.name for archive in self.selected_archives()]
+        if not archive_names:
+            return
 
-        self.remaining_refresh_archives = len(archive_names)  # number of archives to refresh
-        self._toggle_all_buttons(False)
+        profile = self.profile()
+        prepared = []
         for archive_name in archive_names:
-            params = BorgInfoArchiveJob.prepare(self.profile(), archive_name)
-            if params['ok']:
-                job = BorgInfoArchiveJob(params['cmd'], params, self.profile().repo.id)
-                job.updated.connect(self._set_status)
-                job.result.connect(self.info_result)
-                self.app.jobs_manager.add_job(job)
-            else:
+            params = BorgInfoArchiveJob.prepare(profile, archive_name)
+            if not params['ok']:
                 self._set_status(translate('messages', params['message']))
                 return
+            prepared.append(params)
+
+        self._refresh_generation += 1
+        self.remaining_refresh_archives = len(prepared)
+        self._toggle_all_buttons(False)
+        for params in prepared:
+            params['refresh_generation'] = self._refresh_generation
+            job = BorgInfoArchiveJob(params['cmd'], params, profile.repo.id)
+            job.updated.connect(self._set_status)
+            job.result.connect(self.info_result)
+            self.app.jobs_manager.add_job(job)
 
     def info_result(self, result):
+        # A cancelled job can finish after a new refresh has already started.
+        if result['params']['refresh_generation'] != self._refresh_generation:
+            return
         self.remaining_refresh_archives -= 1
         if result['returncode'] == 0 and self.remaining_refresh_archives == 0:
             self._toggle_all_buttons(True)

@@ -1,4 +1,5 @@
 from collections import namedtuple
+from threading import Event
 
 import psutil
 import pytest
@@ -151,6 +152,7 @@ def test_repo_prune(qapp, qtbot, mock_borg_popen, archive_env):
 def test_repo_compact(qapp, qtbot, mocker, borg_json_output, archive_env):
     vorta.utils.borg_compat.version = '1.2.0'
     main, tab = archive_env
+    tab.toggle_compact_button_visibility()
 
     stdout, stderr = borg_json_output('compact')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
@@ -298,6 +300,111 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
         qtbot.mouseClick(tab.bRefreshArchive, QtCore.Qt.MouseButton.LeftButton)
 
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
+
+
+@pytest.mark.parametrize('failed_index', [0, 1])
+def test_refresh_prepare_failure_keeps_buttons_enabled(qapp, mocker, archive_env, failed_index):
+    _, tab = archive_env
+    tab.archiveTable.selectAll()
+    prepare = mocker.patch.object(vorta.views.archive_tab.BorgInfoArchiveJob, 'prepare')
+    prepare.side_effect = [{'ok': True, 'cmd': ['borg', 'info']}] * failed_index + [
+        {'ok': False, 'message': 'Repository password is missing.'}
+    ]
+    add_job = mocker.patch.object(qapp.jobs_manager, 'add_job')
+
+    tab.refresh_archive_info()
+
+    add_job.assert_not_called()
+    assert tab.remaining_refresh_archives == 0
+    assert tab.bCheck.isEnabled()
+    assert tab.bRefreshArchive.isEnabled()
+    assert tab.mountErrors.text() == 'Repository password is missing.'
+
+
+def test_refresh_without_selection_keeps_buttons_enabled(mocker, archive_env):
+    _, tab = archive_env
+    tab.archiveTable.clearSelection()
+    prepare = mocker.patch.object(vorta.views.archive_tab.BorgInfoArchiveJob, 'prepare')
+
+    tab.refresh_archive_info()
+
+    prepare.assert_not_called()
+    assert tab.remaining_refresh_archives == 0
+    assert tab.bCheck.isEnabled()
+
+
+@pytest.mark.parametrize('start_new_refresh', [False, True])
+def test_cancelled_refresh_ignores_late_results(qapp, mocker, archive_env, start_new_refresh):
+    main, tab = archive_env
+    tab.archiveTable.selectAll()
+    add_job = mocker.patch.object(qapp.jobs_manager, 'add_job')
+    tab.refresh_archive_info()
+    old_job = add_job.call_args_list[0].args[0]
+    assert tab.remaining_refresh_archives == 2
+
+    qapp.backup_cancelled_event.emit()
+    assert tab.remaining_refresh_archives == 0
+    assert tab.bCheck.isEnabled()
+    if start_new_refresh:
+        tab.refresh_archive_info()
+    expected = tab.remaining_refresh_archives
+    old_job.result.emit({'returncode': 0, 'params': old_job.params})
+    assert tab.remaining_refresh_archives == expected
+
+    if start_new_refresh:
+        for call in add_job.call_args_list[2:]:
+            job = call.args[0]
+            job.result.emit({'returncode': 0, 'params': job.params})
+    assert tab.remaining_refresh_archives == 0
+    main.backup_started_event()
+    main.backup_finished_event()
+    assert main.createStartBtn.isEnabled()
+    assert tab.bCheck.isEnabled()
+
+
+@pytest.mark.parametrize('version, supported', [('1.1.4', False), ('1.2.0', True)])
+def test_compact_button_respects_version_and_busy_state(monkeypatch, archive_env, version, supported):
+    _, tab = archive_env
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', version)
+    tab._toggle_all_buttons(True)
+    assert tab.compactButton.isEnabled() == supported
+    tab._toggle_all_buttons(False)
+    tab.toggle_compact_button_visibility()
+    assert not tab.compactButton.isEnabled()
+
+
+def test_cancel_refresh_clears_queued_jobs(qapp, qtbot, mocker, mock_borg_popen, archive_env):
+    main, tab = archive_env
+    archive = ArchiveModel.select().first()
+    ArchiveModel.create(name='third', snapshot_id='third', time=archive.time, repo=archive.repo)
+    tab.populate_from_profile()
+    tab.archiveTable.selectAll()
+    release = Event()
+
+    def run(job):
+        job.started_event()
+        if not release.wait(timeout=10):
+            raise RuntimeError('Test did not release the running refresh')
+        job.finished_event({'returncode': -2, 'params': job.params})
+
+    run_job = mocker.patch.object(vorta.views.archive_tab.BorgInfoArchiveJob, 'run', autospec=True, side_effect=run)
+    try:
+        with qtbot.waitSignal(qapp.backup_started_event, **pytest._wait_defaults):
+            tab.refresh_archive_info()
+        assert tab.remaining_refresh_archives == 3
+        qapp.backup_cancelled_event.emit()
+    finally:
+        release.set()
+
+    qtbot.waitUntil(lambda: not qapp.jobs_manager.is_worker_running(), **pytest._wait_defaults)
+    assert run_job.call_count == 1
+    assert tab.remaining_refresh_archives == 0
+    mock_borg_popen(['list'])
+    tab.refresh_archive_list()
+    qtbot.waitUntil(lambda: 'Refreshing archives done.' in main.progressText.text(), **pytest._wait_defaults)
+    assert tab.remaining_refresh_archives == 0
+    assert main.createStartBtn.isEnabled()
+    assert tab.bCheck.isEnabled()
 
 
 def test_inline_archive_rename(qapp, qtbot, mocker, mock_borg_popen, archive_env):
