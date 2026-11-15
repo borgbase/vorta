@@ -68,6 +68,12 @@ class SchedulerExecution:
             logger.info('Profile not found. Maybe deleted?')
             return
 
+        if profile.repo is None:
+            logger.info('Not starting backup for profile %s because of unset repo.', profile_id)
+            self.scheduler.remove_job(profile_id)
+            self.scheduler.schedule_changed.emit()
+            return
+
         if profile_id in self._submitting:
             logger.debug('A run for profile %s is already being submitted.', profile_id)
             return

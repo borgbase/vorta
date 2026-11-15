@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime as dt
 from typing import Any, Dict
 from unittest.mock import MagicMock
 
@@ -9,6 +10,7 @@ from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
+from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
 from vorta.views.dialogs.repo import repo_add
 
@@ -83,18 +85,49 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     main = qapp.main_window
     tab = main.repoTab
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
+    profile = tab.profile()
+    profile.schedule_mode = 'fixed'
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
 
     # Assuming unlink action is the 1st in submenu
     tab.menuRepoUtil.actions()[0].trigger()
 
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
 
     # Directly call create_backup_action and wait for signal
     with qtbot.waitSignal(qapp.backup_progress_event, timeout=5000):
         qapp.create_backup_action()
 
     assert 'Select a backup repository first.' in main.progressText.text()
+
+
+def test_repo_selection_refreshes_schedule(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    profile = tab.profile()
+    profile.schedule_mode = 'fixed'
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+
+    with qtbot.waitSignal(qapp.scheduler.schedule_changed):
+        tab.repoSelector.setCurrentIndex(0)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
+
+    with qtbot.waitSignal(qapp.scheduler.schedule_changed):
+        tab.repoSelector.setCurrentIndex(1)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
 
 
 def test_repo_unlink_shared_repository_keeps_dropdown_entry(qapp, qtbot, mocker, monkeypatch):

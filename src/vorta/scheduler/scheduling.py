@@ -152,6 +152,15 @@ class SchedulerTimers:
         with self.lock:  # Acquire lock
             self.remove_job(profile_id)  # reset schedule
 
+            if profile.repo is None:  # No backups without repo set
+                logger.debug(
+                    'Nothing scheduled for profile %s because of unset repo.',
+                    profile_id,
+                )
+                # Emit signal so that e.g. the GUI can react to the new schedule
+                self.scheduler.schedule_changed.emit()
+                return
+
             pause = self.scheduler.pauses.get(profile_id)
             if pause is not None:
                 pause_end, timer = pause
@@ -165,15 +174,6 @@ class SchedulerTimers:
                     return
                 else:
                     self.scheduler.clear_pause(profile_id)
-
-            if profile.repo is None:  # No backups without repo set
-                logger.debug(
-                    'Nothing scheduled for profile %s because of unset repo.',
-                    profile_id,
-                )
-                # Emit signal so that e.g. the GUI can react to the new schedule
-                self.scheduler.schedule_changed.emit()
-                return
 
             if profile.schedule_mode == 'off':
                 logger.debug('Scheduler for profile %s is disabled.', profile_id)
@@ -321,12 +321,15 @@ class SchedulerTimers:
             # Only set a timer for the profile if the network is actually up
             if profile.repo is None:
                 logger.debug("nothing scheduled for %s because of unset repo", profile.id)
+                self.scheduler.set_timer_for_profile(profile.id)
             elif not profile.repo.is_remote_repo() or self._net_up:
                 logger.debug("scheduling %s", profile.id)
                 self.scheduler.set_timer_for_profile(profile.id)
             else:
                 logger.debug("Network is down, not scheduling %s", profile.id)
-                self.remove_job(profile.id)
+                if not self.scheduler.paused(profile.id):
+                    self.remove_job(profile.id)
+                self.scheduler.schedule_changed.emit()
 
     def next_job(self) -> str:
         now = dt.now()
