@@ -49,7 +49,7 @@ class BorgCompactJob(BorgJob):
         if not borg_compat.check('COMPACT_SUBCOMMAND'):
             raise Exception('The compact action needs Borg >= 1.2.0')
 
-        cmd = ['borg', '--info', '--log-json', 'compact', '--progress']
+        cmd = ['borg', 'compact', '--info', '--log-json', '--progress']
         cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['ok'] = True

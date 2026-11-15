@@ -204,7 +204,8 @@ class SchedulerExecution:
         recent_compactions = (
             EventLogModel.select()
             .where(
-                (EventLogModel.subcommand == '--info')
+                # Compactions were logged as '--info' before #2607; drop it once those rows have been pruned.
+                (EventLogModel.subcommand.in_(['compact', '--info']))
                 & (EventLogModel.returncode.in_(SUCCESS_RETURNCODES))
                 & (EventLogModel.start_time > compaction_cutoff)
                 & (EventLogModel.repo_url == profile.repo.url)

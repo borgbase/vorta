@@ -126,8 +126,8 @@ SHARED_CASES = {
     'compact': (
         lambda p: BorgCompactJob.prepare(p),
         {
-            B1: ['borg', '--info', '--log-json', 'compact', '--progress', URL],
-            B2: ['borg', '--info', '--log-json', 'compact', '--progress', '-r', URL],
+            B1: ['borg', 'compact', '--info', '--log-json', '--progress', URL],
+            B2: ['borg', 'compact', '--info', '--log-json', '--progress', '-r', URL],
         },
     ),
     'prune': (
@@ -147,8 +147,8 @@ SHARED_CASES = {
     'change_passphrase': (
         lambda p: BorgChangePassJob.prepare(p, 'new-pw'),
         {
-            B1: ['borg', '--info', '--log-json', 'key', 'change-passphrase', URL],
-            B2: ['borg', '--info', '--log-json', 'key', 'change-passphrase', '-r', URL],
+            B1: ['borg', 'key', 'change-passphrase', '--info', '--log-json', URL],
+            B2: ['borg', 'key', 'change-passphrase', '--info', '--log-json', '-r', URL],
         },
     ),
     'info_repo': (
@@ -219,7 +219,7 @@ def test_mount_argv_borg1(override, archive, source, borg_version, profile):
     set_override_mount_permissions(override)
     ret = BorgMountJob.prepare(profile, archive)
     assert ret['ok']
-    assert ret['cmd'] == ['borg', '--log-json', 'mount'] + mount_opts(override) + [source]
+    assert ret['cmd'] == ['borg', 'mount', '--log-json'] + mount_opts(override) + [source]
 
 
 def test_delete_argv_borg1(borg_version, profile):
@@ -263,6 +263,7 @@ def test_check_selected_archive_view_borg1(qapp, qtbot, mocker, borg_json_output
         ),
         (['borg', '--log-json', 'mount', URL, '/mnt/repo'], ({}, ['/mnt/repo'])),
         (['borg', '--log-json', 'mount', 'other@host:repo::a1', '/mnt/a'], ({}, [])),
+        (['borg', 'mount', '--log-json', f'{URL}::a1', '/mnt/a'], ({'a1': '/mnt/a'}, [])),
     ],
 )
 def test_extract_mount_points_v1(cmdline, expected):
@@ -335,7 +336,7 @@ def test_mount_argv_borg2(override, archive, selection, borg_version, profile):
     borg_version(B2)
     set_override_mount_permissions(override)
     ret = BorgMountJob.prepare(profile, archive)
-    assert ret['cmd'] == ['borg', '--log-json', 'mount'] + mount_opts(override) + ['-r', URL] + selection
+    assert ret['cmd'] == ['borg', 'mount', '--log-json'] + mount_opts(override) + ['-r', URL] + selection
     assert ret.get('mounted_archive') == archive
 
 
