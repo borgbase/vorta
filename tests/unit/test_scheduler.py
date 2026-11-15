@@ -537,7 +537,7 @@ def test_interval(clockmock, passed_time, scheduled, now, unit, count, added_tim
         profile=profile.id,
         returncode=0,
         category='scheduled' if scheduled else '',
-        start_time=time - passed_time,
+        start_time=time - passed_time - td(hours=2),
         end_time=time - passed_time,
     )
     event.save()
@@ -587,18 +587,89 @@ def test_fixed(clockmock, passed_time, scheduled, now, hour, minute):
     # run test
     expected = time.replace(hour=hour, minute=minute)
 
-    if time >= expected or last_time.date() == expected.date():
+    if time >= expected:
         expected += td(days=1)
 
     scheduler.set_timer_for_profile(profile.id)
     assert scheduler.timers[profile.id]['dt'] == expected
 
 
+@mark.parametrize('scheduled', [True, False])
+@mark.parametrize('catch_up', [True, False])
+@mark.parametrize(
+    'start, end, hour, minute, expected, missed',
+    [
+        (dt(2020, 5, 4, 23, 30), dt(2020, 5, 5, 0, 20), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 4, 23, 59), dt(2020, 5, 5, 0, 3), 23, 59, dt(2020, 5, 5, 23, 59), False),
+        (dt(2020, 5, 5, 0, 31), dt(2020, 5, 5, 0, 50), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 5, 9), dt(2020, 5, 5, 9, 40), 23, 30, dt(2020, 5, 5, 23, 30), False),
+        (dt(2020, 5, 4, 21), dt(2020, 5, 4, 22, 30), 21, 0, dt(2020, 5, 5, 21), False),
+        (dt(2020, 5, 4, 0, 5), dt(2020, 5, 5, 1, 5), 0, 5, dt(2020, 5, 6, 0, 5), True),
+    ],
+)
+def test_fixed_uses_run_start(clockmock, scheduled, catch_up, start, end, hour, minute, expected, missed):
+    """Crossing midnight or catching up must not consume the next daily slot (#2612)."""
+    clockmock.now.return_value = end
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = hour
+    profile.schedule_fixed_minute = minute
+    profile.schedule_make_up_missed = catch_up
+    profile.save()
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=0,
+        category='scheduled' if scheduled else '',
+        start_time=start,
+        end_time=end,
+    )
+
+    catch_up_profile = scheduler._timers.arm_profile(profile.id)
+
+    if missed and catch_up:
+        assert catch_up_profile == profile.id
+    else:
+        assert catch_up_profile is None
+        assert scheduler.timers[profile.id]['dt'] == expected
+
+
+@mark.parametrize('category', ['scheduled', ''])
+def test_fixed_uses_latest_start(clockmock, category):
+    """Old migrated end times must not make an older run take precedence."""
+    clockmock.now.return_value = dt(2020, 5, 5, 12)
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = 23
+    profile.schedule_fixed_minute = 30
+    profile.schedule_make_up_missed = True
+    profile.save()
+    for start, end in [
+        (dt(2020, 5, 4, 8), dt(2020, 5, 5, 12)),
+        (dt(2020, 5, 5, 0, 31), dt(2020, 5, 5, 0, 50)),
+    ]:
+        EventLogModel.create(
+            subcommand='create',
+            profile=profile.id,
+            returncode=0,
+            category=category,
+            start_time=start,
+            end_time=end,
+        )
+
+    assert scheduler._timers.arm_profile(profile.id) is None
+    assert scheduler.timers[profile.id]['dt'] == dt(2020, 5, 5, 23, 30)
+
+
 @mark.parametrize(
     "now, hour, minute, time_since_last_run, expect_catchup",
     [
         (td(hours=9), 18, 00, td(hours=12), False),
-        (td(hours=9), 18, 00, td(hours=24), False),
+        (td(hours=9), 18, 00, td(hours=24), True),
         (td(hours=9), 18, 00, td(hours=36), True),
         (td(hours=20), 18, 00, td(hours=2), False),
         (td(hours=20), 18, 00, td(hours=24), True),
