@@ -39,17 +39,21 @@ class FilePathInfoAsync(QThread):
     def __init__(self, path, exclude_patterns_str):
         self.path = path
         QThread.__init__(self)
-        self.exiting = False
+        self.cancelled = False
         self.exclude_patterns = []
         for _line in (exclude_patterns_str or '').splitlines():
             line = _line.strip()
             if line != '' and not line.startswith("#"):
                 self.exclude_patterns.append(line)
 
+    def cancel(self):
+        self.cancelled = True
+        self.requestInterruption()
+
     def run(self):
-        # logger.info("running thread to get path=%s...", self.path)
-        self.size, self.files_count = get_path_datasize(self.path, self.exclude_patterns)
-        self.signal.emit(self.path, str(self.size), str(self.files_count))
+        self.size, self.files_count = get_path_datasize(self.path, self.exclude_patterns, self.isInterruptionRequested)
+        if not self.isInterruptionRequested():
+            self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
 def normalize_path(path):
@@ -101,7 +105,7 @@ def match(pattern: Callable[[str], bool], path: str):
     return pattern(path.lstrip(os.path.sep))
 
 
-def get_directory_size(dir_path, exclude_patterns):
+def get_directory_size(dir_path, exclude_patterns, should_stop: Optional[Callable[[], bool]] = None):
     '''Get number of files only and total size in bytes from a path.
     Based off https://stackoverflow.com/a/17936789'''
     exclude_patterns = [m for m in map(prepare_pattern, exclude_patterns) if m is not None]
@@ -111,6 +115,9 @@ def get_directory_size(dir_path, exclude_patterns):
     seen_filtered = set()
 
     for dir_path, subdirectories, file_names in os.walk(dir_path, topdown=True):
+        if should_stop is not None and should_stop():
+            break
+
         is_excluded = False
         for pattern in exclude_patterns:
             if match(pattern, dir_path):
@@ -162,11 +169,11 @@ def get_network_status_monitor():
     return _network_status_monitor
 
 
-def get_path_datasize(path, exclude_patterns):
+def get_path_datasize(path, exclude_patterns, should_stop: Optional[Callable[[], bool]] = None):
     file_info = QFileInfo(path)
 
     if file_info.isDir():
-        data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
+        data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns, should_stop)
     else:
         data_size = file_info.size()
         files_count = 1

@@ -108,16 +108,22 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         if source is not None:
             source.save()
             self.update_total_size()
-        self._discard_update_thread(path)
 
-    def _discard_update_thread(self, path):
-        for thrd in self.updateThreads[:]:
-            if thrd.objectName() == path:
+    def _cancel_update_threads(self, path):
+        for thrd in self.updateThreads:
+            if thrd.objectName() == path and not thrd.cancelled:
                 try:
                     thrd.signal.disconnect(self.set_path_info)
                 except (RuntimeError, TypeError):
                     pass
-                self.updateThreads.remove(thrd)
+                thrd.cancel()
+
+    @pyqtSlot()
+    def _forget_update_thread(self):
+        # Only drop the last reference once Qt reports the thread finished, or ~QThread aborts (#2614).
+        thrd = self.sender()
+        if thrd in self.updateThreads:
+            self.updateThreads.remove(thrd)
 
     def update_path_info(self, path: str):
         """Mark ``path`` as calculating and spawn the worker that fills in its size/count.
@@ -127,12 +133,13 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         """
         logger.debug(f"Updating source {path}.")  # Debug #1080
 
-        if any(thrd.objectName() == path for thrd in self.updateThreads):
+        if any(thrd.objectName() == path and not thrd.cancelled for thrd in self.updateThreads):
             return
 
         self.source_model.mark_calculating(path)
         getDir = FilePathInfoAsync(path, self.profile().get_combined_exclusion_string())
         getDir.signal.connect(self.set_path_info)
+        getDir.finished.connect(self._forget_update_thread)
         getDir.setObjectName(path)
         self.updateThreads.append(getDir)  # this is ugly, is there a better way to keep the thread object?
         getDir.start()
@@ -231,7 +238,7 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
             if source is None:
                 continue
             source.delete_instance()
-            self._discard_update_thread(source.dir)
+            self._cancel_update_threads(source.dir)
             logger.debug(f"Removed source {source.dir}")
         self.populate_from_profile()
 
