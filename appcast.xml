@@ -6,8 +6,49 @@
     <description>Latest updates for the app.</description>
     <language>en</language>
     <item>
+      <title>v0.12.2</title>
+      <description><![CDATA[<p>Bugfix release focused on scheduler stability, Borg 2 compatibility, profile import and job handling.</p>
+<h2>Scheduler</h2>
+<ul>
+<li>Fix scheduler timer segfault from cross-thread garbage collection</li>
+<li>Post <code>jobs_changed</code> to the scheduler instead of a dangling <code>singleShot</code> (#2629)</li>
+<li>Re-arm scheduler after results and repository changes (#2628)</li>
+<li>Keep daily backup slots after midnight-crossing runs (#2626)</li>
+<li>Don't save or re-arm the schedule when a profile is loaded (#2620)</li>
+<li>Don't count killed or unfinished backups as the last successful one (#2624)</li>
+</ul>
+<h2>Borg jobs and Borg 2</h2>
+<ul>
+<li>Handle Borg 2 <code>repo-info</code> and <code>info</code> output without cache stats or encryption mode (#2633)</li>
+<li>Put the Borg subcommand at <code>cmd[1]</code> for compact, mount and change-passphrase (#2631)</li>
+<li>Centralise Borg repo/archive arguments and fix Borg 2 drift (#2617)</li>
+<li>Always finish a Borg job and unblock the UI when it raises (#2618)</li>
+<li>Clean up Borg job events and lock statistics resets (#2625)</li>
+<li>Translate Borg prepare errors shown in the UI (#2623)</li>
+</ul>
+<h2>Profiles and keyring</h2>
+<ul>
+<li>Make profile import atomic and keep other profiles' data (#2616)</li>
+<li>Start with a Default profile when the bootstrap import fails (#2619)</li>
+<li>Split keyring unlock from the unlocked check and stop double prompts (#2627)</li>
+</ul>
+<h2>UI</h2>
+<ul>
+<li>Restore archive buttons after failed or cancelled refresh (#2630)</li>
+<li>Return consistent <code>parent()</code> rows and bounds-check <code>index()</code> in FileTreeModel (#2621)</li>
+<li>Keep path-info threads alive until Qt reports them finished (#2622)</li>
+<li>Clip main window log label at two lines to stop layout shifts</li>
+</ul>]]></description>
+      <pubDate>2026-11-15T16:59:32Z</pubDate>
+      <sparkle:version>0.12.2</sparkle:version>
+      <sparkle:minimumSystemVersion>14.4</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.12.2</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.12.2/Vorta-v0.12.2-arm.dmg" length="45694460" type="application/x-apple-diskimage"/>
+    </item>
+    <item>
       <title>v0.12.1</title>
-      <description><![CDATA[<ul>
+      <description><![CDATA[<p>This release fixes bugs and completes missing translation strings.</p>
+<ul>
 <li>Clarify repository menu labels for initializing vs. adding existing repos (#2509)</li>
 <li>Turn off Sparkle's automatic update checks when updates are disabled (#2583)</li>
 <li>Don't count a check that found inconsistencies as a validation (#2591)</li>
@@ -667,24 +708,6 @@ well as many other improvements. Thanks to everyone who contributed!</p>
       <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
       <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.4</sparkle:fullReleaseNotesLink>
       <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.4/vorta-0.8.4.dmg" length="47039883" type="application/octet-stream"/>
-    </item>
-    <item>
-      <title>v0.8.3</title>
-      <description><![CDATA[<p>This is a maintenance release to address smaller issues and upgrade dependencies:</p>
-<ul>
-<li>Distinguish different errors in case borg check failed. By @real-yfprojects (#1163)</li>
-<li>Close SVG files after reading. By @hroncok (#1135)</li>
-<li>Shows folder sizes in diff view. By @skrap (#1156)</li>
-<li>Ignore encoding errors in Wifi names (darwin) (#1158)</li>
-<li>Upgrade llfuse for Flatpak (#1179)</li>
-<li>Bump macOS updater to Sparkle 2.0 (#1186)</li>
-<li>Minor test fixes (#1150, #1147, #1146)</li>
-</ul>]]></description>
-      <pubDate>2022-01-27T12:46:11Z</pubDate>
-      <sparkle:version>0.8.3</sparkle:version>
-      <sparkle:minimumSystemVersion>10.14</sparkle:minimumSystemVersion>
-      <sparkle:fullReleaseNotesLink>https://github.com/borgbase/vorta/releases/tag/v0.8.3</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/borgbase/vorta/releases/download/v0.8.3/vorta-0.8.3.dmg" length="46141585" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
