@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
 
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
+from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, choose_file_dialog, get_asset, get_private_keys
@@ -222,7 +223,7 @@ class AddRepoWindow(RepoWindow):
                 job.result.connect(self.run_result)
                 QApplication.instance().jobs_manager.add_job(job)
             else:
-                self._set_status(params['message'])
+                self._set_status(translate('messages', params['message']))
 
 
 class ExistingRepoWindow(RepoWindow):
@@ -253,4 +254,4 @@ class ExistingRepoWindow(RepoWindow):
                 self.thread = job  # Keep reference for tests
                 QApplication.instance().jobs_manager.add_job(job)
             else:
-                self._set_status(params['message'])
+                self._set_status(translate('messages', params['message']))

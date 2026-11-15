@@ -10,9 +10,28 @@ from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
+from vorta.views.dialogs.repo import repo_add
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
+
+
+@pytest.mark.parametrize(
+    'window_class, job_class',
+    [(repo_add.AddRepoWindow, repo_add.BorgInitJob), (repo_add.ExistingRepoWindow, repo_add.BorgInfoRepoJob)],
+)
+def test_repo_prepare_error_is_translated(qapp, qtbot, mocker, window_class, job_class):
+    window = window_class()
+    qtbot.addWidget(window)
+    mocker.patch.object(window, 'validate', return_value=True)
+    params = {'ok': False, 'message': 'Borg binary was not found.'}
+    mocker.patch.object(job_class, 'prepare', return_value=params)
+    translate = mocker.patch.object(repo_add, 'translate', return_value='Translated prepare error')
+
+    window.run()
+
+    translate.assert_called_once_with('messages', params['message'])
+    assert window.errorText.text() == 'Translated prepare error'
 
 
 @pytest.mark.parametrize(
