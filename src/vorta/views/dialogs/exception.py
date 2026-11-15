@@ -73,3 +73,12 @@ class ExceptionDialog(ExceptionDialogBase, ExceptionDialogUI):
     def copy_report_to_clipboard(self):
         cb = QApplication.clipboard()
         cb.setText(self.crashDetails.toPlainText(), mode=cb.Mode.Clipboard)
+
+
+def show_exception_dialog(exception: str) -> int:
+    """Show an `ExceptionDialog` for the formatted exception and block until it is closed."""
+    exception_dialog = ExceptionDialog(exception)
+    exception_dialog.show()
+    exception_dialog.raise_()
+    exception_dialog.activateWindow()
+    return exception_dialog.exec()

@@ -1,0 +1,85 @@
+{
+    "id": 1,
+    "name": "Test Profile Wifi",
+    "added_at": "2024-03-01 10:00:00.000000",
+    "repo": {
+        "url": "/tmp/vorta-wifi-test-repo",
+        "added_at": "2024-03-01 10:00:00.000000",
+        "encryption": "repokey-blake2",
+        "unique_size": null,
+        "unique_csize": null,
+        "total_size": null,
+        "total_unique_chunks": null,
+        "extra_borg_arguments": ""
+    },
+    "ssh_key": null,
+    "compression": "lz4",
+    "exclude_patterns": null,
+    "schedule_mode": "off",
+    "schedule_interval_unit": "hours",
+    "schedule_interval_count": 3,
+    "schedule_fixed_hour": 3,
+    "schedule_fixed_minute": 42,
+    "validation_on": true,
+    "validation_weeks": 3,
+    "prune_on": false,
+    "prune_hour": 2,
+    "prune_day": 7,
+    "prune_week": 4,
+    "prune_month": 6,
+    "prune_year": 2,
+    "prune_keep_within": "10H",
+    "new_archive_name": "{hostname}-{now:%Y-%m-%d-%H%M%S}",
+    "prune_prefix": "{hostname}-",
+    "pre_backup_cmd": "",
+    "post_backup_cmd": "",
+    "dont_run_on_metered_networks": true,
+    "SourceFileModel": [
+        {
+            "dir": "/wifi/test/source",
+            "dir_size": -1,
+            "dir_files_count": -1,
+            "path_isdir": false,
+            "profile": 1,
+            "added_at": "2024-03-01 10:00:00.000000"
+        }
+    ],
+    "ExclusionModel": [
+        {
+            "name": "*.tmp",
+            "enabled": true,
+            "source": "custom",
+            "profile": 1
+        }
+    ],
+    "WifiSettingModel": [
+        {
+            "id": 1,
+            "ssid": "HomeNet",
+            "last_connected": "2024-02-28 08:00:00.000000",
+            "allowed": true,
+            "profile": 1
+        },
+        {
+            "id": 2,
+            "ssid": "CafeNet",
+            "last_connected": null,
+            "allowed": false,
+            "profile": 1
+        }
+    ],
+    "SchemaVersion": {
+        "id": 1,
+        "version": 23,
+        "changed_at": "2024-03-01 10:00:00.000000"
+    },
+    "SettingsModel": [
+        {
+            "key": "enable_notifications",
+            "value": false,
+            "str_value": "",
+            "label": "Display notifications when background tasks fail",
+            "type": "checkbox"
+        }
+    ]
+}

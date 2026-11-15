@@ -2,6 +2,7 @@ from PyQt6 import QtCore, uic
 from PyQt6.QtWidgets import QApplication, QDialogButtonBox, QLabel
 
 from vorta.borg.change_passphrase import BorgChangePassJob
+from vorta.i18n import translate
 from vorta.keyring.abc import VortaKeyring
 from vorta.utils import get_asset
 from vorta.views.partials.password_input import PasswordInput
@@ -51,7 +52,7 @@ class ChangeBorgPassphraseWindow(ChangeBorgPassBase, ChangeBorgPassUI):
                 job.result.connect(self.run_result)
                 QApplication.instance().jobs_manager.add_job(job)
             else:
-                self._set_status(params['message'])
+                self._set_status(translate('messages', params['message']))
 
     def _set_status(self, text):
         self.errorText.setText(text)

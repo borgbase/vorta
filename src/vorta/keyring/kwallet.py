@@ -71,7 +71,7 @@ class VortaKWallet5Keyring(VortaKeyring):
             str or None: The retrieved password, or None if not found.
         """
         if not (
-            self.is_unlocked and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service])
+            self.try_unlock() and self.get_result("hasEntry", args=[self.handle, self.folder_name, repo_url, service])
         ):
             return None
         password = self.get_result("readPassword", args=[self.handle, self.folder_name, repo_url, service])
@@ -102,20 +102,25 @@ class VortaKWallet5Keyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        """Check if the wallet is unlocked.
+        """Check if the wallet is unlocked, without opening it or prompting.
 
         Returns:
             bool: True if the wallet is unlocked, False otherwise.
         """
-        self.try_unlock()
-        return self.handle > 0
+        if self.handle > 0:
+            return True
+        wallet_name = self.get_result("networkWallet")
+        # Query by name: isOpen(handle) with an invalid handle counts against us in kwalletd.
+        return bool(wallet_name) and self.get_result("isOpen", args=[wallet_name]) is True
 
     def try_unlock(self):
-        """Attempt to unlock the wallet.
+        """Open the wallet if needed. May prompt the user.
 
-        Raises:
-            ValueError: If the wallet name is invalid or unlocking fails.
+        Returns:
+            bool: True if the wallet is open, False otherwise.
         """
+        if self.handle > 0:
+            return True
         wallet_name = self.get_result("networkWallet")
         if wallet_name is None:
             wallet_name, ok = QInputDialog.getText(
@@ -131,7 +136,7 @@ class VortaKWallet5Keyring(VortaKeyring):
                     )
                 )
                 self.handle = -2
-                return
+                return False
 
         wId = QVariant(0)
         wId.convert(QMetaType(QMetaType.Type.LongLong.value))
@@ -139,12 +144,13 @@ class VortaKWallet5Keyring(VortaKeyring):
         if output is None:
             logger.error(translate("KWallet", "Failed to open wallet. Aborting unlock attempt."))
             self.handle = -2
-            return
+            return False
 
         try:
             self.handle = int(output)
         except (ValueError, TypeError):  # For when kwallet is disabled or dbus otherwise broken
             self.handle = -2
+        return self.handle > 0
 
     @classmethod
     def get_priority(cls):

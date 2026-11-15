@@ -385,3 +385,23 @@ def test_extract_sort_proxy_empty_data():
     assert isinstance(proxy.choose_data(fsi_idx1), QDateTime)
     assert proxy.choose_data(fsi_idx2) == -1
     assert proxy.choose_data(fsi_idx3) is False
+
+
+def test_simplified_proxy_parent():
+    model = ExtractTree()
+    paths = ['a', 'a/x', 'a/w', 'b', 'b/c', 'b/c/d', 'b/c/d/e', 'b/c/d/f']
+    parse_json_lines([updated(p, {}) for p in paths], model)
+
+    model.setMode(model.DisplayMode.SIMPLIFIED_TREE)
+    proxy = ExtractSortProxyModel()
+    proxy.setSourceModel(model)
+    proxy.sort(0)
+
+    bcd = model.index(1, 0)
+    e = model.index(0, 0, bcd)
+    assert e.parent() == bcd
+
+    proxy_e = proxy.mapFromSource(e)
+    assert proxy_e.parent() == proxy.mapFromSource(bcd)
+    assert proxy_e.parent().data() == 'b/c/d'
+    assert proxy.mapToSource(proxy_e) == e

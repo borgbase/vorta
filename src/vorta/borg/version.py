@@ -10,9 +10,6 @@ class BorgVersionJob(BorgJob):
     Used to display under 'Settings' and later for version-specific compatibility.
     """
 
-    def finished_event(self, result):
-        self.result.emit(result)
-
     @classmethod
     def prepare(cls):
         ret = {'ok': False}

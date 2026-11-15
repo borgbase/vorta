@@ -11,6 +11,8 @@ from .borg_job import BorgJob
 
 
 class BorgChangePassJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Changing Borg passphrase…')}")
@@ -23,8 +25,8 @@ class BorgChangePassJob(BorgJob):
         result : Dict[str, Any]
             The (json-like) dictionary containing the job results.
         """
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         if result['returncode'] != 0:
             logs_link = link(config.LOG_DIR.as_uri(), translate('messages', 'logs'))
             message = format_richtext(
@@ -52,11 +54,8 @@ class BorgChangePassJob(BorgJob):
             ).format(MIN_BORG_FOR_FEATURE['CHANGE_PASSPHRASE'])
             return ret
 
-        cmd = ['borg', '--info', '--log-json', 'key', 'change-passphrase']
-        if borg_compat.check('V2'):
-            cmd = cmd + ['-r', profile.repo.url]
-        else:
-            cmd.append(f'{profile.repo.url}')
+        cmd = ['borg', 'key', 'change-passphrase', '--info', '--log-json']
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['additional_env'] = {'BORG_NEW_PASSPHRASE': new_passphrase}
 

@@ -30,7 +30,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
         """
         Writes a password to the underlying store.
         """
-        if self.is_unlocked:
+        if self.try_unlock():
             asyncio.set_event_loop(asyncio.new_event_loop())
             attributes = {
                 'application': 'Vorta',
@@ -47,7 +47,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
             logger.debug(f"Saved password for repo {repo_url}")
 
     def delete_password(self, service, repo_url):
-        if self.is_unlocked:
+        if self.try_unlock():
             asyncio.set_event_loop(asyncio.new_event_loop())
             attributes = {
                 'application': 'Vorta',
@@ -66,7 +66,7 @@ class VortaSecretStorageKeyring(VortaKeyring):
         """
         Retrieve a password from the underlying store. Return None if not found.
         """
-        if self.is_unlocked:
+        if self.try_unlock():
             asyncio.set_event_loop(asyncio.new_event_loop())
             attributes = {
                 'application': 'Vorta',
@@ -85,8 +85,12 @@ class VortaSecretStorageKeyring(VortaKeyring):
 
     @property
     def is_unlocked(self):
-        # unlock() will return True if the unlock prompt is dismissed
-        return not (self.collection.is_locked() and self.collection.unlock())
+        return not self.collection.is_locked()
+
+    def try_unlock(self):
+        if self.collection.is_locked():
+            self.collection.unlock()
+        return not self.collection.is_locked()
 
     @classmethod
     def get_priority(cls):

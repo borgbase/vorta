@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QListWidgetItem,
     QMessageBox,
+    QSizePolicy,
     QToolTip,
 )
 
@@ -58,9 +59,10 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.gridLayout.addWidget(self.createStartBtn, 0, 0, 1, 1)
         self.createStartBtn.setGif(get_asset("icons/loading"))
 
-        # set log label height to two lines
+        # Fix the log label at two lines, so long messages get clipped instead of shifting the layout.
         fontmetrics: QFontMetrics = self.logText.fontMetrics()
-        self.logText.setMinimumHeight(fontmetrics.lineSpacing() * 2 + fontmetrics.leading())
+        self.logText.setFixedHeight(fontmetrics.lineSpacing() * 2)
+        self.logText.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
 
         # Use previous window state
         previous_window_width = SettingsModel.get(key='previous_window_width')
@@ -162,7 +164,6 @@ class MainWindow(MainWindowBase, MainWindowUI):
         if text and len(text) > 300:
             text = text[:300] + '...'
         self.logText.setText(text)
-        self.logText.repaint()
 
     def _toggle_buttons(self, create_enabled=True):
         if create_enabled:
@@ -273,6 +274,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         """
 
         def profile_imported_event(profile):
+            # Populating no longer re-arms. Before the modal, so the old timer isn't live while it is open.
+            self.app.scheduler.set_timer_for_profile(profile.id)
             QMessageBox.information(
                 None,
                 self.tr('Profile import successful!'),

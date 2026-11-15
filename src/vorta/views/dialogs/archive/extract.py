@@ -34,7 +34,6 @@ from vorta.views.partials.treemodel import (
     FileTreeSortProxyModel,
     Path,
     path_to_str,
-    relative_path,
 )
 from vorta.views.utils import get_colored_icon
 
@@ -89,7 +88,6 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.sortproxy = ExtractSortProxyModel(self)
         self.sortproxy.setSourceModel(self.model)
         view.setModel(self.sortproxy)
-        self.sortproxy.sorted.connect(self.slot_sorted)
 
         # connect the custom checkstate changed signal to trigger a refresh
         self.model.checkStateChanged.connect(self.refresh_view)
@@ -159,13 +157,6 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             QApplication.instance().paletteChanged.disconnect(self._palette_connection)
         except (TypeError, RuntimeError):
             pass
-
-    def slot_sorted(self, column, order):
-        """React to the tree view being sorted."""
-        # reveal selection
-        selectedRows = self.treeView.selectionModel().selectedRows()
-        if selectedRows:
-            self.treeView.scrollTo(selectedRows[0])
 
     def copy_item(self, index: QModelIndex = None):
         """
@@ -386,12 +377,8 @@ class ExtractTree(FileTreeModel[FileData]):
         return super()._merge_data(item, data)
 
     def _flat_filter(self, item):
-        """
-        Return whether an item is part of the flat model representation.
-
-        The item's data might have not been set yet.
-        """
-        return item.data and not item.children
+        """The extract dialog has no flat mode, so no item is added to the flat representation."""
+        return False
 
     def _simplify_filter(self, item: ExtractFileItem) -> bool:
         """
@@ -527,19 +514,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         if role == Qt.ItemDataRole.DisplayRole:
             if column == 0:
-                # name
-                if self.mode == self.DisplayMode.FLAT:
-                    return path_to_str(item.path)
-
-                if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
-                    parent = index.parent()
-                    if parent == QModelIndex():
-                        return path_to_str(relative_path(self.root.path, item.path))
-
-                    return path_to_str(relative_path(parent.internalPointer().path, item.path))
-
-                # standard tree mode
-                return item.subpath
+                return self.display_name(index)
             elif column == 1:
                 # last modified
                 return QLocale.system().toString(item.data.last_modified, QLocale.FormatType.ShortFormat)
