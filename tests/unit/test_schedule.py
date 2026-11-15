@@ -10,6 +10,7 @@ import vorta.scheduler
 import vorta.scheduler.execution
 import vorta.scheduler.scheduling
 import vorta.scheduler.state
+from tests.unit.conftest import wait_for_workers
 from vorta.application import VortaApp
 from vorta.profile_export import ProfileExport
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel, RepoModel
@@ -207,10 +208,6 @@ def _select_profile(main, profile):
     raise AssertionError(f'{profile.name} not in profile selector')
 
 
-def _wait_for_workers(qapp, qtbot):
-    qtbot.waitUntil(lambda: not any(w.is_alive() for w in qapp.jobs_manager.workers.values()), **pytest._wait_defaults)
-
-
 @pytest.fixture
 def restore_default_profile(qapp):
     yield
@@ -219,11 +216,11 @@ def restore_default_profile(qapp):
     qapp.main_window.current_profile = BackupProfileModel.get(name=PROFILE_NAME)
 
 
-def _switch_from_a_to_b(qapp, qtbot, mocker, tmp_path, a_schedule, b_schedule, b_last_run):
+def _switch_from_a_to_b(qapp, mocker, tmp_path, a_schedule, b_schedule, b_last_run):
     create_backup = mocker.patch.object(qapp.scheduler, 'create_backup')
     # A still-running startup `borg --version` job would overwrite B's event-log row when it ends,
     # leaving no catch-up due and making the create_backup assertion vacuous.
-    _wait_for_workers(qapp, qtbot)
+    wait_for_workers(qapp.jobs_manager)
     main = qapp.main_window
     repo_b = RepoModel.create(url=str(tmp_path / 'repo-b'), encryption='none')  # local, so catch-up ignores network
     profile_a = BackupProfileModel.create(name='Profile A', **a_schedule)
@@ -277,14 +274,11 @@ def _switch_from_a_to_b(qapp, qtbot, mocker, tmp_path, a_schedule, b_schedule, b
     return page
 
 
-def test_profile_switch_interval_does_not_save_or_catch_up(
-    qapp, qtbot, mocker, clockmock, tmp_path, restore_default_profile
-):
+def test_profile_switch_interval_does_not_save_or_catch_up(qapp, mocker, clockmock, tmp_path, restore_default_profile):
     now = dt(2020, 5, 6, 12, 0)
     clockmock.now.return_value = now
     page = _switch_from_a_to_b(
         qapp,
-        qtbot,
         mocker,
         tmp_path,
         a_schedule=dict(schedule_mode='interval', schedule_interval_unit='days', schedule_interval_count=1),
@@ -295,13 +289,10 @@ def test_profile_switch_interval_does_not_save_or_catch_up(
     assert page.framePeriodic.isEnabled() and not page.frameDaily.isEnabled()
 
 
-def test_profile_switch_fixed_does_not_save_or_catch_up(
-    qapp, qtbot, mocker, clockmock, tmp_path, restore_default_profile
-):
+def test_profile_switch_fixed_does_not_save_or_catch_up(qapp, mocker, clockmock, tmp_path, restore_default_profile):
     clockmock.now.return_value = dt(2020, 5, 6, 19, 4)
     page = _switch_from_a_to_b(
         qapp,
-        qtbot,
         mocker,
         tmp_path,
         a_schedule=dict(
@@ -347,7 +338,7 @@ def test_schedule_edits_after_populate_still_save(qapp, mocker):
 
 def test_import_over_current_profile_rearms_its_timer(qapp, qtbot, mocker, monkeypatch, clockmock, tmp_path):
     mocker.patch.object(qapp.scheduler, 'create_backup')
-    _wait_for_workers(qapp, qtbot)
+    wait_for_workers(qapp.jobs_manager)
     now = dt(2020, 5, 6, 12, 0)
     clockmock.now.return_value = now
     main = qapp.main_window

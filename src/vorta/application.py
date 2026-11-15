@@ -23,6 +23,7 @@ from vorta.store.connection import cleanup_db
 from vorta.store.models import BackupProfileModel, SettingsModel
 from vorta.tray_menu import TrayMenu
 from vorta.utils import borg_compat, parse_args
+from vorta.views.dialogs.exception import show_exception_dialog
 from vorta.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,9 @@ class VortaApp(QtSingleApplication):
     backup_progress_event = QtCore.pyqtSignal(str)
     check_failed_event = QtCore.pyqtSignal(dict)
     profile_changed_event = QtCore.pyqtSignal()
+    job_exception_event = QtCore.pyqtSignal(str)  # formatted traceback of a job that raised
+
+    _job_exception_dialog_open = False
 
     def __init__(self, args_raw, single_app=False):
         super().__init__(str(APP_ID), args_raw)
@@ -93,6 +97,8 @@ class VortaApp(QtSingleApplication):
         self.backup_cancelled_event.connect(self.backup_cancelled_event_response)
         self.message_received_event.connect(self.message_received_event_response)
         self.check_failed_event.connect(self.check_failed_response)
+        # Always deferred to the event loop, even when emitted on the main thread.
+        self.job_exception_event.connect(self.job_exception_response, QtCore.Qt.ConnectionType.QueuedConnection)
         self.backup_log_event.connect(self.react_to_log)
         self.aboutToQuit.connect(self.quit_app_action)
         self.set_borg_details_action()
@@ -194,6 +200,18 @@ class VortaApp(QtSingleApplication):
             self.scheduler.reload_all_timers()  # Start timer after Borg version is set.
         else:
             self._alert_missing_borg()
+
+    def job_exception_response(self, exception: str):
+        """Show the exception dialog for a job that raised. The job has already logged it."""
+        if self._job_exception_dialog_open:
+            # E.g. a profile that crashes on every scheduled run must not stack dialogs.
+            logger.info('Exception dialog already open, not showing another one.')
+            return
+        self._job_exception_dialog_open = True
+        try:
+            show_exception_dialog(exception)
+        finally:
+            self._job_exception_dialog_open = False
 
     def _alert_missing_borg(self):
         msg = QMessageBox()
@@ -363,6 +381,11 @@ class VortaApp(QtSingleApplication):
         Displays a `QMessageBox` with an error message depending on the
         return code of the `BorgJob`.
         """
+        if result.get('exception'):
+            # The job crashed in Vorta, not in Borg. The exception dialog reports it.
+            logger.info('Not showing the repo check dialog for a job that raised: %s', result['exception'])
+            return
+
         # extract data from the params for the borg job
         repo_url = result['params']['repo_url']
         returncode = result['returncode']
