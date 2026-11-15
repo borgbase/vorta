@@ -69,7 +69,7 @@ class ArchiveRename:
 
         params = BorgRenameJob.prepare(profile, original, new_name)
         if not params['ok']:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
             self._revert_name(top_left, original)
             return
 

@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 from PyQt6.QtCore import QTimer
 
 from vorta.i18n import translate
+from vorta.scheduler.execution import SUCCESS_RETURNCODES
 from vorta.store.models import BackupProfileModel, EventLogModel, JobModel
 from vorta.utils import get_network_status_monitor
 
@@ -189,7 +190,7 @@ class SchedulerTimers:
                     EventLogModel.subcommand == 'create',
                     EventLogModel.category == 'scheduled',
                     EventLogModel.profile == profile.id,
-                    0 <= EventLogModel.returncode <= 1,
+                    EventLogModel.returncode.in_(SUCCESS_RETURNCODES),
                 )
                 .order_by(EventLogModel.end_time.desc())
                 .first()
@@ -202,7 +203,7 @@ class SchedulerTimers:
                     .where(
                         EventLogModel.subcommand == 'create',
                         EventLogModel.profile == profile.id,
-                        0 <= EventLogModel.returncode <= 1,
+                        EventLogModel.returncode.in_(SUCCESS_RETURNCODES),
                     )
                     .order_by(EventLogModel.end_time.desc())
                     .first()
@@ -245,7 +246,11 @@ class SchedulerTimers:
             needs_network = profile.repo is not None and profile.repo.is_remote_repo()
             # handle missing of a scheduled time
             if next_time <= dt.now():
-                if profile.schedule_make_up_missed and (self._net_up or not needs_network):
+                running = self._running_backup(profile)
+                if running is not None:
+                    logger.debug('Not catching up %s (%s), its backup is still running', profile.name, profile_id)
+                    last_time = running.start_time
+                elif profile.schedule_make_up_missed and (self._net_up or not needs_network):
                     logger.debug(
                         'Catching up by running job for %s (%s)',
                         profile.name,
@@ -293,6 +298,20 @@ class SchedulerTimers:
 
         # Emit signal so that e.g. the GUI can react to the new schedule
         self.scheduler.schedule_changed.emit()
+
+    def _running_backup(self, profile: BackupProfileModel) -> EventLogModel | None:
+        """This profile's newest backup log row if that backup is still running, else None."""
+        if not self.scheduler.app.jobs_manager.is_worker_running(site=profile.repo.id):
+            return None
+        newest = (
+            EventLogModel.select()
+            .where(EventLogModel.subcommand == 'create', EventLogModel.profile == profile.id)
+            .order_by(EventLogModel.id.desc())
+            .first()
+        )
+        if newest is not None and newest.returncode == EventLogModel.returncode.default:
+            return newest
+        return None
 
     def reload_all_timers(self) -> None:
         logger.debug('Refreshing all scheduler timers')

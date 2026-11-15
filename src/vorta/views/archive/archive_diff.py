@@ -46,7 +46,7 @@ class ArchiveDiff:
             job.result.connect(self.list_diff_result)
             self.tab.app.jobs_manager.add_job(job)
         else:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
 
     def list_diff_result(self, result):
         """

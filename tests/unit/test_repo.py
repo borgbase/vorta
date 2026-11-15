@@ -10,9 +10,28 @@ from PyQt6.QtWidgets import QMessageBox
 import vorta.borg.borg_job
 from vorta.keyring.abc import VortaKeyring
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
+from vorta.views.dialogs.repo import repo_add
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
+
+
+@pytest.mark.parametrize(
+    'window_class, job_class',
+    [(repo_add.AddRepoWindow, repo_add.BorgInitJob), (repo_add.ExistingRepoWindow, repo_add.BorgInfoRepoJob)],
+)
+def test_repo_prepare_error_is_translated(qapp, qtbot, mocker, window_class, job_class):
+    window = window_class()
+    qtbot.addWidget(window)
+    mocker.patch.object(window, 'validate', return_value=True)
+    params = {'ok': False, 'message': 'Borg binary was not found.'}
+    mocker.patch.object(job_class, 'prepare', return_value=params)
+    translate = mocker.patch.object(repo_add, 'translate', return_value='Translated prepare error')
+
+    window.run()
+
+    translate.assert_called_once_with('messages', params['message'])
+    assert window.errorText.text() == 'Translated prepare error'
 
 
 @pytest.mark.parametrize(
@@ -388,3 +407,43 @@ def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_t
     mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
     mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
     mock_instance.show.assert_called_once()
+
+
+def test_password_autofill_locked_keyring(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=False)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'host.example.com:repo')
+
+    keyring.get_password.assert_not_called()
+    keyring.try_unlock.assert_not_called()
+
+
+def test_password_autofill_invalid_url(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=True)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'aaa')
+
+    keyring.get_password.assert_not_called()
+
+
+def test_password_autofill_existing_repo(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    password = str(uuid.uuid4())
+    VortaKeyring.get_keyring().set_password('vorta-repo', test_repo_url, password)
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+
+    assert window.passwordInput.get_password() == password

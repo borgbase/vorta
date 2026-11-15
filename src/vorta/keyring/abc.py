@@ -81,7 +81,12 @@ class VortaKeyring:
     @property
     def is_unlocked(self):
         """
-        Try to unlock the keyring.
-        Returns True if the keyring is open. Return False if it is closed or locked
+        Return True if the keyring is unlocked. Must not prompt.
         """
         raise NotImplementedError
+
+    def try_unlock(self):
+        """
+        Unlock the keyring if needed. May prompt the user. Return True if it is unlocked.
+        """
+        return bool(self.is_unlocked)

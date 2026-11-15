@@ -203,15 +203,18 @@ class BorgJob(JobInterface):
         with keyring_lock:
             cls.keyring = VortaKeyring.get_keyring()
             logger.debug("Using %s keyring to store passwords.", cls.keyring.__class__.__name__)
-            ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
-
-            # Check if keyring is locked
-            if profile.repo.encryption != 'none' and not cls.keyring.is_unlocked:
+            encrypted = profile.repo.encryption != 'none'
+            if encrypted and not cls.keyring.try_unlock():
                 ret['message'] = QT_TRANSLATE_NOOP(
                     'messages',
                     'Please unlock your system password manager or disable it under Settings',
                 )
                 return ret
+            # Unencrypted repos don't need a passphrase, so don't prompt to read one.
+            if encrypted or cls.keyring.is_unlocked:
+                ret['password'] = cls.keyring.get_password('vorta-repo', profile.repo.url)
+            else:
+                ret['password'] = None
 
             # Try to fall back to DB Keyring, if we use the system keychain.
             if ret['password'] is None and cls.keyring.is_system:

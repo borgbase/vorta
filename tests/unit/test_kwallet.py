@@ -88,3 +88,67 @@ def test_try_unlock(mock_dialog, kwallet_keyring):
         ]
         kwallet_keyring.try_unlock()
         assert kwallet_keyring.handle == 42
+
+
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_is_unlocked_closed_wallet(mock_dialog, kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = ['test_wallet', False]  # networkWallet, isOpen
+
+        assert kwallet_keyring.is_unlocked is False
+
+        mock_get_result.assert_any_call("isOpen", args=['test_wallet'])
+        assert all(call.args[0] != 'open' for call in mock_get_result.call_args_list)
+    mock_dialog.assert_not_called()
+    assert kwallet_keyring.handle == -1
+
+
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_is_unlocked_no_network_wallet(mock_dialog, kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result', return_value=None):
+        assert kwallet_keyring.is_unlocked is False
+    mock_dialog.assert_not_called()
+    assert kwallet_keyring.handle == -1
+
+
+def test_is_unlocked_wallet_opened_elsewhere(kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = ['test_wallet', True]
+        assert kwallet_keyring.is_unlocked is True
+    assert kwallet_keyring.handle == -1
+
+
+def test_open_handle_needs_no_dbus(kwallet_keyring):
+    kwallet_keyring.handle = 42
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        assert kwallet_keyring.is_unlocked is True
+        assert kwallet_keyring.try_unlock() is True
+        mock_get_result.assert_not_called()
+
+
+def test_try_unlock_returns_true_on_success(kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = ['test_wallet', 42]
+        assert kwallet_keyring.try_unlock() is True
+    assert kwallet_keyring.handle == 42
+
+
+@patch('vorta.keyring.kwallet.QInputDialog.getText', return_value=('', False))
+def test_try_unlock_returns_false_when_dialog_cancelled(mock_dialog, kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result', return_value=None):
+        assert kwallet_keyring.try_unlock() is False
+    mock_dialog.assert_called_once()
+    assert kwallet_keyring.handle == -2
+
+
+def test_try_unlock_returns_false_when_open_fails(kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = ['test_wallet', None]
+        assert kwallet_keyring.try_unlock() is False
+    assert kwallet_keyring.handle == -2
+
+
+def test_try_unlock_returns_false_when_open_denied(kwallet_keyring):
+    with patch.object(kwallet_keyring, 'get_result') as mock_get_result:
+        mock_get_result.side_effect = ['test_wallet', -1]
+        assert kwallet_keyring.try_unlock() is False
