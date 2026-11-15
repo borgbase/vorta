@@ -3,6 +3,7 @@ from pathlib import PurePath
 import pytest
 from PyQt6.QtCore import QDateTime, QItemSelectionModel, Qt
 from PyQt6.QtWidgets import QMenu
+from test_treemodel import check_model, check_parents
 
 import vorta.borg
 import vorta.utils
@@ -477,3 +478,25 @@ def test_change_display_mode(selection: int, expected_mode, expected_bCollapseAl
 
     assert dialog.model.mode == expected_mode
     assert dialog.bCollapseAll.isEnabled() == expected_bCollapseAllEnabled
+
+
+@pytest.mark.parametrize('mode', list(FileTreeModel.DisplayMode), ids=lambda m: m.name)
+@pytest.mark.parametrize('force_py', [False, True])
+def test_diff_tree_parent_matches_index(qtmodeltester, mode, force_py):
+    """`_simplify_filter` refuses to merge `a/b` into `a`, but `a/b/c` is merged into `a/b`."""
+
+    def d(change_type):
+        return DiffData(FileType.DIRECTORY, change_type, 0, 0)
+
+    model = DiffTree()
+    model.addItems(
+        [
+            (PurePath('0'), d(ChangeType.NONE)),
+            (PurePath('a/b'), d(ChangeType.MODIFIED)),
+            (PurePath('a/b/c/x'), d(ChangeType.NONE)),
+            (PurePath('a/b/c/y'), d(ChangeType.NONE)),
+        ]
+    )
+    model.setMode(mode)
+    check_parents(model)
+    check_model(qtmodeltester, model, force_py)
