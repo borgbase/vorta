@@ -15,7 +15,7 @@ class ArchiveMaintenance:
         archives = self.tab.selected_archives()
         params = BorgCheckJob.prepare(self.tab.profile(), archives[0].name if archives else None)
         if not params['ok']:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
             return
 
         job = BorgCheckJob(params['cmd'], params, self.tab.profile().repo.id)
@@ -37,7 +37,7 @@ class ArchiveMaintenance:
             self.tab._toggle_all_buttons(False)
             self.tab.app.jobs_manager.add_job(job)
         else:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
 
     def compact_result(self, result):
         self.tab._toggle_all_buttons(True)
@@ -51,7 +51,7 @@ class ArchiveMaintenance:
             self.tab._toggle_all_buttons(False)
             self.tab.app.jobs_manager.add_job(job)
         else:
-            self.tab._set_status(params['message'])
+            self.tab._set_status(translate('messages', params['message']))
 
     def prune_result(self, result):
         if result['returncode'] == 0:

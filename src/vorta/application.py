@@ -328,7 +328,7 @@ class VortaApp(QtSingleApplication):
     def break_lock(self, profile):
         params = BorgBreakJob.prepare(profile)
         if not params['ok']:
-            self.backup_progress_event.emit(f"[{profile.name}] {params['message']}")
+            self.backup_progress_event.emit(f"[{profile.name}] {translate('messages', params['message'])}")
             return
         job = BorgBreakJob(params['cmd'], params)
         self.jobs_manager.add_job(job)
