@@ -1,3 +1,4 @@
+import os
 import re
 
 from PyQt6 import QtCore, uic
@@ -116,6 +117,13 @@ class RepoWindow(AddRepoBase, AddRepoUI):
 
         return True
 
+    def keyring_password(self, url):
+        """Return a stored password for `url` without prompting to unlock the keyring."""
+        if not (re.match(r'.+:.+', url) or os.path.isabs(url)):
+            return None
+        keyring = VortaKeyring.get_keyring()
+        return keyring.get_password('vorta-repo', url) if keyring.is_unlocked else None
+
     @property
     def values(self):
         out = dict(
@@ -151,7 +159,7 @@ class AddRepoWindow(RepoWindow):
 
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
-        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
+        password = self.keyring_password(URL)
         if password and self.passwordInput.get_password() == "":
             self.passwordInput.set_error_label(self.tr("Autofilled password from password manager."))
             self.passwordInput.passwordLineEdit.setText(password)
@@ -237,7 +245,7 @@ class ExistingRepoWindow(RepoWindow):
 
     def set_password(self, URL):
         '''Autofill password from keyring only if current entry is empty'''
-        password = VortaKeyring.get_keyring().get_password('vorta-repo', URL)
+        password = self.keyring_password(URL)
         if password and self.passwordInput.get_password() == "":
             self._set_status(self.tr("Autofilled password from password manager."))
             self.passwordInput.setText(password)
