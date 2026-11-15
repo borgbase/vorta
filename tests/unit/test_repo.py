@@ -9,6 +9,8 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg.borg_job
+import vorta.utils
+from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.keyring.abc import VortaKeyring
 from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
@@ -216,6 +218,82 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
     assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
+
+
+BORG1_CACHE = {
+    'path': '/home/user/.cache/borg/abc',
+    'stats': {'total_size': 27955635, 'unique_size': 15520474, 'total_unique_chunks': 63},
+}
+BORG2_CACHE = {'path': '/home/user/.cache/borg/abc'}
+
+
+@pytest.mark.parametrize(
+    'data, encryption, total_size',
+    [
+        ({'cache': BORG1_CACHE, 'encryption': {'mode': 'repokey-blake2'}}, 'repokey-blake2', 27955635),
+        (
+            {'cache': BORG2_CACHE, 'encryption': {'mode': 'repokey-blake2-chacha20-poly1305'}},
+            'repokey-blake2-chacha20-poly1305',
+            None,
+        ),
+        (
+            {'cache': {}, 'encryption': {'encryption': 'chacha20-poly1305', 'id_hash': 'sha256'}},
+            'repokey-chacha20-poly1305',
+            None,
+        ),
+        (
+            {'encryption': {'encryption': 'aes256-ocb', 'id_hash': 'blake3', 'keyfile': '/k'}},
+            'keyfile-aes256-ocb',
+            None,
+        ),
+        ({'cache': BORG2_CACHE, 'encryption': {'encryption': 'none-sha256', 'id_hash': 'sha256'}}, 'none', None),
+        ({'cache': BORG2_CACHE, 'encryption': {'encryption': 'none', 'id_hash': 'sha256'}}, 'none', None),
+        ({'cache': BORG1_CACHE, 'encryption': {'mode': 'none'}}, 'none', 27955635),
+    ],
+    ids=['borg1', 'borg2-mode', 'b25-repokey', 'b25-keyfile', 'none-sha256', 'none', 'borg1-none'],
+)
+def test_info_repo_process_result(data, encryption, total_size):
+    keyring = MagicMock()
+    repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    params = {'repo_url': repo_url, 'repo_name': 'Test', 'password': 'pw', 'extra_borg_arguments': '--foo'}
+
+    BorgInfoRepoJob.process_result(MagicMock(keyring=keyring), {'returncode': 0, 'params': params, 'data': data})
+
+    repo = RepoModel.get(url=repo_url)
+    assert repo.encryption == encryption
+    assert repo.total_size == total_size
+    assert repo.extra_borg_arguments == '--foo'
+    if encryption == 'none':
+        keyring.set_password.assert_not_called()
+    else:
+        keyring.set_password.assert_called_once_with('vorta-repo', repo_url, 'pw')
+
+
+def test_repo_add_existing_borg2(qapp, qtbot, mocker, monkeypatch, borg_json_output):
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '2.0.0b25')
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_name = 'Borg 2 Repo'
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+    qtbot.keyClicks(window.repoName, test_repo_name)
+    qtbot.keyClicks(window.passwordInput, LONG_PASSWORD)
+
+    stdout, stderr = borg_json_output('repo_info_v2')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    window.run()
+    qtbot.waitUntil(
+        lambda: tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}", **pytest._wait_defaults
+    )
+
+    repo = RepoModel.get(url=test_repo_url)
+    assert repo.encryption == 'repokey-chacha20-poly1305'
+    assert repo.total_size is None
+    assert VortaKeyring.get_keyring().get_password('vorta-repo', test_repo_url) == LONG_PASSWORD
 
 
 def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
