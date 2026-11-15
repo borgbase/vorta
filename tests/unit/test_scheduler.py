@@ -1236,6 +1236,198 @@ def test_catchup_is_submitted_after_the_lock_is_released(mocker, clockmock):
     assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value, False)]
 
 
+def _every_three_hours(make_up_missed):
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = make_up_missed
+    profile.schedule_mode = INTERVAL_SCHEDULE
+    profile.schedule_interval_unit = 'hours'
+    profile.schedule_interval_count = 3
+    profile.save()
+    return profile
+
+
+def _daily_at_ten():
+    profile = BackupProfileModel.get(name=PROFILE_NAME)
+    profile.schedule_make_up_missed = True
+    profile.schedule_mode = FIXED_SCHEDULE
+    profile.schedule_fixed_hour = 10
+    profile.schedule_fixed_minute = 0
+    profile.save()
+    return profile
+
+
+def _log_backup(profile, when, returncode, category='scheduled'):
+    EventLogModel.create(
+        subcommand='create',
+        profile=profile.id,
+        returncode=returncode,
+        category=category,
+        start_time=when,
+        end_time=when,
+    )
+
+
+def _record_submissions(mocker, scheduler):
+    submitted = []
+    mocker.patch.object(
+        scheduler, 'create_backup', side_effect=lambda profile_id, trigger: submitted.append((profile_id, trigger))
+    )
+    return submitted
+
+
+@mark.parametrize('category', ['scheduled', 'user'])
+@mark.parametrize(
+    'newest_returncode, counts', [(-9, False), (-1, False), (2, False), (130, False), (0, True), (1, True)]
+)
+def test_only_successful_runs_count_as_the_last_backup(clockmock, category, newest_returncode, counts):
+    """A killed (-N) or unfinished (-1) run used to pass the `0 <= returncode <= 1` filter as a success."""
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=False)
+
+    older, newer = now - td(hours=2), now - td(hours=1)
+    _log_backup(profile, older, 0, category)
+    _log_backup(profile, newer, newest_returncode, category)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    expected = (newer if counts else older) + td(hours=3)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.SCHEDULED, expected)
+
+
+def test_mixed_categories_fall_back_to_a_successful_manual_run(clockmock):
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=False)
+
+    manual = now - td(hours=2)
+    _log_backup(profile, manual, 0, 'user')
+    _log_backup(profile, now - td(hours=1), 2)
+    _log_backup(profile, now - td(minutes=30), -1)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, manual + td(hours=3)
+    )
+
+
+@mark.parametrize('returncode', [-9, -1])
+def test_a_profile_with_only_unfinished_runs_has_no_previous_backup(clockmock, returncode):
+    """Like a first backup that failed, a killed or interrupted one leaves nothing to schedule from."""
+    scheduler = VortaScheduler()
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=1), returncode)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.NO_PREVIOUS_BACKUP)
+
+
+@mark.parametrize('mode', [INTERVAL_SCHEDULE, FIXED_SCHEDULE])
+def test_an_interrupted_run_is_caught_up(mocker, clockmock, mode):
+    """A run Vorta died during leaves its log row at -1; it must not hide the missed run."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    if mode == INTERVAL_SCHEDULE:
+        now = dt(2020, 5, 6, 4, 30)
+        profile = _every_three_hours(make_up_missed=True)
+        _log_backup(profile, now - td(hours=6), 0)
+        _log_backup(profile, now - td(hours=1), -1)
+    else:
+        now = dt(2020, 5, 6, 12, 0)
+        profile = _daily_at_ten()
+        _log_backup(profile, dt(2020, 5, 5, 10, 0), 0)
+        _log_backup(profile, dt(2020, 5, 6, 10, 5), -1)
+    clockmock.now.return_value = now
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value)]
+
+
+@mark.parametrize('category', ['scheduled', 'user'])
+@mark.parametrize(
+    'mode, now, rows, expected',
+    [
+        (
+            INTERVAL_SCHEDULE,
+            dt(2020, 5, 6, 4, 30),
+            [(dt(2020, 5, 6, 0, 30), 0), (dt(2020, 5, 6, 3, 30), -1)],
+            dt(2020, 5, 6, 6, 30),
+        ),
+        (
+            FIXED_SCHEDULE,
+            dt(2020, 5, 6, 10, 20),
+            [(dt(2020, 5, 5, 10, 0), 0), (dt(2020, 5, 6, 10, 0), -1)],
+            dt(2020, 5, 7, 10, 0),
+        ),
+    ],
+    ids=[INTERVAL_SCHEDULE, FIXED_SCHEDULE],
+)
+def test_a_running_backup_is_not_caught_up_again(qapp, mocker, clockmock, category, mode, now, rows, expected):
+    """Re-arming during a run must not see its unfinished row as a missed run and get skipped as busy."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True) if mode == INTERVAL_SCHEDULE else _daily_at_ten()
+    for when, returncode in rows:
+        _log_backup(profile, when, returncode, category)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+    jobs_before = JobModel.select().count()
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == []
+    assert JobModel.select().count() == jobs_before
+    assert not scheduler.paused(profile.id)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(ScheduleStatusType.SCHEDULED, expected)
+
+
+def test_a_finished_failure_is_caught_up_while_the_repo_is_busy(qapp, mocker, clockmock):
+    """Only an unfinished newest row holds back the catch-up, not a busy repo alone."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=4), 0)
+    _log_backup(profile, now - td(hours=1), 2)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == [(profile.id, JobModel.Trigger.CATCHUP.value)]
+
+
+def test_a_late_started_running_backup_keeps_its_own_schedule(qapp, mocker, clockmock):
+    """A catch-up that is still running sets the interval grid, not the older success it caught up on."""
+    scheduler = VortaScheduler()
+    scheduler._net_up = True
+    now = dt(2020, 5, 6, 4, 30)
+    clockmock.now.return_value = now
+    profile = _every_three_hours(make_up_missed=True)
+    _log_backup(profile, now - td(hours=5, minutes=50), 0)
+    _log_backup(profile, now - td(minutes=10), -1)
+    mocker.patch.object(qapp.jobs_manager, 'is_worker_running', return_value=True)
+    submitted = _record_submissions(mocker, scheduler)
+
+    scheduler.set_timer_for_profile(profile.id)
+
+    assert submitted == []
+    assert not scheduler.paused(profile.id)
+    assert scheduler.next_job_for_profile(profile.id) == ScheduleStatus(
+        ScheduleStatusType.SCHEDULED, now + td(hours=2, minutes=50)
+    )
+
+
 def test_create_backup_does_not_hold_the_lock_while_preparing(qapp, mocker):
     """`prepare()` can spin the event loop through a keyring dialog, so the lock has to be free."""
     scheduler = qapp.scheduler

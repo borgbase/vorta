@@ -80,6 +80,19 @@ def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
     assert tab.bCheck.isEnabled()
 
 
+def test_repo_list_prepare_error_is_translated(mocker, archive_env):
+    _, tab = archive_env
+    params = {'ok': False, 'message': 'Select a backup repository first.'}
+    mocker.patch('vorta.views.archive_tab.BorgListRepoJob.prepare', return_value=params)
+    translate = mocker.patch('vorta.views.archive_tab.translate', return_value='Translated prepare error')
+
+    tab.refresh_archive_list()
+
+    translate.assert_called_once_with('messages', params['message'])
+    assert tab.mountErrors.text() == 'Translated prepare error'
+    assert params['message'] == 'Select a backup repository first.'
+
+
 @pytest.mark.parametrize('stdout_content', ['', 'not json', '{"foo": 1}', '{"archives": null}'])
 def test_repo_list_invalid_output_keeps_archives(qapp, qtbot, mocker, archive_env, tmp_path, stdout_content):
     """Unreadable borg list output must not wipe the local archive list (#2412)."""

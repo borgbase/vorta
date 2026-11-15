@@ -484,7 +484,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
             self._toggle_all_buttons(False)
             self.app.jobs_manager.add_job(job)
         else:
-            self._set_status(params['message'])
+            self._set_status(translate('messages', params['message']))
 
     def list_result(self, result):
         self._toggle_all_buttons(True)
@@ -508,7 +508,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 job.result.connect(self.info_result)
                 self.app.jobs_manager.add_job(job)
             else:
-                self._set_status(params['message'])
+                self._set_status(translate('messages', params['message']))
                 return
 
     def info_result(self, result):
