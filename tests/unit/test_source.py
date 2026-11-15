@@ -1,11 +1,13 @@
 import os
+import threading
 
 import pytest
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
-from test_constants import TEST_TEMP_DIR
+from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
 from vorta.store.models import SourceFileModel
+from vorta.utils import FilePathInfoAsync
 from vorta.views.partials.source_files_table_model import SourceFilesModel
 
 
@@ -24,7 +26,21 @@ def source_env(qapp, qtbot):
     qtbot.waitUntil(lambda: tab.sourceFilesWidget.model().rowCount() >= 0, **pytest._wait_defaults)
     yield main, tab
 
+    for thrd in list(tab.updateThreads):
+        thrd.cancel()
+    qtbot.waitUntil(lambda: not tab.updateThreads, **pytest._wait_defaults)
     qapp.processEvents()  # cleanup
+
+
+def gated_path_info(gate):
+    """A FilePathInfoAsync that delivers its result at once, then keeps running until ``gate`` is set."""
+
+    class GatedPathInfo(FilePathInfoAsync):
+        def run(self):
+            self.signal.emit(self.path, '1', '1')
+            gate.wait(timeout=20)
+
+    return GatedPathInfo
 
 
 @pytest.mark.skip(reason="prone to failure due to background thread")
@@ -114,6 +130,54 @@ def test_source_remove_under_sort(qapp, qtbot, source_env):
 
     assert SourceFileModel.get_or_none(id=big.id) is None
     assert SourceFileModel.get_or_none(id=small.id) is not None
+
+
+def test_path_info_thread_kept_until_finished(qapp, qtbot, mocker, source_env):
+    """The worker stays referenced after its result arrives, until it has finished (#2614)."""
+    main, tab = source_env
+    gate = threading.Event()
+    mocker.patch('vorta.views.source_tab.FilePathInfoAsync', gated_path_info(gate))
+    try:
+        path = TEST_SOURCE_DIR
+        tab.update_path_info(path)
+        thrd = tab.updateThreads[0]
+        qtbot.waitUntil(lambda: path not in tab.source_model._calculating, **pytest._wait_defaults)
+
+        assert thrd in tab.updateThreads
+        assert thrd.isRunning()
+
+        gate.set()
+        qtbot.waitUntil(lambda: not tab.updateThreads, **pytest._wait_defaults)
+        assert thrd.wait(5000)
+    finally:
+        gate.set()
+
+
+def test_remove_running_path_info_then_readd(qapp, qtbot, mocker, source_env):
+    """Removing a source cancels its running worker without dropping it; re-adding starts a new one (#2614)."""
+    main, tab = source_env
+    gate = threading.Event()
+    mocker.patch('vorta.views.source_tab.FilePathInfoAsync', gated_path_info(gate))
+    try:
+        path = TEST_SOURCE_DIR
+        assert tab.source_model.rowCount() == 1
+        tab.update_path_info(path)
+        thrd = tab.updateThreads[0]
+        tab.sourceFilesWidget.selectRow(0)
+        tab.source_remove()
+
+        assert thrd in tab.updateThreads
+        assert thrd.cancelled
+
+        SourceFileModel.create(dir=path, profile=tab.profile())
+        tab.populate_from_profile()
+        tab.update_path_info(path)
+        assert len(tab.updateThreads) == 2
+
+        gate.set()
+        qtbot.waitUntil(lambda: not tab.updateThreads, **pytest._wait_defaults)
+    finally:
+        gate.set()
 
 
 # This test is for the paste_text() feature that was removed. Kept here for reference or possible future use.

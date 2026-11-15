@@ -407,3 +407,43 @@ def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_t
     mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
     mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
     mock_instance.show.assert_called_once()
+
+
+def test_password_autofill_locked_keyring(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=False)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'host.example.com:repo')
+
+    keyring.get_password.assert_not_called()
+    keyring.try_unlock.assert_not_called()
+
+
+def test_password_autofill_invalid_url(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=True)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'aaa')
+
+    keyring.get_password.assert_not_called()
+
+
+def test_password_autofill_existing_repo(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    password = str(uuid.uuid4())
+    VortaKeyring.get_keyring().set_password('vorta-repo', test_repo_url, password)
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+
+    assert window.passwordInput.get_password() == password
