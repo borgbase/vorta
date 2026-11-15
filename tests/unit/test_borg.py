@@ -57,8 +57,9 @@ def test_repo_stats_reset_under_lock_before_finished(qapp, mocker, borg_json_out
     process_result.assert_called_once()
 
 
-def test_compact_start_message(qapp, qtbot):
+def test_compact_start_message(qapp, qtbot, monkeypatch):
     """Keep the profile prefix separate from the translated status message."""
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '1.2.4')
     params = BorgCompactJob.prepare(BackupProfileModel.get())
     job = BorgCompactJob(params['cmd'], params)
 
