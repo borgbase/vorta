@@ -16,8 +16,8 @@ import vorta.application
 import vorta.borg.borg_job
 from vorta.__main__ import thread_exception_hook
 from vorta.borg.borg_job import JOB_EXCEPTION_RETURNCODE
-from vorta.borg.break_lock import BorgBreakJob
 from vorta.borg.check import BorgCheckJob
+from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.borg.rename import BorgRenameJob
 from vorta.store.models import BackupProfileModel, EventLogModel
@@ -245,12 +245,12 @@ def test_crashed_check_does_not_open_the_check_dialog(qapp, profile, popen_raise
 
 
 def test_failure_message_comes_after_success_sounding_text(qapp, profile, popen_raises, emitted):
-    run_job(BorgBreakJob, BorgBreakJob.prepare(profile), emitted)
+    run_job(BorgDeleteJob, BorgDeleteJob.prepare(profile, ['test-archive']), emitted)
 
     messages = emitted['progress']
-    broken = next(i for i, m in enumerate(messages) if 'Repository lock broken' in m)
+    deleted = next(i for i, m in enumerate(messages) if 'Archive deleted.' in m)
     failed = next(i for i, m in enumerate(messages) if 'Task failed: FileNotFoundError' in m)
-    assert broken < failed
+    assert deleted < failed
     assert failed == len(messages) - 1
     assert messages[failed].startswith(f'[{profile.name}] ')
 

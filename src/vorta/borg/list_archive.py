@@ -37,10 +37,7 @@ class BorgListArchiveJob(BorgJob):
             + "}{path}{source}{health}{NL}",
         ]
 
-        if borg_compat.check('V2'):
-            ret['cmd'].extend(["-r", profile.repo.url, archive_name])
-        else:
-            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
+        ret['cmd'] += borg_compat.repo_args(profile.repo.url, archive_name)
 
         ret['ok'] = True
 

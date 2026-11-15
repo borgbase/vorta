@@ -38,7 +38,7 @@ class BorgCheckJob(BorgJob):
             self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Check completed.')}")
 
     @classmethod
-    def prepare(cls, profile):
+    def prepare(cls, profile, archive=None):
         ret = super().prepare(profile)
         if not ret['ok']:
             return ret
@@ -46,10 +46,7 @@ class BorgCheckJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'check', '--info', '--log-json', '--progress']
-        if borg_compat.check('V2'):
-            cmd = cmd + ["-r", profile.repo.url]
-        else:
-            cmd.append(f'{profile.repo.url}')
+        cmd += borg_compat.repo_args(profile.repo.url, archive or None, match=True)
 
         ret['ok'] = True
         ret['cmd'] = cmd

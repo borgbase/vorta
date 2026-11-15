@@ -348,6 +348,7 @@ class VortaApp(QtSingleApplication):
                 profile_export = ProfileExport.from_json(bootstrap_file)
                 profile = profile_export.to_db(overwrite_profile=True, overwrite_settings=True)
             except Exception as exception:
+                logger.exception('Failed to import profile from %s', bootstrap_file)
                 double_newline = os.linesep + os.linesep
                 QMessageBox.critical(
                     None,
@@ -360,15 +361,15 @@ class VortaApp(QtSingleApplication):
                         self.tr('Consider removing or repairing this file to get rid of this message.'),
                     ),
                 )
-                return
-            bootstrap_file.unlink()
-            notifier = VortaNotifications.pick()
-            notifier.deliver(
-                self.tr('Profile import successful!'),
-                self.tr('Profile {} imported.').format(profile.name),
-                level='info',
-            )
-            logger.info('Profile {} imported.'.format(profile.name))
+            else:
+                bootstrap_file.unlink()
+                notifier = VortaNotifications.pick()
+                notifier.deliver(
+                    self.tr('Profile import successful!'),
+                    self.tr('Profile {} imported.').format(profile.name),
+                    level='info',
+                )
+                logger.info('Profile {} imported.'.format(profile.name))
         if BackupProfileModel.select().count() == 0:
             default_profile = BackupProfileModel(name='Default')
             default_profile.save()

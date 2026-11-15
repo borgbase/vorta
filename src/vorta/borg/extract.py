@@ -60,10 +60,7 @@ class BorgExtractJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'extract', '--list', '--info', '--log-json']
-        if borg_compat.check('V2'):
-            cmd += ['-r', profile.repo.url, archive_name]
-        else:
-            cmd.append(f'{profile.repo.url}::{archive_name}')
+        cmd += borg_compat.repo_args(profile.repo.url, archive_name)
 
         # process selected items
         # all items will be excluded beside the one actively selected in the

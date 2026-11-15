@@ -31,10 +31,10 @@ class BorgInfoRepoJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         if borg_compat.check('V2'):
-            cmd = ["borg", "repo-info", "--info", "--json", "--log-json", "-r"]
+            cmd = ["borg", "repo-info", "--info", "--json", "--log-json"]
         else:
             cmd = ["borg", "info", "--info", "--json", "--log-json"]
-        cmd.append(profile.repo.url)
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['additional_env'] = {
             'BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK': "yes",
@@ -57,7 +57,7 @@ class BorgInfoRepoJob(BorgJob):
     def process_result(self, result):
         if result['returncode'] == 0:
             new_repo, _ = RepoModel.get_or_create(
-                url=result['cmd'][-1], defaults={'name': result['params']['repo_name']}
+                url=result['params']['repo_url'], defaults={'name': result['params']['repo_name']}
             )
             if 'cache' in result['data']:
                 stats = result['data']['cache']['stats']
