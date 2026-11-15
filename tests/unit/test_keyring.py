@@ -99,7 +99,7 @@ def test_info_repo_prepare_no_password_unlock_dismissed(keyring):
     keyring.try_unlock.assert_called_once()
 
 
-def test_info_repo_empty_passphrase_kwallet_closed(qapp, mocker):
+def test_info_repo_empty_passphrase_kwallet_closed(mocker):
     """Adding an encrypted repo with an empty passphrase stores it with an open wallet handle."""
     from vorta.keyring.kwallet import VortaKWallet5Keyring
 
@@ -116,8 +116,9 @@ def test_info_repo_empty_passphrase_kwallet_closed(qapp, mocker):
 
     params = BorgInfoRepoJob.prepare({**INFO_PARAMS, 'password': ''})
     assert params['ok'] is True
-    job = BorgInfoRepoJob(params['cmd'], params)
-    job.process_result({'returncode': 0, 'params': params, 'data': {'encryption': {'mode': 'repokey'}}})
+    job = MagicMock(keyring=BorgInfoRepoJob.keyring)  # process_result only needs the keyring of the job
+    result = {'returncode': 0, 'params': params, 'data': {'encryption': {'mode': 'repokey'}}}
+    BorgInfoRepoJob.process_result(job, result)
 
     writes = [args for method, args in calls if method == 'writePassword']
     assert [args[0] for args in writes] == [7]
