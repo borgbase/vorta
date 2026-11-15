@@ -15,9 +15,6 @@ class BorgRenameJob(BorgJob):
         self._emit_backup_finished(result)
         self._emit_result(result)
 
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
-
     @classmethod
     def prepare(cls, profile, old_archive_name, new_archive_name):
         ret = super().prepare(profile)

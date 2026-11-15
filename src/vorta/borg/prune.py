@@ -1,7 +1,6 @@
-from vorta.store.models import RepoModel
 from vorta.utils import borg_compat, format_archive_name
 
-from .borg_job import BorgJob
+from .borg_job import BorgJob, invalidate_repo_stats
 
 
 class BorgPruneJob(BorgJob):
@@ -11,15 +10,10 @@ class BorgPruneJob(BorgJob):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning old archives…')}")
 
-    def finished_event(self, result):
-        # set repo stats to N/A
-        repo = RepoModel.get(id=result['params']['repo_id'])
-        repo.total_size = None
-        repo.unique_csize = None
-        repo.unique_size = None
-        repo.total_unique_chunks = None
-        repo.save()
+    def process_result(self, result):
+        invalidate_repo_stats(result['params']['repo_id'])
 
+    def finished_event(self, result):
         self._emit_backup_finished(result)
         self._emit_result(result)
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Pruning done.')}")

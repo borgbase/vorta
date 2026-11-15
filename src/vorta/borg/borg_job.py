@@ -27,7 +27,7 @@ from vorta.i18n import translate
 from vorta.inhibitor.abc import Inhibitor
 from vorta.keyring.abc import VortaKeyring
 from vorta.keyring.db import VortaDBKeyring
-from vorta.store.models import EventLogModel, db_lock
+from vorta.store.models import EventLogModel, RepoModel, db_lock
 from vorta.utils import borg_compat, pretty_bytes
 
 keyring_lock = Lock()
@@ -41,6 +41,16 @@ TRACEBACK_HEADER = 'Traceback (most recent call last):'
 # Return code reported when a job raised in Vorta. Same as Borg's error code; results
 # from such a job also carry an `exception` key.
 JOB_EXCEPTION_RETURNCODE = 2
+
+
+def invalidate_repo_stats(repo_id: int) -> None:
+    """Mark cached statistics unknown after a potentially partial repository change."""
+    repo = RepoModel.get(id=repo_id)
+    repo.total_size = None
+    repo.unique_csize = None
+    repo.unique_size = None
+    repo.total_unique_chunks = None
+    repo.save()
 
 
 def summarize_traceback(message: str) -> str:
@@ -271,6 +281,7 @@ class BorgJob(JobInterface):
     def run(self):
         self._result_emitted = False
         self._backup_finished_emitted = False
+        self._process_result_entered = False
         self._finished_event_entered = False
         self._log_entry = None
         self._log_entry_final_saved = False
@@ -341,6 +352,15 @@ class BorgJob(JobInterface):
             'log_entry_id': log_entry.id if log_entry is not None else None,
             'exception': summary,
         }
+
+        # Failed prune/delete jobs must still invalidate stats, but never retry a result handler that raised.
+        if not self._process_result_entered:
+            self._process_result_entered = True
+            try:
+                with db_lock:
+                    self.process_result(fail_result)
+            except Exception:
+                logger.exception('process_result of %s raised while handling an exception', job_name)
 
         if not self._finished_event_entered:
             self._finished_event_entered = True
@@ -488,6 +508,7 @@ class BorgJob(JobInterface):
         with db_lock:
             log_entry.save()
             self._log_entry_final_saved = True
+            self._process_result_entered = True
             self.process_result(result)
 
         self._finished_event_entered = True
