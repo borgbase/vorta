@@ -22,10 +22,7 @@ class BorgInfoArchiveJob(BorgJob):
 
         ret['ok'] = True
         ret['cmd'] = ['borg', 'info', '--log-json', '--json']
-        if borg_compat.check('V2'):
-            ret['cmd'].extend(["-r", profile.repo.url, '-a', archive_name])
-        else:
-            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
+        ret['cmd'] += borg_compat.repo_args(profile.repo.url, archive_name, match=True)
         ret['archive_name'] = archive_name
 
         return ret

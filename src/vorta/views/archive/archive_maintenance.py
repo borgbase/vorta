@@ -12,15 +12,11 @@ class ArchiveMaintenance:
         return translate(self.__class__.__name__, *args, **kwargs)
 
     def check_action(self):
-        params = BorgCheckJob.prepare(self.tab.profile())
+        archives = self.tab.selected_archives()
+        params = BorgCheckJob.prepare(self.tab.profile(), archives[0].name if archives else None)
         if not params['ok']:
             self.tab._set_status(params['message'])
             return
-
-        # Conditions are met (borg binary available, etc)
-        archives = self.tab.selected_archives()
-        if archives:
-            params['cmd'][-1] += f'::{archives[0].name}'
 
         job = BorgCheckJob(params['cmd'], params, self.tab.profile().repo.id)
         job.updated.connect(self.tab._set_status)

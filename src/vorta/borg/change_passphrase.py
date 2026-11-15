@@ -53,10 +53,7 @@ class BorgChangePassJob(BorgJob):
             return ret
 
         cmd = ['borg', '--info', '--log-json', 'key', 'change-passphrase']
-        if borg_compat.check('V2'):
-            cmd = cmd + ['-r', profile.repo.url]
-        else:
-            cmd.append(f'{profile.repo.url}')
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['additional_env'] = {'BORG_NEW_PASSPHRASE': new_passphrase}
 
