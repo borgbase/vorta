@@ -805,6 +805,28 @@ def test_recording_a_skip_emits_jobs_changed(qapp, qtbot, mocker):
         qapp.scheduler.create_backup(1)
 
 
+def test_announced_job_outlives_its_scheduler(qapp, qtbot):
+    """A queued `jobs_changed` is dropped with its scheduler instead of being emitted on freed memory."""
+    scheduler = VortaScheduler()
+    scheduler_ref = weakref.ref(scheduler)
+
+    # The app holds every scheduler through this connection, until the `init_db` teardown drops it the same way.
+    while True:
+        try:
+            qapp.backup_finished_event.disconnect()
+        except TypeError:
+            break
+    # PyQt releases a disconnected slot, and the scheduler its lambda captures, through `deleteLater`.
+    QtCore.QCoreApplication.sendPostedEvents(None, QtCore.QEvent.Type.DeferredDelete)
+
+    scheduler.record_skip(BackupProfileModel.get(name=PROFILE_NAME), JobModel.Trigger.SCHEDULED.value, 'test')
+    del scheduler
+    gc.collect()
+    assert scheduler_ref() is None
+
+    qtbot.wait(50)  # delivers the queued announcement; with a dangling emit this segfaults
+
+
 def test_create_backup_records_failure_not_skip(qapp, qtbot, mocker):
     """An unexpected prepare() failure is recorded as failed, not skipped."""
     mocker.patch(

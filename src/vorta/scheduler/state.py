@@ -248,7 +248,9 @@ class SchedulerState:
 
     def _announce_job(self) -> None:
         # A caller can be holding the scheduler's lock, as `arm_profile` is, and the jobs view reads the table here.
-        QTimer.singleShot(0, self.scheduler.jobs_changed.emit)
+        # Post the emit to the scheduler itself: Qt drops it if the scheduler is deleted first. A pending
+        # `singleShot(0, scheduler.jobs_changed.emit)` doesn't keep the scheduler alive and segfaults then.
+        QtCore.QMetaObject.invokeMethod(self.scheduler, 'jobs_changed', QtCore.Qt.ConnectionType.QueuedConnection)
 
     def record_start(self, profile: BackupProfileModel, trigger: str) -> int | None:
         """Record a submitted run, returning the row id its outcome will settle."""
