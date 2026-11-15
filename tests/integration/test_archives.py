@@ -5,18 +5,22 @@ This file contains tests for the Archive tab to test the various archive related
 import subprocess
 import sys
 from collections import namedtuple
+from pathlib import Path
 
 import psutil
 import pytest
 from packaging.version import Version
 from PyQt6 import QtCore
+from PyQt6.QtCore import QDateTime
 
 import vorta.borg
 import vorta.utils
 import vorta.views.archive.archive_extract
 import vorta.views.archive_tab
-from vorta.borg.extract import _include_pattern
-from vorta.store.models import ArchiveModel
+from vorta.borg.extract import BorgExtractJob, _include_pattern
+from vorta.store.models import ArchiveModel, BackupProfileModel
+from vorta.views.dialogs.archive.extract import ExtractTree, FileData, FileType, parse_json_lines
+from vorta.views.partials.treemodel import FileSystemItem
 
 
 def test_repo_list(qapp, qtbot):
@@ -115,6 +119,76 @@ def test_archive_extract(qapp, qtbot, monkeypatch, choose_file_dialog, tmpdir, a
     assert [item.basename for item in tmpdir.listdir()] == ['private' if sys.platform == 'darwin' else 'tmp']
 
 
+@pytest.mark.parametrize(
+    'selected_paths, expected_patterns, expected_files',
+    [
+        (
+            [('root', 'keep'), ('root', 'other', 'nested', 'target')],
+            {'+ pp:root/keep', '+ pf:root/other/nested/target'},
+            {'root/keep/one', 'root/keep/two', 'root/other/nested/target'},
+        ),
+        (
+            [('root', 'other', 'nested', 'target')],
+            {'+ pf:root/other/nested/target'},
+            {'root/other/nested/target'},
+        ),
+    ],
+)
+def test_extract_selected_patterns(
+    qapp, tmpdir, create_test_repo, borg_version, selected_paths, expected_patterns, expected_files
+):
+    """Borg restores selected directories and files without similarly named siblings."""
+    repo = create_test_repo[0]
+    source = tmpdir.mkdir('pattern_source')
+    root = source.mkdir('root')
+    keep = root.mkdir('keep')
+    keep.join('one').write('one')
+    keep.join('two').write('two')
+    root.mkdir('keep-extra').join('other').write('other')
+    nested = root.mkdir('other').mkdir('nested')
+    nested.join('target').write('target')
+    nested.join('target.bak').write('target.bak')
+
+    archive_name = 'selection-patterns'
+    is_borg_v2 = borg_version[1] >= Version('2.0.0b1')
+    if is_borg_v2:
+        create_cmd = ['borg', '-r', str(repo), 'create', archive_name, 'root']
+    else:
+        create_cmd = ['borg', 'create', f'{repo}::{archive_name}', 'root']
+    subprocess.run(create_cmd, cwd=str(source), check=True)
+
+    paths = [
+        ('root', 'd'),
+        ('root/keep', 'd'),
+        ('root/keep/one', '-'),
+        ('root/keep/two', '-'),
+        ('root/keep-extra', 'd'),
+        ('root/keep-extra/other', '-'),
+        ('root/other', 'd'),
+        ('root/other/nested', 'd'),
+        ('root/other/nested/target', '-'),
+        ('root/other/nested/target.bak', '-'),
+    ]
+    model = ExtractTree()
+    parse_json_lines([{'path': path, 'mode': mode} for path, mode in paths], model)
+    for path in selected_paths:
+        model.setData(model.indexPath(path), QtCore.Qt.CheckState.Checked, QtCore.Qt.ItemDataRole.CheckStateRole)
+
+    destination = tmpdir.mkdir('pattern_destination')
+    prepared = BorgExtractJob.prepare(BackupProfileModel.get(), archive_name, model, str(destination))
+    assert prepared['ok']
+    pattern_lines = Path(prepared['cleanup_files'][0].name).read_text().splitlines()
+    assert pattern_lines[0] == 'P pp'
+    assert pattern_lines[-1] == '- fm:*'
+    assert set(pattern_lines[1:-1]) == expected_patterns
+
+    subprocess.run(prepared['cmd'], cwd=prepared['cwd'], check=True, capture_output=True)
+    restored_files = {
+        str(path.relative_to(str(destination))) for path in Path(str(destination)).rglob('*') if path.is_file()
+    }
+    assert restored_files == expected_files
+
+
 def test_archive_delete(qapp, qtbot, mocker, archive_env):
     """Test for archive deletion"""
     main, tab = archive_env
@@ -166,7 +240,12 @@ def test_extract_unsafe_filenames(tmpdir, borg_version):
         subprocess.run(['borg', 'create', f'{repo}::a1', *wanted, 'other'], cwd=str(src), check=True)
 
     pattern_file = tmpdir.join('patterns')
-    pattern_file.write('P pf\n' + ''.join(_include_pattern(name) + '\n' for name in wanted) + '- fm:*\n')
+
+    def include_file(name):
+        data = FileData(FileType.FILE, 0, '', '', '', True, QDateTime())
+        return _include_pattern(FileSystemItem((name,), data))
+
+    pattern_file.write('P pf\n' + ''.join(include_file(name) + '\n' for name in wanted) + '- fm:*\n')
 
     archive = ['-r', str(repo), 'a1'] if is_borg_v2 else [f'{repo}::a1']
     subprocess.run(['borg', 'extract', *archive, '--patterns-from', str(pattern_file)], cwd=str(dest), check=True)

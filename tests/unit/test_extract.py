@@ -218,23 +218,32 @@ def borg_fnmatch(pattern, path):
     return re.match(fnmatch.translate(pattern + '/*'), path + '/') is not None
 
 
+def extract_item(path, file_type=FileType.FILE):
+    data = FileData(file_type, 0, '', '', '', True, QDateTime())
+    return FileSystemItem(path.split('/'), data)
+
+
 @pytest.mark.parametrize(
-    "path, expected",
+    "path, file_type, expected",
     [
-        ("home/user/file", "+ home/user/file"),
-        ("home/a b/file", "+ home/a b/file"),
-        ("home/x\nPRIMARY y", "+ fm:home/x?PRIMARY y"),
-        ("home/x\r\ny", "+ fm:home/x??y"),
-        ("home/trailing ", "+ fm:home/trailing?"),
-        ("home/tab\t", "+ fm:home/tab?"),
-        (" lead", "+ fm:?lead"),
-        ("home/[a]*?\nb", "+ fm:home/[[]a][*][?]?b"),
+        ("home/user/file", FileType.FILE, "+ pf:home/user/file"),
+        ("home/a b/file", FileType.FILE, "+ pf:home/a b/file"),
+        ("home/user/dir", FileType.DIRECTORY, "+ pp:home/user/dir"),
+        ("home/user/link", FileType.SYMBOLIC_LINK, "+ pf:home/user/link"),
+        ("home/x\nPRIMARY y", FileType.FILE, "+ fm:home/x?PRIMARY y"),
+        ("home/x\r\ny", FileType.FILE, "+ fm:home/x??y"),
+        ("home/trailing ", FileType.FILE, "+ fm:home/trailing?"),
+        ("home/tab\t", FileType.FILE, "+ fm:home/tab?"),
+        (" lead", FileType.FILE, "+ fm:?lead"),
+        ("home/[a]*?\nb", FileType.FILE, "+ fm:home/[[]a][*][?]?b"),
+        ("home/dir\nname", FileType.DIRECTORY, "+ fm:home/dir?name"),
     ],
 )
-def test_include_pattern(path, expected):
-    assert _include_pattern(path) == expected
+def test_include_pattern(path, file_type, expected):
+    item = extract_item(path, file_type)
+    assert _include_pattern(item) == expected
 
-    line = _include_pattern(path)
+    line = _include_pattern(item)
     assert len(line.splitlines()) == 1
     assert line == line.strip()
     if line.startswith('+ fm:'):
@@ -244,7 +253,7 @@ def test_include_pattern(path, expected):
 
 
 def test_include_pattern_escapes_metachars():
-    pattern = _include_pattern("d/[a]*?\n")[len('+ fm:') :]
+    pattern = _include_pattern(extract_item("d/[a]*?\n"))[len('+ fm:') :]
     assert borg_fnmatch(pattern, "d/[a]*?\n")
     assert not borg_fnmatch(pattern, "d/a*?\n")
     assert not borg_fnmatch(pattern, "d/[a]xx\n")
@@ -268,7 +277,7 @@ def test_extract_prepare_selected_directory(qapp):
     with open(ret['cleanup_files'][0].name) as f:
         content = f.read().splitlines()
 
-    assert content == ["P pp", "+ a", "- fm:*"]
+    assert content == ["P pp", "+ pp:a", "- fm:*"]
 
 
 def test_extract_prepare_partial_directory(qapp):
@@ -298,8 +307,8 @@ def test_extract_prepare_partial_directory(qapp):
     assert set(content[1:-1]) == {
         "+ fm:a/x?PRIMARY y",
         "+ fm:a/trailing?",
-        "+ a/plain",
-        "+ a/b/keep",
+        "+ pf:a/plain",
+        "+ pf:a/b/keep",
     }
 
 
