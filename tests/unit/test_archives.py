@@ -302,6 +302,24 @@ def test_refresh_archive_info(qapp, qtbot, mocker, borg_json_output, archive_env
     qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
 
 
+def test_refresh_archive_info_borg2(qapp, qtbot, mocker, monkeypatch, borg_json_output, archive_env):
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '2.0.0b25')
+    main, tab = archive_env
+    ArchiveModel.update(size=12345).where(ArchiveModel.snapshot_id == '99999').execute()
+    tab.archiveTable.selectRow(0)
+    stdout, stderr = borg_json_output('info_v2')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    with qtbot.waitSignal(tab.bRefreshArchive.clicked, timeout=5000):
+        qtbot.mouseClick(tab.bRefreshArchive, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.waitUntil(lambda: tab.mountErrors.text() == 'Refreshed archives.', **pytest._wait_defaults)
+    archive = ArchiveModel.get(snapshot_id='99999')
+    assert archive.size == 12345
+    assert archive.duration == 12.5
+
+
 @pytest.mark.parametrize('failed_index', [0, 1])
 def test_refresh_prepare_failure_keeps_buttons_enabled(qapp, mocker, archive_env, failed_index):
     _, tab = archive_env

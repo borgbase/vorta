@@ -1,0 +1,18 @@
+{
+    "cache": {
+        "path": "/home/user/.cache/borg/a768740d1d3926cb0d49554728332abd3e883547ef14cf4a19467b26329ea37b"
+    },
+    "defaults": {
+        "chunker_params": "fastcdc,19,23,21,2",
+        "compression": "lz4"
+    },
+    "encryption": {
+        "encryption": "chacha20-poly1305",
+        "id_hash": "sha256"
+    },
+    "repository": {
+        "id": "a768740d1d3926cb0d49554728332abd3e883547ef14cf4a19467b26329ea37b",
+        "location": "/srv/borg/repo"
+    },
+    "security_dir": "/home/user/.local/share/borg/security/a768740d1d3926cb0d49554728332abd3e883547ef14cf4a19467b26329ea37b"
+}

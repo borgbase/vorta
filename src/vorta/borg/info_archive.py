@@ -48,12 +48,13 @@ class BorgInfoArchiveJob(BorgJob):
                 archive.name = remote_archive['name']  # in case name changed
                 # archive.time = parser.parse(remote_archive['time'])
                 archive.duration = remote_archive['duration']
-                archive.size = remote_archive['stats']['deduplicated_size']
+                # Borg 2 cannot report the deduplicated size of an existing archive. Keep the one from create.
+                archive.size = remote_archive['stats'].get('deduplicated_size', archive.size)
 
                 archive.save()
 
-            if 'cache' in result['data']:
-                stats = result['data']['cache']['stats']
+            stats = result['data'].get('cache', {}).get('stats')  # Borg 2 has no cache stats
+            if stats:
                 repo = RepoModel.get(id=result['params']['repo_id'])
                 repo.total_size = stats['total_size']
                 repo.unique_size = stats['unique_size']
