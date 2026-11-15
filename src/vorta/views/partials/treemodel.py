@@ -791,17 +791,17 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         else:
             parent_item = parent.internalPointer()
 
-        item = list(parent_item.children)[row]
+        if not (0 <= row < len(parent_item.children) and 0 <= column < self.columnCount(parent)):
+            return QModelIndex()
+
+        item = parent_item.children[row]
 
         if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
             # combine items with a single child with that child
             while len(item.children) == 1 and self._simplify_filter(item):
                 item = item.children[0]
 
-        if 0 <= row < len(parent_item.children) and 0 <= column < self.columnCount(parent):
-            return self.createIndex(row, column, item)
-
-        return QModelIndex()
+        return self.createIndex(row, column, item)
 
     @overload
     def parent(self, child: QModelIndex) -> QModelIndex:
@@ -846,7 +846,8 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
         child_item: FileSystemItem[T] = child.internalPointer()
         parent_item = child_item._parent
 
-        if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
+        simplified = self.mode == self.DisplayMode.SIMPLIFIED_TREE
+        if simplified:
             # combine items with a single child with the child
             while (
                 parent_item is not self.root  # do not call filter with root
@@ -859,7 +860,17 @@ class FileTreeModel(QAbstractItemModel, Generic[T]):
             # Never return root item since it shouldn't be displayed
             return QModelIndex()
 
-        row, item = parent_item._parent.get(parent_item.subpath)
+        # the row is that of the topmost item merged into parent_item, as in `index`
+        top_item = parent_item
+        while (
+            simplified
+            and top_item._parent is not self.root
+            and len(top_item._parent.children) == 1
+            and self._simplify_filter(top_item._parent)
+        ):
+            top_item = top_item._parent
+
+        row, _ = top_item._parent.get(top_item.subpath)
         return self.createIndex(row, 0, parent_item)
 
     def flags(self, index: QModelIndex) -> Qt.ItemFlag:
