@@ -191,7 +191,7 @@ class SchedulerTimers:
                     EventLogModel.profile == profile.id,
                     0 <= EventLogModel.returncode <= 1,
                 )
-                .order_by(EventLogModel.end_time.desc())
+                .order_by(EventLogModel.start_time.desc())
                 .first()
             )
 
@@ -204,7 +204,7 @@ class SchedulerTimers:
                         EventLogModel.profile == profile.id,
                         0 <= EventLogModel.returncode <= 1,
                     )
-                    .order_by(EventLogModel.end_time.desc())
+                    .order_by(EventLogModel.start_time.desc())
                     .first()
                 )
 
@@ -227,14 +227,16 @@ class SchedulerTimers:
                 next_time = last_time + timedelta(**interval)
 
             elif profile.schedule_mode == 'fixed':
-                last_time = last_run_log.end_time
+                last_time = last_run_log.start_time
 
                 next_time = last_time.replace(
                     hour=profile.schedule_fixed_hour,
                     minute=profile.schedule_fixed_minute,
                     second=0,
                     microsecond=0,
-                ) + timedelta(days=1)
+                )
+                if next_time <= last_time:
+                    next_time += timedelta(days=1)
 
             else:
                 # unknown schedule mode
