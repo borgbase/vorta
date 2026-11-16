@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtCore import QSortFilterProxyModel
+from PyQt6.QtCore import QSortFilterProxyModel, Qt
 from PyQt6.QtWidgets import QAbstractItemView, QHeaderView
 
 from vorta import config
@@ -21,6 +21,7 @@ class LogPage(BaseTab, LogTableBase, LogTableUI):
         self._model = EventLogTableModel(self)
         self._proxy = QSortFilterProxyModel(self)
         self._proxy.setSourceModel(self._model)
+        self._proxy.setSortRole(Qt.ItemDataRole.UserRole)
         self.logPage.setModel(self._proxy)
 
         self.init_ui()
