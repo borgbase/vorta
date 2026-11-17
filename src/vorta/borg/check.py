@@ -10,6 +10,7 @@ from .borg_job import BorgJob
 
 class BorgCheckJob(BorgJob):
     emits_backup_finished = True
+    should_inhibit = True
 
     def started_event(self):
         self.app.backup_started_event.emit()
