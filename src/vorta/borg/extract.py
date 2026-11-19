@@ -3,7 +3,7 @@ import tempfile
 from PyQt6.QtCore import QModelIndex, Qt
 
 from vorta.utils import borg_compat
-from vorta.views.dialogs.archive.extract import ExtractTree, FileData
+from vorta.views.dialogs.archive.extract import ExtractTree, FileData, FileType
 from vorta.views.partials.treemodel import FileSystemItem, path_to_str
 
 from .borg_job import BorgJob
@@ -11,15 +11,22 @@ from .borg_job import BorgJob
 _FNMATCH_ESCAPES = {'*': '[*]', '?': '[?]', '[': '[[]'}
 
 
-def _include_pattern(path: str) -> str:
+def _include_pattern(item: FileSystemItem[FileData]) -> str:
     """Return a pattern file line that includes `path`.
 
     Borg reads pattern files line by line and strips surrounding whitespace, with no
     escape mechanism. Paths containing line breaks or leading/trailing whitespace are
     therefore expressed as `fm:` patterns with those characters replaced by `?`.
     """
+    path = path_to_str(item.path)
+    # borg does a linear scan for pp but a hash lookup on pf. Only emit pp if this
+    # might be a directory. Keeps the common case of user selects 1 directory fast
+    # while handling some pathalogical cases of selecting 1 directory then unselecting
+    # 1 child producing thousands of pp:'s requiring the linear scan each
     if '\n' not in path and '\r' not in path and path == path.strip():
-        return '+ ' + path
+        if item.data.file_type == FileType.DIRECTORY:
+            return '+ pp:' + path
+        return '+ pf:' + path
 
     stripped = path.lstrip()
     lead = len(path) - len(stripped)
@@ -69,19 +76,20 @@ class BorgExtractJob(BorgJob):
         # Unselected (and excluded) parent folders will be restored by borg
         # but without the metadata stored in the archive.
         pattern_file = tempfile.NamedTemporaryFile('w', delete=True)
-        pattern_file.write("P pf\n")
+        pattern_file.write("P pp\n")
 
-        indexes = [QModelIndex()]
+        indexes = [model.index(i, 0, QModelIndex()) for i in range(model.rowCount(QModelIndex()))]
         while indexes:
             index = indexes.pop()
 
-            for i in range(model.rowCount(index)):
-                new_index = model.index(i, 0, index)
-                indexes.append(new_index)
-
-                item: FileSystemItem[FileData] = new_index.internalPointer()
-                if item.data.checkstate == Qt.CheckState.Checked:
-                    pattern_file.write(_include_pattern(path_to_str(item.path)) + "\n")
+            checked = model.data(index, Qt.ItemDataRole.CheckStateRole)
+            item: FileSystemItem[FileData] = index.internalPointer()
+            if checked == Qt.CheckState.Checked:
+                pattern_file.write(_include_pattern(item) + "\n")
+            elif checked == Qt.CheckState.PartiallyChecked:
+                for i in range(model.rowCount(index)):
+                    indexes.append(model.index(i, 0, index))
+            # else do neither because its not relevant
 
         pattern_file.write("- fm:*\n")
         pattern_file.flush()
