@@ -213,11 +213,13 @@ def test_archive_extract(qapp, qtbot, mocker, borg_json_output, archive_env):
     stdout, stderr = borg_json_output('list_archive')
     popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
     mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
-    tab.archive_extract.extract_action()
+    job = tab.archive_extract.extract_action()
 
     qtbot.waitUntil(lambda: hasattr(tab, '_window'), **pytest._wait_defaults)
 
     model = tab._window.model
+    assert model is job.model
+    assert model.thread() == job.thread() == qapp.thread()
     assert model.root.children[0].subpath == 'home'
     assert 'test-archive, 2000' in tab._window.archiveNameLabel.text()
 

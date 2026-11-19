@@ -6,7 +6,7 @@ import pytest
 import vorta.application
 import vorta.borg
 import vorta.store.models
-from vorta.borg.borg_job import BorgJob, summarize_traceback
+from vorta.borg.borg_job import BorgJob, LineBuffer, summarize_traceback
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.delete import BorgDeleteJob
 from vorta.borg.prune import BorgPruneJob
@@ -96,6 +96,18 @@ def test_prepare_bin_does_not_grow_path(monkeypatch):
     assert os.environ['PATH'] == path_after_first_call
     path_dirs = path_after_first_call.split(os.pathsep)
     assert len(path_dirs) == len(set(path_dirs))
+
+
+def test_line_buffer_splits_complete_lines_and_flushes_tail():
+    buffer = LineBuffer()
+
+    assert buffer.process('first\nsec') == ['first']
+    assert buffer.process('') == []
+    assert buffer.process('ond\nthird\nlast') == ['second', 'third']
+    assert buffer.flush() == ['last']
+    assert buffer.flush() == []
+    assert buffer.process('next\n') == ['next']
+    assert buffer.flush() == []
 
 
 def _traceback_of(func):
