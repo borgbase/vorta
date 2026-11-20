@@ -10,7 +10,7 @@ from test_constants import TEST_TEMP_DIR
 import vorta.borg
 import vorta.utils
 import vorta.views.archive_tab
-from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel
+from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
 from vorta.views.partials.archive_table_model import ArchiveTableModel
 
 
@@ -62,6 +62,23 @@ def test_populate_does_not_overwrite_prune_keep_within(qapp, qtbot):
     profile = profile.refresh()
     assert profile.prune_keep_within == '10H'
     assert tab.prune_keep_within.text() == '10H'
+
+
+def test_repo_mount_state_resets_when_switching_to_unmounted_profile(qapp, archive_env, mocker):
+    main, tab = archive_env
+    other_repo = RepoModel.create(url='other-test-repo')
+    other_profile = BackupProfileModel.create(name='Other', repo=other_repo)
+    mocker.patch('vorta.views.archive_tab.get_mount_points', return_value=({}, []))
+
+    tab.repo_mount_point = '/tmp/first-profile-mount'
+    tab.archive_mount.bmountrepo_refresh()
+    assert tab.bMountRepo.text() == 'Unmount'
+
+    main.current_profile = other_profile
+    tab.populate_from_profile()
+
+    assert tab.repo_mount_point is None
+    assert tab.bMountRepo.text() == 'Mount…'
 
 
 def test_repo_list(qapp, qtbot, mocker, borg_json_output, archive_env):
