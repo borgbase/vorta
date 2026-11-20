@@ -5,6 +5,7 @@ Qt table model exposing `EventLogModel` rows to the LogPage `QTableView`.
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any, List, Optional
 
 from PyQt6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, Qt
@@ -22,6 +23,7 @@ class EventLogTableModel(QAbstractTableModel):
     COL_SUBCOMMAND = 2
     COL_REPOSITORY = 3
     COL_RETURNCODE = 4
+    COL_DURATION = 5
 
     _HEADERS = (
         QT_TRANSLATE_NOOP('LogPage', 'Time'),
@@ -29,6 +31,7 @@ class EventLogTableModel(QAbstractTableModel):
         QT_TRANSLATE_NOOP('LogPage', 'Subcommand'),
         QT_TRANSLATE_NOOP('LogPage', 'Repository'),
         QT_TRANSLATE_NOOP('LogPage', 'Returncode'),
+        QT_TRANSLATE_NOOP('LogPage', 'Duration'),
     )
 
     def __init__(self, parent: Optional[Any] = None):
@@ -53,11 +56,17 @@ class EventLogTableModel(QAbstractTableModel):
         return len(self._HEADERS)
 
     def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
-        if not index.isValid() or role != Qt.ItemDataRole.DisplayRole:
+        if not index.isValid() or role not in (Qt.ItemDataRole.DisplayRole, Qt.ItemDataRole.UserRole):
             return None
 
         row = self._rows[index.row()]
         column = index.column()
+
+        if column == self.COL_DURATION:
+            if row.returncode == -1 or row.start_time is None or row.end_time is None or row.end_time < row.start_time:
+                return None if role == Qt.ItemDataRole.UserRole else ''
+            seconds = (row.end_time - row.start_time).total_seconds()
+            return seconds if role == Qt.ItemDataRole.UserRole else str(timedelta(seconds=round(seconds)))
 
         if column == self.COL_TIME:
             return row.start_time.strftime('%Y-%m-%d %H:%M')
