@@ -4,7 +4,7 @@ import pytest
 from PyQt6.QtCore import QDir, QModelIndex
 from PyQt6.QtWidgets import QMessageBox
 
-from vorta.filedialog import VortaFileDialog, VortaFileSelector
+from vorta.filedialog import VortaFileDialog, VortaFileSelector, get_drives_path
 
 
 @pytest.fixture
@@ -78,6 +78,40 @@ def test_path_changed_invalid(file_dialog, qtbot):
     with patch('os.path.exists', return_value=False):
         file_dialog.path_bar.setText("/invalid/path")
         qtbot.waitUntil(lambda: file_dialog.path_bar.styleSheet() == "background-color: #ffcccc")
+
+
+@pytest.mark.parametrize(
+    'platform, existing, expected',
+    [
+        ('darwin', {'/Volumes'}, '/Volumes'),
+        ('linux', {'/run/media/alice', '/media', '/mnt'}, '/run/media/alice'),
+        ('linux', {'/media/alice', '/media', '/mnt'}, '/media/alice'),
+        ('linux', {'/mnt'}, '/mnt'),
+        ('linux', set(), None),
+    ],
+)
+def test_get_drives_path(mocker, platform, existing, expected):
+    """The drives folder is /Volumes on macOS and the first mount folder that exists elsewhere."""
+    mocker.patch('vorta.filedialog.sys.platform', platform)
+    mocker.patch('vorta.filedialog.getpass.getuser', return_value='alice')
+    mocker.patch('vorta.filedialog.os.path.isdir', side_effect=lambda path: path in existing)
+    assert get_drives_path() == expected
+
+
+def test_go_drives(file_dialog, mocker):
+    """The drives button opens the folder where external drives are mounted."""
+    mocker.patch('vorta.filedialog.get_drives_path', return_value='/Volumes')
+    mocker.patch('os.path.exists', return_value=True)
+    file_dialog.btnDrives.click()
+    assert file_dialog.path_bar.text() == '/Volumes'
+
+
+def test_drives_button_hidden_without_drives_folder(qapp, mocker):
+    """Without a mount folder there is nothing to open, so the button is hidden."""
+    mocker.patch('vorta.filedialog.get_drives_path', return_value=None)
+    dialog = VortaFileDialog()
+    assert dialog.btnDrives.isHidden()
+    dialog.close()
 
 
 def test_file_selector_get_paths(mocker):
