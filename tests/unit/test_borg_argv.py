@@ -412,6 +412,21 @@ def test_break_lock_finished_signals(returncode, text, qapp, mocker, profile):
     assert text in emitted[1][1]
 
 
+@pytest.mark.parametrize(
+    'ssh_key,expected',
+    [
+        (None, 'ssh'),
+        ('id_ed25519', f"ssh -i {os.path.expanduser('~/.ssh/id_ed25519')} -o IdentitiesOnly=yes"),
+    ],
+)
+def test_selected_ssh_key_is_the_only_identity(ssh_key, expected, qapp, profile):
+    """With a key selected, SSH must not also offer the agent's keys (#2331)."""
+    profile.ssh_key = ssh_key
+    params = BorgListRepoJob.prepare(profile)
+    job = BorgListRepoJob(params['cmd'], params)
+    assert job.env['BORG_RSH'] == expected
+
+
 V2_MP = '/mnt/point'
 
 
