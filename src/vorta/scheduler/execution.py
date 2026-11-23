@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from packaging import version
 
-from vorta.borg.borg_job import BorgJob
+from vorta.borg.borg_job import BorgJob, worst_error
 from vorta.borg.check import BorgCheckJob
 from vorta.borg.compact import BorgCompactJob
 from vorta.borg.create import BorgCreateJob
@@ -33,15 +33,6 @@ def run_succeeded(subcommand: str | None, returncode: int) -> bool:
     if subcommand == 'check':
         return returncode in CHECK_SUCCESS_RETURNCODES
     return returncode in SUCCESS_RETURNCODES
-
-
-def worst_error(errors: list[tuple[int, str]] | None) -> str | None:
-    """The most severe message Borg logged, to show as the reason a run failed."""
-    if not errors:
-        return None
-
-    worst = max(level for level, _ in errors)
-    return next(message for level, message in errors if level == worst)
 
 
 class SchedulerExecution:

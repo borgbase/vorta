@@ -1040,7 +1040,7 @@ def test_recording_a_run_emits_jobs_changed(qapp, qtbot, mocker, borg_json_outpu
 )
 def test_worst_error_picks_the_most_severe_message(errors, expected):
     """A failed run shows the worst thing Borg said, not the first or last thing."""
-    assert vorta.scheduler.execution.worst_error(errors) == expected
+    assert vorta.borg.borg_job.worst_error(errors) == expected
 
 
 @prepare
