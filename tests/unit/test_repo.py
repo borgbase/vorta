@@ -296,6 +296,36 @@ def test_repo_add_existing_borg2(qapp, qtbot, mocker, monkeypatch, borg_json_out
     assert VortaKeyring.get_keyring().get_password('vorta-repo', test_repo_url) == LONG_PASSWORD
 
 
+def test_repo_add_existing_shows_borg_error(qapp, qtbot, mocker, borg_json_output):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    qtbot.addWidget(window)
+    qtbot.keyClicks(window.repoURL, f'vorta-test-repo.{uuid.uuid4()}.com:repo')
+    qtbot.keyClicks(window.passwordInput, 'wrong-password')
+
+    stdout, stderr = borg_json_output('info_passphrase_wrong')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=2)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    window.run()
+    qtbot.waitUntil(lambda: window.saveButton.isEnabled(), **pytest._wait_defaults)
+
+    assert window.errorText.text() == (
+        'Unable to add your repository: Passphrase supplied in BORG_PASSPHRASE, by BORG_PASSCOMMAND, '
+        'or via BORG_PASSPHRASE_FD is incorrect.'
+    )
+
+
+def test_repo_add_failure_without_borg_error(qapp, qtbot):
+    window = repo_add.ExistingRepoWindow()
+    qtbot.addWidget(window)
+
+    window.run_result({'returncode': 2, 'errors': []})
+
+    assert window.errorText.text() == 'Unable to add your repository.'
+
+
 def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
     main = qapp.main_window
     tab = main.repoTab
