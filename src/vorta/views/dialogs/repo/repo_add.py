@@ -68,13 +68,16 @@ class RepoWindow(AddRepoBase, AddRepoUI):
             if folder:
                 self.repoURL.setText(folder[0])
                 self.repoName.setText(folder[0].split('/')[-1])
-                self.repoURL.setEnabled(False)
-                self.sshComboBox.setEnabled(False)
-                self.repoLabel.setText(self.tr('Repository Path:'))
-                self.is_remote_repo = False
+                self._use_local_repo()
 
         dialog = choose_file_dialog(self, self.tr("Choose Location of Borg Repository"))
         dialog.open(receive)
+
+    def _use_local_repo(self):
+        self.repoURL.setEnabled(False)
+        self.sshComboBox.setEnabled(False)
+        self.repoLabel.setText(self.tr('Repository Path:'))
+        self.is_remote_repo = False
 
     def use_remote_repo_action(self):
         self.repoURL.setText('')
@@ -136,6 +139,25 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         )
         return out
 
+    @property
+    def draft(self):
+        """Entered values, without the password, to refill a new window after this one is closed."""
+        draft = {key: value for key, value in self.values.items() if key != 'password'}
+        draft['is_remote_repo'] = self.is_remote_repo
+        return draft
+
+    def restore_draft(self, draft):
+        if not draft:
+            return
+        if not draft['is_remote_repo']:
+            self._use_local_repo()
+        self.repoURL.setText(draft['repo_url'])
+        self.repoName.setText(draft['repo_name'])
+        self.extraBorgArgumentsLineEdit.setText(draft['extra_borg_arguments'])
+        ssh_index = self.sshComboBox.findData(draft['ssh_key'])
+        if ssh_index >= 0:
+            self.sshComboBox.setCurrentIndex(ssh_index)
+
 
 class AddRepoWindow(RepoWindow):
     def __init__(self, parent=None):
@@ -171,6 +193,13 @@ class AddRepoWindow(RepoWindow):
         out = super().values
         out['encryption'] = self.encryptionComboBox.currentData()
         return out
+
+    def restore_draft(self, draft):
+        super().restore_draft(draft)
+        if draft:
+            encryption_index = self.encryptionComboBox.findData(draft['encryption'])
+            if encryption_index >= 0:
+                self.encryptionComboBox.setCurrentIndex(encryption_index)
 
     def init_encryption(self):
         if borg_compat.check('V2'):

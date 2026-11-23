@@ -27,6 +27,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
     def __init__(self, parent=None, profile_provider=None):
         super().__init__(parent=parent, profile_provider=profile_provider)
         self.setupUi(parent)
+        self._repo_window_drafts = {}  # Input of closed repo dialogs, kept for this session only
 
         self.borgbase_sentence = QT_TRANSLATE_NOOP('Form', 'For simple and secure backup hosting, try %1.')
         self.compression_help_text = QT_TRANSLATE_NOOP('Form', 'Help on compression types')
@@ -269,20 +270,21 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
 
     def new_repo(self):
         """Open a dialog to create a new repo and add it to vorta."""
-        window = AddRepoWindow()
-        self._window = window  # For tests
-        window.setParent(self, QtCore.Qt.WindowType.Sheet)
-        window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
-        window.open()
+        self._open_repo_window(AddRepoWindow)
 
     def add_existing_repo(self):
         """Open a dialog to add a existing repo to vorta."""
-        window = ExistingRepoWindow()
+        self._open_repo_window(ExistingRepoWindow)
+
+    def _open_repo_window(self, window_class):
+        """Open a repo dialog, refilled with what was entered before it was last closed."""
+        window = window_class()
         self._window = window  # For tests
         window.setParent(self, QtCore.Qt.WindowType.Sheet)
+        window.restore_draft(self._repo_window_drafts.get(window_class))
         window.added_repo.connect(self.process_new_repo)
-        # window.rejected.connect(lambda: self.repoSelector.setCurrentIndex(0))
+        window.added_repo.connect(lambda _result: self._repo_window_drafts.pop(window_class, None))
+        window.rejected.connect(lambda: self._repo_window_drafts.update({window_class: window.draft}))
         window.open()
 
     def repo_select_action(self):
