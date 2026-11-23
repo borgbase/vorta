@@ -147,7 +147,8 @@ class BorgJob(JobInterface):
         ssh_key = params.get('ssh_key')
         if ssh_key is not None:
             ssh_key_path = os.path.expanduser(f'~/.ssh/{ssh_key}')
-            env['BORG_RSH'] += f' -i {ssh_key_path}'
+            # Without IdentitiesOnly, SSH tries every key in the agent before this one (#2331).
+            env['BORG_RSH'] += f' -i {ssh_key_path} -o IdentitiesOnly=yes'
 
         self.env = env
         self.cmd = cmd
