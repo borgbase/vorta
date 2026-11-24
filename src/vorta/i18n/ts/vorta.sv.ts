@@ -2571,7 +2571,7 @@
     <message>
         <location filename="../../scheduler/execution.py" line="154" />
         <source>Error during backup creation for %s.</source>
-        <translation>Fel vid skapande av säkerhetskopia för %s.</translation>
+        <translation>Fel vid skapandet av säkerhetskopian för %s.</translation>
     </message>
     <message>
         <location filename="../../scheduler/execution.py" line="261" />
