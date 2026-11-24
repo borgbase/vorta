@@ -82,7 +82,7 @@ Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
 
 ### Step 2: Load glossary and scan for consistency
 
-**2a. Load glossary:** Read `.claude/skills/translate/glossaries/<lang>.md` if it exists. The per-language glossary is the project's terminology ledger: all recorded terms and decisions are mandatory. Review its guidance before translating or reviewing a catalog, and update it when maintainers agree on a new term.
+**2a. Load glossary:** Read `.claude/skills/translate/glossaries/<lang>.md` if it exists. All terms in the glossary are mandatory — use them consistently.
 
 **2b. Scan existing translations:** Before translating new strings, grep for key domain terms in already-translated strings to identify established conventions. Flag any conflicts with the glossary (e.g., a glossary says "Passwort" but existing translations use "Kennwort").
 
@@ -146,12 +146,11 @@ For each untranslated string, consider:
    - Key terms: repository, archive, backup, prune, mount, extract, passphrase
 
 4. **Style Guide:**
-   - **Buttons:** Follow the target language's normal capitalization (English commonly uses Title Case: Save, Cancel, Add Repository)
+   - **Buttons:** Title Case in English (Save, Cancel, Add Repository)
    - **Labels with colons:** Keep the colon (Repository:, Password:)
-   - **Menu items:** Follow the target language's normal capitalization
+   - **Menu items:** Title Case
    - **Descriptions/tooltips:** Sentence case
-   - **Technical terms:** Keep product and protocol names such as Borg, BorgBackup, and SSH unchanged. Translate generic terms according to the locale glossary.
-   - **Per-language terminology and style:** Follow `.claude/skills/translate/glossaries/<lang>.md` when it exists. Treat that glossary as the source of truth for each language's terminology, register, capitalization, and other language-specific conventions; do not duplicate locale-specific rules here.
+   - **Technical terms:** Keep English for: Borg, BorgBackup, SSH, repository (or use locale-appropriate term)
    - **Placeholders:** Preserve all five placeholder formats used in Vorta exactly:
      - Qt plural (`numerus="yes"`): `%n` inside `<numerusform>` elements matching the target language's Qt plural count (2 for `de`/`es`/`fi`/`fr`/`gl`/`it`/`nl`/`sv`, 3 for `cs`/`ru`/`sk`, 6 for `ar`)
      - Python printf: `%s`, `%d`

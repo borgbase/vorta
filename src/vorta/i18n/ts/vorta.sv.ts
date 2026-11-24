@@ -1649,7 +1649,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Use -1 for unlimited</source>
-        <translation>Använd -1 för obegränsat</translation>
+        <translation>Använd -1 för obegränsat.</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -3085,7 +3085,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
-        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig</translation>
+        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="94" />
