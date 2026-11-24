@@ -28,7 +28,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="148" />
         <source>Encryption:</source>
-        <translation>Cifraxe:</translation>
+        <translation>Cifrado:</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
@@ -111,7 +111,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Choose a local folder</source>
-        <translation>Elexir cartafol local</translation>
+        <translation>Escoller un cartafol local</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -122,7 +122,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Choose a remote repository</source>
-        <translation>Elexir un repositorio remoto</translation>
+        <translation>Escoller un repositorio remoto</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -169,12 +169,12 @@
     <message>
         <location filename="../../views/archive/archive_delete.py" line="27" />
         <source>Are you sure you want to delete all the selected archives?</source>
-        <translation>Tes certeza de querer eliminar todos os arquivos elexidos?</translation>
+        <translation>Ten a certeza de que quere eliminar todos os arquivos seleccionados?</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_delete.py" line="29" />
         <source>Are you sure you want to delete the selected archive?</source>
-        <translation>Tes certeza de querer eliminar o arquivo elexido?</translation>
+        <translation>Ten a certeza de que quere eliminar o arquivo seleccionado?</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_delete.py" line="30" />
@@ -244,7 +244,7 @@
     <message>
         <location filename="../../views/archive/archive_mount.py" line="64" />
         <source>Mount the selected archive as a folder in the file system</source>
-        <translation>Montar o arquivo elexido como un cartafol no sistema de ficheiros</translation>
+        <translation>Montar o arquivo seleccionado como un cartafol no sistema de ficheiros</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="74" />
@@ -328,22 +328,22 @@
     <message>
         <location filename="../../views/archive_tab.py" line="385" />
         <source>(borg already running)</source>
-        <translation>(borg xa está a funcionar)</translation>
+        <translation>(Borg xa está a funcionar)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="395" />
         <source>(Select minimum one archive)</source>
-        <translation>(Elixe polo menos un arquivo)</translation>
+        <translation>(Seleccione polo menos un arquivo)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="407" />
         <source>(Select two archives)</source>
-        <translation>(Elixer dous arquivos)</translation>
+        <translation>(Seleccione dous arquivos)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="422" />
         <source>(Select exactly one archive)</source>
-        <translation>(Elixe exactamente un arquivo)</translation>
+        <translation>(Seleccione exactamente un arquivo)</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="470" />
@@ -379,7 +379,7 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="163" />
         <source>Scheduled</source>
-        <translation>Programada</translation>
+        <translation>Planeada</translation>
     </message>
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="165" />
@@ -487,7 +487,7 @@
     <message>
         <location filename="../../borg/break_lock.py" line="23" />
         <source>Breaking the repository lock failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Produciuse un fallo ao romper o bloqueo do repositorio. Consulte os %1 para ver os detalles.</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="14" />
@@ -610,14 +610,14 @@
     <message>
         <location filename="../../borg/info_repo.py" line="27" />
         <source>Validating existing repo…</source>
-        <translation>A validar repo existente...</translation>
+        <translation>A validar o repositorio existente…</translation>
     </message>
 </context><context>
     <name>BorgInitJob</name>
     <message>
         <location filename="../../borg/init.py" line="11" />
         <source>Setting up new repo…</source>
-        <translation>A configurar novo repo...</translation>
+        <translation>A configurar o novo repositorio…</translation>
     </message>
 </context><context>
     <name>BorgJob</name>
@@ -647,7 +647,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="376" />
         <source>Task failed: {}</source>
-        <translation type="unfinished" />
+        <translation>Fallou a tarefa: {}</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="521" />
@@ -782,12 +782,12 @@
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="32" />
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
-        <translation>Os perfís permiten configurar diferentes axustes para as copias e os repositorios, incluíndo as programacións.</translation>
+        <translation>Os perfís permiten configurar diferentes axustes para as copias e os repositorios, incluíndo os planeamentos.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="36" />
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
-        <translation>Todos os perfís poderán acceder aos mesmos repositorios así como ás mesmas chaves %1. Os axustes xerais da aplicación en %2 compártense entre os perfís</translation>
+        <translation>Todos os perfís poderán acceder aos mesmos repositorios así como ás mesmas chaves %1. Os axustes xerais da aplicación en %2 compártense entre os perfís.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="21" />
@@ -818,7 +818,7 @@
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <location filename="../../assets/UI/dialogs/exception.ui" line="0" />
         <source>Copy to Clipboard</source>
-        <translation>Copiar ao Portapapeis</translation>
+        <translation>Copiar ao portapapeis</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
@@ -845,7 +845,7 @@
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Folders First</source>
-        <translation>Primeiro Cartafoles</translation>
+        <translation>Primeiro cartafoles</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
@@ -874,7 +874,7 @@
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <location filename="../../assets/UI/dialogs/archive/diff_result.ui" line="0" />
         <source>Collapse All</source>
-        <translation>Pregar Todo</translation>
+        <translation>Pregar todo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
@@ -914,7 +914,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
         <source>Choose archives for diff</source>
-        <translation>Elexir arquivos para diff</translation>
+        <translation>Escoller arquivos para diff</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
@@ -959,7 +959,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <source>Choose files to extract</source>
-        <translation>Elexir ficheiros a extraer</translation>
+        <translation>Escoller ficheiros para extraer</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
@@ -984,12 +984,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
         <source>Overwrite existing profile</source>
-        <translation>Sobrescribe o perfil existente</translation>
+        <translation>Sobrescribir o perfil existente</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
         <source>Overwrite existing settings</source>
-        <translation>Sobrescribe os axustes existentes</translation>
+        <translation>Sobrescribir os axustes existentes</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
@@ -999,12 +999,12 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
         <source>Include borg passphrase in export</source>
-        <translation>Incluír a frase de paso borg na exportación</translation>
+        <translation>Incluír a frase de paso de Borg na exportación</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
         <source>Add Profile</source>
-        <translation>Engadir Perfil</translation>
+        <translation>Engadir perfil</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
@@ -1014,7 +1014,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
         <source>Profile Name:</source>
-        <translation>Nome do Perfil:</translation>
+        <translation>Nome do perfil:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
@@ -1039,7 +1039,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
         <source>Do not change this if you want SSH to automatically find the key.</source>
-        <translation>Non cambie isto se quere que SSH atope a chave automáticamente.</translation>
+        <translation>Non cambie isto se quere que SSH atope a chave automaticamente.</translation>
     </message>
 </context><context>
     <name>DiffResultDialog</name>
@@ -1063,7 +1063,7 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="757" />
         <source>Change</source>
-        <translation>Cambiar</translation>
+        <translation>Cambio</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="759" />
@@ -1147,7 +1147,7 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="208" />
         <source>Toggle</source>
-        <translation>Cambiar</translation>
+        <translation>Alternar</translation>
     </message>
 </context><context>
     <name>ExcludeIfPresentHelp</name>
@@ -1190,7 +1190,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
-        <translation>Contrasinal engadido automáticamente desde xestor de contrasinais.</translation>
+        <translation>Contrasinal engadido automaticamente desde o xestor de contrasinais.</translation>
     </message>
 </context><context>
     <name>ExportWindow</name>
@@ -1202,7 +1202,7 @@
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="39" />
         <source>Disclose your borg passphrase (No passphrase set)</source>
-        <translation>Mostrar o teu contrasinal borg (Sen contrasinal establecido)</translation>
+        <translation>Amosar a súa frase de paso de Borg (Sen frase de paso establecida)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="44" />
@@ -1317,7 +1317,7 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="540" />
         <source>broken</source>
-        <translation>estragada</translation>
+        <translation>danado</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="553" />
@@ -1329,7 +1329,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="31" />
         <source>For simple and secure backup hosting, try %1.</source>
-        <translation>Para hospedar as copias de xeito doado e seguro, proba %1.</translation>
+        <translation>Para hospedar as copias de xeito doado e seguro, probe %1.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="32" />
@@ -1349,7 +1349,7 @@
     <message>
         <location filename="../../views/about_tab.py" line="31" />
         <source>%1 to view Git repo.</source>
-        <translation>%1 para ver o repo Git.</translation>
+        <translation>%1 para ver o repositorio Git.</translation>
     </message>
     <message>
         <location filename="../../views/about_tab.py" line="32" />
@@ -1496,7 +1496,7 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <source>Deduplicated Size:</source>
-        <translation>Tamaño desduplicado:</translation>
+        <translation>Tamaño deduplicado:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
@@ -1589,12 +1589,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Prune the archives in this repository</source>
-        <translation>Podar os arquivos neste repositiorio</translation>
+        <translation>Podar os arquivos neste repositorio</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Prune</source>
-        <translation>Poda</translation>
+        <translation>Podar</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1649,7 +1649,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Delete selected archive(s)</source>
-        <translation>Eliminar archivo(s) seleccionado(s)</translation>
+        <translation>Eliminar o(s) arquivo(s) seleccionado(s)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1714,7 +1714,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Available variables: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</source>
-        <translation>Variables dispoñibles:  hostname, fqdn, profile_id, profile_slug, now, utc_now, user</translation>
+        <translation>Variables dispoñibles: hostname, fqdn, profile_id, profile_slug, now, utc_now, user</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1729,7 +1729,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</source>
-        <translation>{hostname}-{profile_slug}-{now:%d-%m-%Y-%H%M%S}</translation>
+        <translation>{hostname}-{profile_slug}-{now:%Y-%m-%d-%H%M%S}</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1755,7 +1755,7 @@
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="40" />
         <source>Enter passphrase (already loaded from your keyring)</source>
-        <translation>Escribir frase de paso (xa cargada desde o anel de chaves)</translation>
+        <translation>Escribir frase de paso (xa cargada desde o chaveiro)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="48" />
@@ -1986,7 +1986,7 @@
     <message>
         <location filename="../../views/main_window.py" line="367" />
         <source>Should Vorta continue to run in the background?</source>
-        <translation>Debería seguir executandose Vorta nun segundo plano?</translation>
+        <translation>Debería seguir executándose Vorta en segundo plano?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="377" />
@@ -2241,7 +2241,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="147" />
         <source>Try refreshing the metadata of any archive.</source>
-        <translation>Intente actualizar os metadatos de calquera ficheiro.</translation>
+        <translation>Tente actualizar os metadatos de calquera arquivo.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="211" />
@@ -2276,7 +2276,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="336" />
         <source>Repository was Unlinked</source>
-        <translation>O repositorio foi desligado</translation>
+        <translation>O repositorio foi desvinculado</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="337" />
@@ -2286,7 +2286,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="339" />
         <source>Repository was Detached</source>
-        <translation>O repositorio foi desvinculado</translation>
+        <translation>O repositorio foi separado</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="340" />
@@ -2347,7 +2347,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="76" />
         <source>Choose Location of Borg Repository</source>
-        <translation>Elexir a Localización do repositorio Borg</translation>
+        <translation>Escoller a localización do repositorio de Borg</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="85" />
@@ -2696,7 +2696,7 @@
     <message>
         <location filename="../../application.py" line="413" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
-        <translation>Borg saíu cun estado de aviso (rc 1). Mira os %1.</translation>
+        <translation>Borg saíu cun estado de aviso (rc 1). Consulte os %1 para ver os detalles.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="144" />
@@ -2721,7 +2721,7 @@
     <message>
         <location filename="../../application.py" line="243" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
-        <translation>Sen isto, algúns ficheiros non serán accesible e poderías atoparte cunha copia de seguridade incompleta. Establece o permiso %1 para Vorta en %2.</translation>
+        <translation>Sen isto, algúns ficheiros non serán accesibles e podería acabar cunha copia de seguridade incompleta. Estableza o permiso %1 para Vorta en %2.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="249" />
@@ -2821,17 +2821,17 @@
     <message>
         <location filename="../../application.py" line="407" />
         <source>Repo Check Failed</source>
-        <translation>Fallou a Comprobación do repositorio</translation>
+        <translation>Fallou a comprobación do repositorio</translation>
     </message>
     <message>
         <location filename="../../application.py" line="420" />
         <source>Repository data check for repo was killed by signal %s.</source>
-        <translation>A comprobación dos datos do repositorio foi interrumpida polo sinal %s.</translation>
+        <translation>A comprobación dos datos do repositorio foi interrompida polo sinal %s.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="421" />
         <source>The process running the check job got a kill signal. Try again.</source>
-        <translation>O proceso que realiza o traballo de comprobación recibeu un sinal de finalización. Intentar outra vez.</translation>
+        <translation>O proceso que realiza o traballo de comprobación recibiu un sinal de finalización. Ténteo de novo.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="424" />
@@ -2841,7 +2841,7 @@
     <message>
         <location filename="../../application.py" line="429" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
-        <translation>Avalía reparar ou recrear o repositorio axiña para evitar a perda de datos.</translation>
+        <translation>Considere reparar ou recrear o repositorio axiña para evitar a perda de datos.</translation>
     </message>
     <message>
         <source>Abort</source>
@@ -2945,7 +2945,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="199" />
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
-        <translation>A súa versión de Borg é demasiado antiga. ë necesaria unha &gt;=1.1.0.</translation>
+        <translation>A súa versión de Borg é demasiado antiga. É necesaria a versión &gt;=1.1.0.</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="208" />
@@ -3059,7 +3059,7 @@ Tente desvincular e volver engadir o repositorio.</translation>
     <message>
         <location filename="../../store/settings.py" line="60" />
         <source>Show main window of Vorta on launch</source>
-        <translation>Mostrar ventá principal de Vorta ao iniciar</translation>
+        <translation>Amosar a xanela principal de Vorta ao iniciar</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="61" />
@@ -3094,7 +3094,7 @@ Tente desvincular e volver engadir o repositorio.</translation>
     <message>
         <location filename="../../store/settings.py" line="94" />
         <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
-        <translation>Do contrario a configuración da base de datos de Vorta garda o contrasinal en texto plano</translation>
+        <translation>Do contrario, a base de datos de configuración de Vorta gardará o contrasinal en texto plano.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="103" />
@@ -3104,7 +3104,7 @@ Tente desvincular e volver engadir o repositorio.</translation>
     <message>
         <location filename="../../store/settings.py" line="107" />
         <source>Set owner to current user and umask to 0277</source>
-        <translation>Establecer a propiedade para o usuario actual a 0277</translation>
+        <translation>Establecer o propietario ao usuario actual e umask a 0277</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="114" />
@@ -3119,7 +3119,7 @@ Tente desvincular e volver engadir o repositorio.</translation>
     <message>
         <location filename="../../store/settings.py" line="169" />
         <source>Check for updates on startup</source>
-        <translation>Comprobe se hai actualizacións ao iniciar</translation>
+        <translation>Comprobar se hai actualizacións ao iniciar</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="170" />

@@ -38,12 +38,12 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
-        <translation>Repokey-ChaCha20-Poly1305 (Rekommenderas, nyckeln lagras i förrådet)</translation>
+        <translation>Repokey-ChaCha20-Poly1305 (rekommenderas, nyckeln lagras i förrådet)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
-        <translation>Keyfile-ChaCha20-Poly1305 (Nyckeln lagras i hemkatalogen)</translation>
+        <translation>Keyfile-ChaCha20-Poly1305 (nyckeln lagras i hemkatalogen)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
@@ -64,7 +64,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="192" />
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
-        <translation>Repokey-Blake2 (Rekommenderas, nyckeln lagras i förrådet)</translation>
+        <translation>Repokey-Blake2 (rekommenderas, nyckeln lagras i förrådet)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="193" />
@@ -74,7 +74,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="194" />
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
-        <translation>Keyfile-Blake2 (Nyckeln lagras i hemkatalogen)</translation>
+        <translation>Keyfile-Blake2 (nyckeln lagras i hemkatalogen)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="195" />
@@ -348,7 +348,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="470" />
         <source>Preview: %s</source>
-        <translation>Förhandsvisning: %s</translation>
+        <translation>Förhandsgranskning: %s</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="474" />
@@ -443,7 +443,7 @@
     <message>
         <location filename="../../borg/break_lock.py" line="23" />
         <source>Breaking the repository lock failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Kunde inte bryta låset för förrådet. Se %1 för mer information.</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="14" />
@@ -472,7 +472,7 @@
     <message>
         <location filename="../../borg/check.py" line="16" />
         <source>Starting consistency check…</source>
-        <translation>Startar konsekvenskontroll…</translation>
+        <translation>Startar konsistenskontroll…</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="38" />
@@ -603,7 +603,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="376" />
         <source>Task failed: {}</source>
-        <translation type="unfinished" />
+        <translation>Uppgift misslyckades: {}</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="521" />
@@ -910,7 +910,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/diff.ui" line="0" />
         <source>Diff</source>
-        <translation>Diff</translation>
+        <translation>Jämför</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
@@ -1273,7 +1273,7 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="527" />
         <source>Socket</source>
-        <translation>Uttag (socket)</translation>
+        <translation>Socket</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="529" />
@@ -1600,7 +1600,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Diff</source>
-        <translation>Diff</translation>
+        <translation>Jämför</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1610,7 +1610,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Extract…</source>
-        <translation>Extrahera</translation>
+        <translation>Extrahera…</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1649,7 +1649,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Use -1 for unlimited</source>
-        <translation>Använd -1 för obegränsat.</translation>
+        <translation>Använd -1 för obegränsat</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1674,7 +1674,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>No matter what, keep all archives of the last:</source>
-        <translation>Behåll alla arkiv från de senaste, oavsett övriga inställningar:</translation>
+        <translation>Oavsett övriga inställningar, behåll alla arkiv från de senaste:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1961,7 +1961,7 @@
     <message>
         <location filename="../../views/main_window.py" line="282" />
         <source>Profile {} imported.</source>
-        <translation>Profil {} importerad.</translation>
+        <translation>Profilen {} har importerats.</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="289" />
@@ -2103,7 +2103,7 @@
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Run backups over metered networks</source>
-        <translation>Kör säkerhetskopieringar över nätverk med datapris</translation>
+        <translation>Kör säkerhetskopieringar över databegränsade nätverk</translation>
     </message>
 </context><context>
     <name>PasswordInput</name>
@@ -2189,7 +2189,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
         <source>Unlink Repository…</source>
-        <translation>Koppla från förråd…</translation>
+        <translation>Koppla bort förråd…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="52" />
@@ -2270,7 +2270,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="262" />
         <source>Could not find public key.</source>
-        <translation>Kunde inte hitta publik nyckel.</translation>
+        <translation>Kunde inte hitta offentlig nyckel.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="264" />
@@ -2728,7 +2728,7 @@
     <message>
         <location filename="../../application.py" line="242" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
-        <translation>Vorta behöver fullständig diskåtkomst för fullständiga säkerhetskopior</translation>
+        <translation>Vorta behöver Fullständig skivåtkomst för fullständiga säkerhetskopior</translation>
     </message>
     <message>
         <location filename="../../application.py" line="243" />
@@ -2818,7 +2818,7 @@
     <message>
         <location filename="../../application.py" line="361" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
-        <translation>Överväg att ta bort eller reparera denna fil, för att få bort detta meddelande.</translation>
+        <translation>Överväg att ta bort eller reparera denna fil för att få bort detta meddelande.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="368" />
@@ -2828,7 +2828,7 @@
     <message>
         <location filename="../../application.py" line="369" />
         <source>Profile {} imported.</source>
-        <translation>Profil {} importerad.</translation>
+        <translation>Profilen {} har importerats.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="407" />
@@ -2973,7 +2973,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>Kommandot före säkerhetskopieringen returnerade en avslutningskod som inte är noll.</translation>
+        <translation>Kommandot före säkerhetskopieringen returnerade en returkod som inte är noll.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="149" />
@@ -3085,7 +3085,7 @@ Försök att koppla bort och lägga till förrådet igen.</translation>
     <message>
         <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
-        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig.</translation>
+        <translation>Lagra förrådslösenord i systemets nyckelring, om den är tillgänglig</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="94" />
