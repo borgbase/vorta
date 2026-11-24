@@ -33,7 +33,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
         <source>Autofilled password from password manager.</source>
-        <translation>Автоматически заполнять пароль из менеджера паролей</translation>
+        <translation>Пароль автоматически заполнен из менеджера паролей.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
@@ -443,12 +443,12 @@
     <message>
         <location filename="../../borg/break_lock.py" line="23" />
         <source>Breaking the repository lock failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Не удалось снять блокировку репозитория. Подробности смотрите в %1.</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="14" />
         <source>Breaking repository lock…</source>
-        <translation>Снятие блокировки репозитория...</translation>
+        <translation>Снятие блокировки репозитория…</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="19" />
@@ -472,7 +472,7 @@
     <message>
         <location filename="../../borg/check.py" line="16" />
         <source>Starting consistency check…</source>
-        <translation>Проверка целостности...</translation>
+        <translation>Проверка целостности…</translation>
     </message>
     <message>
         <location filename="../../borg/check.py" line="38" />
@@ -518,7 +518,7 @@
     <message>
         <location filename="../../borg/delete.py" line="14" />
         <source>Deleting archive…</source>
-        <translation>Удаление архива...</translation>
+        <translation>Удаление архива…</translation>
     </message>
     <message>
         <location filename="../../borg/delete.py" line="22" />
@@ -530,7 +530,7 @@
     <message>
         <location filename="../../borg/diff.py" line="12" />
         <source>Requesting differences between archives…</source>
-        <translation>Запрос различий между архивами...</translation>
+        <translation>Запрос различий между архивами…</translation>
     </message>
     <message>
         <location filename="../../borg/diff.py" line="18" />
@@ -542,7 +542,7 @@
     <message>
         <location filename="../../borg/extract.py" line="44" />
         <source>Downloading files from archive…</source>
-        <translation>Загрузка файлов из архива...</translation>
+        <translation>Загрузка файлов из архива…</translation>
     </message>
     <message>
         <location filename="../../borg/extract.py" line="51" />
@@ -554,7 +554,7 @@
     <message>
         <location filename="../../borg/info_archive.py" line="12" />
         <source>Refreshing archive…</source>
-        <translation>Обновление архива...</translation>
+        <translation>Обновление архива…</translation>
     </message>
     <message>
         <location filename="../../borg/info_archive.py" line="17" />
@@ -566,14 +566,14 @@
     <message>
         <location filename="../../borg/info_repo.py" line="27" />
         <source>Validating existing repo…</source>
-        <translation>Проверка существующего репозитория...</translation>
+        <translation>Проверка существующего репозитория…</translation>
     </message>
 </context><context>
     <name>BorgInitJob</name>
     <message>
         <location filename="../../borg/init.py" line="11" />
         <source>Setting up new repo…</source>
-        <translation>Создание репозитория...</translation>
+        <translation>Создание репозитория…</translation>
     </message>
 </context><context>
     <name>BorgJob</name>
@@ -603,7 +603,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="376" />
         <source>Task failed: {}</source>
-        <translation type="unfinished" />
+        <translation>Сбой задачи: {}</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="521" />
@@ -615,7 +615,7 @@
     <message>
         <location filename="../../borg/list_archive.py" line="11" />
         <source>Getting archive content…</source>
-        <translation>Получение содержимого архива...</translation>
+        <translation>Получение содержимого архива…</translation>
     </message>
     <message>
         <location filename="../../borg/list_archive.py" line="16" />
@@ -627,7 +627,7 @@
     <message>
         <location filename="../../borg/list_repo.py" line="17" />
         <source>Refreshing archives…</source>
-        <translation>Обновление списка архивов...</translation>
+        <translation>Обновление списка архивов…</translation>
     </message>
     <message>
         <location filename="../../borg/list_repo.py" line="22" />
@@ -644,14 +644,14 @@
     <message>
         <location filename="../../borg/mount.py" line="14" />
         <source>Mounting archive into folder…</source>
-        <translation>Монтирование архива...</translation>
+        <translation>Монтирование архива…</translation>
     </message>
 </context><context>
     <name>BorgPruneJob</name>
     <message>
         <location filename="../../borg/prune.py" line="11" />
         <source>Pruning old archives…</source>
-        <translation>Очистка от старых архивов...</translation>
+        <translation>Очистка от старых архивов…</translation>
     </message>
     <message>
         <location filename="../../borg/prune.py" line="19" />
@@ -675,7 +675,7 @@
     <message>
         <location filename="../../borg/umount.py" line="11" />
         <source>Unmounting archive…</source>
-        <translation>Размонтирование архива...</translation>
+        <translation>Размонтирование архива…</translation>
     </message>
 </context><context>
     <name>ChangeBorgPassphraseWindow</name>
@@ -850,7 +850,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
         <source>Presets</source>
-        <translation>Шаблоны</translation>
+        <translation>Наборы</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/exclude.ui" line="0" />
@@ -930,7 +930,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
         <source>Borg passphrase:</source>
-        <translation>Пароль Borg:</translation>
+        <translation>Ключевая фраза Borg:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/import_window.ui" line="0" />
@@ -955,7 +955,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
         <source>Include borg passphrase in export</source>
-        <translation>Включить пароль Borg в экспорт</translation>
+        <translation>Включить ключевую фразу Borg в экспорт</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
@@ -1166,7 +1166,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
-        <translation>Автоматически заполнять пароль из менеджера паролей</translation>
+        <translation>Пароль автоматически заполнен из менеджера паролей.</translation>
     </message>
 </context><context>
     <name>ExportWindow</name>
@@ -1305,7 +1305,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="31" />
         <source>For simple and secure backup hosting, try %1.</source>
-        <translation>Удалённый или локальный репозиторий. Для простой и безопасной архивации попробуйте использовать хостинг %1.</translation>
+        <translation>Для простого и безопасного хостинга резервных копий попробуйте %1.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="32" />
@@ -1350,7 +1350,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="109" />
         <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
-        <translation>Очистка удаляет старые архивы. Можно выбрать число хранимых архивов за день, неделю и т.д. Обычно сохраняются самые последние и несколько старых архивов. %1.</translation>
+        <translation>Очистка удаляет старые архивы. Можно выбрать количество сохраняемых почасовых, ежедневных и т. д. архивов. Обычно сохраняют больше новых архивов и меньше старых. %1.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="114" />
@@ -1575,7 +1575,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Optimize disk space by defragmenting the repository</source>
-        <translation>Оптимизировать место на диске путем дефрагментации репозитория</translation>
+        <translation>Оптимизировать место на диске путём уплотнения репозитория</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1610,7 +1610,7 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Extract…</source>
-        <translation>Извлечь</translation>
+        <translation>Извлечь…</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1649,7 +1649,7 @@
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>Use -1 for unlimited</source>
-        <translation>-1 = неограниченно.</translation>
+        <translation>Укажите -1 для снятия ограничения</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1932,7 +1932,7 @@
     <message>
         <location filename="../../views/main_window.py" line="116" />
         <source>Import from file…</source>
-        <translation>Импорт из файла...</translation>
+        <translation>Импорт из файла…</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="231" />
@@ -1982,7 +1982,7 @@
     <message>
         <location filename="../../views/main_window.py" line="367" />
         <source>Should Vorta continue to run in the background?</source>
-        <translation>Следует ли Vorta продолжить работать в фоне?</translation>
+        <translation>Продолжить работу Vorta в фоновом режиме?</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="377" />
@@ -2122,7 +2122,7 @@
     <message>
         <location filename="../../views/partials/password_input.py" line="88" />
         <source>Confirm passphrase:</source>
-        <translation>Подтверждение пароля:</translation>
+        <translation>Подтвердите ключевую фразу:</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="91" />
@@ -2252,12 +2252,12 @@
     <message>
         <location filename="../../views/repo_tab.py" line="254" />
         <source>Public Key Copied to Clipboard</source>
-        <translation>Открый ключ скопирован в буфер обмена</translation>
+        <translation>Открытый ключ скопирован в буфер обмена</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="256" />
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>Выбранный ключ SSH был скопирован в буфер обмена. Используйте его при настройке удаленного репозитория.</translation>
+        <translation>Выбранный открытый ключ SSH скопирован в буфер обмена. Используйте его для настройки прав доступа к удалённому репозиторию.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="262" />
@@ -2282,7 +2282,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="339" />
         <source>Repository was Detached</source>
-        <translation>Репозиторий отвязан</translation>
+        <translation>Репозиторий отключён от профиля</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="340" />
@@ -2531,7 +2531,7 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Compact repository</source>
-        <translation>Уплотнить репозиторий</translation>
+        <translation>Уплотнять репозиторий</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2653,7 +2653,7 @@
     <message>
         <location filename="../../views/partials/source_files_table_model.py" line="34" />
         <source>Calculating…</source>
-        <translation>Вычисление...</translation>
+        <translation>Вычисление…</translation>
     </message>
     <message>
         <source>Total Size: {size}, {count} files</source>
@@ -2721,7 +2721,7 @@
     <message>
         <location filename="../../application.py" line="242" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
-        <translation>Vorta требуются Full Disk Access права для завершения архивирования</translation>
+        <translation>Для создания полных резервных копий Vorta требуется полный доступ к диску</translation>
     </message>
     <message>
         <location filename="../../application.py" line="243" />
@@ -2741,7 +2741,7 @@
     <message>
         <location filename="../../application.py" line="270" />
         <source>Repository In Use</source>
-        <translation>Используемый репозиторий</translation>
+        <translation>Репозиторий занят</translation>
     </message>
     <message>
         <location filename="../../application.py" line="272" />
@@ -2761,7 +2761,7 @@
     <message>
         <location filename="../../application.py" line="277" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
-        <translation>Снимайте блокировку только в том случае, если Вы уверены, что ни один другой процесс Borg ни на одном компьютере не обращается к репозиторию. Отменить или снять блокировку?</translation>
+        <translation>Снимайте блокировку только в том случае, если вы уверены, что ни один другой процесс Borg ни на одном компьютере не обращается к репозиторию. Отменить или снять блокировку?</translation>
     </message>
     <message>
         <location filename="../../application.py" line="303" />
@@ -2786,7 +2786,7 @@
     <message>
         <location filename="../../application.py" line="314" />
         <source>You do not have permission to access the repository at {}. Gain access and try again.</source>
-        <translation>У Вас нет прав доступа к репозиторию в {}. Получите доступ и попробуйте снова.</translation>
+        <translation>У вас нет прав доступа к репозиторию в {}. Получите доступ и попробуйте снова.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="319" />
@@ -2811,7 +2811,7 @@
     <message>
         <location filename="../../application.py" line="361" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
-        <translation>Рассмотрите возможность удаления или восстановления данного файла для того, чтобы избежать этого сообщения.</translation>
+        <translation>Удалите или восстановите этот файл, чтобы это сообщение больше не появлялось.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="368" />
@@ -2869,7 +2869,7 @@
         <location filename="../../filedialog.py" line="121" />
         <location filename="../../filedialog.py" line="107" />
         <source>You don't have read access to {path}.</source>
-        <translation>У Вас нет прав на чтение {path}.</translation>
+        <translation>У вас нет прав на чтение {path}.</translation>
     </message>
 </context><context>
     <name>VortaScheduler</name>
@@ -2945,12 +2945,13 @@
         <location filename="../../borg/borg_job.py" line="233" />
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
-        <translation>Пароль вашего репозитория был сохранён в менеджере паролей, который больше не доступен. Попробуйте отвязать и переподключить ваш репозиторий.</translation>
+        <translation>Ключевая фраза вашего репозитория была сохранена в менеджере паролей, который больше недоступен.
+Попробуйте отвязать и снова добавить ваш репозиторий.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="115" />
         <source>Add some folders to back up first.</source>
-        <translation>Сначала добавьте папки для резервирования.</translation>
+        <translation>Сначала добавьте папки для архивации.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="127" />
@@ -2960,12 +2961,12 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../borg/create.py" line="136" />
         <source>Not running backup over metered connection.</source>
-        <translation>Архивация не выполняется из-за платного соединения.</translation>
+        <translation>Архивация не выполняется при лимитном подключении.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>Команда перед архивацией вернула ненулевой код ошибки.</translation>
+        <translation>Команда перед архивацией вернула ненулевой код возврата.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="149" />
@@ -2980,7 +2981,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../borg/create.py" line="202" />
         <source>Starting backup…</source>
-        <translation>Начало архивации...</translation>
+        <translation>Начало архивации…</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="51" />
@@ -3077,7 +3078,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
-        <translation>Хранить пароли репозиториев в системном хранилище ключей, если оно доступно.</translation>
+        <translation>Хранить пароли репозиториев в системном хранилище ключей, если оно доступно</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="94" />
@@ -3127,7 +3128,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../store/settings.py" line="185" />
         <source>Check for Full Disk Access on startup</source>
-        <translation>Проверять наличие Полного доступа к диску при запуске</translation>
+        <translation>Проверять наличие полного доступа к диску при запуске</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="189" />

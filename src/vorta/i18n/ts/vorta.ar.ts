@@ -6,12 +6,12 @@
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="30" />
         <source>Please enter a profile name.</source>
-        <translation>رجاء، أدخل اسم ملف تعريف. </translation>
+        <translation>رجاء، أدخل اسم ملف تعريف.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="31" />
         <source>A profile with this name already exists.</source>
-        <translation>ملف تعريف بهذا الاسم موجود مسبقا. </translation>
+        <translation>ملف تعريف بهذا الاسم موجود مسبقًا.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="27" />
@@ -33,7 +33,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
         <source>Autofilled password from password manager.</source>
-        <translation>كلمة المرور المكمّلة تلقائيا من طرف مدير كلمات المرور. </translation>
+        <translation>تم ملء كلمة المرور تلقائيًا من مدير كلمات المرور.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
@@ -59,12 +59,12 @@
         <location filename="../../views/dialogs/repo/repo_add.py" line="196" />
         <location filename="../../views/dialogs/repo/repo_add.py" line="188" />
         <source>None (not recommended)</source>
-        <translation>لا شيء (غير مستحسن)</translation>
+        <translation>لا شيء (غير موصى به)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="192" />
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
-        <translation>  Repokey-Blake2 (موصى به، مفتاح مخزن في المستودع)</translation>
+        <translation>Repokey-Blake2 (موصى به، مفتاح مخزن في المستودع)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="193" />
@@ -142,7 +142,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>SSH Key:</source>
-        <translation>مفتاح SSH :</translation>
+        <translation>مفتاح SSH:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -281,7 +281,7 @@
     <message>
         <location filename="../../views/archive/archive_rename.py" line="62" />
         <source>Archive name cannot be blank.</source>
-        <translation>اسم الأرشيف الجديد:</translation>
+        <translation>لا يمكن أن يكون اسم الأرشيف فارغًا.</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_rename.py" line="66" />
@@ -364,7 +364,7 @@
         <location filename="../../views/archive_tab.py" line="532" />
         <location filename="../../views/archive_tab.py" line="498" />
         <source>Refreshed archives.</source>
-        <translation>الأرشيفات المحدثة.</translation>
+        <translation>تم تحديث الأرشيفات.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="545" />
@@ -384,7 +384,7 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="165" />
         <source>User initiated</source>
-        <translation>بدأ المستخدم</translation>
+        <translation>بواسطة المستخدم</translation>
     </message>
     <message>
         <source>Pruning finished.</source>
@@ -487,7 +487,7 @@
     <message>
         <location filename="../../borg/break_lock.py" line="23" />
         <source>Breaking the repository lock failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>فشل فك قفل المستودع. راجع %1 للحصول على التفاصيل.</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="14" />
@@ -637,7 +637,7 @@
         <location filename="../../borg/borg_job.py" line="476" />
         <location filename="../../borg/borg_job.py" line="118" />
         <source>Deduplicated</source>
-        <translation>مكررة</translation>
+        <translation>دون تكرار</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="119" />
@@ -647,7 +647,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="376" />
         <source>Task failed: {}</source>
-        <translation type="unfinished" />
+        <translation>فشلت المهمة: {}</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="521" />
@@ -782,17 +782,17 @@
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="32" />
         <source>Profiles allow configuring of different backup and repository settings including different schedules.</source>
-        <translation>تسمح ملفات التعريفات بتكوين إعدادات النسخ الاحتياطي والمستودع المختلفة بما في ذلك جداول زمنية مختلفة.</translation>
+        <translation>تسمح ملفات التعريف بتكوين إعدادات النسخ الاحتياطي والمستودع المختلفة بما في ذلك جداول زمنية مختلفة.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="36" />
         <source>All profiles will be able to access the same repositories as well as the same %1 keys. The global application settings in %2 are shared across profiles.</source>
-        <translation>ستكون جميع ملفات التعريفات قادرة على الوصول إلى نفس المستودعات بالإضافة إلى مفاتيح %1. إعدادات التطبيق العامة في %2 تتم مشاركتها عبر ملفات التعريفات.</translation>
+        <translation>ستكون جميع ملفات التعريف قادرة على الوصول إلى نفس المستودعات بالإضافة إلى نفس مفاتيح %1. إعدادات التطبيق العامة في %2 تتم مشاركتها عبر ملفات التعريف.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="21" />
         <source>2048 or 4096 for RSA, 384 or 521 for ECDSA. Fixed for Ed25519. %1.</source>
-        <translation>2048 أو 4096 لـ RSA، 384 أو 521 لـ ECDSA. ثابت لـEd25519. %1.</translation>
+        <translation>2048 أو 4096 لـ RSA، 384 أو 521 لـ ECDSA. ثابت لـ Ed25519. %1.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="25" />
@@ -959,7 +959,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
         <source>Choose files to extract</source>
-        <translation>اختر ملفات لفك الضغط عنها</translation>
+        <translation>اختر الملفات لاستخراجها</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/archive/extract.ui" line="0" />
@@ -1004,7 +1004,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
         <source>Add Profile</source>
-        <translation>إضافة ملف شخصي</translation>
+        <translation>إضافة ملف تعريف</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
@@ -1034,7 +1034,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
         <source>Output File:</source>
-        <translation>ملف إلاخراج:</translation>
+        <translation>ملف الإخراج:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
@@ -1088,7 +1088,7 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="829" />
         <source>Directory</source>
-        <translation>مسار</translation>
+        <translation>دليل</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="831" />
@@ -1098,12 +1098,12 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="833" />
         <source>Block device file</source>
-        <translation>حظر ملف الجهاز</translation>
+        <translation>ملف جهاز كتلي</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="835" />
         <source>Character device file</source>
-        <translation>ملف جهاز الرمز</translation>
+        <translation>ملف جهاز محرفي</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="840" />
@@ -1123,14 +1123,14 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="846" />
         <source>added</source>
-        <translation>أضيف</translation>
+        <translation>مُضاف</translation>
     </message>
 </context><context>
     <name>EditProfileWindow</name>
     <message>
         <location filename="../../views/dialogs/profile/profile_add_edit.py" line="89" />
         <source>Rename Profile</source>
-        <translation>إعادة تسمية الملف الشخصي</translation>
+        <translation>إعادة تسمية ملف التعريف</translation>
     </message>
 </context><context>
     <name>ExcludeDialog</name>
@@ -1190,14 +1190,14 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
-        <translation>كلمة مرور مملوءة تلقائيا من مدير كلمات المرور.</translation>
+        <translation>تم ملء كلمة المرور تلقائيًا من مدير كلمات المرور.</translation>
     </message>
 </context><context>
     <name>ExportWindow</name>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="30" />
         <source>Export Profile</source>
-        <translation>تصدير الملف الشخصي</translation>
+        <translation>تصدير ملف التعريف</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="39" />
@@ -1207,7 +1207,7 @@
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="44" />
         <source>Save profile_export</source>
-        <translation>احفظ ملف التعريف_المصدّر</translation>
+        <translation>حفظ ملف تصدير ملف التعريف</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="52" />
@@ -1222,12 +1222,12 @@
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="74" />
         <source>Profile export successful!</source>
-        <translation>تم تصدير الملف الشخصي بنجاح!</translation>
+        <translation>تم تصدير ملف التعريف بنجاح!</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/export_window.py" line="75" />
         <source>Profile export written to {}.</source>
-        <translation>تصدير ملف التعريف مكتوبًا إلى {}.</translation>
+        <translation>تم حفظ تصدير ملف التعريف في {}.</translation>
     </message>
 </context><context>
     <name>ExtractDialog</name>
@@ -1277,7 +1277,7 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="519" />
         <source>Directory</source>
-        <translation>الدليل</translation>
+        <translation>دليل</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="521" />
@@ -1302,12 +1302,12 @@
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="529" />
         <source>Block special file</source>
-        <translation>حظر ملف خاص</translation>
+        <translation>ملف كتلي خاص</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="531" />
         <source>Character special file</source>
-        <translation>ملف جهاز الرمز</translation>
+        <translation>ملف محرفي خاص</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/extract.py" line="538" />
@@ -1420,7 +1420,7 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="45" />
         <source>Trigger</source>
-        <translation>مشغل</translation>
+        <translation>المُحفّز</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1496,7 +1496,7 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <source>Deduplicated Size:</source>
-        <translation>الحجم المكرر:</translation>
+        <translation>الحجم دون تكرار:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
@@ -1544,7 +1544,7 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
         <source>Schedule</source>
-        <translation>جدول</translation>
+        <translation>جدولة</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
@@ -1698,12 +1698,12 @@
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>No matter what, keep all archives of the last:</source>
-        <translation>بغض النظر عن ذلك، احتفظ بجميع أرشيفات الأخير:</translation>
+        <translation>في جميع الأحوال، احتفظ بجميع أرشيفات آخر:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
         <source>“&lt;int&gt;&lt;char&gt;”, where char is “H”, “d”, “w”, “m”, “y”</source>
-        <translation>“&lt;int&gt;&lt;char&gt;”, حيث الحرف هو "H"، "d"، "w"، "m"، "y".</translation>
+        <translation>"&lt;int&gt;&lt;char&gt;"، حيث الحرف هو "H"، "d"، "w"، "m"، "y"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1741,7 +1741,7 @@
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="25" />
         <source>Import Profile</source>
-        <translation>استيراد الملف الشخصي</translation>
+        <translation>استيراد ملف التعريف</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="33" />
@@ -1751,7 +1751,7 @@
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="40" />
         <source>Enter passphrase (already loaded from your keyring)</source>
-        <translation>أدخل عبارة المرور (التي تم تحميلها بالفعل من حلقة المفاتيح الخاصة بك)</translation>
+        <translation>أدخل عبارة المرور (التي تم تحميلها بالفعل من سلسلة المفاتيح الخاصة بك)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="48" />
@@ -1775,17 +1775,17 @@
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="80" />
         <source>Newer profile_export export files cannot be used on older versions.</source>
-        <translation>لا يمكن استخدام ملفات التصدير Profile_export الأحدث في الإصدارات الأقدم.</translation>
+        <translation>لا يمكن استخدام ملفات التصدير profile_export الأحدث في الإصدارات الأقدم.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="85" />
         <source>Cannot read profile_export export file due to permission error.</source>
-        <translation>لا يمكن قراءة ملف التصدير Profile_export بسبب خطأ في الإذن.</translation>
+        <translation>لا يمكن قراءة ملف التصدير profile_export بسبب خطأ في الإذن.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/profile/import_window.py" line="88" />
         <source>Profile export file not found.</source>
-        <translation>لم يُعثر على ملف تصدير الملف الشخصي.</translation>
+        <translation>لم يُعثر على ملف تصدير ملف التعريف.</translation>
     </message>
     <message>
         <source>Schema upgrade failure, file a bug report with the link in the Settings tab with the following error:
@@ -1826,7 +1826,7 @@
     <message>
         <location filename="../../views/partials/jobs_table_model.py" line="73" />
         <source>Trigger</source>
-        <translation>مشغل</translation>
+        <translation>المُحفّز</translation>
     </message>
     <message>
         <location filename="../../views/partials/jobs_table_model.py" line="74" />
@@ -1937,7 +1937,7 @@
     <message>
         <location filename="../../views/main_window.py" line="231" />
         <source>Are you sure you want to delete profile '{}'?</source>
-        <translation>هل أنت متأكد أنك تريد حذف الملف الشخصي '{}'؟</translation>
+        <translation>هل أنت متأكد أنك تريد حذف ملف التعريف '{}'؟</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="234" />
@@ -1952,7 +1952,7 @@
     <message>
         <location filename="../../views/main_window.py" line="281" />
         <source>Profile import successful!</source>
-        <translation>تم استيراد الملف الشخصي بنجاح!</translation>
+        <translation>تم استيراد ملف التعريف بنجاح!</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="282" />
@@ -1967,12 +1967,12 @@
     <message>
         <location filename="../../views/main_window.py" line="291" />
         <source>JSON (*.json);;All files (*)</source>
-        <translation>JSON (*.json)؛؛جميع الملفات (*)</translation>
+        <translation>JSON (*.json);;جميع الملفات (*)</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="297" />
         <source>Failed to import profile</source>
-        <translation>فشل استيراد الملف الشخصي</translation>
+        <translation>فشل استيراد ملف التعريف</translation>
     </message>
     <message>
         <location filename="../../views/main_window.py" line="351" />
@@ -2013,17 +2013,17 @@
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Delete current profile</source>
-        <translation>حذف الملف الشخصي الحالي</translation>
+        <translation>حذف ملف التعريف الحالي</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Rename current profile</source>
-        <translation>إعادة تسمية الملف الشخصي الحالي</translation>
+        <translation>إعادة تسمية ملف التعريف الحالي</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Export current profile</source>
-        <translation>تصدير الملف الشخصي الحالي</translation>
+        <translation>تصدير ملف التعريف الحالي</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
@@ -2159,7 +2159,7 @@
     <message>
         <location filename="../../borg/check.py" line="32" />
         <source>Repo check failed. See the %1 for details.</source>
-        <translation>فشل التحقق من المستودع. انظر %1 للتفاصيل .</translation>
+        <translation>فشل فحص المستودع. راجع %1 للحصول على التفاصيل.</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="33" />
@@ -2181,7 +2181,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
         <source>Unlink Repository…</source>
-        <translation>فصل المستودع…</translation>
+        <translation>إلغاء ربط المستودع…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="52" />
@@ -2381,7 +2381,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="65" />
         <source>ED25519 (Recommended)</source>
-        <translation>ED25519 (مستحسن)</translation>
+        <translation>ED25519 (موصى به)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="66" />
@@ -2396,7 +2396,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="76" />
         <source>High (Recommended)</source>
-        <translation>عالي (مستحسن)</translation>
+        <translation>عالٍ (موصى به)</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="77" />
@@ -2406,7 +2406,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="90" />
         <source>Key file already exists. Not overwriting.</source>
-        <translation>ملف المفتاح موجود بالفعل. عدم الكتابة فوقها.</translation>
+        <translation>ملف المفتاح موجود بالفعل. لن تتم الكتابة فوقه.</translation>
     </message>
 </context><context>
     <name>SchedulePage</name>
@@ -2438,7 +2438,7 @@
     <message>
         <location filename="../../views/schedule_page.py" line="122" />
         <source>Run a manual backup first</source>
-        <translation>أجر نسخة احتياطية يدوية أولاً</translation>
+        <translation>نفّذ نسخة احتياطية يدوية أولاً</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2449,7 +2449,7 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Schedule</source>
-        <translation>مجدول</translation>
+        <translation>جدولة</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2506,7 +2506,7 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Validation:</source>
-        <translation>تصديق:</translation>
+        <translation>التحقق من الصحة:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2583,12 +2583,12 @@
     <message>
         <location filename="../../views/shell_commands_page.py" line="31" />
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
-        <translation>شغّل أوامر shell المخصصة قبل وبعد كل نسخة احتياطية. لن يشغل أمر النسخ الاحتياطي وما بعد النسخ الاحتياطي الفعلي إلا في حالة خروج أمر النسخ الاحتياطي المسبق دون خطأ (رمز الإرجاع 0). المتغيرات المتاحة: %1</translation>
+        <translation>شغّل أوامر شل المخصصة قبل وبعد كل نسخة احتياطية. لن يُشغَّل النسخ الاحتياطي الفعلي وأمر ما بعد النسخ الاحتياطي إلا في حالة خروج أمر ما قبل النسخ الاحتياطي دون خطأ (رمز الإرجاع 0). المتغيرات المتاحة: %1</translation>
     </message>
     <message>
         <location filename="../../views/shell_commands_page.py" line="43" />
         <source>Extra arguments for %1. Possible options are listed in %2.</source>
-        <translation>الحجج الإضافية لـ %1. تسرد الخيارات الممكنة في %2.</translation>
+        <translation>وسيطات إضافية لـ %1. الخيارات الممكنة مدرجة في %2.</translation>
     </message>
     <message>
         <location filename="../../views/shell_commands_page.py" line="47" />
@@ -2603,7 +2603,7 @@
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>Pre-backup:</source>
-        <translation>النسخ الاحتياطي المسبق:</translation>
+        <translation>ما قبل النسخ الاحتياطي:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
@@ -2684,7 +2684,7 @@
         <location filename="../../tray_menu.py" line="72" />
         <location filename="../../tray_menu.py" line="66" />
         <source>Backup Now</source>
-        <translation>اعمل نسخة احتياطية الان</translation>
+        <translation>نسخ احتياطي الآن</translation>
     </message>
     <message>
         <location filename="../../tray_menu.py" line="77" />
@@ -2796,7 +2796,7 @@
     <message>
         <location filename="../../application.py" line="355" />
         <source>Failed to import profile</source>
-        <translation>فشل استيراد الملف الشخصي</translation>
+        <translation>فشل استيراد ملف التعريف</translation>
     </message>
     <message>
         <location filename="../../application.py" line="357" />
@@ -2811,7 +2811,7 @@
     <message>
         <location filename="../../application.py" line="368" />
         <source>Profile import successful!</source>
-        <translation>تم استيراد الملف الشخصي بنجاح!</translation>
+        <translation>تم استيراد ملف التعريف بنجاح!</translation>
     </message>
     <message>
         <location filename="../../application.py" line="369" />
@@ -2831,7 +2831,7 @@
     <message>
         <location filename="../../application.py" line="421" />
         <source>The process running the check job got a kill signal. Try again.</source>
-        <translation>حصلت عملية تشغيل مهمة الفحص على إشارة قتل. حاول ثانية.</translation>
+        <translation>تلقّت عملية الفحص إشارة إنهاء (kill). حاول مرة أخرى.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="424" />
@@ -2961,7 +2961,7 @@
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>تم تخزين عبارة مرور المستودع في مدير كلمات مرور لم يعد متاحاً.
-حاول فصل المستودع وإعادة إضافته.</translation>
+حاول إلغاء ربط المستودع وإعادة إضافته.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="115" />
@@ -2981,7 +2981,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>أعاد أمر النسخ الاحتياطي المسبق رمز خروج غير صفري.</translation>
+        <translation>أعاد أمر ما قبل النسخ الاحتياطي رمز خروج غير صفري.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="149" />
@@ -3006,7 +3006,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../borg/info_repo.py" line="65" />
         <source>Please unlock your password manager.</source>
-        <translation>يرجى فتح مدير كلمة المرور الخاص بك.</translation>
+        <translation>يرجى فتح قفل مدير كلمات المرور الخاص بك.</translation>
     </message>
 </context><context>
     <name>settings</name>
@@ -3023,7 +3023,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../store/settings.py" line="26" />
         <source>Information</source>
-        <translation>معلومة</translation>
+        <translation>معلومات</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="27" />
@@ -3043,7 +3043,7 @@ Try unlinking and re-adding your repo.</source>
     <message>
         <location filename="../../store/settings.py" line="38" />
         <source>Display notifications when background tasks fail</source>
-        <translation>عرض الإخطارات عندما تفشل مهام الخلفية</translation>
+        <translation>عرض الإشعارات عندما تفشل مهام الخلفية</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="45" />

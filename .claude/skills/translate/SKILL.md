@@ -82,11 +82,11 @@ Read `src/vorta/i18n/ts/vorta.<lang>.ts` and identify:
 
 ### Step 2: Load glossary and scan for consistency
 
-**2a. Load glossary:** Read `.claude/skills/translate/glossaries/<lang>.md` if it exists. All terms in the glossary are mandatory — use them consistently.
+**2a. Load glossary:** Read `glossaries/<lang>.md` (in this skill directory, e.g. `.agents/skills/translate/glossaries/<lang>.md`) if it exists. All terms and style rules in the glossary are mandatory — use them consistently.
 
-**2b. Scan existing translations:** Before translating new strings, grep for key domain terms in already-translated strings to identify established conventions. Flag any conflicts with the glossary (e.g., a glossary says "Passwort" but existing translations use "Kennwort").
+**2b. Scan existing translations:** Before translating new strings, grep for key domain terms in already-translated strings to identify established conventions. Flag any conflicts with the glossary (e.g., a glossary says "Passwort" but existing translations use "Kennwort"), as well as register/orthography drift.
 
-**2c. Resolve unknown terms:** If a source string contains a term not covered by the glossary, and the term is ambiguous or has multiple valid translations, ask the user which translation to use (via `AskUserQuestion`). Add the decision to the glossary file and its Decision Log.
+**2c. Resolve unknown terms:** If a source string contains a term not covered by the glossary, and the term is ambiguous or has multiple valid translations, ask the user which translation to use. Add the decision to the glossary file and its Decision Log.
 
 ### Step 3: Understand the .ts file format
 
@@ -146,22 +146,34 @@ For each untranslated string, consider:
    - Key terms: repository, archive, backup, prune, mount, extract, passphrase
 
 4. **Style Guide:**
-   - **Buttons:** Title Case in English (Save, Cancel, Add Repository)
-   - **Labels with colons:** Keep the colon (Repository:, Password:)
-   - **Menu items:** Title Case
-   - **Descriptions/tooltips:** Sentence case
-   - **Technical terms:** Keep English for: Borg, BorgBackup, SSH, repository (or use locale-appropriate term)
-   - **Placeholders:** Preserve all five placeholder formats used in Vorta exactly:
-     - Qt plural (`numerus="yes"`): `%n` inside `<numerusform>` elements matching the target language's Qt plural count (2 for `de`/`es`/`fi`/`fr`/`gl`/`it`/`nl`/`sv`, 3 for `cs`/`ru`/`sk`, 6 for `ar`)
-     - Python printf: `%s`, `%d`
-     - Python `str.format` & archive-name template variables (`format_archive_name` in `src/vorta/utils.py`): `{}`, `{0}`, `{1}`, `{size}`, `{path}`, `{repo_url}`, `{exit_code}`, `{method}`, `{hostname}`, `{fqdn}`, `{profile_id}`, `{profile_slug}`, `{now:...}`, `{utc_now:...}`, `{user}` — NEVER translate variable names before `:` (e.g., keep `{now:%Y-%m-%d-%H%M%S}`)
-     - Rich-text `format_richtext()` (`src/vorta/i18n/richtext.py`): `%1`, `%2` (replaced in reverse numeric order with HTML links or bold spans)
-     - Shell command template variables in `ShellCommandsPage`: `$repo_url`, `$profile_name`, `$profile_slug`, `$returncode` (keep variable names verbatim in English)
-   - **Link-text grammar rule (`%1`/`%2` substitutions):** Standalone link strings (`here`, `more`, `logs`, `documentation`, `Click here`, `Github`, `Full Disk Access`, `System Preferences > Security & Privacy`) are injected into `%1`/`%2` templates (e.g., `To mount archives, first install macFUSE from %1.` + `here`, `See the %1 for details.` + `logs`, `Read %1.` + `more`). Always check the surrounding `%1` sentence in the same class/context so prepositions and grammatical case/articles fit seamlessly without duplication (e.g., avoid `"från" + "här"` in Swedish by placing the preposition inside or outside consistently).
+   - **Capitalization:** English uses Title Case for buttons and menu items (`Save`, `Add Repository`), but **non-English languages must follow their own capitalization conventions** (typically sentence case for buttons, menus, tabs, column headers, dialog titles, and lowercase inside parenthetical qualifiers like `(recommended)`, `(legacy)`, plus German noun capitalization). Do not copy English Title Case into target languages.
+   - **Labels with colons:** Keep the colon (`Repository:`, `Password:`) and follow target-language spacing rules (e.g., French requires a non-breaking space `\u00a0` before `:`, `?`, `!`, `;`).
+   - **Descriptions/tooltips:** Sentence case; do not add or drop trailing periods relative to `<source>`, and preserve Unicode ellipses `…` (U+2026) on dialog-opening actions and progress messages (never replace `…` with ASCII `...`).
+   - **Progress & status messages:** Keep voice consistent per language (typically impersonal nominal or passive forms — avoid mixing 1st-person progressive with impersonal forms, and never translate a status message like `Not running backup…` as an imperative command).
+   - **Numeric boundaries:** Preserve exact inequality semantics (`at least N` means `>= N`, never "more than N"; `less than 65` means `<= 64`, never "max 65").
+   - **Technical terms & proper nouns:** Keep proper nouns and Borg mode/CLI identifiers unchanged: `Borg`, `BorgBackup`, `Vorta`, `SSH`, `URL`, `macFUSE`, `GitHub` (prefer `GitHub` even if `<source>` writes `Github`), `BorgBase`, `Sparkle`, `KWallet`, `Repokey`, `Keyfile`, `umask 0277`, `rc 1`, `Wi-Fi` (prefer `Wi-Fi` over `Wifi`). Always capitalize `Borg` in prose even when `<source>` writes lowercase `borg`. For `repository` and other domain nouns, follow the per-language glossary.
+   - **Qt Designer design-time placeholders:** `.ui` files contain sample/default strings overwritten at runtime (`Form`, `MainWindow`, `0.0`, `1.1.8`, `/usr/bin/borg`, `nyx2.local-2018-11-16T09:49:58 from November 16, 2018`). Keep technical/numeric placeholders verbatim; if translating `Form` or sample text, never confuse `Form` with `From`.
+   - **Placeholders & syntax tokens:** Preserve all placeholder and syntax formats used in Vorta exactly:
+     - **Qt plural (`numerus="yes"`):** `%n` inside `<numerusform>` elements matching the target language's Qt plural count and slot order:
+       - 2 forms (`de`, `es`, `fi`, `fr`, `gl`, `it`, `nl`, `sv`): `[0]` singular (`n == 1`, or `0, 1` in `fr`), `[1]` plural.
+       - 3 forms (`cs`, `sk`): `[0]` `n == 1`, `[1]` `n ∈ 2..4`, `[2]` `n == 0` or `n >= 5`.
+       - 3 forms (`ru`): `[0]` `1, 21, 31…`, `[1]` `2–4, 22–24…`, `[2]` `0, 5–20, 25–30…`.
+       - 6 forms (`ar`): `[0]` `n == 0`, `[1]` `n == 1`, `[2]` `n == 2`, `[3]` `3–10`, `[4]` `11–99`, `[5]` `100+`.
+     - **Python printf:** `%s`, `%d`.
+     - **Python `str.format` & archive-name template variables (`format_archive_name` in `src/vorta/utils.py`):** `{}`, `{0}`, `{1}`, `{size}`, `{path}`, `{repo_url}`, `{exit_code}`, `{method}`, `{hostname}`, `{fqdn}`, `{profile_id}`, `{profile_slug}`, `{now:%Y-%m-%d-%H%M%S}`, `{utc_now:...}`, `{user}` — NEVER translate variable names OR alter strftime format specifiers inside `{now:...}` (e.g., keep `%Y-%m-%d-%H%M%S` verbatim so archive names sort chronologically).
+     - **Rich-text `format_richtext()` (`src/vorta/i18n/richtext.py`):** `%1`, `%2` (replaced in reverse numeric order with HTML `link()`, `bold()`, `italic()`, or `code()` spans — e.g., `italic('ssh')`, `italic(settings)`, `italic('borg create')`, `code('$repo_url, ...')`).
+     - **Shell command examples (`ShellCommandsPage`):** Keep `$repo_url`, `$profile_name`, `$profile_slug`, `$returncode` verbatim AND keep ASCII double quotes `"..."` around `echo "..."` examples (never replace with typographic/curly quotes `‘…’` or single quotes `'...'`, which break shell syntax or variable expansion).
+     - **Qt `QFileDialog` filters:** Keep ASCII `;;` separators and glob patterns verbatim (e.g., `JSON (*.json);;All files (*)` — never localize `;;` to `؛؛` or fullwidth characters).
+   - **Link-text & rich-text grammar rule (`%1`/`%2` substitutions):** Standalone strings (`here`, `more`, `logs`, `documentation`, `Click here`, `Github`, `Full Disk Access`, `System Preferences > Security & Privacy`, `BorgBase`, `Settings`) are injected into `%1`/`%2` templates. Always check the surrounding `%1`/`%2` sentence in the same class/context (and cross-context references like `MainWindow::Settings`) so prepositions, articles, and grammatical case fit seamlessly without duplication (e.g., avoid `"från" + "här"` in Swedish or `"via" + "hier"` in Dutch). In case-inflected/agglutinative languages (`fi`, `cs`, `sk`, `ru`), attach a governing head noun or hyphenated compound when a nominative `%1`/`%2` token appears in an oblique case (e.g., `%1-palvelua`, `%2-välilehden`, `v nabídce %2`, `na karte %2`, `в разделе %2`).
 
-### Step 5: Terminology check
+### Step 5: Terminology and QA check
 
-Before writing translations, cross-check all generated translations against the glossary. Verify that no inconsistent terms slipped through (e.g., using "Kennwort" when the glossary specifies "Passwort"). Fix any violations before proceeding.
+Before writing translations, cross-check all generated translations against the glossary and run these quality checks:
+- No glossary violations (e.g., using "Kennwort" when the glossary specifies "Passwort")
+- No untranslated live strings left without `type="unfinished"` (including stray English words like `Level`, `auto`, `default`, `Key` inside translated strings)
+- No broken placeholders, altered `{now:...}` formats, localized `;;` filter separators, or curly quotes in shell `echo "..."` examples
+- No stray leading/trailing whitespace or mismatched trailing colons/periods/ellipses compared to `<source>`
+Fix any violations before proceeding.
 
 ### Step 6: Update the .ts file
 
@@ -209,14 +221,18 @@ done
 - Preserve all formatting placeholders (`%n`, `%s`, `%d`, `%1`, `%2`, `{}`, `{0}`, `{1}`, `{size}`, `{path}`, `{repo_url}`, `{exit_code}`, `{method}`, `{hostname}`, `{profile_slug}`, `{now:...}`, `$repo_url`, `$profile_name`, `$profile_slug`, `$returncode`) and ensure standalone link-text strings (`here`, `more`, `logs`, `documentation`, etc.) grammatically fit their surrounding `%1`/`%2` sentences
 
 ### DON'T:
-- Translate proper nouns: Borg, BorgBackup, Vorta, SSH, URL
-- Change technical identifiers or paths
-- Add or remove punctuation unnecessarily
+- Translate proper nouns or Borg/CLI identifiers: `Borg`, `BorgBackup`, `Vorta`, `SSH`, `URL`, `macFUSE`, `GitHub`, `BorgBase`, `Sparkle`, `KWallet`, `Repokey`, `Keyfile`, `umask 0277`, `rc 1`
+- Change technical identifiers, paths, strftime specifiers (`{now:%Y-%m-%d-%H%M%S}`), `QFileDialog` `;;` separators, or ASCII `"..."` quotes in shell `echo` examples
+- Copy English Title Case into non-English UI labels, buttons, or parenthetical qualifiers
+- Add or remove punctuation unnecessarily (preserve `…`, colons, and matching trailing periods)
 - Translate placeholder text that's clearly a literal syntax example (e.g., `email@example.com`, or Borg `--keep-within` unit suffixes `24H, 1d, 52w, 12m, 1y` where `H`, `d`, `w`, `m`, `y` are literal CLI tokens)
 - Translate based on code-internal names instead of actual UI labels (e.g., code says "Misc" but UI shows "Settings / About" — translate as "Settings")
 
 ### RTL Languages (Arabic):
 - Text direction is handled by Qt automatically
+- Use Arabic punctuation (`،`, `؟`) in prose, but keep ASCII `,`, `;`, `;;`, `"..."` inside CLI/code/`QFileDialog` syntax tokens
+- Add a space between Arabic prefixes (`لـ`) and Latin tokens (`لـ Ed25519`), and avoid spaces before colons (`مفتاح SSH:`)
+- Use Western Arabic digits (`0–9`) consistently
 - Ensure no hardcoded LTR punctuation breaks the flow
 - Test UI layout after translation
 
@@ -278,7 +294,7 @@ Maintain consistency with these translations:
 
 ## Per-Language Glossaries
 
-Per-language glossaries live in `.claude/skills/translate/glossaries/<lang>.md`. These document agreed-upon translations for domain-specific and ambiguous terms. The terms in a glossary are **mandatory** — they must be used consistently in all translations for that language.
+Per-language glossaries live in `glossaries/<lang>.md` (`.agents/skills/translate/glossaries/<lang>.md`). These document agreed-upon translations for domain-specific and ambiguous terms, as well as language-specific style rules (register, capitalization, punctuation, compound words, and plural slots). The terms in a glossary are **mandatory** — they must be used consistently in all translations for that language.
 
 Each glossary contains:
 - A **Terminology** table mapping English terms to the agreed translation

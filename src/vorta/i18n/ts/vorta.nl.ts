@@ -33,7 +33,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
         <source>Autofilled password from password manager.</source>
-        <translation>Automatisch ingevuld wachtwoord door wachtwoorbeheerder.</translation>
+        <translation>Wachtwoord automatisch ingevuld vanuit de wachtwoordbeheerder.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
@@ -122,7 +122,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Choose a remote repository</source>
-        <translation>Kies een externe opslagruimte</translation>
+        <translation>Kies een externe repo</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -147,7 +147,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Automatisch genereren (standaard)</translation>
+        <translation>SSH-sleutel automatisch kiezen (standaard)</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/repo/repo_add.ui" line="0" />
@@ -220,7 +220,7 @@
     <message>
         <location filename="../../views/archive/archive_maintenance.py" line="58" />
         <source>Pruning finished.</source>
-        <translation>Opruimen voltooid.</translation>
+        <translation>Vernietigen voltooid.</translation>
     </message>
 </context><context>
     <name>ArchiveMount</name>
@@ -233,7 +233,7 @@
     <message>
         <location filename="../../views/archive/archive_mount.py" line="59" />
         <source>Unmount the selected archive from the file system</source>
-        <translation>Ontkoppel het geselecteerde archief van het bestandssysteem</translation>
+        <translation>Koppel het geselecteerde archief af van het bestandssysteem</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="77" />
@@ -249,7 +249,7 @@
     <message>
         <location filename="../../views/archive/archive_mount.py" line="74" />
         <source>Unmount the repository from the file system</source>
-        <translation>Ontkoppel de geselecteerde repo van het bestandssysteem</translation>
+        <translation>Koppel de repo af van het bestandssysteem</translation>
     </message>
     <message>
         <location filename="../../views/archive/archive_mount.py" line="79" />
@@ -274,7 +274,7 @@
     <message>
         <location filename="../../views/archive/archive_mount.py" line="183" />
         <source>Unmounting failed. Make sure no programs are using {}</source>
-        <translation>Het afkoppelen is mislukt. Zorg er voor dat er ‘{}‘ niet in gebruik is door andere programma's.</translation>
+        <translation>Het afkoppelen is mislukt. Zorg ervoor dat ‘{}’ niet in gebruik is door andere programma's.</translation>
     </message>
 </context><context>
     <name>ArchiveRename</name>
@@ -487,7 +487,7 @@
     <message>
         <location filename="../../borg/break_lock.py" line="23" />
         <source>Breaking the repository lock failed. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Opheffen van de repovergrendeling is mislukt. Bekijk voor meer informatie de %1.</translation>
     </message>
     <message>
         <location filename="../../borg/break_lock.py" line="14" />
@@ -637,17 +637,17 @@
         <location filename="../../borg/borg_job.py" line="476" />
         <location filename="../../borg/borg_job.py" line="118" />
         <source>Deduplicated</source>
-        <translation>Uitgepakt</translation>
+        <translation>Gededupliceerd</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="119" />
         <source>Compressed</source>
-        <translation>Ingepakt</translation>
+        <translation>Gecomprimeerd</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="376" />
         <source>Task failed: {}</source>
-        <translation type="unfinished" />
+        <translation>Taak mislukt: {}</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="521" />
@@ -719,7 +719,7 @@
     <message>
         <location filename="../../borg/umount.py" line="11" />
         <source>Unmounting archive…</source>
-        <translation>Bezig met ontkoppelen…</translation>
+        <translation>Bezig met afkoppelen van archief…</translation>
     </message>
 </context><context>
     <name>ChangeBorgPassphraseWindow</name>
@@ -999,7 +999,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/profile/export_window.ui" line="0" />
         <source>Include borg passphrase in export</source>
-        <translation>Borg-toegangszin delen tijdens exporteren</translation>
+        <translation>Borg-toegangszin opnemen in export</translation>
     </message>
     <message>
         <location filename="../../assets/UI/dialogs/profile/profile_add.ui" line="0" />
@@ -1039,7 +1039,7 @@
     <message>
         <location filename="../../assets/UI/dialogs/repo/ssh_add.ui" line="0" />
         <source>Do not change this if you want SSH to automatically find the key.</source>
-        <translation>Pas dit niet aan als je wilt dat ssh de sleutel automatisch detecteert.</translation>
+        <translation>Pas dit niet aan als je wilt dat SSH de sleutel automatisch detecteert.</translation>
     </message>
 </context><context>
     <name>DiffResultDialog</name>
@@ -1063,7 +1063,7 @@
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="757" />
         <source>Change</source>
-        <translation>Wijzigen</translation>
+        <translation>Wijziging</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/diff_result.py" line="759" />
@@ -1175,7 +1175,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="240" />
         <source>Connect to existing Repository</source>
-        <translation>Verbinden met externe repo</translation>
+        <translation>Verbinden met bestaande repo</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="243" />
@@ -1190,7 +1190,7 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
-        <translation>Automatisch ingevuld wachtwoord door wachtwoorbeheerder.</translation>
+        <translation>Wachtwoord automatisch ingevuld vanuit de wachtwoordbeheerder.</translation>
     </message>
 </context><context>
     <name>ExportWindow</name>
@@ -1364,7 +1364,7 @@
     <message>
         <location filename="../../views/archive_tab.py" line="107" />
         <source>To mount archives, first install macFUSE from %1.</source>
-        <translation>Om archieven aan te koppelen, installeer eerst macFUSE via %1.</translation>
+        <translation>Installeer eerst macFUSE (%1) om archieven aan te koppelen.</translation>
     </message>
     <message>
         <location filename="../../views/archive_tab.py" line="108" />
@@ -1496,12 +1496,12 @@
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <source>Deduplicated Size:</source>
-        <translation>Grootte na uitpakken:</translation>
+        <translation>Gededupliceerde grootte:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/repo_tab.ui" line="0" />
         <source>Compressed Size:</source>
-        <translation>Grootte na inpakken:</translation>
+        <translation>Gecomprimeerde grootte:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/about_tab.ui" line="0" />
@@ -1559,7 +1559,7 @@
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
         <source>Shell Commands</source>
-        <translation>Shell-opdrachten</translation>
+        <translation>Shellopdrachten</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
@@ -1921,7 +1921,7 @@
     <message>
         <location filename="../../views/partials/event_log_table_model.py" line="31" />
         <source>Returncode</source>
-        <translation>Terugkoppelingscode</translation>
+        <translation>Afsluitcode</translation>
     </message>
 </context><context>
     <name>MainWindow</name>
@@ -2034,7 +2034,7 @@
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source> Settings / About</source>
-        <translation>Instellingen/Over</translation>
+        <translation>Instellingen / Over</translation>
     </message>
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
@@ -2074,7 +2074,7 @@
     <message>
         <location filename="../../assets/UI/main_window.ui" line="0" />
         <source>Reset App</source>
-        <translation>Standaardwaarden</translation>
+        <translation>App opnieuw instellen</translation>
     </message>
 </context><context>
     <name>NetworksPage</name>
@@ -2108,7 +2108,7 @@
     <message>
         <location filename="../../views/partials/password_input.py" line="145" />
         <source>Passwords must be identical and at least {0} characters long.</source>
-        <translation>De wachtwoorden moeten identiek zijn en meer dan {0} tekens bevatten.</translation>
+        <translation>De wachtwoorden moeten identiek zijn en minimaal {0} tekens bevatten.</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="151" />
@@ -2118,7 +2118,7 @@
     <message>
         <location filename="../../views/partials/password_input.py" line="155" />
         <source>Passwords must be at least {0} characters long.</source>
-        <translation>De wachtwoorden moeten meer dan {0} tekens bevatten.</translation>
+        <translation>De wachtwoorden moeten minimaal {0} tekens bevatten.</translation>
     </message>
     <message>
         <location filename="../../views/partials/password_input.py" line="87" />
@@ -2248,7 +2248,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="211" />
         <source>Automatically choose SSH Key (default)</source>
-        <translation>Ssh-sleutel automatisch genereren (standaard)</translation>
+        <translation>SSH-sleutel automatisch kiezen (standaard)</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="237" />
@@ -2263,7 +2263,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="256" />
         <source>The selected public SSH key was copied to the clipboard. Use it to set up remote repo permissions.</source>
-        <translation>De geselecteerde ssh-sleutel is gekopieerd naar het klembord. Gebruik deze om externe repobevoegdheden in te stellen.</translation>
+        <translation>De geselecteerde openbare SSH-sleutel is gekopieerd naar het klembord. Gebruik deze om externe repobevoegdheden in te stellen.</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="262" />
@@ -2288,7 +2288,7 @@
     <message>
         <location filename="../../views/repo_tab.py" line="339" />
         <source>Repository was Detached</source>
-        <translation>Repo is ontkoppeld</translation>
+        <translation>De repo is losgekoppeld</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="340" />
@@ -2364,12 +2364,12 @@
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="108" />
         <source>Please enter a valid repo URL or select a local path.</source>
-        <translation>Voer een geldige repo-url in of kies een lokale locatie.</translation>
+        <translation>Voer een geldige repo-url in of kies een lokaal pad.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="112" />
         <source>Repository name must be less than 65 characters.</source>
-        <translation>De reponaam mag maximaal 65 tekens bevatten.</translation>
+        <translation>De reponaam mag maximaal 64 tekens bevatten.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/repo_add.py" line="116" />
@@ -2382,7 +2382,7 @@
         <location filename="../../views/dialogs/repo/ssh.py" line="50" />
         <location filename="../../views/dialogs/repo/ssh.py" line="33" />
         <source>Generate and copy to clipboard</source>
-        <translation>Genereren, en kopiëren naar klembord</translation>
+        <translation>Genereren en kopiëren naar klembord</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="65" />
@@ -2412,7 +2412,7 @@
     <message>
         <location filename="../../views/dialogs/repo/ssh.py" line="90" />
         <source>Key file already exists. Not overwriting.</source>
-        <translation>Het sleutelbestand bestaal al en wordt niet overschreven.</translation>
+        <translation>Het sleutelbestand bestaat al en wordt niet overschreven.</translation>
     </message>
 </context><context>
     <name>SchedulePage</name>
@@ -2450,7 +2450,7 @@
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <location filename="../../views/schedule_page.py" line="124" />
         <source>None scheduled</source>
-        <translation>Niks ingepland</translation>
+        <translation>Niets ingepland</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2502,7 +2502,7 @@
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
         <source>Autopruning:</source>
-        <translation>Automatisch verwijderen:</translation>
+        <translation>Automatisch vernietigen:</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
@@ -2582,14 +2582,14 @@
     <message>
         <location filename="../../scheduler/scheduling.py" line="342" />
         <source>None scheduled</source>
-        <translation>Niks ingepland</translation>
+        <translation>Niets ingepland</translation>
     </message>
 </context><context>
     <name>ShellCommandsPage</name>
     <message>
         <location filename="../../views/shell_commands_page.py" line="31" />
         <source>Run custom shell commands before and after each backup. The actual backup and post-backup command will only run, if the pre-backup command exits without error (return code 0). Available variables: %1</source>
-        <translation>Voer aangepaste shellopdrachten uit, voor en na elke back-up. De daadwerkelijke back-up en na-back-upopdrachten worden alléén uitgevoerd als de opdracht voorafgaand aan de back-up geen foutmelding geeft (terugkoppelcode 0). Beschikbare variabelen: %1</translation>
+        <translation>Voer aangepaste shellopdrachten uit, voor en na elke back-up. De daadwerkelijke back-up en na-back-upopdrachten worden alléén uitgevoerd als de opdracht voorafgaand aan de back-up geen foutmelding geeft (afsluitcode 0). Beschikbare variabelen: %1</translation>
     </message>
     <message>
         <location filename="../../views/shell_commands_page.py" line="43" />
@@ -2614,7 +2614,7 @@
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>echo "Before backup of $repo_url"</source>
-        <translation>echo ‘Alvorens $repo_url te back-uppen’</translation>
+        <translation>echo "Vóór het back-uppen van $repo_url"</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
@@ -2624,7 +2624,7 @@
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
         <source>echo "Backup of $repo_url ended with $returncode."</source>
-        <translation>echo ‘Het backuppen van $repo_url is voltooid met $returncode.’</translation>
+        <translation>echo "Back-up van $repo_url geëindigd met $returncode."</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
@@ -2808,7 +2808,7 @@
     <message>
         <location filename="../../application.py" line="361" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
-        <translation>Verwijder of repareer het bestand om deze melding te verwerpen.</translation>
+        <translation>Overweeg dit bestand te verwijderen of te repareren zodat deze melding niet meer verschijnt.</translation>
     </message>
     <message>
         <location filename="../../application.py" line="368" />
@@ -2956,7 +2956,7 @@
     <message>
         <location filename="../../borg/borg_job.py" line="208" />
         <source>Please unlock your system password manager or disable it under Settings</source>
-        <translation>Ontgrendel de wachtwoordbeheerder van je systeem of schakel deze uit in de Instellingen</translation>
+        <translation>Ontgrendel de wachtwoordbeheerder van je systeem of schakel deze uit onder ‘Instellingen’</translation>
     </message>
     <message>
         <location filename="../../borg/borg_job.py" line="233" />
@@ -2973,7 +2973,7 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../borg/create.py" line="127" />
         <source>Current Wifi is not allowed.</source>
-        <translation>Niet toegestaan op het huidige wifi-netwerk.</translation>
+        <translation>Niet toegestaan op het huidige wifinetwerk.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="136" />
@@ -2983,7 +2983,7 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
-        <translation>De voor-back-upopdracht koppelde afsluitcode nul terug.</translation>
+        <translation>De voor-back-upopdracht gaf een afsluitcode ongelijk aan nul terug.</translation>
     </message>
     <message>
         <location filename="../../borg/create.py" line="149" />
@@ -3060,7 +3060,7 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../store/settings.py" line="53" />
         <source>Add Vorta to the systems autostart list</source>
-        <translation>Vorta automatisch opstarten</translation>
+        <translation>Vorta toevoegen aan de lijst met automatisch op te starten programma's van het systeem</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="60" />
@@ -3080,7 +3080,7 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../store/settings.py" line="72" />
         <source>When adding a new source, calculate its size and the number of files.</source>
-        <translation>Bereken de bron en het aantal bestanden na het toevoegen van een nieuwe bron.</translation>
+        <translation>Bereken de grootte en het aantal bestanden bij het toevoegen van een nieuwe bron.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="81" />
@@ -3095,12 +3095,12 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
-        <translation>Sla repo-wachtwoorden op in de sleutelbeheerder van het systeem (indien beschikbaar)</translation>
+        <translation>Repowachtwoorden opslaan in de sleutelbeheerder van het systeem (indien beschikbaar)</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="94" />
         <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
-        <translation>Anders bewaart Vorta het wachtwoord in plattetekstopmaak.</translation>
+        <translation>Anders slaat de configuratiedatabase van Vorta het wachtwoord op als platte tekst.</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="103" />
@@ -3135,7 +3135,7 @@ Probeer je repo te ontkoppelen en opnieuw toe te voegen.</translation>
     <message>
         <location filename="../../store/settings.py" line="177" />
         <source>Include pre-release versions when checking for updates</source>
-        <translation>Controleren op vooraf vrijgeven versies</translation>
+        <translation>Ook voorlopige versies (pre-releases) meenemen bij het controleren op updates</translation>
     </message>
     <message>
         <location filename="../../store/settings.py" line="178" />
