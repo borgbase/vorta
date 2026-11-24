@@ -26,7 +26,8 @@ Use informal **"du"** (lowercase) consistently throughout all translations. Do n
 | Source | Quelle | |
 | Exclude | Ausschließen | |
 | Settings (tab) | Einstellungen | UI label is "Settings / About"; code uses "misc" internally — always match UI |
-| Logs | Protokolle | |
+| Logs | Protokolle | Link form in dative (`in den %1`): `Protokollen` |
+| Compact / Compaction | Optimieren / Optimierung | Distinct from Compression (`Kompression`) |
 
 ## Decision Log
 
@@ -37,3 +38,4 @@ Use informal **"du"** (lowercase) consistently throughout all translations. Do n
 | 2026-02-06 | Schlüsselbund vs Passwortmanager/Kennwortverwaltung | Schlüsselbund | OS-neutral term for keychain/password manager; already used in existing translations |
 | 2026-02-06 | Backup vs Datensicherung | Backup | Shorter, more international; consistent with English loan word conventions |
 | 2026-02-06 | Einstellungen vs Verschiedenes | Einstellungen | UI tab is labeled "Settings / About", not "Misc"; previous "Verschiedenes" was a literal translation of the code-internal name |
+| 2026-11-12 | Compact / Compaction | Optimieren / Optimierung | Consistent across ArchiveTab, SchedulePage, and BorgCompactJob; distinct from `Kompression` |

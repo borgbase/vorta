@@ -36,6 +36,9 @@ def _include_pattern(path: str) -> str:
 
 
 class BorgExtractJob(BorgJob):
+    emits_backup_finished = True
+    should_inhibit = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
@@ -43,8 +46,8 @@ class BorgExtractJob(BorgJob):
         )
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Restored files from archive.')}"
         )
@@ -58,10 +61,7 @@ class BorgExtractJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'extract', '--list', '--info', '--log-json']
-        if borg_compat.check('V2'):
-            cmd += ['-r', profile.repo.url, archive_name]
-        else:
-            cmd.append(f'{profile.repo.url}::{archive_name}')
+        cmd += borg_compat.repo_args(profile.repo.url, archive_name)
 
         # process selected items
         # all items will be excluded beside the one actively selected in the
@@ -93,6 +93,3 @@ class BorgExtractJob(BorgJob):
         ret['cwd'] = destination_folder
 
         return ret
-
-    def process_result(self, result: dict):
-        pass

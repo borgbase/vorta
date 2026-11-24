@@ -1,6 +1,5 @@
 import enum
 import json
-import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePath
@@ -33,14 +32,11 @@ from vorta.views.partials.treemodel import (
     FileTreeModel,
     FileTreeSortProxyModel,
     path_to_str,
-    relative_path,
 )
 from vorta.views.utils import get_colored_icon
 
 uifile = get_asset("UI/dialogs/archive/extract.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
-
-logger = logging.getLogger(__name__)
 
 
 class ParseThread(QThread):
@@ -88,7 +84,6 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
         self.sortproxy = ExtractSortProxyModel(self)
         self.sortproxy.setSourceModel(self.model)
         view.setModel(self.sortproxy)
-        self.sortproxy.sorted.connect(self.slot_sorted)
 
         view.setSortingEnabled(True)
 
@@ -149,13 +144,6 @@ class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
             QApplication.instance().paletteChanged.disconnect(self._palette_connection)
         except (TypeError, RuntimeError):
             pass
-
-    def slot_sorted(self, column, order):
-        """React to the tree view being sorted."""
-        # reveal selection
-        selectedRows = self.treeView.selectionModel().selectedRows()
-        if selectedRows:
-            self.treeView.scrollTo(selectedRows[0])
 
     def copy_item(self, index: QModelIndex = None):
         """
@@ -232,13 +220,23 @@ def parse_json_lines(lines, model: "ExtractTree"):
     for item in lines:
         path = PurePath(item["path"])
 
-        size = item["size"]
-        mode = item["mode"]
-        file_type = FileType(mode[0])
-        user = item["user"]
-        group = item["group"]
-        health = item["healthy"]
-        source_path = item["source"] if "source" in item else None
+        size = item.get("size", 0)
+        mode = item.get("mode", "")
+        file_type = FileType(mode[0]) if mode else FileType.FILE
+        user = item.get("user", "")
+        group = item.get("group", "")
+
+        # Borg 1 uses boolean "healthy": true/false.
+        # Borg 2 uses string "health": "healthy"/"broken" from the {health} format placeholder.
+        health_raw = item.get("healthy")
+        if health_raw is None:
+            health_raw = item.get("health", True)
+        if isinstance(health_raw, str):
+            health = health_raw.lower() == "healthy"
+        else:
+            health = bool(health_raw)
+
+        source_path = item.get("source") or None
 
         # For python >= 3.7 this would work
         # modified = datetime.fromisoformat(item["mtime"]).ctime()
@@ -248,9 +246,15 @@ def parse_json_lines(lines, model: "ExtractTree"):
         # except ValueError:
         #     modified = datetime.strptime(item["mtime"], "%Y-%m-%dT%H:%M:%S")
 
-        modified = QDateTime.fromString(
-            item['isomtime' if borg_compat.check('V122') else 'mtime'], Qt.DateFormat.ISODateWithMs
+        mtime_str = (
+            item.get("isomtime" if borg_compat.check("V122") else "mtime") or item.get("mtime") or item.get("isomtime")
         )
+        if mtime_str:
+            modified = QDateTime.fromString(mtime_str, Qt.DateFormat.ISODateWithMs)
+            if not modified.isValid():
+                modified = QDateTime.fromString(mtime_str, Qt.DateFormat.ISODate)
+        else:
+            modified = QDateTime.currentDateTime()
 
         items.append(
             (
@@ -273,9 +277,17 @@ class ExtractSortProxyModel(FileTreeSortProxyModel):
     def choose_data(self, index: QModelIndex):
         """Choose the data of index used for comparison."""
         item: ExtractFileItem = index.internalPointer()
-        if item is None or item.data is None:
-            return ""
         column = index.column()
+
+        if item is None or item.data is None:
+            if column == 1:
+                return QDateTime()
+            elif column == 2:
+                return -1
+            elif column == 3:
+                return False
+            else:
+                return ""
 
         if column == 0:
             # file name
@@ -328,21 +340,9 @@ ExtractFileItem = FileSystemItem[FileData]
 class ExtractTree(FileTreeModel[FileData]):
     """The file tree model for diff results."""
 
-    def _make_filesystemitem(self, path, data):
-        return super()._make_filesystemitem(path, data)
-
-    def _merge_data(self, item, data):
-        if data:
-            logger.debug("Overriding data for {}".format(path_to_str(item.path)))
-        return super()._merge_data(item, data)
-
     def _flat_filter(self, item):
-        """
-        Return whether an item is part of the flat model representation.
-
-        The item's data might have not been set yet.
-        """
-        return item.data and not item.children
+        """The extract dialog has no flat mode, so no item is added to the flat representation."""
+        return False
 
     def _simplify_filter(self, item: ExtractFileItem) -> bool:
         """
@@ -478,19 +478,7 @@ class ExtractTree(FileTreeModel[FileData]):
 
         if role == Qt.ItemDataRole.DisplayRole:
             if column == 0:
-                # name
-                if self.mode == self.DisplayMode.FLAT:
-                    return path_to_str(item.path)
-
-                if self.mode == self.DisplayMode.SIMPLIFIED_TREE:
-                    parent = index.parent()
-                    if parent == QModelIndex():
-                        return path_to_str(relative_path(self.root.path, item.path))
-
-                    return path_to_str(relative_path(parent.internalPointer().path, item.path))
-
-                # standard tree mode
-                return item.subpath
+                return self.display_name(index)
             elif column == 1:
                 # last modified
                 return QLocale.system().toString(item.data.last_modified, QLocale.FormatType.ShortFormat)

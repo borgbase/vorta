@@ -63,6 +63,15 @@ def pytest_configure(config):
 
     vorta.utils.get_network_status_monitor = _mock_get_network_status_monitor
 
+    # Teardown cancels the startup `borg --version` job if it's still running, which reports Borg as
+    # missing. The modal alert would then block forever once pytest-qt processes events (Linux).
+    vorta.application.VortaApp._alert_missing_borg = lambda self: None
+
+    # A job that raises reports its traceback to this slot, which opens a modal ExceptionDialog.
+    # Keep the real slot reachable for tests of the slot itself.
+    vorta.application.VortaApp._real_job_exception_response = vorta.application.VortaApp.job_exception_response
+    vorta.application.VortaApp.job_exception_response = lambda self, exception: None
+
 
 @pytest.fixture(scope='session')
 def qapp(tmpdir_factory):

@@ -9,10 +9,13 @@ from .borg_job import BorgJob
 
 
 class BorgCompactJob(BorgJob):
+    emits_backup_finished = True
+    should_inhibit = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(
-            f"[{self.params['profile_name']} {self.tr('Starting repository compaction...')}]"
+            f"[{self.params['profile_name']}] {self.tr('Starting repository compaction...')}"
         )
 
     def finished_event(self, result: Dict[str, Any]):
@@ -24,8 +27,8 @@ class BorgCompactJob(BorgJob):
         result : Dict[str, Any]
             The (json-like) dictionary containing the job results.
         """
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
         if result['returncode'] != 0:
             logs_link = link(config.LOG_DIR.as_uri(), translate('messages', 'logs'))
             message = format_richtext(
@@ -47,11 +50,8 @@ class BorgCompactJob(BorgJob):
         if not borg_compat.check('COMPACT_SUBCOMMAND'):
             raise Exception('The compact action needs Borg >= 1.2.0')
 
-        cmd = ['borg', '--info', '--log-json', 'compact', '--progress']
-        if borg_compat.check('V2'):
-            cmd = cmd + ["-r", profile.repo.url]
-        else:
-            cmd.append(f'{profile.repo.url}')
+        cmd = ['borg', 'compact', '--info', '--log-json', '--progress']
+        cmd += borg_compat.repo_args(profile.repo.url)
 
         ret['ok'] = True
         ret['cmd'] = cmd

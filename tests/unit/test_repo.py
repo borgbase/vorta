@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime as dt
 from typing import Any, Dict
 from unittest.mock import MagicMock
 
@@ -8,11 +9,33 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 
 import vorta.borg.borg_job
+import vorta.utils
+from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.keyring.abc import VortaKeyring
+from vorta.scheduler import ScheduleStatusType
 from vorta.store.models import ArchiveModel, BackupProfileModel, EventLogModel, RepoModel
+from vorta.views.dialogs.repo import repo_add
 
 LONG_PASSWORD = 'long-password-long'
 SHORT_PASSWORD = 'hunter2'
+
+
+@pytest.mark.parametrize(
+    'window_class, job_class',
+    [(repo_add.AddRepoWindow, repo_add.BorgInitJob), (repo_add.ExistingRepoWindow, repo_add.BorgInfoRepoJob)],
+)
+def test_repo_prepare_error_is_translated(qapp, qtbot, mocker, window_class, job_class):
+    window = window_class()
+    qtbot.addWidget(window)
+    mocker.patch.object(window, 'validate', return_value=True)
+    params = {'ok': False, 'message': 'Borg binary was not found.'}
+    mocker.patch.object(job_class, 'prepare', return_value=params)
+    translate = mocker.patch.object(repo_add, 'translate', return_value='Translated prepare error')
+
+    window.run()
+
+    translate.assert_called_once_with('messages', params['message'])
+    assert window.errorText.text() == 'Translated prepare error'
 
 
 @pytest.mark.parametrize(
@@ -64,18 +87,49 @@ def test_repo_unlink(qapp, qtbot, monkeypatch):
     main = qapp.main_window
     tab = main.repoTab
     monkeypatch.setattr(QMessageBox, "show", lambda *args: True)
+    profile = tab.profile()
+    profile.schedule_mode = 'fixed'
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
 
     # Assuming unlink action is the 1st in submenu
     tab.menuRepoUtil.actions()[0].trigger()
 
     qtbot.waitUntil(lambda: tab.repoSelector.count() == 1, **pytest._wait_defaults)
     assert RepoModel.select().count() == 0
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
 
     # Directly call create_backup_action and wait for signal
     with qtbot.waitSignal(qapp.backup_progress_event, timeout=5000):
         qapp.create_backup_action()
 
     assert 'Select a backup repository first.' in main.progressText.text()
+
+
+def test_repo_selection_refreshes_schedule(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    profile = tab.profile()
+    profile.schedule_mode = 'fixed'
+    profile.save()
+    now = dt.now()
+    EventLogModel.create(
+        subcommand='create', profile=profile.id, returncode=0, category='scheduled', start_time=now, end_time=now
+    )
+    qapp.scheduler.set_timer_for_profile(profile.id)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
+
+    with qtbot.waitSignal(qapp.scheduler.schedule_changed):
+        tab.repoSelector.setCurrentIndex(0)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.UNSCHEDULED
+
+    with qtbot.waitSignal(qapp.scheduler.schedule_changed):
+        tab.repoSelector.setCurrentIndex(1)
+    assert qapp.scheduler.next_job_for_profile(profile.id).type == ScheduleStatusType.SCHEDULED
 
 
 def test_repo_unlink_shared_repository_keeps_dropdown_entry(qapp, qtbot, mocker, monkeypatch):
@@ -164,6 +218,82 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
     assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
+
+
+BORG1_CACHE = {
+    'path': '/home/user/.cache/borg/abc',
+    'stats': {'total_size': 27955635, 'unique_size': 15520474, 'total_unique_chunks': 63},
+}
+BORG2_CACHE = {'path': '/home/user/.cache/borg/abc'}
+
+
+@pytest.mark.parametrize(
+    'data, encryption, total_size',
+    [
+        ({'cache': BORG1_CACHE, 'encryption': {'mode': 'repokey-blake2'}}, 'repokey-blake2', 27955635),
+        (
+            {'cache': BORG2_CACHE, 'encryption': {'mode': 'repokey-blake2-chacha20-poly1305'}},
+            'repokey-blake2-chacha20-poly1305',
+            None,
+        ),
+        (
+            {'cache': {}, 'encryption': {'encryption': 'chacha20-poly1305', 'id_hash': 'sha256'}},
+            'repokey-chacha20-poly1305',
+            None,
+        ),
+        (
+            {'encryption': {'encryption': 'aes256-ocb', 'id_hash': 'blake3', 'keyfile': '/k'}},
+            'keyfile-aes256-ocb',
+            None,
+        ),
+        ({'cache': BORG2_CACHE, 'encryption': {'encryption': 'none-sha256', 'id_hash': 'sha256'}}, 'none', None),
+        ({'cache': BORG2_CACHE, 'encryption': {'encryption': 'none', 'id_hash': 'sha256'}}, 'none', None),
+        ({'cache': BORG1_CACHE, 'encryption': {'mode': 'none'}}, 'none', 27955635),
+    ],
+    ids=['borg1', 'borg2-mode', 'b25-repokey', 'b25-keyfile', 'none-sha256', 'none', 'borg1-none'],
+)
+def test_info_repo_process_result(data, encryption, total_size):
+    keyring = MagicMock()
+    repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    params = {'repo_url': repo_url, 'repo_name': 'Test', 'password': 'pw', 'extra_borg_arguments': '--foo'}
+
+    BorgInfoRepoJob.process_result(MagicMock(keyring=keyring), {'returncode': 0, 'params': params, 'data': data})
+
+    repo = RepoModel.get(url=repo_url)
+    assert repo.encryption == encryption
+    assert repo.total_size == total_size
+    assert repo.extra_borg_arguments == '--foo'
+    if encryption == 'none':
+        keyring.set_password.assert_not_called()
+    else:
+        keyring.set_password.assert_called_once_with('vorta-repo', repo_url, 'pw')
+
+
+def test_repo_add_existing_borg2(qapp, qtbot, mocker, monkeypatch, borg_json_output):
+    monkeypatch.setattr(vorta.utils.borg_compat, 'version', '2.0.0b25')
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+    test_repo_name = 'Borg 2 Repo'
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+    qtbot.keyClicks(window.repoName, test_repo_name)
+    qtbot.keyClicks(window.passwordInput, LONG_PASSWORD)
+
+    stdout, stderr = borg_json_output('repo_info_v2')
+    popen_result = mocker.MagicMock(stdout=stdout, stderr=stderr, returncode=0)
+    mocker.patch.object(vorta.borg.borg_job, 'Popen', return_value=popen_result)
+
+    window.run()
+    qtbot.waitUntil(
+        lambda: tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}", **pytest._wait_defaults
+    )
+
+    repo = RepoModel.get(url=test_repo_url)
+    assert repo.encryption == 'repokey-chacha20-poly1305'
+    assert repo.total_size is None
+    assert VortaKeyring.get_keyring().get_password('vorta-repo', test_repo_url) == LONG_PASSWORD
 
 
 def test_ssh_dialog_success(qapp, qtbot, mocker, tmpdir):
@@ -388,3 +518,43 @@ def test_handle_passphrase_change_result(qapp, qtbot, mocker, result, expected_t
     mock_instance.setWindowTitle.assert_called_once_with(tab.tr(expected_title))
     mock_instance.setText.assert_called_once_with(tab.tr(expected_text))
     mock_instance.show.assert_called_once()
+
+
+def test_password_autofill_locked_keyring(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=False)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'host.example.com:repo')
+
+    keyring.get_password.assert_not_called()
+    keyring.try_unlock.assert_not_called()
+
+
+def test_password_autofill_invalid_url(qapp, qtbot, mocker):
+    keyring = MagicMock(is_unlocked=True)
+    keyring.get_backend_warning.return_value = ''
+    keyring.get_password.return_value = None
+    mocker.patch.object(VortaKeyring, 'get_keyring', return_value=keyring)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+
+    qtbot.keyClicks(tab._window.repoURL, 'aaa')
+
+    keyring.get_password.assert_not_called()
+
+
+def test_password_autofill_existing_repo(qapp, qtbot):
+    tab = qapp.main_window.repoTab
+    tab.add_existing_repo()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'
+    password = str(uuid.uuid4())
+    VortaKeyring.get_keyring().set_password('vorta-repo', test_repo_url, password)
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+
+    assert window.passwordInput.get_password() == password

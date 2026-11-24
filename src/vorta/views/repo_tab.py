@@ -38,8 +38,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         # init repo add button
         self.menuAddRepo = QMenu(self.bAddRepo)
 
-        self.menuAddRepo.addAction(self.tr("New Repository…"), self.new_repo)
-        self.menuAddRepo.addAction(self.tr("Existing Repository…"), self.add_existing_repo)
+        self.menuAddRepo.addAction(self.tr("Initialize Empty Repository…"), self.new_repo)
+        self.menuAddRepo.addAction(self.tr("Use Existing Repository…"), self.add_existing_repo)
 
         self.bAddRepo.setMenu(self.menuAddRepo)
 
@@ -234,7 +234,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         msg = QMessageBox()
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.setParent(self, QtCore.Qt.WindowType.Sheet)
-        msg.setText(self.tr(f'Error during key generation. Exited with code {exit_code}.'))
+        msg.setText(self.tr('Error during key generation. Exited with code {exit_code}.').format(exit_code=exit_code))
         msg.show()
 
     def ssh_copy_to_clipboard_action(self):
@@ -286,7 +286,8 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         window.open()
 
     def repo_select_action(self):
-        self.save_profile_attr('repo', self.repoSelector.currentData())
+        profile = self.save_profile_attr('repo', self.repoSelector.currentData())
+        self.app.scheduler.set_timer_for_profile(profile.id)
         self.init_repo_stats()
 
     def process_new_repo(self, result):
@@ -319,6 +320,7 @@ class RepoTab(BaseTab, RepoBase, RepoUI):
         repo_deleted = not repo.is_shared_with_other_profiles(excluding_profile_id=profile.id)
         profile.repo = None
         profile.save()
+        self.app.scheduler.set_timer_for_profile(profile.id)
         if repo_deleted:
             repo.delete_instance(recursive=True)
 

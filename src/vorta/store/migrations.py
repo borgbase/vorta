@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 
 import peewee as pw
@@ -16,6 +17,8 @@ from .models import (
     SourceFileModel,
     WifiSettingModel,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def run_migrations(current_schema: SchemaVersion, db_connection: pw.SqliteDatabase) -> None:
@@ -272,7 +275,28 @@ def run_migrations(current_schema: SchemaVersion, db_connection: pw.SqliteDataba
 
 def _apply_schema_update(current_schema: SchemaVersion, version_after: int, *operations: Operation) -> None:
     with DB.atomic():
-        migrate(*operations)
+        for operation in operations:
+            if not _adds_existing_column(operation):
+                migrate(operation)
         current_schema.version = version_after
         current_schema.changed_at = datetime.now()
         current_schema.save()
+
+
+def _adds_existing_column(operation: Operation) -> bool:
+    """
+    Check if `operation` adds a column that the table already has.
+
+    A database can already contain parts of a newer schema while its schema version is older,
+    e.g. after an earlier migration was only partly applied. Adding such a column again fails with
+    "duplicate column name" and Vorta can't start, so these operations are skipped.
+    """
+    # peewee 3 stores the name of the migrator method, peewee 4 the function itself.
+    method = getattr(operation, 'method', None) or operation.fn.__name__
+    if method != 'add_column':
+        return False
+    table, column_name = operation.args[:2]
+    if column_name not in {column.name for column in operation.migrator.database.get_columns(table)}:
+        return False
+    logger.warning('Column %s.%s already exists, skipping it in the schema migration.', table, column_name)
+    return True

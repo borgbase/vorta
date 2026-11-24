@@ -19,7 +19,7 @@ from PyQt6 import QtCore
 from PyQt6.QtCore import QFileInfo, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QFileDialog, QSystemTrayIcon
 
-from vorta.borg._compatibility import BorgCompatibility
+from vorta.borg._compatibility import MATCH_ID, BorgCompatibility
 from vorta.log import logger
 from vorta.network_status.abc import NetworkStatusMonitor
 
@@ -39,17 +39,21 @@ class FilePathInfoAsync(QThread):
     def __init__(self, path, exclude_patterns_str):
         self.path = path
         QThread.__init__(self)
-        self.exiting = False
+        self.cancelled = False
         self.exclude_patterns = []
         for _line in (exclude_patterns_str or '').splitlines():
             line = _line.strip()
             if line != '' and not line.startswith("#"):
                 self.exclude_patterns.append(line)
 
+    def cancel(self):
+        self.cancelled = True
+        self.requestInterruption()
+
     def run(self):
-        # logger.info("running thread to get path=%s...", self.path)
-        self.size, self.files_count = get_path_datasize(self.path, self.exclude_patterns)
-        self.signal.emit(self.path, str(self.size), str(self.files_count))
+        self.size, self.files_count = get_path_datasize(self.path, self.exclude_patterns, self.isInterruptionRequested)
+        if not self.isInterruptionRequested():
+            self.signal.emit(self.path, str(self.size), str(self.files_count))
 
 
 def normalize_path(path):
@@ -101,7 +105,7 @@ def match(pattern: Callable[[str], bool], path: str):
     return pattern(path.lstrip(os.path.sep))
 
 
-def get_directory_size(dir_path, exclude_patterns):
+def get_directory_size(dir_path, exclude_patterns, should_stop: Optional[Callable[[], bool]] = None):
     '''Get number of files only and total size in bytes from a path.
     Based off https://stackoverflow.com/a/17936789'''
     exclude_patterns = [m for m in map(prepare_pattern, exclude_patterns) if m is not None]
@@ -111,6 +115,9 @@ def get_directory_size(dir_path, exclude_patterns):
     seen_filtered = set()
 
     for dir_path, subdirectories, file_names in os.walk(dir_path, topdown=True):
+        if should_stop is not None and should_stop():
+            break
+
         is_excluded = False
         for pattern in exclude_patterns:
             if match(pattern, dir_path):
@@ -162,11 +169,11 @@ def get_network_status_monitor():
     return _network_status_monitor
 
 
-def get_path_datasize(path, exclude_patterns):
+def get_path_datasize(path, exclude_patterns, should_stop: Optional[Callable[[], bool]] = None):
     file_info = QFileInfo(path)
 
     if file_info.isDir():
-        data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns)
+        data_size, files_count = get_directory_size(file_info.absoluteFilePath(), exclude_patterns, should_stop)
     else:
         data_size = file_info.size()
         files_count = 1
@@ -462,9 +469,6 @@ def format_archive_name(profile, archive_name_tpl):
     return archive_name_tpl.format(**available_vars)
 
 
-SHELL_PATTERN_ELEMENT = re.compile(r'([?\[\]*])')
-
-
 def is_mount_command(proc):
     try:
         name = proc.name()
@@ -476,23 +480,59 @@ def is_mount_command(proc):
     return False
 
 
+# Options whose value must not be taken for the mount point.
+_MOUNT_SKIPPED_OPTIONS = (
+    '-o -e --exclude --exclude-from --pattern --patterns-from --strip-components --sort-by --first --last --oldest '
+    '--newest --older --newer --lock-wait --umask --rsh --remote-path --upload-ratelimit --upload-buffer '
+    '--debug-profile --debug-topic'
+).split()
+_MOUNT_VALUE_OPTIONS = {'-r': 'repo', '--repo': 'repo', '-a': 'archive', '--match-archives': 'archive'}
+_MOUNT_VALUE_OPTIONS.update(dict.fromkeys(_MOUNT_SKIPPED_OPTIONS))
+_MATCH_ARCHIVES_PREFIXES = ('sh:', 're:', 'aid:', 'name:', 'host:', 'user:', 'tags:', 'date:')
+
+
+def _mount_archive_name(value):
+    """Archive name selected by a Borg 2 `--match-archives` value, or None if it is a pattern."""
+    if value.startswith(MATCH_ID):
+        return value[len(MATCH_ID) :]
+    if value.startswith(_MATCH_ARCHIVES_PREFIXES):
+        return None
+    return value
+
+
 def extract_mount_points_v2(proc, repo_url):
     mount_points = {}
     repo_mounts = []
 
     cmd = proc.cmdline()
-    if repo_url in cmd:
-        i = cmd.index(repo_url)
-        if len(cmd) > i + 1:
-            mount_point = cmd[i + 1]
+    if 'mount' not in cmd:
+        return mount_points, repo_mounts
 
-            ao = '-a' in cmd
-            if ao or '--match-archives' in cmd:
-                i = cmd.index('-a' if ao else '--match-archives')
-                if len(cmd) >= i + 1 and not SHELL_PATTERN_ELEMENT.search(cmd[i + 1]):
-                    mount_points[mount_point] = cmd[i + 1]
-            else:
-                repo_mounts.append(mount_point)
+    values = {'repo': None, 'archive': None}
+    mount_point = None
+    tokens = iter(cmd[cmd.index('mount') + 1 :])
+    for token in tokens:
+        name, sep, joined = token.partition('=')
+        if sep and name.startswith('--') and name in _MOUNT_VALUE_OPTIONS:
+            key, value = _MOUNT_VALUE_OPTIONS[name], joined
+        elif token in _MOUNT_VALUE_OPTIONS:
+            key, value = _MOUNT_VALUE_OPTIONS[token], next(tokens, None)
+        else:
+            if not token.startswith('-') and mount_point is None:
+                mount_point = token
+            continue
+        if key and value is not None:
+            values[key] = value
+
+    if values['repo'] != repo_url or mount_point is None:
+        return mount_points, repo_mounts
+
+    if values['archive'] is None:
+        repo_mounts.append(mount_point)
+    else:
+        archive_name = _mount_archive_name(values['archive'])
+        if archive_name is not None:
+            mount_points[archive_name] = mount_point
 
     return mount_points, repo_mounts
 

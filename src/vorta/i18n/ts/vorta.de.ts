@@ -26,58 +26,58 @@
 </context><context>
     <name>AddRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="139" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="148" />
         <source>Encryption:</source>
         <translation>Verschlüsselung:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="156" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="165" />
         <source>Autofilled password from password manager.</source>
         <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="170" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
         <source>Repokey-ChaCha20-Poly1305 (Recommended, key stored in repository)</source>
         <translation>Repokey-ChaCha20-Poly1305 (empfohlen, Schlüssel wird im Repository gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="174" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
         <source>Keyfile-ChaCha20-Poly1305 (Key stored in home directory)</source>
         <translation>Keyfile-ChaCha20-Poly1305 (Schlüssel wird im Home-Verzeichnis gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="177" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
         <source>Repokey-AES256-OCB</source>
         <translation>Repokey-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="178" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
         <source>Keyfile-AES256-OCB</source>
         <translation>Keyfile-AES256-OCB</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="187" />
-        <location filename="../../views/dialogs/repo/repo_add.py" line="179" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="196" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="188" />
         <source>None (not recommended)</source>
         <translation>Unverschlüsselt (nicht empfohlen)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="183" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="192" />
         <source>Repokey-Blake2 (Recommended, key stored in repository)</source>
         <translation>Repokey-Blake2 (empfohlen, Schlüssel wird im Repository gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="184" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="193" />
         <source>Repokey</source>
         <translation>Repokey</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="185" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="194" />
         <source>Keyfile-Blake2 (Key stored in home directory)</source>
         <translation>Keyfile-Blake2 (Schlüssel wird im Home-Verzeichnis gespeichert)</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="186" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="195" />
         <source>Keyfile</source>
         <translation>Keyfile</translation>
     </message>
@@ -162,56 +162,56 @@
 </context><context>
     <name>ArchiveDelete</name>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="14" />
+        <location filename="../../views/archive/archive_delete.py" line="18" />
         <source>No archive selected</source>
         <translation>Kein Archiv ausgewählt</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="23" />
+        <location filename="../../views/archive/archive_delete.py" line="27" />
         <source>Are you sure you want to delete all the selected archives?</source>
         <translation>Sollen alle ausgewählten Archive gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="25" />
+        <location filename="../../views/archive/archive_delete.py" line="29" />
         <source>Are you sure you want to delete the selected archive?</source>
         <translation>Soll das ausgewählte Archiv gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="26" />
+        <location filename="../../views/archive/archive_delete.py" line="30" />
         <source>Confirm deletion</source>
         <translation>Löschen bestätigen</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="39" />
+        <location filename="../../views/archive/archive_delete.py" line="43" />
         <source>Archives deleted.</source>
         <translation>Archive gelöscht.</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_delete.py" line="41" />
+        <location filename="../../views/archive/archive_delete.py" line="45" />
         <source>Archive deleted.</source>
         <translation>Archiv gelöscht.</translation>
     </message>
 </context><context>
     <name>ArchiveDiff</name>
     <message>
-        <location filename="../../views/archive/archive_diff.py" line="62" />
+        <location filename="../../views/archive/archive_diff.py" line="66" />
         <source>Processing diff results.</source>
         <translation>Verarbeite Archivunterschiede.</translation>
     </message>
 </context><context>
     <name>ArchiveExtract</name>
     <message>
-        <location filename="../../views/archive/archive_extract.py" line="38" />
+        <location filename="../../views/archive/archive_extract.py" line="42" />
         <source>Select an archive to restore first.</source>
         <translation>Zuerst ein Archiv zum Wiederherstellen auswählen.</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_extract.py" line="46" />
+        <location filename="../../views/archive/archive_extract.py" line="50" />
         <source>Processing archive contents</source>
         <translation>Verarbeite Inhalt des Archivs</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_extract.py" line="69" />
+        <location filename="../../views/archive/archive_extract.py" line="73" />
         <source>Choose Extraction Point</source>
         <translation>Extraktionsort auswählen</translation>
     </message>
@@ -225,49 +225,49 @@
 </context><context>
     <name>ArchiveMount</name>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="72" />
-        <location filename="../../views/archive/archive_mount.py" line="55" />
+        <location filename="../../views/archive/archive_mount.py" line="73" />
+        <location filename="../../views/archive/archive_mount.py" line="58" />
         <source>Unmount</source>
         <translation>Aushängen</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="56" />
+        <location filename="../../views/archive/archive_mount.py" line="59" />
         <source>Unmount the selected archive from the file system</source>
         <translation>Hängt das gewählte Archiv aus dem Dateisystem aus</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="76" />
-        <location filename="../../views/archive/archive_mount.py" line="60" />
+        <location filename="../../views/archive/archive_mount.py" line="77" />
+        <location filename="../../views/archive/archive_mount.py" line="63" />
         <source>Mount…</source>
         <translation>Einhängen…</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="62" />
+        <location filename="../../views/archive/archive_mount.py" line="64" />
         <source>Mount the selected archive as a folder in the file system</source>
         <translation>Hängt das gewählte Archiv in das Dateisystem ein</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="73" />
+        <location filename="../../views/archive/archive_mount.py" line="74" />
         <source>Unmount the repository from the file system</source>
         <translation>Hängt das Repository aus dem Dateisystem aus</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="78" />
+        <location filename="../../views/archive/archive_mount.py" line="79" />
         <source>Mount the repository as a folder in the file system</source>
         <translation>Bindet das Repository als Verzeichnis ins Dateisystem ein</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="109" />
+        <location filename="../../views/archive/archive_mount.py" line="110" />
         <source>Choose Mount Point</source>
         <translation>Einhängepunkt auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="114" />
+        <location filename="../../views/archive/archive_mount.py" line="115" />
         <source>Mounted successfully.</source>
         <translation>Erfolgreich eingehängt.</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_mount.py" line="168" />
+        <location filename="../../views/archive/archive_mount.py" line="169" />
         <source>Un-mounted successfully.</source>
         <translation>Erfolgreich ausgehängt.</translation>
     </message>
@@ -279,95 +279,100 @@
 </context><context>
     <name>ArchiveRename</name>
     <message>
-        <location filename="../../views/archive/archive_rename.py" line="58" />
+        <location filename="../../views/archive/archive_rename.py" line="62" />
         <source>Archive name cannot be blank.</source>
         <translation>Archivname darf nicht leer sein.</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_rename.py" line="62" />
+        <location filename="../../views/archive/archive_rename.py" line="66" />
         <source>An archive with this name already exists.</source>
         <translation>Ein Archiv mit diesem Namen existiert bereits.</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_rename.py" line="72" />
+        <location filename="../../views/archive/archive_rename.py" line="76" />
         <source>Renaming archive...</source>
         <translation>Archiv wird umbenannt...</translation>
     </message>
     <message>
-        <location filename="../../views/archive/archive_rename.py" line="86" />
+        <location filename="../../views/archive/archive_rename.py" line="90" />
         <source>Archive renamed.</source>
         <translation>Archiv umbenannt.</translation>
     </message>
 </context><context>
     <name>ArchiveTab</name>
     <message>
-        <location filename="../../views/archive_tab.py" line="205" />
+        <location filename="../../views/archive_tab.py" line="206" />
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="225" />
+        <location filename="../../views/archive_tab.py" line="228" />
         <source>Action cancelled.</source>
         <translation>Vorgang abgebrochen.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="289" />
+        <location filename="../../views/archive_tab.py" line="292" />
         <source>(This feature needs Borg 1.2.0 or higher)</source>
         <translation>(Diese Funktionalität benötigt mindestens Borg 1.2.0)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="304" />
+        <location filename="../../views/archive_tab.py" line="307" />
         <source>Archives for {}</source>
         <translation>Archive für {}</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="328" />
+        <location filename="../../views/archive_tab.py" line="331" />
         <source>Archives</source>
         <translation>Archive</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="382" />
+        <location filename="../../views/archive_tab.py" line="385" />
         <source>(borg already running)</source>
         <translation>(Borg läuft bereits)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="392" />
+        <location filename="../../views/archive_tab.py" line="395" />
         <source>(Select minimum one archive)</source>
         <translation>(Wähle min. ein Archiv aus)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="404" />
+        <location filename="../../views/archive_tab.py" line="407" />
         <source>(Select two archives)</source>
         <translation>(Wähle zwei Archive aus)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="419" />
+        <location filename="../../views/archive_tab.py" line="422" />
         <source>(Select exactly one archive)</source>
         <translation>(Wähle genau ein Archiv aus)</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="467" />
+        <location filename="../../views/archive_tab.py" line="470" />
         <source>Preview: %s</source>
         <translation>Vorschau: %s</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="471" />
+        <location filename="../../views/archive_tab.py" line="474" />
         <source>Error in archive name template.</source>
         <translation>Fehler in der Archiv-Namens-Vorlage.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="515" />
-        <location filename="../../views/archive_tab.py" line="492" />
+        <location filename="../../views/archive_tab.py" line="496" />
+        <source>Could not read archive list from Borg. Local list kept.</source>
+        <translation>Archivliste konnte nicht von Borg gelesen werden. Lokale Liste wird beibehalten.</translation>
+    </message>
+    <message>
+        <location filename="../../views/archive_tab.py" line="532" />
+        <location filename="../../views/archive_tab.py" line="498" />
         <source>Refreshed archives.</source>
         <translation>Archive aktualisiert.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="528" />
+        <location filename="../../views/archive_tab.py" line="545" />
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="529" />
+        <location filename="../../views/archive_tab.py" line="546" />
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -484,188 +489,203 @@
 </context><context>
     <name>BorgBreakJob</name>
     <message>
-        <location filename="../../borg/break_lock.py" line="7" />
-        <source>Breaking repository lock…</source>
+        <location filename="../../borg/break_lock.py" line="23" />
+        <source>Breaking the repository lock failed. See the %1 for details.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../borg/break_lock.py" line="12" />
+        <location filename="../../borg/break_lock.py" line="14" />
+        <source>Breaking repository lock…</source>
+        <translation>Hebe Repository-Sperre auf…</translation>
+    </message>
+    <message>
+        <location filename="../../borg/break_lock.py" line="19" />
         <source>Repository lock broken. Please redo your last action.</source>
-        <translation type="unfinished" />
+        <translation>Repository-Sperre aufgehoben. Bitte wiederhole deine letzte Aktion.</translation>
     </message>
 </context><context>
     <name>BorgChangePassJob</name>
     <message>
         <location filename="../../borg/change_passphrase.py" line="18" />
         <source>Changing Borg passphrase…</source>
-        <translation type="unfinished" />
+        <translation>Ändere Borg-Passwort…</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="39" />
         <source>Passphrase changed.</source>
-        <translation type="unfinished" />
+        <translation>Passwort geändert.</translation>
     </message>
 </context><context>
     <name>BorgCheckJob</name>
     <message>
-        <location filename="../../borg/check.py" line="14" />
+        <location filename="../../borg/check.py" line="16" />
         <source>Starting consistency check…</source>
-        <translation type="unfinished" />
+        <translation>Starte Konsistenzprüfung…</translation>
     </message>
     <message>
-        <location filename="../../borg/check.py" line="36" />
+        <location filename="../../borg/check.py" line="38" />
         <source>Check completed.</source>
-        <translation type="unfinished" />
+        <translation>Prüfung abgeschlossen.</translation>
     </message>
 </context><context>
     <name>BorgCompactJob</name>
     <message>
-        <location filename="../../borg/compact.py" line="32" />
+        <location filename="../../borg/compact.py" line="34" />
         <source>Errors during compaction. See the %1 for details.</source>
-        <translation>Fehler bei der Defragmentierung. Details befinden sich in den %1.</translation>
+        <translation>Fehler bei der Optimierung. Details befinden sich in den %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/compact.py" line="15" />
+        <location filename="../../borg/compact.py" line="17" />
         <source>Starting repository compaction...</source>
-        <translation type="unfinished" />
+        <translation>Starte Optimierung des Repositorys...</translation>
     </message>
     <message>
-        <location filename="../../borg/compact.py" line="37" />
+        <location filename="../../borg/compact.py" line="39" />
         <source>Compaction completed.</source>
-        <translation type="unfinished" />
+        <translation>Optimierung abgeschlossen.</translation>
     </message>
 </context><context>
     <name>BorgCreateJob</name>
     <message>
-        <location filename="../../borg/create.py" line="46" />
+        <location filename="../../borg/create.py" line="49" />
         <source>Backup finished with warnings. See the %1 for details.</source>
-        <translation type="unfinished" />
+        <translation>Backup mit Warnungen abgeschlossen. Details befinden sich in den %1.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="52" />
+        <location filename="../../borg/create.py" line="55" />
         <source>Backup finished.</source>
-        <translation type="unfinished" />
+        <translation>Backup abgeschlossen.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="59" />
+        <location filename="../../borg/create.py" line="62" />
         <source>Backup started.</source>
-        <translation type="unfinished" />
+        <translation>Backup gestartet.</translation>
     </message>
 </context><context>
     <name>BorgDeleteJob</name>
     <message>
-        <location filename="../../borg/delete.py" line="12" />
+        <location filename="../../borg/delete.py" line="14" />
         <source>Deleting archive…</source>
-        <translation type="unfinished" />
+        <translation>Lösche Archiv…</translation>
     </message>
     <message>
-        <location filename="../../borg/delete.py" line="25" />
+        <location filename="../../borg/delete.py" line="22" />
         <source>Archive deleted.</source>
         <translation>Archiv gelöscht.</translation>
     </message>
 </context><context>
     <name>BorgDiffJob</name>
     <message>
-        <location filename="../../borg/diff.py" line="10" />
+        <location filename="../../borg/diff.py" line="12" />
         <source>Requesting differences between archives…</source>
-        <translation type="unfinished" />
+        <translation>Frage Unterschiede zwischen Archiven ab…</translation>
     </message>
     <message>
-        <location filename="../../borg/diff.py" line="16" />
+        <location filename="../../borg/diff.py" line="18" />
         <source>Obtained differences between archives.</source>
-        <translation type="unfinished" />
+        <translation>Unterschiede zwischen Archiven ermittelt.</translation>
     </message>
 </context><context>
     <name>BorgExtractJob</name>
     <message>
-        <location filename="../../borg/extract.py" line="16" />
+        <location filename="../../borg/extract.py" line="44" />
         <source>Downloading files from archive…</source>
-        <translation type="unfinished" />
+        <translation>Lade Dateien aus dem Archiv herunter…</translation>
     </message>
     <message>
-        <location filename="../../borg/extract.py" line="23" />
+        <location filename="../../borg/extract.py" line="51" />
         <source>Restored files from archive.</source>
-        <translation type="unfinished" />
+        <translation>Dateien aus dem Archiv wiederhergestellt.</translation>
     </message>
 </context><context>
     <name>BorgInfoArchiveJob</name>
     <message>
-        <location filename="../../borg/info_archive.py" line="10" />
+        <location filename="../../borg/info_archive.py" line="12" />
         <source>Refreshing archive…</source>
-        <translation type="unfinished" />
+        <translation>Aktualisiere Archiv…</translation>
     </message>
     <message>
-        <location filename="../../borg/info_archive.py" line="15" />
+        <location filename="../../borg/info_archive.py" line="17" />
         <source>Refreshing archive done.</source>
-        <translation type="unfinished" />
+        <translation>Aktualisieren des Archivs abgeschlossen.</translation>
     </message>
 </context><context>
     <name>BorgInfoRepoJob</name>
     <message>
-        <location filename="../../borg/info_repo.py" line="11" />
+        <location filename="../../borg/info_repo.py" line="27" />
         <source>Validating existing repo…</source>
         <translation>Validiere bestehendes Repository…</translation>
     </message>
 </context><context>
     <name>BorgInitJob</name>
     <message>
-        <location filename="../../borg/init.py" line="9" />
+        <location filename="../../borg/init.py" line="11" />
         <source>Setting up new repo…</source>
         <translation>Erstelle neues Repository…</translation>
     </message>
 </context><context>
     <name>BorgJob</name>
     <message>
-        <location filename="../../borg/borg_job.py" line="312" />
-        <location filename="../../borg/borg_job.py" line="69" />
+        <location filename="../../borg/borg_job.py" line="473" />
+        <location filename="../../borg/borg_job.py" line="116" />
         <source>Files</source>
         <translation>Dateien</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="313" />
-        <location filename="../../borg/borg_job.py" line="70" />
+        <location filename="../../borg/borg_job.py" line="474" />
+        <location filename="../../borg/borg_job.py" line="117" />
         <source>Original</source>
         <translation>Original</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="315" />
-        <location filename="../../borg/borg_job.py" line="71" />
+        <location filename="../../borg/borg_job.py" line="476" />
+        <location filename="../../borg/borg_job.py" line="118" />
         <source>Deduplicated</source>
         <translation>Dedupliziert</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="72" />
+        <location filename="../../borg/borg_job.py" line="119" />
         <source>Compressed</source>
         <translation>Komprimiert</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="357" />
+        <location filename="../../borg/borg_job.py" line="376" />
+        <source>Task failed: {}</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../borg/borg_job.py" line="521" />
         <source>Task started</source>
         <translation>Aufgabe gestartet</translation>
     </message>
 </context><context>
     <name>BorgListArchiveJob</name>
     <message>
-        <location filename="../../borg/list_archive.py" line="9" />
+        <location filename="../../borg/list_archive.py" line="11" />
         <source>Getting archive content…</source>
-        <translation type="unfinished" />
+        <translation>Rufe Archivinhalt ab…</translation>
     </message>
     <message>
-        <location filename="../../borg/list_archive.py" line="14" />
+        <location filename="../../borg/list_archive.py" line="16" />
         <source>Done getting archive content.</source>
-        <translation type="unfinished" />
+        <translation>Abrufen des Archivinhalts abgeschlossen.</translation>
     </message>
 </context><context>
     <name>BorgListRepoJob</name>
     <message>
-        <location filename="../../borg/list_repo.py" line="12" />
+        <location filename="../../borg/list_repo.py" line="17" />
         <source>Refreshing archives…</source>
-        <translation type="unfinished" />
+        <translation>Aktualisiere Archive…</translation>
     </message>
     <message>
-        <location filename="../../borg/list_repo.py" line="17" />
+        <location filename="../../borg/list_repo.py" line="22" />
         <source>Refreshing archives done.</source>
-        <translation type="unfinished" />
+        <translation>Aktualisieren der Archive abgeschlossen.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/list_repo.py" line="50" />
+        <source>Could not read archive list from Borg. Local list kept.</source>
+        <translation>Archivliste konnte nicht von Borg gelesen werden. Lokale Liste wird beibehalten.</translation>
     </message>
 </context><context>
     <name>BorgMountJob</name>
@@ -677,24 +697,24 @@
 </context><context>
     <name>BorgPruneJob</name>
     <message>
-        <location filename="../../borg/prune.py" line="10" />
+        <location filename="../../borg/prune.py" line="11" />
         <source>Pruning old archives…</source>
-        <translation type="unfinished" />
+        <translation>Dünne alte Archive aus…</translation>
     </message>
     <message>
-        <location filename="../../borg/prune.py" line="23" />
+        <location filename="../../borg/prune.py" line="19" />
         <source>Pruning done.</source>
-        <translation type="unfinished" />
+        <translation>Ausdünnen abgeschlossen.</translation>
     </message>
 </context><context>
     <name>BorgRenameJob</name>
     <message>
-        <location filename="../../borg/rename.py" line="10" />
+        <location filename="../../borg/rename.py" line="12" />
         <source>Renaming archive…</source>
         <translation>Archiv wird umbenannt...</translation>
     </message>
     <message>
-        <location filename="../../borg/rename.py" line="48" />
+        <location filename="../../borg/rename.py" line="44" />
         <source>Archive renamed.</source>
         <translation>Archiv umbenannt.</translation>
     </message>
@@ -708,22 +728,22 @@
 </context><context>
     <name>ChangeBorgPassphraseWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="19" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="20" />
         <source>Change Passphrase</source>
         <translation>Passwort ändern</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="29" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="30" />
         <source>Repository:</source>
         <translation>Repository:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="33" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="34" />
         <source>Update</source>
         <translation>Aktualisieren</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="66" />
+        <location filename="../../views/dialogs/repo/repo_change_passphrase.py" line="67" />
         <source>Unable to change the borg passphrase.</source>
         <translation>Änderung des Borg-Passworts fehlgeschlagen.</translation>
     </message>
@@ -744,12 +764,12 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="97" />
         <source>Patterns that you add here will be used to exclude files and folders from the backup. For more info on how to use patterns, see the %1. To add multiple patterns at once, use the "Raw" tab.</source>
-        <translation type="unfinished" />
+        <translation>Muster, die du hier hinzufügst, werden verwendet, um Dateien und Ordner vom Backup auszuschließen. Weitere Informationen zur Verwendung von Mustern findest du in der %1. Um mehrere Muster gleichzeitig hinzuzufügen, verwende den Reiter „Roheingabe“.</translation>
     </message>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="103" />
         <source>documentation</source>
-        <translation type="unfinished" />
+        <translation>Dokumentation</translation>
     </message>
 </context><context>
     <name>Dialog</name>
@@ -1028,84 +1048,84 @@
 </context><context>
     <name>DiffResultDialog</name>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="152" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="147" />
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="160" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="155" />
         <source>Expand recursively</source>
         <translation>Rekursiv aufklappen</translation>
     </message>
 </context><context>
     <name>DiffTree</name>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="793" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="755" />
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="795" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="757" />
         <source>Change</source>
         <translation>Änderung</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="797" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="759" />
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="799" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="761" />
         <source>Balance</source>
         <translation>Bilanz</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="870" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="820" />
         <source>Added {}, deleted {}</source>
         <translation>Neu {}, entfernt {}</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="877" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="827" />
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="879" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="829" />
         <source>Directory</source>
         <translation>Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="881" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="831" />
         <source>Link</source>
         <translation>Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="883" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="833" />
         <source>Block device file</source>
         <translation>Blockorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="885" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="835" />
         <source>Character device file</source>
         <translation>Zeichenorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="890" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="840" />
         <source>unchanged</source>
         <translation>unverändert</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="892" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="842" />
         <source>modified</source>
         <translation>verändert</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="894" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="844" />
         <source>removed</source>
         <translation>entfernt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/diff_result.py" line="896" />
+        <location filename="../../views/dialogs/archive/diff_result.py" line="846" />
         <source>added</source>
         <translation>hinzugefügt</translation>
     </message>
@@ -1138,41 +1158,41 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="124" />
         <source>Folders that contain the following files will be excluded from backups.</source>
-        <translation type="unfinished" />
+        <translation>Ordner, die die folgenden Dateien enthalten, werden von Backups ausgeschlossen.</translation>
     </message>
 </context><context>
     <name>ExclusionPresetsHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="106" />
         <source>These presets are provided by the community and are a good starting point for excluding certain types of files. You can enable or disable them as you see fit. To see the patterns that are used for each preset, switch to the "Preview" tab after enabling it.</source>
-        <translation type="unfinished" />
+        <translation>Diese Voreinstellungen werden von der Community bereitgestellt und sind ein guter Ausgangspunkt, um bestimmte Dateitypen auszuschließen. Du kannst sie nach Belieben aktivieren oder deaktivieren. Um die verwendeten Muster einer Voreinstellung zu sehen, wechsle nach dem Aktivieren zum Reiter „Vorschau“.</translation>
     </message>
 </context><context>
     <name>ExclusionsPreviewHelp</name>
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="118" />
         <source>This is a preview of the patterns that will be used to exclude files and folders from the backup.</source>
-        <translation type="unfinished" />
+        <translation>Dies ist eine Vorschau der Muster, die zum Ausschließen von Dateien und Ordnern vom Backup verwendet werden.</translation>
     </message>
 </context><context>
     <name>ExistingRepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="231" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="240" />
         <source>Connect to existing Repository</source>
         <translation>Mit existierendem Repository verbinden</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="234" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="243" />
         <source>Password:</source>
         <translation>Passwort:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="235" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="244" />
         <source>Enter the encryption passphrase</source>
         <translation>Verschlüsselungspasswort eingeben</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="242" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="251" />
         <source>Autofilled password from password manager.</source>
         <translation>Passwort automatisch aus dem Schlüsselbund eingefügt.</translation>
     </message>
@@ -1216,18 +1236,18 @@
 </context><context>
     <name>ExtractDialog</name>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="138" />
-        <location filename="../../views/dialogs/archive/extract.py" line="110" />
+        <location filename="../../views/dialogs/archive/extract.py" line="133" />
+        <location filename="../../views/dialogs/archive/extract.py" line="105" />
         <source>Extract</source>
         <translation>Entpacken</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="216" />
+        <location filename="../../views/dialogs/archive/extract.py" line="204" />
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="222" />
+        <location filename="../../views/dialogs/archive/extract.py" line="210" />
         <source>Expand recursively</source>
         <translation>Rekursiv aufklappen</translation>
     </message>
@@ -1254,57 +1274,57 @@
         <translation>Zustand</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="529" />
+        <location filename="../../views/dialogs/archive/extract.py" line="517" />
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="531" />
+        <location filename="../../views/dialogs/archive/extract.py" line="519" />
         <source>Directory</source>
         <translation>Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="533" />
+        <location filename="../../views/dialogs/archive/extract.py" line="521" />
         <source>Symbolic link</source>
         <translation>Symbolische Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="535" />
+        <location filename="../../views/dialogs/archive/extract.py" line="523" />
         <source>FIFO pipe</source>
         <translation>FIFO Pipe</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="537" />
+        <location filename="../../views/dialogs/archive/extract.py" line="525" />
         <source>Hard link</source>
         <translation>Harte Verknüpfung</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="539" />
+        <location filename="../../views/dialogs/archive/extract.py" line="527" />
         <source>Socket</source>
         <translation>Socket</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="541" />
+        <location filename="../../views/dialogs/archive/extract.py" line="529" />
         <source>Block special file</source>
         <translation>Blockorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="543" />
+        <location filename="../../views/dialogs/archive/extract.py" line="531" />
         <source>Character special file</source>
         <translation>Zeichenorientierte Gerätedatei</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="550" />
+        <location filename="../../views/dialogs/archive/extract.py" line="538" />
         <source>healthy</source>
         <translation>intakt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="552" />
+        <location filename="../../views/dialogs/archive/extract.py" line="540" />
         <source>broken</source>
         <translation>beschädigt</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/archive/extract.py" line="565" />
+        <location filename="../../views/dialogs/archive/extract.py" line="553" />
         <source>Linked to: {}</source>
         <translation>Zeigt auf: {}</translation>
     </message>
@@ -1346,22 +1366,22 @@
         <translation>Protokolle anzeigen</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="106" />
+        <location filename="../../views/archive_tab.py" line="107" />
         <source>To mount archives, first install macFUSE from %1.</source>
         <translation>Um Archive einzuhängen, installiere zuerst macFUSE von %1.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="107" />
+        <location filename="../../views/archive_tab.py" line="108" />
         <source>here</source>
         <translation>hier</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="108" />
+        <location filename="../../views/archive_tab.py" line="109" />
         <source>Pruning removes older archives. You can choose the number of hourly, daily, etc. archives to preserve. Usually you will keep more newer and fewer old archives. Read %1.</source>
         <translation>Ausdünnen entfernt ältere Archive. Du kannst die Anzahl der stündlichen, täglichen, etc. Archive wählen, die du behalten möchtest. Üblicherweise wirst du mehr neue und weniger alte Archive behalten. %1 lesen.</translation>
     </message>
     <message>
-        <location filename="../../views/archive_tab.py" line="113" />
+        <location filename="../../views/archive_tab.py" line="114" />
         <source>more</source>
         <translation>Mehr</translation>
     </message>
@@ -1404,7 +1424,7 @@
     <message>
         <location filename="../../views/partials/archive_table_model.py" line="45" />
         <source>Trigger</source>
-        <translation>Trigger</translation>
+        <translation>Auslöser</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1544,6 +1564,11 @@
         <location filename="../../assets/UI/schedule_tab.ui" line="0" />
         <source>Shell Commands</source>
         <translation>Shell-Kommandos</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/schedule_tab.ui" line="0" />
+        <source>Jobs</source>
+        <translation>Aufträge</translation>
     </message>
     <message>
         <location filename="../../assets/UI/archive_tab.ui" line="0" />
@@ -1779,26 +1804,94 @@
  {1}</translation>
     </message>
 </context><context>
-    <name>KWallet</name>
+    <name>JobsPage</name>
     <message>
-        <location filename="../../keyring/kwallet.py" line="123" />
-        <source>Create Wallet</source>
-        <translation type="unfinished" />
+        <location filename="../../views/jobs_page.py" line="91" />
+        <location filename="../../views/jobs_page.py" line="55" />
+        <source>All</source>
+        <translation>Alle</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="124" />
-        <source>Enter a name for the new wallet:</source>
-        <translation type="unfinished" />
+        <location filename="../../views/partials/jobs_table_model.py" line="69" />
+        <source>Time</source>
+        <translation>Zeit</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="70" />
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="71" />
+        <source>Repository</source>
+        <translation>Repository</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="72" />
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="73" />
+        <source>Trigger</source>
+        <translation>Auslöser</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="74" />
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <location filename="../../views/partials/jobs_table_model.py" line="75" />
+        <source>Reason</source>
+        <translation>Grund</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Profile:</source>
+        <translation>Profil:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Repository:</source>
+        <translation>Repository:</translation>
+    </message>
+    <message>
+        <location filename="../../assets/UI/jobs_page.ui" line="0" />
+        <source>Status:</source>
+        <translation>Status:</translation>
+    </message>
+</context><context>
+    <name>KWallet</name>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="78" />
+        <source>Retrieved password for repo {repo_url}</source>
+        <translation>Passwort für Repository {repo_url} abgerufen</translation>
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="97" />
+        <source>Method '{method}' returned an error message.</source>
+        <translation>Methode '{method}' hat eine Fehlermeldung zurückgegeben.</translation>
     </message>
     <message>
         <location filename="../../keyring/kwallet.py" line="128" />
-        <source>Could not determine a valid wallet name. Aborting unlock attempt.</source>
-        <translation type="unfinished" />
+        <source>Create Wallet</source>
+        <translation>Schlüsselbund erstellen</translation>
     </message>
     <message>
-        <location filename="../../keyring/kwallet.py" line="140" />
+        <location filename="../../keyring/kwallet.py" line="129" />
+        <source>Enter a name for the new wallet:</source>
+        <translation>Gib einen Namen für den neuen Schlüsselbund ein:</translation>
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="133" />
+        <source>Could not determine a valid wallet name. Aborting unlock attempt.</source>
+        <translation>Es konnte kein gültiger Name für den Schlüsselbund ermittelt werden. Entsperrungsversuch wird abgebrochen.</translation>
+    </message>
+    <message>
+        <location filename="../../keyring/kwallet.py" line="145" />
         <source>Failed to open wallet. Aborting unlock attempt.</source>
-        <translation type="unfinished" />
+        <translation>Öffnen des Schlüsselbunds fehlgeschlagen. Entsperrungsversuch wird abgebrochen.</translation>
     </message>
 </context><context>
     <name>LogPage</name>
@@ -1835,77 +1928,77 @@
 </context><context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../views/main_window.py" line="57" />
+        <location filename="../../views/main_window.py" line="58" />
         <source>Start Backup</source>
         <translation>Backup starten</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="113" />
+        <location filename="../../views/main_window.py" line="115" />
         <source>Create new profile</source>
         <translation>Neues Profil erstellen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="114" />
+        <location filename="../../views/main_window.py" line="116" />
         <source>Import from file…</source>
         <translation>Aus Datei importieren…</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="230" />
+        <location filename="../../views/main_window.py" line="231" />
         <source>Are you sure you want to delete profile '{}'?</source>
         <translation>Soll das gewählte Profil '{}' gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="233" />
+        <location filename="../../views/main_window.py" line="234" />
         <source>Confirm deletion</source>
         <translation>Löschen bestätigen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="247" />
+        <location filename="../../views/main_window.py" line="248" />
         <source>Cannot delete the last profile.</source>
         <translation>Das letzte Profil kann nicht gelöscht werden.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="278" />
+        <location filename="../../views/main_window.py" line="281" />
         <source>Profile import successful!</source>
         <translation>Profil erfolgreich importiert!</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="279" />
+        <location filename="../../views/main_window.py" line="282" />
         <source>Profile {} imported.</source>
         <translation>Profil {} importiert.</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="286" />
+        <location filename="../../views/main_window.py" line="289" />
         <source>Load profile</source>
         <translation>Lade Profil</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="288" />
+        <location filename="../../views/main_window.py" line="291" />
         <source>JSON (*.json);;All files (*)</source>
         <translation>JSON (*.json);;Alle Dateien (*)</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="294" />
+        <location filename="../../views/main_window.py" line="297" />
         <source>Failed to import profile</source>
         <translation>Importieren des Profils fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="348" />
+        <location filename="../../views/main_window.py" line="351" />
         <source>Task cancelled</source>
         <translation>Aufgabe abgebrochen</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="364" />
+        <location filename="../../views/main_window.py" line="367" />
         <source>Should Vorta continue to run in the background?</source>
         <translation>Soll Vorta im Hintergrund weiter ausgeführt werden?</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="374" />
+        <location filename="../../views/main_window.py" line="377" />
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../../views/main_window.py" line="375" />
+        <location filename="../../views/main_window.py" line="378" />
         <source>Don't show this again</source>
         <translation>Zeige dies nicht erneut</translation>
     </message>
@@ -2000,12 +2093,12 @@
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Select All</source>
-        <translation type="unfinished" />
+        <translation>Alle auswählen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
         <source>Select None</source>
-        <translation type="unfinished" />
+        <translation>Keine auswählen</translation>
     </message>
     <message>
         <location filename="../../assets/UI/networks_page.ui" line="0" />
@@ -2067,12 +2160,12 @@
     <message>
         <location filename="../../views/dialogs/archive/exclude.py" line="112" />
         <source>You can use this field to add multiple patterns at once. Each pattern should be on a separate line.</source>
-        <translation type="unfinished" />
+        <translation>In diesem Feld kannst du mehrere Muster gleichzeitig hinzufügen. Jedes Muster muss in einer eigenen Zeile stehen.</translation>
     </message>
 </context><context>
     <name>RepoCheckJob</name>
     <message>
-        <location filename="../../borg/check.py" line="30" />
+        <location filename="../../borg/check.py" line="32" />
         <source>Repo check failed. See the %1 for details.</source>
         <translation>Überprüfung des Repositorys fehlgeschlagen. Details befinden sich in den %1.</translation>
     </message>
@@ -2085,13 +2178,13 @@
     <name>RepoTab</name>
     <message>
         <location filename="../../views/repo_tab.py" line="41" />
-        <source>New Repository…</source>
-        <translation>Neues Repository…</translation>
+        <source>Initialize Empty Repository…</source>
+        <translation>Leeres Repository initialisieren…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="42" />
-        <source>Existing Repository…</source>
-        <translation>Bestehendes Repository…</translation>
+        <source>Use Existing Repository…</source>
+        <translation>Bestehendes Repository verwenden…</translation>
     </message>
     <message>
         <location filename="../../views/repo_tab.py" line="49" />
@@ -2160,6 +2253,11 @@
         <translation>SSH-Schlüssel automatisch auswählen (Standardeinstellung)</translation>
     </message>
     <message>
+        <location filename="../../views/repo_tab.py" line="237" />
+        <source>Error during key generation. Exited with code {exit_code}.</source>
+        <translation>Fehler bei der Schlüsselerzeugung. Beendet mit Code {exit_code}.</translation>
+    </message>
+    <message>
         <location filename="../../views/repo_tab.py" line="254" />
         <source>Public Key Copied to Clipboard</source>
         <translation>Öffentlicher Schlüssel in die Zwischenablage kopiert</translation>
@@ -2180,99 +2278,103 @@
         <translation>Wähle zuerst einen öffentlichen Schlüssel aus der Liste aus.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="334" />
+        <location filename="../../views/repo_tab.py" line="336" />
         <source>Repository was Unlinked</source>
         <translation>Repository-Verbindung wurde gelöst</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="335" />
+        <location filename="../../views/repo_tab.py" line="337" />
         <source>You can always connect it again later.</source>
         <translation>Du kannst es jederzeit später wieder verbinden.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="337" />
+        <location filename="../../views/repo_tab.py" line="339" />
         <source>Repository was Detached</source>
-        <translation type="unfinished" />
+        <translation>Repository wurde getrennt</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="338" />
+        <location filename="../../views/repo_tab.py" line="340" />
         <source>The repository remains available for other profiles.</source>
-        <translation type="unfinished" />
+        <translation>Das Repository bleibt für andere Profile verfügbar.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="370" />
+        <location filename="../../views/repo_tab.py" line="372" />
         <source>Invalid Encryption Type</source>
         <translation>Ungültiger Verschlüsselungstyp</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="371" />
+        <location filename="../../views/repo_tab.py" line="373" />
         <source>Unable to change the repository passphrase. Encryption type must be repokey.</source>
         <translation>Das Repository-Passwort kann nicht geändert werden. Der Verschlüsselungstyp muss repokey sein.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="390" />
+        <location filename="../../views/repo_tab.py" line="392" />
         <source>Passphrase Changed</source>
         <translation>Passwort geändert</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="391" />
+        <location filename="../../views/repo_tab.py" line="393" />
         <source>The borg passphrase was successfully changed.</source>
         <translation>Das Borg-Passwort wurde erfolgreich geändert.</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="394" />
+        <location filename="../../views/repo_tab.py" line="396" />
         <source>Passphrase Change Failed</source>
         <translation>Passwortänderung fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../../views/repo_tab.py" line="395" />
+        <location filename="../../views/repo_tab.py" line="397" />
         <source>Unable to change the repository passphrase. Please try again.</source>
         <translation>Das Repository-Passwort konnte nicht geändert werden. Bitte versuche es erneut.</translation>
     </message>
     <message>
-        <source>Error during key generation. Exited with code {exit_code}.</source>
-        <translation type="vanished">Fehler bei der Schlüsselerzeugung. Beendet mit Code {exit_code}.</translation>
+        <source>New Repository…</source>
+        <translation type="vanished">Neues Repository…</translation>
+    </message>
+    <message>
+        <source>Existing Repository…</source>
+        <translation type="vanished">Bestehendes Repository…</translation>
     </message>
 </context><context>
     <name>RepoWindow</name>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="57" />
-        <location filename="../../views/dialogs/repo/repo_add.py" line="38" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="59" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="40" />
         <source>Add</source>
         <translation>Hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="71" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="73" />
         <source>Repository Path:</source>
         <translation>Repository-Pfad:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="74" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="76" />
         <source>Choose Location of Borg Repository</source>
         <translation>Ordner für Borg-Repository auswählen</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="83" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="85" />
         <source>Repository URL:</source>
         <translation>Repository-Adresse:</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="96" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="98" />
         <source>Unable to add your repository.</source>
         <translation>Dein Repository konnte nicht hinzugefügt werden.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="106" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="108" />
         <source>Please enter a valid repo URL or select a local path.</source>
         <translation>Bitte gib eine gültige Repo-Adresse oder einen lokalen Pfad an.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="110" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="112" />
         <source>Repository name must be less than 65 characters.</source>
         <translation>Repository-Name muss weniger als 65 Zeichen lang sein.</translation>
     </message>
     <message>
-        <location filename="../../views/dialogs/repo/repo_add.py" line="114" />
+        <location filename="../../views/dialogs/repo/repo_add.py" line="116" />
         <source>This repo has already been added.</source>
         <translation>Dieses Repo wurde bereits hinzugefügt.</translation>
     </message>
@@ -2317,38 +2419,38 @@
 </context><context>
     <name>SchedulePage</name>
     <message>
-        <location filename="../../views/schedule_page.py" line="29" />
+        <location filename="../../views/schedule_page.py" line="28" />
         <source>Minutes</source>
         <translation>Minuten</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="30" />
+        <location filename="../../views/schedule_page.py" line="29" />
         <source>Hours</source>
         <translation>Stunden</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="31" />
+        <location filename="../../views/schedule_page.py" line="30" />
         <source>Days</source>
         <translation>Tage</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="32" />
+        <location filename="../../views/schedule_page.py" line="31" />
         <source>Weeks</source>
         <translation>Wochen</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="117" />
+        <location filename="../../views/schedule_page.py" line="120" />
         <source>Paused until %s</source>
         <translation>Pausiert bis %s</translation>
     </message>
     <message>
-        <location filename="../../views/schedule_page.py" line="119" />
+        <location filename="../../views/schedule_page.py" line="122" />
         <source>Run a manual backup first</source>
         <translation>Führe erst ein manuelles Backup durch</translation>
     </message>
     <message>
         <location filename="../../assets/UI/schedule_page.ui" line="0" />
-        <location filename="../../views/schedule_page.py" line="121" />
+        <location filename="../../views/schedule_page.py" line="124" />
         <source>None scheduled</source>
         <translation>Keine geplant.</translation>
     </message>
@@ -2441,6 +2543,50 @@
         <translation>Nächstes Backup:</translation>
     </message>
 </context><context>
+    <name>SchedulerExecution</name>
+    <message>
+        <location filename="../../scheduler/execution.py" line="266" />
+        <location filename="../../scheduler/execution.py" line="260" />
+        <location filename="../../scheduler/execution.py" line="153" />
+        <location filename="../../scheduler/execution.py" line="142" />
+        <location filename="../../scheduler/execution.py" line="115" />
+        <location filename="../../scheduler/execution.py" line="92" />
+        <source>Vorta Backup</source>
+        <translation>Vorta Backup</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="93" />
+        <source>Starting background backup for %s.</source>
+        <translation>Starte Backup (Hintergrund) für %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="143" />
+        <source>Backup successful for %s.</source>
+        <translation>Backup erfolgreich abgeschlossen für %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="154" />
+        <source>Error during backup creation for %s.</source>
+        <translation>Fehler beim Erstellen des Backups für %s.</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="261" />
+        <source>Post Backup Tasks failed for %s</source>
+        <translation>Aufgaben nach dem Backup fehlgeschlagen für %s</translation>
+    </message>
+    <message>
+        <location filename="../../scheduler/execution.py" line="267" />
+        <source>Post Backup Tasks successful for %s</source>
+        <translation>Aufgaben nach dem Backup erfolgreich für %s</translation>
+    </message>
+</context><context>
+    <name>SchedulerTimers</name>
+    <message>
+        <location filename="../../scheduler/scheduling.py" line="342" />
+        <source>None scheduled</source>
+        <translation>Keine geplant.</translation>
+    </message>
+</context><context>
     <name>ShellCommandsPage</name>
     <message>
         <location filename="../../views/shell_commands_page.py" line="31" />
@@ -2455,7 +2601,7 @@
     <message>
         <location filename="../../views/shell_commands_page.py" line="47" />
         <source>the borg documentation</source>
-        <translation>die Borg-Dokumentation</translation>
+        <translation>Borg-Dokumentation</translation>
     </message>
     <message>
         <location filename="../../assets/UI/shell_commands_page.ui" line="0" />
@@ -2499,15 +2645,22 @@
         <source>Remove</source>
         <translation>Entfernen</translation>
     </message>
-    <message>
-        <location filename="../../views/source_tab.py" line="251" />
-        <source>Total Size: {size}, {count} files</source>
-        <translation type="unfinished" />
+    <message numerus="yes">
+        <location filename="../../views/source_tab.py" line="258" />
+        <source>Total Size: {size}, %n file(s)</source>
+        <translation>
+            <numerusform>Gesamtgröße: {size}, %n Datei</numerusform>
+            <numerusform>Gesamtgröße: {size}, %n Dateien</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../../views/partials/source_files_table_model.py" line="34" />
         <source>Calculating…</source>
         <translation>Berechne...</translation>
+    </message>
+    <message>
+        <source>Total Size: {size}, {count} files</source>
+        <translation type="vanished">Gesamtgröße: {size}, {count} Dateien</translation>
     </message>
 </context><context>
     <name>TrayMenu</name>
@@ -2545,117 +2698,152 @@
 </context><context>
     <name>VortaApp</name>
     <message>
-        <location filename="../../application.py" line="357" />
+        <location filename="../../application.py" line="413" />
         <source>Borg exited with warning status (rc 1). See the %1 for details.</source>
         <translation>Borg wurde mit einer Warnung beendet (rc 1). Details befinden sich in den %1.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="137" />
+        <location filename="../../application.py" line="144" />
         <source>Vorta Backup</source>
         <translation>Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="200" />
+        <location filename="../../application.py" line="219" />
         <source>No Borg Binary Found</source>
         <translation>Borg-Programm wurde nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="201" />
+        <location filename="../../application.py" line="220" />
         <source>Vorta was unable to locate a usable Borg Backup binary.</source>
         <translation>Vorta konnte keine benutzbare Kopie von Borg Backup finden.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="223" />
+        <location filename="../../application.py" line="242" />
         <source>Vorta needs Full Disk Access for complete Backups</source>
         <translation>Für komplette Backups benötigt Vorta Vollzugriff auf die Festplatte</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="224" />
+        <location filename="../../application.py" line="243" />
         <source>Without this, some files will not be accessible and you may end up with an incomplete backup. Please set %1 permission for Vorta in %2.</source>
         <translation>Auf einige Dateien kann ohne diese Berechtigung nicht zugegriffen werden. Dies kann zu unvollständigen Backups führen. Gewähre Vorta bitte den %1 unter %2.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="230" />
+        <location filename="../../application.py" line="249" />
         <source>Full Disk Access</source>
-        <translation type="unfinished" />
+        <translation>Festplattenvollzugriff</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="233" />
+        <location filename="../../application.py" line="252" />
         <source>System Preferences &gt; Security &amp; Privacy</source>
-        <translation type="unfinished" />
+        <translation>Systemeinstellungen &gt; Sicherheit &amp; Datenschutz</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="251" />
+        <location filename="../../application.py" line="270" />
         <source>Repository In Use</source>
         <translation>Repository wird verwendet</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="253" />
+        <location filename="../../application.py" line="272" />
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="254" />
+        <location filename="../../application.py" line="273" />
         <source>Break the lock</source>
-        <translation type="unfinished" />
+        <translation>Sperre aufheben</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="258" />
+        <location filename="../../application.py" line="275" />
+        <source>The repository at {} might be in use elsewhere.</source>
+        <translation>Das Repository {} wird möglicherweise bereits verwendet.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="277" />
         <source>Only break the lock if you are certain no other Borg process on any machine is accessing the repository. Cancel or break the lock?</source>
-        <translation type="unfinished" />
+        <translation>Hebe die Sperre nur auf, wenn du sicher bist, dass kein anderer Borg-Prozess auf irgendeinem Gerät auf das Repository zugreift. Abbrechen oder Sperre aufheben?</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="274" />
+        <location filename="../../application.py" line="303" />
+        <source>Repository Storage Full</source>
+        <translation>Repository-Speicher voll</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="304" />
+        <source>The storage backing the repository at {} is full.</source>
+        <translation>Der Speicherplatz für das Repository {} ist voll.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="306" />
+        <source>Borg could not create its lock file, so no operation can run — including pruning, which would free space. Free up space outside the repository, then try again.</source>
+        <translation>Borg konnte keine Sperrdatei erstellen, sodass keine Aktion ausgeführt werden kann — auch kein Ausdünnen zum Freigeben von Speicherplatz. Gib außerhalb des Repositorys Speicherplatz frei und versuche es erneut.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="312" />
         <source>No Repository Permissions</source>
         <translation>Keine Berechtigung für Repository</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="304" />
+        <location filename="../../application.py" line="314" />
+        <source>You do not have permission to access the repository at {}. Gain access and try again.</source>
+        <translation>Du hast keine Berechtigung, um auf das Repository auf {} zuzugreifen. Erhalte Zugang und versuche es erneut.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="319" />
+        <source>Repository Lock Failed</source>
+        <translation>Repository-Sperre fehlgeschlagen</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="320" />
+        <source>Borg could not lock the repository at {}.</source>
+        <translation>Borg konnte das Repository {} nicht sperren.</translation>
+    </message>
+    <message>
+        <location filename="../../application.py" line="355" />
         <source>Failed to import profile</source>
         <translation>Importieren des Profils fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="306" />
+        <location filename="../../application.py" line="357" />
         <source>Failed to import a profile from {}:</source>
         <translation>Importieren eines Profils von {} fehlgeschlagen:</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="310" />
+        <location filename="../../application.py" line="361" />
         <source>Consider removing or repairing this file to get rid of this message.</source>
         <translation>Diese Datei sollte entfernt oder repariert werden, um diese Nachricht loszuwerden.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="317" />
+        <location filename="../../application.py" line="368" />
         <source>Profile import successful!</source>
         <translation>Profil erfolgreich importiert!</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="318" />
+        <location filename="../../application.py" line="369" />
         <source>Profile {} imported.</source>
         <translation>Profil {} importiert.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="351" />
+        <location filename="../../application.py" line="407" />
         <source>Repo Check Failed</source>
         <translation>Überprüfung des Repositorys fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="364" />
+        <location filename="../../application.py" line="420" />
         <source>Repository data check for repo was killed by signal %s.</source>
         <translation>Überprüfung des Repositories wurde durch Signal %s abgebrochen.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="365" />
+        <location filename="../../application.py" line="421" />
         <source>The process running the check job got a kill signal. Try again.</source>
         <translation>Der Prozess, der die Überprüfung ausführt, empfing ein "kill"-Signal. Versuche es erneut.</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="368" />
+        <location filename="../../application.py" line="424" />
         <source>Repository data check for repo %s failed. Error code %s</source>
         <translation>Überprüfung des Repositorys %s fehlgeschlagen. Fehlercode %s</translation>
     </message>
     <message>
-        <location filename="../../application.py" line="373" />
+        <location filename="../../application.py" line="429" />
         <source>Consider repairing or recreating the repository soon to avoid missing data.</source>
         <translation>Möglicherweise sollte das Repository zeitnah repariert oder neu erstellt werden, um einen Datenverlust zu verhindern.</translation>
     </message>
@@ -2687,45 +2875,38 @@
         <translation>Versteckte Dateien anzeigen</translation>
     </message>
     <message>
-        <location filename="../../filedialog.py" line="117" />
-        <location filename="../../filedialog.py" line="103" />
+        <location filename="../../filedialog.py" line="120" />
+        <location filename="../../filedialog.py" line="106" />
         <source>Permission Denied</source>
         <translation>Zugriff verweigert</translation>
     </message>
     <message>
+        <location filename="../../filedialog.py" line="121" />
+        <location filename="../../filedialog.py" line="107" />
         <source>You don't have read access to {path}.</source>
-        <translation type="vanished">Du hast keinen Lesezugriff auf {path}.</translation>
+        <translation>Du hast keinen Lesezugriff auf {path}.</translation>
     </message>
 </context><context>
     <name>VortaScheduler</name>
     <message>
-        <location filename="../../scheduler.py" line="504" />
         <source>None scheduled</source>
-        <translation>Keine geplant.</translation>
+        <translation type="vanished">Keine geplant.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="688" />
-        <location filename="../../scheduler.py" line="618" />
-        <location filename="../../scheduler.py" line="607" />
-        <location filename="../../scheduler.py" line="589" />
-        <location filename="../../scheduler.py" line="570" />
         <source>Vorta Backup</source>
-        <translation>Vorta Backup</translation>
+        <translation type="vanished">Vorta Backup</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="571" />
         <source>Starting background backup for %s.</source>
-        <translation>Starte Backup (Hintergrund) für %s.</translation>
+        <translation type="vanished">Starte Backup (Hintergrund) für %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="608" />
         <source>Backup successful for %s.</source>
-        <translation>Backup erfolgreich abgeschlossen für %s.</translation>
+        <translation type="vanished">Backup erfolgreich abgeschlossen für %s.</translation>
     </message>
     <message>
-        <location filename="../../scheduler.py" line="619" />
         <source>Error during backup creation for %s.</source>
-        <translation>Fehler beim Erstellen des Backups für %s.</translation>
+        <translation type="vanished">Fehler beim Erstellen des Backups für %s.</translation>
     </message>
     <message>
         <source>Post Backup Tasks successful for %s</source>
@@ -2734,18 +2915,19 @@
 </context><context>
     <name>messages</name>
     <message>
-        <location filename="../../application.py" line="127" />
+        <location filename="../../application.py" line="134" />
         <source>Running Pre-backup Command...</source>
-        <translation type="unfinished" />
+        <translation>Führe Befehl vor dem Backup aus...</translation>
     </message>
     <message>
         <location filename="../../borg/change_passphrase.py" line="31" />
-        <location filename="../../borg/compact.py" line="30" />
-        <location filename="../../borg/create.py" line="44" />
-        <location filename="../../borg/check.py" line="28" />
-        <location filename="../../application.py" line="358" />
+        <location filename="../../borg/break_lock.py" line="21" />
+        <location filename="../../borg/compact.py" line="32" />
+        <location filename="../../borg/create.py" line="47" />
+        <location filename="../../borg/check.py" line="30" />
+        <location filename="../../application.py" line="414" />
         <source>logs</source>
-        <translation>Protokolle</translation>
+        <translation>Protokollen</translation>
     </message>
     <message>
         <location filename="../../borg/umount.py" line="29" />
@@ -2758,70 +2940,75 @@
         <translation>Einhängepunkt nicht aktiv.</translation>
     </message>
     <message>
-        <location filename="../../borg/version.py" line="21" />
-        <location filename="../../borg/borg_job.py" line="144" />
+        <location filename="../../borg/version.py" line="18" />
+        <location filename="../../borg/borg_job.py" line="191" />
         <source>Borg binary was not found.</source>
         <translation>Borg-Programm wurde nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="148" />
+        <location filename="../../borg/borg_job.py" line="195" />
         <source>Select a backup repository first.</source>
         <translation>Wähle zuerst ein Backup-Repository aus.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="152" />
+        <location filename="../../borg/borg_job.py" line="199" />
         <source>Your Borg version is too old. &gt;=1.1.0 is required.</source>
         <translation>Deine Borg-Version ist zu alt. &gt;=1.1.0 ist notwendig.</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="163" />
+        <location filename="../../borg/borg_job.py" line="208" />
         <source>Please unlock your system password manager or disable it under Settings</source>
         <translation>Bitte entsperre deinen Schlüsselbund oder deaktiviere diesen unter Einstellungen</translation>
     </message>
     <message>
-        <location filename="../../borg/borg_job.py" line="183" />
+        <location filename="../../borg/borg_job.py" line="233" />
         <source>Your repo passphrase was stored in a password manager which is no longer available.
 Try unlinking and re-adding your repo.</source>
         <translation>Dein Repository-Passwort wurde in einem Schlüsselbund gespeichert, der nicht mehr verfügbar ist.
 Versuche, das Repository zu trennen und erneut hinzuzufügen.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="112" />
+        <location filename="../../borg/create.py" line="115" />
         <source>Add some folders to back up first.</source>
         <translation>Füge zuerst einige zu sichernde Ordner hinzu.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="124" />
+        <location filename="../../borg/create.py" line="127" />
         <source>Current Wifi is not allowed.</source>
         <translation>Aktuelles WLAN ist nicht erlaubt.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="133" />
+        <location filename="../../borg/create.py" line="136" />
         <source>Not running backup over metered connection.</source>
         <translation>Backup über limitierte Verbindung wird nicht durchgeführt.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="142" />
+        <location filename="../../borg/create.py" line="145" />
         <source>Pre-backup command returned non-zero exit code.</source>
         <translation>Pre-backup-Kommando hat einen Return-Code ungleich Null zurückgegeben.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="146" />
+        <location filename="../../borg/create.py" line="149" />
         <source>Repo folder not mounted or moved.</source>
         <translation>Repo-Ordner nicht eingehängt oder verschoben.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="150" />
+        <location filename="../../borg/create.py" line="153" />
         <source>Your current Borg version does not support ZStd compression.</source>
         <translation>Deine aktuelle Borg-Version unterstützt keine ZStd-Komprimierung.</translation>
     </message>
     <message>
-        <location filename="../../borg/create.py" line="216" />
+        <location filename="../../borg/create.py" line="202" />
         <source>Starting backup…</source>
         <translation>Starte Backup…</translation>
     </message>
     <message>
-        <location filename="../../borg/info_repo.py" line="48" />
+        <location filename="../../borg/change_passphrase.py" line="51" />
+        <source>This feature needs Borg {} or higher.</source>
+        <translation>Diese Funktion benötigt Borg {} oder höher.</translation>
+    </message>
+    <message>
+        <location filename="../../borg/info_repo.py" line="65" />
         <source>Please unlock your password manager.</source>
         <translation>Bitte Schlüsselbund entsperren.</translation>
     </message>
@@ -2853,107 +3040,122 @@ Versuche, das Repository zu trennen und erneut hinzuzufügen.</translation>
         <translation>Updates</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="37" />
+        <location filename="../../store/settings.py" line="29" />
+        <source>Logging</source>
+        <translation>Protokollierung</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="38" />
         <source>Display notifications when background tasks fail</source>
         <translation>Benachrichtigungen anzeigen, falls Hintergrund-Aufgaben fehlschlagen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="44" />
+        <location filename="../../store/settings.py" line="45" />
         <source>Notify about successful background tasks</source>
         <translation>Benachrichtigungen bei erfolgreich abgeschlossenen Hintergrundaufgaben aktivieren</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="51" />
+        <location filename="../../store/settings.py" line="52" />
         <source>Automatically start Vorta at login</source>
         <translation>Vorta automatisch bei der Anmeldung starten</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="52" />
+        <location filename="../../store/settings.py" line="53" />
         <source>Add Vorta to the systems autostart list</source>
         <translation>Vorta zum Autostart hinzufügen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="59" />
+        <location filename="../../store/settings.py" line="60" />
         <source>Show main window of Vorta on launch</source>
         <translation>Hauptfenster von Vorta beim Start anzeigen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="60" />
+        <location filename="../../store/settings.py" line="61" />
         <source>Make Vorta appear on screen instead of minimizing to system tray</source>
         <translation>Vorta auf dem Bildschirm anzeigen, anstatt es in den System-Tray zu minimieren</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="70" />
+        <location filename="../../store/settings.py" line="71" />
         <source>Get statistics of file/folder when added</source>
         <translation>Größe berechnen, wenn neue Dateien oder Ordner hinzugefügt werden</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="71" />
+        <location filename="../../store/settings.py" line="72" />
         <source>When adding a new source, calculate its size and the number of files.</source>
         <translation>Beim Hinzufügen einer neuen Quelle die Größe und Anzahl der Dateien berechnen.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="80" />
+        <location filename="../../store/settings.py" line="81" />
         <source>Use the same unit of measurement for archive sizes</source>
         <translation>Gleiche Maßeinheit für Archivgrößen verwenden</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="81" />
+        <location filename="../../store/settings.py" line="82" />
         <source>When enabled, all archive sizes will use the same unit of measurement, such as  KB or MB. This can make archive sizes easier to compare.</source>
         <translation>Wenn aktiviert, verwenden alle Archivgrößen die gleiche Maßeinheit, z.B. KB oder MB. Dies erleichtert den Vergleich der Archivgrößen.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="92" />
+        <location filename="../../store/settings.py" line="93" />
         <source>Store repository passwords in system keychain, if available</source>
         <translation>Repository-Passwörter falls verfügbar im Schlüsselbund des Betriebssystems speichern</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="93" />
+        <location filename="../../store/settings.py" line="94" />
         <source>Otherwise Vorta's configuration database stores the password in plaintext.</source>
         <translation>Ansonsten wird das Passwort im Klartext in der Konfiguration gespeichert.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="102" />
+        <location filename="../../store/settings.py" line="103" />
         <source>Try to replace file permissions when mounting an archive</source>
         <translation>Dateiberechtigungen beim Einhängen eines Archivs ersetzen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="106" />
+        <location filename="../../store/settings.py" line="107" />
         <source>Set owner to current user and umask to 0277</source>
         <translation>Setze den Besitzer auf den aktuellen Benutzer und umask auf 0277</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="158" />
+        <location filename="../../store/settings.py" line="114" />
+        <source>Enable logging to file</source>
+        <translation>Protokollierung in Datei aktivieren</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="115" />
+        <source>When disabled, logs are only written to the console (e.g. journald when run via systemd).</source>
+        <translation>Wenn deaktiviert, werden Protokolle nur auf die Konsole geschrieben (z. B. journald bei Ausführung über systemd).</translation>
+    </message>
+    <message>
+        <location filename="../../store/settings.py" line="169" />
         <source>Check for updates on startup</source>
         <translation>Prüfe beim Start auf Aktualisierungen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="159" />
+        <location filename="../../store/settings.py" line="170" />
         <source>Uses Sparkle to find new updates published on Github.</source>
         <translation>Verwendet Sparkle, um neue auf Github veröffentlichte Updates zu finden.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="166" />
+        <location filename="../../store/settings.py" line="177" />
         <source>Include pre-release versions when checking for updates</source>
         <translation>Auch Vorab-Versionen bei der Prüfung auf Aktualisierungen miteinbeziehen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="167" />
+        <location filename="../../store/settings.py" line="178" />
         <source>Needs Vorta restart to apply.</source>
         <translation>Vorta muss für die Anwendung dieser Änderung neu gestartet werden.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="174" />
+        <location filename="../../store/settings.py" line="185" />
         <source>Check for Full Disk Access on startup</source>
         <translation>Beim Start auf vollständigen Festplattenzugriff prüfen</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="178" />
+        <location filename="../../store/settings.py" line="189" />
         <source>Alerts user when full disk access permission has not been provided</source>
         <translation>Den Benutzer benachrichtigen, falls kein vollständiger Festplattenzugriff gewährt wurde.</translation>
     </message>
     <message>
-        <location filename="../../store/settings.py" line="189" />
+        <location filename="../../store/settings.py" line="200" />
         <source>If the system tray isn't available, ask whether to continue in the background on exit</source>
         <translation>Wenn der System-Tray nicht verfügbar ist, beim Beenden fragen, ob im Hintergrund weitergearbeitet werden soll</translation>
     </message>

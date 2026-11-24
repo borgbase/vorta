@@ -1,5 +1,6 @@
 import os
 import time
+import warnings
 from datetime import datetime as dt
 
 import pytest
@@ -52,6 +53,17 @@ def all_workers_finished(jobs_manager):
     return True
 
 
+def wait_for_workers(jobs_manager):
+    """Poll until all worker threads have exited, without spinning the Qt event loop."""
+    timeout = pytest._wait_defaults.get('timeout', 20000) / 1000  # Convert ms to seconds
+    start = time.time()
+    while not all_workers_finished(jobs_manager):
+        if time.time() - start > timeout:
+            warnings.warn(f'Worker threads still running after {timeout:.0f}s', RuntimeWarning, stacklevel=2)
+            break
+        time.sleep(0.1)
+
+
 models = [
     RepoModel,
     RepoPassword,
@@ -93,6 +105,9 @@ def window_load(qapp):
 
 @pytest.fixture(scope='function', autouse=True)
 def init_db(qapp, qtbot, tmpdir_factory, request):
+    # A job still running here, like the startup `borg --version`, would write to the new DB.
+    wait_for_workers(qapp.jobs_manager)
+
     tmp_db = tmpdir_factory.mktemp('Vorta').join('settings.sqlite')
     mock_db = SqliteDatabase(
         str(tmp_db),
@@ -101,6 +116,13 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
         },
     )
     vorta.store.connection.init_db(mock_db)
+
+    # The scheduler outlives the per-test DB, so drop pauses and timers armed by earlier tests.
+    for _, timer in qapp.scheduler.pauses.values():
+        timer.stop()
+    qapp.scheduler.pauses.clear()
+    for profile_id in list(qapp.scheduler.timers):
+        qapp.scheduler.remove_job(profile_id)
 
     # Force use of DB keyring instead of system keyring to avoid keychain prompts during tests
     keyring_setting = SettingsModel.get(key='use_system_keyring')
@@ -148,12 +170,7 @@ def init_db(qapp, qtbot, tmpdir_factory, request):
     # Wait for all worker threads to actually exit (not just for current_job to be None).
     # Use simple polling instead of qtbot.waitUntil to avoid Qt event loop hangs in CI.
     # qtbot.waitUntil processes Qt events while waiting, which can trigger D-Bus operations.
-    timeout = pytest._wait_defaults.get('timeout', 20000) / 1000  # Convert ms to seconds
-    start = time.time()
-    while not all_workers_finished(qapp.jobs_manager):
-        if time.time() - start > timeout:
-            break
-        time.sleep(0.1)
+    wait_for_workers(qapp.jobs_manager)
 
     # Skip QCoreApplication.processEvents() - it can trigger D-Bus operations that hang in CI
 
@@ -184,7 +201,7 @@ def choose_file_dialog(*args):
 
 
 @pytest.fixture
-def borg_json_output():
+def borg_json_output(qapp):
     """
     Returns a function to read borg JSON output files.
     Opens real file handles (required for os.set_blocking and select.select),
@@ -200,6 +217,10 @@ def borg_json_output():
         return stdout, stderr
 
     yield _read_json
+
+    # A test may return while its job still reads these files on a worker thread.
+    # This teardown runs before init_db's, so wait here before closing them.
+    wait_for_workers(qapp.jobs_manager)
 
     # Clean up all opened files when the fixture is torn down
     for f in open_files:

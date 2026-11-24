@@ -40,7 +40,7 @@ release-preflight:  ## Check release prerequisites
 	@echo "All checks passed"
 
 translations-from-source:  ## Extract strings from source code / UI files, merge into every .ts.
-	pylupdate6 $(foreach f,$(wildcard ${VORTA_SRC}/i18n/ts/vorta.*.ts),--ts $f) ${VORTA_SRC}
+	uv run pylupdate6 $(foreach f,$(wildcard ${VORTA_SRC}/i18n/ts/vorta.*.ts),--ts $f) ${VORTA_SRC}
 
 translations-to-qm:  ## Compile .ts text files to binary .qm files.
 	for f in $$(ls ${VORTA_SRC}/i18n/ts/vorta.*.ts); do lrelease $$f -qm ${VORTA_SRC}/i18n/qm/$$(basename $$f .ts).qm; done

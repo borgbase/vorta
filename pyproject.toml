@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "A GUI for Borg Backup"
 readme = "README.md"
 license = "GPL-3.0-only"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "Manuel Riel and Vorta contributors" }]
 keywords = ["backup", "borgbackup"]
 classifiers = [
@@ -18,10 +18,10 @@ classifiers = [
     "Operating System :: MacOS",
     "Operating System :: POSIX",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: System :: Archiving :: Backup",
     "Topic :: System :: Systems Administration",
     "Topic :: Utilities",
@@ -36,7 +36,7 @@ dependencies = [
     "pyobjc-framework-Cocoa<13; sys_platform == 'darwin'",
     "pyobjc-framework-CoreWLAN<13; sys_platform == 'darwin'",
     "pyobjc-framework-LaunchServices<13; sys_platform == 'darwin'",
-    "pyqt6",
+    "pyqt6>=6.12",
     "secretstorage; sys_platform != 'darwin'",
 ]
 
@@ -109,6 +109,8 @@ addopts = "-vs"
 testpaths = ["tests"]
 pythonpath = ["tests/unit"]
 qt_default_raising = true
+# Dump all thread stacks when a test hangs, e.g. on D-Bus in CI.
+faulthandler_timeout = 300
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
@@ -117,7 +119,7 @@ omit = ["tests/*"]
 relative_files = true
 
 [tool.tox]
-env_list = ["py310", "py311", "py312", "py313", "ruff"]
+env_list = ["py311", "py312", "py313", "py314", "ruff"]
 skip_missing_interpreters = true
 
 [tool.tox.env_run_base]
@@ -130,7 +132,7 @@ deps = ["ruff"]
 commands = [["ruff", "check", "src", "tests"]]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 warn_return_any = false
 warn_unused_configs = true
 disallow_untyped_defs = false
@@ -144,6 +146,12 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = ["vorta.store.migrations"]
 ignore_errors = true
+
+# PyQt6 6.12 stubs for these contain `*args, /`, which is a syntax error.
+[[tool.mypy.overrides]]
+module = ["PyQt6.QtDBus", "PyQt6.QtGui"]
+follow_imports = "skip"
+follow_imports_for_stubs = true
 
 [tool.pylint.master]
 extension-pkg-whitelist = "PyQt6"

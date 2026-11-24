@@ -4,16 +4,18 @@ from .borg_job import BorgJob
 
 
 class BorgListArchiveJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Getting archive content…')}")
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
+        self._emit_backup_finished(result)
         self.app.backup_progress_event.emit(
             f"[{self.params['profile_name']}] {self.tr('Done getting archive content.')}"
         )
-        self.result.emit(result)
+        self._emit_result(result)
 
     @classmethod
     def prepare(cls, profile, archive_name):
@@ -35,10 +37,7 @@ class BorgListArchiveJob(BorgJob):
             + "}{path}{source}{health}{NL}",
         ]
 
-        if borg_compat.check('V2'):
-            ret['cmd'].extend(["-r", profile.repo.url, archive_name])
-        else:
-            ret['cmd'].append(f'{profile.repo.url}::{archive_name}')
+        ret['cmd'] += borg_compat.repo_args(profile.repo.url, archive_name)
 
         ret['ok'] = True
 

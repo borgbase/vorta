@@ -20,10 +20,10 @@ on:
 env:
   PYTHON_VERSION: ${{ vars.PYTHON_VERSION || '3.12' }}
   # Pin the minimum macOS the build targets, so the runner image does not
-  # silently set it. Values match the PyQt6 wheel platform tags
-  # (macosx_10_14_x86_64 / macosx_11_0_arm64).
-  DEPLOYMENT_TARGET_ARM: '11.0'
-  DEPLOYMENT_TARGET_INTEL: '10.14'
+  # silently set it. Qt/PyQt6 6.12 binaries are built with minos 14.4 on both
+  # architectures, regardless of the (looser) wheel platform tags.
+  DEPLOYMENT_TARGET_ARM: '14.4'
+  DEPLOYMENT_TARGET_INTEL: '14.4'
 
 jobs:
   build:

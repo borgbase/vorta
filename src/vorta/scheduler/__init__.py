@@ -62,7 +62,14 @@ class VortaScheduler(QtCore.QObject):
         self._state.restore_pauses()
 
         # connect signals
-        self.app.backup_finished_event.connect(lambda res: self.set_timer_for_profile(res['params']['profile_id']))
+        self.app.backup_finished_event.connect(self.backup_finished)
+
+    @QtCore.pyqtSlot(dict)
+    def backup_finished(self, result: dict[str, Any]) -> None:
+        # Scheduled runs re-arm in notify(), after applying any failure pause.
+        if result['params'].get('category') == 'scheduled':
+            return
+        self.set_timer_for_profile(result['params']['profile_id'])
 
     @property
     def timers(self) -> dict[int, dict[str, QTimer | dt | ScheduleStatusType | None]]:

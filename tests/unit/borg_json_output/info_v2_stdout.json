@@ -1,0 +1,44 @@
+{
+    "archives": [
+        {
+            "chunker_params": [
+                "fastcdc",
+                19,
+                23,
+                21,
+                2
+            ],
+            "command_line": "borg create --json --log-json -r /srv/borg/repo test-archive /home/user/src",
+            "comment": "",
+            "cwd": "/home/user",
+            "duration": 12.5,
+            "end": "2026-11-15T14:16:37.638141+00:00",
+            "hostname": "host",
+            "id": "99999",
+            "name": "test-archive",
+            "start": "2026-11-15T14:16:37.632582+00:00",
+            "stats": {
+                "chunking_time": 0.0,
+                "files_stats": {},
+                "hashing_time": 0.0,
+                "nfiles": 1,
+                "original_size": 41,
+                "store_stats": {}
+            },
+            "tags": [],
+            "time": "2026-11-15T14:16:37.632582+00:00",
+            "username": "user"
+        }
+    ],
+    "cache": {
+        "path": "/home/user/.cache/borg/a768740d1d3926cb0d49554728332abd3e883547ef14cf4a19467b26329ea37b"
+    },
+    "encryption": {
+        "encryption": "chacha20-poly1305",
+        "id_hash": "sha256"
+    },
+    "repository": {
+        "id": "a768740d1d3926cb0d49554728332abd3e883547ef14cf4a19467b26329ea37b",
+        "location": "/srv/borg/repo"
+    }
+}

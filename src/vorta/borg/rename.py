@@ -5,16 +5,15 @@ from .borg_job import BorgJob
 
 
 class BorgRenameJob(BorgJob):
+    emits_backup_finished = True
+
     def started_event(self):
         self.app.backup_started_event.emit()
         self.app.backup_progress_event.emit(f"[{self.params['profile_name']}] {self.tr('Renaming archive…')}")
 
     def finished_event(self, result):
-        self.app.backup_finished_event.emit(result)
-        self.result.emit(result)
-
-    def log_event(self, msg):
-        self.app.backup_log_event.emit(msg)
+        self._emit_backup_finished(result)
+        self._emit_result(result)
 
     @classmethod
     def prepare(cls, profile, old_archive_name, new_archive_name):
@@ -25,10 +24,7 @@ class BorgRenameJob(BorgJob):
             ret['ok'] = False  # Set back to false, so we can do our own checks here.
 
         cmd = ['borg', 'rename', '--info', '--log-json']
-        if borg_compat.check('V2'):
-            cmd.extend(["-r", profile.repo.url, old_archive_name, new_archive_name])
-        else:
-            cmd.extend([f'{profile.repo.url}::{old_archive_name}', new_archive_name])
+        cmd += borg_compat.repo_args(profile.repo.url, old_archive_name) + [new_archive_name]
 
         ret['old_archive_name'] = old_archive_name
         ret['new_archive_name'] = new_archive_name

@@ -56,7 +56,7 @@ rewrite the existing ones; the version history is consumed by AppStream/Flatpak.
 
 2. Create commit and tag:
 ```bash
-git add src/vorta/_version.py src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml
+git add src/vorta/_version.py src/vorta/assets/metadata/com.borgbase.Vorta.appdata.xml src/vorta/i18n/ts/ src/vorta/i18n/qm/
 git commit -m "Bump version to vX.Y.Z"
 git tag -a vX.Y.Z -m "TAG_MESSAGE_HERE"
 ```
