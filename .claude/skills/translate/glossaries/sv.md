@@ -2,9 +2,9 @@
 
 Agreed-upon translations for the Vorta project. These terms are **mandatory** — use them consistently in all Swedish translations.
 
-## Register
+## Register and style
 
-Use informal **"du"** (`Ange`, `Din`, `Lås upp`) consistently throughout all translations.
+Use informal **"du"** consistently throughout all translations. Use Swedish sentence case for labels, menu items, and headings: capitalize the first word and proper names, and do not copy English Title Case. Prefer concise, idiomatic Swedish and natural Swedish word order. Preserve Swedish characters such as å, ä, and ö. Keep product and protocol names such as Borg, BorgBackup, Vorta, SSH, and URL unchanged.
 
 ## Terminology
 

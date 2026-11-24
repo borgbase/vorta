@@ -151,7 +151,7 @@ For each untranslated string, consider:
    - **Menu items:** Follow the target language's normal capitalization
    - **Descriptions/tooltips:** Sentence case
    - **Technical terms:** Keep product and protocol names such as Borg, BorgBackup, and SSH unchanged. Translate generic terms according to the locale glossary.
-   - **Swedish (`sv`):** Read `.claude/skills/translate/glossaries/sv.md` as the required terminology and style guide. Use informal `du` consistently, Swedish sentence case, and the glossary's established terms (for example `förråd`, `arkiv`, `säkerhetskopia`, `beskär`, and `lösenfras`). Preserve Swedish characters and idiomatic word order; do not apply English Title Case to Swedish labels. Keep product and protocol names such as Borg, BorgBackup, Vorta, SSH, and URL unchanged.
+   - **Per-language terminology and style:** Follow `.claude/skills/translate/glossaries/<lang>.md` when it exists. Treat that glossary as the source of truth for each language's terminology, register, capitalization, and other language-specific conventions; do not duplicate locale-specific rules here.
    - **Placeholders:** Preserve all five placeholder formats used in Vorta exactly:
      - Qt plural (`numerus="yes"`): `%n` inside `<numerusform>` elements matching the target language's Qt plural count (2 for `de`/`es`/`fi`/`fr`/`gl`/`it`/`nl`/`sv`, 3 for `cs`/`ru`/`sk`, 6 for `ar`)
      - Python printf: `%s`, `%d`
