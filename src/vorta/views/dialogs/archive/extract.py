@@ -39,26 +39,6 @@ uifile = get_asset("UI/dialogs/archive/extract.ui")
 ExtractDialogUI, ExtractDialogBase = uic.loadUiType(uifile)
 
 
-class ParseThread(QThread):
-    """A thread parsing diff results."""
-
-    def __init__(self, fs_data: str, model, parent=None):
-        """Init."""
-        super().__init__(parent)
-        self.model = model
-        self.fs_data = fs_data
-
-    def run(self) -> None:
-        """Do the work"""
-        # handle case of a single line of result, which will already be a dict
-        if isinstance(self.fs_data, dict):
-            lines = [self.fs_data]
-        else:
-            lines = [json.loads(line) for line in self.fs_data.split("\n") if line]
-
-        parse_json_lines(lines, self.model)
-
-
 class ExtractDialog(ExtractDialogBase, ExtractDialogUI):
     """
     Show the contents of an archive and allow choosing what to extract.

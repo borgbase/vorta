@@ -436,7 +436,9 @@ class BorgJob(JobInterface):
             # Wait for new output
             select.select([p.stdout, p.stderr], [], [], 0.1)
 
-            stdout.append(read_async(p.stdout))
+            d = read_async(p.stdout)
+            self.process_intermediate(d, True)
+            stdout.append(d)
             stderr = read_async(p.stderr)
             if stderr:
                 for line in stderr.split('\n'):
@@ -484,8 +486,12 @@ class BorgJob(JobInterface):
 
             if p.poll() is not None:
                 time.sleep(0.1)
-                stdout.append(read_async(p.stdout))
+                d = read_async(p.stdout)
+                self.process_intermediate(d, True)
+                stdout.append(d)
                 break
+
+        self.process_intermediate('', False)
 
         result = {
             'params': self.params,
@@ -517,6 +523,9 @@ class BorgJob(JobInterface):
     def process_result(self, result):
         pass
 
+    def process_intermediate(self, stdout_data: str, more: bool):
+        pass
+
     def started_event(self):
         self.updated.emit(self.tr('Task started'))
 
@@ -542,3 +551,25 @@ class BorgJob(JobInterface):
         else:
             logger.debug("job will not inhibit")
             return Inhibitor.get_noop_inhibitor()
+
+
+class LineBuffer:
+    """Collect newline-delimited text, retaining an incomplete final line."""
+
+    def __init__(self):
+        self.buffer = ''
+
+    def process(self, s: str) -> list[str]:
+        if not s:
+            return []
+        self.buffer += s
+        lines = self.buffer.split('\n')
+        self.buffer = lines[-1]
+        return lines[:-1]
+
+    def flush(self) -> list[str]:
+        if not self.buffer:
+            return []
+        line = self.buffer
+        self.buffer = ''
+        return [line]
