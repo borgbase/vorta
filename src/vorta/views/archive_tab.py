@@ -297,8 +297,7 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
         if profile.repo is not None:
             # get mount points
             self.mount_points, repo_mount_points = get_mount_points(profile.repo.url)
-            if repo_mount_points:
-                self.repo_mount_point = repo_mount_points[0]
+            self.repo_mount_point = repo_mount_points[0] if repo_mount_points else None
 
             if profile.repo.name:
                 repo_name = f"{profile.repo.name} ({profile.repo.url})"
@@ -327,10 +326,12 @@ class ArchiveTab(BaseTab, ArchiveTabBase, ArchiveTabUI):
                 self._toggle_all_buttons(enabled=True)
         else:
             self.mount_points = {}
+            self.repo_mount_point = None
             self.archive_model.set_rows([])
             self.toolBox.setItemText(0, self.tr('Archives'))
             self._toggle_all_buttons(enabled=False)
 
+        self.archive_mount.bmountrepo_refresh()
         self.archiveNameTemplate.setText(profile.new_archive_name)
         self.prunePrefixTemplate.setText(profile.prune_prefix)
 
