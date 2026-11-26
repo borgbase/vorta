@@ -7,7 +7,8 @@ import pytest
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.prune import BorgPruneJob
 from vorta.keyring.abc import VortaKeyring
-from vorta.store.models import BackupProfileModel
+from vorta.keyring.db import VortaDBKeyring
+from vorta.store.models import BackupProfileModel, SettingsModel
 
 
 @pytest.fixture
@@ -123,3 +124,16 @@ def test_info_repo_empty_passphrase_kwallet_closed(mocker):
     writes = [args for method, args in calls if method == 'writePassword']
     assert [args[0] for args in writes] == [7]
     assert [method for method, _ in calls].count('open') == 1
+
+
+@pytest.mark.parametrize('use_system_keyring, priority', [(True, 1), (False, 10), (None, 1)])
+def test_db_keyring_priority(use_system_keyring, priority):
+    """A missing use_system_keyring row counts as the default, on, and keeps the DB keyring as a candidate."""
+    setting = SettingsModel.get(key='use_system_keyring')
+    if use_system_keyring is None:
+        setting.delete_instance()
+    else:
+        setting.value = use_system_keyring
+        setting.save()
+
+    assert VortaDBKeyring.get_priority() == priority

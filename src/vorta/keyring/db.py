@@ -56,4 +56,6 @@ class VortaDBKeyring(VortaKeyring):
 
     @classmethod
     def get_priority(cls):
-        return 1 if SettingsModel.get(key='use_system_keyring').value else 10
+        # A missing row counts as the default, on. Raising here would drop the DB keyring from the candidates.
+        setting = SettingsModel.get_or_none(key='use_system_keyring')
+        return 1 if setting is None or setting.value else 10
