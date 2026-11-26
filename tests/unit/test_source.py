@@ -1,12 +1,13 @@
 import os
+import sys
 import threading
 
 import pytest
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QLineEdit, QMessageBox
 from test_constants import TEST_SOURCE_DIR, TEST_TEMP_DIR
 
-from vorta.store.models import SourceFileModel
+from vorta.store.models import BackupProfileModel, SourceFileModel
 from vorta.utils import FilePathInfoAsync
 from vorta.views.partials.source_files_table_model import SourceFilesModel
 
@@ -130,6 +131,67 @@ def test_source_remove_under_sort(qapp, qtbot, source_env):
 
     assert SourceFileModel.get_or_none(id=big.id) is None
     assert SourceFileModel.get_or_none(id=small.id) is not None
+
+
+@pytest.mark.parametrize(
+    'key', [QtCore.Qt.Key.Key_Delete] + ([QtCore.Qt.Key.Key_Backspace] if sys.platform == 'darwin' else [])
+)
+def test_source_remove_shortcut(qapp, qtbot, mocker, source_env, key):
+    main, tab = source_env
+    profile = tab.profile()
+    SourceFileModel.delete().where(SourceFileModel.profile == profile).execute()
+    small = SourceFileModel.create(dir='/vorta/small', profile=profile, dir_size=1024, path_isdir=True)
+    big = SourceFileModel.create(dir='/vorta/big', profile=profile, dir_size=8 * 1024**3, path_isdir=True)
+    biggest = SourceFileModel.create(dir='/vorta/biggest', profile=profile, dir_size=16 * 1024**3, path_isdir=True)
+    tab.populate_from_profile()
+    tab.source_proxy.sort(SourceFilesModel.COL_SIZE, QtCore.Qt.SortOrder.DescendingOrder)
+    selection = tab.sourceFilesWidget.selectionModel()
+    for row in (0, 1):
+        selection.select(
+            tab.source_proxy.index(row, 0),
+            QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows,
+        )
+    qapp.setActiveWindow(main)
+    tab.sourceFilesWidget.setFocus()
+    qapp.processEvents()
+    assert tab.sourceFilesWidget.hasFocus()
+    warning = mocker.patch.object(QMessageBox, 'question')
+
+    qtbot.keyClick(tab.sourceFilesWidget, key)
+
+    assert SourceFileModel.get_or_none(id=big.id) is None
+    assert SourceFileModel.get_or_none(id=biggest.id) is None
+    assert SourceFileModel.get_or_none(id=small.id) is not None
+    assert BackupProfileModel.select().count() == 1
+    warning.assert_not_called()
+
+    tab.sourceFilesWidget.clearSelection()
+    qtbot.keyClick(tab.sourceFilesWidget, key)
+    assert SourceFileModel.get_or_none(id=small.id) is not None
+
+
+def test_delete_shortcuts_leave_text_editing_alone(qapp, qtbot, mocker, source_env):
+    main, tab = source_env
+    BackupProfileModel.create(name='Test Profile')
+    main.populate_profile_selector()
+    tab.sourceFilesWidget.selectRow(0)
+    source_count = SourceFileModel.select().count()
+    editor = QLineEdit('abc', main)
+    editor.show()
+    qapp.setActiveWindow(main)
+    editor.setFocus()
+    editor.setCursorPosition(1)
+    qapp.processEvents()
+    question = mocker.patch.object(QMessageBox, 'question')
+
+    qtbot.keyClick(editor, QtCore.Qt.Key.Key_Delete)
+    qtbot.keyClick(editor, QtCore.Qt.Key.Key_Backspace)
+
+    assert editor.text() == 'c'
+    assert SourceFileModel.select().count() == source_count
+    assert BackupProfileModel.select().count() == 2
+    question.assert_not_called()
+    editor.deleteLater()
 
 
 def test_path_info_thread_kept_until_finished(qapp, qtbot, mocker, source_env):

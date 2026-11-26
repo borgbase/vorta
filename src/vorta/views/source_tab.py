@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import PurePath
 
 from peewee import fn
@@ -57,6 +58,11 @@ class SourceTab(BaseTab, SourceBase, SourceUI):
         # Shortcuts
         shortcut_copy = QShortcut(QtGui.QKeySequence.StandardKey.Copy, self.sourceFilesWidget)
         shortcut_copy.activated.connect(self.source_copy)
+        shortcut_delete = QShortcut(QtGui.QKeySequence.StandardKey.Delete, self.sourceFilesWidget)
+        if sys.platform == 'darwin':
+            shortcut_delete.setKeys([*shortcut_delete.keys(), QtGui.QKeySequence(Qt.Key.Key_Backspace)])
+        shortcut_delete.setContext(Qt.ShortcutContext.WidgetShortcut)
+        shortcut_delete.activated.connect(self.source_remove)
 
         # Connect signals
         self.addButton.clicked.connect(self.source_add)
