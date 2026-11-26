@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QSizePolicy,
 )
 
+from vorta.borg.borg_job import worst_error
 from vorta.borg.info_repo import BorgInfoRepoJob
 from vorta.borg.init import BorgInitJob
 from vorta.i18n import translate
@@ -94,6 +95,8 @@ class RepoWindow(AddRepoBase, AddRepoUI):
         if result['returncode'] == 0:
             self.added_repo.emit(result)
             self.accept()
+        elif reason := worst_error(result['errors']):
+            self._set_status(self.tr('Unable to add your repository: {}').format(reason))
         else:
             self._set_status(self.tr('Unable to add your repository.'))
 

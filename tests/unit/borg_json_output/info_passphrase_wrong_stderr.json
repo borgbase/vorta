@@ -1,0 +1,1 @@
+{"type": "log_message", "time": 1795440954.121594, "message": "Passphrase supplied in BORG_PASSPHRASE, by BORG_PASSCOMMAND, or via BORG_PASSPHRASE_FD is incorrect.", "levelname": "ERROR", "name": "borg.archiver", "msgid": "PassphraseWrong"}
