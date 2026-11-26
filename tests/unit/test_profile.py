@@ -1,10 +1,63 @@
+import sys
 import tempfile
 
+import pytest
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox, QToolTip
 
 from vorta.store.models import BackupProfileModel, SourceFileModel
 from vorta.views.dialogs.profile.export_window import ExportWindow
+
+
+@pytest.mark.parametrize(
+    'key', [QtCore.Qt.Key.Key_Delete] + ([QtCore.Qt.Key.Key_Backspace] if sys.platform == 'darwin' else [])
+)
+def test_profile_delete_shortcut(qapp, qtbot, mocker, key):
+    main = qapp.main_window
+    profile = BackupProfileModel.create(name='Test Profile')
+    main.populate_profile_selector()
+    item = main.profileSelector.findItems(profile.name, QtCore.Qt.MatchFlag.MatchExactly)[0]
+    main.profileSelector.setCurrentItem(item)
+    main.show()
+    qapp.setActiveWindow(main)
+    main.profileSelector.setFocus()
+    qapp.processEvents()
+    assert main.profileSelector.hasFocus()
+
+    question = mocker.patch.object(QMessageBox, 'question', return_value=QMessageBox.StandardButton.No)
+    qtbot.keyClick(main.profileSelector, key)
+    question.assert_called_once()
+    assert BackupProfileModel.get_or_none(id=profile.id) is not None
+
+    question.return_value = QMessageBox.StandardButton.Yes
+    qtbot.keyClick(main.profileSelector, key)
+    assert BackupProfileModel.get_or_none(id=profile.id) is None
+    assert main.profileSelector.currentItem().text() == 'Default'
+
+    warning = mocker.patch.object(QToolTip, 'showText')
+    qtbot.keyClick(main.profileSelector, key)
+    assert 'Cannot delete the last profile.' in warning.call_args[0][1]
+    assert BackupProfileModel.get_or_none(name='Default') is not None
+
+
+@pytest.mark.parametrize('clear_current', [False, True])
+def test_profile_delete_shortcut_without_selection(qapp, qtbot, mocker, clear_current):
+    main = qapp.main_window
+    BackupProfileModel.create(name='Test Profile')
+    main.populate_profile_selector()
+    main.profileSelector.clearSelection()
+    if clear_current:
+        main.profileSelector.setCurrentRow(-1)
+    main.show()
+    qapp.setActiveWindow(main)
+    main.profileSelector.setFocus()
+    qapp.processEvents()
+    question = mocker.patch.object(QMessageBox, 'question')
+
+    qtbot.keyClick(main.profileSelector, QtCore.Qt.Key.Key_Delete)
+
+    question.assert_not_called()
+    assert BackupProfileModel.select().count() == 2
 
 
 def test_profile_add_delete(qapp, qtbot, mocker):

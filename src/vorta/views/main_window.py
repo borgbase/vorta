@@ -112,6 +112,11 @@ class MainWindow(MainWindowBase, MainWindowUI):
         self.profileRenameButton.clicked.connect(self.profile_rename_action)
         self.profileExportButton.clicked.connect(self.profile_export_action)
         self.profileDeleteButton.clicked.connect(self.profile_delete_action)
+        shortcut_delete = QShortcut(QKeySequence.StandardKey.Delete, self.profileSelector)
+        if sys.platform == 'darwin':
+            shortcut_delete.setKeys([*shortcut_delete.keys(), QKeySequence(Qt.Key.Key_Backspace)])
+        shortcut_delete.setContext(Qt.ShortcutContext.WidgetShortcut)
+        shortcut_delete.activated.connect(self.profile_delete_action)
         self.profileAddButton.addAction(self.tr("Create new profile"), self.profile_add_action)
         self.profileAddButton.addAction(self.tr("Import from file…"), self.profile_import_action)
 
@@ -224,6 +229,8 @@ class MainWindow(MainWindowBase, MainWindowUI):
         window.rejected.connect(lambda: self.profileSelector.setCurrentIndex(self.profileSelector.currentIndex()))
 
     def profile_delete_action(self):
+        if not self.profileSelector.selectedItems():
+            return
         if self.profileSelector.count() > 1:
             to_delete_id = self.profileSelector.currentItem().data(Qt.ItemDataRole.UserRole)
             to_delete = BackupProfileModel.get(id=to_delete_id)
