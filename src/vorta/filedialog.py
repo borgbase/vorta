@@ -1,4 +1,6 @@
+import getpass
 import os
+import sys
 
 from PyQt6.QtCore import QDir, Qt
 from PyQt6.QtGui import QFileSystemModel
@@ -17,6 +19,23 @@ from PyQt6.QtWidgets import (
 )
 
 from vorta.views.utils import get_colored_icon
+
+
+def get_drives_path():
+    """Return the folder where external drives are mounted, or None.
+
+    On macOS that is /Volumes, which has the hidden flag. The dialog hides
+    hidden entries, so /Volumes does not show when the user browses to /.
+    """
+    if sys.platform == 'darwin':
+        candidates = ['/Volumes']
+    else:
+        user = getpass.getuser()
+        candidates = [f'/run/media/{user}', f'/media/{user}', '/media', '/mnt']
+    for path in candidates:
+        if os.path.isdir(path):
+            return path
+    return None
 
 
 class VortaFileDialog(QDialog):
@@ -39,6 +58,12 @@ class VortaFileDialog(QDialog):
         self.btnHome = QPushButton()
         self.btnHome.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.btnHome.setIcon(get_colored_icon('home'))
+        # Drives button
+        self.btnDrives = QPushButton()
+        self.btnDrives.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.btnDrives.setIcon(get_colored_icon('hard-drive'))
+        self.btnDrives.setToolTip(self.tr('External drives'))
+        self.btnDrives.setVisible(get_drives_path() is not None)
         # Up button
         self.btnUp = QPushButton()
         self.btnUp.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -50,6 +75,7 @@ class VortaFileDialog(QDialog):
 
         # Path bar layout
         path_layout.addWidget(self.btnHome)
+        path_layout.addWidget(self.btnDrives)
         path_layout.addWidget(self.path_bar)
         path_layout.addWidget(self.btnUp)
         layout.addLayout(path_layout)
@@ -87,6 +113,7 @@ class VortaFileDialog(QDialog):
 
         # Connections
         self.btnHome.clicked.connect(self.go_home)
+        self.btnDrives.clicked.connect(self.go_drives)
         self.btnUp.clicked.connect(self.go_up)
 
     def resize_tree_column(self, *_):
@@ -135,6 +162,11 @@ class VortaFileDialog(QDialog):
 
     def go_home(self):
         self.path_bar.setText(QDir.homePath())
+
+    def go_drives(self):
+        path = get_drives_path()
+        if path:
+            self.path_bar.setText(path)
 
     def go_up(self):
         current_path = self.path_bar.text()
