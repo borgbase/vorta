@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QDialogButtonBox, QMessageBox
 
 import vorta.borg.borg_job
 import vorta.utils
@@ -190,16 +190,61 @@ def test_repo_add_failure(qapp, qtbot, borg_json_output):
     assert add_repo_window.errorText.text().startswith('Please enter a valid repo URL')
 
 
+@pytest.mark.parametrize('open_window', ['new_repo', 'add_existing_repo'])
+def test_repo_window_keeps_input_after_cancel(qapp, qtbot, open_window):
+    tab = qapp.main_window.repoTab
+    getattr(tab, open_window)()
+    window = tab._window
+    test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
+
+    qtbot.keyClicks(window.repoURL, test_repo_url)
+    qtbot.keyClicks(window.repoName, 'Test Repo')
+    qtbot.keyClicks(window.extraBorgArgumentsLineEdit, '--remote-path=borg1')
+    password_field = getattr(window.passwordInput, 'passwordLineEdit', window.passwordInput)
+    qtbot.keyClicks(password_field, LONG_PASSWORD)
+    qtbot.mouseClick(window.buttonBox.button(QDialogButtonBox.StandardButton.Cancel), QtCore.Qt.MouseButton.LeftButton)
+
+    getattr(tab, open_window)()
+    window = tab._window
+    qtbot.addWidget(window)
+    assert window.repoURL.text() == test_repo_url
+    assert window.repoName.text() == 'Test Repo'
+    assert window.extraBorgArgumentsLineEdit.text() == '--remote-path=borg1'
+    assert window.values['password'] == ''
+
+
+def test_repo_window_keeps_local_path_after_cancel(qapp, qtbot, monkeypatch, choose_file_dialog):
+    monkeypatch.setattr(repo_add, 'choose_file_dialog', choose_file_dialog)
+    tab = qapp.main_window.repoTab
+    tab.new_repo()
+    window = tab._window
+    qtbot.mouseClick(window.chooseLocalFolderButton, QtCore.Qt.MouseButton.LeftButton)
+    local_path = window.repoURL.text()
+    window.reject()
+
+    tab.new_repo()
+    window = tab._window
+    qtbot.addWidget(window)
+    assert window.repoURL.text() == local_path
+    assert not window.is_remote_repo
+    assert not window.repoURL.isEnabled()
+
+
 def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     main = qapp.main_window
     tab = main.repoTab
-    tab.new_repo()
-    add_repo_window = tab._window
     test_repo_url = f'vorta-test-repo.{uuid.uuid4()}.com:repo'  # Random repo URL to avoid macOS keychain
     test_repo_name = 'Test Repo'
 
-    # Enter valid repo URL, name, and password
-    qtbot.keyClicks(add_repo_window.repoURL, test_repo_url)
+    # Enter the URL in a first window that is closed, so it is kept for the next one
+    tab.new_repo()
+    qtbot.keyClicks(tab._window.repoURL, test_repo_url)
+    tab._window.reject()
+    tab.new_repo()
+    add_repo_window = tab._window
+    assert add_repo_window.repoURL.text() == test_repo_url
+
+    # Enter name and password
     qtbot.keyClicks(add_repo_window.repoName, test_repo_name)
     qtbot.keyClicks(add_repo_window.passwordInput.passwordLineEdit, LONG_PASSWORD)
     qtbot.keyClicks(add_repo_window.passwordInput.confirmLineEdit, LONG_PASSWORD)
@@ -218,6 +263,11 @@ def test_repo_add_success(qapp, qtbot, mocker, borg_json_output):
     keyring = VortaKeyring.get_keyring()
     assert keyring.get_password("vorta-repo", RepoModel.get(id=2).url) == LONG_PASSWORD
     assert tab.repoSelector.currentText() == f"{test_repo_name} - {test_repo_url}"
+
+    # Input is not kept after a successful add
+    tab.new_repo()
+    qtbot.addWidget(tab._window)
+    assert tab._window.repoURL.text() == ''
 
 
 BORG1_CACHE = {
